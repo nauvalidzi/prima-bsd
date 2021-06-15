@@ -1,0 +1,9 @@
+date/time,script,user,action,table,field,"key value","old value","new value"
+"2021-06-10 09:17:11",/bsd/login,1,login,::1,,,,
+"2021-06-10 10:39:51",/bsd/logout,1,logout,::1,,,,
+"2021-06-10 10:40:28",/bsd/login,18,login,::1,,,,
+"2021-06-10 10:50:05",/bsd/login,18,login,::1,,,,
+"2021-06-10 11:52:07",/bsd/logout,18,logout,::1,,,,
+"2021-06-10 11:52:12",/bsd/login,18,login,::1,,,,
+"2021-06-10 11:54:37",/bsd/logout,18,logout,::1,,,,
+"2021-06-10 11:54:42",/bsd/login,1,login,::1,,,,
