@@ -153,7 +153,7 @@ CHARTJS;
                     // Set up datasets
                     $cntData = count($chartData);
                     $cntSeries = count($chartSeries);
-                    if ($cntSeries > count($chartData[0]) - 2) {
+                    if ($cntData > 0 && is_array($chartData[0]) && $cntSeries > count($chartData[0]) - 2) {
                         $cntSeries = count($chartData[0]) - 2;
                     }
                     for ($i = 0; $i < $cntSeries; $i++) {

@@ -940,6 +940,23 @@ return function (App $app) {
         }
     );
 
+    // order_pengembangan
+    $app->any('/OrderPengembanganList[/{id}]', OrderPengembanganController::class . ':list')->add(PermissionMiddleware::class)->setName('OrderPengembanganList-order_pengembangan-list'); // list
+    $app->any('/OrderPengembanganAdd[/{id}]', OrderPengembanganController::class . ':add')->add(PermissionMiddleware::class)->setName('OrderPengembanganAdd-order_pengembangan-add'); // add
+    $app->any('/OrderPengembanganView[/{id}]', OrderPengembanganController::class . ':view')->add(PermissionMiddleware::class)->setName('OrderPengembanganView-order_pengembangan-view'); // view
+    $app->any('/OrderPengembanganEdit[/{id}]', OrderPengembanganController::class . ':edit')->add(PermissionMiddleware::class)->setName('OrderPengembanganEdit-order_pengembangan-edit'); // edit
+    $app->any('/OrderPengembanganDelete[/{id}]', OrderPengembanganController::class . ':delete')->add(PermissionMiddleware::class)->setName('OrderPengembanganDelete-order_pengembangan-delete'); // delete
+    $app->group(
+        '/order_pengembangan',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', OrderPengembanganController::class . ':list')->add(PermissionMiddleware::class)->setName('order_pengembangan/list-order_pengembangan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', OrderPengembanganController::class . ':add')->add(PermissionMiddleware::class)->setName('order_pengembangan/add-order_pengembangan-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', OrderPengembanganController::class . ':view')->add(PermissionMiddleware::class)->setName('order_pengembangan/view-order_pengembangan-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', OrderPengembanganController::class . ':edit')->add(PermissionMiddleware::class)->setName('order_pengembangan/edit-order_pengembangan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', OrderPengembanganController::class . ':delete')->add(PermissionMiddleware::class)->setName('order_pengembangan/delete-order_pengembangan-delete-2'); // delete
+        }
+    );
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

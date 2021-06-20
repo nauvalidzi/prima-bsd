@@ -112,6 +112,7 @@ return [
     "v_bonuscustomer_detail" => \DI\create(VBonuscustomerDetail::class),
     "laporansales" => \DI\create(Laporansales::class),
     "v_npd_customer" => \DI\create(VNpdCustomer::class),
+    "order_pengembangan" => \DI\create(OrderPengembangan::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

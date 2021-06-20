@@ -554,7 +554,7 @@ class Crosstab1Crosstab extends Crosstab1
         $this->RecordIndex = 0;
 
         // Set up pager
-        $this->Pager = new PrevNextPager($this->StartGroup, $this->getGroupPerPage(), $this->TotalGroups, $this->PageSizes, $this->GroupRange, $this->AutoHidePager, $this->AutoHidePageSizeSelector);
+        $this->Pager = new NumericPager($this->StartGroup, $this->getGroupPerPage(), $this->TotalGroups, $this->PageSizes, $this->GroupRange, $this->AutoHidePager, $this->AutoHidePageSizeSelector);
 
         // Set LoginStatus / Page_Rendering / Page_Render
         if (!IsApi() && !$this->isTerminated()) {
