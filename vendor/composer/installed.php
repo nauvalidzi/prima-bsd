@@ -58,21 +58,21 @@
     ),
     'doctrine/cache' => 
     array (
-      'pretty_version' => '1.11.3',
-      'version' => '1.11.3.0',
+      'pretty_version' => '2.0.3',
+      'version' => '2.0.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3bb5588cec00a0268829cc4a518490df6741af9d',
+      'reference' => 'c9622c6820d3ede1e2315a6a377ea1076e421d88',
     ),
     'doctrine/dbal' => 
     array (
-      'pretty_version' => '2.13.1',
-      'version' => '2.13.1.0',
+      'pretty_version' => '2.13.2',
+      'version' => '2.13.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c800380457948e65bbd30ba92cc17cda108bf8c9',
+      'reference' => '8dd39d2ead4409ce652fd4f02621060f009ea5e4',
     ),
     'doctrine/deprecations' => 
     array (
@@ -103,12 +103,12 @@
     ),
     'firebase/php-jwt' => 
     array (
-      'pretty_version' => 'v5.3.0',
-      'version' => '5.3.0.0',
+      'pretty_version' => 'v5.4.0',
+      'version' => '5.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3c2d70f2e64e2922345e89f2ceae47d2463faae1',
+      'reference' => 'd2113d9b2e0e349796e72d2a63cf9319100382d2',
     ),
     'hkvstore/dompdf' => 
     array (
@@ -229,12 +229,12 @@
     ),
     'php-di/php-di' => 
     array (
-      'pretty_version' => '6.3.3',
-      'version' => '6.3.3.0',
+      'pretty_version' => '6.3.4',
+      'version' => '6.3.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'da8e476cafc8011477e2ec9fd2e4706947758af2',
+      'reference' => 'f53bcba06ab31b18e911b77c039377f4ccd1f7a5',
     ),
     'php-di/phpdoc-reader' => 
     array (
@@ -256,12 +256,12 @@
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.4.1',
-      'version' => '6.4.1.0',
+      'pretty_version' => 'v6.5.0',
+      'version' => '6.5.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '9256f12d8fb0cd0500f93b19e18c356906cbed3d',
+      'reference' => 'a5b5c43e50b7fba655f793ad27303cd74c57363c',
     ),
     'psr/container' => 
     array (

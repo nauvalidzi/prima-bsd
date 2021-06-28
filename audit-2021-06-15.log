@@ -1,4 +1,0 @@
-date/time,script,user,action,table,field,"key value","old value","new value"
-"2021-06-15 14:41:17",/bsd/login,1,login,::1,,,,
-"2021-06-15 17:38:56",/bsd/login,1,login,::1,,,,
-"2021-06-15 17:39:14",/bsd/logout,1,logout,::1,,,,
