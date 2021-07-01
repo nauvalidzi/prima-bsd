@@ -53,6 +53,17 @@ $brand = Container("brand");
 </td>
         </tr>
 <?php } ?>
+<?php if ($brand->ijinbpom->Visible) { // ijinbpom ?>
+        <tr id="r_ijinbpom">
+            <td class="<?= $brand->TableLeftColumnClass ?>"><?= $brand->ijinbpom->caption() ?></td>
+            <td <?= $brand->ijinbpom->cellAttributes() ?>>
+<span id="el_brand_ijinbpom">
+<span<?= $brand->ijinbpom->viewAttributes() ?>>
+<?= $brand->ijinbpom->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
     </tbody>
 </table>
 </div>

@@ -116,10 +116,10 @@ class Invoice extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_invoice_not_created', false, 'idcustomer', ["kodeorder","tanggalorder","namacustomer",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_invoice_not_created', false, 'idcustomer', ["kodeorder","tanggalorder","namacustomer",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1148,12 +1148,8 @@ SORTHTML;
         if ($curVal != "") {
             $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $lookupFilter = function() {
-                    return "id > 0";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found

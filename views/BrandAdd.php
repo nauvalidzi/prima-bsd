@@ -26,6 +26,7 @@ loadjs.ready("head", function () {
         ["logo", [fields.logo.visible && fields.logo.required ? ew.Validators.fileRequired(fields.logo.caption) : null], fields.logo.isInvalid],
         ["titipmerk", [fields.titipmerk.visible && fields.titipmerk.required ? ew.Validators.required(fields.titipmerk.caption) : null], fields.titipmerk.isInvalid],
         ["ijinhaki", [fields.ijinhaki.visible && fields.ijinhaki.required ? ew.Validators.required(fields.ijinhaki.caption) : null], fields.ijinhaki.isInvalid],
+        ["ijinbpom", [fields.ijinbpom.visible && fields.ijinbpom.required ? ew.Validators.required(fields.ijinbpom.caption) : null], fields.ijinbpom.isInvalid],
         ["aktaperusahaan", [fields.aktaperusahaan.visible && fields.aktaperusahaan.required ? ew.Validators.fileRequired(fields.aktaperusahaan.caption) : null], fields.aktaperusahaan.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
     ]);
@@ -97,6 +98,7 @@ loadjs.ready("head", function () {
     fbrandadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     fbrandadd.lists.titipmerk = <?= $Page->titipmerk->toClientList($Page) ?>;
     fbrandadd.lists.ijinhaki = <?= $Page->ijinhaki->toClientList($Page) ?>;
+    fbrandadd.lists.ijinbpom = <?= $Page->ijinbpom->toClientList($Page) ?>;
     loadjs.done("fbrandadd");
 });
 </script>
@@ -273,6 +275,38 @@ loadjs.ready("head", function() {
     <?= $Page->ijinhaki->editAttributes() ?>>
 <?= $Page->ijinhaki->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->ijinhaki->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+    <div id="r_ijinbpom" class="form-group row">
+        <label id="elh_brand_ijinbpom" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ijinbpom->caption() ?><?= $Page->ijinbpom->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ijinbpom->cellAttributes() ?>>
+<span id="el_brand_ijinbpom">
+<template id="tp_x_ijinbpom">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_ijinbpom" name="x_ijinbpom" id="x_ijinbpom"<?= $Page->ijinbpom->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_ijinbpom" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_ijinbpom"
+    name="x_ijinbpom"
+    value="<?= HtmlEncode($Page->ijinbpom->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_ijinbpom"
+    data-target="dsl_x_ijinbpom"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->ijinbpom->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_ijinbpom"
+    data-value-separator="<?= $Page->ijinbpom->displayValueSeparatorAttribute() ?>"
+    <?= $Page->ijinbpom->editAttributes() ?>>
+<?= $Page->ijinbpom->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ijinbpom->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

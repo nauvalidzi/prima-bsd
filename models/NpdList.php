@@ -2583,6 +2583,7 @@ class NpdList extends Npd
             $this->idpegawai->ViewCustomAttributes = "";
 
             // idcustomer
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);

@@ -745,10 +745,6 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idorder":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idorder_detail":
                     $lookupFilter = function () {

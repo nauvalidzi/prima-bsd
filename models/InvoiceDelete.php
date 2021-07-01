@@ -378,7 +378,7 @@ class InvoiceDelete extends Invoice
         $this->kode->setVisibility();
         $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idorder->Visible = false;
+        $this->idorder->setVisibility();
         $this->totalnonpajak->Visible = false;
         $this->pajak->Visible = false;
         $this->totaltagihan->setVisibility();
@@ -684,12 +684,8 @@ class InvoiceDelete extends Invoice
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return "id > 0";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -828,6 +824,11 @@ class InvoiceDelete extends Invoice
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
+            // idorder
+            $this->idorder->LinkCustomAttributes = "";
+            $this->idorder->HrefValue = "";
+            $this->idorder->TooltipValue = "";
+
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
             $this->totaltagihan->HrefValue = "";
@@ -963,10 +964,6 @@ class InvoiceDelete extends Invoice
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return "id > 0";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idorder":
                     $lookupFilter = function () {

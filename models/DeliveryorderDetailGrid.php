@@ -1555,12 +1555,8 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             if ($curVal != "") {
                 $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
                 if ($this->idorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -1655,16 +1651,14 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idorder`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->idorder->Lookup->renderViewRow($row);
                 $this->idorder->EditValue = $arwrk;
             }
             $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
@@ -1743,16 +1737,14 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idorder`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->idorder->Lookup->renderViewRow($row);
                 $this->idorder->EditValue = $arwrk;
             }
             $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
@@ -2182,10 +2174,6 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idorder":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idorder_detail":
                     $lookupFilter = function () {

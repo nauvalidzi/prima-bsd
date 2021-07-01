@@ -22,7 +22,7 @@ loadjs.ready("head", function () {
     fnpdadd.addFields([
         ["statuskategori", [fields.statuskategori.visible && fields.statuskategori.required ? ew.Validators.required(fields.statuskategori.caption) : null], fields.statuskategori.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null, ew.Validators.integer], fields.idcustomer.isInvalid],
         ["kodeorder", [fields.kodeorder.visible && fields.kodeorder.required ? ew.Validators.required(fields.kodeorder.caption) : null], fields.kodeorder.isInvalid],
         ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
@@ -209,35 +209,26 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
     <div id="r_idcustomer" class="form-group row">
-        <label id="elh_npd_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
 <span id="el_npd_idcustomer">
-<?php $Page->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idcustomer"
-        name="x_idcustomer"
-        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
-        data-select2-id="npd_x_idcustomer"
-        data-table="npd"
-        data-field="x_idcustomer"
-        data-page="1"
-        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
-        <?= $Page->idcustomer->editAttributes() ?>>
-        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
-    </select>
-    <?= $Page->idcustomer->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
-<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
+<?php
+$onchange = $Page->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idcustomer->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idcustomer" class="ew-auto-suggest">
+    <input type="<?= $Page->idcustomer->getInputTextType() ?>" class="form-control" name="sv_x_idcustomer" id="sv_x_idcustomer" value="<?= RemoveHtml($Page->idcustomer->EditValue) ?>" size="30" placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"<?= $Page->idcustomer->editAttributes() ?> aria-describedby="x_idcustomer_help">
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="npd" data-field="x_idcustomer" data-input="sv_x_idcustomer" data-page="1" data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>" name="x_idcustomer" id="x_idcustomer" value="<?= HtmlEncode($Page->idcustomer->CurrentValue) ?>"<?= $onchange ?>>
+<?= $Page->idcustomer->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_idcustomer']"),
-        options = { name: "x_idcustomer", selectId: "npd_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.idcustomer.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fnpdadd"], function() {
+    fnpdadd.createAutoSuggest(Object.assign({"id":"x_idcustomer","forceSelect":false}, ew.vars.tables.npd.fields.idcustomer.autoSuggestOptions));
 });
 </script>
+<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
 </span>
 </div></div>
     </div>

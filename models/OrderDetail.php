@@ -105,10 +105,10 @@ class OrderDetail extends DbTable
         $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["title","","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
             default:
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["title","","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
         }
         $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -125,10 +125,10 @@ class OrderDetail extends DbTable
         $this->idproduct->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["nama","","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
+                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["kode","nama","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
                 break;
             default:
-                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["nama","","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
+                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["kode","nama","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
                 break;
         }
         $this->idproduct->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1783,6 +1783,11 @@ SORTHTML;
     // Lookup Selecting event
     public function lookupSelecting($fld, &$filter)
     {
+    	//if ($fld->Name == "idbrand")
+    	//	$fld->Lookup->addOptions([
+        //        ["1", "Licoderma"]
+        //    ]);
+
         //var_dump($fld->Name, $fld->Lookup, $filter); // Uncomment to view the filter
         // Enter your code here
     }

@@ -160,6 +160,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->ijinhaki->Visible) { // ijinhaki ?>
         <th data-name="ijinhaki" class="<?= $Page->ijinhaki->headerCellClass() ?>"><div id="elh_brand_ijinhaki" class="brand_ijinhaki"><?= $Page->renderSort($Page->ijinhaki) ?></div></th>
 <?php } ?>
+<?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+        <th data-name="ijinbpom" class="<?= $Page->ijinbpom->headerCellClass() ?>"><div id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Page->renderSort($Page->ijinbpom) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -256,6 +259,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_brand_ijinhaki">
 <span<?= $Page->ijinhaki->viewAttributes() ?>>
 <?= $Page->ijinhaki->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+        <td data-name="ijinbpom" <?= $Page->ijinbpom->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_ijinbpom">
+<span<?= $Page->ijinbpom->viewAttributes() ?>>
+<?= $Page->ijinbpom->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

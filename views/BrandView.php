@@ -112,6 +112,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+    <tr id="r_ijinbpom">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_ijinbpom"><?= $Page->ijinbpom->caption() ?></span></td>
+        <td data-name="ijinbpom" <?= $Page->ijinbpom->cellAttributes() ?>>
+<span id="el_brand_ijinbpom">
+<span<?= $Page->ijinbpom->viewAttributes() ?>>
+<?= $Page->ijinbpom->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->aktaperusahaan->Visible) { // aktaperusahaan ?>
     <tr id="r_aktaperusahaan">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_aktaperusahaan"><?= $Page->aktaperusahaan->caption() ?></span></td>

@@ -158,9 +158,8 @@ class Brand extends DbTable
         $this->Fields['ijinhaki'] = &$this->ijinhaki;
 
         // ijinbpom
-        $this->ijinbpom = new DbField('brand', 'brand', 'x_ijinbpom', 'ijinbpom', '`ijinbpom`', '`ijinbpom`', 16, 1, -1, false, '`ijinbpom`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
-        $this->ijinbpom->Sortable = false; // Allow sort
-        $this->ijinbpom->DataType = DATATYPE_BOOLEAN;
+        $this->ijinbpom = new DbField('brand', 'brand', 'x_ijinbpom', 'ijinbpom', '`ijinbpom`', '`ijinbpom`', 16, 1, -1, false, '`ijinbpom`', false, false, false, 'FORMATTED TEXT', 'RADIO');
+        $this->ijinbpom->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
                 $this->ijinbpom->Lookup = new Lookup('ijinbpom', 'brand', false, '', ["","","",""], [], [], [], [], [], [], '', '');
@@ -169,7 +168,7 @@ class Brand extends DbTable
                 $this->ijinbpom->Lookup = new Lookup('ijinbpom', 'brand', false, '', ["","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
-        $this->ijinbpom->OptionCount = 2;
+        $this->ijinbpom->OptionCount = 3;
         $this->ijinbpom->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->ijinbpom->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ijinbpom->Param, "CustomMsg");
         $this->Fields['ijinbpom'] = &$this->ijinbpom;
@@ -1091,7 +1090,6 @@ SORTHTML;
         // ijinhaki
 
         // ijinbpom
-        $this->ijinbpom->CellCssStyle = "white-space: nowrap;";
 
         // aktaperusahaan
 
@@ -1160,10 +1158,10 @@ SORTHTML;
         $this->ijinhaki->ViewCustomAttributes = "";
 
         // ijinbpom
-        if (ConvertToBool($this->ijinbpom->CurrentValue)) {
-            $this->ijinbpom->ViewValue = $this->ijinbpom->tagCaption(1) != "" ? $this->ijinbpom->tagCaption(1) : "Yes";
+        if (strval($this->ijinbpom->CurrentValue) != "") {
+            $this->ijinbpom->ViewValue = $this->ijinbpom->optionCaption($this->ijinbpom->CurrentValue);
         } else {
-            $this->ijinbpom->ViewValue = $this->ijinbpom->tagCaption(2) != "" ? $this->ijinbpom->tagCaption(2) : "No";
+            $this->ijinbpom->ViewValue = null;
         }
         $this->ijinbpom->ViewCustomAttributes = "";
 
@@ -1425,6 +1423,7 @@ SORTHTML;
                     $doc->exportCaption($this->logo);
                     $doc->exportCaption($this->titipmerk);
                     $doc->exportCaption($this->ijinhaki);
+                    $doc->exportCaption($this->ijinbpom);
                     $doc->exportCaption($this->aktaperusahaan);
                 } else {
                     $doc->exportCaption($this->id);
@@ -1434,6 +1433,7 @@ SORTHTML;
                     $doc->exportCaption($this->logo);
                     $doc->exportCaption($this->titipmerk);
                     $doc->exportCaption($this->ijinhaki);
+                    $doc->exportCaption($this->ijinbpom);
                     $doc->exportCaption($this->aktaperusahaan);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->created_by);
@@ -1472,6 +1472,7 @@ SORTHTML;
                         $doc->exportField($this->logo);
                         $doc->exportField($this->titipmerk);
                         $doc->exportField($this->ijinhaki);
+                        $doc->exportField($this->ijinbpom);
                         $doc->exportField($this->aktaperusahaan);
                     } else {
                         $doc->exportField($this->id);
@@ -1481,6 +1482,7 @@ SORTHTML;
                         $doc->exportField($this->logo);
                         $doc->exportField($this->titipmerk);
                         $doc->exportField($this->ijinhaki);
+                        $doc->exportField($this->ijinbpom);
                         $doc->exportField($this->aktaperusahaan);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->created_by);

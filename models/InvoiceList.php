@@ -572,7 +572,7 @@ class InvoiceList extends Invoice
         $this->kode->setVisibility();
         $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idorder->Visible = false;
+        $this->idorder->setVisibility();
         $this->totalnonpajak->Visible = false;
         $this->pajak->Visible = false;
         $this->totaltagihan->setVisibility();
@@ -1245,6 +1245,7 @@ class InvoiceList extends Invoice
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->tglinvoice); // tglinvoice
             $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->idorder); // idorder
             $this->updateSort($this->totaltagihan); // totaltagihan
             $this->updateSort($this->sisabayar); // sisabayar
             $this->setStartRecordNumber(1); // Reset start position
@@ -2010,12 +2011,8 @@ class InvoiceList extends Invoice
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return "id > 0";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -2154,6 +2151,11 @@ class InvoiceList extends Invoice
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
+            // idorder
+            $this->idorder->LinkCustomAttributes = "";
+            $this->idorder->HrefValue = "";
+            $this->idorder->TooltipValue = "";
+
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
             $this->totaltagihan->HrefValue = "";
@@ -2244,10 +2246,6 @@ class InvoiceList extends Invoice
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return "id > 0";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idorder":
                     $lookupFilter = function () {

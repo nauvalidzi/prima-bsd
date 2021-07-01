@@ -474,7 +474,7 @@ class BrandEdit extends Brand
         $this->logo->setVisibility();
         $this->titipmerk->setVisibility();
         $this->ijinhaki->setVisibility();
-        $this->ijinbpom->Visible = false;
+        $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -731,6 +731,16 @@ class BrandEdit extends Brand
             }
         }
 
+        // Check field name 'ijinbpom' first before field var 'x_ijinbpom'
+        $val = $CurrentForm->hasValue("ijinbpom") ? $CurrentForm->getValue("ijinbpom") : $CurrentForm->getValue("x_ijinbpom");
+        if (!$this->ijinbpom->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->ijinbpom->Visible = false; // Disable update for API request
+            } else {
+                $this->ijinbpom->setFormValue($val);
+            }
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
@@ -749,6 +759,7 @@ class BrandEdit extends Brand
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->titipmerk->CurrentValue = $this->titipmerk->FormValue;
         $this->ijinhaki->CurrentValue = $this->ijinhaki->FormValue;
+        $this->ijinbpom->CurrentValue = $this->ijinbpom->FormValue;
     }
 
     /**
@@ -948,6 +959,14 @@ class BrandEdit extends Brand
             }
             $this->ijinhaki->ViewCustomAttributes = "";
 
+            // ijinbpom
+            if (strval($this->ijinbpom->CurrentValue) != "") {
+                $this->ijinbpom->ViewValue = $this->ijinbpom->optionCaption($this->ijinbpom->CurrentValue);
+            } else {
+                $this->ijinbpom->ViewValue = null;
+            }
+            $this->ijinbpom->ViewCustomAttributes = "";
+
             // aktaperusahaan
             if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
                 $this->aktaperusahaan->ImageAlt = $this->aktaperusahaan->alt();
@@ -1012,6 +1031,11 @@ class BrandEdit extends Brand
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
             $this->ijinhaki->TooltipValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
+            $this->ijinbpom->TooltipValue = "";
 
             // aktaperusahaan
             $this->aktaperusahaan->LinkCustomAttributes = "";
@@ -1126,6 +1150,11 @@ class BrandEdit extends Brand
             $this->ijinhaki->EditValue = $this->ijinhaki->options(false);
             $this->ijinhaki->PlaceHolder = RemoveHtml($this->ijinhaki->caption());
 
+            // ijinbpom
+            $this->ijinbpom->EditCustomAttributes = "";
+            $this->ijinbpom->EditValue = $this->ijinbpom->options(false);
+            $this->ijinbpom->PlaceHolder = RemoveHtml($this->ijinbpom->caption());
+
             // aktaperusahaan
             $this->aktaperusahaan->EditAttrs["class"] = "form-control";
             $this->aktaperusahaan->EditCustomAttributes = "";
@@ -1176,6 +1205,10 @@ class BrandEdit extends Brand
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
 
             // aktaperusahaan
             $this->aktaperusahaan->LinkCustomAttributes = "";
@@ -1237,6 +1270,11 @@ class BrandEdit extends Brand
         if ($this->ijinhaki->Required) {
             if ($this->ijinhaki->FormValue == "") {
                 $this->ijinhaki->addErrorMessage(str_replace("%s", $this->ijinhaki->caption(), $this->ijinhaki->RequiredErrorMessage));
+            }
+        }
+        if ($this->ijinbpom->Required) {
+            if ($this->ijinbpom->FormValue == "") {
+                $this->ijinbpom->addErrorMessage(str_replace("%s", $this->ijinbpom->caption(), $this->ijinbpom->RequiredErrorMessage));
             }
         }
         if ($this->aktaperusahaan->Required) {
@@ -1319,6 +1357,9 @@ class BrandEdit extends Brand
 
             // ijinhaki
             $this->ijinhaki->setDbValueDef($rsnew, $this->ijinhaki->CurrentValue, 0, $this->ijinhaki->ReadOnly);
+
+            // ijinbpom
+            $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, null, $this->ijinbpom->ReadOnly);
 
             // aktaperusahaan
             if ($this->aktaperusahaan->Visible && !$this->aktaperusahaan->ReadOnly && !$this->aktaperusahaan->Upload->KeepFile) {

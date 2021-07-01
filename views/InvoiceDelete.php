@@ -53,6 +53,9 @@ $Page->showMessage();
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th class="<?= $Page->idcustomer->headerCellClass() ?>"><span id="elh_invoice_idcustomer" class="invoice_idcustomer"><?= $Page->idcustomer->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->idorder->Visible) { // idorder ?>
+        <th class="<?= $Page->idorder->headerCellClass() ?>"><span id="elh_invoice_idorder" class="invoice_idorder"><?= $Page->idorder->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <th class="<?= $Page->totaltagihan->headerCellClass() ?>"><span id="elh_invoice_totaltagihan" class="invoice_totaltagihan"><?= $Page->totaltagihan->caption() ?></span></th>
 <?php } ?>
@@ -101,6 +104,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_invoice_idcustomer" class="invoice_idcustomer">
 <span<?= $Page->idcustomer->viewAttributes() ?>>
 <?= $Page->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->idorder->Visible) { // idorder ?>
+        <td <?= $Page->idorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_idorder" class="invoice_idorder">
+<span<?= $Page->idorder->viewAttributes() ?>>
+<?= $Page->idorder->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

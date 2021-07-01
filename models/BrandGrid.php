@@ -512,7 +512,7 @@ class BrandGrid extends Brand
         $this->logo->Visible = false;
         $this->titipmerk->Visible = false;
         $this->ijinhaki->setVisibility();
-        $this->ijinbpom->Visible = false;
+        $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -951,6 +951,9 @@ class BrandGrid extends Brand
         if ($CurrentForm->hasValue("x_ijinhaki") && $CurrentForm->hasValue("o_ijinhaki") && $this->ijinhaki->CurrentValue != $this->ijinhaki->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_ijinbpom") && $CurrentForm->hasValue("o_ijinbpom") && $this->ijinbpom->CurrentValue != $this->ijinbpom->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1036,6 +1039,7 @@ class BrandGrid extends Brand
         $this->title->clearErrorMessage();
         $this->kode->clearErrorMessage();
         $this->ijinhaki->clearErrorMessage();
+        $this->ijinbpom->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1481,6 +1485,19 @@ class BrandGrid extends Brand
             $this->ijinhaki->setOldValue($CurrentForm->getValue("o_ijinhaki"));
         }
 
+        // Check field name 'ijinbpom' first before field var 'x_ijinbpom'
+        $val = $CurrentForm->hasValue("ijinbpom") ? $CurrentForm->getValue("ijinbpom") : $CurrentForm->getValue("x_ijinbpom");
+        if (!$this->ijinbpom->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->ijinbpom->Visible = false; // Disable update for API request
+            } else {
+                $this->ijinbpom->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_ijinbpom")) {
+            $this->ijinbpom->setOldValue($CurrentForm->getValue("o_ijinbpom"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1499,6 +1516,7 @@ class BrandGrid extends Brand
         $this->title->CurrentValue = $this->title->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->ijinhaki->CurrentValue = $this->ijinhaki->FormValue;
+        $this->ijinbpom->CurrentValue = $this->ijinbpom->FormValue;
     }
 
     // Load recordset
@@ -1653,7 +1671,6 @@ class BrandGrid extends Brand
         // ijinhaki
 
         // ijinbpom
-        $this->ijinbpom->CellCssStyle = "white-space: nowrap;";
 
         // aktaperusahaan
 
@@ -1721,6 +1738,14 @@ class BrandGrid extends Brand
             }
             $this->ijinhaki->ViewCustomAttributes = "";
 
+            // ijinbpom
+            if (strval($this->ijinbpom->CurrentValue) != "") {
+                $this->ijinbpom->ViewValue = $this->ijinbpom->optionCaption($this->ijinbpom->CurrentValue);
+            } else {
+                $this->ijinbpom->ViewValue = null;
+            }
+            $this->ijinbpom->ViewCustomAttributes = "";
+
             // aktaperusahaan
             if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
                 $this->aktaperusahaan->ImageAlt = $this->aktaperusahaan->alt();
@@ -1759,6 +1784,11 @@ class BrandGrid extends Brand
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
             $this->ijinhaki->TooltipValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
+            $this->ijinbpom->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
@@ -1832,6 +1862,11 @@ class BrandGrid extends Brand
             $this->ijinhaki->EditValue = $this->ijinhaki->options(false);
             $this->ijinhaki->PlaceHolder = RemoveHtml($this->ijinhaki->caption());
 
+            // ijinbpom
+            $this->ijinbpom->EditCustomAttributes = "";
+            $this->ijinbpom->EditValue = $this->ijinbpom->options(false);
+            $this->ijinbpom->PlaceHolder = RemoveHtml($this->ijinbpom->caption());
+
             // Add refer script
 
             // idcustomer
@@ -1849,6 +1884,10 @@ class BrandGrid extends Brand
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
@@ -1922,6 +1961,11 @@ class BrandGrid extends Brand
             $this->ijinhaki->EditValue = $this->ijinhaki->options(false);
             $this->ijinhaki->PlaceHolder = RemoveHtml($this->ijinhaki->caption());
 
+            // ijinbpom
+            $this->ijinbpom->EditCustomAttributes = "";
+            $this->ijinbpom->EditValue = $this->ijinbpom->options(false);
+            $this->ijinbpom->PlaceHolder = RemoveHtml($this->ijinbpom->caption());
+
             // Edit refer script
 
             // idcustomer
@@ -1939,6 +1983,10 @@ class BrandGrid extends Brand
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1977,6 +2025,11 @@ class BrandGrid extends Brand
         if ($this->ijinhaki->Required) {
             if ($this->ijinhaki->FormValue == "") {
                 $this->ijinhaki->addErrorMessage(str_replace("%s", $this->ijinhaki->caption(), $this->ijinhaki->RequiredErrorMessage));
+            }
+        }
+        if ($this->ijinbpom->Required) {
+            if ($this->ijinbpom->FormValue == "") {
+                $this->ijinbpom->addErrorMessage(str_replace("%s", $this->ijinbpom->caption(), $this->ijinbpom->RequiredErrorMessage));
             }
         }
 
@@ -2103,6 +2156,9 @@ class BrandGrid extends Brand
             // ijinhaki
             $this->ijinhaki->setDbValueDef($rsnew, $this->ijinhaki->CurrentValue, 0, $this->ijinhaki->ReadOnly);
 
+            // ijinbpom
+            $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, null, $this->ijinbpom->ReadOnly);
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2187,6 +2243,9 @@ class BrandGrid extends Brand
 
         // ijinhaki
         $this->ijinhaki->setDbValueDef($rsnew, $this->ijinhaki->CurrentValue, 0, strval($this->ijinhaki->CurrentValue) == "");
+
+        // ijinbpom
+        $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, null, false);
 
         // created_by
         if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin

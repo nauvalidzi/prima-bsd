@@ -1205,6 +1205,7 @@ class NpdAdd extends Npd
             $this->idpegawai->ViewCustomAttributes = "";
 
             // idcustomer
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
@@ -1563,25 +1564,24 @@ class NpdAdd extends Npd
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
+            $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            } else {
-                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->EditValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
+                    }
                 }
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idcustomer->EditValue = $arwrk;
+            } else {
+                $this->idcustomer->EditValue = null;
             }
             $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
@@ -1941,6 +1941,9 @@ class NpdAdd extends Npd
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idcustomer->FormValue)) {
+            $this->idcustomer->addErrorMessage($this->idcustomer->getErrorMessage(false));
         }
         if ($this->kodeorder->Required) {
             if (!$this->kodeorder->IsDetailKey && EmptyValue($this->kodeorder->FormValue)) {

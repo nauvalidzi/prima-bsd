@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/6/28" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/7/1" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,6 +925,18 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2020 PT. Prima Visi Globalindo" />
+    <menu id="577">
+      <phrase id="menutext" value="v invoice unpaid" />
+    </menu>
+    <menu id="576">
+      <phrase id="menutext" value="v invoice not created" />
+    </menu>
+    <menu id="574">
+      <phrase id="menutext" value="v invoice not sent" />
+    </menu>
+    <menu id="575">
+      <phrase id="menutext" value="v order aktif" />
+    </menu>
     <menu id="573">
       <phrase id="menutext" value="order pengembangan" />
     </menu>
@@ -1445,9 +1457,11 @@
       <field id="ijinbpom">
         <phrase id="fldcaption" value="Ijin BPOM" />
         <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagcaption1" value="Ada" />
         <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="No" />
+        <phrase id="fldtagcaption2" value="Tidak Ada" />
+        <phrase id="fldtagvalue3" value="-1" />
+        <phrase id="fldtagcaption3" value="Proses" />
       </field>
       <field id="aktaperusahaan">
         <phrase id="fldcaption" value="Akta Perusahaan" />
@@ -3565,6 +3579,72 @@
       </field>
       <field id="batal_oleh">
         <phrase id="fldcaption" value="batal oleh" />
+      </field>
+    </table>
+    <table id="v_invoice_not_sent">
+      <phrase id="tblcaption" value="v invoice not sent" />
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodecustomer">
+        <phrase id="fldcaption" value="kodecustomer" />
+      </field>
+      <field id="namacustomer">
+        <phrase id="fldcaption" value="namacustomer" />
+      </field>
+    </table>
+    <table id="v_order_aktif">
+      <phrase id="tblcaption" value="v order aktif" />
+      <field id="idorder">
+        <phrase id="fldcaption" value="idorder" />
+      </field>
+      <field id="kodeorder">
+        <phrase id="fldcaption" value="kodeorder" />
+      </field>
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodecustomer">
+        <phrase id="fldcaption" value="kodecustomer" />
+      </field>
+      <field id="namacustomer">
+        <phrase id="fldcaption" value="namacustomer" />
+      </field>
+      <field id="tanggalorder">
+        <phrase id="fldcaption" value="tanggalorder" />
+      </field>
+    </table>
+    <table id="v_invoice_not_created">
+      <phrase id="tblcaption" value="v invoice not created" />
+      <field id="idorder">
+        <phrase id="fldcaption" value="idorder" />
+      </field>
+      <field id="kodeorder">
+        <phrase id="fldcaption" value="kodeorder" />
+      </field>
+      <field id="tanggalorder">
+        <phrase id="fldcaption" value="tanggalorder" />
+      </field>
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodecustomer">
+        <phrase id="fldcaption" value="kodecustomer" />
+      </field>
+      <field id="namacustomer">
+        <phrase id="fldcaption" value="namacustomer" />
+      </field>
+    </table>
+    <table id="v_invoice_unpaid">
+      <phrase id="tblcaption" value="v invoice unpaid" />
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodecustomer">
+        <phrase id="fldcaption" value="kodecustomer" />
+      </field>
+      <field id="namacustomer">
+        <phrase id="fldcaption" value="namacustomer" />
       </field>
     </table>
   </project>

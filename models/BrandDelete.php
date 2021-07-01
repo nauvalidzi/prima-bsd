@@ -381,7 +381,7 @@ class BrandDelete extends Brand
         $this->logo->Visible = false;
         $this->titipmerk->Visible = false;
         $this->ijinhaki->setVisibility();
-        $this->ijinbpom->Visible = false;
+        $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -631,7 +631,6 @@ class BrandDelete extends Brand
         // ijinhaki
 
         // ijinbpom
-        $this->ijinbpom->CellCssStyle = "white-space: nowrap;";
 
         // aktaperusahaan
 
@@ -699,6 +698,14 @@ class BrandDelete extends Brand
             }
             $this->ijinhaki->ViewCustomAttributes = "";
 
+            // ijinbpom
+            if (strval($this->ijinbpom->CurrentValue) != "") {
+                $this->ijinbpom->ViewValue = $this->ijinbpom->optionCaption($this->ijinbpom->CurrentValue);
+            } else {
+                $this->ijinbpom->ViewValue = null;
+            }
+            $this->ijinbpom->ViewCustomAttributes = "";
+
             // aktaperusahaan
             if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
                 $this->aktaperusahaan->ImageAlt = $this->aktaperusahaan->alt();
@@ -737,6 +744,11 @@ class BrandDelete extends Brand
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
             $this->ijinhaki->TooltipValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
+            $this->ijinbpom->TooltipValue = "";
         }
 
         // Call Row Rendered event

@@ -397,7 +397,7 @@ class BrandPreview extends Brand
         $this->logo->Visible = false;
         $this->titipmerk->Visible = false;
         $this->ijinhaki->setVisibility();
-        $this->ijinbpom->Visible = false;
+        $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -513,6 +513,7 @@ class BrandPreview extends Brand
             $this->updateSort($this->title); // title
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->ijinhaki); // ijinhaki
+            $this->updateSort($this->ijinbpom); // ijinbpom
         }
     }
 

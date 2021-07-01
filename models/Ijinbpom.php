@@ -1165,7 +1165,11 @@ SORTHTML;
             $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
             if ($this->idbrand->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add") ? "`ijinbpom` = 0" : "";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found

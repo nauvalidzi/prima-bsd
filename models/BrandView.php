@@ -983,6 +983,14 @@ class BrandView extends Brand
             }
             $this->ijinhaki->ViewCustomAttributes = "";
 
+            // ijinbpom
+            if (strval($this->ijinbpom->CurrentValue) != "") {
+                $this->ijinbpom->ViewValue = $this->ijinbpom->optionCaption($this->ijinbpom->CurrentValue);
+            } else {
+                $this->ijinbpom->ViewValue = null;
+            }
+            $this->ijinbpom->ViewCustomAttributes = "";
+
             // aktaperusahaan
             if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
                 $this->aktaperusahaan->ImageAlt = $this->aktaperusahaan->alt();
@@ -1047,6 +1055,11 @@ class BrandView extends Brand
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
             $this->ijinhaki->TooltipValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
+            $this->ijinbpom->TooltipValue = "";
 
             // aktaperusahaan
             $this->aktaperusahaan->LinkCustomAttributes = "";

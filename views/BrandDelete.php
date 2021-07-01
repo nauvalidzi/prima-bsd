@@ -56,6 +56,9 @@ $Page->showMessage();
 <?php if ($Page->ijinhaki->Visible) { // ijinhaki ?>
         <th class="<?= $Page->ijinhaki->headerCellClass() ?>"><span id="elh_brand_ijinhaki" class="brand_ijinhaki"><?= $Page->ijinhaki->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+        <th class="<?= $Page->ijinbpom->headerCellClass() ?>"><span id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Page->ijinbpom->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -106,6 +109,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_brand_ijinhaki" class="brand_ijinhaki">
 <span<?= $Page->ijinhaki->viewAttributes() ?>>
 <?= $Page->ijinhaki->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+        <td <?= $Page->ijinbpom->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_ijinbpom" class="brand_ijinbpom">
+<span<?= $Page->ijinbpom->viewAttributes() ?>>
+<?= $Page->ijinbpom->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

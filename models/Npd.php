@@ -138,12 +138,10 @@ class Npd extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('npd', 'npd', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('npd', 'npd', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
-        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], ["x_idbrand"], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
@@ -1605,6 +1603,7 @@ SORTHTML;
         $this->idpegawai->ViewCustomAttributes = "";
 
         // idcustomer
+        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
         $curVal = trim(strval($this->idcustomer->CurrentValue));
         if ($curVal != "") {
             $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
@@ -1989,6 +1988,7 @@ SORTHTML;
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
+        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
         // kodeorder

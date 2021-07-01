@@ -42,6 +42,17 @@ $invoice = Container("invoice");
 </td>
         </tr>
 <?php } ?>
+<?php if ($invoice->idorder->Visible) { // idorder ?>
+        <tr id="r_idorder">
+            <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->idorder->caption() ?></td>
+            <td <?= $invoice->idorder->cellAttributes() ?>>
+<span id="el_invoice_idorder">
+<span<?= $invoice->idorder->viewAttributes() ?>>
+<?= $invoice->idorder->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
 <?php if ($invoice->totaltagihan->Visible) { // totaltagihan ?>
         <tr id="r_totaltagihan">
             <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->totaltagihan->caption() ?></td>

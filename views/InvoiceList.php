@@ -144,6 +144,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_invoice_idcustomer" class="invoice_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
 <?php } ?>
+<?php if ($Page->idorder->Visible) { // idorder ?>
+        <th data-name="idorder" class="<?= $Page->idorder->headerCellClass() ?>"><div id="elh_invoice_idorder" class="invoice_idorder"><?= $Page->renderSort($Page->idorder) ?></div></th>
+<?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <th data-name="totaltagihan" class="<?= $Page->totaltagihan->headerCellClass() ?>"><div id="elh_invoice_totaltagihan" class="invoice_totaltagihan"><?= $Page->renderSort($Page->totaltagihan) ?></div></th>
 <?php } ?>
@@ -238,6 +241,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_invoice_idcustomer">
 <span<?= $Page->idcustomer->viewAttributes() ?>>
 <?= $Page->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->idorder->Visible) { // idorder ?>
+        <td data-name="idorder" <?= $Page->idorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_idorder">
+<span<?= $Page->idorder->viewAttributes() ?>>
+<?= $Page->idorder->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

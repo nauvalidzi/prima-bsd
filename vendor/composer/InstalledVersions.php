@@ -434,12 +434,12 @@ private static $installed = array (
     ),
     'slim/slim' => 
     array (
-      'pretty_version' => '4.8.0',
-      'version' => '4.8.0.0',
+      'pretty_version' => '4.8.1',
+      'version' => '4.8.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c9bdc9e0d2f8613055632334ec6711b965d5fdf3',
+      'reference' => 'c8934c35d9d98b1a1df9f99ee69b77a59e0aa820',
     ),
     'soundasleep/html2text' => 
     array (

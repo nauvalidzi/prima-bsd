@@ -575,7 +575,7 @@ class BrandList extends Brand
         $this->logo->Visible = false;
         $this->titipmerk->Visible = false;
         $this->ijinhaki->setVisibility();
-        $this->ijinbpom->Visible = false;
+        $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -900,6 +900,7 @@ class BrandList extends Brand
         $filterList = Concat($filterList, $this->logo->AdvancedSearch->toJson(), ","); // Field logo
         $filterList = Concat($filterList, $this->titipmerk->AdvancedSearch->toJson(), ","); // Field titipmerk
         $filterList = Concat($filterList, $this->ijinhaki->AdvancedSearch->toJson(), ","); // Field ijinhaki
+        $filterList = Concat($filterList, $this->ijinbpom->AdvancedSearch->toJson(), ","); // Field ijinbpom
         $filterList = Concat($filterList, $this->aktaperusahaan->AdvancedSearch->toJson(), ","); // Field aktaperusahaan
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
@@ -998,6 +999,14 @@ class BrandList extends Brand
         $this->ijinhaki->AdvancedSearch->SearchValue2 = @$filter["y_ijinhaki"];
         $this->ijinhaki->AdvancedSearch->SearchOperator2 = @$filter["w_ijinhaki"];
         $this->ijinhaki->AdvancedSearch->save();
+
+        // Field ijinbpom
+        $this->ijinbpom->AdvancedSearch->SearchValue = @$filter["x_ijinbpom"];
+        $this->ijinbpom->AdvancedSearch->SearchOperator = @$filter["z_ijinbpom"];
+        $this->ijinbpom->AdvancedSearch->SearchCondition = @$filter["v_ijinbpom"];
+        $this->ijinbpom->AdvancedSearch->SearchValue2 = @$filter["y_ijinbpom"];
+        $this->ijinbpom->AdvancedSearch->SearchOperator2 = @$filter["w_ijinbpom"];
+        $this->ijinbpom->AdvancedSearch->save();
 
         // Field aktaperusahaan
         $this->aktaperusahaan->AdvancedSearch->SearchValue = @$filter["x_aktaperusahaan"];
@@ -1200,6 +1209,7 @@ class BrandList extends Brand
             $this->updateSort($this->title); // title
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->ijinhaki); // ijinhaki
+            $this->updateSort($this->ijinbpom); // ijinbpom
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -2010,7 +2020,6 @@ class BrandList extends Brand
         // ijinhaki
 
         // ijinbpom
-        $this->ijinbpom->CellCssStyle = "white-space: nowrap;";
 
         // aktaperusahaan
 
@@ -2078,6 +2087,14 @@ class BrandList extends Brand
             }
             $this->ijinhaki->ViewCustomAttributes = "";
 
+            // ijinbpom
+            if (strval($this->ijinbpom->CurrentValue) != "") {
+                $this->ijinbpom->ViewValue = $this->ijinbpom->optionCaption($this->ijinbpom->CurrentValue);
+            } else {
+                $this->ijinbpom->ViewValue = null;
+            }
+            $this->ijinbpom->ViewCustomAttributes = "";
+
             // aktaperusahaan
             if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
                 $this->aktaperusahaan->ImageAlt = $this->aktaperusahaan->alt();
@@ -2116,6 +2133,11 @@ class BrandList extends Brand
             $this->ijinhaki->LinkCustomAttributes = "";
             $this->ijinhaki->HrefValue = "";
             $this->ijinhaki->TooltipValue = "";
+
+            // ijinbpom
+            $this->ijinbpom->LinkCustomAttributes = "";
+            $this->ijinbpom->HrefValue = "";
+            $this->ijinbpom->TooltipValue = "";
         }
 
         // Call Row Rendered event

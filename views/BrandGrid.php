@@ -25,7 +25,8 @@ loadjs.ready("head", function () {
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["title", [fields.title.visible && fields.title.required ? ew.Validators.required(fields.title.caption) : null], fields.title.isInvalid],
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
-        ["ijinhaki", [fields.ijinhaki.visible && fields.ijinhaki.required ? ew.Validators.required(fields.ijinhaki.caption) : null], fields.ijinhaki.isInvalid]
+        ["ijinhaki", [fields.ijinhaki.visible && fields.ijinhaki.required ? ew.Validators.required(fields.ijinhaki.caption) : null], fields.ijinhaki.isInvalid],
+        ["ijinbpom", [fields.ijinbpom.visible && fields.ijinbpom.required ? ew.Validators.required(fields.ijinbpom.caption) : null], fields.ijinbpom.isInvalid]
     ]);
 
     // Set invalid fields
@@ -87,6 +88,8 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "ijinhaki", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "ijinbpom", false))
+            return false;
         return true;
     }
 
@@ -102,6 +105,7 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     fbrandgrid.lists.idcustomer = <?= $Grid->idcustomer->toClientList($Grid) ?>;
     fbrandgrid.lists.ijinhaki = <?= $Grid->ijinhaki->toClientList($Grid) ?>;
+    fbrandgrid.lists.ijinbpom = <?= $Grid->ijinbpom->toClientList($Grid) ?>;
     loadjs.done("fbrandgrid");
 });
 </script>
@@ -137,6 +141,9 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->ijinhaki->Visible) { // ijinhaki ?>
         <th data-name="ijinhaki" class="<?= $Grid->ijinhaki->headerCellClass() ?>"><div id="elh_brand_ijinhaki" class="brand_ijinhaki"><?= $Grid->renderSort($Grid->ijinhaki) ?></div></th>
+<?php } ?>
+<?php if ($Grid->ijinbpom->Visible) { // ijinbpom ?>
+        <th data-name="ijinbpom" class="<?= $Grid->ijinbpom->headerCellClass() ?>"><div id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Grid->renderSort($Grid->ijinbpom) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -457,6 +464,73 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->ijinbpom->Visible) { // ijinbpom ?>
+        <td data-name="ijinbpom" <?= $Grid->ijinbpom->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_ijinbpom" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_ijinbpom">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_ijinbpom" name="x<?= $Grid->RowIndex ?>_ijinbpom" id="x<?= $Grid->RowIndex ?>_ijinbpom"<?= $Grid->ijinbpom->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_ijinbpom" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_ijinbpom"
+    name="x<?= $Grid->RowIndex ?>_ijinbpom"
+    value="<?= HtmlEncode($Grid->ijinbpom->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_ijinbpom"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_ijinbpom"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->ijinbpom->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_ijinbpom"
+    data-value-separator="<?= $Grid->ijinbpom->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->ijinbpom->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ijinbpom->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="brand" data-field="x_ijinbpom" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ijinbpom" id="o<?= $Grid->RowIndex ?>_ijinbpom" value="<?= HtmlEncode($Grid->ijinbpom->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_ijinbpom" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_ijinbpom">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_ijinbpom" name="x<?= $Grid->RowIndex ?>_ijinbpom" id="x<?= $Grid->RowIndex ?>_ijinbpom"<?= $Grid->ijinbpom->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_ijinbpom" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_ijinbpom"
+    name="x<?= $Grid->RowIndex ?>_ijinbpom"
+    value="<?= HtmlEncode($Grid->ijinbpom->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_ijinbpom"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_ijinbpom"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->ijinbpom->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_ijinbpom"
+    data-value-separator="<?= $Grid->ijinbpom->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->ijinbpom->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ijinbpom->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_ijinbpom">
+<span<?= $Grid->ijinbpom->viewAttributes() ?>>
+<?= $Grid->ijinbpom->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="brand" data-field="x_ijinbpom" data-hidden="1" name="fbrandgrid$x<?= $Grid->RowIndex ?>_ijinbpom" id="fbrandgrid$x<?= $Grid->RowIndex ?>_ijinbpom" value="<?= HtmlEncode($Grid->ijinbpom->FormValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_ijinbpom" data-hidden="1" name="fbrandgrid$o<?= $Grid->RowIndex ?>_ijinbpom" id="fbrandgrid$o<?= $Grid->RowIndex ?>_ijinbpom" value="<?= HtmlEncode($Grid->ijinbpom->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -616,6 +690,43 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="brand" data-field="x_ijinhaki" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ijinhaki" id="x<?= $Grid->RowIndex ?>_ijinhaki" value="<?= HtmlEncode($Grid->ijinhaki->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="brand" data-field="x_ijinhaki" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ijinhaki" id="o<?= $Grid->RowIndex ?>_ijinhaki" value="<?= HtmlEncode($Grid->ijinhaki->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->ijinbpom->Visible) { // ijinbpom ?>
+        <td data-name="ijinbpom">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_brand_ijinbpom" class="form-group brand_ijinbpom">
+<template id="tp_x<?= $Grid->RowIndex ?>_ijinbpom">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_ijinbpom" name="x<?= $Grid->RowIndex ?>_ijinbpom" id="x<?= $Grid->RowIndex ?>_ijinbpom"<?= $Grid->ijinbpom->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_ijinbpom" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_ijinbpom"
+    name="x<?= $Grid->RowIndex ?>_ijinbpom"
+    value="<?= HtmlEncode($Grid->ijinbpom->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_ijinbpom"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_ijinbpom"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->ijinbpom->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_ijinbpom"
+    data-value-separator="<?= $Grid->ijinbpom->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->ijinbpom->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ijinbpom->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_brand_ijinbpom" class="form-group brand_ijinbpom">
+<span<?= $Grid->ijinbpom->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->ijinbpom->getDisplayValue($Grid->ijinbpom->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="brand" data-field="x_ijinbpom" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ijinbpom" id="x<?= $Grid->RowIndex ?>_ijinbpom" value="<?= HtmlEncode($Grid->ijinbpom->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="brand" data-field="x_ijinbpom" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ijinbpom" id="o<?= $Grid->RowIndex ?>_ijinbpom" value="<?= HtmlEncode($Grid->ijinbpom->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

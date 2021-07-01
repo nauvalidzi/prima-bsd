@@ -58,6 +58,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+    <?php if ($Page->SortUrl($Page->ijinbpom) == "") { ?>
+        <th class="<?= $Page->ijinbpom->headerCellClass() ?>"><?= $Page->ijinbpom->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->ijinbpom->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ijinbpom->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ijinbpom->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ijinbpom->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ijinbpom->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ijinbpom->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -114,6 +123,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->ijinhaki->cellAttributes() ?>>
 <span<?= $Page->ijinhaki->viewAttributes() ?>>
 <?= $Page->ijinhaki->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
+        <!-- ijinbpom -->
+        <td<?= $Page->ijinbpom->cellAttributes() ?>>
+<span<?= $Page->ijinbpom->viewAttributes() ?>>
+<?= $Page->ijinbpom->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

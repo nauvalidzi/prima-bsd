@@ -100,10 +100,10 @@ class DeliveryorderDetail extends DbTable
         $this->idorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idorder->Lookup = new Lookup('idorder', 'order', false, 'id', ["kode","","",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'v_order_aktif', false, 'idorder', ["kodeorder","tanggalorder","namacustomer",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idorder->Lookup = new Lookup('idorder', 'order', false, 'id', ["kode","","",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'v_order_aktif', false, 'idorder', ["kodeorder","tanggalorder","namacustomer",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
                 break;
         }
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1026,12 +1026,8 @@ SORTHTML;
         if ($curVal != "") {
             $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
             if ($this->idorder->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
