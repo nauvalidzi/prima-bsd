@@ -113,10 +113,8 @@ return [
     "laporansales" => \DI\create(Laporansales::class),
     "v_npd_customer" => \DI\create(VNpdCustomer::class),
     "order_pengembangan" => \DI\create(OrderPengembangan::class),
-    "v_invoice_not_sent" => \DI\create(VInvoiceNotSent::class),
-    "v_order_aktif" => \DI\create(VOrderAktif::class),
-    "v_invoice_not_created" => \DI\create(VInvoiceNotCreated::class),
-    "v_invoice_unpaid" => \DI\create(VInvoiceUnpaid::class),
+    "brand_link" => \DI\create(BrandLink::class),
+    "v_brand_link" => \DI\create(VBrandLink::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

@@ -2384,6 +2384,7 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
+        Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$rsnew['id']}, -1)");
     }
 
     // Row Updating event

@@ -1415,7 +1415,7 @@ class BrandGrid extends Brand
         $this->titipmerk->OldValue = $this->titipmerk->CurrentValue;
         $this->ijinhaki->CurrentValue = 0;
         $this->ijinhaki->OldValue = $this->ijinhaki->CurrentValue;
-        $this->ijinbpom->CurrentValue = null;
+        $this->ijinbpom->CurrentValue = 0;
         $this->ijinbpom->OldValue = $this->ijinbpom->CurrentValue;
         $this->aktaperusahaan->Upload->DbValue = null;
         $this->aktaperusahaan->OldValue = $this->aktaperusahaan->Upload->DbValue;

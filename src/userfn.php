@@ -434,3 +434,11 @@ function getNextKode($tipe, $id) {
    	}
    	return $kode;
 }
+
+function check_count_brand($idcustomer) {
+	$count = ExecuteScalar("SELECT COUNT(*) FROM brand_link WHERE idcustomer = {$idcustomer} AND idcustomer_brand = {$idcustomer}");
+	if ($count < 1) {
+		return true;
+	}
+	return false;
+}

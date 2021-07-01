@@ -658,8 +658,7 @@ class BrandAdd extends Brand
         $this->logo->CurrentValue = null; // Clear file related field
         $this->titipmerk->CurrentValue = 1;
         $this->ijinhaki->CurrentValue = 0;
-        $this->ijinbpom->CurrentValue = null;
-        $this->ijinbpom->OldValue = $this->ijinbpom->CurrentValue;
+        $this->ijinbpom->CurrentValue = 0;
         $this->aktaperusahaan->Upload->DbValue = null;
         $this->aktaperusahaan->OldValue = $this->aktaperusahaan->Upload->DbValue;
         $this->aktaperusahaan->CurrentValue = null; // Clear file related field

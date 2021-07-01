@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class PembayaranList extends Pembayaran
+class VBrandLinkList extends VBrandLink
 {
     use MessagesTrait;
 
@@ -18,16 +18,16 @@ class PembayaranList extends Pembayaran
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'pembayaran';
+    public $TableName = 'v_brand_link';
 
     // Page object name
-    public $PageObjName = "PembayaranList";
+    public $PageObjName = "VBrandLinkList";
 
     // Rendering View
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fpembayaranlist";
+    public $FormName = "fv_brand_linklist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -165,9 +165,9 @@ class PembayaranList extends Pembayaran
         // Parent constuctor
         parent::__construct();
 
-        // Table object (pembayaran)
-        if (!isset($GLOBALS["pembayaran"]) || get_class($GLOBALS["pembayaran"]) == PROJECT_NAMESPACE . "pembayaran") {
-            $GLOBALS["pembayaran"] = &$this;
+        // Table object (v_brand_link)
+        if (!isset($GLOBALS["v_brand_link"]) || get_class($GLOBALS["v_brand_link"]) == PROJECT_NAMESPACE . "v_brand_link") {
+            $GLOBALS["v_brand_link"] = &$this;
         }
 
         // Page URL
@@ -181,16 +181,16 @@ class PembayaranList extends Pembayaran
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "PembayaranAdd";
+        $this->AddUrl = "VBrandLinkAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "PembayaranDelete";
-        $this->MultiUpdateUrl = "PembayaranUpdate";
+        $this->MultiDeleteUrl = "VBrandLinkDelete";
+        $this->MultiUpdateUrl = "VBrandLinkUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'pembayaran');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'v_brand_link');
         }
 
         // Start timer
@@ -230,7 +230,7 @@ class PembayaranList extends Pembayaran
 
         // Filter options
         $this->FilterOptions = new ListOptions("div");
-        $this->FilterOptions->TagClassName = "ew-filter-option fpembayaranlistsrch";
+        $this->FilterOptions->TagClassName = "ew-filter-option fv_brand_linklistsrch";
 
         // List actions
         $this->ListActions = new ListActions();
@@ -305,7 +305,7 @@ class PembayaranList extends Pembayaran
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("pembayaran"));
+                $doc = new $class(Container("v_brand_link"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -568,18 +568,9 @@ class PembayaranList extends Pembayaran
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->Visible = false;
-        $this->kode->setVisibility();
-        $this->tanggal->setVisibility();
+        $this->id->setVisibility();
+        $this->title->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idinvoice->setVisibility();
-        $this->totaltagihan->Visible = false;
-        $this->sisatagihan->Visible = false;
-        $this->jumlahbayar->setVisibility();
-        $this->idtipepayment->Visible = false;
-        $this->bukti->Visible = false;
-        $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -607,9 +598,6 @@ class PembayaranList extends Pembayaran
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idinvoice);
-        $this->setupLookupOptions($this->idtipepayment);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -874,17 +862,8 @@ class PembayaranList extends Pembayaran
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
-        $filterList = Concat($filterList, $this->tanggal->AdvancedSearch->toJson(), ","); // Field tanggal
+        $filterList = Concat($filterList, $this->title->AdvancedSearch->toJson(), ","); // Field title
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
-        $filterList = Concat($filterList, $this->idinvoice->AdvancedSearch->toJson(), ","); // Field idinvoice
-        $filterList = Concat($filterList, $this->totaltagihan->AdvancedSearch->toJson(), ","); // Field totaltagihan
-        $filterList = Concat($filterList, $this->sisatagihan->AdvancedSearch->toJson(), ","); // Field sisatagihan
-        $filterList = Concat($filterList, $this->jumlahbayar->AdvancedSearch->toJson(), ","); // Field jumlahbayar
-        $filterList = Concat($filterList, $this->idtipepayment->AdvancedSearch->toJson(), ","); // Field idtipepayment
-        $filterList = Concat($filterList, $this->bukti->AdvancedSearch->toJson(), ","); // Field bukti
-        $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -906,7 +885,7 @@ class PembayaranList extends Pembayaran
         global $UserProfile;
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fpembayaranlistsrch", $filters);
+            $UserProfile->setSearchFilters(CurrentUserName(), "fv_brand_linklistsrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -933,21 +912,13 @@ class PembayaranList extends Pembayaran
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
 
-        // Field kode
-        $this->kode->AdvancedSearch->SearchValue = @$filter["x_kode"];
-        $this->kode->AdvancedSearch->SearchOperator = @$filter["z_kode"];
-        $this->kode->AdvancedSearch->SearchCondition = @$filter["v_kode"];
-        $this->kode->AdvancedSearch->SearchValue2 = @$filter["y_kode"];
-        $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
-        $this->kode->AdvancedSearch->save();
-
-        // Field tanggal
-        $this->tanggal->AdvancedSearch->SearchValue = @$filter["x_tanggal"];
-        $this->tanggal->AdvancedSearch->SearchOperator = @$filter["z_tanggal"];
-        $this->tanggal->AdvancedSearch->SearchCondition = @$filter["v_tanggal"];
-        $this->tanggal->AdvancedSearch->SearchValue2 = @$filter["y_tanggal"];
-        $this->tanggal->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal"];
-        $this->tanggal->AdvancedSearch->save();
+        // Field title
+        $this->title->AdvancedSearch->SearchValue = @$filter["x_title"];
+        $this->title->AdvancedSearch->SearchOperator = @$filter["z_title"];
+        $this->title->AdvancedSearch->SearchCondition = @$filter["v_title"];
+        $this->title->AdvancedSearch->SearchValue2 = @$filter["y_title"];
+        $this->title->AdvancedSearch->SearchOperator2 = @$filter["w_title"];
+        $this->title->AdvancedSearch->save();
 
         // Field idcustomer
         $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
@@ -956,70 +927,6 @@ class PembayaranList extends Pembayaran
         $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
         $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
         $this->idcustomer->AdvancedSearch->save();
-
-        // Field idinvoice
-        $this->idinvoice->AdvancedSearch->SearchValue = @$filter["x_idinvoice"];
-        $this->idinvoice->AdvancedSearch->SearchOperator = @$filter["z_idinvoice"];
-        $this->idinvoice->AdvancedSearch->SearchCondition = @$filter["v_idinvoice"];
-        $this->idinvoice->AdvancedSearch->SearchValue2 = @$filter["y_idinvoice"];
-        $this->idinvoice->AdvancedSearch->SearchOperator2 = @$filter["w_idinvoice"];
-        $this->idinvoice->AdvancedSearch->save();
-
-        // Field totaltagihan
-        $this->totaltagihan->AdvancedSearch->SearchValue = @$filter["x_totaltagihan"];
-        $this->totaltagihan->AdvancedSearch->SearchOperator = @$filter["z_totaltagihan"];
-        $this->totaltagihan->AdvancedSearch->SearchCondition = @$filter["v_totaltagihan"];
-        $this->totaltagihan->AdvancedSearch->SearchValue2 = @$filter["y_totaltagihan"];
-        $this->totaltagihan->AdvancedSearch->SearchOperator2 = @$filter["w_totaltagihan"];
-        $this->totaltagihan->AdvancedSearch->save();
-
-        // Field sisatagihan
-        $this->sisatagihan->AdvancedSearch->SearchValue = @$filter["x_sisatagihan"];
-        $this->sisatagihan->AdvancedSearch->SearchOperator = @$filter["z_sisatagihan"];
-        $this->sisatagihan->AdvancedSearch->SearchCondition = @$filter["v_sisatagihan"];
-        $this->sisatagihan->AdvancedSearch->SearchValue2 = @$filter["y_sisatagihan"];
-        $this->sisatagihan->AdvancedSearch->SearchOperator2 = @$filter["w_sisatagihan"];
-        $this->sisatagihan->AdvancedSearch->save();
-
-        // Field jumlahbayar
-        $this->jumlahbayar->AdvancedSearch->SearchValue = @$filter["x_jumlahbayar"];
-        $this->jumlahbayar->AdvancedSearch->SearchOperator = @$filter["z_jumlahbayar"];
-        $this->jumlahbayar->AdvancedSearch->SearchCondition = @$filter["v_jumlahbayar"];
-        $this->jumlahbayar->AdvancedSearch->SearchValue2 = @$filter["y_jumlahbayar"];
-        $this->jumlahbayar->AdvancedSearch->SearchOperator2 = @$filter["w_jumlahbayar"];
-        $this->jumlahbayar->AdvancedSearch->save();
-
-        // Field idtipepayment
-        $this->idtipepayment->AdvancedSearch->SearchValue = @$filter["x_idtipepayment"];
-        $this->idtipepayment->AdvancedSearch->SearchOperator = @$filter["z_idtipepayment"];
-        $this->idtipepayment->AdvancedSearch->SearchCondition = @$filter["v_idtipepayment"];
-        $this->idtipepayment->AdvancedSearch->SearchValue2 = @$filter["y_idtipepayment"];
-        $this->idtipepayment->AdvancedSearch->SearchOperator2 = @$filter["w_idtipepayment"];
-        $this->idtipepayment->AdvancedSearch->save();
-
-        // Field bukti
-        $this->bukti->AdvancedSearch->SearchValue = @$filter["x_bukti"];
-        $this->bukti->AdvancedSearch->SearchOperator = @$filter["z_bukti"];
-        $this->bukti->AdvancedSearch->SearchCondition = @$filter["v_bukti"];
-        $this->bukti->AdvancedSearch->SearchValue2 = @$filter["y_bukti"];
-        $this->bukti->AdvancedSearch->SearchOperator2 = @$filter["w_bukti"];
-        $this->bukti->AdvancedSearch->save();
-
-        // Field created_at
-        $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
-        $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
-        $this->created_at->AdvancedSearch->SearchCondition = @$filter["v_created_at"];
-        $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
-        $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
-        $this->created_at->AdvancedSearch->save();
-
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1028,8 +935,7 @@ class PembayaranList extends Pembayaran
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bukti, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->title, $arKeywords, $type);
         return $where;
     }
 
@@ -1192,11 +1098,9 @@ class PembayaranList extends Pembayaran
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->kode); // kode
-            $this->updateSort($this->tanggal); // tanggal
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->title); // title
             $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->idinvoice); // idinvoice
-            $this->updateSort($this->jumlahbayar); // jumlahbayar
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1206,14 +1110,10 @@ class PembayaranList extends Pembayaran
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`id` ASC";
+            $this->DefaultSort = "";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
-                if ($this->id->getSort() != "") {
-                    $useDefaultSort = false;
-                }
                 if ($useDefaultSort) {
-                    $this->id->setSort("ASC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -1241,17 +1141,8 @@ class PembayaranList extends Pembayaran
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->kode->setSort("");
-                $this->tanggal->setSort("");
+                $this->title->setSort("");
                 $this->idcustomer->setSort("");
-                $this->idinvoice->setSort("");
-                $this->totaltagihan->setSort("");
-                $this->sisatagihan->setSort("");
-                $this->jumlahbayar->setSort("");
-                $this->idtipepayment->setSort("");
-                $this->bukti->setSort("");
-                $this->created_at->setSort("");
-                $this->created_by->setSort("");
             }
 
             // Reset start position
@@ -1270,24 +1161,6 @@ class PembayaranList extends Pembayaran
         $item->Body = "";
         $item->OnLeft = false;
         $item->Visible = false;
-
-        // "view"
-        $item = &$this->ListOptions->add("view");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
-        $item->OnLeft = false;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -1331,32 +1204,7 @@ class PembayaranList extends Pembayaran
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") {
-            // "view"
-            $opt = $this->ListOptions["view"];
-            $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "edit"
-            $opt = $this->ListOptions["edit"];
-            $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "delete"
-            $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
-            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
+        if ($this->CurrentMode == "view") { // View mode
         } // End View mode
 
         // Set up list action buttons
@@ -1404,13 +1252,6 @@ class PembayaranList extends Pembayaran
     {
         global $Language, $Security;
         $options = &$this->OtherOptions;
-        $option = $options["addedit"];
-
-        // Add
-        $item = &$option->add("add");
-        $addcaption = HtmlTitle($Language->phrase("AddLink"));
-        $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
-        $item->Visible = $this->AddUrl != "" && $Security->canAdd();
         $option = $options["action"];
 
         // Set up options default
@@ -1428,10 +1269,10 @@ class PembayaranList extends Pembayaran
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fpembayaranlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fv_brand_linklistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fpembayaranlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fv_brand_linklistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1455,7 +1296,7 @@ class PembayaranList extends Pembayaran
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fpembayaranlist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
+                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fv_brand_linklist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1646,18 +1487,8 @@ class PembayaranList extends Pembayaran
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
-        $this->tanggal->setDbValue($row['tanggal']);
+        $this->title->setDbValue($row['title']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->idinvoice->setDbValue($row['idinvoice']);
-        $this->totaltagihan->setDbValue($row['totaltagihan']);
-        $this->sisatagihan->setDbValue($row['sisatagihan']);
-        $this->jumlahbayar->setDbValue($row['jumlahbayar']);
-        $this->idtipepayment->setDbValue($row['idtipepayment']);
-        $this->bukti->Upload->DbValue = $row['bukti'];
-        $this->bukti->setDbValue($this->bukti->Upload->DbValue);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
     }
 
     // Return a row with default values
@@ -1665,17 +1496,8 @@ class PembayaranList extends Pembayaran
     {
         $row = [];
         $row['id'] = null;
-        $row['kode'] = null;
-        $row['tanggal'] = null;
+        $row['title'] = null;
         $row['idcustomer'] = null;
-        $row['idinvoice'] = null;
-        $row['totaltagihan'] = null;
-        $row['sisatagihan'] = null;
-        $row['jumlahbayar'] = null;
-        $row['idtipepayment'] = null;
-        $row['bukti'] = null;
-        $row['created_at'] = null;
-        $row['created_by'] = null;
         return $row;
     }
 
@@ -1715,170 +1537,37 @@ class PembayaranList extends Pembayaran
 
         // id
 
-        // kode
-
-        // tanggal
+        // title
 
         // idcustomer
-
-        // idinvoice
-
-        // totaltagihan
-
-        // sisatagihan
-
-        // jumlahbayar
-
-        // idtipepayment
-
-        // bukti
-
-        // created_at
-
-        // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
-
-            // tanggal
-            $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
-            $this->tanggal->ViewCustomAttributes = "";
+            // title
+            $this->title->ViewValue = $this->title->CurrentValue;
+            $this->title->ViewCustomAttributes = "";
 
             // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // idinvoice
-            $curVal = trim(strval($this->idinvoice->CurrentValue));
-            if ($curVal != "") {
-                $this->idinvoice->ViewValue = $this->idinvoice->lookupCacheOption($curVal);
-                if ($this->idinvoice->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                        $this->idinvoice->ViewValue = $this->idinvoice->displayValue($arwrk);
-                    } else {
-                        $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idinvoice->ViewValue = null;
-            }
-            $this->idinvoice->ViewCustomAttributes = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
-            // totaltagihan
-            $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
-            $this->totaltagihan->ViewValue = FormatCurrency($this->totaltagihan->ViewValue, 2, -2, -2, -2);
-            $this->totaltagihan->ViewCustomAttributes = "";
-
-            // sisatagihan
-            $this->sisatagihan->ViewValue = $this->sisatagihan->CurrentValue;
-            $this->sisatagihan->ViewValue = FormatCurrency($this->sisatagihan->ViewValue, 2, -2, -2, -2);
-            $this->sisatagihan->ViewCustomAttributes = "";
-
-            // jumlahbayar
-            $this->jumlahbayar->ViewValue = $this->jumlahbayar->CurrentValue;
-            $this->jumlahbayar->ViewValue = FormatCurrency($this->jumlahbayar->ViewValue, 2, -2, -2, -2);
-            $this->jumlahbayar->ViewCustomAttributes = "";
-
-            // idtipepayment
-            $curVal = trim(strval($this->idtipepayment->CurrentValue));
-            if ($curVal != "") {
-                $this->idtipepayment->ViewValue = $this->idtipepayment->lookupCacheOption($curVal);
-                if ($this->idtipepayment->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idtipepayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idtipepayment->Lookup->renderViewRow($rswrk[0]);
-                        $this->idtipepayment->ViewValue = $this->idtipepayment->displayValue($arwrk);
-                    } else {
-                        $this->idtipepayment->ViewValue = $this->idtipepayment->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idtipepayment->ViewValue = null;
-            }
-            $this->idtipepayment->ViewCustomAttributes = "";
-
-            // bukti
-            if (!EmptyValue($this->bukti->Upload->DbValue)) {
-                $this->bukti->ViewValue = $this->bukti->Upload->DbValue;
-            } else {
-                $this->bukti->ViewValue = "";
-            }
-            $this->bukti->ViewCustomAttributes = "";
-
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
-
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
-
-            // tanggal
-            $this->tanggal->LinkCustomAttributes = "";
-            $this->tanggal->HrefValue = "";
-            $this->tanggal->TooltipValue = "";
+            // title
+            $this->title->LinkCustomAttributes = "";
+            $this->title->HrefValue = "";
+            $this->title->TooltipValue = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
-
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
-            $this->idinvoice->TooltipValue = "";
-
-            // jumlahbayar
-            $this->jumlahbayar->LinkCustomAttributes = "";
-            $this->jumlahbayar->HrefValue = "";
-            $this->jumlahbayar->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1898,7 +1587,7 @@ class PembayaranList extends Pembayaran
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fpembayaranlistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fv_brand_linklistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button
@@ -1926,16 +1615,6 @@ class PembayaranList extends Pembayaran
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -1959,20 +1638,6 @@ class PembayaranList extends Pembayaran
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idinvoice":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idtipepayment":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

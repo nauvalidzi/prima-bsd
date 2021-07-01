@@ -1723,6 +1723,10 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
+        $status = check_count_brand($rsnew['idcustomer']);
+        if ($status === true) {
+            Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$rsnew['idcustomer']}, {$rsnew['idcustomer']})");
+        }
     }
 
     // Row Updating event

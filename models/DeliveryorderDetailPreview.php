@@ -416,7 +416,6 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idorder_detail);
 
         // Load filter
@@ -744,8 +743,6 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idorder":
-                    break;
                 case "x_idorder_detail":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" ) ? "aktif = 1" : "";

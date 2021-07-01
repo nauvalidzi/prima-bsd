@@ -108,20 +108,10 @@ class Invoice extends DbTable
         $this->Fields['tglinvoice'] = &$this->tglinvoice;
 
         // idcustomer
-        $this->idcustomer = new DbField('invoice', 'invoice', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('invoice', 'invoice', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
-        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_invoice_not_created', false, 'idcustomer', ["kodeorder","tanggalorder","namacustomer",""], [], ["x_idorder"], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_invoice_not_created', false, 'idcustomer', ["kodeorder","tanggalorder","namacustomer",""], [], ["x_idorder"], [], [], [], [], '', '');
-                break;
-        }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->Fields['idcustomer'] = &$this->idcustomer;
@@ -1144,24 +1134,8 @@ SORTHTML;
         $this->tglinvoice->ViewCustomAttributes = "";
 
         // idcustomer
-        $curVal = trim(strval($this->idcustomer->CurrentValue));
-        if ($curVal != "") {
-            $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                    $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                }
-            }
-        } else {
-            $this->idcustomer->ViewValue = null;
-        }
+        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+        $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
         $this->idcustomer->ViewCustomAttributes = "";
 
         // idorder
@@ -1409,6 +1383,7 @@ SORTHTML;
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
+        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
         // idorder

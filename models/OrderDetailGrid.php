@@ -1677,11 +1677,7 @@ class OrderDetailGrid extends OrderDetail
                 $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
                 if ($this->idbrand->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -1810,11 +1806,7 @@ class OrderDetailGrid extends OrderDetail
                     $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
                     if ($this->idbrand->ViewValue === null) { // Lookup from database
                         $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $lookupFilter = function() {
-                            return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                        };
-                        $lookupFilter = $lookupFilter->bindTo($this);
-                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                         $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                         $ari = count($rswrk);
                         if ($ari > 0) { // Lookup values found
@@ -1843,11 +1835,7 @@ class OrderDetailGrid extends OrderDetail
                     } else {
                         $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
                     }
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     $arwrk = $rswrk;
@@ -1984,11 +1972,7 @@ class OrderDetailGrid extends OrderDetail
                     $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
                     if ($this->idbrand->ViewValue === null) { // Lookup from database
                         $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $lookupFilter = function() {
-                            return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                        };
-                        $lookupFilter = $lookupFilter->bindTo($this);
-                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                         $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                         $ari = count($rswrk);
                         if ($ari > 0) { // Lookup values found
@@ -2017,11 +2001,7 @@ class OrderDetailGrid extends OrderDetail
                     } else {
                         $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
                     }
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     $arwrk = $rswrk;
@@ -2602,10 +2582,6 @@ class OrderDetailGrid extends OrderDetail
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idbrand":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idproduct":
                     $lookupFilter = function () {

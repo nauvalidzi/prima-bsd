@@ -957,39 +957,21 @@ return function (App $app) {
         }
     );
 
-    // v_invoice_not_sent
-    $app->any('/VInvoiceNotSentList[/{idcustomer}]', VInvoiceNotSentController::class . ':list')->add(PermissionMiddleware::class)->setName('VInvoiceNotSentList-v_invoice_not_sent-list'); // list
+    // brand_link
+    $app->any('/BrandLinkList', BrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('BrandLinkList-brand_link-list'); // list
     $app->group(
-        '/v_invoice_not_sent',
+        '/brand_link',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idcustomer}]', VInvoiceNotSentController::class . ':list')->add(PermissionMiddleware::class)->setName('v_invoice_not_sent/list-v_invoice_not_sent-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '', BrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('brand_link/list-brand_link-list-2'); // list
         }
     );
 
-    // v_order_aktif
-    $app->any('/VOrderAktifList[/{idorder}/{idcustomer}]', VOrderAktifController::class . ':list')->add(PermissionMiddleware::class)->setName('VOrderAktifList-v_order_aktif-list'); // list
+    // v_brand_link
+    $app->any('/VBrandLinkList[/{id}]', VBrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('VBrandLinkList-v_brand_link-list'); // list
     $app->group(
-        '/v_order_aktif',
+        '/v_brand_link',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idorder}/{idcustomer}]', VOrderAktifController::class . ':list')->add(PermissionMiddleware::class)->setName('v_order_aktif/list-v_order_aktif-list-2'); // list
-        }
-    );
-
-    // v_invoice_not_created
-    $app->any('/VInvoiceNotCreatedList[/{idorder}/{idcustomer}]', VInvoiceNotCreatedController::class . ':list')->add(PermissionMiddleware::class)->setName('VInvoiceNotCreatedList-v_invoice_not_created-list'); // list
-    $app->group(
-        '/v_invoice_not_created',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idorder}/{idcustomer}]', VInvoiceNotCreatedController::class . ':list')->add(PermissionMiddleware::class)->setName('v_invoice_not_created/list-v_invoice_not_created-list-2'); // list
-        }
-    );
-
-    // v_invoice_unpaid
-    $app->any('/VInvoiceUnpaidList[/{idcustomer}]', VInvoiceUnpaidController::class . ':list')->add(PermissionMiddleware::class)->setName('VInvoiceUnpaidList-v_invoice_unpaid-list'); // list
-    $app->group(
-        '/v_invoice_unpaid',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idcustomer}]', VInvoiceUnpaidController::class . ':list')->add(PermissionMiddleware::class)->setName('v_invoice_unpaid/list-v_invoice_unpaid-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', VBrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('v_brand_link/list-v_brand_link-list-2'); // list
         }
     );
 

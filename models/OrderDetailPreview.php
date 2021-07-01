@@ -782,10 +782,6 @@ class OrderDetailPreview extends OrderDetail
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idbrand":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idproduct":
                     $lookupFilter = function () {

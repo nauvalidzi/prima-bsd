@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/7/1" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/7/2" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,17 +925,11 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2020 PT. Prima Visi Globalindo" />
-    <menu id="577">
-      <phrase id="menutext" value="v invoice unpaid" />
+    <menu id="580">
+      <phrase id="menutext" value="brand link" />
     </menu>
-    <menu id="576">
-      <phrase id="menutext" value="v invoice not created" />
-    </menu>
-    <menu id="574">
-      <phrase id="menutext" value="v invoice not sent" />
-    </menu>
-    <menu id="575">
-      <phrase id="menutext" value="v order aktif" />
+    <menu id="581">
+      <phrase id="menutext" value="v brand link" />
     </menu>
     <menu id="573">
       <phrase id="menutext" value="order pengembangan" />
@@ -3581,70 +3575,25 @@
         <phrase id="fldcaption" value="batal oleh" />
       </field>
     </table>
-    <table id="v_invoice_not_sent">
-      <phrase id="tblcaption" value="v invoice not sent" />
+    <table id="brand_link">
+      <phrase id="tblcaption" value="brand link" />
       <field id="idcustomer">
         <phrase id="fldcaption" value="idcustomer" />
       </field>
-      <field id="kodecustomer">
-        <phrase id="fldcaption" value="kodecustomer" />
-      </field>
-      <field id="namacustomer">
-        <phrase id="fldcaption" value="namacustomer" />
+      <field id="idcustomer_brand">
+        <phrase id="fldcaption" value="idcustomer brand" />
       </field>
     </table>
-    <table id="v_order_aktif">
-      <phrase id="tblcaption" value="v order aktif" />
-      <field id="idorder">
-        <phrase id="fldcaption" value="idorder" />
+    <table id="v_brand_link">
+      <phrase id="tblcaption" value="v brand link" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
       </field>
-      <field id="kodeorder">
-        <phrase id="fldcaption" value="kodeorder" />
-      </field>
-      <field id="idcustomer">
-        <phrase id="fldcaption" value="idcustomer" />
-      </field>
-      <field id="kodecustomer">
-        <phrase id="fldcaption" value="kodecustomer" />
-      </field>
-      <field id="namacustomer">
-        <phrase id="fldcaption" value="namacustomer" />
-      </field>
-      <field id="tanggalorder">
-        <phrase id="fldcaption" value="tanggalorder" />
-      </field>
-    </table>
-    <table id="v_invoice_not_created">
-      <phrase id="tblcaption" value="v invoice not created" />
-      <field id="idorder">
-        <phrase id="fldcaption" value="idorder" />
-      </field>
-      <field id="kodeorder">
-        <phrase id="fldcaption" value="kodeorder" />
-      </field>
-      <field id="tanggalorder">
-        <phrase id="fldcaption" value="tanggalorder" />
+      <field id="title">
+        <phrase id="fldcaption" value="title" />
       </field>
       <field id="idcustomer">
         <phrase id="fldcaption" value="idcustomer" />
-      </field>
-      <field id="kodecustomer">
-        <phrase id="fldcaption" value="kodecustomer" />
-      </field>
-      <field id="namacustomer">
-        <phrase id="fldcaption" value="namacustomer" />
-      </field>
-    </table>
-    <table id="v_invoice_unpaid">
-      <phrase id="tblcaption" value="v invoice unpaid" />
-      <field id="idcustomer">
-        <phrase id="fldcaption" value="idcustomer" />
-      </field>
-      <field id="kodecustomer">
-        <phrase id="fldcaption" value="kodecustomer" />
-      </field>
-      <field id="namacustomer">
-        <phrase id="fldcaption" value="namacustomer" />
       </field>
     </table>
   </project>

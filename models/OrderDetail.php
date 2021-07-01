@@ -105,10 +105,10 @@ class OrderDetail extends DbTable
         $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idbrand->Lookup = new Lookup('idbrand', 'v_brand_link', false, 'id', ["title","","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
             default:
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idbrand->Lookup = new Lookup('idbrand', 'v_brand_link', false, 'id', ["title","","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
         }
         $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1152,11 +1152,7 @@ SORTHTML;
             $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
             if ($this->idbrand->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
@@ -1352,11 +1348,7 @@ SORTHTML;
                 $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
                 if ($this->idbrand->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idcustomer=-1 OR created_by=".CurrentUserID()." OR created_by IN (SELECT id FROM pegawai WHERE pid=".CurrentUserID().")" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -1783,11 +1775,6 @@ SORTHTML;
     // Lookup Selecting event
     public function lookupSelecting($fld, &$filter)
     {
-    	//if ($fld->Name == "idbrand")
-    	//	$fld->Lookup->addOptions([
-        //        ["1", "Licoderma"]
-        //    ]);
-
         //var_dump($fld->Name, $fld->Lookup, $filter); // Uncomment to view the filter
         // Enter your code here
     }

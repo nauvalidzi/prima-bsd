@@ -22,7 +22,7 @@ loadjs.ready("head", function () {
     finvoiceadd.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tglinvoice", [fields.tglinvoice.visible && fields.tglinvoice.required ? ew.Validators.required(fields.tglinvoice.caption) : null, ew.Validators.datetime(0)], fields.tglinvoice.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null, ew.Validators.integer], fields.idcustomer.isInvalid],
         ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
         ["totalnonpajak", [fields.totalnonpajak.visible && fields.totalnonpajak.required ? ew.Validators.required(fields.totalnonpajak.caption) : null, ew.Validators.integer], fields.totalnonpajak.isInvalid],
         ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null, ew.Validators.float], fields.pajak.isInvalid],
@@ -100,7 +100,6 @@ loadjs.ready("head", function () {
     finvoiceadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    finvoiceadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     finvoiceadd.lists.idorder = <?= $Page->idorder->toClientList($Page) ?>;
     finvoiceadd.lists.idtermpayment = <?= $Page->idtermpayment->toClientList($Page) ?>;
     finvoiceadd.lists.idtipepayment = <?= $Page->idtipepayment->toClientList($Page) ?>;
@@ -162,31 +161,9 @@ loadjs.ready(["finvoiceadd", "datetimepicker"], function() {
         <label id="elh_invoice_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
 <span id="el_invoice_idcustomer">
-<?php $Page->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idcustomer"
-        name="x_idcustomer"
-        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
-        data-select2-id="invoice_x_idcustomer"
-        data-table="invoice"
-        data-field="x_idcustomer"
-        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
-        <?= $Page->idcustomer->editAttributes() ?>>
-        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
-    </select>
-    <?= $Page->idcustomer->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
-<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='invoice_x_idcustomer']"),
-        options = { name: "x_idcustomer", selectId: "invoice_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.invoice.fields.idcustomer.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Page->idcustomer->getInputTextType() ?>" data-table="invoice" data-field="x_idcustomer" name="x_idcustomer" id="x_idcustomer" size="30" placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>" value="<?= $Page->idcustomer->EditValue ?>"<?= $Page->idcustomer->editAttributes() ?> aria-describedby="x_idcustomer_help">
+<?= $Page->idcustomer->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

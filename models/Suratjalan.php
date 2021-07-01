@@ -117,10 +117,10 @@ class Suratjalan extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_invoice_not_sent', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idalamat_customer","suratjalan_detail x_idinvoice"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], ["x_idalamat_customer","suratjalan_detail x_idinvoice"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_invoice_not_sent', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idalamat_customer","suratjalan_detail x_idinvoice"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], ["x_idalamat_customer","suratjalan_detail x_idinvoice"], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1008,8 +1008,12 @@ SORTHTML;
         if ($curVal != "") {
             $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE sent = 0)" : "";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
@@ -1153,8 +1157,12 @@ SORTHTML;
         if ($curVal != "") {
             $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);
             if ($this->idcustomer->EditValue === null) { // Lookup from database
-                $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE sent = 0)" : "";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found

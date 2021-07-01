@@ -495,7 +495,6 @@ class InvoiceAdd extends Invoice
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idtermpayment);
         $this->setupLookupOptions($this->idtipepayment);
@@ -1003,24 +1002,8 @@ class InvoiceAdd extends Invoice
             $this->tglinvoice->ViewCustomAttributes = "";
 
             // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idorder
@@ -1214,28 +1197,7 @@ class InvoiceAdd extends Invoice
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            } else {
-                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`idcustomer`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                foreach ($arwrk as &$row)
-                    $row = $this->idcustomer->Lookup->renderViewRow($row);
-                $this->idcustomer->EditValue = $arwrk;
-            }
+            $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
             $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // idorder
@@ -1440,6 +1402,9 @@ class InvoiceAdd extends Invoice
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idcustomer->FormValue)) {
+            $this->idcustomer->addErrorMessage($this->idcustomer->getErrorMessage(false));
         }
         if ($this->idorder->Required) {
             if (!$this->idorder->IsDetailKey && EmptyValue($this->idorder->FormValue)) {
@@ -1710,8 +1675,6 @@ class InvoiceAdd extends Invoice
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
                 case "x_idorder":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "jumlah > 0" : "";
