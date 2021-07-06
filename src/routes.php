@@ -975,6 +975,15 @@ return function (App $app) {
         }
     );
 
+    // v_order_customer
+    $app->any('/VOrderCustomerList[/{idorder}/{idcustomer}]', VOrderCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('VOrderCustomerList-v_order_customer-list'); // list
+    $app->group(
+        '/v_order_customer',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{idorder}/{idcustomer}]', VOrderCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('v_order_customer/list-v_order_customer-list-2'); // list
+        }
+    );
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

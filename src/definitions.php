@@ -115,6 +115,7 @@ return [
     "order_pengembangan" => \DI\create(OrderPengembangan::class),
     "brand_link" => \DI\create(BrandLink::class),
     "v_brand_link" => \DI\create(VBrandLink::class),
+    "v_order_customer" => \DI\create(VOrderCustomer::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

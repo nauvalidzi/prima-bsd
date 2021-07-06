@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/7/2" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/7/6" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,6 +925,9 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2020 PT. Prima Visi Globalindo" />
+    <menu id="582">
+      <phrase id="menutext" value="v order customer" />
+    </menu>
     <menu id="580">
       <phrase id="menutext" value="brand link" />
     </menu>
@@ -3594,6 +3597,27 @@
       </field>
       <field id="idcustomer">
         <phrase id="fldcaption" value="idcustomer" />
+      </field>
+    </table>
+    <table id="v_order_customer">
+      <phrase id="tblcaption" value="v order customer" />
+      <field id="idorder">
+        <phrase id="fldcaption" value="idorder" />
+      </field>
+      <field id="kodeorder">
+        <phrase id="fldcaption" value="kodeorder" />
+      </field>
+      <field id="tanggalorder">
+        <phrase id="fldcaption" value="tanggalorder" />
+      </field>
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodecustomer">
+        <phrase id="fldcaption" value="kodecustomer" />
+      </field>
+      <field id="namacustomer">
+        <phrase id="fldcaption" value="namacustomer" />
       </field>
     </table>
   </project>

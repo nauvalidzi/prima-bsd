@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class DeliveryorderDetailList extends DeliveryorderDetail
+class VOrderCustomerList extends VOrderCustomer
 {
     use MessagesTrait;
 
@@ -18,16 +18,16 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'deliveryorder_detail';
+    public $TableName = 'v_order_customer';
 
     // Page object name
-    public $PageObjName = "DeliveryorderDetailList";
+    public $PageObjName = "VOrderCustomerList";
 
     // Rendering View
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fdeliveryorder_detaillist";
+    public $FormName = "fv_order_customerlist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -165,9 +165,9 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         // Parent constuctor
         parent::__construct();
 
-        // Table object (deliveryorder_detail)
-        if (!isset($GLOBALS["deliveryorder_detail"]) || get_class($GLOBALS["deliveryorder_detail"]) == PROJECT_NAMESPACE . "deliveryorder_detail") {
-            $GLOBALS["deliveryorder_detail"] = &$this;
+        // Table object (v_order_customer)
+        if (!isset($GLOBALS["v_order_customer"]) || get_class($GLOBALS["v_order_customer"]) == PROJECT_NAMESPACE . "v_order_customer") {
+            $GLOBALS["v_order_customer"] = &$this;
         }
 
         // Page URL
@@ -181,16 +181,16 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "DeliveryorderDetailAdd";
+        $this->AddUrl = "VOrderCustomerAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "DeliveryorderDetailDelete";
-        $this->MultiUpdateUrl = "DeliveryorderDetailUpdate";
+        $this->MultiDeleteUrl = "VOrderCustomerDelete";
+        $this->MultiUpdateUrl = "VOrderCustomerUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'deliveryorder_detail');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'v_order_customer');
         }
 
         // Start timer
@@ -230,7 +230,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // Filter options
         $this->FilterOptions = new ListOptions("div");
-        $this->FilterOptions->TagClassName = "ew-filter-option fdeliveryorder_detaillistsrch";
+        $this->FilterOptions->TagClassName = "ew-filter-option fv_order_customerlistsrch";
 
         // List actions
         $this->ListActions = new ListActions();
@@ -305,7 +305,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("deliveryorder_detail"));
+                $doc = new $class(Container("v_order_customer"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -426,7 +426,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['idorder'] . Config("COMPOSITE_KEY_SEPARATOR");
+            $key .= @$ar['idcustomer'];
         }
         return $key;
     }
@@ -439,7 +440,10 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->idorder->Visible = false;
+        }
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->idcustomer->Visible = false;
         }
     }
 
@@ -568,15 +572,12 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->Visible = false;
-        $this->iddeliveryorder->Visible = false;
         $this->idorder->setVisibility();
-        $this->idorder_detail->setVisibility();
-        $this->sisa->setVisibility();
-        $this->jumlahkirim->setVisibility();
-        $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
-        $this->readonly->Visible = false;
+        $this->kodeorder->setVisibility();
+        $this->tanggalorder->setVisibility();
+        $this->idcustomer->setVisibility();
+        $this->kodecustomer->setVisibility();
+        $this->namacustomer->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -586,9 +587,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         if (method_exists($this, "pageLoad")) {
             $this->pageLoad();
         }
-
-        // Set up master detail parameters
-        $this->setupMasterParms();
 
         // Setup other options
         $this->setupOtherOptions();
@@ -607,8 +605,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idorder);
-        $this->setupLookupOptions($this->idorder_detail);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -658,8 +654,33 @@ class DeliveryorderDetailList extends DeliveryorderDetail
                 $this->OtherOptions->hideAllOptions();
             }
 
+            // Get default search criteria
+            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+            // Get basic search values
+            $this->loadBasicSearchValues();
+
+            // Process filter list
+            if ($this->processFilterList()) {
+                $this->terminate();
+                return;
+            }
+
+            // Restore search parms from Session if not searching / reset / export
+            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+                $this->restoreSearchParms();
+            }
+
+            // Call Recordset SearchValidated event
+            $this->recordsetSearchValidated();
+
             // Set up sorting order
             $this->setupSortOrder();
+
+            // Get basic search criteria
+            if (!$this->hasInvalidFields()) {
+                $srchBasic = $this->basicSearchWhere();
+            }
         }
 
         // Restore display records
@@ -675,40 +696,38 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             $this->loadSortOrder();
         }
 
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms()) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere();
+            }
+        }
+
+        // Build search criteria
+        AddFilter($this->SearchWhere, $srchAdvanced);
+        AddFilter($this->SearchWhere, $srchBasic);
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json") {
+            $this->SearchWhere = $this->getSearchWhere();
+        }
+
         // Build filter
         $filter = "";
         if (!$Security->canList()) {
             $filter = "(0=1)"; // Filter all records
         }
-
-        // Restore master/detail filter
-        $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "deliveryorder") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "deliveryorder"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "deliveryorder") {
-            $masterTbl = Container("deliveryorder");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("DeliveryorderList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
 
         // Set up filter
         if ($this->Command == "json") {
@@ -841,6 +860,273 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        global $UserProfile;
+
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
+        $filterList = Concat($filterList, $this->kodeorder->AdvancedSearch->toJson(), ","); // Field kodeorder
+        $filterList = Concat($filterList, $this->tanggalorder->AdvancedSearch->toJson(), ","); // Field tanggalorder
+        $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
+        $filterList = Concat($filterList, $this->kodecustomer->AdvancedSearch->toJson(), ","); // Field kodecustomer
+        $filterList = Concat($filterList, $this->namacustomer->AdvancedSearch->toJson(), ","); // Field namacustomer
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        global $UserProfile;
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            $UserProfile->setSearchFilters(CurrentUserName(), "fv_order_customerlistsrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field idorder
+        $this->idorder->AdvancedSearch->SearchValue = @$filter["x_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator = @$filter["z_idorder"];
+        $this->idorder->AdvancedSearch->SearchCondition = @$filter["v_idorder"];
+        $this->idorder->AdvancedSearch->SearchValue2 = @$filter["y_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator2 = @$filter["w_idorder"];
+        $this->idorder->AdvancedSearch->save();
+
+        // Field kodeorder
+        $this->kodeorder->AdvancedSearch->SearchValue = @$filter["x_kodeorder"];
+        $this->kodeorder->AdvancedSearch->SearchOperator = @$filter["z_kodeorder"];
+        $this->kodeorder->AdvancedSearch->SearchCondition = @$filter["v_kodeorder"];
+        $this->kodeorder->AdvancedSearch->SearchValue2 = @$filter["y_kodeorder"];
+        $this->kodeorder->AdvancedSearch->SearchOperator2 = @$filter["w_kodeorder"];
+        $this->kodeorder->AdvancedSearch->save();
+
+        // Field tanggalorder
+        $this->tanggalorder->AdvancedSearch->SearchValue = @$filter["x_tanggalorder"];
+        $this->tanggalorder->AdvancedSearch->SearchOperator = @$filter["z_tanggalorder"];
+        $this->tanggalorder->AdvancedSearch->SearchCondition = @$filter["v_tanggalorder"];
+        $this->tanggalorder->AdvancedSearch->SearchValue2 = @$filter["y_tanggalorder"];
+        $this->tanggalorder->AdvancedSearch->SearchOperator2 = @$filter["w_tanggalorder"];
+        $this->tanggalorder->AdvancedSearch->save();
+
+        // Field idcustomer
+        $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
+        $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
+        $this->idcustomer->AdvancedSearch->SearchCondition = @$filter["v_idcustomer"];
+        $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
+        $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
+        $this->idcustomer->AdvancedSearch->save();
+
+        // Field kodecustomer
+        $this->kodecustomer->AdvancedSearch->SearchValue = @$filter["x_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchOperator = @$filter["z_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchCondition = @$filter["v_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchValue2 = @$filter["y_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchOperator2 = @$filter["w_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->save();
+
+        // Field namacustomer
+        $this->namacustomer->AdvancedSearch->SearchValue = @$filter["x_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchOperator = @$filter["z_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchCondition = @$filter["v_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchValue2 = @$filter["y_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchOperator2 = @$filter["w_namacustomer"];
+        $this->namacustomer->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Return basic search SQL
+    protected function basicSearchSql($arKeywords, $type)
+    {
+        $where = "";
+        $this->buildBasicSearchSql($where, $this->kodeorder, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kodecustomer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->namacustomer, $arKeywords, $type);
+        return $where;
+    }
+
+    // Build basic search SQL
+    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
+    {
+        $defCond = ($type == "OR") ? "OR" : "AND";
+        $arSql = []; // Array for SQL parts
+        $arCond = []; // Array for search conditions
+        $cnt = count($arKeywords);
+        $j = 0; // Number of SQL parts
+        for ($i = 0; $i < $cnt; $i++) {
+            $keyword = $arKeywords[$i];
+            $keyword = trim($keyword);
+            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
+                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
+                $ar = explode("\\", $keyword);
+            } else {
+                $ar = [$keyword];
+            }
+            foreach ($ar as $keyword) {
+                if ($keyword != "") {
+                    $wrk = "";
+                    if ($keyword == "OR" && $type == "") {
+                        if ($j > 0) {
+                            $arCond[$j - 1] = "OR";
+                        }
+                    } elseif ($keyword == Config("NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NULL";
+                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NOT NULL";
+                    } elseif ($fld->IsVirtual && $fld->Visible) {
+                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
+                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    }
+                    if ($wrk != "") {
+                        $arSql[$j] = $wrk;
+                        $arCond[$j] = $defCond;
+                        $j += 1;
+                    }
+                }
+            }
+        }
+        $cnt = count($arSql);
+        $quoted = false;
+        $sql = "";
+        if ($cnt > 0) {
+            for ($i = 0; $i < $cnt - 1; $i++) {
+                if ($arCond[$i] == "OR") {
+                    if (!$quoted) {
+                        $sql .= "(";
+                    }
+                    $quoted = true;
+                }
+                $sql .= $arSql[$i];
+                if ($quoted && $arCond[$i] != "OR") {
+                    $sql .= ")";
+                    $quoted = false;
+                }
+                $sql .= " " . $arCond[$i] . " ";
+            }
+            $sql .= $arSql[$cnt - 1];
+            if ($quoted) {
+                $sql .= ")";
+            }
+        }
+        if ($sql != "") {
+            if ($where != "") {
+                $where .= " OR ";
+            }
+            $where .= "(" . $sql . ")";
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    protected function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            // Search keyword in any fields
+            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
+                foreach ($ar as $keyword) {
+                    if ($keyword != "") {
+                        if ($searchStr != "") {
+                            $searchStr .= " " . $searchType . " ";
+                        }
+                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
+                    }
+                }
+            } else {
+                $searchStr = $this->basicSearchSql($ar, $searchType);
+            }
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -849,9 +1135,11 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->idorder); // idorder
-            $this->updateSort($this->idorder_detail); // idorder_detail
-            $this->updateSort($this->sisa); // sisa
-            $this->updateSort($this->jumlahkirim); // jumlahkirim
+            $this->updateSort($this->kodeorder); // kodeorder
+            $this->updateSort($this->tanggalorder); // tanggalorder
+            $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->kodecustomer); // kodecustomer
+            $this->updateSort($this->namacustomer); // namacustomer
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -882,27 +1170,21 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
-            // Reset master/detail keys
-            if ($this->Command == "resetall") {
-                $this->setCurrentMasterTable(""); // Clear master table
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-                        $this->iddeliveryorder->setSessionValue("");
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
             }
 
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
-                $this->iddeliveryorder->setSort("");
                 $this->idorder->setSort("");
-                $this->idorder_detail->setSort("");
-                $this->sisa->setSort("");
-                $this->jumlahkirim->setSort("");
-                $this->created_at->setSort("");
-                $this->created_by->setSort("");
-                $this->readonly->setSort("");
+                $this->kodeorder->setSort("");
+                $this->tanggalorder->setSort("");
+                $this->idcustomer->setSort("");
+                $this->kodecustomer->setSort("");
+                $this->namacustomer->setSort("");
             }
 
             // Reset start position
@@ -921,24 +1203,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $item->Body = "";
         $item->OnLeft = false;
         $item->Visible = false;
-
-        // "view"
-        $item = &$this->ListOptions->add("view");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
-        $item->OnLeft = false;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -982,32 +1246,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") {
-            // "view"
-            $opt = $this->ListOptions["view"];
-            $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "edit"
-            $opt = $this->ListOptions["edit"];
-            $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "delete"
-            $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
-            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
+        if ($this->CurrentMode == "view") { // View mode
         } // End View mode
 
         // Set up list action buttons
@@ -1043,7 +1282,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->idorder->CurrentValue . Config("COMPOSITE_KEY_SEPARATOR") . $this->idcustomer->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1055,13 +1294,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     {
         global $Language, $Security;
         $options = &$this->OtherOptions;
-        $option = $options["addedit"];
-
-        // Add
-        $item = &$option->add("add");
-        $addcaption = HtmlTitle($Language->phrase("AddLink"));
-        $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
-        $item->Visible = $this->AddUrl != "" && $Security->canAdd();
         $option = $options["action"];
 
         // Set up options default
@@ -1079,11 +1311,11 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fdeliveryorder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fv_order_customerlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fdeliveryorder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fv_order_customerlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1106,7 +1338,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fdeliveryorder_detaillist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
+                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fv_order_customerlist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1218,6 +1450,16 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         global $Security, $Language;
     }
 
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1286,30 +1528,24 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         if (!$rs) {
             return;
         }
-        $this->id->setDbValue($row['id']);
-        $this->iddeliveryorder->setDbValue($row['iddeliveryorder']);
         $this->idorder->setDbValue($row['idorder']);
-        $this->idorder_detail->setDbValue($row['idorder_detail']);
-        $this->sisa->setDbValue($row['sisa']);
-        $this->jumlahkirim->setDbValue($row['jumlahkirim']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
-        $this->readonly->setDbValue($row['readonly']);
+        $this->kodeorder->setDbValue($row['kodeorder']);
+        $this->tanggalorder->setDbValue($row['tanggalorder']);
+        $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kodecustomer->setDbValue($row['kodecustomer']);
+        $this->namacustomer->setDbValue($row['namacustomer']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['id'] = null;
-        $row['iddeliveryorder'] = null;
         $row['idorder'] = null;
-        $row['idorder_detail'] = null;
-        $row['sisa'] = null;
-        $row['jumlahkirim'] = null;
-        $row['created_at'] = null;
-        $row['created_by'] = null;
-        $row['readonly'] = null;
+        $row['kodeorder'] = null;
+        $row['tanggalorder'] = null;
+        $row['idcustomer'] = null;
+        $row['kodecustomer'] = null;
+        $row['namacustomer'] = null;
         return $row;
     }
 
@@ -1347,124 +1583,72 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // Common render codes for all row types
 
-        // id
-
-        // iddeliveryorder
-
         // idorder
 
-        // idorder_detail
+        // kodeorder
 
-        // sisa
+        // tanggalorder
 
-        // jumlahkirim
+        // idcustomer
 
-        // created_at
+        // kodecustomer
 
-        // created_by
-
-        // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
+        // namacustomer
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
-            $this->id->ViewCustomAttributes = "";
-
-            // iddeliveryorder
-            $this->iddeliveryorder->ViewValue = $this->iddeliveryorder->CurrentValue;
-            $this->iddeliveryorder->ViewValue = FormatNumber($this->iddeliveryorder->ViewValue, 0, -2, -2, -2);
-            $this->iddeliveryorder->ViewCustomAttributes = "";
-
             // idorder
-            $curVal = trim(strval($this->idorder->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-                if ($this->idorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                    } else {
-                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idorder->ViewValue = null;
-            }
+            $this->idorder->ViewValue = $this->idorder->CurrentValue;
             $this->idorder->ViewCustomAttributes = "";
 
-            // idorder_detail
-            $curVal = trim(strval($this->idorder_detail->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder_detail->ViewValue = $this->idorder_detail->lookupCacheOption($curVal);
-                if ($this->idorder_detail->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder_detail->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder_detail->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder_detail->ViewValue = $this->idorder_detail->displayValue($arwrk);
-                    } else {
-                        $this->idorder_detail->ViewValue = $this->idorder_detail->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idorder_detail->ViewValue = null;
-            }
-            $this->idorder_detail->ViewCustomAttributes = "";
+            // kodeorder
+            $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
+            $this->kodeorder->ViewCustomAttributes = "";
 
-            // sisa
-            $this->sisa->ViewValue = $this->sisa->CurrentValue;
-            $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
-            $this->sisa->ViewCustomAttributes = "";
+            // tanggalorder
+            $this->tanggalorder->ViewValue = $this->tanggalorder->CurrentValue;
+            $this->tanggalorder->ViewValue = FormatDateTime($this->tanggalorder->ViewValue, 0);
+            $this->tanggalorder->ViewCustomAttributes = "";
 
-            // jumlahkirim
-            $this->jumlahkirim->ViewValue = $this->jumlahkirim->CurrentValue;
-            $this->jumlahkirim->ViewValue = FormatNumber($this->jumlahkirim->ViewValue, 0, -2, -2, -2);
-            $this->jumlahkirim->ViewCustomAttributes = "";
+            // idcustomer
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+            $this->idcustomer->ViewCustomAttributes = "";
 
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
+            // kodecustomer
+            $this->kodecustomer->ViewValue = $this->kodecustomer->CurrentValue;
+            $this->kodecustomer->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // namacustomer
+            $this->namacustomer->ViewValue = $this->namacustomer->CurrentValue;
+            $this->namacustomer->ViewCustomAttributes = "";
 
             // idorder
             $this->idorder->LinkCustomAttributes = "";
             $this->idorder->HrefValue = "";
             $this->idorder->TooltipValue = "";
 
-            // idorder_detail
-            $this->idorder_detail->LinkCustomAttributes = "";
-            $this->idorder_detail->HrefValue = "";
-            $this->idorder_detail->TooltipValue = "";
+            // kodeorder
+            $this->kodeorder->LinkCustomAttributes = "";
+            $this->kodeorder->HrefValue = "";
+            $this->kodeorder->TooltipValue = "";
 
-            // sisa
-            $this->sisa->LinkCustomAttributes = "";
-            $this->sisa->HrefValue = "";
-            $this->sisa->TooltipValue = "";
+            // tanggalorder
+            $this->tanggalorder->LinkCustomAttributes = "";
+            $this->tanggalorder->HrefValue = "";
+            $this->tanggalorder->TooltipValue = "";
 
-            // jumlahkirim
-            $this->jumlahkirim->LinkCustomAttributes = "";
-            $this->jumlahkirim->HrefValue = "";
-            $this->jumlahkirim->TooltipValue = "";
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
+            // kodecustomer
+            $this->kodecustomer->LinkCustomAttributes = "";
+            $this->kodecustomer->HrefValue = "";
+            $this->kodecustomer->TooltipValue = "";
+
+            // namacustomer
+            $this->namacustomer->LinkCustomAttributes = "";
+            $this->namacustomer->HrefValue = "";
+            $this->namacustomer->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1480,6 +1664,17 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
+
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fv_order_customerlistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1499,91 +1694,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             $this->SearchOptions->hideAllOptions();
             $this->FilterOptions->hideAllOptions();
         }
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "deliveryorder") {
-                $validMaster = true;
-                $masterTbl = Container("deliveryorder");
-                if (($parm = Get("fk_id", Get("iddeliveryorder"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->iddeliveryorder->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->iddeliveryorder->setSessionValue($this->iddeliveryorder->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "deliveryorder") {
-                $validMaster = true;
-                $masterTbl = Container("deliveryorder");
-                if (($parm = Post("fk_id", Post("iddeliveryorder"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->iddeliveryorder->setFormValue($masterTbl->id->FormValue);
-                    $this->iddeliveryorder->setSessionValue($this->iddeliveryorder->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Update URL
-            $this->AddUrl = $this->addMasterUrl($this->AddUrl);
-            $this->InlineAddUrl = $this->addMasterUrl($this->InlineAddUrl);
-            $this->GridAddUrl = $this->addMasterUrl($this->GridAddUrl);
-            $this->GridEditUrl = $this->addMasterUrl($this->GridEditUrl);
-
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "deliveryorder") {
-                if ($this->iddeliveryorder->CurrentValue == "") {
-                    $this->iddeliveryorder->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
     }
 
     // Set up Breadcrumb
@@ -1609,18 +1719,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idorder":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idorder_detail":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -1769,10 +1867,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        if ($this->readonly->CurrentValue == 1) {
-        	$this->ListOptions->Items["edit"]->Body = "";
-        	$this->ListOptions->Items["delete"]->Body = "";
-        }
     }
 
     // Row Custom Action event

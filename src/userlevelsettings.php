@@ -200,7 +200,10 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}brand_link","1","288"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_brand_link","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_brand_link","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_brand_link","1","288"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_brand_link","1","288"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_order_customer","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_order_customer","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_order_customer","1","288"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Setting Users",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -265,4 +268,5 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["v_npd_customer","v_npd_customer","v npd customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VNpdCustomerList"],
     ["order_pengembangan","order_pengembangan","order pengembangan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","OrderPengembanganList"],
     ["brand_link","brand_link","brand link",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","BrandLinkList"],
-    ["v_brand_link","v_brand_link","v brand link",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VBrandLinkList"]];
+    ["v_brand_link","v_brand_link","v brand link",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VBrandLinkList"],
+    ["v_order_customer","v_order_customer","v order customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VOrderCustomerList"]];

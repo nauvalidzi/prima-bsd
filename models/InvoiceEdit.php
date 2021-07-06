@@ -498,6 +498,7 @@ class InvoiceEdit extends Invoice
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idtermpayment);
         $this->setupLookupOptions($this->idtipepayment);
@@ -964,8 +965,28 @@ class InvoiceEdit extends Invoice
             $this->tglinvoice->ViewCustomAttributes = "";
 
             // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idcustomer->ViewValue = null;
+            }
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idorder
@@ -1508,6 +1529,12 @@ class InvoiceEdit extends Invoice
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
                 case "x_idorder":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "jumlah > 0" : "";

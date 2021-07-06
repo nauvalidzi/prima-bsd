@@ -5,9 +5,9 @@ namespace PHPMaker2021\distributor;
 use Doctrine\DBAL\ParameterType;
 
 /**
- * Table class for deliveryorder_detail
+ * Table class for v_order_customer
  */
-class DeliveryorderDetail extends DbTable
+class VOrderCustomer extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -28,15 +28,12 @@ class DeliveryorderDetail extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $id;
-    public $iddeliveryorder;
     public $idorder;
-    public $idorder_detail;
-    public $sisa;
-    public $jumlahkirim;
-    public $created_at;
-    public $created_by;
-    public $readonly;
+    public $kodeorder;
+    public $tanggalorder;
+    public $idcustomer;
+    public $kodecustomer;
+    public $namacustomer;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -49,12 +46,12 @@ class DeliveryorderDetail extends DbTable
 
         // Language object
         $Language = Container("language");
-        $this->TableVar = 'deliveryorder_detail';
-        $this->TableName = 'deliveryorder_detail';
-        $this->TableType = 'TABLE';
+        $this->TableVar = 'v_order_customer';
+        $this->TableName = 'v_order_customer';
+        $this->TableType = 'VIEW';
 
         // Update Table
-        $this->UpdateTable = "`deliveryorder_detail`";
+        $this->UpdateTable = "`v_order_customer`";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -64,110 +61,65 @@ class DeliveryorderDetail extends DbTable
         $this->ExportExcelPageSize = ""; // Page size (PhpSpreadsheet only)
         $this->ExportWordPageOrientation = "portrait"; // Page orientation (PHPWord only)
         $this->ExportWordColumnWidth = null; // Cell width (PHPWord only)
-        $this->DetailAdd = true; // Allow detail add
+        $this->DetailAdd = false; // Allow detail add
         $this->DetailEdit = false; // Allow detail edit
         $this->DetailView = false; // Allow detail view
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // id
-        $this->id = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Sortable = true; // Allow sort
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
-        $this->Fields['id'] = &$this->id;
-
-        // iddeliveryorder
-        $this->iddeliveryorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_iddeliveryorder', 'iddeliveryorder', '`iddeliveryorder`', '`iddeliveryorder`', 3, 11, -1, false, '`iddeliveryorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->iddeliveryorder->IsForeignKey = true; // Foreign key field
-        $this->iddeliveryorder->Nullable = false; // NOT NULL field
-        $this->iddeliveryorder->Required = true; // Required field
-        $this->iddeliveryorder->Sortable = true; // Allow sort
-        $this->iddeliveryorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->iddeliveryorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->iddeliveryorder->Param, "CustomMsg");
-        $this->Fields['iddeliveryorder'] = &$this->iddeliveryorder;
-
         // idorder
-        $this->idorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idorder->Nullable = false; // NOT NULL field
-        $this->idorder->Required = true; // Required field
+        $this->idorder = new DbField('v_order_customer', 'v_order_customer', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idorder->IsAutoIncrement = true; // Autoincrement field
+        $this->idorder->IsPrimaryKey = true; // Primary key field
         $this->idorder->Sortable = true; // Allow sort
-        $this->idorder->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idorder->Lookup = new Lookup('idorder', 'v_order_customer', false, 'idorder', ["kodeorder","namacustomer","",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idorder->Lookup = new Lookup('idorder', 'v_order_customer', false, 'idorder', ["kodeorder","namacustomer","",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
-                break;
-        }
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
         $this->Fields['idorder'] = &$this->idorder;
 
-        // idorder_detail
-        $this->idorder_detail = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 3, 11, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idorder_detail->Nullable = false; // NOT NULL field
-        $this->idorder_detail->Required = true; // Required field
-        $this->idorder_detail->Sortable = true; // Allow sort
-        $this->idorder_detail->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idorder_detail->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idorder_detail->Lookup = new Lookup('idorder_detail', 'v_orderdetail', false, 'id', ["nama","","",""], ["x_idorder"], [], ["idorder"], ["x_idorder"], ["sisa"], ["x_sisa"], '', '');
-                break;
-            default:
-                $this->idorder_detail->Lookup = new Lookup('idorder_detail', 'v_orderdetail', false, 'id', ["nama","","",""], ["x_idorder"], [], ["idorder"], ["x_idorder"], ["sisa"], ["x_sisa"], '', '');
-                break;
-        }
-        $this->idorder_detail->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idorder_detail->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder_detail->Param, "CustomMsg");
-        $this->Fields['idorder_detail'] = &$this->idorder_detail;
+        // kodeorder
+        $this->kodeorder = new DbField('v_order_customer', 'v_order_customer', 'x_kodeorder', 'kodeorder', '`kodeorder`', '`kodeorder`', 200, 50, -1, false, '`kodeorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodeorder->Nullable = false; // NOT NULL field
+        $this->kodeorder->Required = true; // Required field
+        $this->kodeorder->Sortable = true; // Allow sort
+        $this->kodeorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeorder->Param, "CustomMsg");
+        $this->Fields['kodeorder'] = &$this->kodeorder;
 
-        // sisa
-        $this->sisa = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_sisa', 'sisa', '`sisa`', '`sisa`', 3, 11, -1, false, '`sisa`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->sisa->Nullable = false; // NOT NULL field
-        $this->sisa->Required = true; // Required field
-        $this->sisa->Sortable = true; // Allow sort
-        $this->sisa->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->sisa->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisa->Param, "CustomMsg");
-        $this->Fields['sisa'] = &$this->sisa;
+        // tanggalorder
+        $this->tanggalorder = new DbField('v_order_customer', 'v_order_customer', 'x_tanggalorder', 'tanggalorder', '`tanggalorder`', CastDateFieldForLike("`tanggalorder`", 0, "DB"), 135, 19, 0, false, '`tanggalorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tanggalorder->Nullable = false; // NOT NULL field
+        $this->tanggalorder->Required = true; // Required field
+        $this->tanggalorder->Sortable = true; // Allow sort
+        $this->tanggalorder->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tanggalorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggalorder->Param, "CustomMsg");
+        $this->Fields['tanggalorder'] = &$this->tanggalorder;
 
-        // jumlahkirim
-        $this->jumlahkirim = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_jumlahkirim', 'jumlahkirim', '`jumlahkirim`', '`jumlahkirim`', 3, 11, -1, false, '`jumlahkirim`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jumlahkirim->Nullable = false; // NOT NULL field
-        $this->jumlahkirim->Required = true; // Required field
-        $this->jumlahkirim->Sortable = true; // Allow sort
-        $this->jumlahkirim->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->jumlahkirim->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahkirim->Param, "CustomMsg");
-        $this->Fields['jumlahkirim'] = &$this->jumlahkirim;
+        // idcustomer
+        $this->idcustomer = new DbField('v_order_customer', 'v_order_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
+        $this->idcustomer->IsPrimaryKey = true; // Primary key field
+        $this->idcustomer->Sortable = true; // Allow sort
+        $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
+        $this->Fields['idcustomer'] = &$this->idcustomer;
 
-        // created_at
-        $this->created_at = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->created_at->Sortable = true; // Allow sort
-        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
-        $this->Fields['created_at'] = &$this->created_at;
+        // kodecustomer
+        $this->kodecustomer = new DbField('v_order_customer', 'v_order_customer', 'x_kodecustomer', 'kodecustomer', '`kodecustomer`', '`kodecustomer`', 200, 20, -1, false, '`kodecustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodecustomer->Nullable = false; // NOT NULL field
+        $this->kodecustomer->Required = true; // Required field
+        $this->kodecustomer->Sortable = true; // Allow sort
+        $this->kodecustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodecustomer->Param, "CustomMsg");
+        $this->Fields['kodecustomer'] = &$this->kodecustomer;
 
-        // created_by
-        $this->created_by = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
-
-        // readonly
-        $this->readonly = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->readonly->Nullable = false; // NOT NULL field
-        $this->readonly->Sortable = false; // Allow sort
-        $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
-        $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
-        $this->Fields['readonly'] = &$this->readonly;
+        // namacustomer
+        $this->namacustomer = new DbField('v_order_customer', 'v_order_customer', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 100, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namacustomer->Nullable = false; // NOT NULL field
+        $this->namacustomer->Required = true; // Required field
+        $this->namacustomer->Sortable = true; // Allow sort
+        $this->namacustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namacustomer->Param, "CustomMsg");
+        $this->Fields['namacustomer'] = &$this->namacustomer;
     }
 
     // Field Visibility
@@ -207,62 +159,10 @@ class DeliveryorderDetail extends DbTable
         }
     }
 
-    // Current master table name
-    public function getCurrentMasterTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
-    }
-
-    public function setCurrentMasterTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
-    }
-
-    // Session master WHERE clause
-    public function getMasterFilter()
-    {
-        // Master filter
-        $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "deliveryorder") {
-            if ($this->iddeliveryorder->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->iddeliveryorder->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $masterFilter;
-    }
-
-    // Session detail WHERE clause
-    public function getDetailFilter()
-    {
-        // Detail filter
-        $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "deliveryorder") {
-            if ($this->iddeliveryorder->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`iddeliveryorder`", $this->iddeliveryorder->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_deliveryorder()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_deliveryorder()
-    {
-        return "`iddeliveryorder`=@iddeliveryorder@";
-    }
-
     // Table level SQL
     public function getSqlFrom() // From
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "`deliveryorder_detail`";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "`v_order_customer`";
     }
 
     public function sqlFrom() // For backward compatibility
@@ -356,11 +256,6 @@ class DeliveryorderDetail extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -552,8 +447,12 @@ class DeliveryorderDetail extends DbTable
         $success = $this->insertSql($rs)->execute();
         if ($success) {
             // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
+            $this->idorder->setDbValue($conn->lastInsertId());
+            $rs['idorder'] = $this->idorder->DbValue;
+
+            // Get insert id if necessary
+            $this->idcustomer->setDbValue($conn->lastInsertId());
+            $rs['idcustomer'] = $this->idcustomer->DbValue;
         }
         return $success;
     }
@@ -613,8 +512,11 @@ class DeliveryorderDetail extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('idorder', $rs)) {
+                AddFilter($where, QuotedName('idorder', $this->Dbid) . '=' . QuotedValue($rs['idorder'], $this->idorder->DataType, $this->Dbid));
+            }
+            if (array_key_exists('idcustomer', $rs)) {
+                AddFilter($where, QuotedName('idcustomer', $this->Dbid) . '=' . QuotedValue($rs['idcustomer'], $this->idcustomer->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -638,15 +540,12 @@ class DeliveryorderDetail extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
-        $this->iddeliveryorder->DbValue = $row['iddeliveryorder'];
         $this->idorder->DbValue = $row['idorder'];
-        $this->idorder_detail->DbValue = $row['idorder_detail'];
-        $this->sisa->DbValue = $row['sisa'];
-        $this->jumlahkirim->DbValue = $row['jumlahkirim'];
-        $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
-        $this->readonly->DbValue = $row['readonly'];
+        $this->kodeorder->DbValue = $row['kodeorder'];
+        $this->tanggalorder->DbValue = $row['tanggalorder'];
+        $this->idcustomer->DbValue = $row['idcustomer'];
+        $this->kodecustomer->DbValue = $row['kodecustomer'];
+        $this->namacustomer->DbValue = $row['namacustomer'];
     }
 
     // Delete uploaded files
@@ -658,14 +557,20 @@ class DeliveryorderDetail extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`idorder` = @idorder@ AND `idcustomer` = @idcustomer@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->idorder->CurrentValue : $this->idorder->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
+        $val = $current ? $this->idcustomer->CurrentValue : $this->idcustomer->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -679,11 +584,16 @@ class DeliveryorderDetail extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
+        if (count($keys) == 2) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->idorder->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->idorder->OldValue = $keys[0];
+            }
+            if ($current) {
+                $this->idcustomer->CurrentValue = $keys[1];
+            } else {
+                $this->idcustomer->OldValue = $keys[1];
             }
         }
     }
@@ -693,9 +603,9 @@ class DeliveryorderDetail extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('idorder', $row) ? $row['idorder'] : null;
         } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+            $val = $this->idorder->OldValue !== null ? $this->idorder->OldValue : $this->idorder->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -703,7 +613,20 @@ class DeliveryorderDetail extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@idorder@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
+        if (is_array($row)) {
+            $val = array_key_exists('idcustomer', $row) ? $row['idcustomer'] : null;
+        } else {
+            $val = $this->idcustomer->OldValue !== null ? $this->idcustomer->OldValue : $this->idcustomer->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@idcustomer@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -718,7 +641,7 @@ class DeliveryorderDetail extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("DeliveryorderDetailList");
+        return $_SESSION[$name] ?? GetUrl("VOrderCustomerList");
     }
 
     // Set return page URL
@@ -731,11 +654,11 @@ class DeliveryorderDetail extends DbTable
     public function getModalCaption($pageName)
     {
         global $Language;
-        if ($pageName == "DeliveryorderDetailView") {
+        if ($pageName == "VOrderCustomerView") {
             return $Language->phrase("View");
-        } elseif ($pageName == "DeliveryorderDetailEdit") {
+        } elseif ($pageName == "VOrderCustomerEdit") {
             return $Language->phrase("Edit");
-        } elseif ($pageName == "DeliveryorderDetailAdd") {
+        } elseif ($pageName == "VOrderCustomerAdd") {
             return $Language->phrase("Add");
         } else {
             return "";
@@ -747,15 +670,15 @@ class DeliveryorderDetail extends DbTable
     {
         switch (strtolower($action)) {
             case Config("API_VIEW_ACTION"):
-                return "DeliveryorderDetailView";
+                return "VOrderCustomerView";
             case Config("API_ADD_ACTION"):
-                return "DeliveryorderDetailAdd";
+                return "VOrderCustomerAdd";
             case Config("API_EDIT_ACTION"):
-                return "DeliveryorderDetailEdit";
+                return "VOrderCustomerEdit";
             case Config("API_DELETE_ACTION"):
-                return "DeliveryorderDetailDelete";
+                return "VOrderCustomerDelete";
             case Config("API_LIST_ACTION"):
-                return "DeliveryorderDetailList";
+                return "VOrderCustomerList";
             default:
                 return "";
         }
@@ -764,16 +687,16 @@ class DeliveryorderDetail extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "DeliveryorderDetailList";
+        return "VOrderCustomerList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("DeliveryorderDetailView", $this->getUrlParm($parm));
+            $url = $this->keyUrl("VOrderCustomerView", $this->getUrlParm($parm));
         } else {
-            $url = $this->keyUrl("DeliveryorderDetailView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+            $url = $this->keyUrl("VOrderCustomerView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
         }
         return $this->addMasterUrl($url);
     }
@@ -782,9 +705,9 @@ class DeliveryorderDetail extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "DeliveryorderDetailAdd?" . $this->getUrlParm($parm);
+            $url = "VOrderCustomerAdd?" . $this->getUrlParm($parm);
         } else {
-            $url = "DeliveryorderDetailAdd";
+            $url = "VOrderCustomerAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -792,7 +715,7 @@ class DeliveryorderDetail extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("DeliveryorderDetailEdit", $this->getUrlParm($parm));
+        $url = $this->keyUrl("VOrderCustomerEdit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -806,7 +729,7 @@ class DeliveryorderDetail extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("DeliveryorderDetailAdd", $this->getUrlParm($parm));
+        $url = $this->keyUrl("VOrderCustomerAdd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -820,23 +743,20 @@ class DeliveryorderDetail extends DbTable
     // Delete URL
     public function getDeleteUrl()
     {
-        return $this->keyUrl("DeliveryorderDetailDelete", $this->getUrlParm());
+        return $this->keyUrl("VOrderCustomerDelete", $this->getUrlParm());
     }
 
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "deliveryorder" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->iddeliveryorder->CurrentValue ?? $this->iddeliveryorder->getSessionValue());
-        }
         return $url;
     }
 
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
+        $json .= "idorder:" . JsonEncode($this->idorder->CurrentValue, "number");
+        $json .= ",idcustomer:" . JsonEncode($this->idcustomer->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -847,8 +767,13 @@ class DeliveryorderDetail extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->id->CurrentValue);
+        if ($this->idorder->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idorder->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
+        if ($this->idcustomer->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idcustomer->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -909,13 +834,26 @@ SORTHTML;
         if (Param("key_m") !== null) {
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
+            for ($i = 0; $i < $cnt; $i++) {
+                $arKeys[$i] = explode(Config("COMPOSITE_KEY_SEPARATOR"), $arKeys[$i]);
+            }
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
-                $arKeys[] = $keyValue;
+            if (($keyValue = Param("idorder") ?? Route("idorder")) !== null) {
+                $arKey[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
+                $arKey[] = $keyValue;
             } else {
                 $arKeys = null; // Do not setup
+            }
+            if (($keyValue = Param("idcustomer") ?? Route("idcustomer")) !== null) {
+                $arKey[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(1) ?? Route(3)) !== null)) {
+                $arKey[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+            if (is_array($arKeys)) {
+                $arKeys[] = $arKey;
             }
 
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
@@ -924,7 +862,13 @@ SORTHTML;
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
+                if (!is_array($key) || count($key) != 2) {
+                    continue; // Just skip so other keys will still work
+                }
+                if (!is_numeric($key[0])) { // idorder
+                    continue;
+                }
+                if (!is_numeric($key[1])) { // idcustomer
                     continue;
                 }
                 $ar[] = $key;
@@ -943,9 +887,14 @@ SORTHTML;
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->idorder->CurrentValue = $key[0];
             } else {
-                $this->id->OldValue = $key;
+                $this->idorder->OldValue = $key[0];
+            }
+            if ($setCurrent) {
+                $this->idcustomer->CurrentValue = $key[1];
+            } else {
+                $this->idcustomer->OldValue = $key[1];
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -971,15 +920,12 @@ SORTHTML;
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
-        $this->iddeliveryorder->setDbValue($row['iddeliveryorder']);
         $this->idorder->setDbValue($row['idorder']);
-        $this->idorder_detail->setDbValue($row['idorder_detail']);
-        $this->sisa->setDbValue($row['sisa']);
-        $this->jumlahkirim->setDbValue($row['jumlahkirim']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
-        $this->readonly->setDbValue($row['readonly']);
+        $this->kodeorder->setDbValue($row['kodeorder']);
+        $this->tanggalorder->setDbValue($row['tanggalorder']);
+        $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kodecustomer->setDbValue($row['kodecustomer']);
+        $this->namacustomer->setDbValue($row['namacustomer']);
     }
 
     // Render list row values
@@ -992,153 +938,72 @@ SORTHTML;
 
         // Common render codes
 
-        // id
-
-        // iddeliveryorder
-
         // idorder
 
-        // idorder_detail
+        // kodeorder
 
-        // sisa
+        // tanggalorder
 
-        // jumlahkirim
+        // idcustomer
 
-        // created_at
+        // kodecustomer
 
-        // created_by
-
-        // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
-
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
-        $this->id->ViewCustomAttributes = "";
-
-        // iddeliveryorder
-        $this->iddeliveryorder->ViewValue = $this->iddeliveryorder->CurrentValue;
-        $this->iddeliveryorder->ViewValue = FormatNumber($this->iddeliveryorder->ViewValue, 0, -2, -2, -2);
-        $this->iddeliveryorder->ViewCustomAttributes = "";
+        // namacustomer
 
         // idorder
-        $curVal = trim(strval($this->idorder->CurrentValue));
-        if ($curVal != "") {
-            $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-            if ($this->idorder->ViewValue === null) { // Lookup from database
-                $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                    $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                } else {
-                    $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                }
-            }
-        } else {
-            $this->idorder->ViewValue = null;
-        }
+        $this->idorder->ViewValue = $this->idorder->CurrentValue;
         $this->idorder->ViewCustomAttributes = "";
 
-        // idorder_detail
-        $curVal = trim(strval($this->idorder_detail->CurrentValue));
-        if ($curVal != "") {
-            $this->idorder_detail->ViewValue = $this->idorder_detail->lookupCacheOption($curVal);
-            if ($this->idorder_detail->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idorder_detail->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idorder_detail->Lookup->renderViewRow($rswrk[0]);
-                    $this->idorder_detail->ViewValue = $this->idorder_detail->displayValue($arwrk);
-                } else {
-                    $this->idorder_detail->ViewValue = $this->idorder_detail->CurrentValue;
-                }
-            }
-        } else {
-            $this->idorder_detail->ViewValue = null;
-        }
-        $this->idorder_detail->ViewCustomAttributes = "";
+        // kodeorder
+        $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
+        $this->kodeorder->ViewCustomAttributes = "";
 
-        // sisa
-        $this->sisa->ViewValue = $this->sisa->CurrentValue;
-        $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
-        $this->sisa->ViewCustomAttributes = "";
+        // tanggalorder
+        $this->tanggalorder->ViewValue = $this->tanggalorder->CurrentValue;
+        $this->tanggalorder->ViewValue = FormatDateTime($this->tanggalorder->ViewValue, 0);
+        $this->tanggalorder->ViewCustomAttributes = "";
 
-        // jumlahkirim
-        $this->jumlahkirim->ViewValue = $this->jumlahkirim->CurrentValue;
-        $this->jumlahkirim->ViewValue = FormatNumber($this->jumlahkirim->ViewValue, 0, -2, -2, -2);
-        $this->jumlahkirim->ViewCustomAttributes = "";
+        // idcustomer
+        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+        $this->idcustomer->ViewCustomAttributes = "";
 
-        // created_at
-        $this->created_at->ViewValue = $this->created_at->CurrentValue;
-        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-        $this->created_at->ViewCustomAttributes = "";
+        // kodecustomer
+        $this->kodecustomer->ViewValue = $this->kodecustomer->CurrentValue;
+        $this->kodecustomer->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
-
-        // readonly
-        $this->readonly->ViewValue = $this->readonly->CurrentValue;
-        $this->readonly->ViewCustomAttributes = "";
-
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
-
-        // iddeliveryorder
-        $this->iddeliveryorder->LinkCustomAttributes = "";
-        $this->iddeliveryorder->HrefValue = "";
-        $this->iddeliveryorder->TooltipValue = "";
+        // namacustomer
+        $this->namacustomer->ViewValue = $this->namacustomer->CurrentValue;
+        $this->namacustomer->ViewCustomAttributes = "";
 
         // idorder
         $this->idorder->LinkCustomAttributes = "";
         $this->idorder->HrefValue = "";
         $this->idorder->TooltipValue = "";
 
-        // idorder_detail
-        $this->idorder_detail->LinkCustomAttributes = "";
-        $this->idorder_detail->HrefValue = "";
-        $this->idorder_detail->TooltipValue = "";
+        // kodeorder
+        $this->kodeorder->LinkCustomAttributes = "";
+        $this->kodeorder->HrefValue = "";
+        $this->kodeorder->TooltipValue = "";
 
-        // sisa
-        $this->sisa->LinkCustomAttributes = "";
-        $this->sisa->HrefValue = "";
-        $this->sisa->TooltipValue = "";
+        // tanggalorder
+        $this->tanggalorder->LinkCustomAttributes = "";
+        $this->tanggalorder->HrefValue = "";
+        $this->tanggalorder->TooltipValue = "";
 
-        // jumlahkirim
-        $this->jumlahkirim->LinkCustomAttributes = "";
-        $this->jumlahkirim->HrefValue = "";
-        $this->jumlahkirim->TooltipValue = "";
+        // idcustomer
+        $this->idcustomer->LinkCustomAttributes = "";
+        $this->idcustomer->HrefValue = "";
+        $this->idcustomer->TooltipValue = "";
 
-        // created_at
-        $this->created_at->LinkCustomAttributes = "";
-        $this->created_at->HrefValue = "";
-        $this->created_at->TooltipValue = "";
+        // kodecustomer
+        $this->kodecustomer->LinkCustomAttributes = "";
+        $this->kodecustomer->HrefValue = "";
+        $this->kodecustomer->TooltipValue = "";
 
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
-
-        // readonly
-        $this->readonly->LinkCustomAttributes = "";
-        $this->readonly->HrefValue = "";
-        $this->readonly->TooltipValue = "";
+        // namacustomer
+        $this->namacustomer->LinkCustomAttributes = "";
+        $this->namacustomer->HrefValue = "";
+        $this->namacustomer->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1155,61 +1020,50 @@ SORTHTML;
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->EditAttrs["class"] = "form-control";
-        $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
-        $this->id->ViewCustomAttributes = "";
-
-        // iddeliveryorder
-        $this->iddeliveryorder->EditAttrs["class"] = "form-control";
-        $this->iddeliveryorder->EditCustomAttributes = "";
-        if ($this->iddeliveryorder->getSessionValue() != "") {
-            $this->iddeliveryorder->CurrentValue = GetForeignKeyValue($this->iddeliveryorder->getSessionValue());
-            $this->iddeliveryorder->ViewValue = $this->iddeliveryorder->CurrentValue;
-            $this->iddeliveryorder->ViewValue = FormatNumber($this->iddeliveryorder->ViewValue, 0, -2, -2, -2);
-            $this->iddeliveryorder->ViewCustomAttributes = "";
-        } else {
-            $this->iddeliveryorder->EditValue = $this->iddeliveryorder->CurrentValue;
-            $this->iddeliveryorder->PlaceHolder = RemoveHtml($this->iddeliveryorder->caption());
-        }
-
         // idorder
         $this->idorder->EditAttrs["class"] = "form-control";
         $this->idorder->EditCustomAttributes = "";
-        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
+        $this->idorder->EditValue = $this->idorder->CurrentValue;
+        $this->idorder->ViewCustomAttributes = "";
 
-        // idorder_detail
-        $this->idorder_detail->EditAttrs["class"] = "form-control";
-        $this->idorder_detail->EditCustomAttributes = "";
-        $this->idorder_detail->PlaceHolder = RemoveHtml($this->idorder_detail->caption());
+        // kodeorder
+        $this->kodeorder->EditAttrs["class"] = "form-control";
+        $this->kodeorder->EditCustomAttributes = "";
+        if (!$this->kodeorder->Raw) {
+            $this->kodeorder->CurrentValue = HtmlDecode($this->kodeorder->CurrentValue);
+        }
+        $this->kodeorder->EditValue = $this->kodeorder->CurrentValue;
+        $this->kodeorder->PlaceHolder = RemoveHtml($this->kodeorder->caption());
 
-        // sisa
-        $this->sisa->EditAttrs["class"] = "form-control";
-        $this->sisa->EditCustomAttributes = "readonly";
-        $this->sisa->EditValue = $this->sisa->CurrentValue;
-        $this->sisa->PlaceHolder = RemoveHtml($this->sisa->caption());
+        // tanggalorder
+        $this->tanggalorder->EditAttrs["class"] = "form-control";
+        $this->tanggalorder->EditCustomAttributes = "";
+        $this->tanggalorder->EditValue = FormatDateTime($this->tanggalorder->CurrentValue, 8);
+        $this->tanggalorder->PlaceHolder = RemoveHtml($this->tanggalorder->caption());
 
-        // jumlahkirim
-        $this->jumlahkirim->EditAttrs["class"] = "form-control";
-        $this->jumlahkirim->EditCustomAttributes = "";
-        $this->jumlahkirim->EditValue = $this->jumlahkirim->CurrentValue;
-        $this->jumlahkirim->PlaceHolder = RemoveHtml($this->jumlahkirim->caption());
+        // idcustomer
+        $this->idcustomer->EditAttrs["class"] = "form-control";
+        $this->idcustomer->EditCustomAttributes = "";
+        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
+        $this->idcustomer->ViewCustomAttributes = "";
 
-        // created_at
-        $this->created_at->EditAttrs["class"] = "form-control";
-        $this->created_at->EditCustomAttributes = "";
-        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
-        $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
+        // kodecustomer
+        $this->kodecustomer->EditAttrs["class"] = "form-control";
+        $this->kodecustomer->EditCustomAttributes = "";
+        if (!$this->kodecustomer->Raw) {
+            $this->kodecustomer->CurrentValue = HtmlDecode($this->kodecustomer->CurrentValue);
+        }
+        $this->kodecustomer->EditValue = $this->kodecustomer->CurrentValue;
+        $this->kodecustomer->PlaceHolder = RemoveHtml($this->kodecustomer->caption());
 
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
-
-        // readonly
-        $this->readonly->EditAttrs["class"] = "form-control";
-        $this->readonly->EditCustomAttributes = "";
+        // namacustomer
+        $this->namacustomer->EditAttrs["class"] = "form-control";
+        $this->namacustomer->EditCustomAttributes = "";
+        if (!$this->namacustomer->Raw) {
+            $this->namacustomer->CurrentValue = HtmlDecode($this->namacustomer->CurrentValue);
+        }
+        $this->namacustomer->EditValue = $this->namacustomer->CurrentValue;
+        $this->namacustomer->PlaceHolder = RemoveHtml($this->namacustomer->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1240,18 +1094,18 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->idorder);
-                    $doc->exportCaption($this->idorder_detail);
-                    $doc->exportCaption($this->sisa);
-                    $doc->exportCaption($this->jumlahkirim);
+                    $doc->exportCaption($this->kodeorder);
+                    $doc->exportCaption($this->tanggalorder);
+                    $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->kodecustomer);
+                    $doc->exportCaption($this->namacustomer);
                 } else {
-                    $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->iddeliveryorder);
                     $doc->exportCaption($this->idorder);
-                    $doc->exportCaption($this->idorder_detail);
-                    $doc->exportCaption($this->sisa);
-                    $doc->exportCaption($this->jumlahkirim);
-                    $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
+                    $doc->exportCaption($this->kodeorder);
+                    $doc->exportCaption($this->tanggalorder);
+                    $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->kodecustomer);
+                    $doc->exportCaption($this->namacustomer);
                 }
                 $doc->endExportRow();
             }
@@ -1282,18 +1136,18 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->idorder);
-                        $doc->exportField($this->idorder_detail);
-                        $doc->exportField($this->sisa);
-                        $doc->exportField($this->jumlahkirim);
+                        $doc->exportField($this->kodeorder);
+                        $doc->exportField($this->tanggalorder);
+                        $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->kodecustomer);
+                        $doc->exportField($this->namacustomer);
                     } else {
-                        $doc->exportField($this->id);
-                        $doc->exportField($this->iddeliveryorder);
                         $doc->exportField($this->idorder);
-                        $doc->exportField($this->idorder_detail);
-                        $doc->exportField($this->sisa);
-                        $doc->exportField($this->jumlahkirim);
-                        $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
+                        $doc->exportField($this->kodeorder);
+                        $doc->exportField($this->tanggalorder);
+                        $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->kodecustomer);
+                        $doc->exportField($this->namacustomer);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1308,77 +1162,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `deliveryorder_detail`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
-    }
-
-    // Add master User ID filter
-    public function addMasterUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "deliveryorder") {
-            $filterWrk = Container("deliveryorder")->addUserIDFilter($filterWrk);
-        }
-        return $filterWrk;
-    }
-
-    // Add detail User ID filter
-    public function addDetailUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "deliveryorder") {
-            $mastertable = Container("deliveryorder");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->iddeliveryorder, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        return $filterWrk;
     }
 
     // Get file data
@@ -1432,24 +1215,13 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-
-        // update sisa order detail
-        $myResult = ExecuteUpdate("UPDATE order_detail SET sisa=sisa-(".$rsnew['jumlahkirim'].") WHERE id=".$rsnew['idorder_detail']);
-
-        // tambah stock
-        addStock($rsnew['idorder_detail'], $rsnew['jumlahkirim']);
-
-        // check untuk close order
-        checkCloseOrder($rsnew['idorder_detail']);
         return true;
     }
 
     // Row Inserted event
     public function rowInserted($rsold, &$rsnew)
     {
-        // jadikan order & order detail readonly
-        checkReadOnly("order_detail", $rsnew['idorder_detail']);
-        checkReadOnly("order", $rsnew['idorder']);
+        //Log("Row Inserted");
     }
 
     // Row Updating event
@@ -1457,15 +1229,6 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-
-        // update sisa order detail
-        $myResult = ExecuteUpdate("UPDATE order_detail SET sisa=sisa+(".($rsold['jumlahkirim']-$rsnew['jumlahkirim']).") WHERE id=".$rsold['idorder_detail']);
-
-        // update stock
-        addStock($rsold['idorder_detail'], ($rsnew['jumlahkirim']-$rsold['jumlahkirim']));
-
-        // check close order
-        checkCloseOrder($rsold['idorder_detail']);
         return true;
     }
 
@@ -1516,24 +1279,13 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
-
-        // update sisa order detail
-        $myResult = ExecuteUpdate("UPDATE order_detail SET sisa=sisa+(".$rs['jumlahkirim'].") WHERE id=".$rs['idorder_detail']);
-
-        // update stock
-        addStock($rs['idorder_detail'], -($rs['jumlahkirim']));
-
-        // check untuk close order
-        checkCloseOrder($rs['idorder_detail']);
         return true;
     }
 
     // Row Deleted event
     public function rowDeleted(&$rs)
     {
-        // check readOnly order detail dan order
-        checkReadOnly("order_detail", $rs['idorder_detail']);
-        checkReadOnly("order", $rs['idorder']);
+        //Log("Row Deleted");
     }
 
     // Email Sending event
