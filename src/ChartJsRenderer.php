@@ -319,8 +319,7 @@ CHARTJS;
                 }
 
                 // Get dataset
-                $dataset = $this->getDataset($data, $backgroundColor, $links);
-                $datasets = [$dataset];
+                $datasets = $cntData > 0 ? [$this->getDataset($data, $backgroundColor, $links)] : [];
 
                 // Set up Data/Options
                 $this->Data = ["labels" => $labels, "datasets" => $datasets];

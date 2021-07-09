@@ -116,10 +116,10 @@ class Invoice extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodeorder","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodeorder","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

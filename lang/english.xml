@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/7/6" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/7/9" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1388,7 +1388,7 @@
         <phrase id="fldcaption" value="Customer" />
       </field>
       <field id="alias">
-        <phrase id="fldcaption" value="Nama Alamat" />
+        <phrase id="fldcaption" value="Alamat Alias" />
       </field>
       <field id="idprovinsi">
         <phrase id="fldcaption" value="Provinsi" />
@@ -1406,7 +1406,7 @@
         <phrase id="fldcaption" value="Detail Alamat" />
       </field>
       <field id="penerima">
-        <phrase id="fldcaption" value="Tipe" />
+        <phrase id="fldcaption" value="Penerima" />
       </field>
     </table>
     <table id="tipecustomer">

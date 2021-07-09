@@ -172,12 +172,12 @@ private static $installed = array (
     ),
     'monolog/monolog' => 
     array (
-      'pretty_version' => '2.2.0',
-      'version' => '2.2.0.0',
+      'pretty_version' => '2.3.0',
+      'version' => '2.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '1cb1cde8e8dd0f70cc0fe51354a59acad9302084',
+      'reference' => 'df991fd88693ab703aa403413d83e15f688dae33',
     ),
     'nikic/fast-route' => 
     array (
@@ -190,12 +190,12 @@ private static $installed = array (
     ),
     'nyholm/psr7' => 
     array (
-      'pretty_version' => '1.4.0',
-      'version' => '1.4.0.0',
+      'pretty_version' => '1.4.1',
+      'version' => '1.4.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '23ae1f00fbc6a886cbe3062ca682391b9cc7c37b',
+      'reference' => '2212385b47153ea71b1c1b1374f8cb5e4f7892ec',
     ),
     'nyholm/psr7-server' => 
     array (
