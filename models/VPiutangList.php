@@ -821,10 +821,14 @@ class VPiutangList extends VPiutang
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "";
+            $this->DefaultSort = "`totaltagihan` DESC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
+                if ($this->totaltagihan->getSort() != "") {
+                    $useDefaultSort = false;
+                }
                 if ($useDefaultSort) {
+                    $this->totaltagihan->setSort("DESC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {

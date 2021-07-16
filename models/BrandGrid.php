@@ -2409,9 +2409,10 @@ class BrandGrid extends Brand
         //$header = "your header";
         echo "
         <style>
+        	.nav-item a[data-table=order_detail],
         	.ew-list-other-options .ew-add-edit-option,
         	.ew-list-other-options .ew-detail-option .ew-btn-group .ew-detail-add-group:not(:first-child)
-        	 {
+        	{
         		display: none;
         	}
         </style>

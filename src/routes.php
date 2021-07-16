@@ -984,6 +984,21 @@ return function (App $app) {
         }
     );
 
+    // laporan_purchase_order
+    $app->any('/LaporanPurchaseOrder[/{params:.*}]', LaporanPurchaseOrderController::class)->add(PermissionMiddleware::class)->setName('LaporanPurchaseOrder-laporan_purchase_order-custom'); // custom
+
+    // laporan_delivery_order
+    $app->any('/LaporanDeliveryOrder[/{params:.*}]', LaporanDeliveryOrderController::class)->add(PermissionMiddleware::class)->setName('LaporanDeliveryOrder-laporan_delivery_order-custom'); // custom
+
+    // laporan_invoice
+    $app->any('/LaporanInvoice[/{params:.*}]', LaporanInvoiceController::class)->add(PermissionMiddleware::class)->setName('LaporanInvoice-laporan_invoice-custom'); // custom
+
+    // laporan_surat_jalan
+    $app->any('/LaporanSuratJalan[/{params:.*}]', LaporanSuratJalanController::class)->add(PermissionMiddleware::class)->setName('LaporanSuratJalan-laporan_surat_jalan-custom'); // custom
+
+    // laporan_pembayaran
+    $app->any('/LaporanPembayaran[/{params:.*}]', LaporanPembayaranController::class)->add(PermissionMiddleware::class)->setName('LaporanPembayaran-laporan_pembayaran-custom'); // custom
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

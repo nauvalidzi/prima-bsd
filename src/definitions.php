@@ -116,6 +116,11 @@ return [
     "brand_link" => \DI\create(BrandLink::class),
     "v_brand_link" => \DI\create(VBrandLink::class),
     "v_order_customer" => \DI\create(VOrderCustomer::class),
+    "laporan_purchase_order" => \DI\create(LaporanPurchaseOrder::class),
+    "laporan_delivery_order" => \DI\create(LaporanDeliveryOrder::class),
+    "laporan_invoice" => \DI\create(LaporanInvoice::class),
+    "laporan_surat_jalan" => \DI\create(LaporanSuratJalan::class),
+    "laporan_pembayaran" => \DI\create(LaporanPembayaran::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

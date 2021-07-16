@@ -3199,6 +3199,7 @@ class ProductList extends Product
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
+        $this->ListOptions->Items["preview"]->Body = "";
     }
 
     // Row Custom Action event

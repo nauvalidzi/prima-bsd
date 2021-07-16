@@ -442,3 +442,30 @@ function check_count_brand($idcustomer) {
 	}
 	return false;
 }
+
+function tgl_indo($tanggal, $format='date'){
+		$bulan = array (
+			1 => 'Januari',
+			'Februari',
+			'Maret',
+			'April',
+			'Mei',
+			'Juni',
+			'Juli',
+			'Agustus',
+			'September',
+			'Oktober',
+			'November',
+			'Desember'
+		);
+		$pecahkan = explode('-', $tanggal);
+
+		// variabel pecahkan 0 = tanggal
+		// variabel pecahkan 1 = bulan
+		// variabel pecahkan 2 = tahun
+		$pecahkan2 = explode(' ', $pecahkan[2]);
+		if ($format == 'datetime'){
+			return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
+		}
+		return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+	}

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/7/9" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/7/16" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1080,6 +1080,21 @@
     </menu>
     <menu id="478">
       <phrase id="menutext" value="Laporan Sales" />
+    </menu>
+    <menu id="583">
+      <phrase id="menutext" value="Laporan Purchase Order" />
+    </menu>
+    <menu id="584">
+      <phrase id="menutext" value="Laporan Delivery Order" />
+    </menu>
+    <menu id="585">
+      <phrase id="menutext" value="Laporan Invoice" />
+    </menu>
+    <menu id="586">
+      <phrase id="menutext" value="Laporan Surat Jalan" />
+    </menu>
+    <menu id="587">
+      <phrase id="menutext" value="Laporan Pembayaran" />
     </menu>
     <menu id="567">
       <phrase id="menutext" value="Stok" />
@@ -3619,6 +3634,21 @@
       <field id="namacustomer">
         <phrase id="fldcaption" value="namacustomer" />
       </field>
+    </table>
+    <table id="laporan_purchase_order">
+      <phrase id="tblcaption" value="Laporan Purchase Order" />
+    </table>
+    <table id="laporan_delivery_order">
+      <phrase id="tblcaption" value="Laporan Delivery Order" />
+    </table>
+    <table id="laporan_invoice">
+      <phrase id="tblcaption" value="Laporan Invoice" />
+    </table>
+    <table id="laporan_surat_jalan">
+      <phrase id="tblcaption" value="Laporan Surat Jalan" />
+    </table>
+    <table id="laporan_pembayaran">
+      <phrase id="tblcaption" value="Laporan Pembayaran" />
     </table>
   </project>
 </ew-language>
