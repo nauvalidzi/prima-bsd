@@ -6,217 +6,175 @@ namespace PHPMaker2021\distributor;
 $Laporansales = &$Page;
 ?>
 <?php
+	$listmarketing = ExecuteQuery("SELECT id, kode, nama FROM pegawai ORDER BY id ASC")->fetchAll();
 
-$querypegawai = "SELECT id, kode, nama FROM pegawai";
-$listpegawai = ExecuteQuery($querypegawai)->fetchAll();
+	if(isset($_POST['srhDate'])){
+		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
+		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
 
-$awal = isset($_POST['tglstart']) ? $_POST['tglstart'] : null;
-$akhir = isset($_POST['tglend']) ? $_POST['tglend'] : null;
-$idpegawai = isset($_POST['idpegawai']) ? $_POST['idpegawai'] : null;
+		if ($_POST['marketing'] == "all") {
+			$query = "SELECT p.id, p.nama AS namapegawai, IFNULL(vlo.totalcustomer,0) AS totalcustomer, IFNULL(vlo.totalorder,0) AS totalorder, 
+							IFNULL(vlo.totalproduct,0) AS totalproduct,  IFNULL(vlo.totalbarang,0) AS totalbarang, IFNULL(vlo.totaltagihan,0) AS totaltagihan 
+						FROM pegawai p 
+						LEFT JOIN (
+							SELECT o.idpegawai, COUNT(o.idcustomer) AS totalcustomer, COUNT(o.id) AS totalorder, SUM(od.totalpod) AS totalproduct, 
+								SUM(od.totalbarang) AS totalbarang, SUM(od.totaltagihan) AS totaltagihan
+							FROM `order` o
+							JOIN (
+								SELECT o.id, COUNT(od.id) AS totalpod, SUM(od.jumlah) AS totalbarang, SUM(od.total) AS totaltagihan, o.tanggal
+								FROM order_detail od, `order` o
+								WHERE od.idorder = o.id  AND o.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}'
+								GROUP BY o.id
+							) od ON od.id = o.id
+							GROUP BY o.idpegawai
+						) vlo ON p.id = vlo.idpegawai";
+		} else {
+			$query = "SELECT o.tanggal, o.kode, c.nama customer, SUM(od.total) total, p.nama pegawai
+						FROM `order` o, order_detail od, customer c, pegawai p
+						WHERE o.id = od.idorder AND c.id = o.idcustomer AND p.id = c.idpegawai AND o.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' AND p.id = ".$_POST['marketing']."
+						GROUP BY od.idorder";
+			//$mr_selected = ExecuteRows("SELECT nama FROM pegawai WHERE id = $_POST['marketing']");
+		}
 
-$eAwal = !empty($awal) ? explode("-", $awal) : null;
-$eAkhir = !empty($akhir) ? explode("-", $akhir) : null;
-
-$query = "";
-
-// if (false) {
-if (!empty($idpegawai)) {
-	$query = "SELECT o.tanggal, o.kode, c.nama customer, SUM(od.total) total, p.nama pegawai
-	FROM `order` o, order_detail od, customer c, pegawai p
-	WHERE o.id = od.idorder AND c.id = o.idcustomer AND p.id = c.idpegawai". (!empty($eAwal) ? " AND o.tanggal >= '".$eAwal[2]."-".$eAwal[1]."-".$eAwal[0]."'" : "") ."". (!empty($eAkhir) ? " AND o.tanggal < '".$eAkhir[2]."-".$eAkhir[1]."-".$eAkhir[0]."'" : "") ."
-	AND p.id = ".$idpegawai."
-	GROUP BY od.idorder";
-} else {
-	$query = "SELECT p.id, p.nama namapegawai, IFNULL(vlo.totalorder,0) totalorder, IFNULL(vlo.totalproduct,0) totalproduct, IFNULL(vlo.totalbarang,0) totalbarang, IFNULL(vlo.totaltagihan,0) totaltagihan FROM pegawai p LEFT JOIN
-	(
-		SELECT o.idpegawai, COUNT(o.id) totalorder, SUM(od.totalpod) totalproduct, SUM(od.totalbarang) totalbarang, SUM(od.totaltagihan) totaltagihan
-		FROM `order` o, (
-			SELECT o.id, COUNT(od.id) totalpod, SUM(od.jumlah) totalbarang, SUM(od.total) totaltagihan, o.tanggal
-			FROM order_detail od, `order` o
-			WHERE od.idorder = o.id". (!empty($eAwal) ? " AND o.tanggal >= '".$eAwal[2]."-".$eAwal[1]."-".$eAwal[0]."'" : "") ."". (!empty($eAkhir) ? " AND o.tanggal < '".$eAkhir[2]."-".$eAkhir[1]."-".$eAkhir[0]."'" : "") ."
-			GROUP BY o.id
-		) od
-		WHERE od.id = o.id
-		GROUP BY o.idpegawai
-	) vlo
-	ON p.id = vlo.idpegawai";
+		$result = ExecuteQuery($query)->fetchAll();
+	}
+ ?>
+<style>
+.text-justify{
+	text-align: justify;
+	text-justify: inter-word;
 }
+</style>
+<div class="container">
+ 	<div class="row">
+        <form action="<?php echo CurrentPage()->PageObjName ?>" method="post">
+			<?php if (Config("CHECK_TOKEN")) : ?>
+	            <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
+	            <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
+            <?php endif; ?>
 
-$datas = ExecuteQuery($query)->fetchAll();
-?>
-
-
-<html>
-	<head>
-		<script>
-			loadjs.ready("head", function () {
-				loadjs.done("flaporansales");
-				ew.removeSpinner();
-			});
-		</script>
-	</head>
-	
-	<body>
-        <h4><?= (!empty($awal) ? "Mulai ".$awal." " : "") ?><?= (!empty($akhir) ? "Sampai ".$akhir : "") ?></h4><br>
-        <form name="flaporansales" id="flaporansales" class="ew-form ew-add-form ew-horizontal" action="/bsd/laporansales" method="post">
-            <?php if (Config("CHECK_TOKEN")) { ?>
-            <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
-            <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
-            <?php } ?>
-
-			<div id="r_idpegawai" class="form-group">
-				<select id="idpegawai" name="idpegawai" class="form-control">
-					<option value="">Global</option>
-					<?php
-					foreach ($listpegawai as $pegawai) {
-					?>
-					<option value="<?= $pegawai['id'] ?>" <?= $pegawai['id'] == $idpegawai ? "selected" : "" ?>><?= $pegawai['kode'] ?>, <?= $pegawai['nama'] ?></option>
-					<?php
-					}
-					?>
-				</select>
-			</div>
-
-            <div id="r_tglstart" class="form-group">
-				<input type="text" data-table="invoice" data-field="tglstart" name="tglstart" id="tglstart" placeholder="Tanggal Awal" value="<?= $awal ?>" class="form-control" aria-describedby="tglstart_help">
-				<div class="invalid-feedback">Incorrect date (dd-mm-yyyy) - Tanggal Invoice<br>Please enter required field - Tanggal Invoice</div>
-				<script>
-					loadjs.ready(["flaporansales", "datetimepicker"], function() {
-						ew.createDateTimePicker("flaporansales", "tglstart", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-					});
-				</script>
-            </div>
-            <div id="r_tglend" class="form-group">
-				<input type="text" data-table="invoice" data-field="tglend" name="tglend" id="tglend" placeholder="Tanggal Akhir" value="<?= $akhir ?>" class="form-control" aria-describedby="tglend_help">
-				<div class="invalid-feedback">Incorrect date (dd-mm-yyyy) - Tanggal Invoice<br>Please enter required field - Tanggal Invoice</div>
-				<script>
-					loadjs.ready(["flaporansales", "datetimepicker"], function() {
-						ew.createDateTimePicker("flaporansales", "tglend", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-					});
-				</script>
-			</div>
-			<div class="form-group">
-				<button class="btn btn-primary ew-btn" type="submit">Submit</button>
-				<button class="btn btn-default ew-btn" type="reset">Reset</button>
+			<div class="col-md-12">
+				<ul class="list-unstyled">
+					<li class="d-inline-block">
+						<label class="d-block">M.R.:</label>
+						<select name="marketing" class="form-control">
+							<option selected value="all">-- All --</option>
+							<?php foreach ($listmarketing as $mr) {
+								$selected = ($_POST['marketing'] != "all") ? ($_POST['marketing'] == $mr['id']) ? "selected" : "" : "";
+								echo "<option value=".$mr['id']." {$selected}>".$mr['kode'] . " - " . $mr['nama']."</option>";
+							}?>
+						</select>
+					</li>
+					<li class="d-inline-block">
+						<label class="d-block">Date Range</label>
+						<input type="date" class="form-control input-md" name="dateFrom">
+					</li>
+					to
+					<li class="d-inline-block">
+						<input type="date" class="form-control input-md" name="dateTo">
+					</li>
+					<li class="d-inline-block">
+						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
+					</li>
+				</ul>
 			</div>
         </form>
-		
-		<br>
-		<br>
-
-		<table class="table table-sm table-bordered ew-table">
-			<?php
-			if (empty($idpegawai)) {
-			?>
+    </div>
+    <div class="row">
+    	<?php if(isset($_POST['srhDate'])) : ?>
+		<table class="table ew-table table-bordered">
+		<?php if ($_POST['marketing'] == "all"): ?>
 			<thead>
+				<tr>
+					<th colspan="6" style="text-align: center;"><h5>Marketing: All</h5><?php echo tgl_indo($dateFrom) . ' - '. tgl_indo($dateTo) ?></th>
+				</tr>
 				<tr class="ew-table-header">
 					<th class="text-center">Marketing</th>
+					<th class="text-center">Total Customer</th>
 					<th class="text-center">Total Order</th>
 					<th class="text-center">Total Barang</th>
-					<th class="text-center" colspan="2">Jumlah</th>
+					<th class="text-center" colspan="2">Total</th>
 				</tr>
 			</thead>
-
 			<tbody>
-				<?php
-				if (!empty($datas)) {
-					$total = [
-						'order' => 0,
-						'barang' => 0,
-						'jumlah' => 0,
-					];
-					foreach ($datas as $data) {
-				?>
-				<tr>
-					<td><?= $data['namapegawai'] ?></td>
-					<td class="text-right"><?= $data['totalorder'] ?></td>
-					<td class="text-right"><?= $data['totalbarang'] ?></td>
-					<td class="text-right border-right-0">Rp.</td>
-					<td class="text-right border-left-0"><?= number_format($data['totaltagihan']) ?></td>
-				</tr>
-				<?php
+				<?php if (!empty($result)): ?>
+					<?php $total = ['order' => 0, 'barang' => 0, 'jumlah' => 0, 'customer' => 0]; ?>
+					<?php foreach ($result as $data): ?>
+					<tr>
+						<td><?= $data['namapegawai'] ?></td>
+						<td class="text-center"><?= $data['totalcustomer'] ?></td>
+						<td class="text-center"><?= $data['totalorder'] ?></td>
+						<td class="text-center"><?= $data['totalbarang'] ?></td>
+						<td>Rp. <span class="float-right"><?php echo number_format($data['totaltagihan']) ?></span></td>
+					</tr>
+					<?php
+						$total['customer'] += $data['totalcustomer'];
 						$total['order'] += $data['totalorder'];
 						$total['barang'] += $data['totalbarang'];
 						$total['jumlah'] += $data['totaltagihan'];
-					}
-				?>
+					?>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr>
+						<td colspan="6" align="center">Tidak ada data.</td>
+					</tr>
+				<?php endif; ?>
 			</tbody>
+			<?php if (!empty($result)):  ?>
 			<tfoot>
 				<tr class="ew-table-footer">
-					<td class="text-right"><b>Total</b></td>
-					<td class="text-right"><b><?= $total['order'] ?></b></td>
-					<td class="text-right"><b><?= $total['barang'] ?></b></td>
-					<td class="text-right border-right-0"><b>Rp.</b></td>
-					<td class="text-right border-left-0"><b><?= number_format($total['jumlah']) ?></b></td>
+					<td class="text-right"><b>Grand Total :</b></td>
+					<td class="text-center"><b><?= $total['customer'] ?></b></td>
+					<td class="text-center"><b><?= $total['order'] ?></b></td>
+					<td class="text-center"><b><?= $total['barang'] ?></b></td>
+					<td><strong>Rp. <span class="float-right"><?php echo number_format($total['jumlah']) ?></strong></td>
 				</tr>
 			</tfoot>
-				<?php
-				} else {
-				?>
-				<tr>
-					<td colspan=5>Tidak ada data.</td>
-				</tr>
-			</tbody>
-				<?php
-				}
-			} else {
-				?>
+			<?php endif; ?>
+		<?php else: ?>
 			<thead>
+				<tr>
+					<th colspan="7" style="text-align: center;"><h5>Marketing: <?php echo $result[0]['pegawai'] ?></h5><?php echo tgl_indo($dateFrom) . ' - '. tgl_indo($dateTo) ?></th>
+				</tr>
 				<tr class="ew-table-header">
 					<th class="text-center">No.</th>
 					<th class="text-center">Tanggal</th>
 					<th class="text-center">Kode Order</th>
 					<th class="text-center">Customer</th>
-					<th class="text-center" colspan="2">Nominal</th>
-					<th class="text-center">Marketing</th>
+					<th class="text-center">Total</th>
 				</tr>
 			</thead>
-
 			<tbody>
-				<?php
-				if (!empty($datas)) {
-					$total = 0;
-					$pegawai = "";
-					$i = 0;
-					foreach ($datas as $data) {
-				?>
-				<tr>
-				<td class="text-right"><?= ++$i ?></td>
-				<td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
-				<td><?= $data['kode'] ?></td>
-				<td><?= $data['customer'] ?></td>
-				<td class="text-right border-right-0">Rp.</td>
-				<td class="text-right border-left-0"><?= number_format($data['total']) ?></td>
-				<td><?= $data['pegawai'] ?></td>
-				</tr>
-				<?php
-						$total += $data['total'];
-						$pegawai = $data['pegawai'];
-					}
-				?>
+				<?php if (!empty($result)): ?>
+					<?php $total = 0; $i = 0; ?>
+					<?php foreach ($result as $data): ?>
+					<tr>
+						<td class="text-center"><?= ++$i ?></td>
+						<td><?= tgl_indo($data['tanggal']) ?></td>
+						<td><?= $data['kode'] ?></td>
+						<td><?= $data['customer'] ?></td>
+						<td>Rp <span class="float-right"><?php echo number_format($data['total']) ?></span></td>
+					</tr>
+					<?php $total += $data['total']; ?>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<tr>
+						<td colspan="6" align="center">Tidak ada data.</td>
+					</tr>
+				<?php endif; ?>
 			</tbody>
+			<?php if ($total > 0):  ?>
 			<tfoot>
 				<tr>
-					<td colspan="4" class="text-right"><b>Total:</b></td>
-					<td class="text-right border-right-0"><b>Rp.</b></td>
-					<td class="text-right border-left-0"><b><?= number_format($total) ?></b></td>
-					<td><b><?= $pegawai ?></b></td>
+					<td colspan="4" class="text-right"><strong>Grand Total :</strong></td>
+					<td><strong>Rp. <span class="float-right"><?php echo number_format($total) ?></span></strong></td>
 				</tr>
 			</tfoot>
-				<?php
-				} else {
-				?>
-				<tr>
-					<td colspan=5>Tidak ada data.</td>
-				</tr>
-			</tbody>
-				<?php
-				}
-			}
-			?>
+			<?php endif; ?>
+		<?php endif; ?>
 		</table>
-	</body>
-</html>
-
+    	<?php endif; ?>
+    </div>
+</div>
 
 <?= GetDebugMessage() ?>

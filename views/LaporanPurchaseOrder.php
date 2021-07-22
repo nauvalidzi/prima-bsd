@@ -6,18 +6,35 @@ namespace PHPMaker2021\distributor;
 $LaporanPurchaseOrder = &$Page;
 ?>
 <?php
+	$status_selected = "all";
+	$status = null;
+
+	$marketing = "all";
+	$listmarketing = ExecuteQuery("SELECT id, kode, nama FROM pegawai ORDER BY id ASC")->fetchAll();
+
 	if(isset($_POST['srhDate'])){
 		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
 		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
-		$status = ($_POST['status'] == 'processed') ? " AND `order`.`readonly` = 1" : " AND `order`.`readonly` = 0";
+		$marketing = ($_POST['marketing'] != "all") ? " AND `order`.`idpegawai` = ".$_POST['marketing'] : "";
 
-		$query = "SELECT `order`.`kode`, `order`.`tanggal`, `customer`.`nama` as nama_customer, `pegawai`.`nama` as nama_pegawai,
-					SUM(`order_detail`.`jumlah`) AS jumlah_po
+		if ($_POST['status'] == 'processed') {
+			$status = " AND `order`.`readonly` = 1";
+			$status_selected = "processed";
+		}
+
+		if ($_POST['status'] == 'unprocess') {
+			$status = " AND `order`.`readonly` = 0";
+			$status_selected = "unprocess";
+		}
+
+		$query = "SELECT `order`.`id` as order_id, `order`.`kode`, `order`.`tanggal`, `customer`.`nama` as nama_customer, 
+					`pegawai`.`nama` as nama_pegawai, SUM(`order_detail`.`jumlah`) AS total_barang, 
+					SUM(`order_detail`.`total`) AS total_harga, COUNT(`order_detail`.`idproduct`) AS jenis_barang
 				  FROM `order` 
 				  JOIN customer ON `customer`.`id` = `order`.`idcustomer`
 				  JOIN pegawai ON `pegawai`.`id` = `order`.`idpegawai`
 				  JOIN order_detail ON `order`.`id` = `order_detail`.`idorder`
-				  WHERE tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' {$status}
+				  WHERE tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' {$status} {$marketing}
 				  GROUP BY `order`.`id`
 				  ORDER BY `order`.`tanggal` ASC";
 
@@ -34,15 +51,26 @@ $LaporanPurchaseOrder = &$Page;
 			<div class="col-md-12">
 				<ul class="list-unstyled">
 					<li class="d-inline-block">
+						<label class="d-block">M.R.:</label>
+						<select name="marketing" class="form-control">
+							<option value="all" <?php echo $marketing == "all" ? "selected" : "" ?>>-- All --</option>
+							<?php foreach ($listmarketing as $mr) {
+								$selected = ($_POST['marketing'] != "all") ? ($_POST['marketing'] == $mr['id']) ? "selected" : "" : "";
+								echo "<option value=".$mr['id']." {$selected}>".$mr['kode'] . " - " . $mr['nama']."</option>";
+							}?>
+						</select>
+					</li>
+					<li class="d-inline-block">
 						<label class="d-block">Status P.O:</label>
 						<select name="status" class="form-control">
-							<option value="unprocess">Belum Diproses</option>
-							<option value="processed">Telah Diproses</option>
+							<option selected value="all" <?php echo ($status_selected == "all") ? "selected":""; ?>>-- All --</option>
+							<option value="processed" <?php echo ($status_selected == "processed") ? "selected":""; ?>>Telah Diproses</option>
+							<option value="unprocess" <?php echo ($status_selected == "unprocess") ? "selected":""; ?>>Belum Diproses</option>
 						</select>
 					</li>
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="date" class="form-control input-md" name="dateFrom">
+						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo (!empty($dateFrom)) ? $dateFrom : date('d/m/Y') ?>">
 					</li>
 					to
 					<li class="d-inline-block">
@@ -57,35 +85,57 @@ $LaporanPurchaseOrder = &$Page;
 	</div>
 	<div class="row">
 	    <?php if(isset($_POST['srhDate'])) : ?>
-	    <table class="table">
+	    <table class="table ew-table table-bordered">
 		  <thead>
 		    <tr>
 		        <th>No</th>
 		        <th>Kode</th>
 		        <th>Tanggal</th>
 		        <th>Customer</th>
-		        <th>Jumlah P.O.</th>
+		        <th class="text-center">Jenis Barang</th>
+		        <th class="text-center">Jumlah Barang</th>
+		        <th class="text-center">Total Harga</th>
+		        <?php if ($_POST['marketing'] == "all") : ?>
 		        <th>Pegawai</th>
+			    <?php endif; ?>
 		    </tr>
 		  </thead>
 		  <tbody>
-		    <?php  
-		    $i = 1;
-		    foreach($result as $row) :
-		    ?>
-		    <tr>
-		      <td><?php echo $i?></td>
-		      <td><?php echo $row['kode'] ?></td>
-		      <td><?php echo tgl_indo($row['tanggal']) ?></td>
-		      <td><?php echo $row['nama_customer'] ?></td>
-		      <td><?php echo $row['jumlah_po'] ?></td>
-		      <td><?php echo $row['nama_pegawai'] ?></td>
-		    </tr>
-		    <?php 
-		    $i++;
-		    endforeach;
-		    ?>
+	    	<?php if (!empty($result)): ?>
+			    <?php $i = 1; $ext = ['total_barang' => 0, 'total_harga' => 0] ?>
+			    <?php foreach($result as $row): ?>
+			    <tr>
+			      <td><?php echo $i ?></td>
+			      <td><a href="OrderDetailList?showmaster=order&fk_id=<?php echo $row['order_id'] ?>" target="_blank"><?php echo $row['kode'] ?></a></td>
+			      <td><?php echo tgl_indo($row['tanggal']) ?></td>
+			      <td><?php echo $row['nama_customer'] ?></td>
+			      <td class="text-center"><?php echo $row['jenis_barang'] ?></td>
+			      <td class="text-center"><?php echo $row['total_barang'] ?></td>
+			      <td>Rp. <span class="float-right"><?php echo number_format($row['total_harga'], 2, ",", ".") ?></span></td>
+			      <?php if ($_POST['marketing'] == "all") : ?>
+			      <td><?php echo $row['nama_pegawai'] ?></td>
+				  <?php endif; ?>
+			    </tr>
+			    <?php 
+			    	$ext['total_barang'] += $row['total_barang'];
+			    	$ext['total_harga'] += $row['total_harga'];
+			    ?>
+			    <?php $i++; endforeach; ?>
+	    	<?php else: ?>
+	    		<tr>
+	    			<td colspan="8" class="text-center">Tidak ada data.</td>
+	    		</tr>
+	    	<?php endif; ?>
 		  </tbody>
+		  <?php if (!empty($result)): ?>
+		  <tfoot>
+		  	<tr>
+		  		<th colspan="5" class="text-right">Grand Total :</th>
+		  		<th class="text-center"><?php echo number_format($ext['total_barang'], 0, ",", ".") ?></th>
+		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['total_harga'], 2, ",", ".") ?></span></th>
+		  	</tr>
+		  </tfoot>
+		  <?php endif; ?>
 		</table>
 		<?php endif; ?>
 	</div>
