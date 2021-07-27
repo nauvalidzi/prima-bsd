@@ -583,9 +583,6 @@ class ProductEdit extends Product
         // Process form if post back
         if ($postBack) {
             $this->loadFormValues(); // Get form values
-
-            // Set up detail parameters
-            $this->setupDetailParms();
         }
 
         // Validate form if post back
@@ -612,16 +609,9 @@ class ProductEdit extends Product
                     $this->terminate("ProductList"); // No matching record, return to list
                     return;
                 }
-
-                // Set up detail parameters
-                $this->setupDetailParms();
                 break;
             case "update": // Update
-                if ($this->getCurrentDetailTable() != "") { // Master/detail edit
-                    $returnUrl = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $this->getCurrentDetailTable()); // Master/Detail view page
-                } else {
-                    $returnUrl = $this->getReturnUrl();
-                }
+                $returnUrl = $this->getReturnUrl();
                 if (GetPageName($returnUrl) == "ProductList") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
@@ -646,9 +636,6 @@ class ProductEdit extends Product
                 } else {
                     $this->EventCancelled = true; // Event cancelled
                     $this->restoreFormValues(); // Restore form values if update failed
-
-                    // Set up detail parameters
-                    $this->setupDetailParms();
                 }
         }
 
@@ -1810,13 +1797,6 @@ class ProductEdit extends Product
             }
         }
 
-        // Validate detail grid
-        $detailTblVar = explode(",", $this->getCurrentDetailTable());
-        $detailPage = Container("OrderDetailGrid");
-        if (in_array("order_detail", $detailTblVar) && $detailPage->DetailEdit) {
-            $detailPage->validateGridForm();
-        }
-
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
 
@@ -1844,11 +1824,6 @@ class ProductEdit extends Product
             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
             $editRow = false; // Update Failed
         } else {
-            // Begin transaction
-            if ($this->getCurrentDetailTable() != "") {
-                $conn->beginTransaction();
-            }
-
             // Save old values
             $this->loadDbValues($rsold);
             $rsnew = [];
@@ -2003,26 +1978,6 @@ class ProductEdit extends Product
                         }
                     }
                 }
-
-                // Update detail records
-                $detailTblVar = explode(",", $this->getCurrentDetailTable());
-                if ($editRow) {
-                    $detailPage = Container("OrderDetailGrid");
-                    if (in_array("order_detail", $detailTblVar) && $detailPage->DetailEdit) {
-                        $Security->loadCurrentUserLevel($this->ProjectID . "order_detail"); // Load user level of detail table
-                        $editRow = $detailPage->gridUpdate();
-                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                    }
-                }
-
-                // Commit/Rollback transaction
-                if ($this->getCurrentDetailTable() != "") {
-                    if ($editRow) {
-                        $conn->commit(); // Commit transaction
-                    } else {
-                        $conn->rollback(); // Rollback transaction
-                    }
-                }
             } else {
                 if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
                     // Use the message, do nothing
@@ -2123,37 +2078,6 @@ class ProductEdit extends Product
         }
         $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
         $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
-    {
-        // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("order_detail", $detailTblVar)) {
-                $detailPageObj = Container("OrderDetailGrid");
-                if ($detailPageObj->DetailEdit) {
-                    $detailPageObj->CurrentMode = "edit";
-                    $detailPageObj->CurrentAction = "gridedit";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idproduct->IsDetailKey = true;
-                    $detailPageObj->idproduct->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idproduct->setSessionValue($detailPageObj->idproduct->CurrentValue);
-                    $detailPageObj->idorder->setSessionValue(""); // Clear session key
-                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
-                }
-            }
-        }
     }
 
     // Set up Breadcrumb

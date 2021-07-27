@@ -522,14 +522,6 @@ loadjs.ready("head", function() {
 <?php } ?>
 </div><!-- /page* -->
     <input type="hidden" data-table="product" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-<?php
-    if (in_array("order_detail", explode(",", $Page->getCurrentDetailTable())) && $order_detail->DetailEdit) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("order_detail", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "OrderDetailGrid.php" ?>
-<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

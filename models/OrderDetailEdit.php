@@ -1240,34 +1240,6 @@ class OrderDetailEdit extends OrderDetail
                     $validMaster = false;
                 }
             }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Get("fk_id", Get("idbrand"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idbrand->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idbrand->setSessionValue($this->idbrand->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "product") {
-                $validMaster = true;
-                $masterTbl = Container("product");
-                if (($parm = Get("fk_id", Get("idproduct"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idproduct->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idproduct->setSessionValue($this->idproduct->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
         } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
             $masterTblVar = $master;
             if ($masterTblVar == "") {
@@ -1282,34 +1254,6 @@ class OrderDetailEdit extends OrderDetail
                     $masterTbl->id->setFormValue($parm);
                     $this->idorder->setFormValue($masterTbl->id->FormValue);
                     $this->idorder->setSessionValue($this->idorder->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Post("fk_id", Post("idbrand"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idbrand->setFormValue($masterTbl->id->FormValue);
-                    $this->idbrand->setSessionValue($this->idbrand->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "product") {
-                $validMaster = true;
-                $masterTbl = Container("product");
-                if (($parm = Post("fk_id", Post("idproduct"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idproduct->setFormValue($masterTbl->id->FormValue);
-                    $this->idproduct->setSessionValue($this->idproduct->FormValue);
                     if (!is_numeric($masterTbl->id->FormValue)) {
                         $validMaster = false;
                     }
@@ -1333,16 +1277,6 @@ class OrderDetailEdit extends OrderDetail
             if ($masterTblVar != "order") {
                 if ($this->idorder->CurrentValue == "") {
                     $this->idorder->setSessionValue("");
-                }
-            }
-            if ($masterTblVar != "brand") {
-                if ($this->idbrand->CurrentValue == "") {
-                    $this->idbrand->setSessionValue("");
-                }
-            }
-            if ($masterTblVar != "product") {
-                if ($this->idproduct->CurrentValue == "") {
-                    $this->idproduct->setSessionValue("");
                 }
             }
         }
@@ -1506,6 +1440,12 @@ class OrderDetailEdit extends OrderDetail
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
+        $count = ExecuteScalar("SELECT hutang_max FROM customer WHERE id = '".$this->kodenpd->FormValue."' AND id NOT IN (".$this->id->CurrentValue.")");
+        if ($count>0) {
+        	$customError = "Kode NPD sudah terpakai.";
+    //        $this->kodenpd->addErrorMessage("Kode NPD sudah terpakai.");
+            return false;
+        }
         return true;
     }
 }

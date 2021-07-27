@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/7/22" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/7/28" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1106,10 +1106,13 @@
       <phrase id="menutext" value="Stock View" />
     </menu>
     <menu id="570">
-      <phrase id="menutext" value="Manajemen Pegawai" />
+      <phrase id="menutext" value="Pengaturan" />
     </menu>
     <menu id="31">
       <phrase id="menutext" value="Manajemen Pegawai" />
+    </menu>
+    <menu id="588">
+      <phrase id="menutext" value="Approval P.O." />
     </menu>
     <menu id="30">
       <phrase id="menutext" value="User Permissions" />
@@ -2647,6 +2650,9 @@
       <field id="kodepo">
         <phrase id="fldcaption" value="kodepo" />
       </field>
+      <field id="tanggalpo">
+        <phrase id="fldcaption" value="tanggalpo" />
+      </field>
     </table>
     <table id="p_invoice">
       <phrase id="tblcaption" value="Print Invoice" />
@@ -3634,6 +3640,13 @@
       <field id="namacustomer">
         <phrase id="fldcaption" value="namacustomer" />
       </field>
+      <field id="aktif">
+        <phrase id="fldcaption" value="aktif" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
     </table>
     <table id="laporan_purchase_order">
       <phrase id="tblcaption" value="Laporan Purchase Order" />
@@ -3649,6 +3662,18 @@
     </table>
     <table id="laporan_pembayaran">
       <phrase id="tblcaption" value="Laporan Pembayaran" />
+    </table>
+    <table id="approval_po">
+      <phrase id="tblcaption" value="approval po" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="Customer" />
+      </field>
+      <field id="jumlah_limit">
+        <phrase id="fldcaption" value="Maksimal Tunggakan" />
+      </field>
     </table>
   </project>
 </ew-language>

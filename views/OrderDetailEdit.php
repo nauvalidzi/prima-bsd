@@ -116,14 +116,6 @@ $Page->showMessage();
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="order">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idorder->getSessionValue()) ?>">
 <?php } ?>
-<?php if ($Page->getCurrentMasterTable() == "brand") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="brand">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idbrand->getSessionValue()) ?>">
-<?php } ?>
-<?php if ($Page->getCurrentMasterTable() == "product") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="product">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idproduct->getSessionValue()) ?>">
-<?php } ?>
 <div class="ew-edit-div"><!-- page* -->
 <?php if ($Page->jumlah->Visible) { // jumlah ?>
     <div id="r_jumlah" class="form-group row">

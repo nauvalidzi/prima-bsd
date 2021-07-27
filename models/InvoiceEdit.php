@@ -971,7 +971,7 @@ class InvoiceEdit extends Invoice
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1035,6 +1035,7 @@ class InvoiceEdit extends Invoice
             $this->sisabayar->ViewCustomAttributes = "";
 
             // idtermpayment
+            $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
             $curVal = trim(strval($this->idtermpayment->CurrentValue));
             if ($curVal != "") {
                 $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
@@ -1172,25 +1173,24 @@ class InvoiceEdit extends Invoice
             // idtermpayment
             $this->idtermpayment->EditAttrs["class"] = "form-control";
             $this->idtermpayment->EditCustomAttributes = "";
+            $this->idtermpayment->EditValue = HtmlEncode($this->idtermpayment->CurrentValue);
             $curVal = trim(strval($this->idtermpayment->CurrentValue));
             if ($curVal != "") {
-                $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
-            } else {
-                $this->idtermpayment->ViewValue = $this->idtermpayment->Lookup !== null && is_array($this->idtermpayment->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idtermpayment->ViewValue !== null) { // Load from cache
-                $this->idtermpayment->EditValue = array_values($this->idtermpayment->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idtermpayment->CurrentValue, DATATYPE_NUMBER, "");
+                $this->idtermpayment->EditValue = $this->idtermpayment->lookupCacheOption($curVal);
+                if ($this->idtermpayment->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idtermpayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idtermpayment->Lookup->renderViewRow($rswrk[0]);
+                        $this->idtermpayment->EditValue = $this->idtermpayment->displayValue($arwrk);
+                    } else {
+                        $this->idtermpayment->EditValue = HtmlEncode($this->idtermpayment->CurrentValue);
+                    }
                 }
-                $sqlWrk = $this->idtermpayment->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idtermpayment->EditValue = $arwrk;
+            } else {
+                $this->idtermpayment->EditValue = null;
             }
             $this->idtermpayment->PlaceHolder = RemoveHtml($this->idtermpayment->caption());
 
@@ -1318,6 +1318,9 @@ class InvoiceEdit extends Invoice
             if (!$this->idtermpayment->IsDetailKey && EmptyValue($this->idtermpayment->FormValue)) {
                 $this->idtermpayment->addErrorMessage(str_replace("%s", $this->idtermpayment->caption(), $this->idtermpayment->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idtermpayment->FormValue)) {
+            $this->idtermpayment->addErrorMessage($this->idtermpayment->getErrorMessage(false));
         }
         if ($this->idtipepayment->Required) {
             if (!$this->idtipepayment->IsDetailKey && EmptyValue($this->idtipepayment->FormValue)) {
@@ -1531,7 +1534,7 @@ class InvoiceEdit extends Invoice
             switch ($fld->FieldVar) {
                 case "x_idcustomer":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;

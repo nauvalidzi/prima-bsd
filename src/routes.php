@@ -999,6 +999,23 @@ return function (App $app) {
     // laporan_pembayaran
     $app->any('/LaporanPembayaran[/{params:.*}]', LaporanPembayaranController::class)->add(PermissionMiddleware::class)->setName('LaporanPembayaran-laporan_pembayaran-custom'); // custom
 
+    // approval_po
+    $app->any('/ApprovalPoList[/{id}]', ApprovalPoController::class . ':list')->add(PermissionMiddleware::class)->setName('ApprovalPoList-approval_po-list'); // list
+    $app->any('/ApprovalPoAdd[/{id}]', ApprovalPoController::class . ':add')->add(PermissionMiddleware::class)->setName('ApprovalPoAdd-approval_po-add'); // add
+    $app->any('/ApprovalPoView[/{id}]', ApprovalPoController::class . ':view')->add(PermissionMiddleware::class)->setName('ApprovalPoView-approval_po-view'); // view
+    $app->any('/ApprovalPoEdit[/{id}]', ApprovalPoController::class . ':edit')->add(PermissionMiddleware::class)->setName('ApprovalPoEdit-approval_po-edit'); // edit
+    $app->any('/ApprovalPoDelete[/{id}]', ApprovalPoController::class . ':delete')->add(PermissionMiddleware::class)->setName('ApprovalPoDelete-approval_po-delete'); // delete
+    $app->group(
+        '/approval_po',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', ApprovalPoController::class . ':list')->add(PermissionMiddleware::class)->setName('approval_po/list-approval_po-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', ApprovalPoController::class . ':add')->add(PermissionMiddleware::class)->setName('approval_po/add-approval_po-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', ApprovalPoController::class . ':view')->add(PermissionMiddleware::class)->setName('approval_po/view-approval_po-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', ApprovalPoController::class . ':edit')->add(PermissionMiddleware::class)->setName('approval_po/edit-approval_po-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', ApprovalPoController::class . ':delete')->add(PermissionMiddleware::class)->setName('approval_po/delete-approval_po-delete-2'); // delete
+        }
+    );
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

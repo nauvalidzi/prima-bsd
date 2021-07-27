@@ -724,43 +724,6 @@ class BrandView extends Brand
             $item->Visible = false;
         }
 
-        // "detail_order_detail"
-        $item = &$option->add("detail_order_detail");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("order_detail", "TblCaption");
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("OrderDetailList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
-        $links = "";
-        $detailPageObj = Container("OrderDetailGrid");
-        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            if ($detailViewTblVar != "") {
-                $detailViewTblVar .= ",";
-            }
-            $detailViewTblVar .= "order_detail";
-        }
-        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            if ($detailEditTblVar != "") {
-                $detailEditTblVar .= ",";
-            }
-            $detailEditTblVar .= "order_detail";
-        }
-        if ($links != "") {
-            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-        }
-        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-        $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'order_detail');
-        if ($item->Visible) {
-            if ($detailTableLink != "") {
-                $detailTableLink .= ",";
-            }
-            $detailTableLink .= "order_detail";
-        }
-        if ($this->ShowMultipleDetails) {
-            $item->Visible = false;
-        }
-
         // Multiple details
         if ($this->ShowMultipleDetails) {
             $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
@@ -1192,21 +1155,6 @@ class BrandView extends Brand
                     $detailPageObj->idbrand->IsDetailKey = true;
                     $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
-                }
-            }
-            if (in_array("order_detail", $detailTblVar)) {
-                $detailPageObj = Container("OrderDetailGrid");
-                if ($detailPageObj->DetailView) {
-                    $detailPageObj->CurrentMode = "view";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idbrand->IsDetailKey = true;
-                    $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
-                    $detailPageObj->idorder->setSessionValue(""); // Clear session key
-                    $detailPageObj->idproduct->setSessionValue(""); // Clear session key
                 }
             }
         }

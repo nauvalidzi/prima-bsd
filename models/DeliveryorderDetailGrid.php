@@ -1546,7 +1546,6 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             $this->id->ViewCustomAttributes = "";
 
             // iddeliveryorder
-            $this->iddeliveryorder->ViewValue = $this->iddeliveryorder->CurrentValue;
             $this->iddeliveryorder->ViewValue = FormatNumber($this->iddeliveryorder->ViewValue, 0, -2, -2, -2);
             $this->iddeliveryorder->ViewCustomAttributes = "";
 
@@ -1557,7 +1556,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
                 if ($this->idorder->ViewValue === null) { // Lookup from database
                     $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1658,7 +1657,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
                     $filterWrk = "`idorder`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -1746,7 +1745,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
                     $filterWrk = "`idorder`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -2183,7 +2182,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             switch ($fld->FieldVar) {
                 case "x_idorder":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;

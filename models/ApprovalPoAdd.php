@@ -7,21 +7,21 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class InvoiceDelete extends Invoice
+class ApprovalPoAdd extends ApprovalPo
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "delete";
+    public $PageID = "add";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'invoice';
+    public $TableName = 'approval_po';
 
     // Page object name
-    public $PageObjName = "InvoiceDelete";
+    public $PageObjName = "ApprovalPoAdd";
 
     // Rendering View
     public $RenderingView = false;
@@ -127,9 +127,9 @@ class InvoiceDelete extends Invoice
         // Parent constuctor
         parent::__construct();
 
-        // Table object (invoice)
-        if (!isset($GLOBALS["invoice"]) || get_class($GLOBALS["invoice"]) == PROJECT_NAMESPACE . "invoice") {
-            $GLOBALS["invoice"] = &$this;
+        // Table object (approval_po)
+        if (!isset($GLOBALS["approval_po"]) || get_class($GLOBALS["approval_po"]) == PROJECT_NAMESPACE . "approval_po") {
+            $GLOBALS["approval_po"] = &$this;
         }
 
         // Page URL
@@ -137,7 +137,7 @@ class InvoiceDelete extends Invoice
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'invoice');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'approval_po');
         }
 
         // Start timer
@@ -222,7 +222,7 @@ class InvoiceDelete extends Invoice
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("invoice"));
+                $doc = new $class(Container("approval_po"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -259,8 +259,25 @@ class InvoiceDelete extends Invoice
             if (!Config("DEBUG") && ob_get_length()) {
                 ob_end_clean();
             }
-            SaveDebugMessage();
-            Redirect(GetUrl($url));
+
+            // Handle modal response
+            if ($this->IsModal) { // Show as modal
+                $row = ["url" => GetUrl($url), "modal" => "1"];
+                $pageName = GetPageName($url);
+                if ($pageName != $this->getListUrl()) { // Not List page
+                    $row["caption"] = $this->getModalCaption($pageName);
+                    if ($pageName == "ApprovalPoView") {
+                        $row["view"] = "1";
+                    }
+                } else { // List page should not be shown as modal => error
+                    $row["error"] = $this->getFailureMessage();
+                    $this->clearFailureMessage();
+                }
+                WriteJson($row);
+            } else {
+                SaveDebugMessage();
+                Redirect(GetUrl($url));
+            }
         }
         return; // Return to controller
     }
@@ -356,14 +373,80 @@ class InvoiceDelete extends Invoice
             $this->id->Visible = false;
         }
     }
+
+    // Lookup data
+    public function lookup()
+    {
+        global $Language, $Security;
+
+        // Get lookup object
+        $fieldName = Post("field");
+        $lookup = $this->Fields[$fieldName]->Lookup;
+
+        // Get lookup parameters
+        $lookupType = Post("ajax", "unknown");
+        $pageSize = -1;
+        $offset = -1;
+        $searchValue = "";
+        if (SameText($lookupType, "modal")) {
+            $searchValue = Post("sv", "");
+            $pageSize = Post("recperpage", 10);
+            $offset = Post("start", 0);
+        } elseif (SameText($lookupType, "autosuggest")) {
+            $searchValue = Param("q", "");
+            $pageSize = Param("n", -1);
+            $pageSize = is_numeric($pageSize) ? (int)$pageSize : -1;
+            if ($pageSize <= 0) {
+                $pageSize = Config("AUTO_SUGGEST_MAX_ENTRIES");
+            }
+            $start = Param("start", -1);
+            $start = is_numeric($start) ? (int)$start : -1;
+            $page = Param("page", -1);
+            $page = is_numeric($page) ? (int)$page : -1;
+            $offset = $start >= 0 ? $start : ($page > 0 && $pageSize > 0 ? ($page - 1) * $pageSize : 0);
+        }
+        $userSelect = Decrypt(Post("s", ""));
+        $userFilter = Decrypt(Post("f", ""));
+        $userOrderBy = Decrypt(Post("o", ""));
+        $keys = Post("keys");
+        $lookup->LookupType = $lookupType; // Lookup type
+        if ($keys !== null) { // Selected records from modal
+            if (is_array($keys)) {
+                $keys = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $keys);
+            }
+            $lookup->FilterFields = []; // Skip parent fields if any
+            $lookup->FilterValues[] = $keys; // Lookup values
+            $pageSize = -1; // Show all records
+        } else { // Lookup values
+            $lookup->FilterValues[] = Post("v0", Post("lookupValue", ""));
+        }
+        $cnt = is_array($lookup->FilterFields) ? count($lookup->FilterFields) : 0;
+        for ($i = 1; $i <= $cnt; $i++) {
+            $lookup->FilterValues[] = Post("v" . $i, "");
+        }
+        $lookup->SearchValue = $searchValue;
+        $lookup->PageSize = $pageSize;
+        $lookup->Offset = $offset;
+        if ($userSelect != "") {
+            $lookup->UserSelect = $userSelect;
+        }
+        if ($userFilter != "") {
+            $lookup->UserFilter = $userFilter;
+        }
+        if ($userOrderBy != "") {
+            $lookup->UserOrderBy = $userOrderBy;
+        }
+        $lookup->toJson($this); // Use settings from current page
+    }
+    public $FormClassName = "ew-horizontal ew-form ew-add-form";
+    public $IsModal = false;
+    public $IsMobileOrModal = false;
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
     public $StartRecord;
-    public $TotalRecords = 0;
-    public $RecordCount;
-    public $RecKeys = [];
-    public $StartRowCount = 1;
-    public $RowCount = 0;
+    public $Priv = 0;
+    public $OldRecordset;
+    public $CopyRecord;
 
     /**
      * Page run
@@ -372,25 +455,18 @@ class InvoiceDelete extends Invoice
      */
     public function run()
     {
-        global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
+        global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm,
+            $SkipHeaderFooter;
+
+        // Is modal
+        $this->IsModal = Param("modal") == "1";
+
+        // Create form object
+        $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->kode->setVisibility();
-        $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idorder->setVisibility();
-        $this->totalnonpajak->Visible = false;
-        $this->pajak->Visible = false;
-        $this->totaltagihan->setVisibility();
-        $this->sisabayar->setVisibility();
-        $this->idtermpayment->Visible = false;
-        $this->idtipepayment->Visible = false;
-        $this->keterangan->Visible = false;
-        $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
-        $this->aktif->Visible = false;
-        $this->readonly->Visible = false;
-        $this->sent->Visible = false;
+        $this->jumlah_limit->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -406,86 +482,107 @@ class InvoiceDelete extends Invoice
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idorder);
-        $this->setupLookupOptions($this->idtermpayment);
-        $this->setupLookupOptions($this->idtipepayment);
+
+        // Check modal
+        if ($this->IsModal) {
+            $SkipHeaderFooter = true;
+        }
+        $this->IsMobileOrModal = IsMobile() || $this->IsModal;
+        $this->FormClassName = "ew-form ew-add-form ew-horizontal";
+        $postBack = false;
+
+        // Set up current action
+        if (IsApi()) {
+            $this->CurrentAction = "insert"; // Add record directly
+            $postBack = true;
+        } elseif (Post("action") !== null) {
+            $this->CurrentAction = Post("action"); // Get form action
+            $this->setKey(Post($this->OldKeyName));
+            $postBack = true;
+        } else {
+            // Load key values from QueryString
+            if (($keyValue = Get("id") ?? Route("id")) !== null) {
+                $this->id->setQueryStringValue($keyValue);
+            }
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
+            $this->CopyRecord = !EmptyValue($this->OldKey);
+            if ($this->CopyRecord) {
+                $this->CurrentAction = "copy"; // Copy record
+            } else {
+                $this->CurrentAction = "show"; // Display blank record
+            }
+        }
+
+        // Load old record / default values
+        $loaded = $this->loadOldRecord();
+
+        // Load form values
+        if ($postBack) {
+            $this->loadFormValues(); // Load form values
+        }
+
+        // Validate form if post back
+        if ($postBack) {
+            if (!$this->validateForm()) {
+                $this->EventCancelled = true; // Event cancelled
+                $this->restoreFormValues(); // Restore form values
+                if (IsApi()) {
+                    $this->terminate();
+                    return;
+                } else {
+                    $this->CurrentAction = "show"; // Form error, reset action
+                }
+            }
+        }
+
+        // Perform current action
+        switch ($this->CurrentAction) {
+            case "copy": // Copy an existing record
+                if (!$loaded) { // Record not loaded
+                    if ($this->getFailureMessage() == "") {
+                        $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+                    }
+                    $this->terminate("ApprovalPoList"); // No matching record, return to list
+                    return;
+                }
+                break;
+            case "insert": // Add new record
+                $this->SendEmail = true; // Send email on add success
+                if ($this->addRow($this->OldRecordset)) { // Add successful
+                    if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
+                        $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
+                    }
+                    $returnUrl = $this->getReturnUrl();
+                    if (GetPageName($returnUrl) == "ApprovalPoList") {
+                        $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
+                    } elseif (GetPageName($returnUrl) == "ApprovalPoView") {
+                        $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
+                    }
+                    if (IsApi()) { // Return to caller
+                        $this->terminate(true);
+                        return;
+                    } else {
+                        $this->terminate($returnUrl);
+                        return;
+                    }
+                } elseif (IsApi()) { // API request, return
+                    $this->terminate();
+                    return;
+                } else {
+                    $this->EventCancelled = true; // Event cancelled
+                    $this->restoreFormValues(); // Add failed, restore form values
+                }
+        }
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
-        // Load key parameters
-        $this->RecKeys = $this->getRecordKeys(); // Load record keys
-        $filter = $this->getFilterFromRecordKeys();
-        if ($filter == "") {
-            $this->terminate("InvoiceList"); // Prevent SQL injection, return to list
-            return;
-        }
+        // Render row based on row type
+        $this->RowType = ROWTYPE_ADD; // Render add type
 
-        // Set up filter (WHERE Clause)
-        $this->CurrentFilter = $filter;
-
-        // Check if valid User ID
-        $conn = $this->getConnection();
-        $sql = $this->getSql($this->CurrentFilter);
-        $rows = $conn->fetchAll($sql);
-        $res = true;
-        foreach ($rows as $row) {
-            $this->loadRowValues($row);
-            if (!$this->showOptionLink("delete")) {
-                $userIdMsg = $Language->phrase("NoDeletePermission");
-                $this->setFailureMessage($userIdMsg);
-                $res = false;
-                break;
-            }
-        }
-        if (!$res) {
-            $this->terminate("InvoiceList"); // Return to list
-            return;
-        }
-
-        // Get action
-        if (IsApi()) {
-            $this->CurrentAction = "delete"; // Delete record directly
-        } elseif (Post("action") !== null) {
-            $this->CurrentAction = Post("action");
-        } elseif (Get("action") == "1") {
-            $this->CurrentAction = "delete"; // Delete record directly
-        } else {
-            $this->CurrentAction = "show"; // Display record
-        }
-        if ($this->isDelete()) {
-            $this->SendEmail = true; // Send email on delete success
-            if ($this->deleteRows()) { // Delete rows
-                if ($this->getSuccessMessage() == "") {
-                    $this->setSuccessMessage($Language->phrase("DeleteSuccess")); // Set up success message
-                }
-                if (IsApi()) {
-                    $this->terminate(true);
-                    return;
-                } else {
-                    $this->terminate($this->getReturnUrl()); // Return to caller
-                    return;
-                }
-            } else { // Delete failed
-                if (IsApi()) {
-                    $this->terminate();
-                    return;
-                }
-                $this->CurrentAction = "show"; // Display record
-            }
-        }
-        if ($this->isShow()) { // Load records for display
-            if ($this->Recordset = $this->loadRecordset()) {
-                $this->TotalRecords = $this->Recordset->recordCount(); // Get record count
-            }
-            if ($this->TotalRecords <= 0) { // No record found, exit
-                if ($this->Recordset) {
-                    $this->Recordset->close();
-                }
-                $this->terminate("InvoiceList"); // Return to list
-                return;
-            }
-        }
+        // Render row
+        $this->resetAttributes();
+        $this->renderRow();
 
         // Set LoginStatus / Page_Rendering / Page_Render
         if (!IsApi() && !$this->isTerminated()) {
@@ -508,25 +605,59 @@ class InvoiceDelete extends Invoice
         }
     }
 
-    // Load recordset
-    public function loadRecordset($offset = -1, $rowcnt = -1)
+    // Get upload files
+    protected function getUploadFiles()
     {
-        // Load List page SQL (QueryBuilder)
-        $sql = $this->getListSql();
+        global $CurrentForm, $Language;
+    }
 
-        // Load recordset
-        if ($offset > -1) {
-            $sql->setFirstResult($offset);
-        }
-        if ($rowcnt > 0) {
-            $sql->setMaxResults($rowcnt);
-        }
-        $stmt = $sql->execute();
-        $rs = new Recordset($stmt, $sql);
+    // Load default values
+    protected function loadDefaultValues()
+    {
+        $this->id->CurrentValue = null;
+        $this->id->OldValue = $this->id->CurrentValue;
+        $this->idcustomer->CurrentValue = null;
+        $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
+        $this->jumlah_limit->CurrentValue = null;
+        $this->jumlah_limit->OldValue = $this->jumlah_limit->CurrentValue;
+    }
 
-        // Call Recordset Selected event
-        $this->recordsetSelected($rs);
-        return $rs;
+    // Load form values
+    protected function loadFormValues()
+    {
+        // Load from form
+        global $CurrentForm;
+
+        // Check field name 'idcustomer' first before field var 'x_idcustomer'
+        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
+        if (!$this->idcustomer->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idcustomer->Visible = false; // Disable update for API request
+            } else {
+                $this->idcustomer->setFormValue($val);
+            }
+        }
+
+        // Check field name 'jumlah_limit' first before field var 'x_jumlah_limit'
+        $val = $CurrentForm->hasValue("jumlah_limit") ? $CurrentForm->getValue("jumlah_limit") : $CurrentForm->getValue("x_jumlah_limit");
+        if (!$this->jumlah_limit->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->jumlah_limit->Visible = false; // Disable update for API request
+            } else {
+                $this->jumlah_limit->setFormValue($val);
+            }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+    }
+
+    // Restore form values
+    public function restoreFormValues()
+    {
+        global $CurrentForm;
+        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        $this->jumlah_limit->CurrentValue = $this->jumlah_limit->FormValue;
     }
 
     /**
@@ -577,46 +708,35 @@ class InvoiceDelete extends Invoice
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
-        $this->tglinvoice->setDbValue($row['tglinvoice']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->idorder->setDbValue($row['idorder']);
-        $this->totalnonpajak->setDbValue($row['totalnonpajak']);
-        $this->pajak->setDbValue($row['pajak']);
-        $this->totaltagihan->setDbValue($row['totaltagihan']);
-        $this->sisabayar->setDbValue($row['sisabayar']);
-        $this->idtermpayment->setDbValue($row['idtermpayment']);
-        $this->idtipepayment->setDbValue($row['idtipepayment']);
-        $this->keterangan->setDbValue($row['keterangan']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
-        $this->readonly->setDbValue($row['readonly']);
-        $this->sent->setDbValue($row['sent']);
+        $this->jumlah_limit->setDbValue($row['jumlah_limit']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
+        $this->loadDefaultValues();
         $row = [];
-        $row['id'] = null;
-        $row['kode'] = null;
-        $row['tglinvoice'] = null;
-        $row['idcustomer'] = null;
-        $row['idorder'] = null;
-        $row['totalnonpajak'] = null;
-        $row['pajak'] = null;
-        $row['totaltagihan'] = null;
-        $row['sisabayar'] = null;
-        $row['idtermpayment'] = null;
-        $row['idtipepayment'] = null;
-        $row['keterangan'] = null;
-        $row['created_at'] = null;
-        $row['created_by'] = null;
-        $row['aktif'] = null;
-        $row['readonly'] = null;
-        $row['sent'] = null;
+        $row['id'] = $this->id->CurrentValue;
+        $row['idcustomer'] = $this->idcustomer->CurrentValue;
+        $row['jumlah_limit'] = $this->jumlah_limit->CurrentValue;
         return $row;
+    }
+
+    // Load old record
+    protected function loadOldRecord()
+    {
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -633,63 +753,21 @@ class InvoiceDelete extends Invoice
 
         // id
 
-        // kode
-
-        // tglinvoice
-
         // idcustomer
 
-        // idorder
-
-        // totalnonpajak
-
-        // pajak
-
-        // totaltagihan
-
-        // sisabayar
-
-        // idtermpayment
-
-        // idtipepayment
-
-        // keterangan
-
-        // created_at
-
-        // created_by
-
-        // aktif
-
-        // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
-
-        // sent
+        // jumlah_limit
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
-
-            // tglinvoice
-            $this->tglinvoice->ViewValue = $this->tglinvoice->CurrentValue;
-            $this->tglinvoice->ViewValue = FormatDateTime($this->tglinvoice->ViewValue, 0);
-            $this->tglinvoice->ViewCustomAttributes = "";
 
             // idcustomer
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -704,145 +782,64 @@ class InvoiceDelete extends Invoice
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // idorder
-            $curVal = trim(strval($this->idorder->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-                if ($this->idorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "jumlah > 0" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                    } else {
-                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idorder->ViewValue = null;
-            }
-            $this->idorder->ViewCustomAttributes = "";
-
-            // totalnonpajak
-            $this->totalnonpajak->ViewValue = $this->totalnonpajak->CurrentValue;
-            $this->totalnonpajak->ViewValue = FormatCurrency($this->totalnonpajak->ViewValue, 2, -2, -2, -2);
-            $this->totalnonpajak->ViewCustomAttributes = "";
-
-            // pajak
-            $this->pajak->ViewValue = $this->pajak->CurrentValue;
-            $this->pajak->ViewValue = FormatNumber($this->pajak->ViewValue, 2, -2, -2, -2);
-            $this->pajak->ViewCustomAttributes = "";
-
-            // totaltagihan
-            $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
-            $this->totaltagihan->ViewValue = FormatCurrency($this->totaltagihan->ViewValue, 2, -2, -2, -2);
-            $this->totaltagihan->ViewCustomAttributes = "";
-
-            // sisabayar
-            $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
-            $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
-            $this->sisabayar->ViewCustomAttributes = "";
-
-            // idtermpayment
-            $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-            $curVal = trim(strval($this->idtermpayment->CurrentValue));
-            if ($curVal != "") {
-                $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
-                if ($this->idtermpayment->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idtermpayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idtermpayment->Lookup->renderViewRow($rswrk[0]);
-                        $this->idtermpayment->ViewValue = $this->idtermpayment->displayValue($arwrk);
-                    } else {
-                        $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idtermpayment->ViewValue = null;
-            }
-            $this->idtermpayment->ViewCustomAttributes = "";
-
-            // idtipepayment
-            $curVal = trim(strval($this->idtipepayment->CurrentValue));
-            if ($curVal != "") {
-                $this->idtipepayment->ViewValue = $this->idtipepayment->lookupCacheOption($curVal);
-                if ($this->idtipepayment->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idtipepayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idtipepayment->Lookup->renderViewRow($rswrk[0]);
-                        $this->idtipepayment->ViewValue = $this->idtipepayment->displayValue($arwrk);
-                    } else {
-                        $this->idtipepayment->ViewValue = $this->idtipepayment->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idtipepayment->ViewValue = null;
-            }
-            $this->idtipepayment->ViewCustomAttributes = "";
-
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-            $this->keterangan->ViewCustomAttributes = "";
-
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
-
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // aktif
-            if (ConvertToBool($this->aktif->CurrentValue)) {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
-            } else {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
-            }
-            $this->aktif->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
-
-            // tglinvoice
-            $this->tglinvoice->LinkCustomAttributes = "";
-            $this->tglinvoice->HrefValue = "";
-            $this->tglinvoice->TooltipValue = "";
+            // jumlah_limit
+            $this->jumlah_limit->ViewValue = $this->jumlah_limit->CurrentValue;
+            $this->jumlah_limit->ViewValue = FormatNumber($this->jumlah_limit->ViewValue, 0, -2, -2, -2);
+            $this->jumlah_limit->ViewCustomAttributes = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
-            // idorder
-            $this->idorder->LinkCustomAttributes = "";
-            $this->idorder->HrefValue = "";
-            $this->idorder->TooltipValue = "";
+            // jumlah_limit
+            $this->jumlah_limit->LinkCustomAttributes = "";
+            $this->jumlah_limit->HrefValue = "";
+            $this->jumlah_limit->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_ADD) {
+            // idcustomer
+            $this->idcustomer->EditAttrs["class"] = "form-control";
+            $this->idcustomer->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+            } else {
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
+            }
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
-            // totaltagihan
-            $this->totaltagihan->LinkCustomAttributes = "";
-            $this->totaltagihan->HrefValue = "";
-            $this->totaltagihan->TooltipValue = "";
+            // jumlah_limit
+            $this->jumlah_limit->EditAttrs["class"] = "form-control";
+            $this->jumlah_limit->EditCustomAttributes = "";
+            $this->jumlah_limit->EditValue = HtmlEncode($this->jumlah_limit->CurrentValue);
+            $this->jumlah_limit->PlaceHolder = RemoveHtml($this->jumlah_limit->caption());
 
-            // sisabayar
-            $this->sisabayar->LinkCustomAttributes = "";
-            $this->sisabayar->HrefValue = "";
-            $this->sisabayar->TooltipValue = "";
+            // Add refer script
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+
+            // jumlah_limit
+            $this->jumlah_limit->LinkCustomAttributes = "";
+            $this->jumlah_limit->HrefValue = "";
+        }
+        if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
+            $this->setupFieldTitles();
         }
 
         // Call Row Rendered event
@@ -851,97 +848,106 @@ class InvoiceDelete extends Invoice
         }
     }
 
-    // Delete records based on current filter
-    protected function deleteRows()
+    // Validate form
+    protected function validateForm()
+    {
+        global $Language;
+
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
+        }
+        if ($this->idcustomer->Required) {
+            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
+                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
+        }
+        if ($this->jumlah_limit->Required) {
+            if (!$this->jumlah_limit->IsDetailKey && EmptyValue($this->jumlah_limit->FormValue)) {
+                $this->jumlah_limit->addErrorMessage(str_replace("%s", $this->jumlah_limit->caption(), $this->jumlah_limit->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->jumlah_limit->FormValue)) {
+            $this->jumlah_limit->addErrorMessage($this->jumlah_limit->getErrorMessage(false));
+        }
+
+        // Return validate result
+        $validateForm = !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateForm = $validateForm && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateForm;
+    }
+
+    // Add record
+    protected function addRow($rsold = null)
     {
         global $Language, $Security;
-        if (!$Security->canDelete()) {
-            $this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
-            return false;
+        if ($this->idcustomer->CurrentValue != "") { // Check field with unique index
+            $filter = "(`idcustomer` = " . AdjustSql($this->idcustomer->CurrentValue, $this->Dbid) . ")";
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $idxErrMsg = str_replace("%f", $this->idcustomer->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->idcustomer->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
         }
-        $deleteRows = true;
-        $sql = $this->getCurrentSql();
         $conn = $this->getConnection();
-        $rows = $conn->fetchAll($sql);
-        if (count($rows) == 0) {
-            $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
-            return false;
-        }
-        $conn->beginTransaction();
 
-        // Clone old rows
-        $rsold = $rows;
+        // Load db values from rsold
+        $this->loadDbValues($rsold);
+        if ($rsold) {
+        }
+        $rsnew = [];
 
-        // Call row deleting event
-        if ($deleteRows) {
-            foreach ($rsold as $row) {
-                $deleteRows = $this->rowDeleting($row);
-                if (!$deleteRows) {
-                    break;
-                }
+        // idcustomer
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
+
+        // jumlah_limit
+        $this->jumlah_limit->setDbValueDef($rsnew, $this->jumlah_limit->CurrentValue, 0, false);
+
+        // Call Row Inserting event
+        $insertRow = $this->rowInserting($rsold, $rsnew);
+        $addRow = false;
+        if ($insertRow) {
+            try {
+                $addRow = $this->insert($rsnew);
+            } catch (\Exception $e) {
+                $this->setFailureMessage($e->getMessage());
             }
-        }
-        if ($deleteRows) {
-            $key = "";
-            foreach ($rsold as $row) {
-                $thisKey = "";
-                if ($thisKey != "") {
-                    $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
-                }
-                $thisKey .= $row['id'];
-                if (Config("DELETE_UPLOADED_FILES")) { // Delete old files
-                    $this->deleteUploadedFiles($row);
-                }
-                $deleteRows = $this->delete($row); // Delete
-                if ($deleteRows === false) {
-                    break;
-                }
-                if ($key != "") {
-                    $key .= ", ";
-                }
-                $key .= $thisKey;
+            if ($addRow) {
             }
-        }
-        if (!$deleteRows) {
-            // Set up error message
+        } else {
             if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
                 // Use the message, do nothing
             } elseif ($this->CancelMessage != "") {
                 $this->setFailureMessage($this->CancelMessage);
                 $this->CancelMessage = "";
             } else {
-                $this->setFailureMessage($Language->phrase("DeleteCancelled"));
+                $this->setFailureMessage($Language->phrase("InsertCancelled"));
             }
+            $addRow = false;
         }
-        if ($deleteRows) {
-            $conn->commit(); // Commit the changes
-        } else {
-            $conn->rollback(); // Rollback changes
+        if ($addRow) {
+            // Call Row Inserted event
+            $this->rowInserted($rsold, $rsnew);
         }
 
-        // Call Row Deleted event
-        if ($deleteRows) {
-            foreach ($rsold as $row) {
-                $this->rowDeleted($row);
-            }
+        // Clean upload path if any
+        if ($addRow) {
         }
 
         // Write JSON for API request
-        if (IsApi() && $deleteRows) {
-            $row = $this->getRecordsFromRecordset($rsold);
+        if (IsApi() && $addRow) {
+            $row = $this->getRecordsFromRecordset([$rsnew], true);
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
-        return $deleteRows;
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
+        return $addRow;
     }
 
     // Set up Breadcrumb
@@ -950,9 +956,9 @@ class InvoiceDelete extends Invoice
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("InvoiceList"), "", $this->TableVar, true);
-        $pageId = "delete";
-        $Breadcrumb->add("delete", $pageId, $url);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ApprovalPoList"), "", $this->TableVar, true);
+        $pageId = ($this->isCopy()) ? "Copy" : "Add";
+        $Breadcrumb->add("add", $pageId, $url);
     }
 
     // Setup lookup options
@@ -969,24 +975,6 @@ class InvoiceDelete extends Invoice
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idorder":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "jumlah > 0" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idtermpayment":
-                    break;
-                case "x_idtipepayment":
-                    break;
-                case "x_aktif":
-                    break;
-                case "x_sent":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1065,5 +1053,12 @@ class InvoiceDelete extends Invoice
     {
         // Example:
         //$footer = "your footer";
+    }
+
+    // Form Custom Validate event
+    public function formCustomValidate(&$customError)
+    {
+        // Return error message in CustomError
+        return true;
     }
 }

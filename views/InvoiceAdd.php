@@ -27,7 +27,7 @@ loadjs.ready("head", function () {
         ["totalnonpajak", [fields.totalnonpajak.visible && fields.totalnonpajak.required ? ew.Validators.required(fields.totalnonpajak.caption) : null, ew.Validators.integer], fields.totalnonpajak.isInvalid],
         ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null, ew.Validators.float], fields.pajak.isInvalid],
         ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
-        ["idtermpayment", [fields.idtermpayment.visible && fields.idtermpayment.required ? ew.Validators.required(fields.idtermpayment.caption) : null], fields.idtermpayment.isInvalid],
+        ["idtermpayment", [fields.idtermpayment.visible && fields.idtermpayment.required ? ew.Validators.required(fields.idtermpayment.caption) : null, ew.Validators.integer], fields.idtermpayment.isInvalid],
         ["idtipepayment", [fields.idtipepayment.visible && fields.idtipepayment.required ? ew.Validators.required(fields.idtipepayment.caption) : null], fields.idtipepayment.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid],
@@ -263,33 +263,26 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
     <div id="r_idtermpayment" class="form-group row">
-        <label id="elh_invoice_idtermpayment" for="x_idtermpayment" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idtermpayment->caption() ?><?= $Page->idtermpayment->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_invoice_idtermpayment" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idtermpayment->caption() ?><?= $Page->idtermpayment->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idtermpayment->cellAttributes() ?>>
 <span id="el_invoice_idtermpayment">
-    <select
-        id="x_idtermpayment"
-        name="x_idtermpayment"
-        class="form-control ew-select<?= $Page->idtermpayment->isInvalidClass() ?>"
-        data-select2-id="invoice_x_idtermpayment"
-        data-table="invoice"
-        data-field="x_idtermpayment"
-        data-value-separator="<?= $Page->idtermpayment->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idtermpayment->getPlaceHolder()) ?>"
-        <?= $Page->idtermpayment->editAttributes() ?>>
-        <?= $Page->idtermpayment->selectOptionListHtml("x_idtermpayment") ?>
-    </select>
-    <?= $Page->idtermpayment->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idtermpayment->getErrorMessage() ?></div>
-<?= $Page->idtermpayment->Lookup->getParamTag($Page, "p_x_idtermpayment") ?>
+<?php
+$onchange = $Page->idtermpayment->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idtermpayment->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idtermpayment" class="ew-auto-suggest">
+    <input type="<?= $Page->idtermpayment->getInputTextType() ?>" class="form-control" name="sv_x_idtermpayment" id="sv_x_idtermpayment" value="<?= RemoveHtml($Page->idtermpayment->EditValue) ?>" size="30" placeholder="<?= HtmlEncode($Page->idtermpayment->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idtermpayment->getPlaceHolder()) ?>"<?= $Page->idtermpayment->editAttributes() ?> aria-describedby="x_idtermpayment_help">
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="invoice" data-field="x_idtermpayment" data-input="sv_x_idtermpayment" data-value-separator="<?= $Page->idtermpayment->displayValueSeparatorAttribute() ?>" name="x_idtermpayment" id="x_idtermpayment" value="<?= HtmlEncode($Page->idtermpayment->CurrentValue) ?>"<?= $onchange ?>>
+<?= $Page->idtermpayment->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idtermpayment->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='invoice_x_idtermpayment']"),
-        options = { name: "x_idtermpayment", selectId: "invoice_x_idtermpayment", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.invoice.fields.idtermpayment.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["finvoiceadd"], function() {
+    finvoiceadd.createAutoSuggest(Object.assign({"id":"x_idtermpayment","forceSelect":false}, ew.vars.tables.invoice.fields.idtermpayment.autoSuggestOptions));
 });
 </script>
+<?= $Page->idtermpayment->Lookup->getParamTag($Page, "p_x_idtermpayment") ?>
 </span>
 </div></div>
     </div>

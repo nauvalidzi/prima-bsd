@@ -1027,8 +1027,6 @@ class OrderView extends Order
                     $detailPageObj->idorder->IsDetailKey = true;
                     $detailPageObj->idorder->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idorder->setSessionValue($detailPageObj->idorder->CurrentValue);
-                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
-                    $detailPageObj->idproduct->setSessionValue(""); // Clear session key
                 }
             }
         }

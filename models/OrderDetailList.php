@@ -694,12 +694,6 @@ class OrderDetailList extends OrderDetail
                 if ($this->getCurrentMasterTable() == "order") {
                     $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "order"); // Add master User ID filter
                 }
-                if ($this->getCurrentMasterTable() == "brand") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "brand"); // Add master User ID filter
-                }
-                if ($this->getCurrentMasterTable() == "product") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "product"); // Add master User ID filter
-                }
         }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
@@ -712,38 +706,6 @@ class OrderDetailList extends OrderDetail
             if (!$this->MasterRecordExists) {
                 $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
                 $this->terminate("OrderList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "brand") {
-            $masterTbl = Container("brand");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("BrandList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "product") {
-            $masterTbl = Container("product");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("ProductList"); // Return to master page
                 return;
             } else {
                 $masterTbl->loadListRowValues($rsmaster);
@@ -933,8 +895,6 @@ class OrderDetailList extends OrderDetail
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
                         $this->idorder->setSessionValue("");
-                        $this->idbrand->setSessionValue("");
-                        $this->idproduct->setSessionValue("");
             }
 
             // Reset (clear) sorting order
@@ -1637,34 +1597,6 @@ class OrderDetailList extends OrderDetail
                     $validMaster = false;
                 }
             }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Get("fk_id", Get("idbrand"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idbrand->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idbrand->setSessionValue($this->idbrand->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "product") {
-                $validMaster = true;
-                $masterTbl = Container("product");
-                if (($parm = Get("fk_id", Get("idproduct"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idproduct->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idproduct->setSessionValue($this->idproduct->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
         } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
             $masterTblVar = $master;
             if ($masterTblVar == "") {
@@ -1679,34 +1611,6 @@ class OrderDetailList extends OrderDetail
                     $masterTbl->id->setFormValue($parm);
                     $this->idorder->setFormValue($masterTbl->id->FormValue);
                     $this->idorder->setSessionValue($this->idorder->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Post("fk_id", Post("idbrand"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idbrand->setFormValue($masterTbl->id->FormValue);
-                    $this->idbrand->setSessionValue($this->idbrand->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "product") {
-                $validMaster = true;
-                $masterTbl = Container("product");
-                if (($parm = Post("fk_id", Post("idproduct"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idproduct->setFormValue($masterTbl->id->FormValue);
-                    $this->idproduct->setSessionValue($this->idproduct->FormValue);
                     if (!is_numeric($masterTbl->id->FormValue)) {
                         $validMaster = false;
                     }
@@ -1735,16 +1639,6 @@ class OrderDetailList extends OrderDetail
             if ($masterTblVar != "order") {
                 if ($this->idorder->CurrentValue == "") {
                     $this->idorder->setSessionValue("");
-                }
-            }
-            if ($masterTblVar != "brand") {
-                if ($this->idbrand->CurrentValue == "") {
-                    $this->idbrand->setSessionValue("");
-                }
-            }
-            if ($masterTblVar != "product") {
-                if ($this->idproduct->CurrentValue == "") {
-                    $this->idproduct->setSessionValue("");
                 }
             }
         }

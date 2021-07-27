@@ -238,6 +238,19 @@ function Container_Build($builder)
     //    }
     // ]);
 }
+$API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
+	$vars = Param("idcustomer", Route(1));
+    if ($vars !== NULL) {
+        $idcustomer = AdjustSql($vars);
+        $tagihan = ExecuteRow("SELECT COUNT(*) AS jumlahtagihan FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} GROUP BY idinvoice, totaltagihan) bayar WHERE jumlahbayar < totaltagihan");
+        $limit = ExecuteRow("SELECT jumlah_limit FROM approval_po WHERE idcustomer = {$idcustomer}")['jumlah_limit'];
+        $jumlahlimit = empty($limit) ? 3 : $limit;
+        $status = ($tagihan['jumlahtagihan'] >= $jumlahlimit) ? FALSE : TRUE;
+        $customer = ExecuteRow("SELECT nama FROM customer WHERE id = {$idcustomer}")['nama'];
+        WriteJson(compact('status', 'jumlahlimit', 'customer'));
+    }
+};
+http://localhost/bsd/api/getTagihan?idcustomer=
 
 function domain() {
 	return sprintf(

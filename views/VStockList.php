@@ -162,6 +162,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->kodepo->Visible) { // kodepo ?>
         <th data-name="kodepo" class="<?= $Page->kodepo->headerCellClass() ?>"><div id="elh_v_stock_kodepo" class="v_stock_kodepo"><?= $Page->renderSort($Page->kodepo) ?></div></th>
 <?php } ?>
+<?php if ($Page->tanggalpo->Visible) { // tanggalpo ?>
+        <th data-name="tanggalpo" class="<?= $Page->tanggalpo->headerCellClass() ?>"><div id="elh_v_stock_tanggalpo" class="v_stock_tanggalpo"><?= $Page->renderSort($Page->tanggalpo) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -298,6 +301,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_stock_kodepo">
 <span<?= $Page->kodepo->viewAttributes() ?>>
 <?= $Page->kodepo->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->tanggalpo->Visible) { // tanggalpo ?>
+        <td data-name="tanggalpo" <?= $Page->tanggalpo->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_stock_tanggalpo">
+<span<?= $Page->tanggalpo->viewAttributes() ?>>
+<?= $Page->tanggalpo->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -3,19 +3,19 @@
 namespace PHPMaker2021\distributor;
 
 // Page object
-$OrderDetailList = &$Page;
+$ApprovalPoList = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentForm, currentPageID;
-var forder_detaillist;
+var fapproval_polist;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object
     currentPageID = ew.PAGE_ID = "list";
-    forder_detaillist = currentForm = new ew.Form("forder_detaillist", "list");
-    forder_detaillist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
-    loadjs.done("forder_detaillist");
+    fapproval_polist = currentForm = new ew.Form("fapproval_polist", "list");
+    fapproval_polist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
+    loadjs.done("fapproval_polist");
 });
 </script>
 <style>
@@ -59,15 +59,6 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
-<?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "order") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/OrderMaster.php";
-    }
-}
-?>
-<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
@@ -76,20 +67,16 @@ $Page->renderOtherOptions();
 $Page->showMessage();
 ?>
 <?php if ($Page->TotalRecords > 0 || $Page->CurrentAction) { ?>
-<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> order_detail">
-<form name="forder_detaillist" id="forder_detaillist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> approval_po">
+<form name="fapproval_polist" id="fapproval_polist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="order_detail">
-<?php if ($Page->getCurrentMasterTable() == "order" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="order">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idorder->getSessionValue()) ?>">
-<?php } ?>
-<div id="gmp_order_detail" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<input type="hidden" name="t" value="approval_po">
+<div id="gmp_approval_po" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_order_detaillist" class="table ew-table"><!-- .ew-table -->
+<table id="tbl_approval_polist" class="table ew-table"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -102,26 +89,11 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_order_detail_idbrand" class="order_detail_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
+<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
+        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_approval_po_idcustomer" class="approval_po_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
 <?php } ?>
-<?php if ($Page->idproduct->Visible) { // idproduct ?>
-        <th data-name="idproduct" class="<?= $Page->idproduct->headerCellClass() ?>"><div id="elh_order_detail_idproduct" class="order_detail_idproduct"><?= $Page->renderSort($Page->idproduct) ?></div></th>
-<?php } ?>
-<?php if ($Page->jumlah->Visible) { // jumlah ?>
-        <th data-name="jumlah" class="<?= $Page->jumlah->headerCellClass() ?>"><div id="elh_order_detail_jumlah" class="order_detail_jumlah"><?= $Page->renderSort($Page->jumlah) ?></div></th>
-<?php } ?>
-<?php if ($Page->bonus->Visible) { // bonus ?>
-        <th data-name="bonus" class="<?= $Page->bonus->headerCellClass() ?>"><div id="elh_order_detail_bonus" class="order_detail_bonus"><?= $Page->renderSort($Page->bonus) ?></div></th>
-<?php } ?>
-<?php if ($Page->sisa->Visible) { // sisa ?>
-        <th data-name="sisa" class="<?= $Page->sisa->headerCellClass() ?>"><div id="elh_order_detail_sisa" class="order_detail_sisa"><?= $Page->renderSort($Page->sisa) ?></div></th>
-<?php } ?>
-<?php if ($Page->harga->Visible) { // harga ?>
-        <th data-name="harga" class="<?= $Page->harga->headerCellClass() ?>"><div id="elh_order_detail_harga" class="order_detail_harga"><?= $Page->renderSort($Page->harga) ?></div></th>
-<?php } ?>
-<?php if ($Page->total->Visible) { // total ?>
-        <th data-name="total" class="<?= $Page->total->headerCellClass() ?>"><div id="elh_order_detail_total" class="order_detail_total"><?= $Page->renderSort($Page->total) ?></div></th>
+<?php if ($Page->jumlah_limit->Visible) { // jumlah_limit ?>
+        <th data-name="jumlah_limit" class="<?= $Page->jumlah_limit->headerCellClass() ?>"><div id="elh_approval_po_jumlah_limit" class="approval_po_jumlah_limit"><?= $Page->renderSort($Page->jumlah_limit) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -177,7 +149,7 @@ while ($Page->RecordCount < $Page->StopRecord) {
         $Page->RowType = ROWTYPE_VIEW; // Render view
 
         // Set up row id / data-rowindex
-        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_order_detail", "data-rowtype" => $Page->RowType]);
+        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_approval_po", "data-rowtype" => $Page->RowType]);
 
         // Render row
         $Page->renderRow();
@@ -190,59 +162,19 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
+    <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
+        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_approval_po_idcustomer">
+<span<?= $Page->idcustomer->viewAttributes() ?>>
+<?= $Page->idcustomer->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idproduct->Visible) { // idproduct ?>
-        <td data-name="idproduct" <?= $Page->idproduct->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_idproduct">
-<span<?= $Page->idproduct->viewAttributes() ?>>
-<?= $Page->idproduct->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->jumlah->Visible) { // jumlah ?>
-        <td data-name="jumlah" <?= $Page->jumlah->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_jumlah">
-<span<?= $Page->jumlah->viewAttributes() ?>>
-<?= $Page->jumlah->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->bonus->Visible) { // bonus ?>
-        <td data-name="bonus" <?= $Page->bonus->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_bonus">
-<span<?= $Page->bonus->viewAttributes() ?>>
-<?= $Page->bonus->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->sisa->Visible) { // sisa ?>
-        <td data-name="sisa" <?= $Page->sisa->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_sisa">
-<span<?= $Page->sisa->viewAttributes() ?>>
-<?= $Page->sisa->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->harga->Visible) { // harga ?>
-        <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_harga">
-<span<?= $Page->harga->viewAttributes() ?>>
-<?= $Page->harga->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->total->Visible) { // total ?>
-        <td data-name="total" <?= $Page->total->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_total">
-<span<?= $Page->total->viewAttributes() ?>>
-<?= $Page->total->getViewValue() ?></span>
+    <?php if ($Page->jumlah_limit->Visible) { // jumlah_limit ?>
+        <td data-name="jumlah_limit" <?= $Page->jumlah_limit->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_approval_po_jumlah_limit">
+<span<?= $Page->jumlah_limit->viewAttributes() ?>>
+<?= $Page->jumlah_limit->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -301,7 +233,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("order_detail");
+    ew.addEventHandlers("approval_po");
 });
 </script>
 <script>
@@ -309,16 +241,4 @@ loadjs.ready("load", function () {
     // Write your table-specific startup script here, no need to add script tags.
 });
 </script>
-<?php if (!$Page->isExport()) { ?>
-<script>
-loadjs.ready("fixedheadertable", function () {
-    ew.fixedHeaderTable({
-        delay: 0,
-        container: "gmp_order_detail",
-        width: "",
-        height: ""
-    });
-});
-</script>
-<?php } ?>
 <?php } ?>

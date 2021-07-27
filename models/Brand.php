@@ -305,10 +305,6 @@ class Brand extends DbTable
             $detailUrl = Container("product")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "order_detail") {
-            $detailUrl = Container("order_detail")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
-        }
         if ($detailUrl == "") {
             $detailUrl = "BrandList";
         }
@@ -1723,9 +1719,10 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $status = check_count_brand($rsnew['idcustomer']);
+        $idcustomer = $rsnew['idcustomer'];
+        $status = check_count_brand($idcustomer);
         if ($status === true) {
-            Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$rsnew['idcustomer']}, {$rsnew['idcustomer']})");
+            Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$idcustomer}, {$idcustomer})");
         }
     }
 

@@ -218,7 +218,10 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_surat_jalan.php","1","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_pembayaran.php","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_pembayaran.php","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_pembayaran.php","1","0"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_pembayaran.php","1","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}approval_po","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}approval_po","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}approval_po","1","288"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Setting Users",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -289,4 +292,5 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["laporan_delivery_order.php","laporan_delivery_order","Laporan Delivery Order",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanDeliveryOrder"],
     ["laporan_invoice.php","laporan_invoice","Laporan Invoice",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanInvoice"],
     ["laporan_surat_jalan.php","laporan_surat_jalan","Laporan Surat Jalan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanSuratJalan"],
-    ["laporan_pembayaran.php","laporan_pembayaran","Laporan Pembayaran",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanPembayaran"]];
+    ["laporan_pembayaran.php","laporan_pembayaran","Laporan Pembayaran",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanPembayaran"],
+    ["approval_po","approval_po","approval po",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","ApprovalPoList"]];

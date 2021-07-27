@@ -153,6 +153,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->namacustomer->Visible) { // namacustomer ?>
         <th data-name="namacustomer" class="<?= $Page->namacustomer->headerCellClass() ?>"><div id="elh_v_order_customer_namacustomer" class="v_order_customer_namacustomer"><?= $Page->renderSort($Page->namacustomer) ?></div></th>
 <?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+        <th data-name="aktif" class="<?= $Page->aktif->headerCellClass() ?>"><div id="elh_v_order_customer_aktif" class="v_order_customer_aktif"><?= $Page->renderSort($Page->aktif) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -265,6 +268,17 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_order_customer_namacustomer">
 <span<?= $Page->namacustomer->viewAttributes() ?>>
 <?= $Page->namacustomer->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->aktif->Visible) { // aktif ?>
+        <td data-name="aktif" <?= $Page->aktif->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_order_customer_aktif">
+<span<?= $Page->aktif->viewAttributes() ?>>
+<div class="custom-control custom-checkbox d-inline-block">
+    <input type="checkbox" id="x_aktif_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->aktif->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->aktif->CurrentValue)) { ?> checked<?php } ?>>
+    <label class="custom-control-label" for="x_aktif_<?= $Page->RowCount ?>"></label>
+</div></span>
 </span>
 </td>
     <?php } ?>

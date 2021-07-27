@@ -1289,10 +1289,6 @@ class BrandEdit extends Brand
         if (in_array("product", $detailTblVar) && $detailPage->DetailEdit) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("OrderDetailGrid");
-        if (in_array("order_detail", $detailTblVar) && $detailPage->DetailEdit) {
-            $detailPage->validateGridForm();
-        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -1540,14 +1536,6 @@ class BrandEdit extends Brand
                         $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                     }
                 }
-                if ($editRow) {
-                    $detailPage = Container("OrderDetailGrid");
-                    if (in_array("order_detail", $detailTblVar) && $detailPage->DetailEdit) {
-                        $Security->loadCurrentUserLevel($this->ProjectID . "order_detail"); // Load user level of detail table
-                        $editRow = $detailPage->gridUpdate();
-                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                    }
-                }
 
                 // Commit/Rollback transaction
                 if ($this->getCurrentDetailTable() != "") {
@@ -1696,22 +1684,6 @@ class BrandEdit extends Brand
                     $detailPageObj->idbrand->IsDetailKey = true;
                     $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
-                }
-            }
-            if (in_array("order_detail", $detailTblVar)) {
-                $detailPageObj = Container("OrderDetailGrid");
-                if ($detailPageObj->DetailEdit) {
-                    $detailPageObj->CurrentMode = "edit";
-                    $detailPageObj->CurrentAction = "gridedit";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idbrand->IsDetailKey = true;
-                    $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
-                    $detailPageObj->idorder->setSessionValue(""); // Clear session key
-                    $detailPageObj->idproduct->setSessionValue(""); // Clear session key
                 }
             }
         }

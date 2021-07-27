@@ -92,7 +92,6 @@ class Product extends DbTable
         $this->id = new DbField('product', 'product', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->IsForeignKey = true; // Foreign key field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -426,32 +425,6 @@ class Product extends DbTable
     public function sqlDetailFilter_brand()
     {
         return "`idbrand`=@idbrand@";
-    }
-
-    // Current detail table name
-    public function getCurrentDetailTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE"));
-    }
-
-    public function setCurrentDetailTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE")] = $v;
-    }
-
-    // Get detail url
-    public function getDetailUrl()
-    {
-        // Detail url
-        $detailUrl = "";
-        if ($this->getCurrentDetailTable() == "order_detail") {
-            $detailUrl = Container("order_detail")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
-        }
-        if ($detailUrl == "") {
-            $detailUrl = "ProductList";
-        }
-        return $detailUrl;
     }
 
     // Table level SQL
@@ -1010,11 +983,7 @@ class Product extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        if ($parm != "") {
-            $url = $this->keyUrl("ProductEdit", $this->getUrlParm($parm));
-        } else {
-            $url = $this->keyUrl("ProductEdit", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
-        }
+        $url = $this->keyUrl("ProductEdit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -1028,11 +997,7 @@ class Product extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        if ($parm != "") {
-            $url = $this->keyUrl("ProductAdd", $this->getUrlParm($parm));
-        } else {
-            $url = $this->keyUrl("ProductAdd", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
-        }
+        $url = $this->keyUrl("ProductAdd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 

@@ -245,14 +245,6 @@ $Page->showMessage();
     </tr>
 <?php } ?>
 </table>
-<?php
-    if (in_array("order_detail", explode(",", $Page->getCurrentDetailTable())) && $order_detail->DetailView) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("order_detail", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "OrderDetailGrid.php" ?>
-<?php } ?>
 </form>
 <?php
 $Page->showPageFooter();

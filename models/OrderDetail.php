@@ -97,7 +97,6 @@ class OrderDetail extends DbTable
 
         // idbrand
         $this->idbrand = new DbField('order_detail', 'order_detail', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 3, 11, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idbrand->IsForeignKey = true; // Foreign key field
         $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
@@ -117,7 +116,6 @@ class OrderDetail extends DbTable
 
         // idproduct
         $this->idproduct = new DbField('order_detail', 'order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 3, 11, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idproduct->IsForeignKey = true; // Foreign key field
         $this->idproduct->Nullable = false; // NOT NULL field
         $this->idproduct->Required = true; // Required field
         $this->idproduct->Sortable = true; // Allow sort
@@ -282,20 +280,6 @@ class OrderDetail extends DbTable
                 return "";
             }
         }
-        if ($this->getCurrentMasterTable() == "brand") {
-            if ($this->idbrand->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        if ($this->getCurrentMasterTable() == "product") {
-            if ($this->idproduct->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idproduct->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
         return $masterFilter;
     }
 
@@ -307,20 +291,6 @@ class OrderDetail extends DbTable
         if ($this->getCurrentMasterTable() == "order") {
             if ($this->idorder->getSessionValue() != "") {
                 $detailFilter .= "" . GetForeignKeySql("`idorder`", $this->idorder->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        if ($this->getCurrentMasterTable() == "brand") {
-            if ($this->idbrand->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idbrand`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        if ($this->getCurrentMasterTable() == "product") {
-            if ($this->idproduct->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idproduct`", $this->idproduct->getSessionValue(), DATATYPE_NUMBER, "DB");
             } else {
                 return "";
             }
@@ -337,28 +307,6 @@ class OrderDetail extends DbTable
     public function sqlDetailFilter_order()
     {
         return "`idorder`=@idorder@";
-    }
-
-    // Master filter
-    public function sqlMasterFilter_brand()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_brand()
-    {
-        return "`idbrand`=@idbrand@";
-    }
-
-    // Master filter
-    public function sqlMasterFilter_product()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_product()
-    {
-        return "`idproduct`=@idproduct@";
     }
 
     // Table level SQL
@@ -936,14 +884,6 @@ class OrderDetail extends DbTable
             $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
             $url .= "&" . GetForeignKeyUrl("fk_id", $this->idorder->CurrentValue ?? $this->idorder->getSessionValue());
         }
-        if ($this->getCurrentMasterTable() == "brand" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idbrand->CurrentValue ?? $this->idbrand->getSessionValue());
-        }
-        if ($this->getCurrentMasterTable() == "product" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idproduct->CurrentValue ?? $this->idproduct->getSessionValue());
-        }
         return $url;
     }
 
@@ -1341,62 +1281,12 @@ SORTHTML;
         // idbrand
         $this->idbrand->EditAttrs["class"] = "form-control";
         $this->idbrand->EditCustomAttributes = "";
-        if ($this->idbrand->getSessionValue() != "") {
-            $this->idbrand->CurrentValue = GetForeignKeyValue($this->idbrand->getSessionValue());
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                    } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idbrand->ViewValue = null;
-            }
-            $this->idbrand->ViewCustomAttributes = "";
-        } else {
-            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-        }
+        $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
         // idproduct
         $this->idproduct->EditAttrs["class"] = "form-control";
         $this->idproduct->EditCustomAttributes = "";
-        if ($this->idproduct->getSessionValue() != "") {
-            $this->idproduct->CurrentValue = GetForeignKeyValue($this->idproduct->getSessionValue());
-            $curVal = trim(strval($this->idproduct->CurrentValue));
-            if ($curVal != "") {
-                $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
-                if ($this->idproduct->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idproduct->Lookup->renderViewRow($rswrk[0]);
-                        $this->idproduct->ViewValue = $this->idproduct->displayValue($arwrk);
-                    } else {
-                        $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idproduct->ViewValue = null;
-            }
-            $this->idproduct->ViewCustomAttributes = "";
-        } else {
-            $this->idproduct->PlaceHolder = RemoveHtml($this->idproduct->caption());
-        }
+        $this->idproduct->PlaceHolder = RemoveHtml($this->idproduct->caption());
 
         // jumlah
         $this->jumlah->EditAttrs["class"] = "form-control";
@@ -1614,9 +1504,6 @@ SORTHTML;
         if ($currentMasterTable == "order") {
             $filterWrk = Container("order")->addUserIDFilter($filterWrk);
         }
-        if ($currentMasterTable == "brand") {
-            $filterWrk = Container("brand")->addUserIDFilter($filterWrk);
-        }
         return $filterWrk;
     }
 
@@ -1628,13 +1515,6 @@ SORTHTML;
             $mastertable = Container("order");
             if (!$mastertable->userIdAllow()) {
                 $subqueryWrk = $mastertable->getUserIDSubquery($this->idorder, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        if ($currentMasterTable == "brand") {
-            $mastertable = Container("brand");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->idbrand, $mastertable->id);
                 AddFilter($filterWrk, $subqueryWrk);
             }
         }

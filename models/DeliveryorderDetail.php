@@ -65,8 +65,8 @@ class DeliveryorderDetail extends DbTable
         $this->ExportWordPageOrientation = "portrait"; // Page orientation (PHPWord only)
         $this->ExportWordColumnWidth = null; // Cell width (PHPWord only)
         $this->DetailAdd = true; // Allow detail add
-        $this->DetailEdit = false; // Allow detail edit
-        $this->DetailView = false; // Allow detail view
+        $this->DetailEdit = true; // Allow detail edit
+        $this->DetailView = true; // Allow detail view
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
@@ -82,11 +82,13 @@ class DeliveryorderDetail extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // iddeliveryorder
-        $this->iddeliveryorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_iddeliveryorder', 'iddeliveryorder', '`iddeliveryorder`', '`iddeliveryorder`', 3, 11, -1, false, '`iddeliveryorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->iddeliveryorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_iddeliveryorder', 'iddeliveryorder', '`iddeliveryorder`', '`iddeliveryorder`', 3, 11, -1, false, '`iddeliveryorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->iddeliveryorder->IsForeignKey = true; // Foreign key field
         $this->iddeliveryorder->Nullable = false; // NOT NULL field
         $this->iddeliveryorder->Required = true; // Required field
         $this->iddeliveryorder->Sortable = true; // Allow sort
+        $this->iddeliveryorder->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->iddeliveryorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->iddeliveryorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->iddeliveryorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->iddeliveryorder->Param, "CustomMsg");
         $this->Fields['iddeliveryorder'] = &$this->iddeliveryorder;
@@ -1017,7 +1019,6 @@ SORTHTML;
         $this->id->ViewCustomAttributes = "";
 
         // iddeliveryorder
-        $this->iddeliveryorder->ViewValue = $this->iddeliveryorder->CurrentValue;
         $this->iddeliveryorder->ViewValue = FormatNumber($this->iddeliveryorder->ViewValue, 0, -2, -2, -2);
         $this->iddeliveryorder->ViewCustomAttributes = "";
 
@@ -1028,7 +1029,7 @@ SORTHTML;
             if ($this->idorder->ViewValue === null) { // Lookup from database
                 $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1167,11 +1168,9 @@ SORTHTML;
         $this->iddeliveryorder->EditCustomAttributes = "";
         if ($this->iddeliveryorder->getSessionValue() != "") {
             $this->iddeliveryorder->CurrentValue = GetForeignKeyValue($this->iddeliveryorder->getSessionValue());
-            $this->iddeliveryorder->ViewValue = $this->iddeliveryorder->CurrentValue;
             $this->iddeliveryorder->ViewValue = FormatNumber($this->iddeliveryorder->ViewValue, 0, -2, -2, -2);
             $this->iddeliveryorder->ViewCustomAttributes = "";
         } else {
-            $this->iddeliveryorder->EditValue = $this->iddeliveryorder->CurrentValue;
             $this->iddeliveryorder->PlaceHolder = RemoveHtml($this->iddeliveryorder->caption());
         }
 

@@ -121,6 +121,7 @@ return [
     "laporan_invoice" => \DI\create(LaporanInvoice::class),
     "laporan_surat_jalan" => \DI\create(LaporanSuratJalan::class),
     "laporan_pembayaran" => \DI\create(LaporanPembayaran::class),
+    "approval_po" => \DI\create(ApprovalPo::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

@@ -7,56 +7,24 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class OrderDetailView extends OrderDetail
+class ApprovalPoEdit extends ApprovalPo
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "view";
+    public $PageID = "edit";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'order_detail';
+    public $TableName = 'approval_po';
 
     // Page object name
-    public $PageObjName = "OrderDetailView";
+    public $PageObjName = "ApprovalPoEdit";
 
     // Rendering View
     public $RenderingView = false;
-
-    // Page URLs
-    public $AddUrl;
-    public $EditUrl;
-    public $CopyUrl;
-    public $DeleteUrl;
-    public $ViewUrl;
-    public $ListUrl;
-
-    // Export URLs
-    public $ExportPrintUrl;
-    public $ExportHtmlUrl;
-    public $ExportExcelUrl;
-    public $ExportWordUrl;
-    public $ExportXmlUrl;
-    public $ExportCsvUrl;
-    public $ExportPdfUrl;
-
-    // Custom export
-    public $ExportExcelCustom = false;
-    public $ExportWordCustom = false;
-    public $ExportPdfCustom = false;
-    public $ExportEmailCustom = false;
-
-    // Update URLs
-    public $InlineAddUrl;
-    public $InlineCopyUrl;
-    public $InlineEditUrl;
-    public $GridAddUrl;
-    public $GridEditUrl;
-    public $MultiDeleteUrl;
-    public $MultiUpdateUrl;
 
     // Page headings
     public $Heading = "";
@@ -159,27 +127,17 @@ class OrderDetailView extends OrderDetail
         // Parent constuctor
         parent::__construct();
 
-        // Table object (order_detail)
-        if (!isset($GLOBALS["order_detail"]) || get_class($GLOBALS["order_detail"]) == PROJECT_NAMESPACE . "order_detail") {
-            $GLOBALS["order_detail"] = &$this;
+        // Table object (approval_po)
+        if (!isset($GLOBALS["approval_po"]) || get_class($GLOBALS["approval_po"]) == PROJECT_NAMESPACE . "approval_po") {
+            $GLOBALS["approval_po"] = &$this;
         }
 
         // Page URL
         $pageUrl = $this->pageUrl();
-        if (($keyValue = Get("id") ?? Route("id")) !== null) {
-            $this->RecKey["id"] = $keyValue;
-        }
-        $this->ExportPrintUrl = $pageUrl . "export=print";
-        $this->ExportHtmlUrl = $pageUrl . "export=html";
-        $this->ExportExcelUrl = $pageUrl . "export=excel";
-        $this->ExportWordUrl = $pageUrl . "export=word";
-        $this->ExportXmlUrl = $pageUrl . "export=xml";
-        $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->ExportPdfUrl = $pageUrl . "export=pdf";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'order_detail');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'approval_po');
         }
 
         // Start timer
@@ -193,19 +151,6 @@ class OrderDetailView extends OrderDetail
 
         // User table object
         $UserTable = Container("usertable");
-
-        // Export options
-        $this->ExportOptions = new ListOptions("div");
-        $this->ExportOptions->TagClassName = "ew-export-option";
-
-        // Other options
-        if (!$this->OtherOptions) {
-            $this->OtherOptions = new ListOptionsArray();
-        }
-        $this->OtherOptions["action"] = new ListOptions("div");
-        $this->OtherOptions["action"]->TagClassName = "ew-action-option";
-        $this->OtherOptions["detail"] = new ListOptions("div");
-        $this->OtherOptions["detail"]->TagClassName = "ew-detail-option";
     }
 
     // Get content from stream
@@ -277,7 +222,7 @@ class OrderDetailView extends OrderDetail
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("order_detail"));
+                $doc = new $class(Container("approval_po"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -321,7 +266,7 @@ class OrderDetailView extends OrderDetail
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "OrderDetailView") {
+                    if ($pageName == "ApprovalPoView") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -493,17 +438,18 @@ class OrderDetailView extends OrderDetail
         }
         $lookup->toJson($this); // Use settings from current page
     }
-    public $ExportOptions; // Export options
-    public $OtherOptions; // Other options
-    public $DisplayRecords = 1;
+    public $FormClassName = "ew-horizontal ew-form ew-edit-form";
+    public $IsModal = false;
+    public $IsMobileOrModal = false;
     public $DbMasterFilter;
     public $DbDetailFilter;
+    public $HashValue; // Hash Value
+    public $DisplayRecords = 1;
     public $StartRecord;
     public $StopRecord;
     public $TotalRecords = 0;
     public $RecordRange = 10;
-    public $RecKey = [];
-    public $IsModal = false;
+    public $RecordCount;
 
     /**
      * Page run
@@ -517,20 +463,13 @@ class OrderDetailView extends OrderDetail
 
         // Is modal
         $this->IsModal = Param("modal") == "1";
+
+        // Create form object
+        $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
-        $this->idorder->setVisibility();
-        $this->idbrand->setVisibility();
-        $this->idproduct->setVisibility();
-        $this->jumlah->setVisibility();
-        $this->bonus->setVisibility();
-        $this->sisa->setVisibility();
-        $this->harga->setVisibility();
-        $this->total->setVisibility();
-        $this->aktif->setVisibility();
-        $this->created_at->setVisibility();
-        $this->created_by->setVisibility();
-        $this->readonly->setVisibility();
+        $this->id->Visible = false;
+        $this->idcustomer->Visible = false;
+        $this->jumlah_limit->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -545,85 +484,139 @@ class OrderDetailView extends OrderDetail
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idbrand);
-        $this->setupLookupOptions($this->idproduct);
+        $this->setupLookupOptions($this->idcustomer);
 
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
         }
+        $this->IsMobileOrModal = IsMobile() || $this->IsModal;
+        $this->FormClassName = "ew-form ew-edit-form ew-horizontal";
+        $loaded = false;
+        $postBack = false;
 
-        // Load current record
-        $loadCurrentRecord = false;
-        $returnUrl = "";
-        $matchRecord = false;
-
-        // Set up master/detail parameters
-        $this->setupMasterParms();
-        if ($this->isPageRequest()) { // Validate request
-            if (($keyValue = Get("id") ?? Route("id")) !== null) {
+        // Set up current action and primary key
+        if (IsApi()) {
+            // Load key values
+            $loaded = true;
+            if (($keyValue = Get("id") ?? Key(0) ?? Route(2)) !== null) {
                 $this->id->setQueryStringValue($keyValue);
-                $this->RecKey["id"] = $this->id->QueryStringValue;
+                $this->id->setOldValue($this->id->QueryStringValue);
             } elseif (Post("id") !== null) {
                 $this->id->setFormValue(Post("id"));
-                $this->RecKey["id"] = $this->id->FormValue;
-            } elseif (IsApi() && ($keyValue = Key(0) ?? Route(2)) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-                $this->RecKey["id"] = $this->id->QueryStringValue;
+                $this->id->setOldValue($this->id->FormValue);
             } else {
-                $returnUrl = "OrderDetailList"; // Return to list
+                $loaded = false; // Unable to load key
             }
 
-            // Get action
-            $this->CurrentAction = "show"; // Display
-            switch ($this->CurrentAction) {
-                case "show": // Get a record to display
-
-                    // Load record based on key
-                    if (IsApi()) {
-                        $filter = $this->getRecordFilter();
-                        $this->CurrentFilter = $filter;
-                        $sql = $this->getCurrentSql();
-                        $conn = $this->getConnection();
-                        $this->Recordset = LoadRecordset($sql, $conn);
-                        $res = $this->Recordset && !$this->Recordset->EOF;
-                    } else {
-                        $res = $this->loadRow();
-                    }
-                    if (!$res) { // Load record based on key
-                        if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
-                            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
-                        }
-                        $returnUrl = "OrderDetailList"; // No matching record, return to list
-                    }
-                    break;
+            // Load record
+            if ($loaded) {
+                $loaded = $this->loadRow();
             }
+            if (!$loaded) {
+                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+                $this->terminate();
+                return;
+            }
+            $this->CurrentAction = "update"; // Update record directly
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
+            $postBack = true;
         } else {
-            $returnUrl = "OrderDetailList"; // Not page request, return to list
+            if (Post("action") !== null) {
+                $this->CurrentAction = Post("action"); // Get action code
+                if (!$this->isShow()) { // Not reload record, handle as postback
+                    $postBack = true;
+                }
+
+                // Get key from Form
+                $this->setKey(Post($this->OldKeyName), $this->isShow());
+            } else {
+                $this->CurrentAction = "show"; // Default action is display
+
+                // Load key from QueryString
+                $loadByQuery = false;
+                if (($keyValue = Get("id") ?? Route("id")) !== null) {
+                    $this->id->setQueryStringValue($keyValue);
+                    $loadByQuery = true;
+                } else {
+                    $this->id->CurrentValue = null;
+                }
+            }
+
+            // Load recordset
+            if ($this->isShow()) {
+                // Load current record
+                $loaded = $this->loadRow();
+                $this->OldKey = $loaded ? $this->getKey(true) : ""; // Get from CurrentValue
+            }
         }
-        if ($returnUrl != "") {
-            $this->terminate($returnUrl);
-            return;
+
+        // Process form if post back
+        if ($postBack) {
+            $this->loadFormValues(); // Get form values
+        }
+
+        // Validate form if post back
+        if ($postBack) {
+            if (!$this->validateForm()) {
+                $this->EventCancelled = true; // Event cancelled
+                $this->restoreFormValues();
+                if (IsApi()) {
+                    $this->terminate();
+                    return;
+                } else {
+                    $this->CurrentAction = ""; // Form error, reset action
+                }
+            }
+        }
+
+        // Perform current action
+        switch ($this->CurrentAction) {
+            case "show": // Get a record to display
+                if (!$loaded) { // Load record based on key
+                    if ($this->getFailureMessage() == "") {
+                        $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+                    }
+                    $this->terminate("ApprovalPoList"); // No matching record, return to list
+                    return;
+                }
+                break;
+            case "update": // Update
+                $returnUrl = $this->getReturnUrl();
+                if (GetPageName($returnUrl) == "ApprovalPoList") {
+                    $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
+                }
+                $this->SendEmail = true; // Send email on update success
+                if ($this->editRow()) { // Update record based on key
+                    if ($this->getSuccessMessage() == "") {
+                        $this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Update success
+                    }
+                    if (IsApi()) {
+                        $this->terminate(true);
+                        return;
+                    } else {
+                        $this->terminate($returnUrl); // Return to caller
+                        return;
+                    }
+                } elseif (IsApi()) { // API request, return
+                    $this->terminate();
+                    return;
+                } elseif ($this->getFailureMessage() == $Language->phrase("NoRecord")) {
+                    $this->terminate($returnUrl); // Return to caller
+                    return;
+                } else {
+                    $this->EventCancelled = true; // Event cancelled
+                    $this->restoreFormValues(); // Restore form values if update failed
+                }
         }
 
         // Set up Breadcrumb
-        if (!$this->isExport()) {
-            $this->setupBreadcrumb();
-        }
+        $this->setupBreadcrumb();
 
-        // Render row
-        $this->RowType = ROWTYPE_VIEW;
+        // Render the record
+        $this->RowType = ROWTYPE_EDIT; // Render as Edit
         $this->resetAttributes();
         $this->renderRow();
-
-        // Normal return
-        if (IsApi()) {
-            $rows = $this->getRecordsFromRecordset($this->Recordset, true); // Get current record only
-            $this->Recordset->close();
-            WriteJson(["success" => true, $this->TableVar => $rows]);
-            $this->terminate(true);
-            return;
-        }
 
         // Set LoginStatus / Page_Rendering / Page_Render
         if (!IsApi() && !$this->isTerminated()) {
@@ -646,50 +639,41 @@ class OrderDetailView extends OrderDetail
         }
     }
 
-    // Set up other options
-    protected function setupOtherOptions()
+    // Get upload files
+    protected function getUploadFiles()
     {
-        global $Language, $Security;
-        $options = &$this->OtherOptions;
-        $option = $options["action"];
+        global $CurrentForm, $Language;
+    }
 
-        // Add
-        $item = &$option->add("add");
-        $addcaption = HtmlTitle($Language->phrase("ViewPageAddLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode(GetUrl($this->AddUrl)) . "'});\">" . $Language->phrase("ViewPageAddLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
+    // Load form values
+    protected function loadFormValues()
+    {
+        // Load from form
+        global $CurrentForm;
+
+        // Check field name 'jumlah_limit' first before field var 'x_jumlah_limit'
+        $val = $CurrentForm->hasValue("jumlah_limit") ? $CurrentForm->getValue("jumlah_limit") : $CurrentForm->getValue("x_jumlah_limit");
+        if (!$this->jumlah_limit->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->jumlah_limit->Visible = false; // Disable update for API request
+            } else {
+                $this->jumlah_limit->setFormValue($val);
+            }
         }
-        $item->Visible = ($this->AddUrl != "" && $Security->canAdd());
 
-        // Edit
-        $item = &$option->add("edit");
-        $editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode(GetUrl($this->EditUrl)) . "'});\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
-        $item->Visible = ($this->EditUrl != "" && $Security->canEdit() && $this->showOptionLink("edit"));
+    }
 
-        // Delete
-        $item = &$option->add("delete");
-        if ($this->IsModal) { // Handle as inline delete
-            $item->Body = "<a onclick=\"return ew.confirmDelete(this);\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(UrlAddQuery(GetUrl($this->DeleteUrl), "action=1")) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-        }
-        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete() && $this->showOptionLink("delete"));
-
-        // Set up action default
-        $option = $options["action"];
-        $option->DropDownButtonPhrase = $Language->phrase("ButtonActions");
-        $option->UseDropDownButton = false;
-        $option->UseButtonGroup = true;
-        $item = &$option->add($option->GroupOptionName);
-        $item->Body = "";
-        $item->Visible = false;
+    // Restore form values
+    public function restoreFormValues()
+    {
+        global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
+        $this->jumlah_limit->CurrentValue = $this->jumlah_limit->FormValue;
     }
 
     /**
@@ -740,18 +724,8 @@ class OrderDetailView extends OrderDetail
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idorder->setDbValue($row['idorder']);
-        $this->idbrand->setDbValue($row['idbrand']);
-        $this->idproduct->setDbValue($row['idproduct']);
-        $this->jumlah->setDbValue($row['jumlah']);
-        $this->bonus->setDbValue($row['bonus']);
-        $this->sisa->setDbValue($row['sisa']);
-        $this->harga->setDbValue($row['harga']);
-        $this->total->setDbValue($row['total']);
-        $this->aktif->setDbValue($row['aktif']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
-        $this->readonly->setDbValue($row['readonly']);
+        $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->jumlah_limit->setDbValue($row['jumlah_limit']);
     }
 
     // Return a row with default values
@@ -759,19 +733,25 @@ class OrderDetailView extends OrderDetail
     {
         $row = [];
         $row['id'] = null;
-        $row['idorder'] = null;
-        $row['idbrand'] = null;
-        $row['idproduct'] = null;
-        $row['jumlah'] = null;
-        $row['bonus'] = null;
-        $row['sisa'] = null;
-        $row['harga'] = null;
-        $row['total'] = null;
-        $row['aktif'] = null;
-        $row['created_at'] = null;
-        $row['created_by'] = null;
-        $row['readonly'] = null;
+        $row['idcustomer'] = null;
+        $row['jumlah_limit'] = null;
         return $row;
+    }
+
+    // Load old record
+    protected function loadOldRecord()
+    {
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -780,12 +760,6 @@ class OrderDetailView extends OrderDetail
         global $Security, $Language, $CurrentLanguage;
 
         // Initialize URLs
-        $this->AddUrl = $this->getAddUrl();
-        $this->EditUrl = $this->getEditUrl();
-        $this->CopyUrl = $this->getCopyUrl();
-        $this->DeleteUrl = $this->getDeleteUrl();
-        $this->ListUrl = $this->getListUrl();
-        $this->setupOtherOptions();
 
         // Call Row_Rendering event
         $this->rowRendering();
@@ -794,162 +768,59 @@ class OrderDetailView extends OrderDetail
 
         // id
 
-        // idorder
+        // idcustomer
 
-        // idbrand
-
-        // idproduct
-
-        // jumlah
-
-        // bonus
-
-        // sisa
-
-        // harga
-
-        // total
-
-        // aktif
-
-        // created_at
-
-        // created_by
-
-        // readonly
+        // jumlah_limit
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // idorder
-            $this->idorder->ViewValue = $this->idorder->CurrentValue;
-            $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
-            $this->idorder->ViewCustomAttributes = "";
-
-            // idbrand
-            $curVal = trim(strval($this->idbrand->CurrentValue));
+            // idcustomer
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
                     } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
                     }
                 }
             } else {
-                $this->idbrand->ViewValue = null;
+                $this->idcustomer->ViewValue = null;
             }
-            $this->idbrand->ViewCustomAttributes = "";
+            $this->idcustomer->ViewCustomAttributes = "";
 
-            // idproduct
-            $curVal = trim(strval($this->idproduct->CurrentValue));
-            if ($curVal != "") {
-                $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
-                if ($this->idproduct->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idproduct->Lookup->renderViewRow($rswrk[0]);
-                        $this->idproduct->ViewValue = $this->idproduct->displayValue($arwrk);
-                    } else {
-                        $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idproduct->ViewValue = null;
-            }
-            $this->idproduct->ViewCustomAttributes = "";
+            // jumlah_limit
+            $this->jumlah_limit->ViewValue = $this->jumlah_limit->CurrentValue;
+            $this->jumlah_limit->ViewValue = FormatNumber($this->jumlah_limit->ViewValue, 0, -2, -2, -2);
+            $this->jumlah_limit->ViewCustomAttributes = "";
 
-            // jumlah
-            $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
-            $this->jumlah->ViewCustomAttributes = "";
+            // jumlah_limit
+            $this->jumlah_limit->LinkCustomAttributes = "";
+            $this->jumlah_limit->HrefValue = "";
+            $this->jumlah_limit->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // jumlah_limit
+            $this->jumlah_limit->EditAttrs["class"] = "form-control";
+            $this->jumlah_limit->EditCustomAttributes = "";
+            $this->jumlah_limit->EditValue = HtmlEncode($this->jumlah_limit->CurrentValue);
+            $this->jumlah_limit->PlaceHolder = RemoveHtml($this->jumlah_limit->caption());
 
-            // bonus
-            $this->bonus->ViewValue = $this->bonus->CurrentValue;
-            $this->bonus->ViewValue = FormatNumber($this->bonus->ViewValue, 0, -2, -2, -2);
-            $this->bonus->ViewCustomAttributes = "";
+            // Edit refer script
 
-            // sisa
-            $this->sisa->ViewValue = $this->sisa->CurrentValue;
-            $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
-            $this->sisa->ViewCustomAttributes = "";
-
-            // harga
-            $this->harga->ViewValue = $this->harga->CurrentValue;
-            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-            $this->harga->ViewCustomAttributes = "";
-
-            // total
-            $this->total->ViewValue = $this->total->CurrentValue;
-            $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
-            $this->total->ViewCustomAttributes = "";
-
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
-            } else {
-                $this->aktif->ViewValue = null;
-            }
-            $this->aktif->ViewCustomAttributes = "";
-
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
-
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
-
-            // idproduct
-            $this->idproduct->LinkCustomAttributes = "";
-            $this->idproduct->HrefValue = "";
-            $this->idproduct->TooltipValue = "";
-
-            // jumlah
-            $this->jumlah->LinkCustomAttributes = "";
-            $this->jumlah->HrefValue = "";
-            $this->jumlah->TooltipValue = "";
-
-            // bonus
-            $this->bonus->LinkCustomAttributes = "";
-            $this->bonus->HrefValue = "";
-            $this->bonus->TooltipValue = "";
-
-            // sisa
-            $this->sisa->LinkCustomAttributes = "";
-            $this->sisa->HrefValue = "";
-            $this->sisa->TooltipValue = "";
-
-            // harga
-            $this->harga->LinkCustomAttributes = "";
-            $this->harga->HrefValue = "";
-            $this->harga->TooltipValue = "";
-
-            // total
-            $this->total->LinkCustomAttributes = "";
-            $this->total->HrefValue = "";
-            $this->total->TooltipValue = "";
+            // jumlah_limit
+            $this->jumlah_limit->LinkCustomAttributes = "";
+            $this->jumlah_limit->HrefValue = "";
+        }
+        if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
+            $this->setupFieldTitles();
         }
 
         // Call Row Rendered event
@@ -958,84 +829,100 @@ class OrderDetailView extends OrderDetail
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
+    // Validate form
+    protected function validateForm()
     {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
+        global $Language;
+
+        // Check if validation required
+        if (!Config("SERVER_VALIDATE")) {
+            return true;
         }
-        return true;
+        if ($this->jumlah_limit->Required) {
+            if (!$this->jumlah_limit->IsDetailKey && EmptyValue($this->jumlah_limit->FormValue)) {
+                $this->jumlah_limit->addErrorMessage(str_replace("%s", $this->jumlah_limit->caption(), $this->jumlah_limit->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->jumlah_limit->FormValue)) {
+            $this->jumlah_limit->addErrorMessage($this->jumlah_limit->getErrorMessage(false));
+        }
+
+        // Return validate result
+        $validateForm = !$this->hasInvalidFields();
+
+        // Call Form_CustomValidate event
+        $formCustomError = "";
+        $validateForm = $validateForm && $this->formCustomValidate($formCustomError);
+        if ($formCustomError != "") {
+            $this->setFailureMessage($formCustomError);
+        }
+        return $validateForm;
     }
 
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
+    // Update record based on key values
+    protected function editRow()
     {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "order") {
-                $validMaster = true;
-                $masterTbl = Container("order");
-                if (($parm = Get("fk_id", Get("idorder"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idorder->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idorder->setSessionValue($this->idorder->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
+        global $Security, $Language;
+        $oldKeyFilter = $this->getRecordFilter();
+        $filter = $this->applyUserIDFilters($oldKeyFilter);
+        $conn = $this->getConnection();
+        $this->CurrentFilter = $filter;
+        $sql = $this->getCurrentSql();
+        $rsold = $conn->fetchAssoc($sql);
+        $editRow = false;
+        if (!$rsold) {
+            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+            $editRow = false; // Update Failed
+        } else {
+            // Save old values
+            $this->loadDbValues($rsold);
+            $rsnew = [];
+
+            // jumlah_limit
+            $this->jumlah_limit->setDbValueDef($rsnew, $this->jumlah_limit->CurrentValue, 0, $this->jumlah_limit->ReadOnly);
+
+            // Call Row Updating event
+            $updateRow = $this->rowUpdating($rsold, $rsnew);
+            if ($updateRow) {
+                if (count($rsnew) > 0) {
+                    try {
+                        $editRow = $this->update($rsnew, "", $rsold);
+                    } catch (\Exception $e) {
+                        $this->setFailureMessage($e->getMessage());
                     }
                 } else {
-                    $validMaster = false;
+                    $editRow = true; // No field to update
                 }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "order") {
-                $validMaster = true;
-                $masterTbl = Container("order");
-                if (($parm = Post("fk_id", Post("idorder"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idorder->setFormValue($masterTbl->id->FormValue);
-                    $this->idorder->setSessionValue($this->idorder->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
+                if ($editRow) {
+                }
+            } else {
+                if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
+                    // Use the message, do nothing
+                } elseif ($this->CancelMessage != "") {
+                    $this->setFailureMessage($this->CancelMessage);
+                    $this->CancelMessage = "";
                 } else {
-                    $validMaster = false;
+                    $this->setFailureMessage($Language->phrase("UpdateCancelled"));
                 }
+                $editRow = false;
             }
         }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-            $this->setSessionWhere($this->getDetailFilter());
 
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "order") {
-                if ($this->idorder->CurrentValue == "") {
-                    $this->idorder->setSessionValue("");
-                }
-            }
+        // Call Row_Updated event
+        if ($editRow) {
+            $this->rowUpdated($rsold, $rsnew);
         }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
+
+        // Clean upload path if any
+        if ($editRow) {
+        }
+
+        // Write JSON for API request
+        if (IsApi() && $editRow) {
+            $row = $this->getRecordsFromRecordset([$rsnew], true);
+            WriteJson(["success" => true, $this->TableVar => $row]);
+        }
+        return $editRow;
     }
 
     // Set up Breadcrumb
@@ -1044,9 +931,9 @@ class OrderDetailView extends OrderDetail
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("OrderDetailList"), "", $this->TableVar, true);
-        $pageId = "view";
-        $Breadcrumb->add("view", $pageId, $url);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("ApprovalPoList"), "", $this->TableVar, true);
+        $pageId = "edit";
+        $Breadcrumb->add("edit", $pageId, $url);
     }
 
     // Setup lookup options
@@ -1062,15 +949,7 @@ class OrderDetailView extends OrderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idbrand":
-                    break;
-                case "x_idproduct":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_aktif":
+                case "x_idcustomer":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1174,11 +1053,6 @@ class OrderDetailView extends OrderDetail
     public function pageRender()
     {
         //Log("Page Render");
-        $this->OtherOptions["action"]->Items["add"]->Visible = false;
-        if ($this->readonly->CurrentValue) {
-        	$this->OtherOptions["action"]->Items["edit"]->Visible = false;
-        	$this->OtherOptions["action"]->Items["delete"]->Visible = false;
-        }
     }
 
     // Page Data Rendering event
@@ -1195,27 +1069,10 @@ class OrderDetailView extends OrderDetail
         //$footer = "your footer";
     }
 
-    // Page Exporting event
-    // $this->ExportDoc = export document object
-    public function pageExporting()
+    // Form Custom Validate event
+    public function formCustomValidate(&$customError)
     {
-        //$this->ExportDoc->Text = "my header"; // Export header
-        //return false; // Return false to skip default export and use Row_Export event
-        return true; // Return true to use default export and skip Row_Export event
-    }
-
-    // Row Export event
-    // $this->ExportDoc = export document object
-    public function rowExport($rs)
-    {
-        //$this->ExportDoc->Text .= "my content"; // Build HTML with field value: $rs["MyField"] or $this->MyField->ViewValue
-    }
-
-    // Page Exported event
-    // $this->ExportDoc = export document object
-    public function pageExported()
-    {
-        //$this->ExportDoc->Text .= "my footer"; // Export footer
-        //Log($this->ExportDoc->Text);
+        // Return error message in CustomError
+        return true;
     }
 }

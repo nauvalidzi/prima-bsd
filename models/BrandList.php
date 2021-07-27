@@ -1320,13 +1320,6 @@ class BrandList extends Brand
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
-        // "detail_order_detail"
-        $item = &$this->ListOptions->add("detail_order_detail");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'order_detail') && !$this->ShowMultipleDetails;
-        $item->OnLeft = false;
-        $item->ShowInButtonGroup = false;
-
         // Multiple details
         if ($this->ShowMultipleDetails) {
             $item = &$this->ListOptions->add("details");
@@ -1339,7 +1332,6 @@ class BrandList extends Brand
         // Set up detail pages
         $pages = new SubPages();
         $pages->add("product");
-        $pages->add("order_detail");
         $this->DetailPages = $pages;
 
         // List actions
@@ -1481,42 +1473,6 @@ class BrandList extends Brand
                 $opt->Visible = false;
             }
         }
-
-        // "detail_order_detail"
-        $opt = $this->ListOptions["detail_order_detail"];
-        if ($Security->allowList(CurrentProjectID() . 'order_detail') && $this->showOptionLink()) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("order_detail", "TblCaption");
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("OrderDetailList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
-            $links = "";
-            $detailPage = Container("OrderDetailGrid");
-            if ($detailPage->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'brand')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
-                if ($detailViewTblVar != "") {
-                    $detailViewTblVar .= ",";
-                }
-                $detailViewTblVar .= "order_detail";
-            }
-            if ($detailPage->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'brand')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
-                if ($detailEditTblVar != "") {
-                    $detailEditTblVar .= ",";
-                }
-                $detailEditTblVar .= "order_detail";
-            }
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-            }
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-            $opt->Body = $body;
-            if ($this->ShowMultipleDetails) {
-                $opt->Visible = false;
-            }
-        }
         if ($this->ShowMultipleDetails) {
             $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
             $links = "";
@@ -1573,18 +1529,6 @@ class BrandList extends Brand
                         $detailTableLink .= ",";
                     }
                     $detailTableLink .= "product";
-                }
-                $item = &$option->add("detailadd_order_detail");
-                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $detailPage = Container("OrderDetailGrid");
-                $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
-                $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
-                $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'brand') && $Security->canAdd());
-                if ($item->Visible) {
-                    if ($detailTableLink != "") {
-                        $detailTableLink .= ",";
-                    }
-                    $detailTableLink .= "order_detail";
                 }
 
         // Add multiple details
@@ -1783,38 +1727,6 @@ class BrandList extends Brand
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'brand')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
                 $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=product");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            $btngrp .= "</div>";
-            if ($link != "") {
-                $btngrps .= $btngrp;
-                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
-            }
-        }
-        $sqlwrk = "`idbrand`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
-
-        // Column "detail_order_detail"
-        if ($this->DetailPages && $this->DetailPages["order_detail"] && $this->DetailPages["order_detail"]->Visible) {
-            $link = "";
-            $option = $this->ListOptions["detail_order_detail"];
-            $url = "OrderDetailPreview?t=brand&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"order_detail\" data-url=\"" . $url . "\">";
-            if ($Security->allowList(CurrentProjectID() . 'brand')) {
-                $label = $Language->TablePhrase("order_detail", "TblCaption");
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"order_detail\" data-url=\"" . $url . "\">" . $label . "</a></li>";
-                $links .= $link;
-                $detaillnk = JsEncodeAttribute("OrderDetailList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("order_detail", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
-            }
-            $detailPageObj = Container("OrderDetailGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'brand')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'brand')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -2409,16 +2321,6 @@ class BrandList extends Brand
     {
         // Example:
         //$header = "your header";
-        echo "
-        <style>
-        	.nav-item a[data-table=order_detail],
-        	.ew-list-other-options .ew-add-edit-option,
-        	.ew-list-other-options .ew-detail-option .ew-btn-group .ew-detail-add-group:not(:first-child)
-        	{
-        		display: none;
-        	}
-        </style>
-        ";
     }
 
     // Page Data Rendered event

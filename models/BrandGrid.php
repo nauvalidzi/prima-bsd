@@ -1323,38 +1323,6 @@ class BrandGrid extends Brand
                 $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
             }
         }
-        $sqlwrk = "`idbrand`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
-
-        // Column "detail_order_detail"
-        if ($this->DetailPages && $this->DetailPages["order_detail"] && $this->DetailPages["order_detail"]->Visible) {
-            $link = "";
-            $option = $this->ListOptions["detail_order_detail"];
-            $url = "OrderDetailPreview?t=brand&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"order_detail\" data-url=\"" . $url . "\">";
-            if ($Security->allowList(CurrentProjectID() . 'brand')) {
-                $label = $Language->TablePhrase("order_detail", "TblCaption");
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"order_detail\" data-url=\"" . $url . "\">" . $label . "</a></li>";
-                $links .= $link;
-                $detaillnk = JsEncodeAttribute("OrderDetailList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("order_detail", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
-            }
-            $detailPageObj = Container("OrderDetailGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'brand')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'brand')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            $btngrp .= "</div>";
-            if ($link != "") {
-                $btngrps .= $btngrp;
-                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
-            }
-        }
 
         // Hide detail items if necessary
         $this->ListOptions->hideDetailItemsForDropDown();
@@ -2407,16 +2375,6 @@ class BrandGrid extends Brand
     {
         // Example:
         //$header = "your header";
-        echo "
-        <style>
-        	.nav-item a[data-table=order_detail],
-        	.ew-list-other-options .ew-add-edit-option,
-        	.ew-list-other-options .ew-detail-option .ew-btn-group .ew-detail-add-group:not(:first-child)
-        	{
-        		display: none;
-        	}
-        </style>
-        ";
     }
 
     // Page Data Rendered event

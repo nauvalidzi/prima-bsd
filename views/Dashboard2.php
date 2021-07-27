@@ -23,6 +23,7 @@ $do = ExecuteScalar("SELECT count(id) FROM deliveryorder");
 	    <div class="icon">
 	      <i class="fa fa-users"></i>
 	    </div>
+	    <a href="CustomerList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
 	  </div>
 	</div>
 	<div class="col-lg-3 col-xs-6">
@@ -34,6 +35,7 @@ $do = ExecuteScalar("SELECT count(id) FROM deliveryorder");
 	    <div class="icon">
 	      <i class="fa fa-cubes"></i>
 	    </div>
+	    <a href="ProductList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
 	  </div>
 	</div>
 	<div class="col-lg-3 col-xs-6">
@@ -45,6 +47,7 @@ $do = ExecuteScalar("SELECT count(id) FROM deliveryorder");
 	    <div class="icon">
 	      <i class="fa fa-dice"></i>
 	    </div>
+	    <a href="NpdList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
 	  </div>
 	</div>
 	<div class="col-lg-3 col-xs-6">
@@ -56,6 +59,7 @@ $do = ExecuteScalar("SELECT count(id) FROM deliveryorder");
 	    <div class="icon">
 	      <i class="fa fa-truck-loading"></i>
 	    </div>
+	    <a href="DeliveryorderList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
 	  </div>
 	</div>
 </div>

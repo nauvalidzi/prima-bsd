@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class DeliveryorderDetailList extends DeliveryorderDetail
+class ApprovalPoList extends ApprovalPo
 {
     use MessagesTrait;
 
@@ -18,16 +18,16 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'deliveryorder_detail';
+    public $TableName = 'approval_po';
 
     // Page object name
-    public $PageObjName = "DeliveryorderDetailList";
+    public $PageObjName = "ApprovalPoList";
 
     // Rendering View
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fdeliveryorder_detaillist";
+    public $FormName = "fapproval_polist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -165,9 +165,9 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         // Parent constuctor
         parent::__construct();
 
-        // Table object (deliveryorder_detail)
-        if (!isset($GLOBALS["deliveryorder_detail"]) || get_class($GLOBALS["deliveryorder_detail"]) == PROJECT_NAMESPACE . "deliveryorder_detail") {
-            $GLOBALS["deliveryorder_detail"] = &$this;
+        // Table object (approval_po)
+        if (!isset($GLOBALS["approval_po"]) || get_class($GLOBALS["approval_po"]) == PROJECT_NAMESPACE . "approval_po") {
+            $GLOBALS["approval_po"] = &$this;
         }
 
         // Page URL
@@ -181,16 +181,16 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "DeliveryorderDetailAdd";
+        $this->AddUrl = "ApprovalPoAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "DeliveryorderDetailDelete";
-        $this->MultiUpdateUrl = "DeliveryorderDetailUpdate";
+        $this->MultiDeleteUrl = "ApprovalPoDelete";
+        $this->MultiUpdateUrl = "ApprovalPoUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'deliveryorder_detail');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'approval_po');
         }
 
         // Start timer
@@ -230,7 +230,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // Filter options
         $this->FilterOptions = new ListOptions("div");
-        $this->FilterOptions->TagClassName = "ew-filter-option fdeliveryorder_detaillistsrch";
+        $this->FilterOptions->TagClassName = "ew-filter-option fapproval_polistsrch";
 
         // List actions
         $this->ListActions = new ListActions();
@@ -305,7 +305,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("deliveryorder_detail"));
+                $doc = new $class(Container("approval_po"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -569,14 +569,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->iddeliveryorder->Visible = false;
-        $this->idorder->setVisibility();
-        $this->idorder_detail->setVisibility();
-        $this->sisa->setVisibility();
-        $this->jumlahkirim->setVisibility();
-        $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
-        $this->readonly->Visible = false;
+        $this->idcustomer->setVisibility();
+        $this->jumlah_limit->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -586,9 +580,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         if (method_exists($this, "pageLoad")) {
             $this->pageLoad();
         }
-
-        // Set up master detail parameters
-        $this->setupMasterParms();
 
         // Setup other options
         $this->setupOtherOptions();
@@ -607,8 +598,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idorder);
-        $this->setupLookupOptions($this->idorder_detail);
+        $this->setupLookupOptions($this->idcustomer);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -680,35 +670,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         if (!$Security->canList()) {
             $filter = "(0=1)"; // Filter all records
         }
-
-        // Restore master/detail filter
-        $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "deliveryorder") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "deliveryorder"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "deliveryorder") {
-            $masterTbl = Container("deliveryorder");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("DeliveryorderList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
 
         // Set up filter
         if ($this->Command == "json") {
@@ -848,10 +811,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idorder); // idorder
-            $this->updateSort($this->idorder_detail); // idorder_detail
-            $this->updateSort($this->sisa); // sisa
-            $this->updateSort($this->jumlahkirim); // jumlahkirim
+            $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->jumlah_limit); // jumlah_limit
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -882,27 +843,13 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
-            // Reset master/detail keys
-            if ($this->Command == "resetall") {
-                $this->setCurrentMasterTable(""); // Clear master table
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-                        $this->iddeliveryorder->setSessionValue("");
-            }
-
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->iddeliveryorder->setSort("");
-                $this->idorder->setSort("");
-                $this->idorder_detail->setSort("");
-                $this->sisa->setSort("");
-                $this->jumlahkirim->setSort("");
-                $this->created_at->setSort("");
-                $this->created_by->setSort("");
-                $this->readonly->setSort("");
+                $this->idcustomer->setSort("");
+                $this->jumlah_limit->setSort("");
             }
 
             // Reset start position
@@ -932,6 +879,12 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $item = &$this->ListOptions->add("edit");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "copy"
+        $item = &$this->ListOptions->add("copy");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canAdd();
         $item->OnLeft = false;
 
         // "delete"
@@ -986,7 +939,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             // "view"
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
+            if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -995,15 +948,24 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             // "edit"
             $opt = $this->ListOptions["edit"];
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
+            if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "copy"
+            $opt = $this->ListOptions["copy"];
+            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
+            if ($Security->canAdd()) {
+                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
 
             // "delete"
             $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
+            if ($Security->canDelete()) {
             $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1079,10 +1041,10 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fdeliveryorder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fapproval_polistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = false;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fdeliveryorder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fapproval_polistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = false;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1106,7 +1068,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fdeliveryorder_detaillist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
+                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fapproval_polist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1287,14 +1249,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->iddeliveryorder->setDbValue($row['iddeliveryorder']);
-        $this->idorder->setDbValue($row['idorder']);
-        $this->idorder_detail->setDbValue($row['idorder_detail']);
-        $this->sisa->setDbValue($row['sisa']);
-        $this->jumlahkirim->setDbValue($row['jumlahkirim']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
-        $this->readonly->setDbValue($row['readonly']);
+        $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->jumlah_limit->setDbValue($row['jumlah_limit']);
     }
 
     // Return a row with default values
@@ -1302,14 +1258,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     {
         $row = [];
         $row['id'] = null;
-        $row['iddeliveryorder'] = null;
-        $row['idorder'] = null;
-        $row['idorder_detail'] = null;
-        $row['sisa'] = null;
-        $row['jumlahkirim'] = null;
-        $row['created_at'] = null;
-        $row['created_by'] = null;
-        $row['readonly'] = null;
+        $row['idcustomer'] = null;
+        $row['jumlah_limit'] = null;
         return $row;
     }
 
@@ -1349,121 +1299,49 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
         // id
 
-        // iddeliveryorder
+        // idcustomer
 
-        // idorder
-
-        // idorder_detail
-
-        // sisa
-
-        // jumlahkirim
-
-        // created_at
-
-        // created_by
-
-        // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
+        // jumlah_limit
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
-            // iddeliveryorder
-            $this->iddeliveryorder->ViewValue = FormatNumber($this->iddeliveryorder->ViewValue, 0, -2, -2, -2);
-            $this->iddeliveryorder->ViewCustomAttributes = "";
-
-            // idorder
-            $curVal = trim(strval($this->idorder->CurrentValue));
+            // idcustomer
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-                if ($this->idorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                    } else {
-                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idorder->ViewValue = null;
-            }
-            $this->idorder->ViewCustomAttributes = "";
-
-            // idorder_detail
-            $curVal = trim(strval($this->idorder_detail->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder_detail->ViewValue = $this->idorder_detail->lookupCacheOption($curVal);
-                if ($this->idorder_detail->ViewValue === null) { // Lookup from database
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder_detail->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder_detail->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder_detail->ViewValue = $this->idorder_detail->displayValue($arwrk);
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
                     } else {
-                        $this->idorder_detail->ViewValue = $this->idorder_detail->CurrentValue;
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
                     }
                 }
             } else {
-                $this->idorder_detail->ViewValue = null;
+                $this->idcustomer->ViewValue = null;
             }
-            $this->idorder_detail->ViewCustomAttributes = "";
+            $this->idcustomer->ViewCustomAttributes = "";
 
-            // sisa
-            $this->sisa->ViewValue = $this->sisa->CurrentValue;
-            $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
-            $this->sisa->ViewCustomAttributes = "";
+            // jumlah_limit
+            $this->jumlah_limit->ViewValue = $this->jumlah_limit->CurrentValue;
+            $this->jumlah_limit->ViewValue = FormatNumber($this->jumlah_limit->ViewValue, 0, -2, -2, -2);
+            $this->jumlah_limit->ViewCustomAttributes = "";
 
-            // jumlahkirim
-            $this->jumlahkirim->ViewValue = $this->jumlahkirim->CurrentValue;
-            $this->jumlahkirim->ViewValue = FormatNumber($this->jumlahkirim->ViewValue, 0, -2, -2, -2);
-            $this->jumlahkirim->ViewCustomAttributes = "";
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
 
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
-
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // idorder
-            $this->idorder->LinkCustomAttributes = "";
-            $this->idorder->HrefValue = "";
-            $this->idorder->TooltipValue = "";
-
-            // idorder_detail
-            $this->idorder_detail->LinkCustomAttributes = "";
-            $this->idorder_detail->HrefValue = "";
-            $this->idorder_detail->TooltipValue = "";
-
-            // sisa
-            $this->sisa->LinkCustomAttributes = "";
-            $this->sisa->HrefValue = "";
-            $this->sisa->TooltipValue = "";
-
-            // jumlahkirim
-            $this->jumlahkirim->LinkCustomAttributes = "";
-            $this->jumlahkirim->HrefValue = "";
-            $this->jumlahkirim->TooltipValue = "";
+            // jumlah_limit
+            $this->jumlah_limit->LinkCustomAttributes = "";
+            $this->jumlah_limit->HrefValue = "";
+            $this->jumlah_limit->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1500,91 +1378,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "deliveryorder") {
-                $validMaster = true;
-                $masterTbl = Container("deliveryorder");
-                if (($parm = Get("fk_id", Get("iddeliveryorder"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->iddeliveryorder->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->iddeliveryorder->setSessionValue($this->iddeliveryorder->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "deliveryorder") {
-                $validMaster = true;
-                $masterTbl = Container("deliveryorder");
-                if (($parm = Post("fk_id", Post("iddeliveryorder"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->iddeliveryorder->setFormValue($masterTbl->id->FormValue);
-                    $this->iddeliveryorder->setSessionValue($this->iddeliveryorder->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Update URL
-            $this->AddUrl = $this->addMasterUrl($this->AddUrl);
-            $this->InlineAddUrl = $this->addMasterUrl($this->InlineAddUrl);
-            $this->GridAddUrl = $this->addMasterUrl($this->GridAddUrl);
-            $this->GridEditUrl = $this->addMasterUrl($this->GridEditUrl);
-
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "deliveryorder") {
-                if ($this->iddeliveryorder->CurrentValue == "") {
-                    $this->iddeliveryorder->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -1608,17 +1401,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idorder":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idorder_detail":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
+                case "x_idcustomer":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1768,10 +1551,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        if ($this->readonly->CurrentValue == 1) {
-        	$this->ListOptions->Items["edit"]->Body = "";
-        	$this->ListOptions->Items["delete"]->Body = "";
-        }
     }
 
     // Row Custom Action event

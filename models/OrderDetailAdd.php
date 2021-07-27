@@ -1046,106 +1046,56 @@ class OrderDetailAdd extends OrderDetail
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
             $this->idbrand->EditCustomAttributes = "";
-            if ($this->idbrand->getSessionValue() != "") {
-                $this->idbrand->CurrentValue = GetForeignKeyValue($this->idbrand->getSessionValue());
-                $curVal = trim(strval($this->idbrand->CurrentValue));
-                if ($curVal != "") {
-                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                    if ($this->idbrand->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                            $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                        } else {
-                            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idbrand->ViewValue = null;
-                }
-                $this->idbrand->ViewCustomAttributes = "";
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
             } else {
-                $curVal = trim(strval($this->idbrand->CurrentValue));
-                if ($curVal != "") {
-                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                } else {
-                    $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idbrand->ViewValue !== null) { // Load from cache
-                    $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idbrand->EditValue = $arwrk;
-                }
-                $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
             }
+            if ($this->idbrand->ViewValue !== null) { // Load from cache
+                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idbrand->EditValue = $arwrk;
+            }
+            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
             // idproduct
             $this->idproduct->EditAttrs["class"] = "form-control";
             $this->idproduct->EditCustomAttributes = "";
-            if ($this->idproduct->getSessionValue() != "") {
-                $this->idproduct->CurrentValue = GetForeignKeyValue($this->idproduct->getSessionValue());
-                $curVal = trim(strval($this->idproduct->CurrentValue));
-                if ($curVal != "") {
-                    $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
-                    if ($this->idproduct->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $lookupFilter = function() {
-                            return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
-                        };
-                        $lookupFilter = $lookupFilter->bindTo($this);
-                        $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idproduct->Lookup->renderViewRow($rswrk[0]);
-                            $this->idproduct->ViewValue = $this->idproduct->displayValue($arwrk);
-                        } else {
-                            $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idproduct->ViewValue = null;
-                }
-                $this->idproduct->ViewCustomAttributes = "";
+            $curVal = trim(strval($this->idproduct->CurrentValue));
+            if ($curVal != "") {
+                $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
             } else {
-                $curVal = trim(strval($this->idproduct->CurrentValue));
-                if ($curVal != "") {
-                    $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
-                } else {
-                    $this->idproduct->ViewValue = $this->idproduct->Lookup !== null && is_array($this->idproduct->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idproduct->ViewValue !== null) { // Load from cache
-                    $this->idproduct->EditValue = array_values($this->idproduct->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idproduct->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idproduct->EditValue = $arwrk;
-                }
-                $this->idproduct->PlaceHolder = RemoveHtml($this->idproduct->caption());
+                $this->idproduct->ViewValue = $this->idproduct->Lookup !== null && is_array($this->idproduct->Lookup->Options) ? $curVal : null;
             }
+            if ($this->idproduct->ViewValue !== null) { // Load from cache
+                $this->idproduct->EditValue = array_values($this->idproduct->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idproduct->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idproduct->EditValue = $arwrk;
+            }
+            $this->idproduct->PlaceHolder = RemoveHtml($this->idproduct->caption());
 
             // jumlah
             $this->jumlah->EditAttrs["class"] = "form-control";
@@ -1344,28 +1294,6 @@ class OrderDetailAdd extends OrderDetail
                     return false;
                 }
             }
-            $masterFilter = $this->sqlMasterFilter_brand();
-            if (strval($this->idbrand->CurrentValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
-            } else {
-                $masterFilter = "";
-            }
-            if ($masterFilter != "") {
-                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
-                $masterRecordExists = $rsmaster !== false;
-                $validMasterKey = true;
-                if ($masterRecordExists) {
-                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
-                } elseif ($this->getCurrentMasterTable() == "brand") {
-                    $validMasterKey = false;
-                }
-                if (!$validMasterKey) {
-                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
-                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
-                    $this->setFailureMessage($masterUserIdMsg);
-                    return false;
-                }
-            }
         }
         $conn = $this->getConnection();
 
@@ -1479,34 +1407,6 @@ class OrderDetailAdd extends OrderDetail
                     $validMaster = false;
                 }
             }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Get("fk_id", Get("idbrand"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idbrand->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idbrand->setSessionValue($this->idbrand->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "product") {
-                $validMaster = true;
-                $masterTbl = Container("product");
-                if (($parm = Get("fk_id", Get("idproduct"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idproduct->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idproduct->setSessionValue($this->idproduct->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
         } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
             $masterTblVar = $master;
             if ($masterTblVar == "") {
@@ -1521,34 +1421,6 @@ class OrderDetailAdd extends OrderDetail
                     $masterTbl->id->setFormValue($parm);
                     $this->idorder->setFormValue($masterTbl->id->FormValue);
                     $this->idorder->setSessionValue($this->idorder->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Post("fk_id", Post("idbrand"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idbrand->setFormValue($masterTbl->id->FormValue);
-                    $this->idbrand->setSessionValue($this->idbrand->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "product") {
-                $validMaster = true;
-                $masterTbl = Container("product");
-                if (($parm = Post("fk_id", Post("idproduct"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idproduct->setFormValue($masterTbl->id->FormValue);
-                    $this->idproduct->setSessionValue($this->idproduct->FormValue);
                     if (!is_numeric($masterTbl->id->FormValue)) {
                         $validMaster = false;
                     }
@@ -1571,16 +1443,6 @@ class OrderDetailAdd extends OrderDetail
             if ($masterTblVar != "order") {
                 if ($this->idorder->CurrentValue == "") {
                     $this->idorder->setSessionValue("");
-                }
-            }
-            if ($masterTblVar != "brand") {
-                if ($this->idbrand->CurrentValue == "") {
-                    $this->idbrand->setSessionValue("");
-                }
-            }
-            if ($masterTblVar != "product") {
-                if ($this->idproduct->CurrentValue == "") {
-                    $this->idproduct->setSessionValue("");
                 }
             }
         }

@@ -1392,8 +1392,6 @@ class OrderAdd extends Order
                     $detailPageObj->idorder->IsDetailKey = true;
                     $detailPageObj->idorder->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idorder->setSessionValue($detailPageObj->idorder->CurrentValue);
-                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
-                    $detailPageObj->idproduct->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -1512,6 +1510,25 @@ class OrderAdd extends Order
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
+        $idcustomer = $this->idcustomer->FormValue;
+        $tagihan = ExecuteRow("SELECT COUNT(*) AS jumlahtagihan FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} GROUP BY idinvoice, totaltagihan) bayar WHERE jumlahbayar < totaltagihan");
+        $limit = ExecuteRow("SELECT jumlah_limit FROM approval_po WHERE idcustomer = {$idcustomer}")['jumlah_limit'];
+        $jumlahlimit = empty($limit) ? 3 : $limit;
+        if ($tagihan['jumlahtagihan'] >= $jumlahlimit) {
+          	$customError = "Tunggakan P.O. sebelumnya telah melebihi batas ({$jumlahlimit}).";
+            return FALSE;
+        }
+        $detail = $GLOBALS["order_detail"]->GetGridFormValues();
+        $totalorder = 0;
+        foreach ($detail as $d) {
+         	$totalorder += $d['total'];
+        }
+        $hutang_max = ExecuteRow("SELECT hutang_max FROM customer WHERE id = {$idcustomer}")['hutang_max'];
+        $kredit = empty($hutang_max) ? 10000000 : $hutang_max;
+        if ($totalorder > $kredit) {
+          	$customError = "Total order melebihi limit kredit (".number_format($kredit, 0, ",", ".").").";
+          	return FALSE;
+        }
         return true;
     }
 }

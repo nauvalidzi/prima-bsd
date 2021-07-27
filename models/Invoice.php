@@ -116,10 +116,10 @@ class Invoice extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodeorder","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodeorder","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -135,10 +135,10 @@ class Invoice extends DbTable
         $this->idorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","","",""], ["x_idcustomer"], ["invoice_detail x_idorder_detail"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","tanggalpo","",""], ["x_idcustomer"], ["invoice_detail x_idorder_detail"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
             default:
-                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","","",""], ["x_idcustomer"], ["invoice_detail x_idorder_detail"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","tanggalpo","",""], ["x_idcustomer"], ["invoice_detail x_idorder_detail"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
         }
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -179,12 +179,10 @@ class Invoice extends DbTable
         $this->Fields['sisabayar'] = &$this->sisabayar;
 
         // idtermpayment
-        $this->idtermpayment = new DbField('invoice', 'invoice', 'x_idtermpayment', 'idtermpayment', '`idtermpayment`', '`idtermpayment`', 3, 11, -1, false, '`idtermpayment`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idtermpayment = new DbField('invoice', 'invoice', 'x_idtermpayment', 'idtermpayment', '`idtermpayment`', '`idtermpayment`', 3, 11, -1, false, '`idtermpayment`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idtermpayment->Nullable = false; // NOT NULL field
         $this->idtermpayment->Required = true; // Required field
         $this->idtermpayment->Sortable = true; // Allow sort
-        $this->idtermpayment->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idtermpayment->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idtermpayment->Lookup = new Lookup('idtermpayment', 'termpayment', false, 'id', ["title","","",""], [], [], [], [], [], [], '', '');
@@ -1150,7 +1148,7 @@ SORTHTML;
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
                 $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                    return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1214,6 +1212,7 @@ SORTHTML;
         $this->sisabayar->ViewCustomAttributes = "";
 
         // idtermpayment
+        $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
         $curVal = trim(strval($this->idtermpayment->CurrentValue));
         if ($curVal != "") {
             $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
@@ -1450,6 +1449,7 @@ SORTHTML;
         // idtermpayment
         $this->idtermpayment->EditAttrs["class"] = "form-control";
         $this->idtermpayment->EditCustomAttributes = "";
+        $this->idtermpayment->EditValue = $this->idtermpayment->CurrentValue;
         $this->idtermpayment->PlaceHolder = RemoveHtml($this->idtermpayment->caption());
 
         // idtipepayment

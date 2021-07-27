@@ -345,14 +345,6 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php include_once "ProductGrid.php" ?>
 <?php } ?>
-<?php
-    if (in_array("order_detail", explode(",", $Page->getCurrentDetailTable())) && $order_detail->DetailEdit) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("order_detail", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "OrderDetailGrid.php" ?>
-<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

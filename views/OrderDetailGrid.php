@@ -272,13 +272,6 @@ $Grid->ListOptions->render("body", "left", $Grid->RowCount);
     <?php if ($Grid->idbrand->Visible) { // idbrand ?>
         <td data-name="idbrand" <?= $Grid->idbrand->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<?php if ($Grid->idbrand->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_order_detail_idbrand" class="form-group">
-<span<?= $Grid->idbrand->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idbrand" name="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_idbrand" class="form-group">
 <?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
@@ -305,17 +298,9 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <input type="hidden" data-table="order_detail" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($Grid->idbrand->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_order_detail_idbrand" class="form-group">
-<span<?= $Grid->idbrand->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idbrand" name="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_idbrand" class="form-group">
 <?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
@@ -342,7 +327,6 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_idbrand">
@@ -359,13 +343,6 @@ loadjs.ready("head", function() {
     <?php if ($Grid->idproduct->Visible) { // idproduct ?>
         <td data-name="idproduct" <?= $Grid->idproduct->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<?php if ($Grid->idproduct->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_order_detail_idproduct" class="form-group">
-<span<?= $Grid->idproduct->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idproduct->getDisplayValue($Grid->idproduct->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idproduct" name="x<?= $Grid->RowIndex ?>_idproduct" value="<?= HtmlEncode($Grid->idproduct->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_idproduct" class="form-group">
 <?php $Grid->idproduct->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
     <select
@@ -392,17 +369,9 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <input type="hidden" data-table="order_detail" data-field="x_idproduct" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idproduct" id="o<?= $Grid->RowIndex ?>_idproduct" value="<?= HtmlEncode($Grid->idproduct->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($Grid->idproduct->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_order_detail_idproduct" class="form-group">
-<span<?= $Grid->idproduct->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idproduct->getDisplayValue($Grid->idproduct->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idproduct" name="x<?= $Grid->RowIndex ?>_idproduct" value="<?= HtmlEncode($Grid->idproduct->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_idproduct" class="form-group">
 <?php $Grid->idproduct->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
     <select
@@ -429,7 +398,6 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_idproduct">
@@ -625,13 +593,6 @@ $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
     <?php if ($Grid->idbrand->Visible) { // idbrand ?>
         <td data-name="idbrand">
 <?php if (!$Grid->isConfirm()) { ?>
-<?php if ($Grid->idbrand->getSessionValue() != "") { ?>
-<span id="el$rowindex$_order_detail_idbrand" class="form-group order_detail_idbrand">
-<span<?= $Grid->idbrand->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idbrand" name="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el$rowindex$_order_detail_idbrand" class="form-group order_detail_idbrand">
 <?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
@@ -658,7 +619,6 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <?php } else { ?>
 <span id="el$rowindex$_order_detail_idbrand" class="form-group order_detail_idbrand">
 <span<?= $Grid->idbrand->viewAttributes() ?>>
@@ -672,13 +632,6 @@ loadjs.ready("head", function() {
     <?php if ($Grid->idproduct->Visible) { // idproduct ?>
         <td data-name="idproduct">
 <?php if (!$Grid->isConfirm()) { ?>
-<?php if ($Grid->idproduct->getSessionValue() != "") { ?>
-<span id="el$rowindex$_order_detail_idproduct" class="form-group order_detail_idproduct">
-<span<?= $Grid->idproduct->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idproduct->getDisplayValue($Grid->idproduct->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idproduct" name="x<?= $Grid->RowIndex ?>_idproduct" value="<?= HtmlEncode($Grid->idproduct->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el$rowindex$_order_detail_idproduct" class="form-group order_detail_idproduct">
 <?php $Grid->idproduct->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
     <select
@@ -705,7 +658,6 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <?php } else { ?>
 <span id="el$rowindex$_order_detail_idproduct" class="form-group order_detail_idproduct">
 <span<?= $Grid->idproduct->viewAttributes() ?>>

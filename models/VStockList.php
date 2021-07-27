@@ -574,6 +574,7 @@ class VStockList extends VStock
         $this->idcustomer->setVisibility();
         $this->idorder->setVisibility();
         $this->kodepo->setVisibility();
+        $this->tanggalpo->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -873,6 +874,7 @@ class VStockList extends VStock
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
         $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
         $filterList = Concat($filterList, $this->kodepo->AdvancedSearch->toJson(), ","); // Field kodepo
+        $filterList = Concat($filterList, $this->tanggalpo->AdvancedSearch->toJson(), ","); // Field tanggalpo
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -984,6 +986,14 @@ class VStockList extends VStock
         $this->kodepo->AdvancedSearch->SearchValue2 = @$filter["y_kodepo"];
         $this->kodepo->AdvancedSearch->SearchOperator2 = @$filter["w_kodepo"];
         $this->kodepo->AdvancedSearch->save();
+
+        // Field tanggalpo
+        $this->tanggalpo->AdvancedSearch->SearchValue = @$filter["x_tanggalpo"];
+        $this->tanggalpo->AdvancedSearch->SearchOperator = @$filter["z_tanggalpo"];
+        $this->tanggalpo->AdvancedSearch->SearchCondition = @$filter["v_tanggalpo"];
+        $this->tanggalpo->AdvancedSearch->SearchValue2 = @$filter["y_tanggalpo"];
+        $this->tanggalpo->AdvancedSearch->SearchOperator2 = @$filter["w_tanggalpo"];
+        $this->tanggalpo->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1165,6 +1175,7 @@ class VStockList extends VStock
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idorder); // idorder
             $this->updateSort($this->kodepo); // kodepo
+            $this->updateSort($this->tanggalpo); // tanggalpo
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1213,6 +1224,7 @@ class VStockList extends VStock
                 $this->idcustomer->setSort("");
                 $this->idorder->setSort("");
                 $this->kodepo->setSort("");
+                $this->tanggalpo->setSort("");
             }
 
             // Reset start position
@@ -1565,6 +1577,7 @@ class VStockList extends VStock
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idorder->setDbValue($row['idorder']);
         $this->kodepo->setDbValue($row['kodepo']);
+        $this->tanggalpo->setDbValue($row['tanggalpo']);
     }
 
     // Return a row with default values
@@ -1580,6 +1593,7 @@ class VStockList extends VStock
         $row['idcustomer'] = null;
         $row['idorder'] = null;
         $row['kodepo'] = null;
+        $row['tanggalpo'] = null;
         return $row;
     }
 
@@ -1634,6 +1648,8 @@ class VStockList extends VStock
         // idorder
 
         // kodepo
+
+        // tanggalpo
         if ($this->RowType == ROWTYPE_VIEW) {
             // idorder_detail
             $this->idorder_detail->ViewValue = $this->idorder_detail->CurrentValue;
@@ -1677,6 +1693,11 @@ class VStockList extends VStock
             // kodepo
             $this->kodepo->ViewValue = $this->kodepo->CurrentValue;
             $this->kodepo->ViewCustomAttributes = "";
+
+            // tanggalpo
+            $this->tanggalpo->ViewValue = $this->tanggalpo->CurrentValue;
+            $this->tanggalpo->ViewValue = FormatDateTime($this->tanggalpo->ViewValue, 0);
+            $this->tanggalpo->ViewCustomAttributes = "";
 
             // idorder_detail
             $this->idorder_detail->LinkCustomAttributes = "";
@@ -1722,6 +1743,11 @@ class VStockList extends VStock
             $this->kodepo->LinkCustomAttributes = "";
             $this->kodepo->HrefValue = "";
             $this->kodepo->TooltipValue = "";
+
+            // tanggalpo
+            $this->tanggalpo->LinkCustomAttributes = "";
+            $this->tanggalpo->HrefValue = "";
+            $this->tanggalpo->TooltipValue = "";
         }
 
         // Call Row Rendered event

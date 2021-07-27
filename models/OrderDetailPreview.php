@@ -699,12 +699,6 @@ class OrderDetailPreview extends OrderDetail
         if ($masterTblVar == "order") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=order&" . GetForeignKeyUrl("fk_id", $this->idorder->QueryStringValue) . "";
         }
-        if ($masterTblVar == "brand") {
-            $url = "" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->idbrand->QueryStringValue) . "";
-        }
-        if ($masterTblVar == "product") {
-            $url = "" . Config("TABLE_SHOW_MASTER") . "=product&" . GetForeignKeyUrl("fk_id", $this->idproduct->QueryStringValue) . "";
-        }
         return $url;
     }
 
@@ -720,26 +714,6 @@ class OrderDetailPreview extends OrderDetail
                 $val = substr($f, $x);
                 $val = $this->unquoteValue($val, "DB");
                  $this->idorder->setQueryStringValue($val);
-            }
-        }
-        if ($masterTblVar == "brand") {
-            $find = "`idbrand`=";
-            $x = strpos($f, $find);
-            if ($x !== false) {
-                $x += strlen($find);
-                $val = substr($f, $x);
-                $val = $this->unquoteValue($val, "DB");
-                 $this->idbrand->setQueryStringValue($val);
-            }
-        }
-        if ($masterTblVar == "product") {
-            $find = "`idproduct`=";
-            $x = strpos($f, $find);
-            if ($x !== false) {
-                $x += strlen($find);
-                $val = substr($f, $x);
-                $val = $this->unquoteValue($val, "DB");
-                 $this->idproduct->setQueryStringValue($val);
             }
         }
     }

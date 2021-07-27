@@ -5,9 +5,9 @@ namespace PHPMaker2021\distributor;
 use Doctrine\DBAL\ParameterType;
 
 /**
- * Table class for v_stock
+ * Table class for approval_po
  */
-class VStock extends DbTable
+class ApprovalPo extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -28,16 +28,9 @@ class VStock extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $idorder_detail;
-    public $nama;
-    public $harga;
-    public $jumlahorder;
-    public $bonus;
-    public $jumlah;
+    public $id;
     public $idcustomer;
-    public $idorder;
-    public $kodepo;
-    public $tanggalpo;
+    public $jumlah_limit;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -50,12 +43,12 @@ class VStock extends DbTable
 
         // Language object
         $Language = Container("language");
-        $this->TableVar = 'v_stock';
-        $this->TableName = 'v_stock';
-        $this->TableType = 'VIEW';
+        $this->TableVar = 'approval_po';
+        $this->TableName = 'approval_po';
+        $this->TableType = 'TABLE';
 
         // Update Table
-        $this->UpdateTable = "`v_stock`";
+        $this->UpdateTable = "`approval_po`";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -74,94 +67,42 @@ class VStock extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // idorder_detail
-        $this->idorder_detail = new DbField('v_stock', 'v_stock', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 3, 11, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idorder_detail->IsPrimaryKey = true; // Primary key field
-        $this->idorder_detail->Nullable = false; // NOT NULL field
-        $this->idorder_detail->Required = true; // Required field
-        $this->idorder_detail->Sortable = true; // Allow sort
-        $this->idorder_detail->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idorder_detail->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder_detail->Param, "CustomMsg");
-        $this->Fields['idorder_detail'] = &$this->idorder_detail;
-
-        // nama
-        $this->nama = new DbField('v_stock', 'v_stock', 'x_nama', 'nama', '`nama`', '`nama`', 200, 255, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nama->Nullable = false; // NOT NULL field
-        $this->nama->Required = true; // Required field
-        $this->nama->Sortable = true; // Allow sort
-        $this->nama->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama->Param, "CustomMsg");
-        $this->Fields['nama'] = &$this->nama;
-
-        // harga
-        $this->harga = new DbField('v_stock', 'v_stock', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->harga->Nullable = false; // NOT NULL field
-        $this->harga->Required = true; // Required field
-        $this->harga->Sortable = true; // Allow sort
-        $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");
-        $this->Fields['harga'] = &$this->harga;
-
-        // jumlahorder
-        $this->jumlahorder = new DbField('v_stock', 'v_stock', 'x_jumlahorder', 'jumlahorder', '`jumlahorder`', '`jumlahorder`', 20, 20, -1, false, '`jumlahorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jumlahorder->Nullable = false; // NOT NULL field
-        $this->jumlahorder->Required = true; // Required field
-        $this->jumlahorder->Sortable = true; // Allow sort
-        $this->jumlahorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->jumlahorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahorder->Param, "CustomMsg");
-        $this->Fields['jumlahorder'] = &$this->jumlahorder;
-
-        // bonus
-        $this->bonus = new DbField('v_stock', 'v_stock', 'x_bonus', 'bonus', '`bonus`', '`bonus`', 20, 20, -1, false, '`bonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bonus->Nullable = false; // NOT NULL field
-        $this->bonus->Required = true; // Required field
-        $this->bonus->Sortable = true; // Allow sort
-        $this->bonus->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->bonus->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bonus->Param, "CustomMsg");
-        $this->Fields['bonus'] = &$this->bonus;
-
-        // jumlah
-        $this->jumlah = new DbField('v_stock', 'v_stock', 'x_jumlah', 'jumlah', '`jumlah`', '`jumlah`', 3, 11, -1, false, '`jumlah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jumlah->Nullable = false; // NOT NULL field
-        $this->jumlah->Required = true; // Required field
-        $this->jumlah->Sortable = true; // Allow sort
-        $this->jumlah->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->jumlah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah->Param, "CustomMsg");
-        $this->Fields['jumlah'] = &$this->jumlah;
+        // id
+        $this->id = new DbField('approval_po', 'approval_po', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Sortable = true; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_stock', 'v_stock', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('approval_po', 'approval_po', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
+        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
-        // idorder
-        $this->idorder = new DbField('v_stock', 'v_stock', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idorder->Nullable = false; // NOT NULL field
-        $this->idorder->Required = true; // Required field
-        $this->idorder->Sortable = true; // Allow sort
-        $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
-        $this->Fields['idorder'] = &$this->idorder;
-
-        // kodepo
-        $this->kodepo = new DbField('v_stock', 'v_stock', 'x_kodepo', 'kodepo', '`kodepo`', '`kodepo`', 200, 50, -1, false, '`kodepo`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kodepo->Nullable = false; // NOT NULL field
-        $this->kodepo->Required = true; // Required field
-        $this->kodepo->Sortable = true; // Allow sort
-        $this->kodepo->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodepo->Param, "CustomMsg");
-        $this->Fields['kodepo'] = &$this->kodepo;
-
-        // tanggalpo
-        $this->tanggalpo = new DbField('v_stock', 'v_stock', 'x_tanggalpo', 'tanggalpo', '`tanggalpo`', CastDateFieldForLike("`tanggalpo`", 0, "DB"), 135, 19, 0, false, '`tanggalpo`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggalpo->Nullable = false; // NOT NULL field
-        $this->tanggalpo->Required = true; // Required field
-        $this->tanggalpo->Sortable = true; // Allow sort
-        $this->tanggalpo->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggalpo->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggalpo->Param, "CustomMsg");
-        $this->Fields['tanggalpo'] = &$this->tanggalpo;
+        // jumlah_limit
+        $this->jumlah_limit = new DbField('approval_po', 'approval_po', 'x_jumlah_limit', 'jumlah_limit', '`jumlah_limit`', '`jumlah_limit`', 3, 11, -1, false, '`jumlah_limit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jumlah_limit->Nullable = false; // NOT NULL field
+        $this->jumlah_limit->Required = true; // Required field
+        $this->jumlah_limit->Sortable = true; // Allow sort
+        $this->jumlah_limit->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->jumlah_limit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah_limit->Param, "CustomMsg");
+        $this->Fields['jumlah_limit'] = &$this->jumlah_limit;
     }
 
     // Field Visibility
@@ -204,7 +145,7 @@ class VStock extends DbTable
     // Table level SQL
     public function getSqlFrom() // From
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "`v_stock`";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "`approval_po`";
     }
 
     public function sqlFrom() // For backward compatibility
@@ -488,6 +429,9 @@ class VStock extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -547,8 +491,8 @@ class VStock extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('idorder_detail', $rs)) {
-                AddFilter($where, QuotedName('idorder_detail', $this->Dbid) . '=' . QuotedValue($rs['idorder_detail'], $this->idorder_detail->DataType, $this->Dbid));
+            if (array_key_exists('id', $rs)) {
+                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -572,16 +516,9 @@ class VStock extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->idorder_detail->DbValue = $row['idorder_detail'];
-        $this->nama->DbValue = $row['nama'];
-        $this->harga->DbValue = $row['harga'];
-        $this->jumlahorder->DbValue = $row['jumlahorder'];
-        $this->bonus->DbValue = $row['bonus'];
-        $this->jumlah->DbValue = $row['jumlah'];
+        $this->id->DbValue = $row['id'];
         $this->idcustomer->DbValue = $row['idcustomer'];
-        $this->idorder->DbValue = $row['idorder'];
-        $this->kodepo->DbValue = $row['kodepo'];
-        $this->tanggalpo->DbValue = $row['tanggalpo'];
+        $this->jumlah_limit->DbValue = $row['jumlah_limit'];
     }
 
     // Delete uploaded files
@@ -593,14 +530,14 @@ class VStock extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`idorder_detail` = @idorder_detail@";
+        return "`id` = @id@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->idorder_detail->CurrentValue : $this->idorder_detail->OldValue;
+        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -616,9 +553,9 @@ class VStock extends DbTable
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->idorder_detail->CurrentValue = $keys[0];
+                $this->id->CurrentValue = $keys[0];
             } else {
-                $this->idorder_detail->OldValue = $keys[0];
+                $this->id->OldValue = $keys[0];
             }
         }
     }
@@ -628,9 +565,9 @@ class VStock extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('idorder_detail', $row) ? $row['idorder_detail'] : null;
+            $val = array_key_exists('id', $row) ? $row['id'] : null;
         } else {
-            $val = $this->idorder_detail->OldValue !== null ? $this->idorder_detail->OldValue : $this->idorder_detail->CurrentValue;
+            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -638,7 +575,7 @@ class VStock extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@idorder_detail@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -653,7 +590,7 @@ class VStock extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("VStockList");
+        return $_SESSION[$name] ?? GetUrl("ApprovalPoList");
     }
 
     // Set return page URL
@@ -666,11 +603,11 @@ class VStock extends DbTable
     public function getModalCaption($pageName)
     {
         global $Language;
-        if ($pageName == "VStockView") {
+        if ($pageName == "ApprovalPoView") {
             return $Language->phrase("View");
-        } elseif ($pageName == "VStockEdit") {
+        } elseif ($pageName == "ApprovalPoEdit") {
             return $Language->phrase("Edit");
-        } elseif ($pageName == "VStockAdd") {
+        } elseif ($pageName == "ApprovalPoAdd") {
             return $Language->phrase("Add");
         } else {
             return "";
@@ -682,15 +619,15 @@ class VStock extends DbTable
     {
         switch (strtolower($action)) {
             case Config("API_VIEW_ACTION"):
-                return "VStockView";
+                return "ApprovalPoView";
             case Config("API_ADD_ACTION"):
-                return "VStockAdd";
+                return "ApprovalPoAdd";
             case Config("API_EDIT_ACTION"):
-                return "VStockEdit";
+                return "ApprovalPoEdit";
             case Config("API_DELETE_ACTION"):
-                return "VStockDelete";
+                return "ApprovalPoDelete";
             case Config("API_LIST_ACTION"):
-                return "VStockList";
+                return "ApprovalPoList";
             default:
                 return "";
         }
@@ -699,16 +636,16 @@ class VStock extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "VStockList";
+        return "ApprovalPoList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("VStockView", $this->getUrlParm($parm));
+            $url = $this->keyUrl("ApprovalPoView", $this->getUrlParm($parm));
         } else {
-            $url = $this->keyUrl("VStockView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+            $url = $this->keyUrl("ApprovalPoView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
         }
         return $this->addMasterUrl($url);
     }
@@ -717,9 +654,9 @@ class VStock extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "VStockAdd?" . $this->getUrlParm($parm);
+            $url = "ApprovalPoAdd?" . $this->getUrlParm($parm);
         } else {
-            $url = "VStockAdd";
+            $url = "ApprovalPoAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -727,7 +664,7 @@ class VStock extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("VStockEdit", $this->getUrlParm($parm));
+        $url = $this->keyUrl("ApprovalPoEdit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -741,7 +678,7 @@ class VStock extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("VStockAdd", $this->getUrlParm($parm));
+        $url = $this->keyUrl("ApprovalPoAdd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -755,7 +692,7 @@ class VStock extends DbTable
     // Delete URL
     public function getDeleteUrl()
     {
-        return $this->keyUrl("VStockDelete", $this->getUrlParm());
+        return $this->keyUrl("ApprovalPoDelete", $this->getUrlParm());
     }
 
     // Add master url
@@ -767,7 +704,7 @@ class VStock extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "idorder_detail:" . JsonEncode($this->idorder_detail->CurrentValue, "number");
+        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -778,8 +715,8 @@ class VStock extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->idorder_detail->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->idorder_detail->CurrentValue);
+        if ($this->id->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->id->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -841,7 +778,7 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("idorder_detail") ?? Route("idorder_detail")) !== null) {
+            if (($keyValue = Param("id") ?? Route("id")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
                 $arKeys[] = $keyValue;
@@ -874,9 +811,9 @@ SORTHTML;
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->idorder_detail->CurrentValue = $key;
+                $this->id->CurrentValue = $key;
             } else {
-                $this->idorder_detail->OldValue = $key;
+                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -902,16 +839,9 @@ SORTHTML;
         } else {
             return;
         }
-        $this->idorder_detail->setDbValue($row['idorder_detail']);
-        $this->nama->setDbValue($row['nama']);
-        $this->harga->setDbValue($row['harga']);
-        $this->jumlahorder->setDbValue($row['jumlahorder']);
-        $this->bonus->setDbValue($row['bonus']);
-        $this->jumlah->setDbValue($row['jumlah']);
+        $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->idorder->setDbValue($row['idorder']);
-        $this->kodepo->setDbValue($row['kodepo']);
-        $this->tanggalpo->setDbValue($row['tanggalpo']);
+        $this->jumlah_limit->setDbValue($row['jumlah_limit']);
     }
 
     // Render list row values
@@ -924,123 +854,56 @@ SORTHTML;
 
         // Common render codes
 
-        // idorder_detail
-
-        // nama
-
-        // harga
-
-        // jumlahorder
-
-        // bonus
-
-        // jumlah
+        // id
 
         // idcustomer
 
-        // idorder
+        // jumlah_limit
 
-        // kodepo
-
-        // tanggalpo
-
-        // idorder_detail
-        $this->idorder_detail->ViewValue = $this->idorder_detail->CurrentValue;
-        $this->idorder_detail->ViewValue = FormatNumber($this->idorder_detail->ViewValue, 0, -2, -2, -2);
-        $this->idorder_detail->ViewCustomAttributes = "";
-
-        // nama
-        $this->nama->ViewValue = $this->nama->CurrentValue;
-        $this->nama->ViewCustomAttributes = "";
-
-        // harga
-        $this->harga->ViewValue = $this->harga->CurrentValue;
-        $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-        $this->harga->ViewCustomAttributes = "";
-
-        // jumlahorder
-        $this->jumlahorder->ViewValue = $this->jumlahorder->CurrentValue;
-        $this->jumlahorder->ViewValue = FormatNumber($this->jumlahorder->ViewValue, 0, -2, -2, -2);
-        $this->jumlahorder->ViewCustomAttributes = "";
-
-        // bonus
-        $this->bonus->ViewValue = $this->bonus->CurrentValue;
-        $this->bonus->ViewValue = FormatNumber($this->bonus->ViewValue, 0, -2, -2, -2);
-        $this->bonus->ViewCustomAttributes = "";
-
-        // jumlah
-        $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-        $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
-        $this->jumlah->ViewCustomAttributes = "";
+        // id
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
 
         // idcustomer
-        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->idcustomer->CurrentValue));
+        if ($curVal != "") {
+            $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+            if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                    $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                } else {
+                    $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                }
+            }
+        } else {
+            $this->idcustomer->ViewValue = null;
+        }
         $this->idcustomer->ViewCustomAttributes = "";
 
-        // idorder
-        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-        $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
-        $this->idorder->ViewCustomAttributes = "";
+        // jumlah_limit
+        $this->jumlah_limit->ViewValue = $this->jumlah_limit->CurrentValue;
+        $this->jumlah_limit->ViewValue = FormatNumber($this->jumlah_limit->ViewValue, 0, -2, -2, -2);
+        $this->jumlah_limit->ViewCustomAttributes = "";
 
-        // kodepo
-        $this->kodepo->ViewValue = $this->kodepo->CurrentValue;
-        $this->kodepo->ViewCustomAttributes = "";
-
-        // tanggalpo
-        $this->tanggalpo->ViewValue = $this->tanggalpo->CurrentValue;
-        $this->tanggalpo->ViewValue = FormatDateTime($this->tanggalpo->ViewValue, 0);
-        $this->tanggalpo->ViewCustomAttributes = "";
-
-        // idorder_detail
-        $this->idorder_detail->LinkCustomAttributes = "";
-        $this->idorder_detail->HrefValue = "";
-        $this->idorder_detail->TooltipValue = "";
-
-        // nama
-        $this->nama->LinkCustomAttributes = "";
-        $this->nama->HrefValue = "";
-        $this->nama->TooltipValue = "";
-
-        // harga
-        $this->harga->LinkCustomAttributes = "";
-        $this->harga->HrefValue = "";
-        $this->harga->TooltipValue = "";
-
-        // jumlahorder
-        $this->jumlahorder->LinkCustomAttributes = "";
-        $this->jumlahorder->HrefValue = "";
-        $this->jumlahorder->TooltipValue = "";
-
-        // bonus
-        $this->bonus->LinkCustomAttributes = "";
-        $this->bonus->HrefValue = "";
-        $this->bonus->TooltipValue = "";
-
-        // jumlah
-        $this->jumlah->LinkCustomAttributes = "";
-        $this->jumlah->HrefValue = "";
-        $this->jumlah->TooltipValue = "";
+        // id
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
 
         // idcustomer
         $this->idcustomer->LinkCustomAttributes = "";
         $this->idcustomer->HrefValue = "";
         $this->idcustomer->TooltipValue = "";
 
-        // idorder
-        $this->idorder->LinkCustomAttributes = "";
-        $this->idorder->HrefValue = "";
-        $this->idorder->TooltipValue = "";
-
-        // kodepo
-        $this->kodepo->LinkCustomAttributes = "";
-        $this->kodepo->HrefValue = "";
-        $this->kodepo->TooltipValue = "";
-
-        // tanggalpo
-        $this->tanggalpo->LinkCustomAttributes = "";
-        $this->tanggalpo->HrefValue = "";
-        $this->tanggalpo->TooltipValue = "";
+        // jumlah_limit
+        $this->jumlah_limit->LinkCustomAttributes = "";
+        $this->jumlah_limit->HrefValue = "";
+        $this->jumlah_limit->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1057,71 +920,22 @@ SORTHTML;
         // Call Row Rendering event
         $this->rowRendering();
 
-        // idorder_detail
-        $this->idorder_detail->EditAttrs["class"] = "form-control";
-        $this->idorder_detail->EditCustomAttributes = "";
-        $this->idorder_detail->EditValue = $this->idorder_detail->CurrentValue;
-        $this->idorder_detail->PlaceHolder = RemoveHtml($this->idorder_detail->caption());
-
-        // nama
-        $this->nama->EditAttrs["class"] = "form-control";
-        $this->nama->EditCustomAttributes = "";
-        if (!$this->nama->Raw) {
-            $this->nama->CurrentValue = HtmlDecode($this->nama->CurrentValue);
-        }
-        $this->nama->EditValue = $this->nama->CurrentValue;
-        $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
-
-        // harga
-        $this->harga->EditAttrs["class"] = "form-control";
-        $this->harga->EditCustomAttributes = "";
-        $this->harga->EditValue = $this->harga->CurrentValue;
-        $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
-
-        // jumlahorder
-        $this->jumlahorder->EditAttrs["class"] = "form-control";
-        $this->jumlahorder->EditCustomAttributes = "";
-        $this->jumlahorder->EditValue = $this->jumlahorder->CurrentValue;
-        $this->jumlahorder->PlaceHolder = RemoveHtml($this->jumlahorder->caption());
-
-        // bonus
-        $this->bonus->EditAttrs["class"] = "form-control";
-        $this->bonus->EditCustomAttributes = "";
-        $this->bonus->EditValue = $this->bonus->CurrentValue;
-        $this->bonus->PlaceHolder = RemoveHtml($this->bonus->caption());
-
-        // jumlah
-        $this->jumlah->EditAttrs["class"] = "form-control";
-        $this->jumlah->EditCustomAttributes = "";
-        $this->jumlah->EditValue = $this->jumlah->CurrentValue;
-        $this->jumlah->PlaceHolder = RemoveHtml($this->jumlah->caption());
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
+        $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
-        // idorder
-        $this->idorder->EditAttrs["class"] = "form-control";
-        $this->idorder->EditCustomAttributes = "";
-        $this->idorder->EditValue = $this->idorder->CurrentValue;
-        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
-
-        // kodepo
-        $this->kodepo->EditAttrs["class"] = "form-control";
-        $this->kodepo->EditCustomAttributes = "";
-        if (!$this->kodepo->Raw) {
-            $this->kodepo->CurrentValue = HtmlDecode($this->kodepo->CurrentValue);
-        }
-        $this->kodepo->EditValue = $this->kodepo->CurrentValue;
-        $this->kodepo->PlaceHolder = RemoveHtml($this->kodepo->caption());
-
-        // tanggalpo
-        $this->tanggalpo->EditAttrs["class"] = "form-control";
-        $this->tanggalpo->EditCustomAttributes = "";
-        $this->tanggalpo->EditValue = FormatDateTime($this->tanggalpo->CurrentValue, 8);
-        $this->tanggalpo->PlaceHolder = RemoveHtml($this->tanggalpo->caption());
+        // jumlah_limit
+        $this->jumlah_limit->EditAttrs["class"] = "form-control";
+        $this->jumlah_limit->EditCustomAttributes = "";
+        $this->jumlah_limit->EditValue = $this->jumlah_limit->CurrentValue;
+        $this->jumlah_limit->PlaceHolder = RemoveHtml($this->jumlah_limit->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1151,27 +965,12 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idorder_detail);
-                    $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->harga);
-                    $doc->exportCaption($this->jumlahorder);
-                    $doc->exportCaption($this->bonus);
-                    $doc->exportCaption($this->jumlah);
                     $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->idorder);
-                    $doc->exportCaption($this->kodepo);
-                    $doc->exportCaption($this->tanggalpo);
+                    $doc->exportCaption($this->jumlah_limit);
                 } else {
-                    $doc->exportCaption($this->idorder_detail);
-                    $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->harga);
-                    $doc->exportCaption($this->jumlahorder);
-                    $doc->exportCaption($this->bonus);
-                    $doc->exportCaption($this->jumlah);
+                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->idorder);
-                    $doc->exportCaption($this->kodepo);
-                    $doc->exportCaption($this->tanggalpo);
+                    $doc->exportCaption($this->jumlah_limit);
                 }
                 $doc->endExportRow();
             }
@@ -1201,27 +1000,12 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idorder_detail);
-                        $doc->exportField($this->nama);
-                        $doc->exportField($this->harga);
-                        $doc->exportField($this->jumlahorder);
-                        $doc->exportField($this->bonus);
-                        $doc->exportField($this->jumlah);
                         $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->idorder);
-                        $doc->exportField($this->kodepo);
-                        $doc->exportField($this->tanggalpo);
+                        $doc->exportField($this->jumlah_limit);
                     } else {
-                        $doc->exportField($this->idorder_detail);
-                        $doc->exportField($this->nama);
-                        $doc->exportField($this->harga);
-                        $doc->exportField($this->jumlahorder);
-                        $doc->exportField($this->bonus);
-                        $doc->exportField($this->jumlah);
+                        $doc->exportField($this->id);
                         $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->idorder);
-                        $doc->exportField($this->kodepo);
-                        $doc->exportField($this->tanggalpo);
+                        $doc->exportField($this->jumlah_limit);
                     }
                     $doc->endExportRow($rowCnt);
                 }

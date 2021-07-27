@@ -746,7 +746,7 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
             switch ($fld->FieldVar) {
                 case "x_idorder":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM deliveryorder_detail)" : "";
+                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
