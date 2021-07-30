@@ -1232,7 +1232,7 @@
       </field>
     </table>
     <table id="userlevels">
-      <phrase id="tblcaption" value="Setting Users" />
+      <phrase id="tblcaption" value="Manajemen Pegawai" />
       <field id="userlevelid">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -1241,7 +1241,7 @@
       </field>
     </table>
     <table id="userlevelpermissions">
-      <phrase id="tblcaption" value="userlevelpermissions" />
+      <phrase id="tblcaption" value="Hak Akses Pegawai" />
       <field id="userlevelid">
         <phrase id="fldcaption" value="Level ID" />
       </field>
@@ -1307,7 +1307,7 @@
       </field>
     </table>
     <table id="customer">
-      <phrase id="tblcaption" value="Customer" />
+      <phrase id="tblcaption" value="Pelanggan" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -1489,7 +1489,7 @@
       </field>
     </table>
     <table id="product">
-      <phrase id="tblcaption" value="Product" />
+      <phrase id="tblcaption" value="Produk" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -1682,7 +1682,7 @@
       </field>
     </table>
     <table id="npd">
-      <phrase id="tblcaption" value="New Product Development" />
+      <phrase id="tblcaption" value="Pengembangan Produk" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -2506,7 +2506,7 @@
       </field>
     </table>
     <table id="order">
-      <phrase id="tblcaption" value="Order" />
+      <phrase id="tblcaption" value="Purchase Orders" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
