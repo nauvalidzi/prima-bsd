@@ -1515,7 +1515,7 @@ class OrderAdd extends Order
         $limit = ExecuteRow("SELECT jumlah_limit FROM approval_po WHERE idcustomer = {$idcustomer}")['jumlah_limit'];
         $jumlahlimit = empty($limit) ? 3 : $limit;
         if ($tagihan['jumlahtagihan'] >= $jumlahlimit) {
-          	$customError = "Tunggakan P.O. sebelumnya telah melebihi batas ({$jumlahlimit}).";
+          	$customError = "P.O. berikut melebihi jumlah P.O. aktif sebelumnya.<br />Silakan mengajukan approval ke atasan untuk proses khusus.";
             return FALSE;
         }
         $detail = $GLOBALS["order_detail"]->GetGridFormValues();
@@ -1526,7 +1526,7 @@ class OrderAdd extends Order
         $hutang_max = ExecuteRow("SELECT hutang_max FROM customer WHERE id = {$idcustomer}")['hutang_max'];
         $kredit = empty($hutang_max) ? 10000000 : $hutang_max;
         if ($totalorder > $kredit) {
-          	$customError = "Total order melebihi limit kredit (".number_format($kredit, 0, ",", ".").").";
+          	$customError = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.";
           	return FALSE;
         }
         return true;

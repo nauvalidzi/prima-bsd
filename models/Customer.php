@@ -2384,7 +2384,9 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$rsnew['id']}, -1)");
+        $new_idcustomer = $rsnew['id'];
+        Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$new_idcustomer}, -1)");
+        Execute("INSERT INTO approval_po (idcustomer, jumlah_limit) VALUES ({$new_idcustomer}, 3)");    
     }
 
     // Row Updating event

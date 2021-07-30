@@ -224,7 +224,7 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}approval_po","1","288"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
-    ["userlevels","userlevels","Setting Users",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
+    ["userlevels","userlevels","Manajemen User",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
     ["userlevelpermissions","userlevelpermissions","userlevelpermissions",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelpermissionsList"],
     ["provinsi","provinsi","Provinsi",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","ProvinsiList"],
     ["kabupaten","kabupaten","Kabupaten",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","KabupatenList"],
@@ -293,4 +293,4 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["laporan_invoice.php","laporan_invoice","Laporan Invoice",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanInvoice"],
     ["laporan_surat_jalan.php","laporan_surat_jalan","Laporan Surat Jalan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanSuratJalan"],
     ["laporan_pembayaran.php","laporan_pembayaran","Laporan Pembayaran",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanPembayaran"],
-    ["approval_po","approval_po","approval po",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","ApprovalPoList"]];
+    ["approval_po","approval_po","Approval P.O.",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","ApprovalPoList"]];

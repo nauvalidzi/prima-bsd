@@ -14,12 +14,6 @@ class ApprovalPoController extends ControllerBase
         return $this->runPage($request, $response, $args, "ApprovalPoList");
     }
 
-    // add
-    public function add(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "ApprovalPoAdd");
-    }
-
     // view
     public function view(Request $request, Response $response, array $args): Response
     {
