@@ -242,15 +242,31 @@ $API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
 	$vars = Param("idcustomer", Route(1));
     if ($vars !== NULL) {
         $idcustomer = AdjustSql($vars);
-        $tagihan = ExecuteRow("SELECT COUNT(*) AS jumlahtagihan FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} GROUP BY idinvoice, totaltagihan) bayar WHERE jumlahbayar < totaltagihan");
-        $limit = ExecuteRow("SELECT jumlah_limit FROM approval_po WHERE idcustomer = {$idcustomer}")['jumlah_limit'];
-        $jumlahlimit = empty($limit) ? 3 : $limit;
-        $status = ($tagihan['jumlahtagihan'] >= $jumlahlimit) ? FALSE : TRUE;
-        $customer = ExecuteRow("SELECT nama FROM customer WHERE id = {$idcustomer}")['nama'];
-        WriteJson(compact('status', 'jumlahlimit', 'customer'));
+        $status = true;
+        $message = null;
+        $limitpoaktif_default = 2;
+        $existing_tagihan = cek_po_aktif($idcustomer);
+        if ($existing_tagihan > $limitpoaktif_default) {
+            $approval = ExecuteRow("SELECT limit_kredit, limit_po_aktif FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
+            if ($approval) {
+                if ($existing_tagihan > $approval['limit_po_aktif']) {
+                    $message = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
+                    $status = false;
+                } else {
+                    $message = null;
+                    return true;
+                }
+            }
+            $message = "P.O. berikut melebihi jumlah P.O. aktif sebelumnya.<br />Silakan mengajukan approval ke atasan untuk proses khusus.";
+            $status = false;
+        }
+        WriteJson(compact('status', 'message'));
     }
 };
-http://localhost/bsd/api/getTagihan?idcustomer=
+
+function get_po_id($cust_id) {
+	return ExecuteRow("SELECT id FROM po_limit_approval WHERE aktif = 1 AND idcustomer = {$cust_id} ORDER BY id DESC LIMIT 1");
+}
 
 function domain() {
 	return sprintf(
@@ -457,28 +473,34 @@ function check_count_brand($idcustomer) {
 }
 
 function tgl_indo($tanggal, $format='date'){
-		$bulan = array (
-			1 => 'Januari',
-			'Februari',
-			'Maret',
-			'April',
-			'Mei',
-			'Juni',
-			'Juli',
-			'Agustus',
-			'September',
-			'Oktober',
-			'November',
-			'Desember'
-		);
-		$pecahkan = explode('-', $tanggal);
+	$bulan = array (
+		1 => 'Januari',
+		'Februari',
+		'Maret',
+		'April',
+		'Mei',
+		'Juni',
+		'Juli',
+		'Agustus',
+		'September',
+		'Oktober',
+		'November',
+		'Desember'
+	);
+	$pecahkan = explode('-', $tanggal);
 
-		// variabel pecahkan 0 = tanggal
-		// variabel pecahkan 1 = bulan
-		// variabel pecahkan 2 = tahun
-		$pecahkan2 = explode(' ', $pecahkan[2]);
-		if ($format == 'datetime'){
-			return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
-		}
-		return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+	// variabel pecahkan 0 = tanggal
+	// variabel pecahkan 1 = bulan
+	// variabel pecahkan 2 = tahun
+	$pecahkan2 = explode(' ', $pecahkan[2]);
+	if ($format == 'datetime'){
+		return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
 	}
+	return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+}
+
+function cek_po_aktif($idcustomer) {
+    $tagihan_belumlunas = ExecuteRow("SELECT COUNT(*) AS jumlah FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} GROUP BY idinvoice, totaltagihan) bayar WHERE jumlahbayar < totaltagihan");
+    $tagihan_belumbayar = ExecuteRow("SELECT COUNT(*) AS jumlah FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1 AND id NOT IN (SELECT idinvoice FROM pembayaran)");
+    return $tagihan_belumlunas['jumlah'] + $tagihan_belumbayar['jumlah'];
+}

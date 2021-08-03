@@ -41,7 +41,6 @@ loadjs.ready("head", function () {
         ["website", [fields.website.visible && fields.website.required ? ew.Validators.required(fields.website.caption) : null], fields.website.isInvalid],
         ["foto", [fields.foto.visible && fields.foto.required ? ew.Validators.fileRequired(fields.foto.caption) : null], fields.foto.isInvalid],
         ["budget_bonus_persen", [fields.budget_bonus_persen.visible && fields.budget_bonus_persen.required ? ew.Validators.required(fields.budget_bonus_persen.caption) : null, ew.Validators.float], fields.budget_bonus_persen.isInvalid],
-        ["hutang_max", [fields.hutang_max.visible && fields.hutang_max.required ? ew.Validators.required(fields.hutang_max.caption) : null, ew.Validators.integer], fields.hutang_max.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
@@ -569,18 +568,6 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->budget_bonus_persen->getInputTextType() ?>" data-table="customer" data-field="x_budget_bonus_persen" name="x_budget_bonus_persen" id="x_budget_bonus_persen" size="5" placeholder="<?= HtmlEncode($Page->budget_bonus_persen->getPlaceHolder()) ?>" value="<?= $Page->budget_bonus_persen->EditValue ?>"<?= $Page->budget_bonus_persen->editAttributes() ?> aria-describedby="x_budget_bonus_persen_help">
 <?= $Page->budget_bonus_persen->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->budget_bonus_persen->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->hutang_max->Visible) { // hutang_max ?>
-    <div id="r_hutang_max" class="form-group row">
-        <label id="elh_customer_hutang_max" for="x_hutang_max" class="<?= $Page->LeftColumnClass ?>"><?= $Page->hutang_max->caption() ?><?= $Page->hutang_max->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->hutang_max->cellAttributes() ?>>
-<span id="el_customer_hutang_max">
-<input type="<?= $Page->hutang_max->getInputTextType() ?>" data-table="customer" data-field="x_hutang_max" name="x_hutang_max" id="x_hutang_max" size="30" placeholder="<?= HtmlEncode($Page->hutang_max->getPlaceHolder()) ?>" value="<?= $Page->hutang_max->EditValue ?>"<?= $Page->hutang_max->editAttributes() ?> aria-describedby="x_hutang_max_help">
-<?= $Page->hutang_max->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->hutang_max->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

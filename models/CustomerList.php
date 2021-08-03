@@ -963,7 +963,6 @@ class CustomerList extends Customer
         $filterList = Concat($filterList, $this->website->AdvancedSearch->toJson(), ","); // Field website
         $filterList = Concat($filterList, $this->foto->AdvancedSearch->toJson(), ","); // Field foto
         $filterList = Concat($filterList, $this->budget_bonus_persen->AdvancedSearch->toJson(), ","); // Field budget_bonus_persen
-        $filterList = Concat($filterList, $this->hutang_max->AdvancedSearch->toJson(), ","); // Field hutang_max
         $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
         $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
@@ -1161,14 +1160,6 @@ class CustomerList extends Customer
         $this->budget_bonus_persen->AdvancedSearch->SearchOperator2 = @$filter["w_budget_bonus_persen"];
         $this->budget_bonus_persen->AdvancedSearch->save();
 
-        // Field hutang_max
-        $this->hutang_max->AdvancedSearch->SearchValue = @$filter["x_hutang_max"];
-        $this->hutang_max->AdvancedSearch->SearchOperator = @$filter["z_hutang_max"];
-        $this->hutang_max->AdvancedSearch->SearchCondition = @$filter["v_hutang_max"];
-        $this->hutang_max->AdvancedSearch->SearchValue2 = @$filter["y_hutang_max"];
-        $this->hutang_max->AdvancedSearch->SearchOperator2 = @$filter["w_hutang_max"];
-        $this->hutang_max->AdvancedSearch->save();
-
         // Field keterangan
         $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
         $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
@@ -1239,7 +1230,6 @@ class CustomerList extends Customer
         $this->buildSearchSql($where, $this->website, $default, false); // website
         $this->buildSearchSql($where, $this->foto, $default, false); // foto
         $this->buildSearchSql($where, $this->budget_bonus_persen, $default, false); // budget_bonus_persen
-        $this->buildSearchSql($where, $this->hutang_max, $default, false); // hutang_max
         $this->buildSearchSql($where, $this->keterangan, $default, false); // keterangan
         $this->buildSearchSql($where, $this->aktif, $default, false); // aktif
         $this->buildSearchSql($where, $this->created_at, $default, false); // created_at
@@ -1270,7 +1260,6 @@ class CustomerList extends Customer
             $this->website->AdvancedSearch->save(); // website
             $this->foto->AdvancedSearch->save(); // foto
             $this->budget_bonus_persen->AdvancedSearch->save(); // budget_bonus_persen
-            $this->hutang_max->AdvancedSearch->save(); // hutang_max
             $this->keterangan->AdvancedSearch->save(); // keterangan
             $this->aktif->AdvancedSearch->save(); // aktif
             $this->created_at->AdvancedSearch->save(); // created_at
@@ -1537,9 +1526,6 @@ class CustomerList extends Customer
         if ($this->budget_bonus_persen->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->hutang_max->AdvancedSearch->issetSession()) {
-            return true;
-        }
         if ($this->keterangan->AdvancedSearch->issetSession()) {
             return true;
         }
@@ -1606,7 +1592,6 @@ class CustomerList extends Customer
                 $this->website->AdvancedSearch->unsetSession();
                 $this->foto->AdvancedSearch->unsetSession();
                 $this->budget_bonus_persen->AdvancedSearch->unsetSession();
-                $this->hutang_max->AdvancedSearch->unsetSession();
                 $this->keterangan->AdvancedSearch->unsetSession();
                 $this->aktif->AdvancedSearch->unsetSession();
                 $this->created_at->AdvancedSearch->unsetSession();
@@ -1642,7 +1627,6 @@ class CustomerList extends Customer
                 $this->website->AdvancedSearch->load();
                 $this->foto->AdvancedSearch->load();
                 $this->budget_bonus_persen->AdvancedSearch->load();
-                $this->hutang_max->AdvancedSearch->load();
                 $this->keterangan->AdvancedSearch->load();
                 $this->aktif->AdvancedSearch->load();
                 $this->created_at->AdvancedSearch->load();
@@ -2507,14 +2491,6 @@ class CustomerList extends Customer
             }
         }
 
-        // hutang_max
-        if (!$this->isAddOrEdit() && $this->hutang_max->AdvancedSearch->get()) {
-            $hasValue = true;
-            if (($this->hutang_max->AdvancedSearch->SearchValue != "" || $this->hutang_max->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
-                $this->Command = "search";
-            }
-        }
-
         // keterangan
         if (!$this->isAddOrEdit() && $this->keterangan->AdvancedSearch->get()) {
             $hasValue = true;
@@ -2788,6 +2764,7 @@ class CustomerList extends Customer
         // budget_bonus_persen
 
         // hutang_max
+        $this->hutang_max->CellCssStyle = "white-space: nowrap;";
 
         // keterangan
 
@@ -3007,11 +2984,6 @@ class CustomerList extends Customer
             $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
             $this->budget_bonus_persen->ViewCustomAttributes = "";
 
-            // hutang_max
-            $this->hutang_max->ViewValue = $this->hutang_max->CurrentValue;
-            $this->hutang_max->ViewValue = FormatCurrency($this->hutang_max->ViewValue, 2, -2, -2, -2);
-            $this->hutang_max->ViewCustomAttributes = "";
-
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -3118,7 +3090,6 @@ class CustomerList extends Customer
         $this->website->AdvancedSearch->load();
         $this->foto->AdvancedSearch->load();
         $this->budget_bonus_persen->AdvancedSearch->load();
-        $this->hutang_max->AdvancedSearch->load();
         $this->keterangan->AdvancedSearch->load();
         $this->aktif->AdvancedSearch->load();
         $this->created_at->AdvancedSearch->load();

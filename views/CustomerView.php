@@ -279,17 +279,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->hutang_max->Visible) { // hutang_max ?>
-    <tr id="r_hutang_max">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_hutang_max"><?= $Page->hutang_max->caption() ?></span></td>
-        <td data-name="hutang_max" <?= $Page->hutang_max->cellAttributes() ?>>
-<span id="el_customer_hutang_max">
-<span<?= $Page->hutang_max->viewAttributes() ?>>
-<?= $Page->hutang_max->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->keterangan->Visible) { // keterangan ?>
     <tr id="r_keterangan">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_keterangan"><?= $Page->keterangan->caption() ?></span></td>

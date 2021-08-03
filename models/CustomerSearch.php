@@ -480,7 +480,7 @@ class CustomerSearch extends Customer
         $this->website->setVisibility();
         $this->foto->setVisibility();
         $this->budget_bonus_persen->setVisibility();
-        $this->hutang_max->setVisibility();
+        $this->hutang_max->Visible = false;
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->setVisibility();
@@ -589,7 +589,6 @@ class CustomerSearch extends Customer
         $this->buildSearchUrl($srchUrl, $this->website); // website
         $this->buildSearchUrl($srchUrl, $this->foto); // foto
         $this->buildSearchUrl($srchUrl, $this->budget_bonus_persen); // budget_bonus_persen
-        $this->buildSearchUrl($srchUrl, $this->hutang_max); // hutang_max
         $this->buildSearchUrl($srchUrl, $this->keterangan); // keterangan
         $this->buildSearchUrl($srchUrl, $this->aktif); // aktif
         $this->buildSearchUrl($srchUrl, $this->created_at); // created_at
@@ -730,9 +729,6 @@ class CustomerSearch extends Customer
             $hasValue = true;
         }
         if ($this->budget_bonus_persen->AdvancedSearch->post()) {
-            $hasValue = true;
-        }
-        if ($this->hutang_max->AdvancedSearch->post()) {
             $hasValue = true;
         }
         if ($this->keterangan->AdvancedSearch->post()) {
@@ -1034,11 +1030,6 @@ class CustomerSearch extends Customer
             $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
             $this->budget_bonus_persen->ViewCustomAttributes = "";
 
-            // hutang_max
-            $this->hutang_max->ViewValue = $this->hutang_max->CurrentValue;
-            $this->hutang_max->ViewValue = FormatCurrency($this->hutang_max->ViewValue, 2, -2, -2, -2);
-            $this->hutang_max->ViewCustomAttributes = "";
-
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -1210,11 +1201,6 @@ class CustomerSearch extends Customer
             $this->budget_bonus_persen->LinkCustomAttributes = "";
             $this->budget_bonus_persen->HrefValue = "";
             $this->budget_bonus_persen->TooltipValue = "";
-
-            // hutang_max
-            $this->hutang_max->LinkCustomAttributes = "";
-            $this->hutang_max->HrefValue = "";
-            $this->hutang_max->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1533,12 +1519,6 @@ class CustomerSearch extends Customer
             $this->budget_bonus_persen->EditValue = HtmlEncode($this->budget_bonus_persen->AdvancedSearch->SearchValue);
             $this->budget_bonus_persen->PlaceHolder = RemoveHtml($this->budget_bonus_persen->caption());
 
-            // hutang_max
-            $this->hutang_max->EditAttrs["class"] = "form-control";
-            $this->hutang_max->EditCustomAttributes = "";
-            $this->hutang_max->EditValue = HtmlEncode($this->hutang_max->AdvancedSearch->SearchValue);
-            $this->hutang_max->PlaceHolder = RemoveHtml($this->hutang_max->caption());
-
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
             $this->keterangan->EditCustomAttributes = "";
@@ -1588,9 +1568,6 @@ class CustomerSearch extends Customer
         if (!CheckNumber($this->budget_bonus_persen->AdvancedSearch->SearchValue)) {
             $this->budget_bonus_persen->addErrorMessage($this->budget_bonus_persen->getErrorMessage(false));
         }
-        if (!CheckInteger($this->hutang_max->AdvancedSearch->SearchValue)) {
-            $this->hutang_max->addErrorMessage($this->hutang_max->getErrorMessage(false));
-        }
 
         // Return validate result
         $validateSearch = !$this->hasInvalidFields();
@@ -1626,7 +1603,6 @@ class CustomerSearch extends Customer
         $this->website->AdvancedSearch->load();
         $this->foto->AdvancedSearch->load();
         $this->budget_bonus_persen->AdvancedSearch->load();
-        $this->hutang_max->AdvancedSearch->load();
         $this->keterangan->AdvancedSearch->load();
         $this->aktif->AdvancedSearch->load();
         $this->created_at->AdvancedSearch->load();

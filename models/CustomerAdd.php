@@ -487,7 +487,7 @@ class CustomerAdd extends Customer
         $this->website->setVisibility();
         $this->foto->setVisibility();
         $this->budget_bonus_persen->setVisibility();
-        $this->hutang_max->setVisibility();
+        $this->hutang_max->Visible = false;
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->Visible = false;
@@ -918,16 +918,6 @@ class CustomerAdd extends Customer
             }
         }
 
-        // Check field name 'hutang_max' first before field var 'x_hutang_max'
-        $val = $CurrentForm->hasValue("hutang_max") ? $CurrentForm->getValue("hutang_max") : $CurrentForm->getValue("x_hutang_max");
-        if (!$this->hutang_max->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->hutang_max->Visible = false; // Disable update for API request
-            } else {
-                $this->hutang_max->setFormValue($val);
-            }
-        }
-
         // Check field name 'keterangan' first before field var 'x_keterangan'
         $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
         if (!$this->keterangan->IsDetailKey) {
@@ -985,7 +975,6 @@ class CustomerAdd extends Customer
         $this->_email->CurrentValue = $this->_email->FormValue;
         $this->website->CurrentValue = $this->website->FormValue;
         $this->budget_bonus_persen->CurrentValue = $this->budget_bonus_persen->FormValue;
-        $this->hutang_max->CurrentValue = $this->hutang_max->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
         $this->aktif->CurrentValue = $this->aktif->FormValue;
         $this->created_by->CurrentValue = $this->created_by->FormValue;
@@ -1408,11 +1397,6 @@ class CustomerAdd extends Customer
             $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
             $this->budget_bonus_persen->ViewCustomAttributes = "";
 
-            // hutang_max
-            $this->hutang_max->ViewValue = $this->hutang_max->CurrentValue;
-            $this->hutang_max->ViewValue = FormatCurrency($this->hutang_max->ViewValue, 2, -2, -2, -2);
-            $this->hutang_max->ViewCustomAttributes = "";
-
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -1584,11 +1568,6 @@ class CustomerAdd extends Customer
             $this->budget_bonus_persen->LinkCustomAttributes = "";
             $this->budget_bonus_persen->HrefValue = "";
             $this->budget_bonus_persen->TooltipValue = "";
-
-            // hutang_max
-            $this->hutang_max->LinkCustomAttributes = "";
-            $this->hutang_max->HrefValue = "";
-            $this->hutang_max->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1936,12 +1915,6 @@ class CustomerAdd extends Customer
                 $this->budget_bonus_persen->EditValue = FormatNumber($this->budget_bonus_persen->EditValue, -2, -2, -2, -2);
             }
 
-            // hutang_max
-            $this->hutang_max->EditAttrs["class"] = "form-control";
-            $this->hutang_max->EditCustomAttributes = "";
-            $this->hutang_max->EditValue = HtmlEncode($this->hutang_max->CurrentValue);
-            $this->hutang_max->PlaceHolder = RemoveHtml($this->hutang_max->caption());
-
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
             $this->keterangan->EditCustomAttributes = "";
@@ -2076,10 +2049,6 @@ class CustomerAdd extends Customer
             // budget_bonus_persen
             $this->budget_bonus_persen->LinkCustomAttributes = "";
             $this->budget_bonus_persen->HrefValue = "";
-
-            // hutang_max
-            $this->hutang_max->LinkCustomAttributes = "";
-            $this->hutang_max->HrefValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -2219,14 +2188,6 @@ class CustomerAdd extends Customer
         }
         if (!CheckNumber($this->budget_bonus_persen->FormValue)) {
             $this->budget_bonus_persen->addErrorMessage($this->budget_bonus_persen->getErrorMessage(false));
-        }
-        if ($this->hutang_max->Required) {
-            if (!$this->hutang_max->IsDetailKey && EmptyValue($this->hutang_max->FormValue)) {
-                $this->hutang_max->addErrorMessage(str_replace("%s", $this->hutang_max->caption(), $this->hutang_max->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->hutang_max->FormValue)) {
-            $this->hutang_max->addErrorMessage($this->hutang_max->getErrorMessage(false));
         }
         if ($this->keterangan->Required) {
             if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
@@ -2393,9 +2354,6 @@ class CustomerAdd extends Customer
 
         // budget_bonus_persen
         $this->budget_bonus_persen->setDbValueDef($rsnew, $this->budget_bonus_persen->CurrentValue, null, false);
-
-        // hutang_max
-        $this->hutang_max->setDbValueDef($rsnew, $this->hutang_max->CurrentValue, null, false);
 
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);

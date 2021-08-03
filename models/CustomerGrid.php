@@ -1832,6 +1832,7 @@ class CustomerGrid extends Customer
         // budget_bonus_persen
 
         // hutang_max
+        $this->hutang_max->CellCssStyle = "white-space: nowrap;";
 
         // keterangan
 
@@ -2050,11 +2051,6 @@ class CustomerGrid extends Customer
             $this->budget_bonus_persen->ViewValue = $this->budget_bonus_persen->CurrentValue;
             $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
             $this->budget_bonus_persen->ViewCustomAttributes = "";
-
-            // hutang_max
-            $this->hutang_max->ViewValue = $this->hutang_max->CurrentValue;
-            $this->hutang_max->ViewValue = FormatCurrency($this->hutang_max->ViewValue, 2, -2, -2, -2);
-            $this->hutang_max->ViewCustomAttributes = "";
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;

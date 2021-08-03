@@ -308,7 +308,7 @@ class Customer extends DbTable
 
         // hutang_max
         $this->hutang_max = new DbField('customer', 'customer', 'x_hutang_max', 'hutang_max', '`hutang_max`', '`hutang_max`', 20, 20, -1, false, '`hutang_max`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->hutang_max->Sortable = true; // Allow sort
+        $this->hutang_max->Sortable = false; // Allow sort
         $this->hutang_max->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->hutang_max->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hutang_max->Param, "CustomMsg");
         $this->Fields['hutang_max'] = &$this->hutang_max;
@@ -1318,6 +1318,7 @@ SORTHTML;
         // budget_bonus_persen
 
         // hutang_max
+        $this->hutang_max->CellCssStyle = "white-space: nowrap;";
 
         // keterangan
 
@@ -2052,7 +2053,6 @@ SORTHTML;
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
                     $doc->exportCaption($this->budget_bonus_persen);
-                    $doc->exportCaption($this->hutang_max);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                 } else {
@@ -2078,7 +2078,6 @@ SORTHTML;
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
                     $doc->exportCaption($this->budget_bonus_persen);
-                    $doc->exportCaption($this->hutang_max);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->created_at);
@@ -2134,7 +2133,6 @@ SORTHTML;
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
                         $doc->exportField($this->budget_bonus_persen);
-                        $doc->exportField($this->hutang_max);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                     } else {
@@ -2160,7 +2158,6 @@ SORTHTML;
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
                         $doc->exportField($this->budget_bonus_persen);
-                        $doc->exportField($this->hutang_max);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->created_at);
@@ -2386,7 +2383,6 @@ SORTHTML;
         //Log("Row Inserted");
         $new_idcustomer = $rsnew['id'];
         Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$new_idcustomer}, -1)");
-        Execute("INSERT INTO approval_po (idcustomer, jumlah_limit) VALUES ({$new_idcustomer}, 3)");    
     }
 
     // Row Updating event

@@ -999,18 +999,14 @@ return function (App $app) {
     // laporan_pembayaran
     $app->any('/LaporanPembayaran[/{params:.*}]', LaporanPembayaranController::class)->add(PermissionMiddleware::class)->setName('LaporanPembayaran-laporan_pembayaran-custom'); // custom
 
-    // approval_po
-    $app->any('/ApprovalPoList[/{id}]', ApprovalPoController::class . ':list')->add(PermissionMiddleware::class)->setName('ApprovalPoList-approval_po-list'); // list
-    $app->any('/ApprovalPoView[/{id}]', ApprovalPoController::class . ':view')->add(PermissionMiddleware::class)->setName('ApprovalPoView-approval_po-view'); // view
-    $app->any('/ApprovalPoEdit[/{id}]', ApprovalPoController::class . ':edit')->add(PermissionMiddleware::class)->setName('ApprovalPoEdit-approval_po-edit'); // edit
-    $app->any('/ApprovalPoDelete[/{id}]', ApprovalPoController::class . ':delete')->add(PermissionMiddleware::class)->setName('ApprovalPoDelete-approval_po-delete'); // delete
+    // po_limit_approval
+    $app->any('/PoLimitApprovalList', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('PoLimitApprovalList-po_limit_approval-list'); // list
+    $app->any('/PoLimitApprovalAdd', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('PoLimitApprovalAdd-po_limit_approval-add'); // add
     $app->group(
-        '/approval_po',
+        '/po_limit_approval',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', ApprovalPoController::class . ':list')->add(PermissionMiddleware::class)->setName('approval_po/list-approval_po-list-2'); // list
-            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', ApprovalPoController::class . ':view')->add(PermissionMiddleware::class)->setName('approval_po/view-approval_po-view-2'); // view
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', ApprovalPoController::class . ':edit')->add(PermissionMiddleware::class)->setName('approval_po/edit-approval_po-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', ApprovalPoController::class . ':delete')->add(PermissionMiddleware::class)->setName('approval_po/delete-approval_po-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('po_limit_approval/list-po_limit_approval-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('po_limit_approval/add-po_limit_approval-add-2'); // add
         }
     );
 

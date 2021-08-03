@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class CustomerDelete extends Customer
+class PoLimitApprovalDelete extends PoLimitApproval
 {
     use MessagesTrait;
 
@@ -18,10 +18,10 @@ class CustomerDelete extends Customer
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'customer';
+    public $TableName = 'po_limit_approval';
 
     // Page object name
-    public $PageObjName = "CustomerDelete";
+    public $PageObjName = "PoLimitApprovalDelete";
 
     // Rendering View
     public $RenderingView = false;
@@ -127,9 +127,9 @@ class CustomerDelete extends Customer
         // Parent constuctor
         parent::__construct();
 
-        // Table object (customer)
-        if (!isset($GLOBALS["customer"]) || get_class($GLOBALS["customer"]) == PROJECT_NAMESPACE . "customer") {
-            $GLOBALS["customer"] = &$this;
+        // Table object (po_limit_approval)
+        if (!isset($GLOBALS["po_limit_approval"]) || get_class($GLOBALS["po_limit_approval"]) == PROJECT_NAMESPACE . "po_limit_approval") {
+            $GLOBALS["po_limit_approval"] = &$this;
         }
 
         // Page URL
@@ -137,7 +137,7 @@ class CustomerDelete extends Customer
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'customer');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'po_limit_approval');
         }
 
         // Start timer
@@ -222,7 +222,7 @@ class CustomerDelete extends Customer
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("customer"));
+                $doc = new $class(Container("po_limit_approval"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -375,33 +375,15 @@ class CustomerDelete extends Customer
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->kode->setVisibility();
-        $this->idtipecustomer->setVisibility();
+        $this->idorder->setVisibility();
         $this->idpegawai->setVisibility();
-        $this->nama->setVisibility();
-        $this->kodenpd->setVisibility();
-        $this->usaha->Visible = false;
-        $this->jabatan->Visible = false;
-        $this->ktp->Visible = false;
-        $this->npwp->Visible = false;
-        $this->idprov->Visible = false;
-        $this->idkab->Visible = false;
-        $this->idkec->Visible = false;
-        $this->idkel->Visible = false;
-        $this->kodepos->Visible = false;
-        $this->alamat->Visible = false;
-        $this->telpon->Visible = false;
-        $this->hp->setVisibility();
-        $this->_email->Visible = false;
-        $this->website->Visible = false;
-        $this->foto->Visible = false;
-        $this->budget_bonus_persen->Visible = false;
-        $this->hutang_max->Visible = false;
-        $this->keterangan->Visible = false;
+        $this->idcustomer->setVisibility();
+        $this->limit_kredit->setVisibility();
+        $this->limit_po_aktif->setVisibility();
+        $this->lampiran->setVisibility();
         $this->aktif->Visible = false;
-        $this->created_at->Visible = false;
-        $this->updated_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->created_at->setVisibility();
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -416,15 +398,9 @@ class CustomerDelete extends Customer
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idtipecustomer);
+        $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idpegawai);
-        $this->setupLookupOptions($this->idprov);
-        $this->setupLookupOptions($this->idkab);
-        $this->setupLookupOptions($this->idkec);
-        $this->setupLookupOptions($this->idkel);
-
-        // Set up master/detail parameters
-        $this->setupMasterParms();
+        $this->setupLookupOptions($this->idcustomer);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -433,7 +409,7 @@ class CustomerDelete extends Customer
         $this->RecKeys = $this->getRecordKeys(); // Load record keys
         $filter = $this->getFilterFromRecordKeys();
         if ($filter == "") {
-            $this->terminate("CustomerList"); // Prevent SQL injection, return to list
+            $this->terminate("PoLimitApprovalList"); // Prevent SQL injection, return to list
             return;
         }
 
@@ -479,7 +455,7 @@ class CustomerDelete extends Customer
                 if ($this->Recordset) {
                     $this->Recordset->close();
                 }
-                $this->terminate("CustomerList"); // Return to list
+                $this->terminate("PoLimitApprovalList"); // Return to list
                 return;
             }
         }
@@ -574,40 +550,16 @@ class CustomerDelete extends Customer
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
-        $this->idtipecustomer->setDbValue($row['idtipecustomer']);
+        $this->idorder->setDbValue($row['idorder']);
         $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->nama->setDbValue($row['nama']);
-        $this->kodenpd->setDbValue($row['kodenpd']);
-        $this->usaha->setDbValue($row['usaha']);
-        $this->jabatan->setDbValue($row['jabatan']);
-        $this->ktp->Upload->DbValue = $row['ktp'];
-        if (is_resource($this->ktp->Upload->DbValue) && get_resource_type($this->ktp->Upload->DbValue) == "stream") { // Byte array
-            $this->ktp->Upload->DbValue = stream_get_contents($this->ktp->Upload->DbValue);
-        }
-        $this->npwp->Upload->DbValue = $row['npwp'];
-        if (is_resource($this->npwp->Upload->DbValue) && get_resource_type($this->npwp->Upload->DbValue) == "stream") { // Byte array
-            $this->npwp->Upload->DbValue = stream_get_contents($this->npwp->Upload->DbValue);
-        }
-        $this->idprov->setDbValue($row['idprov']);
-        $this->idkab->setDbValue($row['idkab']);
-        $this->idkec->setDbValue($row['idkec']);
-        $this->idkel->setDbValue($row['idkel']);
-        $this->kodepos->setDbValue($row['kodepos']);
-        $this->alamat->setDbValue($row['alamat']);
-        $this->telpon->setDbValue($row['telpon']);
-        $this->hp->setDbValue($row['hp']);
-        $this->_email->setDbValue($row['email']);
-        $this->website->setDbValue($row['website']);
-        $this->foto->Upload->DbValue = $row['foto'];
-        $this->foto->setDbValue($this->foto->Upload->DbValue);
-        $this->budget_bonus_persen->setDbValue($row['budget_bonus_persen']);
-        $this->hutang_max->setDbValue($row['hutang_max']);
-        $this->keterangan->setDbValue($row['keterangan']);
+        $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->limit_kredit->setDbValue($row['limit_kredit']);
+        $this->limit_po_aktif->setDbValue($row['limit_po_aktif']);
+        $this->lampiran->Upload->DbValue = $row['lampiran'];
+        $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
-        $this->created_by->setDbValue($row['created_by']);
     }
 
     // Return a row with default values
@@ -615,33 +567,15 @@ class CustomerDelete extends Customer
     {
         $row = [];
         $row['id'] = null;
-        $row['kode'] = null;
-        $row['idtipecustomer'] = null;
+        $row['idorder'] = null;
         $row['idpegawai'] = null;
-        $row['nama'] = null;
-        $row['kodenpd'] = null;
-        $row['usaha'] = null;
-        $row['jabatan'] = null;
-        $row['ktp'] = null;
-        $row['npwp'] = null;
-        $row['idprov'] = null;
-        $row['idkab'] = null;
-        $row['idkec'] = null;
-        $row['idkel'] = null;
-        $row['kodepos'] = null;
-        $row['alamat'] = null;
-        $row['telpon'] = null;
-        $row['hp'] = null;
-        $row['email'] = null;
-        $row['website'] = null;
-        $row['foto'] = null;
-        $row['budget_bonus_persen'] = null;
-        $row['hutang_max'] = null;
-        $row['keterangan'] = null;
+        $row['idcustomer'] = null;
+        $row['limit_kredit'] = null;
+        $row['limit_po_aktif'] = null;
+        $row['lampiran'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
-        $row['created_by'] = null;
         return $row;
     }
 
@@ -659,89 +593,48 @@ class CustomerDelete extends Customer
 
         // id
 
-        // kode
-
-        // idtipecustomer
+        // idorder
 
         // idpegawai
 
-        // nama
+        // idcustomer
 
-        // kodenpd
+        // limit_kredit
 
-        // usaha
+        // limit_po_aktif
 
-        // jabatan
-
-        // ktp
-
-        // npwp
-
-        // idprov
-
-        // idkab
-
-        // idkec
-
-        // idkel
-
-        // kodepos
-
-        // alamat
-
-        // telpon
-
-        // hp
-
-        // email
-
-        // website
-
-        // foto
-
-        // budget_bonus_persen
-
-        // hutang_max
-        $this->hutang_max->CellCssStyle = "white-space: nowrap;";
-
-        // keterangan
+        // lampiran
 
         // aktif
 
         // created_at
 
         // updated_at
-
-        // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
-
-            // idtipecustomer
-            $curVal = trim(strval($this->idtipecustomer->CurrentValue));
+            // idorder
+            $curVal = trim(strval($this->idorder->CurrentValue));
             if ($curVal != "") {
-                $this->idtipecustomer->ViewValue = $this->idtipecustomer->lookupCacheOption($curVal);
-                if ($this->idtipecustomer->ViewValue === null) { // Lookup from database
+                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
+                if ($this->idorder->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idtipecustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idtipecustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idtipecustomer->ViewValue = $this->idtipecustomer->displayValue($arwrk);
+                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
+                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
                     } else {
-                        $this->idtipecustomer->ViewValue = $this->idtipecustomer->CurrentValue;
+                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
                     }
                 }
             } else {
-                $this->idtipecustomer->ViewValue = null;
+                $this->idorder->ViewValue = null;
             }
-            $this->idtipecustomer->ViewCustomAttributes = "";
+            $this->idorder->ViewCustomAttributes = "";
 
             // idpegawai
             $curVal = trim(strval($this->idpegawai->CurrentValue));
@@ -764,175 +657,44 @@ class CustomerDelete extends Customer
             }
             $this->idpegawai->ViewCustomAttributes = "";
 
-            // nama
-            $this->nama->ViewValue = $this->nama->CurrentValue;
-            $this->nama->ViewCustomAttributes = "";
-
-            // kodenpd
-            $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
-            $this->kodenpd->ViewCustomAttributes = "";
-
-            // usaha
-            $this->usaha->ViewValue = $this->usaha->CurrentValue;
-            $this->usaha->ViewCustomAttributes = "";
-
-            // jabatan
-            $this->jabatan->ViewValue = $this->jabatan->CurrentValue;
-            $this->jabatan->ViewCustomAttributes = "";
-
-            // ktp
-            if (!EmptyValue($this->ktp->Upload->DbValue)) {
-                $this->ktp->ViewValue = $this->id->CurrentValue;
-                $this->ktp->IsBlobImage = IsImageFile(ContentExtension($this->ktp->Upload->DbValue));
-                $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-            } else {
-                $this->ktp->ViewValue = "";
-            }
-            $this->ktp->ViewCustomAttributes = "";
-
-            // npwp
-            if (!EmptyValue($this->npwp->Upload->DbValue)) {
-                $this->npwp->ViewValue = $this->id->CurrentValue;
-                $this->npwp->IsBlobImage = IsImageFile(ContentExtension($this->npwp->Upload->DbValue));
-                $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-            } else {
-                $this->npwp->ViewValue = "";
-            }
-            $this->npwp->ViewCustomAttributes = "";
-
-            // idprov
-            $curVal = trim(strval($this->idprov->CurrentValue));
+            // idcustomer
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
-                $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
-                if ($this->idprov->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idprov->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idprov->Lookup->renderViewRow($rswrk[0]);
-                        $this->idprov->ViewValue = $this->idprov->displayValue($arwrk);
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
                     } else {
-                        $this->idprov->ViewValue = $this->idprov->CurrentValue;
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
                     }
                 }
             } else {
-                $this->idprov->ViewValue = null;
+                $this->idcustomer->ViewValue = null;
             }
-            $this->idprov->ViewCustomAttributes = "";
+            $this->idcustomer->ViewCustomAttributes = "";
 
-            // idkab
-            $curVal = trim(strval($this->idkab->CurrentValue));
-            if ($curVal != "") {
-                $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
-                if ($this->idkab->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkab->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkab->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkab->ViewValue = $this->idkab->displayValue($arwrk);
-                    } else {
-                        $this->idkab->ViewValue = $this->idkab->CurrentValue;
-                    }
-                }
+            // limit_kredit
+            $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
+            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit->ViewCustomAttributes = "";
+
+            // limit_po_aktif
+            $this->limit_po_aktif->ViewValue = $this->limit_po_aktif->CurrentValue;
+            $this->limit_po_aktif->ViewValue = FormatCurrency($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
+            $this->limit_po_aktif->ViewCustomAttributes = "";
+
+            // lampiran
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
             } else {
-                $this->idkab->ViewValue = null;
+                $this->lampiran->ViewValue = "";
             }
-            $this->idkab->ViewCustomAttributes = "";
-
-            // idkec
-            $curVal = trim(strval($this->idkec->CurrentValue));
-            if ($curVal != "") {
-                $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
-                if ($this->idkec->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkec->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkec->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkec->ViewValue = $this->idkec->displayValue($arwrk);
-                    } else {
-                        $this->idkec->ViewValue = $this->idkec->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idkec->ViewValue = null;
-            }
-            $this->idkec->ViewCustomAttributes = "";
-
-            // idkel
-            $curVal = trim(strval($this->idkel->CurrentValue));
-            if ($curVal != "") {
-                $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
-                if ($this->idkel->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkel->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkel->ViewValue = $this->idkel->displayValue($arwrk);
-                    } else {
-                        $this->idkel->ViewValue = $this->idkel->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idkel->ViewValue = null;
-            }
-            $this->idkel->ViewCustomAttributes = "";
-
-            // kodepos
-            $this->kodepos->ViewValue = $this->kodepos->CurrentValue;
-            $this->kodepos->ViewCustomAttributes = "";
-
-            // alamat
-            $this->alamat->ViewValue = $this->alamat->CurrentValue;
-            $this->alamat->ViewCustomAttributes = "";
-
-            // telpon
-            $this->telpon->ViewValue = $this->telpon->CurrentValue;
-            $this->telpon->ViewCustomAttributes = "";
-
-            // hp
-            $this->hp->ViewValue = $this->hp->CurrentValue;
-            $this->hp->ViewCustomAttributes = "";
-
-            // email
-            $this->_email->ViewValue = $this->_email->CurrentValue;
-            $this->_email->ViewCustomAttributes = "";
-
-            // website
-            $this->website->ViewValue = $this->website->CurrentValue;
-            $this->website->ViewCustomAttributes = "";
-
-            // foto
-            if (!EmptyValue($this->foto->Upload->DbValue)) {
-                $this->foto->ImageAlt = $this->foto->alt();
-                $this->foto->ViewValue = $this->foto->Upload->DbValue;
-            } else {
-                $this->foto->ViewValue = "";
-            }
-            $this->foto->ViewCustomAttributes = "";
-
-            // budget_bonus_persen
-            $this->budget_bonus_persen->ViewValue = $this->budget_bonus_persen->CurrentValue;
-            $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
-            $this->budget_bonus_persen->ViewCustomAttributes = "";
-
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-            $this->keterangan->ViewCustomAttributes = "";
-
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
-            } else {
-                $this->aktif->ViewValue = null;
-            }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->lampiran->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -944,40 +706,46 @@ class CustomerDelete extends Customer
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
-
-            // idtipecustomer
-            $this->idtipecustomer->LinkCustomAttributes = "";
-            $this->idtipecustomer->HrefValue = "";
-            $this->idtipecustomer->TooltipValue = "";
+            // idorder
+            $this->idorder->LinkCustomAttributes = "";
+            $this->idorder->HrefValue = "";
+            $this->idorder->TooltipValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
             $this->idpegawai->TooltipValue = "";
 
-            // nama
-            $this->nama->LinkCustomAttributes = "";
-            $this->nama->HrefValue = "";
-            $this->nama->TooltipValue = "";
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
 
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
-            $this->kodenpd->TooltipValue = "";
+            // limit_kredit
+            $this->limit_kredit->LinkCustomAttributes = "";
+            $this->limit_kredit->HrefValue = "";
+            $this->limit_kredit->TooltipValue = "";
 
-            // hp
-            $this->hp->LinkCustomAttributes = "";
-            $this->hp->HrefValue = "";
-            $this->hp->TooltipValue = "";
+            // limit_po_aktif
+            $this->limit_po_aktif->LinkCustomAttributes = "";
+            $this->limit_po_aktif->HrefValue = "";
+            $this->limit_po_aktif->TooltipValue = "";
+
+            // lampiran
+            $this->lampiran->LinkCustomAttributes = "";
+            $this->lampiran->HrefValue = "";
+            $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
+            $this->lampiran->TooltipValue = "";
+
+            // created_at
+            $this->created_at->LinkCustomAttributes = "";
+            $this->created_at->HrefValue = "";
+            $this->created_at->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1069,82 +837,13 @@ class CustomerDelete extends Customer
         return $deleteRows;
     }
 
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Get("fk_id", Get("idpegawai"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idpegawai->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Post("fk_id", Post("idpegawai"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idpegawai->setFormValue($masterTbl->id->FormValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "pegawai") {
-                if ($this->idpegawai->CurrentValue == "") {
-                    $this->idpegawai->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("CustomerList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("PoLimitApprovalList"), "", $this->TableVar, true);
         $pageId = "delete";
         $Breadcrumb->add("delete", $pageId, $url);
     }
@@ -1162,19 +861,11 @@ class CustomerDelete extends Customer
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idtipecustomer":
+                case "x_idorder":
                     break;
                 case "x_idpegawai":
                     break;
-                case "x_idprov":
-                    break;
-                case "x_idkab":
-                    break;
-                case "x_idkec":
-                    break;
-                case "x_idkel":
-                    break;
-                case "x_aktif":
+                case "x_idcustomer":
                     break;
                 default:
                     $lookupFilter = "";

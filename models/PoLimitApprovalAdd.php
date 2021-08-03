@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class OrderAdd extends Order
+class PoLimitApprovalAdd extends PoLimitApproval
 {
     use MessagesTrait;
 
@@ -18,10 +18,10 @@ class OrderAdd extends Order
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'order';
+    public $TableName = 'po_limit_approval';
 
     // Page object name
-    public $PageObjName = "OrderAdd";
+    public $PageObjName = "PoLimitApprovalAdd";
 
     // Rendering View
     public $RenderingView = false;
@@ -127,9 +127,9 @@ class OrderAdd extends Order
         // Parent constuctor
         parent::__construct();
 
-        // Table object (order)
-        if (!isset($GLOBALS["order"]) || get_class($GLOBALS["order"]) == PROJECT_NAMESPACE . "order") {
-            $GLOBALS["order"] = &$this;
+        // Table object (po_limit_approval)
+        if (!isset($GLOBALS["po_limit_approval"]) || get_class($GLOBALS["po_limit_approval"]) == PROJECT_NAMESPACE . "po_limit_approval") {
+            $GLOBALS["po_limit_approval"] = &$this;
         }
 
         // Page URL
@@ -137,7 +137,7 @@ class OrderAdd extends Order
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'order');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'po_limit_approval');
         }
 
         // Start timer
@@ -222,7 +222,7 @@ class OrderAdd extends Order
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("order"));
+                $doc = new $class(Container("po_limit_approval"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -266,7 +266,7 @@ class OrderAdd extends Order
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "OrderView") {
+                    if ($pageName == "PoLimitApprovalView") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -357,7 +357,6 @@ class OrderAdd extends Order
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -369,9 +368,6 @@ class OrderAdd extends Order
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -464,16 +460,16 @@ class OrderAdd extends Order
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
-        $this->kode->setVisibility();
-        $this->tanggal->setVisibility();
+        $this->id->setVisibility();
+        $this->idorder->Visible = false;
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->dokumen->setVisibility();
-        $this->created_at->Visible = false;
-        $this->created_by->setVisibility();
+        $this->limit_kredit->setVisibility();
+        $this->limit_po_aktif->setVisibility();
+        $this->lampiran->setVisibility();
         $this->aktif->Visible = false;
-        $this->readonly->Visible = false;
+        $this->created_at->Visible = false;
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -488,6 +484,7 @@ class OrderAdd extends Order
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
 
@@ -507,13 +504,8 @@ class OrderAdd extends Order
             $this->CurrentAction = Post("action"); // Get form action
             $this->setKey(Post($this->OldKeyName));
             $postBack = true;
-        } else {
-            // Load key values from QueryString
-            if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-            }
-            $this->OldKey = $this->getKey(true); // Get from CurrentValue
-            $this->CopyRecord = !EmptyValue($this->OldKey);
+        } else { // Not post back
+            $this->CopyRecord = false;
             if ($this->CopyRecord) {
                 $this->CurrentAction = "copy"; // Copy record
             } else {
@@ -528,9 +520,6 @@ class OrderAdd extends Order
         if ($postBack) {
             $this->loadFormValues(); // Load form values
         }
-
-        // Set up detail parameters
-        $this->setupDetailParms();
 
         // Validate form if post back
         if ($postBack) {
@@ -553,12 +542,9 @@ class OrderAdd extends Order
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("OrderList"); // No matching record, return to list
+                    $this->terminate("PoLimitApprovalList"); // No matching record, return to list
                     return;
                 }
-
-                // Set up detail parameters
-                $this->setupDetailParms();
                 break;
             case "insert": // Add new record
                 $this->SendEmail = true; // Send email on add success
@@ -566,14 +552,10 @@ class OrderAdd extends Order
                     if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
-                    if ($this->getCurrentDetailTable() != "") { // Master/detail add
-                        $returnUrl = $this->getDetailUrl();
-                    } else {
-                        $returnUrl = $this->getReturnUrl();
-                    }
-                    if (GetPageName($returnUrl) == "OrderList") {
+                    $returnUrl = $this->getReturnUrl();
+                    if (GetPageName($returnUrl) == "PoLimitApprovalList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "OrderView") {
+                    } elseif (GetPageName($returnUrl) == "PoLimitApprovalView") {
                         $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
                     }
                     if (IsApi()) { // Return to caller
@@ -589,9 +571,6 @@ class OrderAdd extends Order
                 } else {
                     $this->EventCancelled = true; // Event cancelled
                     $this->restoreFormValues(); // Add failed, restore form values
-
-                    // Set up detail parameters
-                    $this->setupDetailParms();
                 }
         }
 
@@ -630,9 +609,9 @@ class OrderAdd extends Order
     protected function getUploadFiles()
     {
         global $CurrentForm, $Language;
-        $this->dokumen->Upload->Index = $CurrentForm->Index;
-        $this->dokumen->Upload->uploadFile();
-        $this->dokumen->CurrentValue = $this->dokumen->Upload->FileName;
+        $this->lampiran->Upload->Index = $CurrentForm->Index;
+        $this->lampiran->Upload->uploadFile();
+        $this->lampiran->CurrentValue = $this->lampiran->Upload->FileName;
     }
 
     // Load default values
@@ -640,22 +619,24 @@ class OrderAdd extends Order
     {
         $this->id->CurrentValue = null;
         $this->id->OldValue = $this->id->CurrentValue;
-        $this->kode->CurrentValue = null;
-        $this->kode->OldValue = $this->kode->CurrentValue;
-        $this->tanggal->CurrentValue = null;
-        $this->tanggal->OldValue = $this->tanggal->CurrentValue;
-        $this->idpegawai->CurrentValue = CurrentUserID();
+        $this->idorder->CurrentValue = null;
+        $this->idorder->OldValue = $this->idorder->CurrentValue;
+        $this->idpegawai->CurrentValue = null;
+        $this->idpegawai->OldValue = $this->idpegawai->CurrentValue;
         $this->idcustomer->CurrentValue = null;
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-        $this->dokumen->Upload->DbValue = null;
-        $this->dokumen->OldValue = $this->dokumen->Upload->DbValue;
-        $this->dokumen->CurrentValue = null; // Clear file related field
+        $this->limit_kredit->CurrentValue = null;
+        $this->limit_kredit->OldValue = $this->limit_kredit->CurrentValue;
+        $this->limit_po_aktif->CurrentValue = null;
+        $this->limit_po_aktif->OldValue = $this->limit_po_aktif->CurrentValue;
+        $this->lampiran->Upload->DbValue = null;
+        $this->lampiran->OldValue = $this->lampiran->Upload->DbValue;
+        $this->lampiran->CurrentValue = null; // Clear file related field
+        $this->aktif->CurrentValue = 1;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
-        $this->aktif->CurrentValue = 1;
-        $this->readonly->CurrentValue = null;
-        $this->readonly->OldValue = $this->readonly->CurrentValue;
+        $this->updated_at->CurrentValue = null;
+        $this->updated_at->OldValue = $this->updated_at->CurrentValue;
     }
 
     // Load form values
@@ -664,25 +645,14 @@ class OrderAdd extends Order
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'kode' first before field var 'x_kode'
-        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
-        if (!$this->kode->IsDetailKey) {
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->kode->Visible = false; // Disable update for API request
+                $this->id->Visible = false; // Disable update for API request
             } else {
-                $this->kode->setFormValue($val);
+                $this->id->setFormValue($val);
             }
-        }
-
-        // Check field name 'tanggal' first before field var 'x_tanggal'
-        $val = $CurrentForm->hasValue("tanggal") ? $CurrentForm->getValue("tanggal") : $CurrentForm->getValue("x_tanggal");
-        if (!$this->tanggal->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->tanggal->Visible = false; // Disable update for API request
-            } else {
-                $this->tanggal->setFormValue($val);
-            }
-            $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
         }
 
         // Check field name 'idpegawai' first before field var 'x_idpegawai'
@@ -705,18 +675,25 @@ class OrderAdd extends Order
             }
         }
 
-        // Check field name 'created_by' first before field var 'x_created_by'
-        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
-        if (!$this->created_by->IsDetailKey) {
+        // Check field name 'limit_kredit' first before field var 'x_limit_kredit'
+        $val = $CurrentForm->hasValue("limit_kredit") ? $CurrentForm->getValue("limit_kredit") : $CurrentForm->getValue("x_limit_kredit");
+        if (!$this->limit_kredit->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->created_by->Visible = false; // Disable update for API request
+                $this->limit_kredit->Visible = false; // Disable update for API request
             } else {
-                $this->created_by->setFormValue($val);
+                $this->limit_kredit->setFormValue($val);
             }
         }
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        // Check field name 'limit_po_aktif' first before field var 'x_limit_po_aktif'
+        $val = $CurrentForm->hasValue("limit_po_aktif") ? $CurrentForm->getValue("limit_po_aktif") : $CurrentForm->getValue("x_limit_po_aktif");
+        if (!$this->limit_po_aktif->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->limit_po_aktif->Visible = false; // Disable update for API request
+            } else {
+                $this->limit_po_aktif->setFormValue($val);
+            }
+        }
         $this->getUploadFiles(); // Get upload files
     }
 
@@ -724,12 +701,11 @@ class OrderAdd extends Order
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->kode->CurrentValue = $this->kode->FormValue;
-        $this->tanggal->CurrentValue = $this->tanggal->FormValue;
-        $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->created_by->CurrentValue = $this->created_by->FormValue;
+        $this->limit_kredit->CurrentValue = $this->limit_kredit->FormValue;
+        $this->limit_po_aktif->CurrentValue = $this->limit_po_aktif->FormValue;
     }
 
     /**
@@ -754,15 +730,6 @@ class OrderAdd extends Order
         if ($row) {
             $res = true;
             $this->loadRowValues($row); // Load row values
-        }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("add");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
         }
         return $res;
     }
@@ -789,16 +756,16 @@ class OrderAdd extends Order
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
-        $this->tanggal->setDbValue($row['tanggal']);
+        $this->idorder->setDbValue($row['idorder']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->dokumen->Upload->DbValue = $row['dokumen'];
-        $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->limit_kredit->setDbValue($row['limit_kredit']);
+        $this->limit_po_aktif->setDbValue($row['limit_po_aktif']);
+        $this->lampiran->Upload->DbValue = $row['lampiran'];
+        $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
         $this->aktif->setDbValue($row['aktif']);
-        $this->readonly->setDbValue($row['readonly']);
+        $this->created_at->setDbValue($row['created_at']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -807,32 +774,22 @@ class OrderAdd extends Order
         $this->loadDefaultValues();
         $row = [];
         $row['id'] = $this->id->CurrentValue;
-        $row['kode'] = $this->kode->CurrentValue;
-        $row['tanggal'] = $this->tanggal->CurrentValue;
+        $row['idorder'] = $this->idorder->CurrentValue;
         $row['idpegawai'] = $this->idpegawai->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
-        $row['dokumen'] = $this->dokumen->Upload->DbValue;
-        $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
+        $row['limit_kredit'] = $this->limit_kredit->CurrentValue;
+        $row['limit_po_aktif'] = $this->limit_po_aktif->CurrentValue;
+        $row['lampiran'] = $this->lampiran->Upload->DbValue;
         $row['aktif'] = $this->aktif->CurrentValue;
-        $row['readonly'] = $this->readonly->CurrentValue;
+        $row['created_at'] = $this->created_at->CurrentValue;
+        $row['updated_at'] = $this->updated_at->CurrentValue;
         return $row;
     }
 
     // Load old record
     protected function loadOldRecord()
     {
-        // Load old record
-        $this->OldRecordset = null;
-        $validKey = $this->OldKey != "";
-        if ($validKey) {
-            $this->CurrentFilter = $this->getRecordFilter();
-            $sql = $this->getCurrentSql();
-            $conn = $this->getConnection();
-            $this->OldRecordset = LoadRecordset($sql, $conn);
-        }
-        $this->loadRowValues($this->OldRecordset); // Load row values
-        return $validKey;
+        return false;
     }
 
     // Render row values based on field settings
@@ -849,36 +806,48 @@ class OrderAdd extends Order
 
         // id
 
-        // kode
-
-        // tanggal
+        // idorder
 
         // idpegawai
 
         // idcustomer
 
-        // dokumen
+        // limit_kredit
 
-        // created_at
+        // limit_po_aktif
 
-        // created_by
+        // lampiran
 
         // aktif
 
-        // readonly
+        // created_at
+
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
-
-            // tanggal
-            $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
-            $this->tanggal->ViewCustomAttributes = "";
+            // idorder
+            $curVal = trim(strval($this->idorder->CurrentValue));
+            if ($curVal != "") {
+                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
+                if ($this->idorder->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
+                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
+                    } else {
+                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idorder->ViewValue = null;
+            }
+            $this->idorder->ViewCustomAttributes = "";
 
             // idpegawai
             $curVal = trim(strval($this->idpegawai->CurrentValue));
@@ -922,41 +891,38 @@ class OrderAdd extends Order
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // dokumen
-            if (!EmptyValue($this->dokumen->Upload->DbValue)) {
-                $this->dokumen->ViewValue = $this->dokumen->Upload->DbValue;
+            // limit_kredit
+            $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
+            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit->ViewCustomAttributes = "";
+
+            // limit_po_aktif
+            $this->limit_po_aktif->ViewValue = $this->limit_po_aktif->CurrentValue;
+            $this->limit_po_aktif->ViewValue = FormatCurrency($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
+            $this->limit_po_aktif->ViewCustomAttributes = "";
+
+            // lampiran
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
             } else {
-                $this->dokumen->ViewValue = "";
+                $this->lampiran->ViewValue = "";
             }
-            $this->dokumen->ViewCustomAttributes = "";
+            $this->lampiran->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
-            } else {
-                $this->aktif->ViewValue = null;
-            }
-            $this->aktif->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
-
-            // tanggal
-            $this->tanggal->LinkCustomAttributes = "";
-            $this->tanggal->HrefValue = "";
-            $this->tanggal->TooltipValue = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -968,31 +934,35 @@ class OrderAdd extends Order
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
-            // dokumen
-            $this->dokumen->LinkCustomAttributes = "";
-            $this->dokumen->HrefValue = "";
-            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
-            $this->dokumen->TooltipValue = "";
+            // limit_kredit
+            $this->limit_kredit->LinkCustomAttributes = "";
+            $this->limit_kredit->HrefValue = "";
+            $this->limit_kredit->TooltipValue = "";
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
-        } elseif ($this->RowType == ROWTYPE_ADD) {
-            // kode
-            $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "readonly";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
+            // limit_po_aktif
+            $this->limit_po_aktif->LinkCustomAttributes = "";
+            $this->limit_po_aktif->HrefValue = "";
+            $this->limit_po_aktif->TooltipValue = "";
+
+            // lampiran
+            $this->lampiran->LinkCustomAttributes = "";
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->HrefValue = GetFileUploadUrl($this->lampiran, $this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)); // Add prefix/suffix
+                $this->lampiran->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->lampiran->HrefValue = FullUrl($this->lampiran->HrefValue, "href");
+                }
+            } else {
+                $this->lampiran->HrefValue = "";
             }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
-
-            // tanggal
-            $this->tanggal->EditAttrs["class"] = "form-control";
-            $this->tanggal->EditCustomAttributes = "";
-            $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 8));
-            $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
+            $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
+            $this->lampiran->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -1044,35 +1014,39 @@ class OrderAdd extends Order
             }
             $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
-            // dokumen
-            $this->dokumen->EditAttrs["class"] = "form-control";
-            $this->dokumen->EditCustomAttributes = "";
-            if (!EmptyValue($this->dokumen->Upload->DbValue)) {
-                $this->dokumen->EditValue = $this->dokumen->Upload->DbValue;
+            // limit_kredit
+            $this->limit_kredit->EditAttrs["class"] = "form-control";
+            $this->limit_kredit->EditCustomAttributes = "";
+            $this->limit_kredit->EditValue = HtmlEncode($this->limit_kredit->CurrentValue);
+            $this->limit_kredit->PlaceHolder = RemoveHtml($this->limit_kredit->caption());
+
+            // limit_po_aktif
+            $this->limit_po_aktif->EditAttrs["class"] = "form-control";
+            $this->limit_po_aktif->EditCustomAttributes = "";
+            $this->limit_po_aktif->EditValue = HtmlEncode($this->limit_po_aktif->CurrentValue);
+            $this->limit_po_aktif->PlaceHolder = RemoveHtml($this->limit_po_aktif->caption());
+
+            // lampiran
+            $this->lampiran->EditAttrs["class"] = "form-control";
+            $this->lampiran->EditAttrs["accept"] = "image/*,application/msword,application/pdf ";
+            $this->lampiran->EditCustomAttributes = "";
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->EditValue = $this->lampiran->Upload->DbValue;
             } else {
-                $this->dokumen->EditValue = "";
+                $this->lampiran->EditValue = "";
             }
-            if (!EmptyValue($this->dokumen->CurrentValue)) {
-                $this->dokumen->Upload->FileName = $this->dokumen->CurrentValue;
+            if (!EmptyValue($this->lampiran->CurrentValue)) {
+                $this->lampiran->Upload->FileName = $this->lampiran->CurrentValue;
             }
             if ($this->isShow() || $this->isCopy()) {
-                RenderUploadField($this->dokumen);
+                RenderUploadField($this->lampiran);
             }
-
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
 
             // Add refer script
 
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-
-            // tanggal
-            $this->tanggal->LinkCustomAttributes = "";
-            $this->tanggal->HrefValue = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -1082,14 +1056,26 @@ class OrderAdd extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
 
-            // dokumen
-            $this->dokumen->LinkCustomAttributes = "";
-            $this->dokumen->HrefValue = "";
-            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
+            // limit_kredit
+            $this->limit_kredit->LinkCustomAttributes = "";
+            $this->limit_kredit->HrefValue = "";
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
+            // limit_po_aktif
+            $this->limit_po_aktif->LinkCustomAttributes = "";
+            $this->limit_po_aktif->HrefValue = "";
+
+            // lampiran
+            $this->lampiran->LinkCustomAttributes = "";
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->HrefValue = GetFileUploadUrl($this->lampiran, $this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)); // Add prefix/suffix
+                $this->lampiran->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->lampiran->HrefValue = FullUrl($this->lampiran->HrefValue, "href");
+                }
+            } else {
+                $this->lampiran->HrefValue = "";
+            }
+            $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1110,18 +1096,13 @@ class OrderAdd extends Order
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->kode->Required) {
-            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
-                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
-        if ($this->tanggal->Required) {
-            if (!$this->tanggal->IsDetailKey && EmptyValue($this->tanggal->FormValue)) {
-                $this->tanggal->addErrorMessage(str_replace("%s", $this->tanggal->caption(), $this->tanggal->RequiredErrorMessage));
-            }
-        }
-        if (!CheckDate($this->tanggal->FormValue)) {
-            $this->tanggal->addErrorMessage($this->tanggal->getErrorMessage(false));
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idpegawai->Required) {
             if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
@@ -1133,22 +1114,26 @@ class OrderAdd extends Order
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
             }
         }
-        if ($this->dokumen->Required) {
-            if ($this->dokumen->Upload->FileName == "" && !$this->dokumen->Upload->KeepFile) {
-                $this->dokumen->addErrorMessage(str_replace("%s", $this->dokumen->caption(), $this->dokumen->RequiredErrorMessage));
+        if ($this->limit_kredit->Required) {
+            if (!$this->limit_kredit->IsDetailKey && EmptyValue($this->limit_kredit->FormValue)) {
+                $this->limit_kredit->addErrorMessage(str_replace("%s", $this->limit_kredit->caption(), $this->limit_kredit->RequiredErrorMessage));
             }
         }
-        if ($this->created_by->Required) {
-            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
-                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
+        if (!CheckInteger($this->limit_kredit->FormValue)) {
+            $this->limit_kredit->addErrorMessage($this->limit_kredit->getErrorMessage(false));
+        }
+        if ($this->limit_po_aktif->Required) {
+            if (!$this->limit_po_aktif->IsDetailKey && EmptyValue($this->limit_po_aktif->FormValue)) {
+                $this->limit_po_aktif->addErrorMessage(str_replace("%s", $this->limit_po_aktif->caption(), $this->limit_po_aktif->RequiredErrorMessage));
             }
         }
-
-        // Validate detail grid
-        $detailTblVar = explode(",", $this->getCurrentDetailTable());
-        $detailPage = Container("OrderDetailGrid");
-        if (in_array("order_detail", $detailTblVar) && $detailPage->DetailAdd) {
-            $detailPage->validateGridForm();
+        if (!CheckInteger($this->limit_po_aktif->FormValue)) {
+            $this->limit_po_aktif->addErrorMessage($this->limit_po_aktif->getErrorMessage(false));
+        }
+        if ($this->lampiran->Required) {
+            if ($this->lampiran->Upload->FileName == "" && !$this->lampiran->Upload->KeepFile) {
+                $this->lampiran->addErrorMessage(str_replace("%s", $this->lampiran->caption(), $this->lampiran->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -1167,24 +1152,7 @@ class OrderAdd extends Order
     protected function addRow($rsold = null)
     {
         global $Language, $Security;
-
-        // Check if valid User ID
-        $validUser = false;
-        if ($Security->currentUserID() != "" && !EmptyValue($this->created_by->CurrentValue) && !$Security->isAdmin()) { // Non system admin
-            $validUser = $Security->isValidUserID($this->created_by->CurrentValue);
-            if (!$validUser) {
-                $userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
-                $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
-                $this->setFailureMessage($userIdMsg);
-                return false;
-            }
-        }
         $conn = $this->getConnection();
-
-        // Begin transaction
-        if ($this->getCurrentDetailTable() != "") {
-            $conn->beginTransaction();
-        }
 
         // Load db values from rsold
         $this->loadDbValues($rsold);
@@ -1192,11 +1160,8 @@ class OrderAdd extends Order
         }
         $rsnew = [];
 
-        // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
-
-        // tanggal
-        $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), false);
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, false);
 
         // idpegawai
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
@@ -1204,27 +1169,30 @@ class OrderAdd extends Order
         // idcustomer
         $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
-        // dokumen
-        if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
-            $this->dokumen->Upload->DbValue = ""; // No need to delete old file
-            if ($this->dokumen->Upload->FileName == "") {
-                $rsnew['dokumen'] = null;
+        // limit_kredit
+        $this->limit_kredit->setDbValueDef($rsnew, $this->limit_kredit->CurrentValue, 0, false);
+
+        // limit_po_aktif
+        $this->limit_po_aktif->setDbValueDef($rsnew, $this->limit_po_aktif->CurrentValue, 0, false);
+
+        // lampiran
+        if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
+            $this->lampiran->Upload->DbValue = ""; // No need to delete old file
+            if ($this->lampiran->Upload->FileName == "") {
+                $rsnew['lampiran'] = null;
             } else {
-                $rsnew['dokumen'] = $this->dokumen->Upload->FileName;
+                $rsnew['lampiran'] = $this->lampiran->Upload->FileName;
             }
         }
-
-        // created_by
-        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
-        if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
-            $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
-            if (!EmptyValue($this->dokumen->Upload->FileName)) {
-                $newFiles = [$this->dokumen->Upload->FileName];
+        if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
+            $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
+            if (!EmptyValue($this->lampiran->Upload->FileName)) {
+                $newFiles = [$this->lampiran->Upload->FileName];
                 $NewFileCount = count($newFiles);
                 for ($i = 0; $i < $NewFileCount; $i++) {
                     if ($newFiles[$i] != "") {
                         $file = $newFiles[$i];
-                        $tempPath = UploadTempPath($this->dokumen, $this->dokumen->Upload->Index);
+                        $tempPath = UploadTempPath($this->lampiran, $this->lampiran->Upload->Index);
                         if (file_exists($tempPath . $file)) {
                             if (Config("DELETE_UPLOADED_FILES")) {
                                 $oldFileFound = false;
@@ -1241,10 +1209,10 @@ class OrderAdd extends Order
                                     continue;
                                 }
                             }
-                            $file1 = UniqueFilename($this->dokumen->physicalUploadPath(), $file); // Get new file name
+                            $file1 = UniqueFilename($this->lampiran->physicalUploadPath(), $file); // Get new file name
                             if ($file1 != $file) { // Rename temp file
-                                while (file_exists($tempPath . $file1) || file_exists($this->dokumen->physicalUploadPath() . $file1)) { // Make sure no file name clash
-                                    $file1 = UniqueFilename([$this->dokumen->physicalUploadPath(), $tempPath], $file1, true); // Use indexed name
+                                while (file_exists($tempPath . $file1) || file_exists($this->lampiran->physicalUploadPath() . $file1)) { // Make sure no file name clash
+                                    $file1 = UniqueFilename([$this->lampiran->physicalUploadPath(), $tempPath], $file1, true); // Use indexed name
                                 }
                                 rename($tempPath . $file, $tempPath . $file1);
                                 $newFiles[$i] = $file1;
@@ -1252,9 +1220,9 @@ class OrderAdd extends Order
                         }
                     }
                 }
-                $this->dokumen->Upload->DbValue = empty($oldFiles) ? "" : implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $oldFiles);
-                $this->dokumen->Upload->FileName = implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $newFiles);
-                $this->dokumen->setDbValueDef($rsnew, $this->dokumen->Upload->FileName, null, false);
+                $this->lampiran->Upload->DbValue = empty($oldFiles) ? "" : implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $oldFiles);
+                $this->lampiran->Upload->FileName = implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $newFiles);
+                $this->lampiran->setDbValueDef($rsnew, $this->lampiran->Upload->FileName, "", false);
             }
         }
 
@@ -1268,20 +1236,20 @@ class OrderAdd extends Order
                 $this->setFailureMessage($e->getMessage());
             }
             if ($addRow) {
-                if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
-                    $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
-                    if (!EmptyValue($this->dokumen->Upload->FileName)) {
-                        $newFiles = [$this->dokumen->Upload->FileName];
-                        $newFiles2 = [$this->dokumen->htmlDecode($rsnew['dokumen'])];
+                if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
+                    $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
+                    if (!EmptyValue($this->lampiran->Upload->FileName)) {
+                        $newFiles = [$this->lampiran->Upload->FileName];
+                        $newFiles2 = [$this->lampiran->htmlDecode($rsnew['lampiran'])];
                         $newFileCount = count($newFiles);
                         for ($i = 0; $i < $newFileCount; $i++) {
                             if ($newFiles[$i] != "") {
-                                $file = UploadTempPath($this->dokumen, $this->dokumen->Upload->Index) . $newFiles[$i];
+                                $file = UploadTempPath($this->lampiran, $this->lampiran->Upload->Index) . $newFiles[$i];
                                 if (file_exists($file)) {
                                     if (@$newFiles2[$i] != "") { // Use correct file name
                                         $newFiles[$i] = $newFiles2[$i];
                                     }
-                                    if (!$this->dokumen->Upload->SaveToFile($newFiles[$i], true, $i)) { // Just replace
+                                    if (!$this->lampiran->Upload->SaveToFile($newFiles[$i], true, $i)) { // Just replace
                                         $this->setFailureMessage($Language->phrase("UploadErrMsg7"));
                                         return false;
                                     }
@@ -1294,7 +1262,7 @@ class OrderAdd extends Order
                     if (Config("DELETE_UPLOADED_FILES")) {
                         foreach ($oldFiles as $oldFile) {
                             if ($oldFile != "" && !in_array($oldFile, $newFiles)) {
-                                @unlink($this->dokumen->oldPhysicalUploadPath() . $oldFile);
+                                @unlink($this->lampiran->oldPhysicalUploadPath() . $oldFile);
                             }
                         }
                     }
@@ -1311,30 +1279,6 @@ class OrderAdd extends Order
             }
             $addRow = false;
         }
-
-        // Add detail records
-        if ($addRow) {
-            $detailTblVar = explode(",", $this->getCurrentDetailTable());
-            $detailPage = Container("OrderDetailGrid");
-            if (in_array("order_detail", $detailTblVar) && $detailPage->DetailAdd) {
-                $detailPage->idorder->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "order_detail"); // Load user level of detail table
-                $addRow = $detailPage->gridInsert();
-                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                if (!$addRow) {
-                $detailPage->idorder->setSessionValue(""); // Clear master key if insert failed
-                }
-            }
-        }
-
-        // Commit/Rollback transaction
-        if ($this->getCurrentDetailTable() != "") {
-            if ($addRow) {
-                $conn->commit(); // Commit transaction
-            } else {
-                $conn->rollback(); // Rollback transaction
-            }
-        }
         if ($addRow) {
             // Call Row Inserted event
             $this->rowInserted($rsold, $rsnew);
@@ -1342,8 +1286,8 @@ class OrderAdd extends Order
 
         // Clean upload path if any
         if ($addRow) {
-            // dokumen
-            CleanUploadTempPath($this->dokumen, $this->dokumen->Upload->Index);
+            // lampiran
+            CleanUploadTempPath($this->lampiran, $this->lampiran->Upload->Index);
         }
 
         // Write JSON for API request
@@ -1354,56 +1298,13 @@ class OrderAdd extends Order
         return $addRow;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
-    {
-        // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("order_detail", $detailTblVar)) {
-                $detailPageObj = Container("OrderDetailGrid");
-                if ($detailPageObj->DetailAdd) {
-                    if ($this->CopyRecord) {
-                        $detailPageObj->CurrentMode = "copy";
-                    } else {
-                        $detailPageObj->CurrentMode = "add";
-                    }
-                    $detailPageObj->CurrentAction = "gridadd";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idorder->IsDetailKey = true;
-                    $detailPageObj->idorder->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idorder->setSessionValue($detailPageObj->idorder->CurrentValue);
-                }
-            }
-        }
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("OrderList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("PoLimitApprovalList"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
     }
@@ -1421,11 +1322,11 @@ class OrderAdd extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idorder":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
-                    break;
-                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1510,44 +1411,12 @@ class OrderAdd extends Order
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
-        $limitkredit_default = 5000000; // DEFAULT LIMA Juta;
-        $limitpoaktif_default = 2; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
         $idcustomer = $this->idcustomer->FormValue;
-        $approval = ExecuteRow("SELECT limit_kredit, limit_po_aktif FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
-
-        // CEK TOTAL PESANAN
-        $totalorder = 0; // DEFAULT 0
-        $detail = $GLOBALS["order_detail"]->GetGridFormValues(); // TOTAL ORDER YANG DIINPUT
-        foreach ($detail as $d) {
-            $totalorder += $d['total'];
+        $approval = ExecuteRow("SELECT COUNT(*) AS jumlah, customer.nama FROM po_limit_approval JOIN customer ON po_limit_approval.idcustomer = customer.id WHERE idcustomer = {$idcustomer} AND po_limit_approval.aktif = 1");
+        if ($approval['jumlah'] > 0) {
+        	$customError = "Approval P.O. ".$approval['nama']." sudah ada. Silakan membuat P.O baru dahulu sebelum mengajukan Approval baru.";
+        	return false;
         }
-        if ($totalorder > $limitkredit_default) {
-            if ($approval) {
-                if ($totalorder > $approval['limit_kredit']) {
-                    $customError = "Transaksi melebihi limit kredit dari pengajuan approval.";
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-            $customError = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.";
-            return false;
-        }
-
-        // CEK TAGIHAN BELUM LUNAS / BELUM BAYAR
-        $existing_tagihan = cek_po_aktif($idcustomer);
-        if ($existing_tagihan > $limitpoaktif_default) {
-            if ($approval) {
-                if ($existing_tagihan > $approval['limit_po_aktif']) {
-                    $customError = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
-                    return false;
-                } else {                    
-                    return true;
-                }
-            }
-            $customError = "P.O. berikut melebihi jumlah P.O. aktif sebelumnya.<br />Silakan mengajukan approval ke atasan untuk proses khusus.";
-            return false;
-        }       
         return true;
     }
 }

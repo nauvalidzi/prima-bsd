@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/7/30" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/8/3" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1033,6 +1033,9 @@
     <menu id="343">
       <phrase id="menutext" value="v orderdetail" />
     </menu>
+    <menu id="588">
+      <phrase id="menutext" value="P.O Limit Approval" />
+    </menu>
     <menu id="321">
       <phrase id="menutext" value="Delivery Order" />
     </menu>
@@ -1110,9 +1113,6 @@
     </menu>
     <menu id="31">
       <phrase id="menutext" value="Manajemen Pegawai" />
-    </menu>
-    <menu id="588">
-      <phrase id="menutext" value="Approval P.O." />
     </menu>
     <menu id="30">
       <phrase id="menutext" value="User Permissions" />
@@ -3663,16 +3663,37 @@
     <table id="laporan_pembayaran">
       <phrase id="tblcaption" value="Laporan Pembayaran" />
     </table>
-    <table id="approval_po">
-      <phrase id="tblcaption" value="Approval P.O." />
+    <table id="po_limit_approval">
+      <phrase id="tblcaption" value="P.O. Limit Approval" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="idorder">
+        <phrase id="fldcaption" value="Kode P.O" />
+      </field>
+      <field id="idpegawai">
+        <phrase id="fldcaption" value="Marketing" />
       </field>
       <field id="idcustomer">
         <phrase id="fldcaption" value="Customer" />
       </field>
-      <field id="jumlah_limit">
-        <phrase id="fldcaption" value="Maksimal P.O. Aktif" />
+      <field id="limit_kredit">
+        <phrase id="fldcaption" value="Limit Kredit (Rp.)" />
+      </field>
+      <field id="limit_po_aktif">
+        <phrase id="fldcaption" value="Limit P.O Aktif" />
+      </field>
+      <field id="lampiran">
+        <phrase id="fldcaption" value="Lampiran" />
+      </field>
+      <field id="aktif">
+        <phrase id="fldcaption" value="Aktif" />
+      </field>
+      <field id="created_at">
+        <phrase id="fldcaption" value="created at" />
+      </field>
+      <field id="updated_at">
+        <phrase id="fldcaption" value="updated at" />
       </field>
     </table>
   </project>

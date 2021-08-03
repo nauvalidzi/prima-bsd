@@ -43,7 +43,6 @@ loadjs.ready("head", function () {
         ["website", [], fields.website.isInvalid],
         ["foto", [], fields.foto.isInvalid],
         ["budget_bonus_persen", [ew.Validators.float], fields.budget_bonus_persen.isInvalid],
-        ["hutang_max", [ew.Validators.integer], fields.hutang_max.isInvalid],
         ["keterangan", [], fields.keterangan.isInvalid],
         ["aktif", [], fields.aktif.isInvalid],
         ["created_at", [], fields.created_at.isInvalid],
@@ -544,22 +543,6 @@ loadjs.ready("head", function() {
             <span id="el_customer_budget_bonus_persen" class="ew-search-field ew-search-field-single">
 <input type="<?= $Page->budget_bonus_persen->getInputTextType() ?>" data-table="customer" data-field="x_budget_bonus_persen" name="x_budget_bonus_persen" id="x_budget_bonus_persen" size="5" placeholder="<?= HtmlEncode($Page->budget_bonus_persen->getPlaceHolder()) ?>" value="<?= $Page->budget_bonus_persen->EditValue ?>"<?= $Page->budget_bonus_persen->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->budget_bonus_persen->getErrorMessage(false) ?></div>
-</span>
-        </div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->hutang_max->Visible) { // hutang_max ?>
-    <div id="r_hutang_max" class="form-group row">
-        <label for="x_hutang_max" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_hutang_max"><?= $Page->hutang_max->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("=") ?>
-<input type="hidden" name="z_hutang_max" id="z_hutang_max" value="=">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->hutang_max->cellAttributes() ?>>
-            <span id="el_customer_hutang_max" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->hutang_max->getInputTextType() ?>" data-table="customer" data-field="x_hutang_max" name="x_hutang_max" id="x_hutang_max" size="30" placeholder="<?= HtmlEncode($Page->hutang_max->getPlaceHolder()) ?>" value="<?= $Page->hutang_max->EditValue ?>"<?= $Page->hutang_max->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->hutang_max->getErrorMessage(false) ?></div>
 </span>
         </div></div>
     </div>
