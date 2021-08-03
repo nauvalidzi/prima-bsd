@@ -460,7 +460,7 @@ class PoLimitApprovalAdd extends PoLimitApproval
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idorder->Visible = false;
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
@@ -645,16 +645,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'idpegawai' first before field var 'x_idpegawai'
         $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
         if (!$this->idpegawai->IsDetailKey) {
@@ -701,7 +691,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->limit_kredit->CurrentValue = $this->limit_kredit->FormValue;
@@ -919,11 +908,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
@@ -958,12 +942,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
             $this->idpegawai->EditCustomAttributes = "";
@@ -1044,10 +1022,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
@@ -1095,14 +1069,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idpegawai->Required) {
             if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
@@ -1159,9 +1125,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
         if ($rsold) {
         }
         $rsnew = [];
-
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, false);
 
         // idpegawai
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
