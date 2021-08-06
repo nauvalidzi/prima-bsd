@@ -521,11 +521,11 @@ function cek_po_aktif($idcustomer) {
     // $tagihan_belumlunas = ExecuteRow("SELECT COUNT(*) AS jumlah FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} AND jumlahbayar < totaltagihan GROUP BY idinvoice, totaltagihan) bayar");
     // $tagihan_belumbayar = ExecuteRow("SELECT COUNT(*) AS jumlah FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1 AND id NOT IN (SELECT idinvoice FROM pembayaran)");
     // return $tagihan_belumlunas['jumlah'] + $tagihan_belumbayar['jumlah'];
-    return ExecuteRow("SELECT count(idcustomer) AS jumlah FROM invoice WHERE idcustomer = 51 AND sisabayar > 0 AND aktif = 1")['jumlah'];
+    return ExecuteRow("SELECT count(idcustomer) AS jumlah FROM invoice WHERE idcustomer = {$idcustomer} AND sisabayar > 0 AND aktif = 1")['jumlah'];
 }
 
 function cek_totaltagihan_po_aktif($idcustomer) {
-    return ExecuteRow("SELECT SUM(sisabayar) AS totaltagihan FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1")['totaltagihan'];
+    return ExecuteRow("SELECT IFNULL(SUM(sisabayar),0) AS totaltagihan FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1")['totaltagihan'];
 }
 
 function cek_po_approval($idcustomer) {

@@ -1000,13 +1000,13 @@ return function (App $app) {
     $app->any('/LaporanPembayaran[/{params:.*}]', LaporanPembayaranController::class)->add(PermissionMiddleware::class)->setName('LaporanPembayaran-laporan_pembayaran-custom'); // custom
 
     // po_limit_approval
-    $app->any('/PoLimitApprovalList', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('PoLimitApprovalList-po_limit_approval-list'); // list
-    $app->any('/PoLimitApprovalAdd', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('PoLimitApprovalAdd-po_limit_approval-add'); // add
+    $app->any('/PoLimitApprovalList[/{id}]', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('PoLimitApprovalList-po_limit_approval-list'); // list
+    $app->any('/PoLimitApprovalAdd[/{id}]', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('PoLimitApprovalAdd-po_limit_approval-add'); // add
     $app->group(
         '/po_limit_approval',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('po_limit_approval/list-po_limit_approval-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('po_limit_approval/add-po_limit_approval-add-2'); // add
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('po_limit_approval/list-po_limit_approval-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('po_limit_approval/add-po_limit_approval-add-2'); // add
         }
     );
 

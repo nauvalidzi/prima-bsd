@@ -58,12 +58,12 @@
     ),
     'doctrine/cache' => 
     array (
-      'pretty_version' => '2.0.3',
-      'version' => '2.0.3.0',
+      'pretty_version' => '2.1.1',
+      'version' => '2.1.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c9622c6820d3ede1e2315a6a377ea1076e421d88',
+      'reference' => '331b4d5dbaeab3827976273e9356b3b453c300ce',
     ),
     'doctrine/dbal' => 
     array (
@@ -148,12 +148,12 @@
     ),
     'monolog/monolog' => 
     array (
-      'pretty_version' => '2.3.0',
-      'version' => '2.3.0.0',
+      'pretty_version' => '2.3.2',
+      'version' => '2.3.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'df991fd88693ab703aa403413d83e15f688dae33',
+      'reference' => '71312564759a7db5b789296369c1a264efc43aad',
     ),
     'nikic/fast-route' => 
     array (
@@ -220,12 +220,12 @@
     ),
     'php-di/invoker' => 
     array (
-      'pretty_version' => '2.3.0',
-      'version' => '2.3.0.0',
+      'pretty_version' => '2.3.2',
+      'version' => '2.3.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '992fec6c56f2d1ad1ad5fee28267867c85bfb8f9',
+      'reference' => '5214cbe5aad066022cd845dbf313f0e47aed928f',
     ),
     'php-di/php-di' => 
     array (

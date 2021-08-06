@@ -357,6 +357,7 @@ class PoLimitApprovalAdd extends PoLimitApproval
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -368,6 +369,9 @@ class PoLimitApprovalAdd extends PoLimitApproval
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -504,8 +508,13 @@ class PoLimitApprovalAdd extends PoLimitApproval
             $this->CurrentAction = Post("action"); // Get form action
             $this->setKey(Post($this->OldKeyName));
             $postBack = true;
-        } else { // Not post back
-            $this->CopyRecord = false;
+        } else {
+            // Load key values from QueryString
+            if (($keyValue = Get("id") ?? Route("id")) !== null) {
+                $this->id->setQueryStringValue($keyValue);
+            }
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
+            $this->CopyRecord = !EmptyValue($this->OldKey);
             if ($this->CopyRecord) {
                 $this->CurrentAction = "copy"; // Copy record
             } else {
@@ -684,6 +693,9 @@ class PoLimitApprovalAdd extends PoLimitApproval
                 $this->limit_po_aktif->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         $this->getUploadFiles(); // Get upload files
     }
 
@@ -778,7 +790,17 @@ class PoLimitApprovalAdd extends PoLimitApproval
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
