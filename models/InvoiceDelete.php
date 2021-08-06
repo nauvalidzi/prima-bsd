@@ -407,7 +407,6 @@ class InvoiceDelete extends Invoice
         // Set up lookup cache
         $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idorder);
-        $this->setupLookupOptions($this->idtermpayment);
         $this->setupLookupOptions($this->idtipepayment);
 
         // Set up Breadcrumb
@@ -751,24 +750,7 @@ class InvoiceDelete extends Invoice
 
             // idtermpayment
             $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-            $curVal = trim(strval($this->idtermpayment->CurrentValue));
-            if ($curVal != "") {
-                $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
-                if ($this->idtermpayment->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idtermpayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idtermpayment->Lookup->renderViewRow($rswrk[0]);
-                        $this->idtermpayment->ViewValue = $this->idtermpayment->displayValue($arwrk);
-                    } else {
-                        $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idtermpayment->ViewValue = null;
-            }
+            $this->idtermpayment->ViewValue = FormatNumber($this->idtermpayment->ViewValue, 0, -2, -2, -2);
             $this->idtermpayment->ViewCustomAttributes = "";
 
             // idtipepayment
@@ -979,8 +961,6 @@ class InvoiceDelete extends Invoice
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "jumlah > 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idtermpayment":
                     break;
                 case "x_idtipepayment":
                     break;

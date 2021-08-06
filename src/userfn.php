@@ -244,18 +244,36 @@ $API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
         $idcustomer = AdjustSql($vars);
         $status = true;
         $message = null;
-        $limitpoaktif_default = 2;
-        $existing_tagihan = cek_po_aktif($idcustomer);
-        if ($existing_tagihan > $limitpoaktif_default) {
-            $approval = ExecuteRow("SELECT limit_kredit, limit_po_aktif FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
-            if ($approval) {
-                if ($existing_tagihan > $approval['limit_po_aktif']) {
-                    $message = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
-                    $status = false;
-                } else {
-                    $message = null;
-                    return true;
-                }
+        $limit_kredit = 5000000; // DEFAULT LIMA Juta;
+        $limit_poaktif = 2; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
+
+        // CEK TOTAL EXISTING TAGIHAN
+        $existing_tagihan = cek_totaltagihan_po_aktif($idcustomer);
+
+        // HITUNG TOTAL TAGIHAN EXISTING DAN PO YANG AKAN DIBUAT
+        $totaltagihan = $existing_tagihan + $totalorder;
+
+        // CEK KREDIT APPROVAL
+        $approval = cek_po_approval($idcustomer);
+        if ($approval) {
+            $limit_kredit = $approval['limit_kredit'];
+            $limit_poaktif = $approval['limit_po_aktif'];
+        }
+        if ($totaltagihan > $limit_kredit) {
+            if ($limit_kredit != 5000000) {
+                $message = "Transaksi melebihi limit kredit dari pengajuan approval.";
+                $status = false;
+            }
+            $message = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.";
+            $status = false;
+        }
+
+        // CEK TAGIHAN BELUM LUNAS / BELUM BAYAR
+        $existing_count_tagihan = cek_po_aktif($idcustomer);
+        if ($existing_count_tagihan > $limit_poaktif) {
+            if ($limit_poaktif > 2) {
+                $message = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
+                $status = false;
             }
             $message = "P.O. berikut melebihi jumlah P.O. aktif sebelumnya.<br />Silakan mengajukan approval ke atasan untuk proses khusus.";
             $status = false;
@@ -500,7 +518,16 @@ function tgl_indo($tanggal, $format='date'){
 }
 
 function cek_po_aktif($idcustomer) {
-    $tagihan_belumlunas = ExecuteRow("SELECT COUNT(*) AS jumlah FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} GROUP BY idinvoice, totaltagihan) bayar WHERE jumlahbayar < totaltagihan");
-    $tagihan_belumbayar = ExecuteRow("SELECT COUNT(*) AS jumlah FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1 AND id NOT IN (SELECT idinvoice FROM pembayaran)");
-    return $tagihan_belumlunas['jumlah'] + $tagihan_belumbayar['jumlah'];
+    // $tagihan_belumlunas = ExecuteRow("SELECT COUNT(*) AS jumlah FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} AND jumlahbayar < totaltagihan GROUP BY idinvoice, totaltagihan) bayar");
+    // $tagihan_belumbayar = ExecuteRow("SELECT COUNT(*) AS jumlah FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1 AND id NOT IN (SELECT idinvoice FROM pembayaran)");
+    // return $tagihan_belumlunas['jumlah'] + $tagihan_belumbayar['jumlah'];
+    return ExecuteRow("SELECT count(idcustomer) AS jumlah FROM invoice WHERE idcustomer = 51 AND sisabayar > 0 AND aktif = 1")['jumlah'];
+}
+
+function cek_totaltagihan_po_aktif($idcustomer) {
+    return ExecuteRow("SELECT SUM(sisabayar) AS totaltagihan FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1")['totaltagihan'];
+}
+
+function cek_po_approval($idcustomer) {
+    return ExecuteRow("SELECT limit_kredit, limit_po_aktif FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
 }

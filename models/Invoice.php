@@ -183,14 +183,6 @@ class Invoice extends DbTable
         $this->idtermpayment->Nullable = false; // NOT NULL field
         $this->idtermpayment->Required = true; // Required field
         $this->idtermpayment->Sortable = true; // Allow sort
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idtermpayment->Lookup = new Lookup('idtermpayment', 'termpayment', false, 'id', ["title","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idtermpayment->Lookup = new Lookup('idtermpayment', 'termpayment', false, 'id', ["title","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->idtermpayment->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idtermpayment->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idtermpayment->Param, "CustomMsg");
         $this->Fields['idtermpayment'] = &$this->idtermpayment;
@@ -1213,24 +1205,7 @@ SORTHTML;
 
         // idtermpayment
         $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-        $curVal = trim(strval($this->idtermpayment->CurrentValue));
-        if ($curVal != "") {
-            $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
-            if ($this->idtermpayment->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idtermpayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idtermpayment->Lookup->renderViewRow($rswrk[0]);
-                    $this->idtermpayment->ViewValue = $this->idtermpayment->displayValue($arwrk);
-                } else {
-                    $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-                }
-            }
-        } else {
-            $this->idtermpayment->ViewValue = null;
-        }
+        $this->idtermpayment->ViewValue = FormatNumber($this->idtermpayment->ViewValue, 0, -2, -2, -2);
         $this->idtermpayment->ViewCustomAttributes = "";
 
         // idtipepayment

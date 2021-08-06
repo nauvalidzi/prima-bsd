@@ -1510,44 +1510,48 @@ class OrderAdd extends Order
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
-        $limitkredit_default = 5000000; // DEFAULT LIMA Juta;
-        $limitpoaktif_default = 2; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
+        $limit_kredit = 5000000; // DEFAULT LIMA Juta;
+        $limit_poaktif = 2; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
         $idcustomer = $this->idcustomer->FormValue;
-        $approval = ExecuteRow("SELECT limit_kredit, limit_po_aktif FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
 
-        // CEK TOTAL PESANAN
+        // CEK TOTAL PESANAN        
         $totalorder = 0; // DEFAULT 0
         $detail = $GLOBALS["order_detail"]->GetGridFormValues(); // TOTAL ORDER YANG DIINPUT
         foreach ($detail as $d) {
             $totalorder += $d['total'];
         }
-        if ($totalorder > $limitkredit_default) {
-            if ($approval) {
-                if ($totalorder > $approval['limit_kredit']) {
-                    $customError = "Transaksi melebihi limit kredit dari pengajuan approval.";
-                    return false;
-                } else {
-                    return true;
-                }
+
+        // CEK TOTAL EXISTING TAGIHAN
+        $existing_tagihan = cek_totaltagihan_po_aktif($idcustomer);
+
+        // HITUNG TOTAL TAGIHAN EXISTING DAN PO YANG AKAN DIBUAT
+        $totaltagihan = $existing_tagihan + $totalorder;
+
+        // CEK KREDIT APPROVAL
+        $approval = cek_po_approval($idcustomer);
+        if ($approval) {
+            $limit_kredit = $approval['limit_kredit'];
+            $limit_poaktif = $approval['limit_po_aktif'];
+        }
+        if ($totaltagihan > $limit_kredit) {
+            if ($limit_kredit != 5000000) {
+                $customError = "Transaksi melebihi limit kredit dari pengajuan approval.";
+                return false;
             }
             $customError = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.";
             return false;
         }
 
         // CEK TAGIHAN BELUM LUNAS / BELUM BAYAR
-        $existing_tagihan = cek_po_aktif($idcustomer);
-        if ($existing_tagihan > $limitpoaktif_default) {
-            if ($approval) {
-                if ($existing_tagihan > $approval['limit_po_aktif']) {
-                    $customError = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
-                    return false;
-                } else {                    
-                    return true;
-                }
+        $existing_count_tagihan = cek_po_aktif($idcustomer);
+        if ($existing_count_tagihan > $limit_poaktif) {
+            if ($limit_poaktif > 2) {
+                $customError = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
+                return false;
             }
             $customError = "P.O. berikut melebihi jumlah P.O. aktif sebelumnya.<br />Silakan mengajukan approval ke atasan untuk proses khusus.";
             return false;
-        }       
+        }
         return true;
     }
 }

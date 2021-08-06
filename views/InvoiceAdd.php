@@ -102,7 +102,6 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     finvoiceadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     finvoiceadd.lists.idorder = <?= $Page->idorder->toClientList($Page) ?>;
-    finvoiceadd.lists.idtermpayment = <?= $Page->idtermpayment->toClientList($Page) ?>;
     finvoiceadd.lists.idtipepayment = <?= $Page->idtipepayment->toClientList($Page) ?>;
     loadjs.done("finvoiceadd");
 });
@@ -263,26 +262,12 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
     <div id="r_idtermpayment" class="form-group row">
-        <label id="elh_invoice_idtermpayment" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idtermpayment->caption() ?><?= $Page->idtermpayment->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_invoice_idtermpayment" for="x_idtermpayment" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idtermpayment->caption() ?><?= $Page->idtermpayment->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idtermpayment->cellAttributes() ?>>
 <span id="el_invoice_idtermpayment">
-<?php
-$onchange = $Page->idtermpayment->EditAttrs->prepend("onchange", "");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->idtermpayment->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_idtermpayment" class="ew-auto-suggest">
-    <input type="<?= $Page->idtermpayment->getInputTextType() ?>" class="form-control" name="sv_x_idtermpayment" id="sv_x_idtermpayment" value="<?= RemoveHtml($Page->idtermpayment->EditValue) ?>" size="30" placeholder="<?= HtmlEncode($Page->idtermpayment->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idtermpayment->getPlaceHolder()) ?>"<?= $Page->idtermpayment->editAttributes() ?> aria-describedby="x_idtermpayment_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="invoice" data-field="x_idtermpayment" data-input="sv_x_idtermpayment" data-value-separator="<?= $Page->idtermpayment->displayValueSeparatorAttribute() ?>" name="x_idtermpayment" id="x_idtermpayment" value="<?= HtmlEncode($Page->idtermpayment->CurrentValue) ?>"<?= $onchange ?>>
+<input type="<?= $Page->idtermpayment->getInputTextType() ?>" data-table="invoice" data-field="x_idtermpayment" name="x_idtermpayment" id="x_idtermpayment" size="30" placeholder="<?= HtmlEncode($Page->idtermpayment->getPlaceHolder()) ?>" value="<?= $Page->idtermpayment->EditValue ?>"<?= $Page->idtermpayment->editAttributes() ?> aria-describedby="x_idtermpayment_help">
 <?= $Page->idtermpayment->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->idtermpayment->getErrorMessage() ?></div>
-<script>
-loadjs.ready(["finvoiceadd"], function() {
-    finvoiceadd.createAutoSuggest(Object.assign({"id":"x_idtermpayment","forceSelect":false}, ew.vars.tables.invoice.fields.idtermpayment.autoSuggestOptions));
-});
-</script>
-<?= $Page->idtermpayment->Lookup->getParamTag($Page, "p_x_idtermpayment") ?>
 </span>
 </div></div>
     </div>
