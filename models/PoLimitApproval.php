@@ -1599,7 +1599,7 @@ SORTHTML;
     		$this->idpegawai->ReadOnly = TRUE; 
     	}
         if ($this->idorder->CurrentValue == 0) {
-        	$this->idorder->ViewValue = 'PO belum';
+        	$this->idorder->ViewValue = 'PO Belum dibuat.';
         } else {
         	$this->RowAttrs["style"] = "background-color: #32CD32; ";
         }

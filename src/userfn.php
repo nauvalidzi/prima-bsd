@@ -518,16 +518,45 @@ function tgl_indo($tanggal, $format='date'){
 }
 
 function cek_po_aktif($idcustomer) {
-    // $tagihan_belumlunas = ExecuteRow("SELECT COUNT(*) AS jumlah FROM (SELECT totaltagihan, IFNULL(SUM(jumlahbayar),0) AS jumlahbayar FROM pembayaran WHERE idcustomer = {$idcustomer} AND jumlahbayar < totaltagihan GROUP BY idinvoice, totaltagihan) bayar");
-    // $tagihan_belumbayar = ExecuteRow("SELECT COUNT(*) AS jumlah FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1 AND id NOT IN (SELECT idinvoice FROM pembayaran)");
-    // return $tagihan_belumlunas['jumlah'] + $tagihan_belumbayar['jumlah'];
-    return ExecuteRow("SELECT count(idcustomer) AS jumlah FROM invoice WHERE idcustomer = {$idcustomer} AND sisabayar > 0 AND aktif = 1")['jumlah'];
+    return ExecuteRow("SELECT COUNT(idcustomer) AS jumlah
+                    FROM (
+                    SELECT idorder, idcustomer
+                    FROM invoice
+                    WHERE sisabayar > 0
+                    UNION ALL
+                    SELECT `order`.id as idorder, idcustomer
+                    FROM `order`
+                    WHERE `order`.id NOT IN (SELECT idorder FROM invoice)
+                    ) po_aktif WHERE idcustomer = {$idcustomer}
+                ")['jumlah'];    
 }
 
 function cek_totaltagihan_po_aktif($idcustomer) {
-    return ExecuteRow("SELECT IFNULL(SUM(sisabayar),0) AS totaltagihan FROM invoice WHERE idcustomer = {$idcustomer} AND aktif = 1")['totaltagihan'];
+    return ExecuteRow("SELECT idcustomer, SUM(tagihan) AS totaltagihan
+                    FROM (
+                    SELECT idorder, idcustomer, sisabayar AS tagihan
+                    FROM invoice
+                    WHERE sisabayar > 0
+                    UNION ALL
+                    SELECT `order`.id as idorder, idcustomer, total AS tagihan
+                    FROM `order`
+                    JOIN order_detail ON `order`.id = order_detail.idorder
+                    WHERE `order`.id NOT IN (SELECT idorder FROM invoice)
+                    ) po_aktif WHERE idcustomer = {$idcustomer}
+                ")['totaltagihan'];
 }
 
 function cek_po_approval($idcustomer) {
     return ExecuteRow("SELECT limit_kredit, limit_po_aktif FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
 }
+
+/*
+CATATAN LIMIT PO AKTIF & NOMINAL PO
+order baru => order.aktif = 1 & order.readonly = 0
+order masuk do, kirim sebagian => order.aktif = 1 & order.readonly = 1
+order masuk do, dengan jumlah penuh => order.aktif = 0 & order.readonly = 1 & do.readonly = 0
+order masuk invoice => do.readonly = 1 & invoice.aktif = 1 & invoice.readonly = 0 & invoice.sent = 0
+order masuk surat jalan => invoice.sent = 1
+order masuk bayar sebagian => invoice.aktif = 1 & invoice.readonly = 1 invoice.sent = 0
+order masuk bayar lunas => invoice.aktif = 0
+*/
