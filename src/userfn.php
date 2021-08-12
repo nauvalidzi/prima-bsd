@@ -270,7 +270,7 @@ $API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
 
         // CEK TAGIHAN BELUM LUNAS / BELUM BAYAR
         $existing_count_tagihan = cek_po_aktif($idcustomer);
-        if ($existing_count_tagihan > $limit_poaktif) {
+        if ($existing_count_tagihan >= $limit_poaktif) {
             if ($limit_poaktif > 2) {
                 $message = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
                 $status = false;
@@ -542,6 +542,11 @@ function cek_totaltagihan_po_aktif($idcustomer) {
                     FROM `order`
                     JOIN order_detail ON `order`.id = order_detail.idorder
                     WHERE `order`.id NOT IN (SELECT idorder FROM invoice)
+                    UNION ALL
+                    SELECT idorder, idcustomer, (sisa - bonus) * harga AS tagihan
+                    FROM order_detail
+                    JOIN `order` ON order_detail.idorder = `order`.id
+                    WHERE sisa >= bonus AND sisa != 0 AND idorder IN (SELECT idorder FROM deliveryorder_detail)
                     ) po_aktif WHERE idcustomer = {$idcustomer}
                 ")['totaltagihan'];
 }

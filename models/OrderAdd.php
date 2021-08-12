@@ -1544,7 +1544,7 @@ class OrderAdd extends Order
 
         // CEK TAGIHAN BELUM LUNAS / BELUM BAYAR
         $existing_count_tagihan = cek_po_aktif($idcustomer);
-        if ($existing_count_tagihan > $limit_poaktif) {
+        if ($existing_count_tagihan >= $limit_poaktif) {
             if ($limit_poaktif > 2) {
                 $customError = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
                 return false;

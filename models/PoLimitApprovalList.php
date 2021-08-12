@@ -1364,12 +1364,12 @@ class PoLimitApprovalList extends PoLimitApproval
 
             // limit_kredit
             $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit->ViewValue = FormatCurrency($this->limit_kredit->ViewValue, 2, -2, -2, -2);
             $this->limit_kredit->ViewCustomAttributes = "";
 
             // limit_po_aktif
             $this->limit_po_aktif->ViewValue = $this->limit_po_aktif->CurrentValue;
-            $this->limit_po_aktif->ViewValue = FormatCurrency($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
+            $this->limit_po_aktif->ViewValue = FormatNumber($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
             $this->limit_po_aktif->ViewCustomAttributes = "";
 
             // lampiran
