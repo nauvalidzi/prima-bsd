@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/8/12" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/8/19" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,6 +925,9 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2020 PT. Prima Visi Globalindo" />
+    <menu id="589">
+      <phrase id="menutext" value="v do stock" />
+    </menu>
     <menu id="582">
       <phrase id="menutext" value="v order customer" />
     </menu>
@@ -3690,10 +3693,25 @@
         <phrase id="fldcaption" value="Aktif" />
       </field>
       <field id="created_at">
-        <phrase id="fldcaption" value="created at" />
+        <phrase id="fldcaption" value="Created" />
       </field>
       <field id="updated_at">
-        <phrase id="fldcaption" value="updated at" />
+        <phrase id="fldcaption" value="Updated" />
+      </field>
+    </table>
+    <table id="v_do_stock">
+      <phrase id="tblcaption" value="v do stock" />
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodecustomer">
+        <phrase id="fldcaption" value="kodecustomer" />
+      </field>
+      <field id="namacustomer">
+        <phrase id="fldcaption" value="namacustomer" />
+      </field>
+      <field id="jumlah">
+        <phrase id="fldcaption" value="jumlah" />
       </field>
     </table>
   </project>

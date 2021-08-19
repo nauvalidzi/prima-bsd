@@ -894,12 +894,12 @@ class PoLimitApprovalEdit extends PoLimitApproval
 
             // limit_kredit
             $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit->ViewValue = FormatCurrency($this->limit_kredit->ViewValue, 2, -2, -2, -2);
             $this->limit_kredit->ViewCustomAttributes = "";
 
             // limit_po_aktif
             $this->limit_po_aktif->ViewValue = $this->limit_po_aktif->CurrentValue;
-            $this->limit_po_aktif->ViewValue = FormatCurrency($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
+            $this->limit_po_aktif->ViewValue = FormatNumber($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
             $this->limit_po_aktif->ViewCustomAttributes = "";
 
             // lampiran
@@ -912,12 +912,12 @@ class PoLimitApprovalEdit extends PoLimitApproval
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 1);
             $this->created_at->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 1);
             $this->updated_at->ViewCustomAttributes = "";
 
             // limit_kredit
@@ -932,7 +932,15 @@ class PoLimitApprovalEdit extends PoLimitApproval
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
-            $this->lampiran->HrefValue = "";
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->HrefValue = GetFileUploadUrl($this->lampiran, $this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)); // Add prefix/suffix
+                $this->lampiran->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->lampiran->HrefValue = FullUrl($this->lampiran->HrefValue, "href");
+                }
+            } else {
+                $this->lampiran->HrefValue = "";
+            }
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
@@ -976,7 +984,15 @@ class PoLimitApprovalEdit extends PoLimitApproval
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
-            $this->lampiran->HrefValue = "";
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->HrefValue = GetFileUploadUrl($this->lampiran, $this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)); // Add prefix/suffix
+                $this->lampiran->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->lampiran->HrefValue = FullUrl($this->lampiran->HrefValue, "href");
+                }
+            } else {
+                $this->lampiran->HrefValue = "";
+            }
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row

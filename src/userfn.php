@@ -250,16 +250,13 @@ $API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
         // CEK TOTAL EXISTING TAGIHAN
         $existing_tagihan = cek_totaltagihan_po_aktif($idcustomer);
 
-        // HITUNG TOTAL TAGIHAN EXISTING DAN PO YANG AKAN DIBUAT
-        $totaltagihan = $existing_tagihan + $totalorder;
-
         // CEK KREDIT APPROVAL
         $approval = cek_po_approval($idcustomer);
         if ($approval) {
             $limit_kredit = $approval['limit_kredit'];
             $limit_poaktif = $approval['limit_po_aktif'];
         }
-        if ($totaltagihan > $limit_kredit) {
+        if ($existing_tagihan > $limit_kredit) {
             if ($limit_kredit != 5000000) {
                 $message = "Transaksi melebihi limit kredit dari pengajuan approval.";
                 $status = false;
@@ -518,15 +515,16 @@ function tgl_indo($tanggal, $format='date'){
 }
 
 function cek_po_aktif($idcustomer) {
-    return ExecuteRow("SELECT COUNT(idcustomer) AS jumlah
+    return ExecuteRow("SELECT DISTINCT COUNT(idorder) AS jumlah
                     FROM (
                     SELECT idorder, idcustomer
                     FROM invoice
-                    WHERE sisabayar > 0
-                    UNION ALL
-                    SELECT `order`.id as idorder, idcustomer
-                    FROM `order`
-                    WHERE `order`.id NOT IN (SELECT idorder FROM invoice)
+                    WHERE sisabayar > 0 UNION ALL
+                    SELECT `order`.id AS idorder, idcustomer
+                    FROM stock
+                    JOIN order_detail ON stock.idorder_detail = order_detail.id
+                    JOIN `order` ON `order`.id = order_detail.idorder
+                    WHERE order_detail.sisa > 0 OR stock.jumlah > 0 
                     ) po_aktif WHERE idcustomer = {$idcustomer}
                 ")['jumlah'];    
 }
@@ -538,15 +536,11 @@ function cek_totaltagihan_po_aktif($idcustomer) {
                     FROM invoice
                     WHERE sisabayar > 0
                     UNION ALL
-                    SELECT `order`.id as idorder, idcustomer, total AS tagihan
-                    FROM `order`
-                    JOIN order_detail ON `order`.id = order_detail.idorder
-                    WHERE `order`.id NOT IN (SELECT idorder FROM invoice)
-                    UNION ALL
-                    SELECT idorder, idcustomer, (sisa - bonus) * harga AS tagihan
-                    FROM order_detail
-                    JOIN `order` ON order_detail.idorder = `order`.id
-                    WHERE sisa >= bonus AND sisa != 0 AND idorder IN (SELECT idorder FROM deliveryorder_detail)
+                    SELECT `order`.id AS idorder, idcustomer, 
+                    ((stock.jumlah + order_detail.sisa) - bonus) * harga AS tagihan
+                    FROM stock
+                    JOIN order_detail ON stock.idorder_detail = order_detail.id
+                    JOIN `order` ON `order`.id = order_detail.idorder
                     ) po_aktif WHERE idcustomer = {$idcustomer}
                 ")['totaltagihan'];
 }

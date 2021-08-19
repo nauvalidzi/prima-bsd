@@ -116,10 +116,10 @@ class Invoice extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_do_stock', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_order_customer', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_do_stock', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1140,7 +1140,7 @@ SORTHTML;
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
                 $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
+                    return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);

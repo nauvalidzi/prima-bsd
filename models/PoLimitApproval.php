@@ -172,14 +172,14 @@ class PoLimitApproval extends DbTable
         $this->Fields['aktif'] = &$this->aktif;
 
         // created_at
-        $this->created_at = new DbField('po_limit_approval', 'po_limit_approval', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at = new DbField('po_limit_approval', 'po_limit_approval', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 1, "DB"), 135, 19, 1, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Sortable = true; // Allow sort
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
 
         // updated_at
-        $this->updated_at = new DbField('po_limit_approval', 'po_limit_approval', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at = new DbField('po_limit_approval', 'po_limit_approval', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 1, "DB"), 135, 19, 1, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->updated_at->Sortable = true; // Allow sort
         $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
@@ -1068,12 +1068,12 @@ SORTHTML;
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
-        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 1);
         $this->created_at->ViewCustomAttributes = "";
 
         // updated_at
         $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 1);
         $this->updated_at->ViewCustomAttributes = "";
 
         // id

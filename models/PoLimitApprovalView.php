@@ -668,25 +668,6 @@ class PoLimitApprovalView extends PoLimitApproval
         }
         $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
-        // Copy
-        $item = &$option->add("copy");
-        $copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode(GetUrl($this->CopyUrl)) . "'});\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-        }
-        $item->Visible = ($this->CopyUrl != "" && $Security->canAdd());
-
-        // Delete
-        $item = &$option->add("delete");
-        if ($this->IsModal) { // Handle as inline delete
-            $item->Body = "<a onclick=\"return ew.confirmDelete(this);\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(UrlAddQuery(GetUrl($this->DeleteUrl), "action=1")) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-        }
-        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
-
         // Set up action default
         $option = $options["action"];
         $option->DropDownButtonPhrase = $Language->phrase("ButtonActions");
@@ -881,12 +862,12 @@ class PoLimitApprovalView extends PoLimitApproval
 
             // limit_kredit
             $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit->ViewValue = FormatCurrency($this->limit_kredit->ViewValue, 2, -2, -2, -2);
             $this->limit_kredit->ViewCustomAttributes = "";
 
             // limit_po_aktif
             $this->limit_po_aktif->ViewValue = $this->limit_po_aktif->CurrentValue;
-            $this->limit_po_aktif->ViewValue = FormatCurrency($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
+            $this->limit_po_aktif->ViewValue = FormatNumber($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
             $this->limit_po_aktif->ViewCustomAttributes = "";
 
             // lampiran
@@ -904,12 +885,12 @@ class PoLimitApprovalView extends PoLimitApproval
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 1);
             $this->created_at->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 1);
             $this->updated_at->ViewCustomAttributes = "";
 
             // idorder
@@ -939,7 +920,15 @@ class PoLimitApprovalView extends PoLimitApproval
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
-            $this->lampiran->HrefValue = "";
+            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
+                $this->lampiran->HrefValue = GetFileUploadUrl($this->lampiran, $this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)); // Add prefix/suffix
+                $this->lampiran->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->lampiran->HrefValue = FullUrl($this->lampiran->HrefValue, "href");
+                }
+            } else {
+                $this->lampiran->HrefValue = "";
+            }
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
 

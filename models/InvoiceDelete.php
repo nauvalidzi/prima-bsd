@@ -685,7 +685,7 @@ class InvoiceDelete extends Invoice
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
+                        return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -952,7 +952,7 @@ class InvoiceDelete extends Invoice
             switch ($fld->FieldVar) {
                 case "x_idcustomer":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idorder NOT IN (SELECT idorder FROM invoice) AND idorder IN (SELECT idorder FROM deliveryorder_detail) GROUP BY idcustomer" : "";
+                        return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;

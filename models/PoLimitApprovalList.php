@@ -890,6 +890,18 @@ class PoLimitApprovalList extends PoLimitApproval
         $item->OnLeft = false;
         $item->Visible = false;
 
+        // "view"
+        $item = &$this->ListOptions->add("view");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canView();
+        $item->OnLeft = false;
+
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
         // List actions
         $item = &$this->ListOptions->add("listactions");
         $item->CssClass = "text-nowrap";
@@ -932,7 +944,24 @@ class PoLimitApprovalList extends PoLimitApproval
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") { // View mode
+        if ($this->CurrentMode == "view") {
+            // "view"
+            $opt = $this->ListOptions["view"];
+            $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
+            if ($Security->canView()) {
+                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "edit"
+            $opt = $this->ListOptions["edit"];
+            $editcaption = HtmlTitle($Language->phrase("EditLink"));
+            if ($Security->canEdit()) {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
         } // End View mode
 
         // Set up list action buttons
@@ -1382,12 +1411,12 @@ class PoLimitApprovalList extends PoLimitApproval
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 1);
             $this->created_at->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 1);
             $this->updated_at->ViewCustomAttributes = "";
 
             // idorder
@@ -1637,6 +1666,9 @@ class PoLimitApprovalList extends PoLimitApproval
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
+        if ($this->idorder->CurrentValue > 0) {
+            $this->ListOptions->Items["edit"]->Body = "";
+        }
     }
 
     // Row Custom Action event

@@ -1002,11 +1002,24 @@ return function (App $app) {
     // po_limit_approval
     $app->any('/PoLimitApprovalList[/{id}]', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('PoLimitApprovalList-po_limit_approval-list'); // list
     $app->any('/PoLimitApprovalAdd[/{id}]', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('PoLimitApprovalAdd-po_limit_approval-add'); // add
+    $app->any('/PoLimitApprovalView[/{id}]', PoLimitApprovalController::class . ':view')->add(PermissionMiddleware::class)->setName('PoLimitApprovalView-po_limit_approval-view'); // view
+    $app->any('/PoLimitApprovalEdit[/{id}]', PoLimitApprovalController::class . ':edit')->add(PermissionMiddleware::class)->setName('PoLimitApprovalEdit-po_limit_approval-edit'); // edit
     $app->group(
         '/po_limit_approval',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PoLimitApprovalController::class . ':list')->add(PermissionMiddleware::class)->setName('po_limit_approval/list-po_limit_approval-list-2'); // list
             $group->any('/' . Config("ADD_ACTION") . '[/{id}]', PoLimitApprovalController::class . ':add')->add(PermissionMiddleware::class)->setName('po_limit_approval/add-po_limit_approval-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', PoLimitApprovalController::class . ':view')->add(PermissionMiddleware::class)->setName('po_limit_approval/view-po_limit_approval-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', PoLimitApprovalController::class . ':edit')->add(PermissionMiddleware::class)->setName('po_limit_approval/edit-po_limit_approval-edit-2'); // edit
+        }
+    );
+
+    // v_do_stock
+    $app->any('/VDoStockList', VDoStockController::class . ':list')->add(PermissionMiddleware::class)->setName('VDoStockList-v_do_stock-list'); // list
+    $app->group(
+        '/v_do_stock',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '', VDoStockController::class . ':list')->add(PermissionMiddleware::class)->setName('v_do_stock/list-v_do_stock-list-2'); // list
         }
     );
 
