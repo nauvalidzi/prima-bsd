@@ -515,17 +515,20 @@ function tgl_indo($tanggal, $format='date'){
 }
 
 function cek_po_aktif($idcustomer) {
-    return ExecuteRow("SELECT DISTINCT COUNT(idorder) AS jumlah
+    return ExecuteRow("SELECT COUNT(*) AS jumlah
                     FROM (
-                    SELECT idorder, idcustomer
+                    SELECT idorder AS idorder, idcustomer
                     FROM invoice
-                    WHERE sisabayar > 0 UNION ALL
+                    WHERE sisabayar > 0 
+                    UNION
                     SELECT `order`.id AS idorder, idcustomer
                     FROM stock
                     JOIN order_detail ON stock.idorder_detail = order_detail.id
                     JOIN `order` ON `order`.id = order_detail.idorder
-                    WHERE order_detail.sisa > 0 OR stock.jumlah > 0 
-                    ) po_aktif WHERE idcustomer = {$idcustomer}
+                    WHERE order_detail.sisa > 0 OR stock.jumlah > 0
+                    GROUP BY `order`.id 
+                    ) po_aktif
+                    WHERE idcustomer = {$idcustomer}
                 ")['jumlah'];    
 }
 
@@ -535,7 +538,7 @@ function cek_totaltagihan_po_aktif($idcustomer) {
                     SELECT idorder, idcustomer, sisabayar AS tagihan
                     FROM invoice
                     WHERE sisabayar > 0
-                    UNION ALL
+                    UNION
                     SELECT `order`.id AS idorder, idcustomer, 
                     ((stock.jumlah + order_detail.sisa) - bonus) * harga AS tagihan
                     FROM stock
