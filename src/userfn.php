@@ -522,28 +522,28 @@ function cek_po_aktif($idcustomer) {
                     WHERE sisabayar > 0 
                     UNION
                     SELECT `order`.id AS idorder, idcustomer
-                    FROM stock
-                    JOIN order_detail ON stock.idorder_detail = order_detail.id
-                    JOIN `order` ON `order`.id = order_detail.idorder
-                    WHERE order_detail.sisa > 0 OR stock.jumlah > 0
-                    GROUP BY `order`.id 
+                    FROM `order`
+                    JOIN order_detail ON `order`.id = order_detail.idorder
+                    LEFT JOIN stock ON stock.idorder_detail = order_detail.id
+                    GROUP BY `order`.id
                     ) po_aktif
                     WHERE idcustomer = {$idcustomer}
                 ")['jumlah'];    
 }
 
 function cek_totaltagihan_po_aktif($idcustomer) {
-    return ExecuteRow("SELECT idcustomer, SUM(tagihan) AS totaltagihan
+    return ExecuteRow("SELECT tagihan AS totaltagihan
                     FROM (
                     SELECT idorder, idcustomer, sisabayar AS tagihan
                     FROM invoice
                     WHERE sisabayar > 0
                     UNION
                     SELECT `order`.id AS idorder, idcustomer, 
-                    ((stock.jumlah + order_detail.sisa) - bonus) * harga AS tagihan
-                    FROM stock
-                    JOIN order_detail ON stock.idorder_detail = order_detail.id
-                    JOIN `order` ON `order`.id = order_detail.idorder
+                     SUM(((ifnull(stock.jumlah,0) + order_detail.sisa) - bonus) * harga) AS tagihan
+                    FROM `order` 
+                    JOIN order_detail ON `order`.id = order_detail.idorder
+                    LEFT JOIN stock ON stock.idorder_detail = order_detail.id
+                    GROUP BY `order`.id
                     ) po_aktif WHERE idcustomer = {$idcustomer}
                 ")['totaltagihan'];
 }
