@@ -1522,10 +1522,10 @@ class OrderAdd extends Order
         }
 
         // CEK TOTAL EXISTING TAGIHAN
-        // $existing_tagihan = cek_totaltagihan_po_aktif($idcustomer);
+        //$existing_tagihan = cek_totaltagihan_po_aktif($idcustomer);
 
         // HITUNG TOTAL TAGIHAN EXISTING DAN PO YANG AKAN DIBUAT
-        // $totaltagihan = $existing_tagihan + $totalorder;
+        //$totaltagihan = $existing_tagihan + $totalorder;
 
         // CEK KREDIT APPROVAL
         $approval = cek_po_approval($idcustomer);
@@ -1535,10 +1535,10 @@ class OrderAdd extends Order
         }
         if ($totalorder > $limit_kredit) {
             if ($limit_kredit != 5000000) {
-                $customError = "Transaksi melebihi limit kredit dari pengajuan approval.";
+                $customError = "Transaksi melebihi limit kredit dari pengajuan approval.<br />Limit Rp. ".rupiah($limit_kredit).".";
                 return false;
             }
-            $customError = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.";
+            $customError = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.<br />Limit Rp. ".rupiah($limit_kredit).".";
             return false;
         }
 

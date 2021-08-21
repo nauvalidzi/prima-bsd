@@ -562,3 +562,12 @@ order masuk surat jalan => invoice.sent = 1
 order masuk bayar sebagian => invoice.aktif = 1 & invoice.readonly = 1 invoice.sent = 0
 order masuk bayar lunas => invoice.aktif = 0
 */
+function rupiah($number) {
+    if (!is_numeric($number)) {
+        return "Bad Format!";
+    }
+    if ($number < 1000) {
+        return $number;
+    }
+    return number_format($number, 2, ",", ".");
+}
