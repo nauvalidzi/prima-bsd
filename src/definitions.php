@@ -123,6 +123,7 @@ return [
     "laporan_pembayaran" => \DI\create(LaporanPembayaran::class),
     "po_limit_approval" => \DI\create(PoLimitApproval::class),
     "v_do_stock" => \DI\create(VDoStock::class),
+    "po_limit_approval_detail" => \DI\create(PoLimitApprovalDetail::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

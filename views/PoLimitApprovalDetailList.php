@@ -3,19 +3,19 @@
 namespace PHPMaker2021\distributor;
 
 // Page object
-$PoLimitApprovalList = &$Page;
+$PoLimitApprovalDetailList = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentForm, currentPageID;
-var fpo_limit_approvallist;
+var fpo_limit_approval_detaillist;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object
     currentPageID = ew.PAGE_ID = "list";
-    fpo_limit_approvallist = currentForm = new ew.Form("fpo_limit_approvallist", "list");
-    fpo_limit_approvallist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
-    loadjs.done("fpo_limit_approvallist");
+    fpo_limit_approval_detaillist = currentForm = new ew.Form("fpo_limit_approval_detaillist", "list");
+    fpo_limit_approval_detaillist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
+    loadjs.done("fpo_limit_approval_detaillist");
 });
 </script>
 <style>
@@ -59,6 +59,15 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
+<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
+<?php
+if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "po_limit_approval") {
+    if ($Page->MasterRecordExists) {
+        include_once "views/PoLimitApprovalMaster.php";
+    }
+}
+?>
+<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
@@ -67,16 +76,20 @@ $Page->renderOtherOptions();
 $Page->showMessage();
 ?>
 <?php if ($Page->TotalRecords > 0 || $Page->CurrentAction) { ?>
-<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> po_limit_approval">
-<form name="fpo_limit_approvallist" id="fpo_limit_approvallist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> po_limit_approval_detail">
+<form name="fpo_limit_approval_detaillist" id="fpo_limit_approval_detaillist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="po_limit_approval">
-<div id="gmp_po_limit_approval" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<input type="hidden" name="t" value="po_limit_approval_detail">
+<?php if ($Page->getCurrentMasterTable() == "po_limit_approval" && $Page->CurrentAction) { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="po_limit_approval">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idapproval->getSessionValue()) ?>">
+<?php } ?>
+<div id="gmp_po_limit_approval_detail" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_po_limit_approvallist" class="table ew-table"><!-- .ew-table -->
+<table id="tbl_po_limit_approval_detaillist" class="table ew-table"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -89,26 +102,14 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <th data-name="idpegawai" class="<?= $Page->idpegawai->headerCellClass() ?>"><div id="elh_po_limit_approval_idpegawai" class="po_limit_approval_idpegawai"><?= $Page->renderSort($Page->idpegawai) ?></div></th>
+<?php if ($Page->idorder->Visible) { // idorder ?>
+        <th data-name="idorder" class="<?= $Page->idorder->headerCellClass() ?>"><div id="elh_po_limit_approval_detail_idorder" class="po_limit_approval_detail_idorder"><?= $Page->renderSort($Page->idorder) ?></div></th>
 <?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_po_limit_approval_idcustomer" class="po_limit_approval_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
-<?php } ?>
-<?php if ($Page->limit_kredit->Visible) { // limit_kredit ?>
-        <th data-name="limit_kredit" class="<?= $Page->limit_kredit->headerCellClass() ?>"><div id="elh_po_limit_approval_limit_kredit" class="po_limit_approval_limit_kredit"><?= $Page->renderSort($Page->limit_kredit) ?></div></th>
-<?php } ?>
-<?php if ($Page->limit_po_aktif->Visible) { // limit_po_aktif ?>
-        <th data-name="limit_po_aktif" class="<?= $Page->limit_po_aktif->headerCellClass() ?>"><div id="elh_po_limit_approval_limit_po_aktif" class="po_limit_approval_limit_po_aktif"><?= $Page->renderSort($Page->limit_po_aktif) ?></div></th>
+<?php if ($Page->kredit_terpakai->Visible) { // kredit_terpakai ?>
+        <th data-name="kredit_terpakai" class="<?= $Page->kredit_terpakai->headerCellClass() ?>"><div id="elh_po_limit_approval_detail_kredit_terpakai" class="po_limit_approval_detail_kredit_terpakai"><?= $Page->renderSort($Page->kredit_terpakai) ?></div></th>
 <?php } ?>
 <?php if ($Page->created_at->Visible) { // created_at ?>
-        <th data-name="created_at" class="<?= $Page->created_at->headerCellClass() ?>"><div id="elh_po_limit_approval_created_at" class="po_limit_approval_created_at"><?= $Page->renderSort($Page->created_at) ?></div></th>
-<?php } ?>
-<?php if ($Page->sisalimitkredit->Visible) { // sisalimitkredit ?>
-        <th data-name="sisalimitkredit" class="<?= $Page->sisalimitkredit->headerCellClass() ?>"><div id="elh_po_limit_approval_sisalimitkredit" class="po_limit_approval_sisalimitkredit"><?= $Page->renderSort($Page->sisalimitkredit) ?></div></th>
-<?php } ?>
-<?php if ($Page->sisapoaktif->Visible) { // sisapoaktif ?>
-        <th data-name="sisapoaktif" class="<?= $Page->sisapoaktif->headerCellClass() ?>"><div id="elh_po_limit_approval_sisapoaktif" class="po_limit_approval_sisapoaktif"><?= $Page->renderSort($Page->sisapoaktif) ?></div></th>
+        <th data-name="created_at" class="<?= $Page->created_at->headerCellClass() ?>"><div id="elh_po_limit_approval_detail_created_at" class="po_limit_approval_detail_created_at"><?= $Page->renderSort($Page->created_at) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -164,7 +165,7 @@ while ($Page->RecordCount < $Page->StopRecord) {
         $Page->RowType = ROWTYPE_VIEW; // Render view
 
         // Set up row id / data-rowindex
-        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_po_limit_approval", "data-rowtype" => $Page->RowType]);
+        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_po_limit_approval_detail", "data-rowtype" => $Page->RowType]);
 
         // Render row
         $Page->renderRow();
@@ -177,59 +178,27 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <td data-name="idpegawai" <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_po_limit_approval_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<?= $Page->idpegawai->getViewValue() ?></span>
+    <?php if ($Page->idorder->Visible) { // idorder ?>
+        <td data-name="idorder" <?= $Page->idorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_po_limit_approval_detail_idorder">
+<span<?= $Page->idorder->viewAttributes() ?>>
+<?= $Page->idorder->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_po_limit_approval_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->limit_kredit->Visible) { // limit_kredit ?>
-        <td data-name="limit_kredit" <?= $Page->limit_kredit->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_po_limit_approval_limit_kredit">
-<span<?= $Page->limit_kredit->viewAttributes() ?>>
-<?= $Page->limit_kredit->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->limit_po_aktif->Visible) { // limit_po_aktif ?>
-        <td data-name="limit_po_aktif" <?= $Page->limit_po_aktif->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_po_limit_approval_limit_po_aktif">
-<span<?= $Page->limit_po_aktif->viewAttributes() ?>>
-<?= $Page->limit_po_aktif->getViewValue() ?></span>
+    <?php if ($Page->kredit_terpakai->Visible) { // kredit_terpakai ?>
+        <td data-name="kredit_terpakai" <?= $Page->kredit_terpakai->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_po_limit_approval_detail_kredit_terpakai">
+<span<?= $Page->kredit_terpakai->viewAttributes() ?>>
+<?= $Page->kredit_terpakai->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
     <?php if ($Page->created_at->Visible) { // created_at ?>
         <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_po_limit_approval_created_at">
+<span id="el<?= $Page->RowCount ?>_po_limit_approval_detail_created_at">
 <span<?= $Page->created_at->viewAttributes() ?>>
 <?= $Page->created_at->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->sisalimitkredit->Visible) { // sisalimitkredit ?>
-        <td data-name="sisalimitkredit" <?= $Page->sisalimitkredit->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_po_limit_approval_sisalimitkredit">
-<span<?= $Page->sisalimitkredit->viewAttributes() ?>>
-<?= $Page->sisalimitkredit->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->sisapoaktif->Visible) { // sisapoaktif ?>
-        <td data-name="sisapoaktif" <?= $Page->sisapoaktif->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_po_limit_approval_sisapoaktif">
-<span<?= $Page->sisapoaktif->viewAttributes() ?>>
-<?= $Page->sisapoaktif->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -288,7 +257,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("po_limit_approval");
+    ew.addEventHandlers("po_limit_approval_detail");
 });
 </script>
 <script>

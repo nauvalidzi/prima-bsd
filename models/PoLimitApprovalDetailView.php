@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class PoLimitApprovalView extends PoLimitApproval
+class PoLimitApprovalDetailView extends PoLimitApprovalDetail
 {
     use MessagesTrait;
 
@@ -18,10 +18,10 @@ class PoLimitApprovalView extends PoLimitApproval
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'po_limit_approval';
+    public $TableName = 'po_limit_approval_detail';
 
     // Page object name
-    public $PageObjName = "PoLimitApprovalView";
+    public $PageObjName = "PoLimitApprovalDetailView";
 
     // Rendering View
     public $RenderingView = false;
@@ -159,9 +159,9 @@ class PoLimitApprovalView extends PoLimitApproval
         // Parent constuctor
         parent::__construct();
 
-        // Table object (po_limit_approval)
-        if (!isset($GLOBALS["po_limit_approval"]) || get_class($GLOBALS["po_limit_approval"]) == PROJECT_NAMESPACE . "po_limit_approval") {
-            $GLOBALS["po_limit_approval"] = &$this;
+        // Table object (po_limit_approval_detail)
+        if (!isset($GLOBALS["po_limit_approval_detail"]) || get_class($GLOBALS["po_limit_approval_detail"]) == PROJECT_NAMESPACE . "po_limit_approval_detail") {
+            $GLOBALS["po_limit_approval_detail"] = &$this;
         }
 
         // Page URL
@@ -179,7 +179,7 @@ class PoLimitApprovalView extends PoLimitApproval
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'po_limit_approval');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'po_limit_approval_detail');
         }
 
         // Start timer
@@ -277,7 +277,7 @@ class PoLimitApprovalView extends PoLimitApproval
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("po_limit_approval"));
+                $doc = new $class(Container("po_limit_approval_detail"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -321,7 +321,7 @@ class PoLimitApprovalView extends PoLimitApproval
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "PoLimitApprovalView") {
+                    if ($pageName == "PoLimitApprovalDetailView") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -519,16 +519,10 @@ class PoLimitApprovalView extends PoLimitApproval
         $this->IsModal = Param("modal") == "1";
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->idpegawai->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->limit_kredit->setVisibility();
-        $this->limit_po_aktif->setVisibility();
-        $this->lampiran->setVisibility();
-        $this->aktif->setVisibility();
+        $this->idapproval->setVisibility();
+        $this->idorder->setVisibility();
+        $this->kredit_terpakai->setVisibility();
         $this->created_at->setVisibility();
-        $this->updated_at->setVisibility();
-        $this->sisalimitkredit->setVisibility();
-        $this->sisapoaktif->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -543,8 +537,7 @@ class PoLimitApprovalView extends PoLimitApproval
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idpegawai);
-        $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->idorder);
 
         // Check modal
         if ($this->IsModal) {
@@ -555,6 +548,9 @@ class PoLimitApprovalView extends PoLimitApproval
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
+
+        // Set up master/detail parameters
+        $this->setupMasterParms();
         if ($this->isPageRequest()) { // Validate request
             if (($keyValue = Get("id") ?? Route("id")) !== null) {
                 $this->id->setQueryStringValue($keyValue);
@@ -566,7 +562,7 @@ class PoLimitApprovalView extends PoLimitApproval
                 $this->id->setQueryStringValue($keyValue);
                 $this->RecKey["id"] = $this->id->QueryStringValue;
             } else {
-                $returnUrl = "PoLimitApprovalList"; // Return to list
+                $returnUrl = "PoLimitApprovalDetailList"; // Return to list
             }
 
             // Get action
@@ -589,12 +585,12 @@ class PoLimitApprovalView extends PoLimitApproval
                         if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "") {
                             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
                         }
-                        $returnUrl = "PoLimitApprovalList"; // No matching record, return to list
+                        $returnUrl = "PoLimitApprovalDetailList"; // No matching record, return to list
                     }
                     break;
             }
         } else {
-            $returnUrl = "PoLimitApprovalList"; // Not page request, return to list
+            $returnUrl = "PoLimitApprovalDetailList"; // Not page request, return to list
         }
         if ($returnUrl != "") {
             $this->terminate($returnUrl);
@@ -610,9 +606,6 @@ class PoLimitApprovalView extends PoLimitApproval
         $this->RowType = ROWTYPE_VIEW;
         $this->resetAttributes();
         $this->renderRow();
-
-        // Set up detail parameters
-        $this->setupDetailParms();
 
         // Normal return
         if (IsApi()) {
@@ -650,102 +643,6 @@ class PoLimitApprovalView extends PoLimitApproval
         global $Language, $Security;
         $options = &$this->OtherOptions;
         $option = $options["action"];
-
-        // Add
-        $item = &$option->add("add");
-        $addcaption = HtmlTitle($Language->phrase("ViewPageAddLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode(GetUrl($this->AddUrl)) . "'});\">" . $Language->phrase("ViewPageAddLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
-        }
-        $item->Visible = ($this->AddUrl != "" && $Security->canAdd());
-
-        // Edit
-        $item = &$option->add("edit");
-        $editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode(GetUrl($this->EditUrl)) . "'});\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-        }
-        $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
-        $option = $options["detail"];
-        $detailTableLink = "";
-        $detailViewTblVar = "";
-        $detailCopyTblVar = "";
-        $detailEditTblVar = "";
-
-        // "detail_po_limit_approval_detail"
-        $item = &$option->add("detail_po_limit_approval_detail");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("po_limit_approval_detail", "TblCaption");
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("PoLimitApprovalDetailList?" . Config("TABLE_SHOW_MASTER") . "=po_limit_approval&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
-        $links = "";
-        $detailPageObj = Container("PoLimitApprovalDetailGrid");
-        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'po_limit_approval')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=po_limit_approval_detail"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            if ($detailViewTblVar != "") {
-                $detailViewTblVar .= ",";
-            }
-            $detailViewTblVar .= "po_limit_approval_detail";
-        }
-        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'po_limit_approval')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=po_limit_approval_detail"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            if ($detailEditTblVar != "") {
-                $detailEditTblVar .= ",";
-            }
-            $detailEditTblVar .= "po_limit_approval_detail";
-        }
-        if ($links != "") {
-            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-        }
-        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-        $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'po_limit_approval_detail');
-        if ($item->Visible) {
-            if ($detailTableLink != "") {
-                $detailTableLink .= ",";
-            }
-            $detailTableLink .= "po_limit_approval_detail";
-        }
-        if ($this->ShowMultipleDetails) {
-            $item->Visible = false;
-        }
-
-        // Multiple details
-        if ($this->ShowMultipleDetails) {
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
-            $links = "";
-            if ($detailViewTblVar != "") {
-                $links .= "<li><a class=\"ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailViewTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            }
-            if ($detailEditTblVar != "") {
-                $links .= "<li><a class=\"ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailEditTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            }
-            if ($detailCopyTblVar != "") {
-                $links .= "<li><a class=\"ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailCopyTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
-            }
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-master-detail\" title=\"" . HtmlTitle($Language->phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->phrase("MultipleMasterDetails") . "</button>";
-                $body .= "<ul class=\"dropdown-menu ew-menu\">" . $links . "</ul>";
-            }
-            $body .= "</div>";
-            // Multiple details
-            $item = &$option->add("details");
-            $item->Body = $body;
-        }
-
-        // Set up detail default
-        $option = $options["detail"];
-        $options["detail"]->DropDownButtonPhrase = $Language->phrase("ButtonDetails");
-        $ar = explode(",", $detailTableLink);
-        $cnt = count($ar);
-        $option->UseDropDownButton = ($cnt > 1);
-        $option->UseButtonGroup = true;
-        $item = &$option->add($option->GroupOptionName);
-        $item->Body = "";
-        $item->Visible = false;
 
         // Set up action default
         $option = $options["action"];
@@ -805,17 +702,10 @@ class PoLimitApprovalView extends PoLimitApproval
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->limit_kredit->setDbValue($row['limit_kredit']);
-        $this->limit_po_aktif->setDbValue($row['limit_po_aktif']);
-        $this->lampiran->Upload->DbValue = $row['lampiran'];
-        $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->idapproval->setDbValue($row['idapproval']);
+        $this->idorder->setDbValue($row['idorder']);
+        $this->kredit_terpakai->setDbValue($row['kredit_terpakai']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->updated_at->setDbValue($row['updated_at']);
-        $this->sisalimitkredit->setDbValue($row['sisalimitkredit']);
-        $this->sisapoaktif->setDbValue($row['sisapoaktif']);
     }
 
     // Return a row with default values
@@ -823,16 +713,10 @@ class PoLimitApprovalView extends PoLimitApproval
     {
         $row = [];
         $row['id'] = null;
-        $row['idpegawai'] = null;
-        $row['idcustomer'] = null;
-        $row['limit_kredit'] = null;
-        $row['limit_po_aktif'] = null;
-        $row['lampiran'] = null;
-        $row['aktif'] = null;
+        $row['idapproval'] = null;
+        $row['idorder'] = null;
+        $row['kredit_terpakai'] = null;
         $row['created_at'] = null;
-        $row['updated_at'] = null;
-        $row['sisalimitkredit'] = null;
-        $row['sisapoaktif'] = null;
         return $row;
     }
 
@@ -856,173 +740,79 @@ class PoLimitApprovalView extends PoLimitApproval
 
         // id
 
-        // idpegawai
+        // idapproval
 
-        // idcustomer
+        // idorder
 
-        // limit_kredit
-
-        // limit_po_aktif
-
-        // lampiran
-
-        // aktif
+        // kredit_terpakai
 
         // created_at
-
-        // updated_at
-
-        // sisalimitkredit
-
-        // sisapoaktif
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
-            // idpegawai
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
+            // idapproval
+            $this->idapproval->ViewValue = $this->idapproval->CurrentValue;
+            $this->idapproval->ViewValue = FormatNumber($this->idapproval->ViewValue, 0, -2, -2, -2);
+            $this->idapproval->ViewCustomAttributes = "";
+
+            // idorder
+            $curVal = trim(strval($this->idorder->CurrentValue));
             if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
+                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
+                if ($this->idorder->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
+                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
+                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
                     } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
                     }
                 }
             } else {
-                $this->idpegawai->ViewValue = null;
+                $this->idorder->ViewValue = null;
             }
-            $this->idpegawai->ViewCustomAttributes = "";
+            $this->idorder->ViewCustomAttributes = "";
 
-            // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
-
-            // limit_kredit
-            $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-            $this->limit_kredit->ViewValue = FormatCurrency($this->limit_kredit->ViewValue, 2, -2, -2, -2);
-            $this->limit_kredit->ViewCustomAttributes = "";
-
-            // limit_po_aktif
-            $this->limit_po_aktif->ViewValue = $this->limit_po_aktif->CurrentValue;
-            $this->limit_po_aktif->ViewValue = FormatNumber($this->limit_po_aktif->ViewValue, 0, -2, -2, -2);
-            $this->limit_po_aktif->ViewCustomAttributes = "";
-
-            // lampiran
-            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-                $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
-            } else {
-                $this->lampiran->ViewValue = "";
-            }
-            $this->lampiran->ViewCustomAttributes = "";
-
-            // aktif
-            $this->aktif->ViewValue = $this->aktif->CurrentValue;
-            $this->aktif->ViewValue = FormatNumber($this->aktif->ViewValue, 0, -2, -2, -2);
-            $this->aktif->ViewCustomAttributes = "";
+            // kredit_terpakai
+            $this->kredit_terpakai->ViewValue = $this->kredit_terpakai->CurrentValue;
+            $this->kredit_terpakai->ViewValue = FormatCurrency($this->kredit_terpakai->ViewValue, 2, -2, -2, -2);
+            $this->kredit_terpakai->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 1);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // updated_at
-            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 1);
-            $this->updated_at->ViewCustomAttributes = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
-            // sisalimitkredit
-            $this->sisalimitkredit->ViewValue = $this->sisalimitkredit->CurrentValue;
-            $this->sisalimitkredit->ViewValue = FormatCurrency($this->sisalimitkredit->ViewValue, 2, -2, -2, -2);
-            $this->sisalimitkredit->ViewCustomAttributes = "";
+            // idapproval
+            $this->idapproval->LinkCustomAttributes = "";
+            $this->idapproval->HrefValue = "";
+            $this->idapproval->TooltipValue = "";
 
-            // sisapoaktif
-            $this->sisapoaktif->ViewValue = $this->sisapoaktif->CurrentValue;
-            $this->sisapoaktif->ViewValue = FormatNumber($this->sisapoaktif->ViewValue, 0, -2, -2, -2);
-            $this->sisapoaktif->ViewCustomAttributes = "";
+            // idorder
+            $this->idorder->LinkCustomAttributes = "";
+            $this->idorder->HrefValue = "";
+            $this->idorder->TooltipValue = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // limit_kredit
-            $this->limit_kredit->LinkCustomAttributes = "";
-            $this->limit_kredit->HrefValue = "";
-            $this->limit_kredit->TooltipValue = "";
-
-            // limit_po_aktif
-            $this->limit_po_aktif->LinkCustomAttributes = "";
-            $this->limit_po_aktif->HrefValue = "";
-            $this->limit_po_aktif->TooltipValue = "";
-
-            // lampiran
-            $this->lampiran->LinkCustomAttributes = "";
-            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-                $this->lampiran->HrefValue = GetFileUploadUrl($this->lampiran, $this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)); // Add prefix/suffix
-                $this->lampiran->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->lampiran->HrefValue = FullUrl($this->lampiran->HrefValue, "href");
-                }
-            } else {
-                $this->lampiran->HrefValue = "";
-            }
-            $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
-            $this->lampiran->TooltipValue = "";
-
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
+            // kredit_terpakai
+            $this->kredit_terpakai->LinkCustomAttributes = "";
+            $this->kredit_terpakai->HrefValue = "";
+            $this->kredit_terpakai->TooltipValue = "";
 
             // created_at
             $this->created_at->LinkCustomAttributes = "";
             $this->created_at->HrefValue = "";
             $this->created_at->TooltipValue = "";
-
-            // updated_at
-            $this->updated_at->LinkCustomAttributes = "";
-            $this->updated_at->HrefValue = "";
-            $this->updated_at->TooltipValue = "";
-
-            // sisalimitkredit
-            $this->sisalimitkredit->LinkCustomAttributes = "";
-            $this->sisalimitkredit->HrefValue = "";
-            $this->sisalimitkredit->TooltipValue = "";
-
-            // sisapoaktif
-            $this->sisapoaktif->LinkCustomAttributes = "";
-            $this->sisapoaktif->HrefValue = "";
-            $this->sisapoaktif->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1031,32 +821,74 @@ class PoLimitApprovalView extends PoLimitApproval
         }
     }
 
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
+    // Set up master/detail based on QueryString
+    protected function setupMasterParms()
     {
+        $validMaster = false;
         // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("po_limit_approval_detail", $detailTblVar)) {
-                $detailPageObj = Container("PoLimitApprovalDetailGrid");
-                if ($detailPageObj->DetailView) {
-                    $detailPageObj->CurrentMode = "view";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idapproval->IsDetailKey = true;
-                    $detailPageObj->idapproval->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idapproval->setSessionValue($detailPageObj->idapproval->CurrentValue);
+        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
+            $masterTblVar = $master;
+            if ($masterTblVar == "") {
+                $validMaster = true;
+                $this->DbMasterFilter = "";
+                $this->DbDetailFilter = "";
+            }
+            if ($masterTblVar == "po_limit_approval") {
+                $validMaster = true;
+                $masterTbl = Container("po_limit_approval");
+                if (($parm = Get("fk_id", Get("idapproval"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idapproval->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idapproval->setSessionValue($this->idapproval->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
+            $masterTblVar = $master;
+            if ($masterTblVar == "") {
+                    $validMaster = true;
+                    $this->DbMasterFilter = "";
+                    $this->DbDetailFilter = "";
+            }
+            if ($masterTblVar == "po_limit_approval") {
+                $validMaster = true;
+                $masterTbl = Container("po_limit_approval");
+                if (($parm = Post("fk_id", Post("idapproval"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idapproval->setFormValue($masterTbl->id->FormValue);
+                    $this->idapproval->setSessionValue($this->idapproval->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
                 }
             }
         }
+        if ($validMaster) {
+            // Save current master table
+            $this->setCurrentMasterTable($masterTblVar);
+            $this->setSessionWhere($this->getDetailFilter());
+
+            // Reset start record counter (new master key)
+            if (!$this->isAddOrEdit()) {
+                $this->StartRecord = 1;
+                $this->setStartRecordNumber($this->StartRecord);
+            }
+
+            // Clear previous master key from Session
+            if ($masterTblVar != "po_limit_approval") {
+                if ($this->idapproval->CurrentValue == "") {
+                    $this->idapproval->setSessionValue("");
+                }
+            }
+        }
+        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
+        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
     }
 
     // Set up Breadcrumb
@@ -1065,7 +897,7 @@ class PoLimitApprovalView extends PoLimitApproval
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("PoLimitApprovalList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("PoLimitApprovalDetailList"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
     }
@@ -1083,9 +915,7 @@ class PoLimitApprovalView extends PoLimitApproval
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idpegawai":
-                    break;
-                case "x_idcustomer":
+                case "x_idorder":
                     break;
                 default:
                     $lookupFilter = "";

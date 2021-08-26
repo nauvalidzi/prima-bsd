@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/8/21" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/8/27" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,6 +925,9 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2020 PT. Prima Visi Globalindo" />
+    <menu id="590">
+      <phrase id="menutext" value="P.O. Limit Approval Detail" />
+    </menu>
     <menu id="589">
       <phrase id="menutext" value="v do stock" />
     </menu>
@@ -3671,9 +3674,6 @@
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
-      <field id="idorder">
-        <phrase id="fldcaption" value="Kode P.O" />
-      </field>
       <field id="idpegawai">
         <phrase id="fldcaption" value="Marketing" />
       </field>
@@ -3698,6 +3698,12 @@
       <field id="updated_at">
         <phrase id="fldcaption" value="Updated" />
       </field>
+      <field id="sisalimitkredit">
+        <phrase id="fldcaption" value="Sisa Limit Kredit" />
+      </field>
+      <field id="sisapoaktif">
+        <phrase id="fldcaption" value="Sisa P.O. Aktif" />
+      </field>
     </table>
     <table id="v_do_stock">
       <phrase id="tblcaption" value="v do stock" />
@@ -3712,6 +3718,24 @@
       </field>
       <field id="jumlah">
         <phrase id="fldcaption" value="jumlah" />
+      </field>
+    </table>
+    <table id="po_limit_approval_detail">
+      <phrase id="tblcaption" value="P.O. Limit Approval Detail" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="idapproval">
+        <phrase id="fldcaption" value="ID Approval" />
+      </field>
+      <field id="idorder">
+        <phrase id="fldcaption" value="ID Order" />
+      </field>
+      <field id="kredit_terpakai">
+        <phrase id="fldcaption" value="Kredit Terpakai" />
+      </field>
+      <field id="created_at">
+        <phrase id="fldcaption" value="Created At" />
       </field>
     </table>
   </project>

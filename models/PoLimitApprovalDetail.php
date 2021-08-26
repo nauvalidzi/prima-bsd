@@ -5,9 +5,9 @@ namespace PHPMaker2021\distributor;
 use Doctrine\DBAL\ParameterType;
 
 /**
- * Table class for order
+ * Table class for po_limit_approval_detail
  */
-class Order extends DbTable
+class PoLimitApprovalDetail extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -29,15 +29,10 @@ class Order extends DbTable
 
     // Fields
     public $id;
-    public $kode;
-    public $tanggal;
-    public $idpegawai;
-    public $idcustomer;
-    public $dokumen;
+    public $idapproval;
+    public $idorder;
+    public $kredit_terpakai;
     public $created_at;
-    public $created_by;
-    public $aktif;
-    public $readonly;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -50,12 +45,12 @@ class Order extends DbTable
 
         // Language object
         $Language = Container("language");
-        $this->TableVar = 'order';
-        $this->TableName = 'order';
+        $this->TableVar = 'po_limit_approval_detail';
+        $this->TableName = 'po_limit_approval_detail';
         $this->TableType = 'TABLE';
 
         // Update Table
-        $this->UpdateTable = "`order`";
+        $this->UpdateTable = "`po_limit_approval_detail`";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -71,117 +66,56 @@ class Order extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('order', 'order', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id = new DbField('po_limit_approval_detail', 'po_limit_approval_detail', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->IsForeignKey = true; // Foreign key field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
-        // kode
-        $this->kode = new DbField('order', 'order', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode->Nullable = false; // NOT NULL field
-        $this->kode->Required = true; // Required field
-        $this->kode->Sortable = true; // Allow sort
-        $this->kode->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode->Param, "CustomMsg");
-        $this->Fields['kode'] = &$this->kode;
+        // idapproval
+        $this->idapproval = new DbField('po_limit_approval_detail', 'po_limit_approval_detail', 'x_idapproval', 'idapproval', '`idapproval`', '`idapproval`', 3, 11, -1, false, '`idapproval`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idapproval->IsForeignKey = true; // Foreign key field
+        $this->idapproval->Sortable = true; // Allow sort
+        $this->idapproval->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idapproval->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idapproval->Param, "CustomMsg");
+        $this->Fields['idapproval'] = &$this->idapproval;
 
-        // tanggal
-        $this->tanggal = new DbField('order', 'order', 'x_tanggal', 'tanggal', '`tanggal`', CastDateFieldForLike("`tanggal`", 0, "DB"), 135, 19, 0, false, '`tanggal`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggal->Nullable = false; // NOT NULL field
-        $this->tanggal->Required = true; // Required field
-        $this->tanggal->Sortable = true; // Allow sort
-        $this->tanggal->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggal->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal->Param, "CustomMsg");
-        $this->Fields['tanggal'] = &$this->tanggal;
-
-        // idpegawai
-        $this->idpegawai = new DbField('order', 'order', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idpegawai->Nullable = false; // NOT NULL field
-        $this->idpegawai->Required = true; // Required field
-        $this->idpegawai->Sortable = true; // Allow sort
-        $this->idpegawai->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idpegawai->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        // idorder
+        $this->idorder = new DbField('po_limit_approval_detail', 'po_limit_approval_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idorder->Sortable = true; // Allow sort
+        $this->idorder->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], ["x_idcustomer"], [], [], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'order', false, 'id', ["kode","tanggal","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], ["x_idcustomer"], [], [], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'order', false, 'id', ["kode","tanggal","",""], [], [], [], [], [], [], '', '');
                 break;
         }
-        $this->idpegawai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
-        $this->Fields['idpegawai'] = &$this->idpegawai;
+        $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
+        $this->Fields['idorder'] = &$this->idorder;
 
-        // idcustomer
-        $this->idcustomer = new DbField('order', 'order', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idcustomer->Nullable = false; // NOT NULL field
-        $this->idcustomer->Required = true; // Required field
-        $this->idcustomer->Sortable = true; // Allow sort
-        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], ["order_detail x_idbrand"], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
-                break;
-            default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], ["order_detail x_idbrand"], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
-                break;
-        }
-        $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
-        $this->Fields['idcustomer'] = &$this->idcustomer;
-
-        // dokumen
-        $this->dokumen = new DbField('order', 'order', 'x_dokumen', 'dokumen', '`dokumen`', '`dokumen`', 200, 255, -1, true, '`dokumen`', false, false, false, 'FORMATTED TEXT', 'FILE');
-        $this->dokumen->Sortable = true; // Allow sort
-        $this->dokumen->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->dokumen->Param, "CustomMsg");
-        $this->Fields['dokumen'] = &$this->dokumen;
+        // kredit_terpakai
+        $this->kredit_terpakai = new DbField('po_limit_approval_detail', 'po_limit_approval_detail', 'x_kredit_terpakai', 'kredit_terpakai', '`kredit_terpakai`', '`kredit_terpakai`', 20, 20, -1, false, '`kredit_terpakai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kredit_terpakai->Sortable = true; // Allow sort
+        $this->kredit_terpakai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->kredit_terpakai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kredit_terpakai->Param, "CustomMsg");
+        $this->Fields['kredit_terpakai'] = &$this->kredit_terpakai;
 
         // created_at
-        $this->created_at = new DbField('order', 'order', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at = new DbField('po_limit_approval_detail', 'po_limit_approval_detail', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Sortable = true; // Allow sort
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
-
-        // created_by
-        $this->created_by = new DbField('order', 'order', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
-
-        // aktif
-        $this->aktif = new DbField('order', 'order', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'RADIO');
-        $this->aktif->Nullable = false; // NOT NULL field
-        $this->aktif->Sortable = true; // Allow sort
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->aktif->Lookup = new Lookup('aktif', 'order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->aktif->Lookup = new Lookup('aktif', 'order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->aktif->OptionCount = 2;
-        $this->aktif->DefaultErrorMessage = $Language->phrase("IncorrectField");
-        $this->aktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktif->Param, "CustomMsg");
-        $this->Fields['aktif'] = &$this->aktif;
-
-        // readonly
-        $this->readonly = new DbField('order', 'order', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->readonly->Nullable = false; // NOT NULL field
-        $this->readonly->Sortable = false; // Allow sort
-        $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
-        $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
-        $this->Fields['readonly'] = &$this->readonly;
     }
 
     // Field Visibility
@@ -221,36 +155,62 @@ class Order extends DbTable
         }
     }
 
-    // Current detail table name
-    public function getCurrentDetailTable()
+    // Current master table name
+    public function getCurrentMasterTable()
     {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE"));
+        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
     }
 
-    public function setCurrentDetailTable($v)
+    public function setCurrentMasterTable($v)
     {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE")] = $v;
+        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
     }
 
-    // Get detail url
-    public function getDetailUrl()
+    // Session master WHERE clause
+    public function getMasterFilter()
     {
-        // Detail url
-        $detailUrl = "";
-        if ($this->getCurrentDetailTable() == "order_detail") {
-            $detailUrl = Container("order_detail")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
+        // Master filter
+        $masterFilter = "";
+        if ($this->getCurrentMasterTable() == "po_limit_approval") {
+            if ($this->idapproval->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idapproval->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
         }
-        if ($detailUrl == "") {
-            $detailUrl = "OrderList";
+        return $masterFilter;
+    }
+
+    // Session detail WHERE clause
+    public function getDetailFilter()
+    {
+        // Detail filter
+        $detailFilter = "";
+        if ($this->getCurrentMasterTable() == "po_limit_approval") {
+            if ($this->idapproval->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`idapproval`", $this->idapproval->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
         }
-        return $detailUrl;
+        return $detailFilter;
+    }
+
+    // Master filter
+    public function sqlMasterFilter_po_limit_approval()
+    {
+        return "`id`=@id@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_po_limit_approval()
+    {
+        return "`idapproval`=@idapproval@";
     }
 
     // Table level SQL
     public function getSqlFrom() // From
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "`order`";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "`po_limit_approval_detail`";
     }
 
     public function sqlFrom() // For backward compatibility
@@ -344,11 +304,6 @@ class Order extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -627,27 +582,16 @@ class Order extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->kode->DbValue = $row['kode'];
-        $this->tanggal->DbValue = $row['tanggal'];
-        $this->idpegawai->DbValue = $row['idpegawai'];
-        $this->idcustomer->DbValue = $row['idcustomer'];
-        $this->dokumen->Upload->DbValue = $row['dokumen'];
+        $this->idapproval->DbValue = $row['idapproval'];
+        $this->idorder->DbValue = $row['idorder'];
+        $this->kredit_terpakai->DbValue = $row['kredit_terpakai'];
         $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
-        $this->aktif->DbValue = $row['aktif'];
-        $this->readonly->DbValue = $row['readonly'];
     }
 
     // Delete uploaded files
     public function deleteUploadedFiles($row)
     {
         $this->loadDbValues($row);
-        $oldFiles = EmptyValue($row['dokumen']) ? [] : [$row['dokumen']];
-        foreach ($oldFiles as $oldFile) {
-            if (file_exists($this->dokumen->oldPhysicalUploadPath() . $oldFile)) {
-                @unlink($this->dokumen->oldPhysicalUploadPath() . $oldFile);
-            }
-        }
     }
 
     // Record filter WHERE clause
@@ -713,7 +657,7 @@ class Order extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("OrderList");
+        return $_SESSION[$name] ?? GetUrl("PoLimitApprovalDetailList");
     }
 
     // Set return page URL
@@ -726,11 +670,11 @@ class Order extends DbTable
     public function getModalCaption($pageName)
     {
         global $Language;
-        if ($pageName == "OrderView") {
+        if ($pageName == "PoLimitApprovalDetailView") {
             return $Language->phrase("View");
-        } elseif ($pageName == "OrderEdit") {
+        } elseif ($pageName == "PoLimitApprovalDetailEdit") {
             return $Language->phrase("Edit");
-        } elseif ($pageName == "OrderAdd") {
+        } elseif ($pageName == "PoLimitApprovalDetailAdd") {
             return $Language->phrase("Add");
         } else {
             return "";
@@ -742,15 +686,15 @@ class Order extends DbTable
     {
         switch (strtolower($action)) {
             case Config("API_VIEW_ACTION"):
-                return "OrderView";
+                return "PoLimitApprovalDetailView";
             case Config("API_ADD_ACTION"):
-                return "OrderAdd";
+                return "PoLimitApprovalDetailAdd";
             case Config("API_EDIT_ACTION"):
-                return "OrderEdit";
+                return "PoLimitApprovalDetailEdit";
             case Config("API_DELETE_ACTION"):
-                return "OrderDelete";
+                return "PoLimitApprovalDetailDelete";
             case Config("API_LIST_ACTION"):
-                return "OrderList";
+                return "PoLimitApprovalDetailList";
             default:
                 return "";
         }
@@ -759,16 +703,16 @@ class Order extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "OrderList";
+        return "PoLimitApprovalDetailList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("OrderView", $this->getUrlParm($parm));
+            $url = $this->keyUrl("PoLimitApprovalDetailView", $this->getUrlParm($parm));
         } else {
-            $url = $this->keyUrl("OrderView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+            $url = $this->keyUrl("PoLimitApprovalDetailView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
         }
         return $this->addMasterUrl($url);
     }
@@ -777,9 +721,9 @@ class Order extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "OrderAdd?" . $this->getUrlParm($parm);
+            $url = "PoLimitApprovalDetailAdd?" . $this->getUrlParm($parm);
         } else {
-            $url = "OrderAdd";
+            $url = "PoLimitApprovalDetailAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -787,11 +731,7 @@ class Order extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        if ($parm != "") {
-            $url = $this->keyUrl("OrderEdit", $this->getUrlParm($parm));
-        } else {
-            $url = $this->keyUrl("OrderEdit", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
-        }
+        $url = $this->keyUrl("PoLimitApprovalDetailEdit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -805,11 +745,7 @@ class Order extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        if ($parm != "") {
-            $url = $this->keyUrl("OrderAdd", $this->getUrlParm($parm));
-        } else {
-            $url = $this->keyUrl("OrderAdd", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
-        }
+        $url = $this->keyUrl("PoLimitApprovalDetailAdd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -823,12 +759,16 @@ class Order extends DbTable
     // Delete URL
     public function getDeleteUrl()
     {
-        return $this->keyUrl("OrderDelete", $this->getUrlParm());
+        return $this->keyUrl("PoLimitApprovalDetailDelete", $this->getUrlParm());
     }
 
     // Add master url
     public function addMasterUrl($url)
     {
+        if ($this->getCurrentMasterTable() == "po_limit_approval" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idapproval->CurrentValue ?? $this->idapproval->getSessionValue());
+        }
         return $url;
     }
 
@@ -971,16 +911,10 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->kode->setDbValue($row['kode']);
-        $this->tanggal->setDbValue($row['tanggal']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->dokumen->Upload->DbValue = $row['dokumen'];
-        $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
+        $this->idapproval->setDbValue($row['idapproval']);
+        $this->idorder->setDbValue($row['idorder']);
+        $this->kredit_terpakai->setDbValue($row['kredit_terpakai']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
-        $this->readonly->setDbValue($row['readonly']);
     }
 
     // Render list row values
@@ -995,160 +929,79 @@ SORTHTML;
 
         // id
 
-        // kode
+        // idapproval
 
-        // tanggal
+        // idorder
 
-        // idpegawai
-
-        // idcustomer
-
-        // dokumen
+        // kredit_terpakai
 
         // created_at
 
-        // created_by
-
-        // aktif
-
-        // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
-
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
-        // kode
-        $this->kode->ViewValue = $this->kode->CurrentValue;
-        $this->kode->ViewCustomAttributes = "";
+        // idapproval
+        $this->idapproval->ViewValue = $this->idapproval->CurrentValue;
+        $this->idapproval->ViewValue = FormatNumber($this->idapproval->ViewValue, 0, -2, -2, -2);
+        $this->idapproval->ViewCustomAttributes = "";
 
-        // tanggal
-        $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-        $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
-        $this->tanggal->ViewCustomAttributes = "";
-
-        // idpegawai
-        $curVal = trim(strval($this->idpegawai->CurrentValue));
+        // idorder
+        $curVal = trim(strval($this->idorder->CurrentValue));
         if ($curVal != "") {
-            $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-            if ($this->idpegawai->ViewValue === null) { // Lookup from database
+            $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
+            if ($this->idorder->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                    $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
+                    $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
+                    $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
                 } else {
-                    $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+                    $this->idorder->ViewValue = $this->idorder->CurrentValue;
                 }
             }
         } else {
-            $this->idpegawai->ViewValue = null;
+            $this->idorder->ViewValue = null;
         }
-        $this->idpegawai->ViewCustomAttributes = "";
+        $this->idorder->ViewCustomAttributes = "";
 
-        // idcustomer
-        $curVal = trim(strval($this->idcustomer->CurrentValue));
-        if ($curVal != "") {
-            $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                    $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                }
-            }
-        } else {
-            $this->idcustomer->ViewValue = null;
-        }
-        $this->idcustomer->ViewCustomAttributes = "";
-
-        // dokumen
-        if (!EmptyValue($this->dokumen->Upload->DbValue)) {
-            $this->dokumen->ViewValue = $this->dokumen->Upload->DbValue;
-        } else {
-            $this->dokumen->ViewValue = "";
-        }
-        $this->dokumen->ViewCustomAttributes = "";
+        // kredit_terpakai
+        $this->kredit_terpakai->ViewValue = $this->kredit_terpakai->CurrentValue;
+        $this->kredit_terpakai->ViewValue = FormatCurrency($this->kredit_terpakai->ViewValue, 2, -2, -2, -2);
+        $this->kredit_terpakai->ViewCustomAttributes = "";
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
-
-        // aktif
-        if (strval($this->aktif->CurrentValue) != "") {
-            $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
-        } else {
-            $this->aktif->ViewValue = null;
-        }
-        $this->aktif->ViewCustomAttributes = "";
-
-        // readonly
-        $this->readonly->ViewValue = $this->readonly->CurrentValue;
-        $this->readonly->ViewCustomAttributes = "";
-
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
-        // kode
-        $this->kode->LinkCustomAttributes = "";
-        $this->kode->HrefValue = "";
-        $this->kode->TooltipValue = "";
+        // idapproval
+        $this->idapproval->LinkCustomAttributes = "";
+        $this->idapproval->HrefValue = "";
+        $this->idapproval->TooltipValue = "";
 
-        // tanggal
-        $this->tanggal->LinkCustomAttributes = "";
-        $this->tanggal->HrefValue = "";
-        $this->tanggal->TooltipValue = "";
+        // idorder
+        $this->idorder->LinkCustomAttributes = "";
+        $this->idorder->HrefValue = "";
+        $this->idorder->TooltipValue = "";
 
-        // idpegawai
-        $this->idpegawai->LinkCustomAttributes = "";
-        $this->idpegawai->HrefValue = "";
-        $this->idpegawai->TooltipValue = "";
-
-        // idcustomer
-        $this->idcustomer->LinkCustomAttributes = "";
-        $this->idcustomer->HrefValue = "";
-        $this->idcustomer->TooltipValue = "";
-
-        // dokumen
-        $this->dokumen->LinkCustomAttributes = "";
-        $this->dokumen->HrefValue = "";
-        $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
-        $this->dokumen->TooltipValue = "";
+        // kredit_terpakai
+        $this->kredit_terpakai->LinkCustomAttributes = "";
+        $this->kredit_terpakai->HrefValue = "";
+        $this->kredit_terpakai->TooltipValue = "";
 
         // created_at
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
-
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
-
-        // aktif
-        $this->aktif->LinkCustomAttributes = "";
-        $this->aktif->HrefValue = "";
-        $this->aktif->TooltipValue = "";
-
-        // readonly
-        $this->readonly->LinkCustomAttributes = "";
-        $this->readonly->HrefValue = "";
-        $this->readonly->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1169,63 +1022,38 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
-        // kode
-        $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "readonly";
-        if (!$this->kode->Raw) {
-            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-        }
-        $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
-
-        // tanggal
-        $this->tanggal->EditAttrs["class"] = "form-control";
-        $this->tanggal->EditCustomAttributes = "";
-        $this->tanggal->EditValue = FormatDateTime($this->tanggal->CurrentValue, 8);
-        $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
-
-        // idpegawai
-        $this->idpegawai->EditAttrs["class"] = "form-control";
-        $this->idpegawai->EditCustomAttributes = "";
-        $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
-
-        // idcustomer
-        $this->idcustomer->EditAttrs["class"] = "form-control";
-        $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
-
-        // dokumen
-        $this->dokumen->EditAttrs["class"] = "form-control";
-        $this->dokumen->EditCustomAttributes = "";
-        if (!EmptyValue($this->dokumen->Upload->DbValue)) {
-            $this->dokumen->EditValue = $this->dokumen->Upload->DbValue;
+        // idapproval
+        $this->idapproval->EditAttrs["class"] = "form-control";
+        $this->idapproval->EditCustomAttributes = "";
+        if ($this->idapproval->getSessionValue() != "") {
+            $this->idapproval->CurrentValue = GetForeignKeyValue($this->idapproval->getSessionValue());
+            $this->idapproval->ViewValue = $this->idapproval->CurrentValue;
+            $this->idapproval->ViewValue = FormatNumber($this->idapproval->ViewValue, 0, -2, -2, -2);
+            $this->idapproval->ViewCustomAttributes = "";
         } else {
-            $this->dokumen->EditValue = "";
+            $this->idapproval->EditValue = $this->idapproval->CurrentValue;
+            $this->idapproval->PlaceHolder = RemoveHtml($this->idapproval->caption());
         }
-        if (!EmptyValue($this->dokumen->CurrentValue)) {
-            $this->dokumen->Upload->FileName = $this->dokumen->CurrentValue;
-        }
+
+        // idorder
+        $this->idorder->EditAttrs["class"] = "form-control";
+        $this->idorder->EditCustomAttributes = "";
+        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
+
+        // kredit_terpakai
+        $this->kredit_terpakai->EditAttrs["class"] = "form-control";
+        $this->kredit_terpakai->EditCustomAttributes = "";
+        $this->kredit_terpakai->EditValue = $this->kredit_terpakai->CurrentValue;
+        $this->kredit_terpakai->PlaceHolder = RemoveHtml($this->kredit_terpakai->caption());
 
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
-
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
-
-        // aktif
-        $this->aktif->EditCustomAttributes = "readonly";
-        $this->aktif->EditValue = $this->aktif->options(false);
-        $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
-
-        // readonly
-        $this->readonly->EditAttrs["class"] = "form-control";
-        $this->readonly->EditCustomAttributes = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1255,21 +1083,17 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->kode);
-                    $doc->exportCaption($this->tanggal);
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->dokumen);
+                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->idapproval);
+                    $doc->exportCaption($this->idorder);
+                    $doc->exportCaption($this->kredit_terpakai);
+                    $doc->exportCaption($this->created_at);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->kode);
-                    $doc->exportCaption($this->tanggal);
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->dokumen);
+                    $doc->exportCaption($this->idapproval);
+                    $doc->exportCaption($this->idorder);
+                    $doc->exportCaption($this->kredit_terpakai);
                     $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
-                    $doc->exportCaption($this->aktif);
                 }
                 $doc->endExportRow();
             }
@@ -1299,21 +1123,17 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->kode);
-                        $doc->exportField($this->tanggal);
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->dokumen);
+                        $doc->exportField($this->id);
+                        $doc->exportField($this->idapproval);
+                        $doc->exportField($this->idorder);
+                        $doc->exportField($this->kredit_terpakai);
+                        $doc->exportField($this->created_at);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->kode);
-                        $doc->exportField($this->tanggal);
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->dokumen);
+                        $doc->exportField($this->idapproval);
+                        $doc->exportField($this->idorder);
+                        $doc->exportField($this->kredit_terpakai);
                         $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
-                        $doc->exportField($this->aktif);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1330,170 +1150,10 @@ SORTHTML;
         }
     }
 
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `order`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
-    }
-
     // Get file data
     public function getFileData($fldparm, $key, $resize, $width = 0, $height = 0, $plugins = [])
     {
-        $width = ($width > 0) ? $width : Config("THUMBNAIL_DEFAULT_WIDTH");
-        $height = ($height > 0) ? $height : Config("THUMBNAIL_DEFAULT_HEIGHT");
-
-        // Set up field name / file name field / file type field
-        $fldName = "";
-        $fileNameFld = "";
-        $fileTypeFld = "";
-        if ($fldparm == 'dokumen') {
-            $fldName = "dokumen";
-            $fileNameFld = "dokumen";
-        } else {
-            return false; // Incorrect field
-        }
-
-        // Set up key values
-        $ar = explode(Config("COMPOSITE_KEY_SEPARATOR"), $key);
-        if (count($ar) == 1) {
-            $this->id->CurrentValue = $ar[0];
-        } else {
-            return false; // Incorrect key
-        }
-
-        // Set up filter (WHERE Clause)
-        $filter = $this->getRecordFilter();
-        $this->CurrentFilter = $filter;
-        $sql = $this->getCurrentSql();
-        $conn = $this->getConnection();
-        $dbtype = GetConnectionType($this->Dbid);
-        if ($row = $conn->fetchAssoc($sql)) {
-            $val = $row[$fldName];
-            if (!EmptyValue($val)) {
-                $fld = $this->Fields[$fldName];
-
-                // Binary data
-                if ($fld->DataType == DATATYPE_BLOB) {
-                    if ($dbtype != "MYSQL") {
-                        if (is_resource($val) && get_resource_type($val) == "stream") { // Byte array
-                            $val = stream_get_contents($val);
-                        }
-                    }
-                    if ($resize) {
-                        ResizeBinary($val, $width, $height, 100, $plugins);
-                    }
-
-                    // Write file type
-                    if ($fileTypeFld != "" && !EmptyValue($row[$fileTypeFld])) {
-                        AddHeader("Content-type", $row[$fileTypeFld]);
-                    } else {
-                        AddHeader("Content-type", ContentType($val));
-                    }
-
-                    // Write file name
-                    $downloadPdf = !Config("EMBED_PDF") && Config("DOWNLOAD_PDF_FILE");
-                    if ($fileNameFld != "" && !EmptyValue($row[$fileNameFld])) {
-                        $fileName = $row[$fileNameFld];
-                        $pathinfo = pathinfo($fileName);
-                        $ext = strtolower(@$pathinfo["extension"]);
-                        $isPdf = SameText($ext, "pdf");
-                        if ($downloadPdf || !$isPdf) { // Skip header if not download PDF
-                            AddHeader("Content-Disposition", "attachment; filename=\"" . $fileName . "\"");
-                        }
-                    } else {
-                        $ext = ContentExtension($val);
-                        $isPdf = SameText($ext, ".pdf");
-                        if ($isPdf && $downloadPdf) { // Add header if download PDF
-                            AddHeader("Content-Disposition", "attachment; filename=\"" . $fileName . "\"");
-                        }
-                    }
-
-                    // Write file data
-                    if (
-                        StartsString("PK", $val) &&
-                        ContainsString($val, "[Content_Types].xml") &&
-                        ContainsString($val, "_rels") &&
-                        ContainsString($val, "docProps")
-                    ) { // Fix Office 2007 documents
-                        if (!EndsString("\0\0\0", $val)) { // Not ends with 3 or 4 \0
-                            $val .= "\0\0\0\0";
-                        }
-                    }
-
-                    // Clear any debug message
-                    if (ob_get_length()) {
-                        ob_end_clean();
-                    }
-
-                    // Write binary data
-                    Write($val);
-
-                // Upload to folder
-                } else {
-                    if ($fld->UploadMultiple) {
-                        $files = explode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $val);
-                    } else {
-                        $files = [$val];
-                    }
-                    $data = [];
-                    $ar = [];
-                    foreach ($files as $file) {
-                        if (!EmptyValue($file)) {
-                            if (Config("ENCRYPT_FILE_PATH")) {
-                                $ar[$file] = FullUrl(GetApiUrl(Config("API_FILE_ACTION") .
-                                    "/" . $this->TableVar . "/" . Encrypt($fld->physicalUploadPath() . $file)));
-                            } else {
-                                $ar[$file] = FullUrl($fld->hrefPath() . $file);
-                            }
-                        }
-                    }
-                    $data[$fld->Param] = $ar;
-                    WriteJson($data);
-                }
-            }
-            return true;
-        }
+        // No binary fields
         return false;
     }
 
@@ -1541,7 +1201,6 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        $rsnew['kode'] = getNextKode('order', 0);
         return true;
     }
 
@@ -1549,24 +1208,7 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $approval = get_approval($rsnew['idcustomer']);
-        if ($approval) {
-        	$totalorder = 0; // DEFAULT 0
-        	$detail = $GLOBALS["order_detail"]->GetGridFormValues(); // TOTAL ORDER YANG DIINPUT
-        	foreach ($detail as $d) {
-            	$totalorder += $d['total'];
-            }
-
-        	// Jika Sisa Limit Kredit lebih dari 10.000, maka limit kredit masih aktif.
-            $aktif = 0;
-            $sisalimitkredit = $approval['sisalimitkredit'] - $totalorder;
-        	if ($sisalimitkredit > 10000) {
-        		$aktif = 1;
-        	}
-            ExecuteUpdate("INSERT INTO po_limit_approval_detail (idapproval, idorder, kredit_terpakai, created_at) VALUES ({$approval['id']}, {$rsnew['id']}, {$totalorder}, '".date('Y-m-d H:i:s')."')");
-           	ExecuteUpdate("UPDATE po_limit_approval SET aktif = {$aktif}, updated_at = '".date('Y-m-d H:i:s')."', sisalimitkredit = {$sisalimitkredit} WHERE id = {$approval['id']}");
-            // sisapoaktif = ".($approval['sisapoaktif'] - 1).",
-        }
+        ExecuteUpdate("UPDATE po_limit_approval_detail SET created_at = '".date('Y-m-d H:i:s')."' WHERE id = {$id}");
     }
 
     // Row Updating event
@@ -1624,13 +1266,6 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
-        if ($rs['readonly']) {
-        	$this->setFailureMessage("Data tidak dapat dihapus karena sudah memasuki proses.");
-        	return false;
-        }
-
-        // Delete related children
-        $myResult = ExecuteUpdate("DELETE FROM order_detail WHERE idorder=".$rs['id']);
         return true;
     }
 
@@ -1665,11 +1300,6 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
-        $user_level = CurrentUserLevel();
-    	if($user_level != -1){
-    		$this->idpegawai->CurrentValue = CurrentUserID();
-    		$this->idpegawai->ReadOnly = TRUE; 
-    	}
     }
 
     // User ID Filtering event

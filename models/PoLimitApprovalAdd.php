@@ -465,7 +465,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->idorder->Visible = false;
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->limit_kredit->setVisibility();
@@ -474,6 +473,8 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
+        $this->sisalimitkredit->Visible = false;
+        $this->sisapoaktif->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -488,7 +489,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
 
@@ -530,6 +530,9 @@ class PoLimitApprovalAdd extends PoLimitApproval
             $this->loadFormValues(); // Load form values
         }
 
+        // Set up detail parameters
+        $this->setupDetailParms();
+
         // Validate form if post back
         if ($postBack) {
             if (!$this->validateForm()) {
@@ -554,6 +557,9 @@ class PoLimitApprovalAdd extends PoLimitApproval
                     $this->terminate("PoLimitApprovalList"); // No matching record, return to list
                     return;
                 }
+
+                // Set up detail parameters
+                $this->setupDetailParms();
                 break;
             case "insert": // Add new record
                 $this->SendEmail = true; // Send email on add success
@@ -561,7 +567,11 @@ class PoLimitApprovalAdd extends PoLimitApproval
                     if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
-                    $returnUrl = $this->getReturnUrl();
+                    if ($this->getCurrentDetailTable() != "") { // Master/detail add
+                        $returnUrl = $this->getDetailUrl();
+                    } else {
+                        $returnUrl = $this->getReturnUrl();
+                    }
                     if (GetPageName($returnUrl) == "PoLimitApprovalList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                     } elseif (GetPageName($returnUrl) == "PoLimitApprovalView") {
@@ -580,6 +590,9 @@ class PoLimitApprovalAdd extends PoLimitApproval
                 } else {
                     $this->EventCancelled = true; // Event cancelled
                     $this->restoreFormValues(); // Add failed, restore form values
+
+                    // Set up detail parameters
+                    $this->setupDetailParms();
                 }
         }
 
@@ -628,8 +641,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
     {
         $this->id->CurrentValue = null;
         $this->id->OldValue = $this->id->CurrentValue;
-        $this->idorder->CurrentValue = null;
-        $this->idorder->OldValue = $this->idorder->CurrentValue;
         $this->idpegawai->CurrentValue = null;
         $this->idpegawai->OldValue = $this->idpegawai->CurrentValue;
         $this->idcustomer->CurrentValue = null;
@@ -646,6 +657,10 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->updated_at->CurrentValue = null;
         $this->updated_at->OldValue = $this->updated_at->CurrentValue;
+        $this->sisalimitkredit->CurrentValue = null;
+        $this->sisalimitkredit->OldValue = $this->sisalimitkredit->CurrentValue;
+        $this->sisapoaktif->CurrentValue = null;
+        $this->sisapoaktif->OldValue = $this->sisapoaktif->CurrentValue;
     }
 
     // Load form values
@@ -757,7 +772,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idorder->setDbValue($row['idorder']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->limit_kredit->setDbValue($row['limit_kredit']);
@@ -767,6 +781,8 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
+        $this->sisalimitkredit->setDbValue($row['sisalimitkredit']);
+        $this->sisapoaktif->setDbValue($row['sisapoaktif']);
     }
 
     // Return a row with default values
@@ -775,7 +791,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $this->loadDefaultValues();
         $row = [];
         $row['id'] = $this->id->CurrentValue;
-        $row['idorder'] = $this->idorder->CurrentValue;
         $row['idpegawai'] = $this->idpegawai->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['limit_kredit'] = $this->limit_kredit->CurrentValue;
@@ -784,6 +799,8 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['updated_at'] = $this->updated_at->CurrentValue;
+        $row['sisalimitkredit'] = $this->sisalimitkredit->CurrentValue;
+        $row['sisapoaktif'] = $this->sisapoaktif->CurrentValue;
         return $row;
     }
 
@@ -817,8 +834,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
 
         // id
 
-        // idorder
-
         // idpegawai
 
         // idcustomer
@@ -834,31 +849,14 @@ class PoLimitApprovalAdd extends PoLimitApproval
         // created_at
 
         // updated_at
+
+        // sisalimitkredit
+
+        // sisapoaktif
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
-
-            // idorder
-            $curVal = trim(strval($this->idorder->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-                if ($this->idorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                    } else {
-                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idorder->ViewValue = null;
-            }
-            $this->idorder->ViewCustomAttributes = "";
 
             // idpegawai
             $curVal = trim(strval($this->idpegawai->CurrentValue));
@@ -929,6 +927,16 @@ class PoLimitApprovalAdd extends PoLimitApproval
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 1);
             $this->updated_at->ViewCustomAttributes = "";
+
+            // sisalimitkredit
+            $this->sisalimitkredit->ViewValue = $this->sisalimitkredit->CurrentValue;
+            $this->sisalimitkredit->ViewValue = FormatCurrency($this->sisalimitkredit->ViewValue, 2, -2, -2, -2);
+            $this->sisalimitkredit->ViewCustomAttributes = "";
+
+            // sisapoaktif
+            $this->sisapoaktif->ViewValue = $this->sisapoaktif->CurrentValue;
+            $this->sisapoaktif->ViewValue = FormatNumber($this->sisapoaktif->ViewValue, 0, -2, -2, -2);
+            $this->sisapoaktif->ViewCustomAttributes = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -1124,6 +1132,13 @@ class PoLimitApprovalAdd extends PoLimitApproval
             }
         }
 
+        // Validate detail grid
+        $detailTblVar = explode(",", $this->getCurrentDetailTable());
+        $detailPage = Container("PoLimitApprovalDetailGrid");
+        if (in_array("po_limit_approval_detail", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage->validateGridForm();
+        }
+
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
 
@@ -1142,6 +1157,11 @@ class PoLimitApprovalAdd extends PoLimitApproval
         global $Language, $Security;
         $conn = $this->getConnection();
 
+        // Begin transaction
+        if ($this->getCurrentDetailTable() != "") {
+            $conn->beginTransaction();
+        }
+
         // Load db values from rsold
         $this->loadDbValues($rsold);
         if ($rsold) {
@@ -1155,7 +1175,7 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // limit_kredit
-        $this->limit_kredit->setDbValueDef($rsnew, $this->limit_kredit->CurrentValue, 0, false);
+        $this->limit_kredit->setDbValueDef($rsnew, $this->limit_kredit->CurrentValue, 0, strval($this->limit_kredit->CurrentValue) == "");
 
         // limit_po_aktif
         $this->limit_po_aktif->setDbValueDef($rsnew, $this->limit_po_aktif->CurrentValue, 0, false);
@@ -1264,6 +1284,30 @@ class PoLimitApprovalAdd extends PoLimitApproval
             }
             $addRow = false;
         }
+
+        // Add detail records
+        if ($addRow) {
+            $detailTblVar = explode(",", $this->getCurrentDetailTable());
+            $detailPage = Container("PoLimitApprovalDetailGrid");
+            if (in_array("po_limit_approval_detail", $detailTblVar) && $detailPage->DetailAdd) {
+                $detailPage->idapproval->setSessionValue($this->id->CurrentValue); // Set master key
+                $Security->loadCurrentUserLevel($this->ProjectID . "po_limit_approval_detail"); // Load user level of detail table
+                $addRow = $detailPage->gridInsert();
+                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+                if (!$addRow) {
+                $detailPage->idapproval->setSessionValue(""); // Clear master key if insert failed
+                }
+            }
+        }
+
+        // Commit/Rollback transaction
+        if ($this->getCurrentDetailTable() != "") {
+            if ($addRow) {
+                $conn->commit(); // Commit transaction
+            } else {
+                $conn->rollback(); // Rollback transaction
+            }
+        }
         if ($addRow) {
             // Call Row Inserted event
             $this->rowInserted($rsold, $rsnew);
@@ -1281,6 +1325,39 @@ class PoLimitApprovalAdd extends PoLimitApproval
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
         return $addRow;
+    }
+
+    // Set up detail parms based on QueryString
+    protected function setupDetailParms()
+    {
+        // Get the keys for master table
+        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
+        if ($detailTblVar !== null) {
+            $this->setCurrentDetailTable($detailTblVar);
+        } else {
+            $detailTblVar = $this->getCurrentDetailTable();
+        }
+        if ($detailTblVar != "") {
+            $detailTblVar = explode(",", $detailTblVar);
+            if (in_array("po_limit_approval_detail", $detailTblVar)) {
+                $detailPageObj = Container("PoLimitApprovalDetailGrid");
+                if ($detailPageObj->DetailAdd) {
+                    if ($this->CopyRecord) {
+                        $detailPageObj->CurrentMode = "copy";
+                    } else {
+                        $detailPageObj->CurrentMode = "add";
+                    }
+                    $detailPageObj->CurrentAction = "gridadd";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idapproval->IsDetailKey = true;
+                    $detailPageObj->idapproval->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idapproval->setSessionValue($detailPageObj->idapproval->CurrentValue);
+                }
+            }
+        }
     }
 
     // Set up Breadcrumb
@@ -1307,8 +1384,6 @@ class PoLimitApprovalAdd extends PoLimitApproval
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idorder":
-                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
@@ -1399,7 +1474,7 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $idcustomer = $this->idcustomer->FormValue;
         $approval = ExecuteRow("SELECT COUNT(*) AS jumlah, customer.nama FROM po_limit_approval JOIN customer ON po_limit_approval.idcustomer = customer.id WHERE idcustomer = {$idcustomer} AND po_limit_approval.aktif = 1");
         if ($approval['jumlah'] > 0) {
-        	$customError = "Approval P.O. ".$approval['nama']." sudah ada. Silakan membuat P.O baru dahulu sebelum mengajukan Approval baru.";
+        	$customError = "Approval P.O. {$approval['nama']} sudah ada. Silakan membuat P.O baru dahulu sebelum mengajukan Approval baru.";
         	return false;
         }
         return true;

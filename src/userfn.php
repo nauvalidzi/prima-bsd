@@ -245,25 +245,26 @@ $API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
         $status = true;
         $message = null;
         $limit_kredit = 5000000; // DEFAULT LIMA Juta;
-        $limit_poaktif = 2; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
+        $limit_poaktif = 3; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
 
         // CEK TOTAL EXISTING TAGIHAN
-        $existing_tagihan = cek_totaltagihan_po_aktif($idcustomer);
+        // $existing_tagihan = cek_totaltagihan_po_aktif($idcustomer);
 
         // CEK KREDIT APPROVAL
         $approval = cek_po_approval($idcustomer);
         if ($approval) {
-            $limit_kredit = $approval['limit_kredit'];
-            $limit_poaktif = $approval['limit_po_aktif'];
+        	// $limit_kredit = $approval['sisalimitkredit'];
+        	$limit_poaktif = $approval['sisalimitkredit'];
         }
-        if ($existing_tagihan > $limit_kredit) {
-            if ($limit_kredit != 5000000) {
-                $message = "Transaksi melebihi limit kredit dari pengajuan approval.";
-                $status = false;
-            }
-            $message = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.";
-            $status = false;
-        }
+
+        // if ($existing_tagihan > $limit_kredit) {
+        //     if ($limit_kredit != 5000000) {
+        //         $message = "Transaksi melebihi limit kredit dari pengajuan approval.";
+        //         $status = false;
+        //     }
+        //     $message = "Transaksi melebihi limit yang di approve.<br />Silakan mengajukan approval khusus ke atasan.";
+        //     $status = false;
+        // }
 
         // CEK TAGIHAN BELUM LUNAS / BELUM BAYAR
         $existing_count_tagihan = cek_po_aktif($idcustomer);
@@ -279,8 +280,8 @@ $API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
     }
 };
 
-function get_po_id($cust_id) {
-	return ExecuteRow("SELECT id FROM po_limit_approval WHERE aktif = 1 AND idcustomer = {$cust_id} ORDER BY id DESC LIMIT 1");
+function get_approval($cust_id) {
+	return ExecuteRow("SELECT * FROM po_limit_approval WHERE aktif = 1 AND idcustomer = {$cust_id} ORDER BY id DESC");
 }
 
 function domain() {
@@ -549,7 +550,7 @@ function cek_totaltagihan_po_aktif($idcustomer) {
 }
 
 function cek_po_approval($idcustomer) {
-    return ExecuteRow("SELECT limit_kredit, limit_po_aktif FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
+    return ExecuteRow("SELECT * FROM po_limit_approval WHERE idcustomer = {$idcustomer} AND aktif = 1");
 }
 
 /*

@@ -29,7 +29,6 @@ class PoLimitApproval extends DbTable
 
     // Fields
     public $id;
-    public $idorder;
     public $idpegawai;
     public $idcustomer;
     public $limit_kredit;
@@ -38,6 +37,8 @@ class PoLimitApproval extends DbTable
     public $aktif;
     public $created_at;
     public $updated_at;
+    public $sisalimitkredit;
+    public $sisapoaktif;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -78,27 +79,11 @@ class PoLimitApproval extends DbTable
         $this->id = new DbField('po_limit_approval', 'po_limit_approval', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->IsForeignKey = true; // Foreign key field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
-
-        // idorder
-        $this->idorder = new DbField('po_limit_approval', 'po_limit_approval', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idorder->Sortable = true; // Allow sort
-        $this->idorder->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idorder->Lookup = new Lookup('idorder', 'order', false, 'id', ["kode","tanggal","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idorder->Lookup = new Lookup('idorder', 'order', false, 'id', ["kode","tanggal","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
-        $this->Fields['idorder'] = &$this->idorder;
 
         // idpegawai
         $this->idpegawai = new DbField('po_limit_approval', 'po_limit_approval', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -139,7 +124,7 @@ class PoLimitApproval extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // limit_kredit
-        $this->limit_kredit = new DbField('po_limit_approval', 'po_limit_approval', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 3, 100, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit = new DbField('po_limit_approval', 'po_limit_approval', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 20, 20, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->limit_kredit->Nullable = false; // NOT NULL field
         $this->limit_kredit->Required = true; // Required field
         $this->limit_kredit->Sortable = true; // Allow sort
@@ -184,6 +169,20 @@ class PoLimitApproval extends DbTable
         $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
+
+        // sisalimitkredit
+        $this->sisalimitkredit = new DbField('po_limit_approval', 'po_limit_approval', 'x_sisalimitkredit', 'sisalimitkredit', '`sisalimitkredit`', '`sisalimitkredit`', 20, 20, -1, false, '`sisalimitkredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisalimitkredit->Sortable = true; // Allow sort
+        $this->sisalimitkredit->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->sisalimitkredit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisalimitkredit->Param, "CustomMsg");
+        $this->Fields['sisalimitkredit'] = &$this->sisalimitkredit;
+
+        // sisapoaktif
+        $this->sisapoaktif = new DbField('po_limit_approval', 'po_limit_approval', 'x_sisapoaktif', 'sisapoaktif', '`sisapoaktif`', '`sisapoaktif`', 3, 11, -1, false, '`sisapoaktif`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisapoaktif->Sortable = true; // Allow sort
+        $this->sisapoaktif->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->sisapoaktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisapoaktif->Param, "CustomMsg");
+        $this->Fields['sisapoaktif'] = &$this->sisapoaktif;
     }
 
     // Field Visibility
@@ -221,6 +220,32 @@ class PoLimitApproval extends DbTable
         } else {
             $fld->setSort("");
         }
+    }
+
+    // Current detail table name
+    public function getCurrentDetailTable()
+    {
+        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE"));
+    }
+
+    public function setCurrentDetailTable($v)
+    {
+        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE")] = $v;
+    }
+
+    // Get detail url
+    public function getDetailUrl()
+    {
+        // Detail url
+        $detailUrl = "";
+        if ($this->getCurrentDetailTable() == "po_limit_approval_detail") {
+            $detailUrl = Container("po_limit_approval_detail")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
+        }
+        if ($detailUrl == "") {
+            $detailUrl = "PoLimitApprovalList";
+        }
+        return $detailUrl;
     }
 
     // Table level SQL
@@ -598,7 +623,6 @@ class PoLimitApproval extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->idorder->DbValue = $row['idorder'];
         $this->idpegawai->DbValue = $row['idpegawai'];
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->limit_kredit->DbValue = $row['limit_kredit'];
@@ -607,6 +631,8 @@ class PoLimitApproval extends DbTable
         $this->aktif->DbValue = $row['aktif'];
         $this->created_at->DbValue = $row['created_at'];
         $this->updated_at->DbValue = $row['updated_at'];
+        $this->sisalimitkredit->DbValue = $row['sisalimitkredit'];
+        $this->sisapoaktif->DbValue = $row['sisapoaktif'];
     }
 
     // Delete uploaded files
@@ -758,7 +784,11 @@ class PoLimitApproval extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("PoLimitApprovalEdit", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("PoLimitApprovalEdit", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("PoLimitApprovalEdit", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 
@@ -772,7 +802,11 @@ class PoLimitApproval extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("PoLimitApprovalAdd", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("PoLimitApprovalAdd", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("PoLimitApprovalAdd", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 
@@ -934,7 +968,6 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idorder->setDbValue($row['idorder']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->limit_kredit->setDbValue($row['limit_kredit']);
@@ -944,6 +977,8 @@ SORTHTML;
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
+        $this->sisalimitkredit->setDbValue($row['sisalimitkredit']);
+        $this->sisapoaktif->setDbValue($row['sisapoaktif']);
     }
 
     // Render list row values
@@ -957,8 +992,6 @@ SORTHTML;
         // Common render codes
 
         // id
-
-        // idorder
 
         // idpegawai
 
@@ -976,30 +1009,13 @@ SORTHTML;
 
         // updated_at
 
+        // sisalimitkredit
+
+        // sisapoaktif
+
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
-
-        // idorder
-        $curVal = trim(strval($this->idorder->CurrentValue));
-        if ($curVal != "") {
-            $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-            if ($this->idorder->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                    $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                } else {
-                    $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                }
-            }
-        } else {
-            $this->idorder->ViewValue = null;
-        }
-        $this->idorder->ViewCustomAttributes = "";
 
         // idpegawai
         $curVal = trim(strval($this->idpegawai->CurrentValue));
@@ -1076,15 +1092,20 @@ SORTHTML;
         $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 1);
         $this->updated_at->ViewCustomAttributes = "";
 
+        // sisalimitkredit
+        $this->sisalimitkredit->ViewValue = $this->sisalimitkredit->CurrentValue;
+        $this->sisalimitkredit->ViewValue = FormatCurrency($this->sisalimitkredit->ViewValue, 2, -2, -2, -2);
+        $this->sisalimitkredit->ViewCustomAttributes = "";
+
+        // sisapoaktif
+        $this->sisapoaktif->ViewValue = $this->sisapoaktif->CurrentValue;
+        $this->sisapoaktif->ViewValue = FormatNumber($this->sisapoaktif->ViewValue, 0, -2, -2, -2);
+        $this->sisapoaktif->ViewCustomAttributes = "";
+
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
-
-        // idorder
-        $this->idorder->LinkCustomAttributes = "";
-        $this->idorder->HrefValue = "";
-        $this->idorder->TooltipValue = "";
 
         // idpegawai
         $this->idpegawai->LinkCustomAttributes = "";
@@ -1135,6 +1156,16 @@ SORTHTML;
         $this->updated_at->HrefValue = "";
         $this->updated_at->TooltipValue = "";
 
+        // sisalimitkredit
+        $this->sisalimitkredit->LinkCustomAttributes = "";
+        $this->sisalimitkredit->HrefValue = "";
+        $this->sisalimitkredit->TooltipValue = "";
+
+        // sisapoaktif
+        $this->sisapoaktif->LinkCustomAttributes = "";
+        $this->sisapoaktif->HrefValue = "";
+        $this->sisapoaktif->TooltipValue = "";
+
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1155,11 +1186,6 @@ SORTHTML;
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
-
-        // idorder
-        $this->idorder->EditAttrs["class"] = "form-control";
-        $this->idorder->EditCustomAttributes = "";
-        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -1214,6 +1240,20 @@ SORTHTML;
         $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
         $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
+        // sisalimitkredit
+        $this->sisalimitkredit->EditAttrs["class"] = "form-control";
+        $this->sisalimitkredit->EditCustomAttributes = "";
+        $this->sisalimitkredit->EditValue = $this->sisalimitkredit->CurrentValue;
+        $this->sisalimitkredit->EditValue = FormatCurrency($this->sisalimitkredit->EditValue, 2, -2, -2, -2);
+        $this->sisalimitkredit->ViewCustomAttributes = "";
+
+        // sisapoaktif
+        $this->sisapoaktif->EditAttrs["class"] = "form-control";
+        $this->sisapoaktif->EditCustomAttributes = "";
+        $this->sisapoaktif->EditValue = $this->sisapoaktif->CurrentValue;
+        $this->sisapoaktif->EditValue = FormatNumber($this->sisapoaktif->EditValue, 0, -2, -2, -2);
+        $this->sisapoaktif->ViewCustomAttributes = "";
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1242,7 +1282,6 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->limit_kredit);
@@ -1251,9 +1290,10 @@ SORTHTML;
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
+                    $doc->exportCaption($this->sisalimitkredit);
+                    $doc->exportCaption($this->sisapoaktif);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->limit_kredit);
@@ -1261,6 +1301,8 @@ SORTHTML;
                     $doc->exportCaption($this->lampiran);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
+                    $doc->exportCaption($this->sisalimitkredit);
+                    $doc->exportCaption($this->sisapoaktif);
                 }
                 $doc->endExportRow();
             }
@@ -1290,7 +1332,6 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idorder);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->limit_kredit);
@@ -1299,9 +1340,10 @@ SORTHTML;
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
+                        $doc->exportField($this->sisalimitkredit);
+                        $doc->exportField($this->sisapoaktif);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->idorder);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->limit_kredit);
@@ -1309,6 +1351,8 @@ SORTHTML;
                         $doc->exportField($this->lampiran);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
+                        $doc->exportField($this->sisalimitkredit);
+                        $doc->exportField($this->sisapoaktif);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1496,9 +1540,8 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $insert_id = $rsnew['id'];
         $current_date = date('Y-m-d H:i:s');
-        ExecuteUpdate("UPDATE po_limit_approval SET created_at = '{$current_date}', updated_at = '{$current_date}', aktif = 1 WHERE id = {$insert_id}");
+        ExecuteUpdate("UPDATE po_limit_approval SET created_at = '{$current_date}', updated_at = '{$current_date}', aktif = 1, sisalimitkredit = {$rsnew['limit_kredit']}, sisapoaktif = {$rsnew['limit_po_aktif']} WHERE id = {$rsnew['id']}");
     }
 
     // Row Updating event
@@ -1598,11 +1641,7 @@ SORTHTML;
     		$this->idpegawai->CurrentValue = CurrentUserID();
     		$this->idpegawai->ReadOnly = TRUE; 
     	}
-        if ($this->idorder->CurrentValue == 0) {
-        	$this->idorder->ViewValue = 'PO Belum dibuat.';
-        } else {
-        	$this->RowAttrs["style"] = "background-color: #32CD32; ";
-        }
+        $this->created_at->ViewValue = date('d/m/Y H:i',strtotime($this->created_at->CurrentValue));
     }
 
     // User ID Filtering event

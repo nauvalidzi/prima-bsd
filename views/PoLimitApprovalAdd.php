@@ -232,6 +232,14 @@ loadjs.ready("head", function() {
     </div>
 <?php } ?>
 </div><!-- /page* -->
+<?php
+    if (in_array("po_limit_approval_detail", explode(",", $Page->getCurrentDetailTable())) && $po_limit_approval_detail->DetailAdd) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("po_limit_approval_detail", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "PoLimitApprovalDetailGrid.php" ?>
+<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

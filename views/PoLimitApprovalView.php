@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="po_limit_approval">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->idorder->Visible) { // idorder ?>
-    <tr id="r_idorder">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_po_limit_approval_idorder"><?= $Page->idorder->caption() ?></span></td>
-        <td data-name="idorder" <?= $Page->idorder->cellAttributes() ?>>
-<span id="el_po_limit_approval_idorder">
-<span<?= $Page->idorder->viewAttributes() ?>>
-<?= $Page->idorder->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
     <tr id="r_idpegawai">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_po_limit_approval_idpegawai"><?= $Page->idpegawai->caption() ?></span></td>
@@ -145,7 +134,37 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->sisalimitkredit->Visible) { // sisalimitkredit ?>
+    <tr id="r_sisalimitkredit">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_po_limit_approval_sisalimitkredit"><?= $Page->sisalimitkredit->caption() ?></span></td>
+        <td data-name="sisalimitkredit" <?= $Page->sisalimitkredit->cellAttributes() ?>>
+<span id="el_po_limit_approval_sisalimitkredit">
+<span<?= $Page->sisalimitkredit->viewAttributes() ?>>
+<?= $Page->sisalimitkredit->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->sisapoaktif->Visible) { // sisapoaktif ?>
+    <tr id="r_sisapoaktif">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_po_limit_approval_sisapoaktif"><?= $Page->sisapoaktif->caption() ?></span></td>
+        <td data-name="sisapoaktif" <?= $Page->sisapoaktif->cellAttributes() ?>>
+<span id="el_po_limit_approval_sisapoaktif">
+<span<?= $Page->sisapoaktif->viewAttributes() ?>>
+<?= $Page->sisapoaktif->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
+<?php
+    if (in_array("po_limit_approval_detail", explode(",", $Page->getCurrentDetailTable())) && $po_limit_approval_detail->DetailView) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("po_limit_approval_detail", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "PoLimitApprovalDetailGrid.php" ?>
+<?php } ?>
 </form>
 <?php
 $Page->showPageFooter();

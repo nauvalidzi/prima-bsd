@@ -22,7 +22,9 @@ loadjs.ready("head", function () {
     fpo_limit_approvaledit.addFields([
         ["limit_kredit", [fields.limit_kredit.visible && fields.limit_kredit.required ? ew.Validators.required(fields.limit_kredit.caption) : null, ew.Validators.integer], fields.limit_kredit.isInvalid],
         ["limit_po_aktif", [fields.limit_po_aktif.visible && fields.limit_po_aktif.required ? ew.Validators.required(fields.limit_po_aktif.caption) : null, ew.Validators.integer], fields.limit_po_aktif.isInvalid],
-        ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid]
+        ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
+        ["sisalimitkredit", [fields.sisalimitkredit.visible && fields.sisalimitkredit.required ? ew.Validators.required(fields.sisalimitkredit.caption) : null], fields.sisalimitkredit.isInvalid],
+        ["sisapoaktif", [fields.sisapoaktif.visible && fields.sisapoaktif.required ? ew.Validators.required(fields.sisapoaktif.caption) : null], fields.sisapoaktif.isInvalid]
     ]);
 
     // Set invalid fields
@@ -160,8 +162,40 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->sisalimitkredit->Visible) { // sisalimitkredit ?>
+    <div id="r_sisalimitkredit" class="form-group row">
+        <label id="elh_po_limit_approval_sisalimitkredit" for="x_sisalimitkredit" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sisalimitkredit->caption() ?><?= $Page->sisalimitkredit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sisalimitkredit->cellAttributes() ?>>
+<span id="el_po_limit_approval_sisalimitkredit">
+<span<?= $Page->sisalimitkredit->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->sisalimitkredit->getDisplayValue($Page->sisalimitkredit->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="po_limit_approval" data-field="x_sisalimitkredit" data-hidden="1" name="x_sisalimitkredit" id="x_sisalimitkredit" value="<?= HtmlEncode($Page->sisalimitkredit->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->sisapoaktif->Visible) { // sisapoaktif ?>
+    <div id="r_sisapoaktif" class="form-group row">
+        <label id="elh_po_limit_approval_sisapoaktif" for="x_sisapoaktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sisapoaktif->caption() ?><?= $Page->sisapoaktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sisapoaktif->cellAttributes() ?>>
+<span id="el_po_limit_approval_sisapoaktif">
+<span<?= $Page->sisapoaktif->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->sisapoaktif->getDisplayValue($Page->sisapoaktif->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="po_limit_approval" data-field="x_sisapoaktif" data-hidden="1" name="x_sisapoaktif" id="x_sisapoaktif" value="<?= HtmlEncode($Page->sisapoaktif->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
     <input type="hidden" data-table="po_limit_approval" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<?php
+    if (in_array("po_limit_approval_detail", explode(",", $Page->getCurrentDetailTable())) && $po_limit_approval_detail->DetailEdit) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("po_limit_approval_detail", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "PoLimitApprovalDetailGrid.php" ?>
+<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

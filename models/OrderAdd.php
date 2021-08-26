@@ -1511,7 +1511,7 @@ class OrderAdd extends Order
     {
         // Return error message in CustomError
         $limit_kredit = 5000000; // DEFAULT LIMA Juta;
-        $limit_poaktif = 2; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
+        $limit_poaktif = 3; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
         $idcustomer = $this->idcustomer->FormValue;
 
         // CEK TOTAL PESANAN        
@@ -1530,8 +1530,8 @@ class OrderAdd extends Order
         // CEK KREDIT APPROVAL
         $approval = cek_po_approval($idcustomer);
         if ($approval) {
-            $limit_kredit = $approval['limit_kredit'];
-            $limit_poaktif = $approval['limit_po_aktif'];
+            $limit_kredit = $approval['sisalimitkredit'];
+            $limit_poaktif = $approval['sisalimitkredit'];
         }
         if ($totalorder > $limit_kredit) {
             if ($limit_kredit != 5000000) {

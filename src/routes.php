@@ -1023,6 +1023,19 @@ return function (App $app) {
         }
     );
 
+    // po_limit_approval_detail
+    $app->any('/PoLimitApprovalDetailList[/{id}]', PoLimitApprovalDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('PoLimitApprovalDetailList-po_limit_approval_detail-list'); // list
+    $app->any('/PoLimitApprovalDetailView[/{id}]', PoLimitApprovalDetailController::class . ':view')->add(PermissionMiddleware::class)->setName('PoLimitApprovalDetailView-po_limit_approval_detail-view'); // view
+    $app->any('/PoLimitApprovalDetailPreview', PoLimitApprovalDetailController::class . ':preview')->add(PermissionMiddleware::class)->setName('PoLimitApprovalDetailPreview-po_limit_approval_detail-preview'); // preview
+    $app->group(
+        '/po_limit_approval_detail',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PoLimitApprovalDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('po_limit_approval_detail/list-po_limit_approval_detail-list-2'); // list
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', PoLimitApprovalDetailController::class . ':view')->add(PermissionMiddleware::class)->setName('po_limit_approval_detail/view-po_limit_approval_detail-view-2'); // view
+            $group->any('/' . Config("PREVIEW_ACTION") . '', PoLimitApprovalDetailController::class . ':preview')->add(PermissionMiddleware::class)->setName('po_limit_approval_detail/preview-po_limit_approval_detail-preview-2'); // preview
+        }
+    );
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 
