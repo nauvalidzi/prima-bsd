@@ -1838,7 +1838,7 @@ class PoLimitApprovalList extends PoLimitApproval
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        if ($this->sisalimitkredit->CurrentValue < $this->limit_kredit->CurrentValue) {
+        if ($this->sisalimitkredit->CurrentValue < $this->limit_kredit->CurrentValue || $this->sisapoaktif->CurrentValue < $this->limit_po_aktif->CurrentValue) {
             $this->ListOptions->Items["edit"]->Body = "";
         }
     }

@@ -1557,15 +1557,15 @@ SORTHTML;
             	$totalorder += $d['total'];
             }
 
-        	// Jika Sisa Limit Kredit lebih dari 10.000, maka limit kredit masih aktif.
-            $aktif = 0;
+        	// Jika Sisa Limit Kredit lebih dari 10.000 atau Sisa PO Aktif belum habis, maka limit kredit masih aktif.
+            $aktif = 1;
+            $sisapoaktif = $approval['sisapoaktif'] - 1; // PENGURANGAN JUMLAH SISA PO AKTIF
             $sisalimitkredit = $approval['sisalimitkredit'] - $totalorder;
-        	if ($sisalimitkredit > 10000) {
-        		$aktif = 1;
+        	if ($sisalimitkredit < 10000 || $sisapoaktif < 1) {
+        		$aktif = 0;
         	}
             ExecuteUpdate("INSERT INTO po_limit_approval_detail (idapproval, idorder, kredit_terpakai, created_at) VALUES ({$approval['id']}, {$rsnew['id']}, {$totalorder}, '".date('Y-m-d H:i:s')."')");
-           	ExecuteUpdate("UPDATE po_limit_approval SET aktif = {$aktif}, updated_at = '".date('Y-m-d H:i:s')."', sisalimitkredit = {$sisalimitkredit} WHERE id = {$approval['id']}");
-            // sisapoaktif = ".($approval['sisapoaktif'] - 1).",
+           	ExecuteUpdate("UPDATE po_limit_approval SET aktif = {$aktif}, updated_at = '".date('Y-m-d H:i:s')."', sisalimitkredit = {$sisalimitkredit}, sisapoaktif = {$sisapoaktif} WHERE id = {$approval['id']}");
         }
     }
 

@@ -1528,10 +1528,10 @@ class OrderAdd extends Order
         //$totaltagihan = $existing_tagihan + $totalorder;
 
         // CEK KREDIT APPROVAL
-        $approval = cek_po_approval($idcustomer);
+        $approval = get_approval($idcustomer);
         if ($approval) {
             $limit_kredit = $approval['sisalimitkredit'];
-            $limit_poaktif = $approval['sisalimitkredit'];
+            $limit_poaktif = $approval['limit_po_aktif'];
         }
         if ($totalorder > $limit_kredit) {
             if ($limit_kredit != 5000000) {
@@ -1545,11 +1545,11 @@ class OrderAdd extends Order
         // CEK TAGIHAN BELUM LUNAS / BELUM BAYAR
         $existing_count_tagihan = cek_po_aktif($idcustomer);
         if ($existing_count_tagihan >= $limit_poaktif) {
-            if ($limit_poaktif > 2) {
-                $customError = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.";
+            if ($limit_poaktif > 3) {
+                $customError = "P.O. berikut melebihi P.O. aktif dari pengajuan approval.<br />Limit P.O. Aktif sebanyak {$limit_poaktif}";
                 return false;
             }
-            $customError = "P.O. berikut melebihi jumlah P.O. aktif sebelumnya.<br />Silakan mengajukan approval ke atasan untuk proses khusus.";
+            $customError = "P.O. berikut melebihi jumlah P.O. aktif sebelumnya.<br />Silakan mengajukan approval ke atasan untuk proses khusus.<br />Limit P.O. Aktif sebanyak {$limit_poaktif}";
             return false;
         }
         return true;

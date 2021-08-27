@@ -1556,9 +1556,7 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
-        $id = $rsold['id'];
-        $current_date = date('Y-m-d H:i:s');
-        ExecuteUpdate("UPDATE po_limit_approval SET updated_at = '{$current_date}' WHERE id = {$id}");
+        ExecuteUpdate("UPDATE po_limit_approval SET updated_at = '".date('Y-m-d H:i:s')."' WHERE id = {$rsold['id']}");
     }
 
     // Row Update Conflict event

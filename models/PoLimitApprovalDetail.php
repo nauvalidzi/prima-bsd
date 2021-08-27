@@ -1208,7 +1208,7 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        ExecuteUpdate("UPDATE po_limit_approval_detail SET created_at = '".date('Y-m-d H:i:s')."' WHERE id = {$id}");
+        ExecuteUpdate("UPDATE po_limit_approval_detail SET created_at = '".date('Y-m-d H:i:s')."' WHERE id = {$rsnew['id']}");
     }
 
     // Row Updating event
