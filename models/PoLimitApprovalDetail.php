@@ -1300,6 +1300,7 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        $this->idorder->ViewValue = "<a href=\"OrderDetailList?showmaster=order&fk_id=".$this->idorder->CurrentValue."\">".$this->idorder->ViewValue."</a>";
     }
 
     // User ID Filtering event
