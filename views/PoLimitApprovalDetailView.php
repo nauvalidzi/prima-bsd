@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="po_limit_approval_detail">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_po_limit_approval_detail_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el_po_limit_approval_detail_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idapproval->Visible) { // idapproval ?>
     <tr id="r_idapproval">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_po_limit_approval_detail_idapproval"><?= $Page->idapproval->caption() ?></span></td>

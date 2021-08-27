@@ -524,8 +524,8 @@ function cek_po_aktif($idcustomer) {
                     UNION
                     SELECT `order`.id AS idorder, idcustomer
                     FROM `order`
-                    JOIN order_detail ON `order`.id = order_detail.idorder
-                    LEFT JOIN stock ON stock.idorder_detail = order_detail.id
+                    JOIN order_detail ON `order`.id = order_detail.idorder AND order_detail.sisa > 0
+                    LEFT JOIN stock ON stock.idorder_detail = order_detail.id AND stock.jumlah > 0
                     GROUP BY `order`.id
                     ) po_aktif
                     WHERE idcustomer = {$idcustomer}

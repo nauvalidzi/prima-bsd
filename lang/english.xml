@@ -3723,7 +3723,7 @@
     <table id="po_limit_approval_detail">
       <phrase id="tblcaption" value="P.O. Limit Approval Detail" />
       <field id="id">
-        <phrase id="fldcaption" value="id" />
+        <phrase id="fldcaption" value="ID" />
       </field>
       <field id="idapproval">
         <phrase id="fldcaption" value="ID Approval" />

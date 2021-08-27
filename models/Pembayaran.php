@@ -129,10 +129,10 @@ class Pembayaran extends DbTable
         $this->idinvoice->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
+                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
                 break;
             default:
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
+                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
                 break;
         }
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

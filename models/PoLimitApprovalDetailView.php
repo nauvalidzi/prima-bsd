@@ -789,11 +789,6 @@ class PoLimitApprovalDetailView extends PoLimitApprovalDetail
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idapproval
             $this->idapproval->LinkCustomAttributes = "";
             $this->idapproval->HrefValue = "";
