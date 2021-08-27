@@ -6,7 +6,7 @@
 
 return [
     "Databases" => [
-        "DB" => ["id" => "DB", "type" => "MYSQL", "qs" => "`", "qe" => "`", "host" => "localhost", "port" => "3306", "user" => "root", "password" => "", "dbname" => "bsd"],
+        "DB" => ["id" => "DB", "type" => "MYSQL", "qs" => "`", "qe" => "`", "host" => "ls-b9e992bc52faba574fd15397e7880de17f555d47.cpe3c4hmmuxu.us-east-2.rds.amazonaws.com", "port" => "3306", "user" => "root", "password" => "Jombang74", "dbname" => "bsd"],
         "dbpabrik" => ["id" => "dbpabrik", "type" => "MYSQL", "qs" => "`", "qe" => "`", "host" => "localhost", "port" => "3306", "user" => "root", "password" => "", "dbname" => "dbpabrik"]
     ],
     "SMTP" => [
