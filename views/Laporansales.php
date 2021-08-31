@@ -34,6 +34,7 @@ $Laporansales = &$Page;
 						WHERE o.id = od.idorder AND c.id = o.idcustomer AND p.id = c.idpegawai AND o.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' AND p.id = ".$_POST['marketing']."
 						GROUP BY od.idorder";
 			//$mr_selected = ExecuteRows("SELECT nama FROM pegawai WHERE id = $_POST['marketing']");
+			$marketing = ExecuteRow("SELECT kode, nama FROM pegawai WHERE id = {$_POST['marketing']}");
 		}
 
 		$result = ExecuteQuery($query)->fetchAll();
@@ -76,17 +77,25 @@ $Laporansales = &$Page;
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
 					</li>
+					<?php if(isset($_POST['srhDate'])) : ?>
+					<li class="d-inline-block">
+						<button type="button" class="btn btn-info btn-md p-2" onclick="exportTableToExcel('printTable')"><i class="mr-2 far fa-file-excel"></i>Export to Excel</button>
+					</li>
+					<?php endif; ?>
 				</ul>
 			</div>
         </form>
     </div>
     <div class="row">
     	<?php if(isset($_POST['srhDate'])) : ?>
-		<table class="table ew-table table-bordered">
+		<table class="table ew-table table-bordered" class="printTable">
 		<?php if ($_POST['marketing'] == "all"): ?>
 			<thead>
 				<tr>
-					<th colspan="6" style="text-align: center;"><h5>Marketing: All</h5><?php echo tgl_indo($dateFrom) . ' - '. tgl_indo($dateTo) ?></th>
+					<th colspan="6" class="text-center">
+						<h4 class="my-2">Laporan Sales</h4>
+						<p class="mt-3">Marketing: All<br />Periode: <?php echo tgl_indo($dateFrom) . ' - '. tgl_indo($dateTo) ?></p>
+					</th>
 				</tr>
 				<tr class="ew-table-header">
 					<th class="text-center">Marketing</th>
@@ -134,7 +143,10 @@ $Laporansales = &$Page;
 		<?php else: ?>
 			<thead>
 				<tr>
-					<th colspan="7" style="text-align: center;"><h5>Marketing: <?php echo $result[0]['pegawai'] ?></h5><?php echo tgl_indo($dateFrom) . ' - '. tgl_indo($dateTo) ?></th>
+					<th colspan="6" class="text-center">
+						<h4 class="my-2">Laporan Sales</h4>
+						<p class="mt-3">Marketing: <?php echo $marketing['kode'] . ' - ' .$marketing['nama'] ?><br />Periode: <?php echo tgl_indo($dateFrom) . ' - '. tgl_indo($dateTo) ?></p>
+					</th>
 				</tr>
 				<tr class="ew-table-header">
 					<th class="text-center">No.</th>
@@ -145,8 +157,9 @@ $Laporansales = &$Page;
 				</tr>
 			</thead>
 			<tbody>
+				<?php $total = 0; ?>
 				<?php if (!empty($result)): ?>
-					<?php $total = 0; $i = 0; ?>
+					<?php $i = 0; ?>
 					<?php foreach ($result as $data): ?>
 					<tr>
 						<td class="text-center"><?= ++$i ?></td>
@@ -163,7 +176,7 @@ $Laporansales = &$Page;
 					</tr>
 				<?php endif; ?>
 			</tbody>
-			<?php if ($total > 0):  ?>
+			<?php if (!empty($result) && $total > 0):  ?>
 			<tfoot>
 				<tr>
 					<td colspan="4" class="text-right"><strong>Grand Total :</strong></td>
@@ -173,6 +186,39 @@ $Laporansales = &$Page;
 			<?php endif; ?>
 		<?php endif; ?>
 		</table>
+		<script>
+			function exportTableToExcel(tableID, filename = '') {
+				var downloadLink;
+				var dataType = 'data:application/vnd.ms-excel';
+				var tableSelect = document.getElementById(tableID);
+				var tableHTML = encodeURIComponent(tableSelect.outerHTML);
+				var d = new Date();
+
+				// Specify file name
+				filename = filename ? filename + '.xls' : 'Laporan Sales '+ d.toDateString() +'.xls';
+
+				// Create download link element
+				downloadLink = document.createElement("a");
+
+				document.body.appendChild(downloadLink);
+
+				if (navigator.msSaveOrOpenBlob) {
+					var blob = new Blob(['\ufeff', tableHTML], {
+						type: dataType
+					});
+					navigator.msSaveOrOpenBlob(blob, filename);
+				} else {
+					// Create a link to the file
+					downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+					// Setting the file name
+					downloadLink.download = filename;
+
+					//triggering the function
+					downloadLink.click();
+				}
+			}
+		</script>
     	<?php endif; ?>
     </div>
 </div>

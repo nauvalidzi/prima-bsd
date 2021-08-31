@@ -70,14 +70,25 @@ $LaporanDeliveryOrder = &$Page;
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
 					</li>
+					<?php if(isset($_POST['srhDate'])) : ?>
+					<li class="d-inline-block">
+						<button type="button" class="btn btn-info btn-md p-2" onclick="exportTableToExcel('printTable')"><i class="mr-2 far fa-file-excel"></i>Export to Excel</button>
+					</li>
+					<?php endif; ?>
 				</ul>
 			</div>
 		</form>
 	</div>
 	<div class="row">
 	    <?php if(isset($_POST['srhDate'])) : ?>
-	    <table class="table ew-table table-bordered">
+	    <table class="table ew-table table-bordered" id="printTable">
 		  <thead>
+			<tr>
+				<th colspan="10" class="text-center">
+					<h4 class="my-2">Laporan Delivery Order</h4>
+					<p class="mt-3">Status D.O: <?php echo ucwords($status_selected) ?><br />Periode: <?php echo tgl_indo($dateFrom) . ' - ' . tgl_indo($dateTo) ?></p>
+				</th>
+			</tr>
 		    <tr>
 		        <th>No</th>
 		        <th>Tanggal</th>
@@ -101,7 +112,7 @@ $LaporanDeliveryOrder = &$Page;
 			    <tr>
 			      <td><?php echo $i?></td>
 			      <td><?php echo tgl_indo($row['tanggal']) ?></td>
-			      <td><a href="DeliveryorderDetailList?showmaster=deliveryorder&fk_id=<?php echo $row['do_id'] ?>" target="_blank"><?php echo $row['kode_do'] ?></a></td>
+			      <td><a href="<?php echo base_url() ?>DeliveryorderDetailList?showmaster=deliveryorder&fk_id=<?php echo $row['do_id'] ?>" target="_blank"><?php echo $row['kode_do'] ?></a></td>
 			      <td><?php echo $row['kode_po'] ?></td>
 			      <td class="text-center"><?php echo $row['jumlah_kirim'] ?></td>
 			      <?php if ($_POST['status'] == "all" || $_POST['status'] == "sisa") : ?>
@@ -134,6 +145,39 @@ $LaporanDeliveryOrder = &$Page;
 		  </tfoot>
 		  <?php endif; ?>
 		</table>
+		<script>
+			function exportTableToExcel(tableID, filename = '') {
+				var downloadLink;
+				var dataType = 'data:application/vnd.ms-excel';
+				var tableSelect = document.getElementById(tableID);
+				var tableHTML = encodeURIComponent(tableSelect.outerHTML);
+				var d = new Date();
+
+				// Specify file name
+				filename = filename ? filename + '.xls' : 'Laporan Delivery Order '+ d.toDateString() +'.xls';
+
+				// Create download link element
+				downloadLink = document.createElement("a");
+
+				document.body.appendChild(downloadLink);
+
+				if (navigator.msSaveOrOpenBlob) {
+					var blob = new Blob(['\ufeff', tableHTML], {
+						type: dataType
+					});
+					navigator.msSaveOrOpenBlob(blob, filename);
+				} else {
+					// Create a link to the file
+					downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+					// Setting the file name
+					downloadLink.download = filename;
+
+					//triggering the function
+					downloadLink.click();
+				}
+			}
+		</script>
 		<?php endif; ?>
 	</div>
 </div>

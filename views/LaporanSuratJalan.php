@@ -55,14 +55,25 @@ $LaporanSuratJalan = &$Page;
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
 					</li>
+					<?php if(isset($_POST['srhDate'])) : ?>
+					<li class="d-inline-block">
+						<button type="button" class="btn btn-info btn-md p-2" onclick="exportTableToExcel('printTable')"><i class="mr-2 far fa-file-excel"></i>Export to Excel</button>
+					</li>
+					<?php endif; ?>
 				</ul>
 			</div>
 		</form>
 	</div>
 	<div class="row">
 	    <?php if(isset($_POST['srhDate'])) : ?>
-	    <table class="table ew-table table-bordered">
+	    <table class="table ew-table table-bordered" id="printTable">
 		  <thead>
+			<tr>
+				<th colspan="10" class="text-center">
+					<h4 class="my-2">Laporan Surat Jalan</h4>
+					<p class="mt-3">Berdasarkan: <?php echo ($_POST['kolom'] == 'tglsurat') ? "Tanggal Surat" : "Tanggal Kirim" ?><br />Periode: <?php echo tgl_indo($dateFrom) . ' - ' . tgl_indo($dateTo) ?></p>
+				</th>
+			</tr>
 		    <tr>
 		        <th class="text-center">No</th>
 		        <th>Tgl. Surat</th>
@@ -92,6 +103,40 @@ $LaporanSuratJalan = &$Page;
 	    	<?php endif; ?>
 		  </tbody>
 		</table>
+
+		<script>
+			function exportTableToExcel(tableID, filename = '') {
+				var downloadLink;
+				var dataType = 'data:application/vnd.ms-excel';
+				var tableSelect = document.getElementById(tableID);
+				var tableHTML = encodeURIComponent(tableSelect.outerHTML);
+				var d = new Date();
+
+				// Specify file name
+				filename = filename ? filename + '.xls' : 'Laporan Surat Jalan '+ d.toDateString() +'.xls';
+
+				// Create download link element
+				downloadLink = document.createElement("a");
+
+				document.body.appendChild(downloadLink);
+
+				if (navigator.msSaveOrOpenBlob) {
+					var blob = new Blob(['\ufeff', tableHTML], {
+						type: dataType
+					});
+					navigator.msSaveOrOpenBlob(blob, filename);
+				} else {
+					// Create a link to the file
+					downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+					// Setting the file name
+					downloadLink.download = filename;
+
+					//triggering the function
+					downloadLink.click();
+				}
+			}
+		</script>
 		<?php endif; ?>
 	</div>
 </div>

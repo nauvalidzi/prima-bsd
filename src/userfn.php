@@ -568,3 +568,9 @@ function rupiah($number) {
     }
     return number_format($number, 2, ",", ".");
 }
+
+function base_url() {
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https://" : "http://";
+    $script = str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+    return $protocol . $_SERVER['HTTP_HOST'] . $script;
+}

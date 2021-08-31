@@ -16,17 +16,21 @@ $LaporanInvoice = &$Page;
 		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
 		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
 
-		if ($_POST['status'] == 'paid') {
+		if ($_POST['status'] == 'lunas') {
 			$status = " AND invoice.aktif = 0";
-			$status_selected = "paid";
+			$status_selected = "lunas";
 		}
 
-		if ($_POST['status'] == 'unpaid') {
+		if ($_POST['status'] == 'belumlunas') {
 			$status = " AND invoice.aktif = 1";
-			$status_selected = "unpaid";
+			$status_selected = "belumlunas";
 		}
 
-		$tipepayment = ($_POST['payment'] != "all") ? " AND idtipepayment = ".$_POST['payment'] : "";
+		$tipepayment = null;
+		if ($_POST['payment'] != "all") {
+			$tipepayment = " AND idtipepayment = ".$_POST['payment'];
+			$payment_selected = ExecuteRow("SELECT payment FROM tipepayment WHERE id = {$_POST['payment']}");
+		}
 
 		$query = "SELECT tglinvoice, invoice.kode AS kode_invoice, `order`.kode AS kode_po, 
 					customer.nama as nama_customer, totaltagihan, sisabayar, invoice.aktif, tipepayment.payment
@@ -63,8 +67,8 @@ $LaporanInvoice = &$Page;
 						<label class="d-block">Status Invoice:</label>
 						<select name="status" class="form-control">
 							<option selected value="all" <?php echo ($status_selected == "all") ? "selected":""; ?>>-- All --</option>
-							<option value="paid" <?php echo ($status_selected == "paid") ? "selected":""; ?>>Lunas</option>
-							<option value="unpaid" <?php echo ($status_selected == "unpaid") ? "selected":""; ?>>Belum Lunas</option>
+							<option value="lunas" <?php echo ($status_selected == "lunas") ? "selected":""; ?>>Lunas</option>
+							<option value="belumlunas" <?php echo ($status_selected == "belumlunas") ? "selected":""; ?>>Belum Lunas</option>
 						</select>
 					</li>
 					<li class="d-inline-block">
@@ -78,14 +82,25 @@ $LaporanInvoice = &$Page;
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
 					</li>
+					<?php if(isset($_POST['srhDate'])) : ?>
+					<li class="d-inline-block">
+						<button type="button" class="btn btn-info btn-md p-2" onclick="exportTableToExcel('printTable')"><i class="mr-2 far fa-file-excel"></i>Export to Excel</button>
+					</li>
+					<?php endif; ?>
 				</ul>
 			</div>
 		</form>
 	</div>
 	<div class="row">
 	    <?php if(isset($_POST['srhDate'])) : ?>
-	    <table class="table ew-table table-bordered">
+	    <table class="table ew-table table-bordered" id="printTable">
 	    	<thead>
+				<tr>
+					<th colspan="10" class="text-center">
+						<h4 class="my-2">Laporan Invoice</h4>
+						<p class="mt-3">Pembayaran: <?php echo ($_POST['payment'] == "all") ? "All" : $payment_selected['payment']; ?><br />Status Invoice: <?php echo ucwords($status_selected) ?><br />Periode: <?php echo tgl_indo($dateFrom) . ' - ' . tgl_indo($dateTo) ?></p>
+					</th>
+				</tr>
 	    		<tr>
 	    			<th>No.</th>
 		    		<th>Tgl Invoice</th>
@@ -141,6 +156,39 @@ $LaporanInvoice = &$Page;
 	    	</tfoot>
 			<?php endif; ?>
 	    </table>
+		<script>
+			function exportTableToExcel(tableID, filename = '') {
+				var downloadLink;
+				var dataType = 'data:application/vnd.ms-excel';
+				var tableSelect = document.getElementById(tableID);
+				var tableHTML = encodeURIComponent(tableSelect.outerHTML);
+				var d = new Date();
+
+				// Specify file name
+				filename = filename ? filename + '.xls' : 'Laporan Invoice '+ d.toDateString() +'.xls';
+
+				// Create download link element
+				downloadLink = document.createElement("a");
+
+				document.body.appendChild(downloadLink);
+
+				if (navigator.msSaveOrOpenBlob) {
+					var blob = new Blob(['\ufeff', tableHTML], {
+						type: dataType
+					});
+					navigator.msSaveOrOpenBlob(blob, filename);
+				} else {
+					// Create a link to the file
+					downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+					// Setting the file name
+					downloadLink.download = filename;
+
+					//triggering the function
+					downloadLink.click();
+				}
+			}
+		</script>
 		<?php endif; ?>
 	</div>
 </div>
