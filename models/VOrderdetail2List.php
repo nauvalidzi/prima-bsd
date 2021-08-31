@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class VBonuscustomerList extends VBonuscustomer
+class VOrderdetail2List extends VOrderdetail2
 {
     use MessagesTrait;
 
@@ -18,16 +18,16 @@ class VBonuscustomerList extends VBonuscustomer
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'v_bonuscustomer';
+    public $TableName = 'v_orderdetail';
 
     // Page object name
-    public $PageObjName = "VBonuscustomerList";
+    public $PageObjName = "VOrderdetail2List";
 
     // Rendering View
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fv_bonuscustomerlist";
+    public $FormName = "fv_orderdetail2list";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -165,9 +165,9 @@ class VBonuscustomerList extends VBonuscustomer
         // Parent constuctor
         parent::__construct();
 
-        // Table object (v_bonuscustomer)
-        if (!isset($GLOBALS["v_bonuscustomer"]) || get_class($GLOBALS["v_bonuscustomer"]) == PROJECT_NAMESPACE . "v_bonuscustomer") {
-            $GLOBALS["v_bonuscustomer"] = &$this;
+        // Table object (v_orderdetail2)
+        if (!isset($GLOBALS["v_orderdetail2"]) || get_class($GLOBALS["v_orderdetail2"]) == PROJECT_NAMESPACE . "v_orderdetail2") {
+            $GLOBALS["v_orderdetail2"] = &$this;
         }
 
         // Page URL
@@ -181,16 +181,16 @@ class VBonuscustomerList extends VBonuscustomer
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "VBonuscustomerAdd";
+        $this->AddUrl = "VOrderdetail2Add";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "VBonuscustomerDelete";
-        $this->MultiUpdateUrl = "VBonuscustomerUpdate";
+        $this->MultiDeleteUrl = "VOrderdetail2Delete";
+        $this->MultiUpdateUrl = "VOrderdetail2Update";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'v_bonuscustomer');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'v_orderdetail');
         }
 
         // Start timer
@@ -230,7 +230,7 @@ class VBonuscustomerList extends VBonuscustomer
 
         // Filter options
         $this->FilterOptions = new ListOptions("div");
-        $this->FilterOptions->TagClassName = "ew-filter-option fv_bonuscustomerlistsrch";
+        $this->FilterOptions->TagClassName = "ew-filter-option fv_orderdetail2listsrch";
 
         // List actions
         $this->ListActions = new ListActions();
@@ -305,7 +305,7 @@ class VBonuscustomerList extends VBonuscustomer
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("v_bonuscustomer"));
+                $doc = new $class(Container("v_orderdetail2"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -426,6 +426,7 @@ class VBonuscustomerList extends VBonuscustomer
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -437,6 +438,9 @@ class VBonuscustomerList extends VBonuscustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -564,9 +568,12 @@ class VBonuscustomerList extends VBonuscustomer
 
         // Set up list options
         $this->setupListOptions();
-        $this->idpegawai->Visible = false;
-        $this->idcustomer->setVisibility();
-        $this->blackbonus->setVisibility();
+        $this->id->setVisibility();
+        $this->nama->setVisibility();
+        $this->idorder->setVisibility();
+        $this->sisa->setVisibility();
+        $this->aktif->setVisibility();
+        $this->harga->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -594,8 +601,6 @@ class VBonuscustomerList extends VBonuscustomer
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idpegawai);
-        $this->setupLookupOptions($this->idcustomer);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -859,9 +864,12 @@ class VBonuscustomerList extends VBonuscustomer
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
-        $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
-        $filterList = Concat($filterList, $this->blackbonus->AdvancedSearch->toJson(), ","); // Field blackbonus
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
+        $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
+        $filterList = Concat($filterList, $this->sisa->AdvancedSearch->toJson(), ","); // Field sisa
+        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
+        $filterList = Concat($filterList, $this->harga->AdvancedSearch->toJson(), ","); // Field harga
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -883,7 +891,7 @@ class VBonuscustomerList extends VBonuscustomer
         global $UserProfile;
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fv_bonuscustomerlistsrch", $filters);
+            $UserProfile->setSearchFilters(CurrentUserName(), "fv_orderdetail2listsrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -902,29 +910,53 @@ class VBonuscustomerList extends VBonuscustomer
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field idpegawai
-        $this->idpegawai->AdvancedSearch->SearchValue = @$filter["x_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator = @$filter["z_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchCondition = @$filter["v_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchValue2 = @$filter["y_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator2 = @$filter["w_idpegawai"];
-        $this->idpegawai->AdvancedSearch->save();
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
 
-        // Field idcustomer
-        $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchCondition = @$filter["v_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
-        $this->idcustomer->AdvancedSearch->save();
+        // Field nama
+        $this->nama->AdvancedSearch->SearchValue = @$filter["x_nama"];
+        $this->nama->AdvancedSearch->SearchOperator = @$filter["z_nama"];
+        $this->nama->AdvancedSearch->SearchCondition = @$filter["v_nama"];
+        $this->nama->AdvancedSearch->SearchValue2 = @$filter["y_nama"];
+        $this->nama->AdvancedSearch->SearchOperator2 = @$filter["w_nama"];
+        $this->nama->AdvancedSearch->save();
 
-        // Field blackbonus
-        $this->blackbonus->AdvancedSearch->SearchValue = @$filter["x_blackbonus"];
-        $this->blackbonus->AdvancedSearch->SearchOperator = @$filter["z_blackbonus"];
-        $this->blackbonus->AdvancedSearch->SearchCondition = @$filter["v_blackbonus"];
-        $this->blackbonus->AdvancedSearch->SearchValue2 = @$filter["y_blackbonus"];
-        $this->blackbonus->AdvancedSearch->SearchOperator2 = @$filter["w_blackbonus"];
-        $this->blackbonus->AdvancedSearch->save();
+        // Field idorder
+        $this->idorder->AdvancedSearch->SearchValue = @$filter["x_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator = @$filter["z_idorder"];
+        $this->idorder->AdvancedSearch->SearchCondition = @$filter["v_idorder"];
+        $this->idorder->AdvancedSearch->SearchValue2 = @$filter["y_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator2 = @$filter["w_idorder"];
+        $this->idorder->AdvancedSearch->save();
+
+        // Field sisa
+        $this->sisa->AdvancedSearch->SearchValue = @$filter["x_sisa"];
+        $this->sisa->AdvancedSearch->SearchOperator = @$filter["z_sisa"];
+        $this->sisa->AdvancedSearch->SearchCondition = @$filter["v_sisa"];
+        $this->sisa->AdvancedSearch->SearchValue2 = @$filter["y_sisa"];
+        $this->sisa->AdvancedSearch->SearchOperator2 = @$filter["w_sisa"];
+        $this->sisa->AdvancedSearch->save();
+
+        // Field aktif
+        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
+        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
+        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
+        $this->aktif->AdvancedSearch->save();
+
+        // Field harga
+        $this->harga->AdvancedSearch->SearchValue = @$filter["x_harga"];
+        $this->harga->AdvancedSearch->SearchOperator = @$filter["z_harga"];
+        $this->harga->AdvancedSearch->SearchCondition = @$filter["v_harga"];
+        $this->harga->AdvancedSearch->SearchValue2 = @$filter["y_harga"];
+        $this->harga->AdvancedSearch->SearchOperator2 = @$filter["w_harga"];
+        $this->harga->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -933,8 +965,7 @@ class VBonuscustomerList extends VBonuscustomer
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->idpegawai, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->idcustomer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nama, $arKeywords, $type);
         return $where;
     }
 
@@ -1097,8 +1128,12 @@ class VBonuscustomerList extends VBonuscustomer
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->blackbonus); // blackbonus
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->nama); // nama
+            $this->updateSort($this->idorder); // idorder
+            $this->updateSort($this->sisa); // sisa
+            $this->updateSort($this->aktif); // aktif
+            $this->updateSort($this->harga); // harga
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1138,9 +1173,12 @@ class VBonuscustomerList extends VBonuscustomer
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->idpegawai->setSort("");
-                $this->idcustomer->setSort("");
-                $this->blackbonus->setSort("");
+                $this->id->setSort("");
+                $this->nama->setSort("");
+                $this->idorder->setSort("");
+                $this->sisa->setSort("");
+                $this->aktif->setSort("");
+                $this->harga->setSort("");
             }
 
             // Reset start position
@@ -1160,34 +1198,11 @@ class VBonuscustomerList extends VBonuscustomer
         $item->OnLeft = false;
         $item->Visible = false;
 
-        // "detail_redeembonus"
-        $item = &$this->ListOptions->add("detail_redeembonus");
+        // "view"
+        $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'redeembonus') && !$this->ShowMultipleDetails;
+        $item->Visible = $Security->canView();
         $item->OnLeft = false;
-        $item->ShowInButtonGroup = false;
-
-        // "detail_v_bonuscustomer_detail"
-        $item = &$this->ListOptions->add("detail_v_bonuscustomer_detail");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'v_bonuscustomer_detail') && !$this->ShowMultipleDetails;
-        $item->OnLeft = false;
-        $item->ShowInButtonGroup = false;
-
-        // Multiple details
-        if ($this->ShowMultipleDetails) {
-            $item = &$this->ListOptions->add("details");
-            $item->CssClass = "text-nowrap";
-            $item->Visible = $this->ShowMultipleDetails;
-            $item->OnLeft = false;
-            $item->ShowInButtonGroup = false;
-        }
-
-        // Set up detail pages
-        $pages = new SubPages();
-        $pages->add("redeembonus");
-        $pages->add("v_bonuscustomer_detail");
-        $this->DetailPages = $pages;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -1231,7 +1246,15 @@ class VBonuscustomerList extends VBonuscustomer
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") { // View mode
+        if ($this->CurrentMode == "view") {
+            // "view"
+            $opt = $this->ListOptions["view"];
+            $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
+            if ($Security->canView()) {
+                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
         } // End View mode
 
         // Set up list action buttons
@@ -1264,69 +1287,10 @@ class VBonuscustomerList extends VBonuscustomer
                 $opt->Visible = true;
             }
         }
-        $detailViewTblVar = "";
-        $detailCopyTblVar = "";
-        $detailEditTblVar = "";
-
-        // "detail_redeembonus"
-        $opt = $this->ListOptions["detail_redeembonus"];
-        if ($Security->allowList(CurrentProjectID() . 'redeembonus') && $this->showOptionLink()) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("redeembonus", "TblCaption");
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("RedeembonusList?" . Config("TABLE_SHOW_MASTER") . "=v_bonuscustomer&" . GetForeignKeyUrl("fk_idcustomer", $this->idcustomer->CurrentValue) . "") . "\">" . $body . "</a>";
-            $links = "";
-            $detailPage = Container("RedeembonusGrid");
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-            }
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-            $opt->Body = $body;
-            if ($this->ShowMultipleDetails) {
-                $opt->Visible = false;
-            }
-        }
-
-        // "detail_v_bonuscustomer_detail"
-        $opt = $this->ListOptions["detail_v_bonuscustomer_detail"];
-        if ($Security->allowList(CurrentProjectID() . 'v_bonuscustomer_detail') && $this->showOptionLink()) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("v_bonuscustomer_detail", "TblCaption");
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("VBonuscustomerDetailList?" . Config("TABLE_SHOW_MASTER") . "=v_bonuscustomer&" . GetForeignKeyUrl("fk_idcustomer", $this->idcustomer->CurrentValue) . "") . "\">" . $body . "</a>";
-            $links = "";
-            $detailPage = Container("VBonuscustomerDetailGrid");
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-            }
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-            $opt->Body = $body;
-            if ($this->ShowMultipleDetails) {
-                $opt->Visible = false;
-            }
-        }
-        if ($this->ShowMultipleDetails) {
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
-            $links = "";
-            if ($detailViewTblVar != "") {
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailViewTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            }
-            if ($detailEditTblVar != "") {
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailEditTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            }
-            if ($detailCopyTblVar != "") {
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode($this->GetCopyUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailCopyTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
-            }
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-master-detail\" title=\"" . HtmlTitle($Language->phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->phrase("MultipleMasterDetails") . "</button>";
-                $body .= "<ul class=\"dropdown-menu ew-menu\">" . $links . "</ul>";
-            }
-            $body .= "</div>";
-            // Multiple details
-            $opt = $this->ListOptions["details"];
-            $opt->Body = $body;
-        }
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1355,10 +1319,10 @@ class VBonuscustomerList extends VBonuscustomer
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fv_bonuscustomerlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fv_orderdetail2listsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fv_bonuscustomerlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fv_orderdetail2listsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1382,7 +1346,7 @@ class VBonuscustomerList extends VBonuscustomer
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fv_bonuscustomerlist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
+                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fv_orderdetail2list},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1492,96 +1456,6 @@ class VBonuscustomerList extends VBonuscustomer
     protected function renderListOptionsExt()
     {
         global $Security, $Language;
-        $links = "";
-        $btngrps = "";
-        $sqlwrk = "`idcustomer`=" . AdjustSql($this->idcustomer->CurrentValue, $this->Dbid) . "";
-
-        // Column "detail_redeembonus"
-        if ($this->DetailPages && $this->DetailPages["redeembonus"] && $this->DetailPages["redeembonus"]->Visible) {
-            $link = "";
-            $option = $this->ListOptions["detail_redeembonus"];
-            $url = "RedeembonusPreview?t=v_bonuscustomer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"redeembonus\" data-url=\"" . $url . "\">";
-            if ($Security->allowList(CurrentProjectID() . 'v_bonuscustomer')) {
-                $label = $Language->TablePhrase("redeembonus", "TblCaption");
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"redeembonus\" data-url=\"" . $url . "\">" . $label . "</a></li>";
-                $links .= $link;
-                $detaillnk = JsEncodeAttribute("RedeembonusList?" . Config("TABLE_SHOW_MASTER") . "=v_bonuscustomer&" . GetForeignKeyUrl("fk_idcustomer", $this->idcustomer->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("redeembonus", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
-            }
-            $detailPageObj = Container("RedeembonusGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'v_bonuscustomer')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=redeembonus");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            $btngrp .= "</div>";
-            if ($link != "") {
-                $btngrps .= $btngrp;
-                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
-            }
-        }
-        $sqlwrk = "`idcustomer`=" . AdjustSql($this->idcustomer->CurrentValue, $this->Dbid) . "";
-
-        // Column "detail_v_bonuscustomer_detail"
-        if ($this->DetailPages && $this->DetailPages["v_bonuscustomer_detail"] && $this->DetailPages["v_bonuscustomer_detail"]->Visible) {
-            $link = "";
-            $option = $this->ListOptions["detail_v_bonuscustomer_detail"];
-            $url = "VBonuscustomerDetailPreview?t=v_bonuscustomer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"v_bonuscustomer_detail\" data-url=\"" . $url . "\">";
-            if ($Security->allowList(CurrentProjectID() . 'v_bonuscustomer')) {
-                $label = $Language->TablePhrase("v_bonuscustomer_detail", "TblCaption");
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"v_bonuscustomer_detail\" data-url=\"" . $url . "\">" . $label . "</a></li>";
-                $links .= $link;
-                $detaillnk = JsEncodeAttribute("VBonuscustomerDetailList?" . Config("TABLE_SHOW_MASTER") . "=v_bonuscustomer&" . GetForeignKeyUrl("fk_idcustomer", $this->idcustomer->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("v_bonuscustomer_detail", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
-            }
-            $detailPageObj = Container("VBonuscustomerDetailGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'v_bonuscustomer')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=v_bonuscustomer_detail");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            $btngrp .= "</div>";
-            if ($link != "") {
-                $btngrps .= $btngrp;
-                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
-            }
-        }
-
-        // Hide detail items if necessary
-        $this->ListOptions->hideDetailItemsForDropDown();
-
-        // Column "preview"
-        $option = $this->ListOptions["preview"];
-        if (!$option) { // Add preview column
-            $option = &$this->ListOptions->add("preview");
-            $option->OnLeft = false;
-            if ($option->OnLeft) {
-                $option->moveTo($this->ListOptions->itemPos("checkbox") + 1);
-            } else {
-                $option->moveTo($this->ListOptions->itemPos("checkbox"));
-            }
-            $option->Visible = !($this->isExport() || $this->isGridAdd() || $this->isGridEdit());
-            $option->ShowInDropDown = false;
-            $option->ShowInButtonGroup = false;
-        }
-        if ($option) {
-            $option->Body = "<i class=\"ew-preview-row-btn ew-icon icon-expand\"></i>";
-            $option->Body .= "<div class=\"d-none ew-preview\">" . $links . $btngrps . "</div>";
-            if ($option->Visible) {
-                $option->Visible = $links != "";
-            }
-        }
-
-        // Column "details" (Multiple details)
-        $option = $this->ListOptions["details"];
-        if ($option) {
-            $option->Body .= "<div class=\"d-none ew-preview\">" . $links . $btngrps . "</div>";
-            if ($option->Visible) {
-                $option->Visible = $links != "";
-            }
-        }
     }
 
     // Load basic search values
@@ -1662,25 +1536,41 @@ class VBonuscustomerList extends VBonuscustomer
         if (!$rs) {
             return;
         }
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->blackbonus->setDbValue($row['blackbonus']);
+        $this->id->setDbValue($row['id']);
+        $this->nama->setDbValue($row['nama']);
+        $this->idorder->setDbValue($row['idorder']);
+        $this->sisa->setDbValue($row['sisa']);
+        $this->aktif->setDbValue($row['aktif']);
+        $this->harga->setDbValue($row['harga']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['idpegawai'] = null;
-        $row['idcustomer'] = null;
-        $row['blackbonus'] = null;
+        $row['id'] = null;
+        $row['nama'] = null;
+        $row['idorder'] = null;
+        $row['sisa'] = null;
+        $row['aktif'] = null;
+        $row['harga'] = null;
         return $row;
     }
 
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -1696,80 +1586,83 @@ class VBonuscustomerList extends VBonuscustomer
         $this->InlineCopyUrl = $this->getInlineCopyUrl();
         $this->DeleteUrl = $this->getDeleteUrl();
 
-        // Convert decimal values if posted back
-        if ($this->blackbonus->FormValue == $this->blackbonus->CurrentValue && is_numeric(ConvertToFloatString($this->blackbonus->CurrentValue))) {
-            $this->blackbonus->CurrentValue = ConvertToFloatString($this->blackbonus->CurrentValue);
-        }
-
         // Call Row_Rendering event
         $this->rowRendering();
 
         // Common render codes for all row types
 
-        // idpegawai
+        // id
 
-        // idcustomer
+        // nama
 
-        // blackbonus
+        // idorder
+
+        // sisa
+
+        // aktif
+
+        // harga
         if ($this->RowType == ROWTYPE_VIEW) {
-            // idpegawai
-            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
-            if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                    } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                    }
-                }
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
+            // nama
+            $this->nama->ViewValue = $this->nama->CurrentValue;
+            $this->nama->ViewCustomAttributes = "";
+
+            // idorder
+            $this->idorder->ViewValue = $this->idorder->CurrentValue;
+            $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
+            $this->idorder->ViewCustomAttributes = "";
+
+            // sisa
+            $this->sisa->ViewValue = $this->sisa->CurrentValue;
+            $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
+            $this->sisa->ViewCustomAttributes = "";
+
+            // aktif
+            if (ConvertToBool($this->aktif->CurrentValue)) {
+                $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
             } else {
-                $this->idpegawai->ViewValue = null;
+                $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
             }
-            $this->idpegawai->ViewCustomAttributes = "";
+            $this->aktif->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
+            // harga
+            $this->harga->ViewValue = $this->harga->CurrentValue;
+            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
+            $this->harga->ViewCustomAttributes = "";
 
-            // blackbonus
-            $this->blackbonus->ViewValue = $this->blackbonus->CurrentValue;
-            $this->blackbonus->ViewValue = FormatCurrency($this->blackbonus->ViewValue, 2, -2, -2, -2);
-            $this->blackbonus->ViewCustomAttributes = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // nama
+            $this->nama->LinkCustomAttributes = "";
+            $this->nama->HrefValue = "";
+            $this->nama->TooltipValue = "";
 
-            // blackbonus
-            $this->blackbonus->LinkCustomAttributes = "";
-            $this->blackbonus->HrefValue = "";
-            $this->blackbonus->TooltipValue = "";
+            // idorder
+            $this->idorder->LinkCustomAttributes = "";
+            $this->idorder->HrefValue = "";
+            $this->idorder->TooltipValue = "";
+
+            // sisa
+            $this->sisa->LinkCustomAttributes = "";
+            $this->sisa->HrefValue = "";
+            $this->sisa->TooltipValue = "";
+
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+            $this->aktif->TooltipValue = "";
+
+            // harga
+            $this->harga->LinkCustomAttributes = "";
+            $this->harga->HrefValue = "";
+            $this->harga->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1789,7 +1682,7 @@ class VBonuscustomerList extends VBonuscustomer
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fv_bonuscustomerlistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fv_orderdetail2listsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button
@@ -1817,16 +1710,6 @@ class VBonuscustomerList extends VBonuscustomer
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->idpegawai->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -1850,9 +1733,7 @@ class VBonuscustomerList extends VBonuscustomer
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idpegawai":
-                    break;
-                case "x_idcustomer":
+                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";

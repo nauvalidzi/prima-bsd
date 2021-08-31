@@ -3,31 +3,31 @@
 namespace PHPMaker2021\distributor;
 
 // Page object
-$VStockList = &$Page;
+$VOrderdetail2List = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentForm, currentPageID;
-var fv_stocklist;
+var fv_orderdetail2list;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object
     currentPageID = ew.PAGE_ID = "list";
-    fv_stocklist = currentForm = new ew.Form("fv_stocklist", "list");
-    fv_stocklist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
-    loadjs.done("fv_stocklist");
+    fv_orderdetail2list = currentForm = new ew.Form("fv_orderdetail2list", "list");
+    fv_orderdetail2list.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
+    loadjs.done("fv_orderdetail2list");
 });
-var fv_stocklistsrch, currentSearchForm, currentAdvancedSearchForm;
+var fv_orderdetail2listsrch, currentSearchForm, currentAdvancedSearchForm;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object for search
-    fv_stocklistsrch = currentSearchForm = new ew.Form("fv_stocklistsrch");
+    fv_orderdetail2listsrch = currentSearchForm = new ew.Form("fv_orderdetail2listsrch");
 
     // Dynamic selection lists
 
     // Filters
-    fv_stocklistsrch.filterList = <?= $Page->getFilterList() ?>;
-    loadjs.done("fv_stocklistsrch");
+    fv_orderdetail2listsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fv_orderdetail2listsrch");
 });
 </script>
 <style>
@@ -82,10 +82,10 @@ $Page->renderOtherOptions();
 ?>
 <?php if ($Security->canSearch()) { ?>
 <?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
-<form name="fv_stocklistsrch" id="fv_stocklistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
-<div id="fv_stocklistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<form name="fv_orderdetail2listsrch" id="fv_orderdetail2listsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fv_orderdetail2listsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="v_stock">
+<input type="hidden" name="t" value="v_orderdetail2">
     <div class="ew-extended-search">
 <div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
     <div class="ew-quick-search input-group">
@@ -113,16 +113,16 @@ $Page->renderOtherOptions();
 $Page->showMessage();
 ?>
 <?php if ($Page->TotalRecords > 0 || $Page->CurrentAction) { ?>
-<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> v_stock">
-<form name="fv_stocklist" id="fv_stocklist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> v_orderdetail2">
+<form name="fv_orderdetail2list" id="fv_orderdetail2list" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="v_stock">
-<div id="gmp_v_stock" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<input type="hidden" name="t" value="v_orderdetail2">
+<div id="gmp_v_orderdetail2" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_v_stocklist" class="table ew-table"><!-- .ew-table -->
+<table id="tbl_v_orderdetail2list" class="table ew-table"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -135,29 +135,23 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->id->Visible) { // id ?>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_v_orderdetail2_id" class="v_orderdetail2_id"><?= $Page->renderSort($Page->id) ?></div></th>
+<?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
-        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_v_stock_nama" class="v_stock_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
+        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_v_orderdetail2_nama" class="v_orderdetail2_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
+<?php } ?>
+<?php if ($Page->idorder->Visible) { // idorder ?>
+        <th data-name="idorder" class="<?= $Page->idorder->headerCellClass() ?>"><div id="elh_v_orderdetail2_idorder" class="v_orderdetail2_idorder"><?= $Page->renderSort($Page->idorder) ?></div></th>
+<?php } ?>
+<?php if ($Page->sisa->Visible) { // sisa ?>
+        <th data-name="sisa" class="<?= $Page->sisa->headerCellClass() ?>"><div id="elh_v_orderdetail2_sisa" class="v_orderdetail2_sisa"><?= $Page->renderSort($Page->sisa) ?></div></th>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+        <th data-name="aktif" class="<?= $Page->aktif->headerCellClass() ?>"><div id="elh_v_orderdetail2_aktif" class="v_orderdetail2_aktif"><?= $Page->renderSort($Page->aktif) ?></div></th>
 <?php } ?>
 <?php if ($Page->harga->Visible) { // harga ?>
-        <th data-name="harga" class="<?= $Page->harga->headerCellClass() ?>"><div id="elh_v_stock_harga" class="v_stock_harga"><?= $Page->renderSort($Page->harga) ?></div></th>
-<?php } ?>
-<?php if ($Page->jumlahorder->Visible) { // jumlahorder ?>
-        <th data-name="jumlahorder" class="<?= $Page->jumlahorder->headerCellClass() ?>"><div id="elh_v_stock_jumlahorder" class="v_stock_jumlahorder"><?= $Page->renderSort($Page->jumlahorder) ?></div></th>
-<?php } ?>
-<?php if ($Page->bonus->Visible) { // bonus ?>
-        <th data-name="bonus" class="<?= $Page->bonus->headerCellClass() ?>"><div id="elh_v_stock_bonus" class="v_stock_bonus"><?= $Page->renderSort($Page->bonus) ?></div></th>
-<?php } ?>
-<?php if ($Page->jumlah->Visible) { // jumlah ?>
-        <th data-name="jumlah" class="<?= $Page->jumlah->headerCellClass() ?>"><div id="elh_v_stock_jumlah" class="v_stock_jumlah"><?= $Page->renderSort($Page->jumlah) ?></div></th>
-<?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_v_stock_idcustomer" class="v_stock_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
-<?php } ?>
-<?php if ($Page->kodepo->Visible) { // kodepo ?>
-        <th data-name="kodepo" class="<?= $Page->kodepo->headerCellClass() ?>"><div id="elh_v_stock_kodepo" class="v_stock_kodepo"><?= $Page->renderSort($Page->kodepo) ?></div></th>
-<?php } ?>
-<?php if ($Page->tanggalpo->Visible) { // tanggalpo ?>
-        <th data-name="tanggalpo" class="<?= $Page->tanggalpo->headerCellClass() ?>"><div id="elh_v_stock_tanggalpo" class="v_stock_tanggalpo"><?= $Page->renderSort($Page->tanggalpo) ?></div></th>
+        <th data-name="harga" class="<?= $Page->harga->headerCellClass() ?>"><div id="elh_v_orderdetail2_harga" class="v_orderdetail2_harga"><?= $Page->renderSort($Page->harga) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -213,7 +207,7 @@ while ($Page->RecordCount < $Page->StopRecord) {
         $Page->RowType = ROWTYPE_VIEW; // Render view
 
         // Set up row id / data-rowindex
-        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_v_stock", "data-rowtype" => $Page->RowType]);
+        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_v_orderdetail2", "data-rowtype" => $Page->RowType]);
 
         // Render row
         $Page->renderRow();
@@ -226,67 +220,54 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->id->Visible) { // id ?>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_orderdetail2_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->nama->Visible) { // nama ?>
         <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_nama">
+<span id="el<?= $Page->RowCount ?>_v_orderdetail2_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->idorder->Visible) { // idorder ?>
+        <td data-name="idorder" <?= $Page->idorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_orderdetail2_idorder">
+<span<?= $Page->idorder->viewAttributes() ?>>
+<?= $Page->idorder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->sisa->Visible) { // sisa ?>
+        <td data-name="sisa" <?= $Page->sisa->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_orderdetail2_sisa">
+<span<?= $Page->sisa->viewAttributes() ?>>
+<?= $Page->sisa->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->aktif->Visible) { // aktif ?>
+        <td data-name="aktif" <?= $Page->aktif->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_orderdetail2_aktif">
+<span<?= $Page->aktif->viewAttributes() ?>>
+<div class="custom-control custom-checkbox d-inline-block">
+    <input type="checkbox" id="x_aktif_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->aktif->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->aktif->CurrentValue)) { ?> checked<?php } ?>>
+    <label class="custom-control-label" for="x_aktif_<?= $Page->RowCount ?>"></label>
+</div></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->harga->Visible) { // harga ?>
         <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_harga">
+<span id="el<?= $Page->RowCount ?>_v_orderdetail2_harga">
 <span<?= $Page->harga->viewAttributes() ?>>
 <?= $Page->harga->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->jumlahorder->Visible) { // jumlahorder ?>
-        <td data-name="jumlahorder" <?= $Page->jumlahorder->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_jumlahorder">
-<span<?= $Page->jumlahorder->viewAttributes() ?>>
-<?= $Page->jumlahorder->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->bonus->Visible) { // bonus ?>
-        <td data-name="bonus" <?= $Page->bonus->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_bonus">
-<span<?= $Page->bonus->viewAttributes() ?>>
-<?= $Page->bonus->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->jumlah->Visible) { // jumlah ?>
-        <td data-name="jumlah" <?= $Page->jumlah->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_jumlah">
-<span<?= $Page->jumlah->viewAttributes() ?>>
-<?= $Page->jumlah->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->kodepo->Visible) { // kodepo ?>
-        <td data-name="kodepo" <?= $Page->kodepo->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_kodepo">
-<span<?= $Page->kodepo->viewAttributes() ?>>
-<?= $Page->kodepo->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->tanggalpo->Visible) { // tanggalpo ?>
-        <td data-name="tanggalpo" <?= $Page->tanggalpo->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stock_tanggalpo">
-<span<?= $Page->tanggalpo->viewAttributes() ?>>
-<?= $Page->tanggalpo->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -345,7 +326,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("v_stock");
+    ew.addEventHandlers("v_orderdetail2");
 });
 </script>
 <script>

@@ -565,14 +565,14 @@ class VStockList extends VStock
 
         // Set up list options
         $this->setupListOptions();
-        $this->idorder_detail->setVisibility();
+        $this->idorder_detail->Visible = false;
         $this->nama->setVisibility();
         $this->harga->setVisibility();
         $this->jumlahorder->setVisibility();
         $this->bonus->setVisibility();
         $this->jumlah->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idorder->setVisibility();
+        $this->idorder->Visible = false;
         $this->kodepo->setVisibility();
         $this->tanggalpo->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -602,6 +602,7 @@ class VStockList extends VStock
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idcustomer);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -1166,14 +1167,12 @@ class VStockList extends VStock
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idorder_detail); // idorder_detail
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->harga); // harga
             $this->updateSort($this->jumlahorder); // jumlahorder
             $this->updateSort($this->bonus); // bonus
             $this->updateSort($this->jumlah); // jumlah
             $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->idorder); // idorder
             $this->updateSort($this->kodepo); // kodepo
             $this->updateSort($this->tanggalpo); // tanggalpo
             $this->setStartRecordNumber(1); // Reset start position
@@ -1682,7 +1681,24 @@ class VStockList extends VStock
 
             // idcustomer
             $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idcustomer->ViewValue = null;
+            }
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idorder
@@ -1698,11 +1714,6 @@ class VStockList extends VStock
             $this->tanggalpo->ViewValue = $this->tanggalpo->CurrentValue;
             $this->tanggalpo->ViewValue = FormatDateTime($this->tanggalpo->ViewValue, 0);
             $this->tanggalpo->ViewCustomAttributes = "";
-
-            // idorder_detail
-            $this->idorder_detail->LinkCustomAttributes = "";
-            $this->idorder_detail->HrefValue = "";
-            $this->idorder_detail->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";
@@ -1733,11 +1744,6 @@ class VStockList extends VStock
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
-
-            // idorder
-            $this->idorder->LinkCustomAttributes = "";
-            $this->idorder->HrefValue = "";
-            $this->idorder->TooltipValue = "";
 
             // kodepo
             $this->kodepo->LinkCustomAttributes = "";
@@ -1818,6 +1824,8 @@ class VStockList extends VStock
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idcustomer":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

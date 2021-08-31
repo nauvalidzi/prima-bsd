@@ -1112,7 +1112,7 @@
       <phrase id="menutext" value="Stok" />
     </menu>
     <menu id="344">
-      <phrase id="menutext" value="Stock View" />
+      <phrase id="menutext" value="Stok" />
     </menu>
     <menu id="570">
       <phrase id="menutext" value="Pengaturan" />
@@ -2628,36 +2628,36 @@
       </field>
     </table>
     <table id="v_stock">
-      <phrase id="tblcaption" value="v stock" />
+      <phrase id="tblcaption" value="Stok" />
       <field id="idorder_detail">
         <phrase id="fldcaption" value="idorder detail" />
       </field>
       <field id="nama">
-        <phrase id="fldcaption" value="nama" />
+        <phrase id="fldcaption" value="Produk" />
       </field>
       <field id="harga">
-        <phrase id="fldcaption" value="harga" />
+        <phrase id="fldcaption" value="Harga Satuan" />
       </field>
       <field id="jumlahorder">
-        <phrase id="fldcaption" value="jumlahorder" />
+        <phrase id="fldcaption" value="Jumlah Order" />
       </field>
       <field id="bonus">
-        <phrase id="fldcaption" value="bonus" />
+        <phrase id="fldcaption" value="Bonus" />
       </field>
       <field id="jumlah">
-        <phrase id="fldcaption" value="jumlah" />
+        <phrase id="fldcaption" value="Jumlah Stok" />
       </field>
       <field id="idcustomer">
-        <phrase id="fldcaption" value="idcustomer" />
+        <phrase id="fldcaption" value="Customer" />
       </field>
       <field id="idorder">
-        <phrase id="fldcaption" value="idorder" />
+        <phrase id="fldcaption" value="ID Order" />
       </field>
       <field id="kodepo">
-        <phrase id="fldcaption" value="kodepo" />
+        <phrase id="fldcaption" value="Kode PO" />
       </field>
       <field id="tanggalpo">
-        <phrase id="fldcaption" value="tanggalpo" />
+        <phrase id="fldcaption" value="Tanggal PO" />
       </field>
     </table>
     <table id="p_invoice">

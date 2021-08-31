@@ -268,7 +268,7 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["order","order","Order",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","OrderList"],
     ["order_detail","order_detail","Detail Order",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","OrderDetailList"],
     ["v_orderdetail","v_orderdetail","v orderdetail",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VOrderdetailList"],
-    ["v_stock","v_stock","Stock",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VStockList"],
+    ["v_stock","v_stock","Stok",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VStockList"],
     ["p_invoice.php","p_invoice","Print Invoice",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PInvoice"],
     ["v_piutang","v_piutang","Piutang Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VPiutangList"],
     ["deliveryorder","deliveryorder","Delivery Order",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","DeliveryorderList"],
