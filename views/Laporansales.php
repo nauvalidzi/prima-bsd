@@ -88,7 +88,7 @@ $Laporansales = &$Page;
     </div>
     <div class="row">
     	<?php if(isset($_POST['srhDate'])) : ?>
-		<table class="table ew-table table-bordered" class="printTable">
+		<table class="table ew-table table-bordered" id="printTable">
 		<?php if ($_POST['marketing'] == "all"): ?>
 			<thead>
 				<tr>
