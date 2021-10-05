@@ -227,7 +227,13 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_do_stock","1","288"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}po_limit_approval_detail","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}po_limit_approval_detail","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}po_limit_approval_detail","1","288"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}po_limit_approval_detail","1","288"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}kpi_marketing","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}kpi_marketing","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}kpi_marketing","1","288"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_kpi_sales.php","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_kpi_sales.php","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_kpi_sales.php","1","0"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Manajemen User",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -301,4 +307,6 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["laporan_pembayaran.php","laporan_pembayaran","Laporan Pembayaran",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanPembayaran"],
     ["po_limit_approval","po_limit_approval","P.O. Limit Approval",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PoLimitApprovalList"],
     ["v_do_stock","v_do_stock","v do stock",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VDoStockList"],
-    ["po_limit_approval_detail","po_limit_approval_detail","P.O. Limit Approval Detail",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PoLimitApprovalDetailList"]];
+    ["po_limit_approval_detail","po_limit_approval_detail","P.O. Limit Approval Detail",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PoLimitApprovalDetailList"],
+    ["kpi_marketing","kpi_marketing","KPI Marketing",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","KpiMarketingList"],
+    ["laporan_kpi_sales.php","laporan_kpi_sales","Laporan KPI Sales",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanKpiSales"]];

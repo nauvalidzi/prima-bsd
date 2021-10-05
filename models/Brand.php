@@ -88,6 +88,7 @@ class Brand extends DbTable
         // idcustomer
         $this->idcustomer = new DbField('brand', 'brand', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text

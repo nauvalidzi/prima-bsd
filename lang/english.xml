@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/9/13" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/10/5" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1105,6 +1105,9 @@
     <menu id="587">
       <phrase id="menutext" value="Laporan Pembayaran" />
     </menu>
+    <menu id="592">
+      <phrase id="menutext" value="Laporan KPI Sales" />
+    </menu>
     <menu id="567">
       <phrase id="menutext" value="Stok" />
     </menu>
@@ -1113,6 +1116,9 @@
     </menu>
     <menu id="344">
       <phrase id="menutext" value="Stok" />
+    </menu>
+    <menu id="591">
+      <phrase id="menutext" value="KPI Marketing" />
     </menu>
     <menu id="570">
       <phrase id="menutext" value="Pengaturan" />
@@ -3737,6 +3743,27 @@
       <field id="created_at">
         <phrase id="fldcaption" value="Created At" />
       </field>
+    </table>
+    <table id="kpi_marketing">
+      <phrase id="tblcaption" value="KPI Marketing" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="idpegawai">
+        <phrase id="fldcaption" value="Pegawai" />
+      </field>
+      <field id="bulan">
+        <phrase id="fldcaption" value="Bulan" />
+      </field>
+      <field id="target">
+        <phrase id="fldcaption" value="Target" />
+      </field>
+      <field id="created_at">
+        <phrase id="fldcaption" value="Dibuat" />
+      </field>
+    </table>
+    <table id="laporan_kpi_sales">
+      <phrase id="tblcaption" value="Laporan KPI Sales" />
     </table>
   </project>
 </ew-language>

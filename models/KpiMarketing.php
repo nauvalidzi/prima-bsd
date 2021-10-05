@@ -5,9 +5,9 @@ namespace PHPMaker2021\distributor;
 use Doctrine\DBAL\ParameterType;
 
 /**
- * Table class for d_jatuhtempo
+ * Table class for kpi_marketing
  */
-class DJatuhtempo extends DbTable
+class KpiMarketing extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -28,15 +28,11 @@ class DJatuhtempo extends DbTable
     public $ExportDoc;
 
     // Fields
+    public $id;
     public $idpegawai;
-    public $namapegawai;
-    public $idcustomer;
-    public $namacustomer;
-    public $idinvoice;
-    public $sisabayar;
-    public $jatuhtempo;
-    public $sisahari;
-    public $kodeinvoice;
+    public $bulan;
+    public $target;
+    public $created_at;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -49,12 +45,12 @@ class DJatuhtempo extends DbTable
 
         // Language object
         $Language = Container("language");
-        $this->TableVar = 'd_jatuhtempo';
-        $this->TableName = 'd_jatuhtempo';
-        $this->TableType = 'VIEW';
+        $this->TableVar = 'kpi_marketing';
+        $this->TableName = 'kpi_marketing';
+        $this->TableType = 'TABLE';
 
         // Update Table
-        $this->UpdateTable = "`d_jatuhtempo`";
+        $this->UpdateTable = "`kpi_marketing`";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -70,74 +66,58 @@ class DJatuhtempo extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
+        // id
+        $this->id = new DbField('kpi_marketing', 'kpi_marketing', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Sortable = false; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
+
         // idpegawai
-        $this->idpegawai = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idpegawai->IsAutoIncrement = true; // Autoincrement field
+        $this->idpegawai = new DbField('kpi_marketing', 'kpi_marketing', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 20, 20, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idpegawai->Required = true; // Required field
         $this->idpegawai->Sortable = true; // Allow sort
+        $this->idpegawai->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idpegawai->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
         $this->idpegawai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
-        // namapegawai
-        $this->namapegawai = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_namapegawai', 'namapegawai', '`namapegawai`', '`namapegawai`', 200, 123, -1, false, '`namapegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->namapegawai->Sortable = true; // Allow sort
-        $this->namapegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namapegawai->Param, "CustomMsg");
-        $this->Fields['namapegawai'] = &$this->namapegawai;
+        // bulan
+        $this->bulan = new DbField('kpi_marketing', 'kpi_marketing', 'x_bulan', 'bulan', '`bulan`', CastDateFieldForLike("`bulan`", 7, "DB"), 133, 10, 7, false, '`bulan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bulan->Required = true; // Required field
+        $this->bulan->Sortable = true; // Allow sort
+        $this->bulan->DefaultErrorMessage = $Language->phrase("IncorrectField");
+        $this->bulan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bulan->Param, "CustomMsg");
+        $this->Fields['bulan'] = &$this->bulan;
 
-        // idcustomer
-        $this->idcustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
-        $this->idcustomer->Sortable = true; // Allow sort
-        $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
-        $this->Fields['idcustomer'] = &$this->idcustomer;
+        // target
+        $this->target = new DbField('kpi_marketing', 'kpi_marketing', 'x_target', 'target', '`target`', '`target`', 3, 30, -1, false, '`target`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->target->Required = true; // Required field
+        $this->target->Sortable = true; // Allow sort
+        $this->target->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->target->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->target->Param, "CustomMsg");
+        $this->Fields['target'] = &$this->target;
 
-        // namacustomer
-        $this->namacustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 123, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->namacustomer->Sortable = true; // Allow sort
-        $this->namacustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namacustomer->Param, "CustomMsg");
-        $this->Fields['namacustomer'] = &$this->namacustomer;
-
-        // idinvoice
-        $this->idinvoice = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 3, 11, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idinvoice->IsAutoIncrement = true; // Autoincrement field
-        $this->idinvoice->IsPrimaryKey = true; // Primary key field
-        $this->idinvoice->Sortable = true; // Allow sort
-        $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idinvoice->Param, "CustomMsg");
-        $this->Fields['idinvoice'] = &$this->idinvoice;
-
-        // sisabayar
-        $this->sisabayar = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->sisabayar->Nullable = false; // NOT NULL field
-        $this->sisabayar->Sortable = true; // Allow sort
-        $this->sisabayar->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->sisabayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisabayar->Param, "CustomMsg");
-        $this->Fields['sisabayar'] = &$this->sisabayar;
-
-        // jatuhtempo
-        $this->jatuhtempo = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_jatuhtempo', 'jatuhtempo', '`jatuhtempo`', CastDateFieldForLike("`jatuhtempo`", 0, "DB"), 135, 19, 0, false, '`jatuhtempo`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jatuhtempo->Sortable = true; // Allow sort
-        $this->jatuhtempo->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->jatuhtempo->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jatuhtempo->Param, "CustomMsg");
-        $this->Fields['jatuhtempo'] = &$this->jatuhtempo;
-
-        // sisahari
-        $this->sisahari = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_sisahari', 'sisahari', '`sisahari`', '`sisahari`', 20, 7, -1, false, '`sisahari`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->sisahari->Sortable = true; // Allow sort
-        $this->sisahari->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->sisahari->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisahari->Param, "CustomMsg");
-        $this->Fields['sisahari'] = &$this->sisahari;
-
-        // kodeinvoice
-        $this->kodeinvoice = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_kodeinvoice', 'kodeinvoice', '`kodeinvoice`', '`kodeinvoice`', 200, 50, -1, false, '`kodeinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kodeinvoice->Nullable = false; // NOT NULL field
-        $this->kodeinvoice->Required = true; // Required field
-        $this->kodeinvoice->Sortable = true; // Allow sort
-        $this->kodeinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeinvoice->Param, "CustomMsg");
-        $this->Fields['kodeinvoice'] = &$this->kodeinvoice;
+        // created_at
+        $this->created_at = new DbField('kpi_marketing', 'kpi_marketing', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 111, "DB"), 135, 19, 111, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at->Sortable = true; // Allow sort
+        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
+        $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
+        $this->Fields['created_at'] = &$this->created_at;
     }
 
     // Field Visibility
@@ -180,7 +160,7 @@ class DJatuhtempo extends DbTable
     // Table level SQL
     public function getSqlFrom() // From
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "`d_jatuhtempo`";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "`kpi_marketing`";
     }
 
     public function sqlFrom() // For backward compatibility
@@ -274,11 +254,6 @@ class DJatuhtempo extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -470,16 +445,8 @@ class DJatuhtempo extends DbTable
         $success = $this->insertSql($rs)->execute();
         if ($success) {
             // Get insert id if necessary
-            $this->idpegawai->setDbValue($conn->lastInsertId());
-            $rs['idpegawai'] = $this->idpegawai->DbValue;
-
-            // Get insert id if necessary
-            $this->idcustomer->setDbValue($conn->lastInsertId());
-            $rs['idcustomer'] = $this->idcustomer->DbValue;
-
-            // Get insert id if necessary
-            $this->idinvoice->setDbValue($conn->lastInsertId());
-            $rs['idinvoice'] = $this->idinvoice->DbValue;
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -539,8 +506,8 @@ class DJatuhtempo extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('idinvoice', $rs)) {
-                AddFilter($where, QuotedName('idinvoice', $this->Dbid) . '=' . QuotedValue($rs['idinvoice'], $this->idinvoice->DataType, $this->Dbid));
+            if (array_key_exists('id', $rs)) {
+                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -564,15 +531,11 @@ class DJatuhtempo extends DbTable
         if (!is_array($row)) {
             return;
         }
+        $this->id->DbValue = $row['id'];
         $this->idpegawai->DbValue = $row['idpegawai'];
-        $this->namapegawai->DbValue = $row['namapegawai'];
-        $this->idcustomer->DbValue = $row['idcustomer'];
-        $this->namacustomer->DbValue = $row['namacustomer'];
-        $this->idinvoice->DbValue = $row['idinvoice'];
-        $this->sisabayar->DbValue = $row['sisabayar'];
-        $this->jatuhtempo->DbValue = $row['jatuhtempo'];
-        $this->sisahari->DbValue = $row['sisahari'];
-        $this->kodeinvoice->DbValue = $row['kodeinvoice'];
+        $this->bulan->DbValue = $row['bulan'];
+        $this->target->DbValue = $row['target'];
+        $this->created_at->DbValue = $row['created_at'];
     }
 
     // Delete uploaded files
@@ -584,14 +547,14 @@ class DJatuhtempo extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`idinvoice` = @idinvoice@";
+        return "`id` = @id@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->idinvoice->CurrentValue : $this->idinvoice->OldValue;
+        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -607,9 +570,9 @@ class DJatuhtempo extends DbTable
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->idinvoice->CurrentValue = $keys[0];
+                $this->id->CurrentValue = $keys[0];
             } else {
-                $this->idinvoice->OldValue = $keys[0];
+                $this->id->OldValue = $keys[0];
             }
         }
     }
@@ -619,9 +582,9 @@ class DJatuhtempo extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('idinvoice', $row) ? $row['idinvoice'] : null;
+            $val = array_key_exists('id', $row) ? $row['id'] : null;
         } else {
-            $val = $this->idinvoice->OldValue !== null ? $this->idinvoice->OldValue : $this->idinvoice->CurrentValue;
+            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -629,7 +592,7 @@ class DJatuhtempo extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@idinvoice@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -644,7 +607,7 @@ class DJatuhtempo extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("DJatuhtempoList");
+        return $_SESSION[$name] ?? GetUrl("KpiMarketingList");
     }
 
     // Set return page URL
@@ -657,11 +620,11 @@ class DJatuhtempo extends DbTable
     public function getModalCaption($pageName)
     {
         global $Language;
-        if ($pageName == "DJatuhtempoView") {
+        if ($pageName == "KpiMarketingView") {
             return $Language->phrase("View");
-        } elseif ($pageName == "DJatuhtempoEdit") {
+        } elseif ($pageName == "KpiMarketingEdit") {
             return $Language->phrase("Edit");
-        } elseif ($pageName == "DJatuhtempoAdd") {
+        } elseif ($pageName == "KpiMarketingAdd") {
             return $Language->phrase("Add");
         } else {
             return "";
@@ -673,15 +636,15 @@ class DJatuhtempo extends DbTable
     {
         switch (strtolower($action)) {
             case Config("API_VIEW_ACTION"):
-                return "DJatuhtempoView";
+                return "KpiMarketingView";
             case Config("API_ADD_ACTION"):
-                return "DJatuhtempoAdd";
+                return "KpiMarketingAdd";
             case Config("API_EDIT_ACTION"):
-                return "DJatuhtempoEdit";
+                return "KpiMarketingEdit";
             case Config("API_DELETE_ACTION"):
-                return "DJatuhtempoDelete";
+                return "KpiMarketingDelete";
             case Config("API_LIST_ACTION"):
-                return "DJatuhtempoList";
+                return "KpiMarketingList";
             default:
                 return "";
         }
@@ -690,16 +653,16 @@ class DJatuhtempo extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "DJatuhtempoList";
+        return "KpiMarketingList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("DJatuhtempoView", $this->getUrlParm($parm));
+            $url = $this->keyUrl("KpiMarketingView", $this->getUrlParm($parm));
         } else {
-            $url = $this->keyUrl("DJatuhtempoView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+            $url = $this->keyUrl("KpiMarketingView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
         }
         return $this->addMasterUrl($url);
     }
@@ -708,9 +671,9 @@ class DJatuhtempo extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "DJatuhtempoAdd?" . $this->getUrlParm($parm);
+            $url = "KpiMarketingAdd?" . $this->getUrlParm($parm);
         } else {
-            $url = "DJatuhtempoAdd";
+            $url = "KpiMarketingAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -718,7 +681,7 @@ class DJatuhtempo extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("DJatuhtempoEdit", $this->getUrlParm($parm));
+        $url = $this->keyUrl("KpiMarketingEdit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -732,7 +695,7 @@ class DJatuhtempo extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("DJatuhtempoAdd", $this->getUrlParm($parm));
+        $url = $this->keyUrl("KpiMarketingAdd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -746,7 +709,7 @@ class DJatuhtempo extends DbTable
     // Delete URL
     public function getDeleteUrl()
     {
-        return $this->keyUrl("DJatuhtempoDelete", $this->getUrlParm());
+        return $this->keyUrl("KpiMarketingDelete", $this->getUrlParm());
     }
 
     // Add master url
@@ -758,7 +721,7 @@ class DJatuhtempo extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "idinvoice:" . JsonEncode($this->idinvoice->CurrentValue, "number");
+        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -769,8 +732,8 @@ class DJatuhtempo extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->idinvoice->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->idinvoice->CurrentValue);
+        if ($this->id->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->id->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -832,7 +795,7 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("idinvoice") ?? Route("idinvoice")) !== null) {
+            if (($keyValue = Param("id") ?? Route("id")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
                 $arKeys[] = $keyValue;
@@ -865,9 +828,9 @@ SORTHTML;
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->idinvoice->CurrentValue = $key;
+                $this->id->CurrentValue = $key;
             } else {
-                $this->idinvoice->OldValue = $key;
+                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -893,15 +856,11 @@ SORTHTML;
         } else {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->namapegawai->setDbValue($row['namapegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->namacustomer->setDbValue($row['namacustomer']);
-        $this->idinvoice->setDbValue($row['idinvoice']);
-        $this->sisabayar->setDbValue($row['sisabayar']);
-        $this->jatuhtempo->setDbValue($row['jatuhtempo']);
-        $this->sisahari->setDbValue($row['sisahari']);
-        $this->kodeinvoice->setDbValue($row['kodeinvoice']);
+        $this->bulan->setDbValue($row['bulan']);
+        $this->target->setDbValue($row['target']);
+        $this->created_at->setDbValue($row['created_at']);
     }
 
     // Render list row values
@@ -914,107 +873,82 @@ SORTHTML;
 
         // Common render codes
 
-        // idpegawai
-
-        // namapegawai
-
-        // idcustomer
-
-        // namacustomer
-
-        // idinvoice
-
-        // sisabayar
-
-        // jatuhtempo
-
-        // sisahari
-
-        // kodeinvoice
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // idpegawai
-        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+
+        // bulan
+
+        // target
+
+        // created_at
+
+        // id
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
+
+        // idpegawai
+        $curVal = trim(strval($this->idpegawai->CurrentValue));
+        if ($curVal != "") {
+            $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
+            if ($this->idpegawai->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
+                    $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
+                } else {
+                    $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+                }
+            }
+        } else {
+            $this->idpegawai->ViewValue = null;
+        }
         $this->idpegawai->ViewCustomAttributes = "";
 
-        // namapegawai
-        $this->namapegawai->ViewValue = $this->namapegawai->CurrentValue;
-        $this->namapegawai->ViewCustomAttributes = "";
+        // bulan
+        $this->bulan->ViewValue = $this->bulan->CurrentValue;
+        $this->bulan->ViewValue = FormatDateTime($this->bulan->ViewValue, 7);
+        $this->bulan->ViewCustomAttributes = "";
 
-        // idcustomer
-        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->ViewCustomAttributes = "";
+        // target
+        $this->target->ViewValue = $this->target->CurrentValue;
+        $this->target->ViewValue = FormatCurrency($this->target->ViewValue, 2, -2, -2, -2);
+        $this->target->ViewCustomAttributes = "";
 
-        // namacustomer
-        $this->namacustomer->ViewValue = $this->namacustomer->CurrentValue;
-        $this->namacustomer->ViewCustomAttributes = "";
+        // created_at
+        $this->created_at->ViewValue = $this->created_at->CurrentValue;
+        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 111);
+        $this->created_at->ViewCustomAttributes = "";
 
-        // idinvoice
-        $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-        $this->idinvoice->ViewCustomAttributes = "";
-
-        // sisabayar
-        $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
-        $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
-        $this->sisabayar->ViewCustomAttributes = "";
-
-        // jatuhtempo
-        $this->jatuhtempo->ViewValue = $this->jatuhtempo->CurrentValue;
-        $this->jatuhtempo->ViewValue = FormatDateTime($this->jatuhtempo->ViewValue, 0);
-        $this->jatuhtempo->ViewCustomAttributes = "";
-
-        // sisahari
-        $this->sisahari->ViewValue = $this->sisahari->CurrentValue;
-        $this->sisahari->ViewValue = FormatNumber($this->sisahari->ViewValue, 0, -2, -2, -2);
-        $this->sisahari->ViewCustomAttributes = "";
-
-        // kodeinvoice
-        $this->kodeinvoice->ViewValue = $this->kodeinvoice->CurrentValue;
-        $this->kodeinvoice->ViewCustomAttributes = "";
+        // id
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
 
         // idpegawai
         $this->idpegawai->LinkCustomAttributes = "";
         $this->idpegawai->HrefValue = "";
         $this->idpegawai->TooltipValue = "";
 
-        // namapegawai
-        $this->namapegawai->LinkCustomAttributes = "";
-        $this->namapegawai->HrefValue = "";
-        $this->namapegawai->TooltipValue = "";
+        // bulan
+        $this->bulan->LinkCustomAttributes = "";
+        $this->bulan->HrefValue = "";
+        $this->bulan->TooltipValue = "";
 
-        // idcustomer
-        $this->idcustomer->LinkCustomAttributes = "";
-        $this->idcustomer->HrefValue = "";
-        $this->idcustomer->TooltipValue = "";
+        // target
+        $this->target->LinkCustomAttributes = "";
+        $this->target->HrefValue = "";
+        $this->target->TooltipValue = "";
 
-        // namacustomer
-        $this->namacustomer->LinkCustomAttributes = "";
-        $this->namacustomer->HrefValue = "";
-        $this->namacustomer->TooltipValue = "";
-
-        // idinvoice
-        $this->idinvoice->LinkCustomAttributes = "";
-        $this->idinvoice->HrefValue = "";
-        $this->idinvoice->TooltipValue = "";
-
-        // sisabayar
-        $this->sisabayar->LinkCustomAttributes = "";
-        $this->sisabayar->HrefValue = "";
-        $this->sisabayar->TooltipValue = "";
-
-        // jatuhtempo
-        $this->jatuhtempo->LinkCustomAttributes = "";
-        $this->jatuhtempo->HrefValue = "";
-        $this->jatuhtempo->TooltipValue = "";
-
-        // sisahari
-        $this->sisahari->LinkCustomAttributes = "";
-        $this->sisahari->HrefValue = "";
-        $this->sisahari->TooltipValue = "";
-
-        // kodeinvoice
-        $this->kodeinvoice->LinkCustomAttributes = "";
-        $this->kodeinvoice->HrefValue = "";
-        $this->kodeinvoice->TooltipValue = "";
+        // created_at
+        $this->created_at->LinkCustomAttributes = "";
+        $this->created_at->HrefValue = "";
+        $this->created_at->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1031,71 +965,53 @@ SORTHTML;
         // Call Row Rendering event
         $this->rowRendering();
 
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
+        $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
+
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
         $this->idpegawai->EditCustomAttributes = "";
-        if (!$Security->isAdmin() && $Security->isLoggedIn() && !$this->userIDAllow("info")) { // Non system admin
+        $curVal = trim(strval($this->idpegawai->CurrentValue));
+        if ($curVal != "") {
+            $this->idpegawai->EditValue = $this->idpegawai->lookupCacheOption($curVal);
+            if ($this->idpegawai->EditValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
+                    $this->idpegawai->EditValue = $this->idpegawai->displayValue($arwrk);
+                } else {
+                    $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
+                }
+            }
         } else {
-            $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
-            $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
+            $this->idpegawai->EditValue = null;
         }
+        $this->idpegawai->ViewCustomAttributes = "";
 
-        // namapegawai
-        $this->namapegawai->EditAttrs["class"] = "form-control";
-        $this->namapegawai->EditCustomAttributes = "";
-        if (!$this->namapegawai->Raw) {
-            $this->namapegawai->CurrentValue = HtmlDecode($this->namapegawai->CurrentValue);
-        }
-        $this->namapegawai->EditValue = $this->namapegawai->CurrentValue;
-        $this->namapegawai->PlaceHolder = RemoveHtml($this->namapegawai->caption());
+        // bulan
+        $this->bulan->EditAttrs["class"] = "form-control";
+        $this->bulan->EditCustomAttributes = "";
+        $this->bulan->EditValue = FormatDateTime($this->bulan->CurrentValue, 7);
+        $this->bulan->PlaceHolder = RemoveHtml($this->bulan->caption());
 
-        // idcustomer
-        $this->idcustomer->EditAttrs["class"] = "form-control";
-        $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        // target
+        $this->target->EditAttrs["class"] = "form-control";
+        $this->target->EditCustomAttributes = "";
+        $this->target->EditValue = $this->target->CurrentValue;
+        $this->target->PlaceHolder = RemoveHtml($this->target->caption());
 
-        // namacustomer
-        $this->namacustomer->EditAttrs["class"] = "form-control";
-        $this->namacustomer->EditCustomAttributes = "";
-        if (!$this->namacustomer->Raw) {
-            $this->namacustomer->CurrentValue = HtmlDecode($this->namacustomer->CurrentValue);
-        }
-        $this->namacustomer->EditValue = $this->namacustomer->CurrentValue;
-        $this->namacustomer->PlaceHolder = RemoveHtml($this->namacustomer->caption());
-
-        // idinvoice
-        $this->idinvoice->EditAttrs["class"] = "form-control";
-        $this->idinvoice->EditCustomAttributes = "";
-        $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-        $this->idinvoice->ViewCustomAttributes = "";
-
-        // sisabayar
-        $this->sisabayar->EditAttrs["class"] = "form-control";
-        $this->sisabayar->EditCustomAttributes = "";
-        $this->sisabayar->EditValue = $this->sisabayar->CurrentValue;
-        $this->sisabayar->PlaceHolder = RemoveHtml($this->sisabayar->caption());
-
-        // jatuhtempo
-        $this->jatuhtempo->EditAttrs["class"] = "form-control";
-        $this->jatuhtempo->EditCustomAttributes = "";
-        $this->jatuhtempo->EditValue = FormatDateTime($this->jatuhtempo->CurrentValue, 8);
-        $this->jatuhtempo->PlaceHolder = RemoveHtml($this->jatuhtempo->caption());
-
-        // sisahari
-        $this->sisahari->EditAttrs["class"] = "form-control";
-        $this->sisahari->EditCustomAttributes = "";
-        $this->sisahari->EditValue = $this->sisahari->CurrentValue;
-        $this->sisahari->PlaceHolder = RemoveHtml($this->sisahari->caption());
-
-        // kodeinvoice
-        $this->kodeinvoice->EditAttrs["class"] = "form-control";
-        $this->kodeinvoice->EditCustomAttributes = "";
-        if (!$this->kodeinvoice->Raw) {
-            $this->kodeinvoice->CurrentValue = HtmlDecode($this->kodeinvoice->CurrentValue);
-        }
-        $this->kodeinvoice->EditValue = $this->kodeinvoice->CurrentValue;
-        $this->kodeinvoice->PlaceHolder = RemoveHtml($this->kodeinvoice->caption());
+        // created_at
+        $this->created_at->EditAttrs["class"] = "form-control";
+        $this->created_at->EditCustomAttributes = "";
+        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 111);
+        $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1126,24 +1042,14 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->namapegawai);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->namacustomer);
-                    $doc->exportCaption($this->idinvoice);
-                    $doc->exportCaption($this->sisabayar);
-                    $doc->exportCaption($this->jatuhtempo);
-                    $doc->exportCaption($this->sisahari);
-                    $doc->exportCaption($this->kodeinvoice);
+                    $doc->exportCaption($this->bulan);
+                    $doc->exportCaption($this->target);
+                    $doc->exportCaption($this->created_at);
                 } else {
                     $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->namapegawai);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->namacustomer);
-                    $doc->exportCaption($this->idinvoice);
-                    $doc->exportCaption($this->sisabayar);
-                    $doc->exportCaption($this->jatuhtempo);
-                    $doc->exportCaption($this->sisahari);
-                    $doc->exportCaption($this->kodeinvoice);
+                    $doc->exportCaption($this->bulan);
+                    $doc->exportCaption($this->target);
+                    $doc->exportCaption($this->created_at);
                 }
                 $doc->endExportRow();
             }
@@ -1174,24 +1080,14 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->namapegawai);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->namacustomer);
-                        $doc->exportField($this->idinvoice);
-                        $doc->exportField($this->sisabayar);
-                        $doc->exportField($this->jatuhtempo);
-                        $doc->exportField($this->sisahari);
-                        $doc->exportField($this->kodeinvoice);
+                        $doc->exportField($this->bulan);
+                        $doc->exportField($this->target);
+                        $doc->exportField($this->created_at);
                     } else {
                         $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->namapegawai);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->namacustomer);
-                        $doc->exportField($this->idinvoice);
-                        $doc->exportField($this->sisabayar);
-                        $doc->exportField($this->jatuhtempo);
-                        $doc->exportField($this->sisahari);
-                        $doc->exportField($this->kodeinvoice);
+                        $doc->exportField($this->bulan);
+                        $doc->exportField($this->target);
+                        $doc->exportField($this->created_at);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1206,53 +1102,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`idpegawai` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `d_jatuhtempo`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
     }
 
     // Get file data
@@ -1306,6 +1155,8 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['created_at'] = date('Y-m-d H:i:s');
+        $rsnew['bulan'] = date('Y-m-01', strtotime($rsnew['bulan']));
         return true;
     }
 
@@ -1404,6 +1255,12 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        $user_level = CurrentUserLevel();
+        if($user_level != -1){
+            $this->idpegawai->CurrentValue = CurrentUserID();
+            $this->idpegawai->ReadOnly = TRUE; 
+        }
+        $this->bulan->ViewValue = date('F Y',strtotime($this->bulan->CurrentValue));
     }
 
     // User ID Filtering event

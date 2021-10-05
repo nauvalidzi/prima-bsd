@@ -124,6 +124,8 @@ return [
     "po_limit_approval" => \DI\create(PoLimitApproval::class),
     "v_do_stock" => \DI\create(VDoStock::class),
     "po_limit_approval_detail" => \DI\create(PoLimitApprovalDetail::class),
+    "kpi_marketing" => \DI\create(KpiMarketing::class),
+    "laporan_kpi_sales" => \DI\create(LaporanKpiSales::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

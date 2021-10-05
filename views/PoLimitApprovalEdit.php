@@ -20,11 +20,9 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.po_limit_approval)
         ew.vars.tables.po_limit_approval = currentTable;
     fpo_limit_approvaledit.addFields([
-        ["limit_kredit", [fields.limit_kredit.visible && fields.limit_kredit.required ? ew.Validators.required(fields.limit_kredit.caption) : null, ew.Validators.integer], fields.limit_kredit.isInvalid],
-        ["limit_po_aktif", [fields.limit_po_aktif.visible && fields.limit_po_aktif.required ? ew.Validators.required(fields.limit_po_aktif.caption) : null, ew.Validators.integer], fields.limit_po_aktif.isInvalid],
-        ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
-        ["sisalimitkredit", [fields.sisalimitkredit.visible && fields.sisalimitkredit.required ? ew.Validators.required(fields.sisalimitkredit.caption) : null], fields.sisalimitkredit.isInvalid],
-        ["sisapoaktif", [fields.sisapoaktif.visible && fields.sisapoaktif.required ? ew.Validators.required(fields.sisapoaktif.caption) : null], fields.sisapoaktif.isInvalid]
+        ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
+        ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid]
     ]);
 
     // Set invalid fields
@@ -91,6 +89,8 @@ loadjs.ready("head", function () {
     fpo_limit_approvaledit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    fpo_limit_approvaledit.lists.idpegawai = <?= $Page->idpegawai->toClientList($Page) ?>;
+    fpo_limit_approvaledit.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     loadjs.done("fpo_limit_approvaledit");
 });
 </script>
@@ -113,26 +113,69 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->limit_kredit->Visible) { // limit_kredit ?>
-    <div id="r_limit_kredit" class="form-group row">
-        <label id="elh_po_limit_approval_limit_kredit" for="x_limit_kredit" class="<?= $Page->LeftColumnClass ?>"><?= $Page->limit_kredit->caption() ?><?= $Page->limit_kredit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->limit_kredit->cellAttributes() ?>>
-<span id="el_po_limit_approval_limit_kredit">
-<input type="<?= $Page->limit_kredit->getInputTextType() ?>" data-table="po_limit_approval" data-field="x_limit_kredit" name="x_limit_kredit" id="x_limit_kredit" size="30" placeholder="<?= HtmlEncode($Page->limit_kredit->getPlaceHolder()) ?>" value="<?= $Page->limit_kredit->EditValue ?>"<?= $Page->limit_kredit->editAttributes() ?> aria-describedby="x_limit_kredit_help">
-<?= $Page->limit_kredit->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->limit_kredit->getErrorMessage() ?></div>
+<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
+    <div id="r_idpegawai" class="form-group row">
+        <label id="elh_po_limit_approval_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idpegawai->cellAttributes() ?>>
+<span id="el_po_limit_approval_idpegawai">
+<?php $Page->idpegawai->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_idpegawai"
+        name="x_idpegawai"
+        class="form-control ew-select<?= $Page->idpegawai->isInvalidClass() ?>"
+        data-select2-id="po_limit_approval_x_idpegawai"
+        data-table="po_limit_approval"
+        data-field="x_idpegawai"
+        data-value-separator="<?= $Page->idpegawai->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idpegawai->getPlaceHolder()) ?>"
+        <?= $Page->idpegawai->editAttributes() ?>>
+        <?= $Page->idpegawai->selectOptionListHtml("x_idpegawai") ?>
+    </select>
+    <?= $Page->idpegawai->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idpegawai->getErrorMessage() ?></div>
+<?= $Page->idpegawai->Lookup->getParamTag($Page, "p_x_idpegawai") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='po_limit_approval_x_idpegawai']"),
+        options = { name: "x_idpegawai", selectId: "po_limit_approval_x_idpegawai", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.po_limit_approval.fields.idpegawai.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->limit_po_aktif->Visible) { // limit_po_aktif ?>
-    <div id="r_limit_po_aktif" class="form-group row">
-        <label id="elh_po_limit_approval_limit_po_aktif" for="x_limit_po_aktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->limit_po_aktif->caption() ?><?= $Page->limit_po_aktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->limit_po_aktif->cellAttributes() ?>>
-<span id="el_po_limit_approval_limit_po_aktif">
-<input type="<?= $Page->limit_po_aktif->getInputTextType() ?>" data-table="po_limit_approval" data-field="x_limit_po_aktif" name="x_limit_po_aktif" id="x_limit_po_aktif" size="30" placeholder="<?= HtmlEncode($Page->limit_po_aktif->getPlaceHolder()) ?>" value="<?= $Page->limit_po_aktif->EditValue ?>"<?= $Page->limit_po_aktif->editAttributes() ?> aria-describedby="x_limit_po_aktif_help">
-<?= $Page->limit_po_aktif->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->limit_po_aktif->getErrorMessage() ?></div>
+<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
+    <div id="r_idcustomer" class="form-group row">
+        <label id="elh_po_limit_approval_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
+<span id="el_po_limit_approval_idcustomer">
+    <select
+        id="x_idcustomer"
+        name="x_idcustomer"
+        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
+        data-select2-id="po_limit_approval_x_idcustomer"
+        data-table="po_limit_approval"
+        data-field="x_idcustomer"
+        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
+        <?= $Page->idcustomer->editAttributes() ?>>
+        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
+    </select>
+    <?= $Page->idcustomer->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
+<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='po_limit_approval_x_idcustomer']"),
+        options = { name: "x_idcustomer", selectId: "po_limit_approval_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.po_limit_approval.fields.idcustomer.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -159,30 +202,6 @@ $Page->showMessage();
 </div>
 <table id="ft_x_lampiran" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
 </span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->sisalimitkredit->Visible) { // sisalimitkredit ?>
-    <div id="r_sisalimitkredit" class="form-group row">
-        <label id="elh_po_limit_approval_sisalimitkredit" for="x_sisalimitkredit" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sisalimitkredit->caption() ?><?= $Page->sisalimitkredit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sisalimitkredit->cellAttributes() ?>>
-<span id="el_po_limit_approval_sisalimitkredit">
-<span<?= $Page->sisalimitkredit->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->sisalimitkredit->getDisplayValue($Page->sisalimitkredit->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="po_limit_approval" data-field="x_sisalimitkredit" data-hidden="1" name="x_sisalimitkredit" id="x_sisalimitkredit" value="<?= HtmlEncode($Page->sisalimitkredit->CurrentValue) ?>">
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->sisapoaktif->Visible) { // sisapoaktif ?>
-    <div id="r_sisapoaktif" class="form-group row">
-        <label id="elh_po_limit_approval_sisapoaktif" for="x_sisapoaktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sisapoaktif->caption() ?><?= $Page->sisapoaktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sisapoaktif->cellAttributes() ?>>
-<span id="el_po_limit_approval_sisapoaktif">
-<span<?= $Page->sisapoaktif->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->sisapoaktif->getDisplayValue($Page->sisapoaktif->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="po_limit_approval" data-field="x_sisapoaktif" data-hidden="1" name="x_sisapoaktif" id="x_sisapoaktif" value="<?= HtmlEncode($Page->sisapoaktif->CurrentValue) ?>">
 </div></div>
     </div>
 <?php } ?>

@@ -1,1 +1,178 @@
-ew.events={order:{x_idcustomer:{change:function(a){var n=a.target.value;n&&($(document).Toasts("remove"),$.get("api/getTagihan?idcustomer="+n,(function(a){0==a.status&&$(document).Toasts("create",{class:"ew-toast bg-danger",title:"Error",delay:7500,autohide:!0,body:a.message})})))}}},order_detail:{x_jumlah:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_jumlah").val())||0,e=parseInt($("#"+n+"_bonus").val())||0;$("#"+n+"_sisa").val(t+e);var l=parseInt($("#"+n+"_harga").val())||0;$("#"+n+"_total").val(l*t)}},x_bonus:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_jumlah").val())||0,e=parseInt($("#"+n+"_bonus").val())||0;$("#"+n+"_sisa").val(t+e)}},x_harga:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_jumlah").val())||0,e=parseInt($("#"+n+"_harga").val())||0;$("#"+n+"_total").val(e*t)}}},deliveryorder_detail:{x_jumlahkirim:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_jumlahkirim").val())||0,e=parseInt($("#"+n+"_sisa").val())||0;t>e&&$("#"+n+"_jumlahkirim").val(e)}}},invoice_detail:{x_idorder_detail:{change:function(a){}},x_jumlahkirim:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_jumlahorder").val())||0,e=parseInt($("#"+n+"_stockdo").val())||0,l=parseInt($("#"+n+"_jumlahkirim").val())||0,i=parseInt($("#"+n+"_harga").val())||0;(l<0||l>e)&&(l=e,$("#"+n+"_jumlahkirim").val(e)),l>t&&(l=t,$("#"+n+"_jumlahkirim").val(t)),$("#"+n+"_totalnondiskon").val(i*l).change(),$("#"+n+"_jumlahbonus").val(e-l).change()}},x_harga:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_jumlahkirim").val())||0,e=parseInt($("#"+n+"_harga").val())||0;parseFloat($("#"+n+"_bonus").val());$("#"+n+"_totalnondiskon").val(e*t).change()}},x_totalnondiskon:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_totalnondiskon").val())||0,e=t-t*((parseFloat($("#"+n+"_diskonpayment").val())||0)/100),l=t*((parseFloat($("#"+n+"_bbpersen").val())||0)/100);$("#"+n+"_totaltagihan").val(e).change(),$("#"+n+"_blackbonus").val(l).change()}},x_diskonpayment:{change:function(a){var n=this.id.split("_")[0],t=parseInt($("#"+n+"_totalnondiskon").val())||0,e=t-t*((parseFloat($("#"+n+"_diskonpayment").val())||0)/100),l=t*((parseFloat($("#"+n+"_bbpersen").val())||0)/100);$("#"+n+"_totaltagihan").val(e).change(),$("#"+n+"_blackbonus").val(l).change()}},x_bbpersen:{change:function(a){var n=this.id.split("_")[0],t=(parseInt($("#"+n+"_totalnondiskon").val())||0)*((parseFloat($("#"+n+"_bbpersen").val())||0)/100);$("#"+n+"_blackbonus").val(t).change()}}},pembayaran:{x_jumlahbayar:{change:function(a){var n=parseInt($("#x_sisatagihan").val())||0;(parseInt($("#x_jumlahbayar").val())||0)>n&&$("#x_jumlahbayar").val(n)}}}},ew.charts={},ew.clientScript=function(){},ew.startupScript=function(){loadjs.ready("jquery",(function(){$(".ew-add-form").on("keydown","input, select",(function(a){var n,t;if("Enter"===a.key)return(t=(n=$(this).parents("form:eq(0)").find("input,select,textarea").filter(":visible")).eq(n.index(this)+1)).length?t.focus():a.preventDefault(),!1}))}))};
+// User event handlers
+ew.events = {
+    "order": {
+        "x_idcustomer": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    var kodecust = e.target.value;
+                    if (kodecust) {
+                        $(document).Toasts('remove');
+                        $.get("api/getTagihan?idcustomer="+kodecust, function(res) {
+                            if (res.status == false) {
+                                $(document).Toasts('create', {
+                                     class: 'ew-toast bg-danger',
+                                     title: 'Error',
+                                     delay: 7500,
+                                     autohide: true,
+                                     body: res.message,
+                                 });
+                            }
+                        });
+                    }
+                }
+            }
+    },
+    "order_detail": {
+        "x_jumlah": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var jumlah = parseInt($('#'+prefix+'_jumlah').val()) || 0;
+                    var bonus = parseInt($('#'+prefix+'_bonus').val()) || 0;
+                    $('#'+prefix+'_sisa').val(jumlah+bonus);
+                    var harga = parseInt($('#'+prefix+'_harga').val()) || 0;
+                    $('#'+prefix+'_total').val(harga*jumlah);
+                }
+            },
+        "x_bonus": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var jumlah = parseInt($('#'+prefix+'_jumlah').val()) || 0;
+                    var bonus = parseInt($('#'+prefix+'_bonus').val()) || 0;
+                    $('#'+prefix+'_sisa').val(jumlah+bonus);
+                }
+            },
+        "x_harga": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var jumlah = parseInt($('#'+prefix+'_jumlah').val()) || 0;
+                    var harga = parseInt($('#'+prefix+'_harga').val()) || 0;
+                    $('#'+prefix+'_total').val(harga*jumlah);
+                }
+            }
+    },
+    "deliveryorder_detail": {
+        "x_jumlahkirim": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var jumlahkirim = parseInt($('#'+prefix+'_jumlahkirim').val()) || 0;
+                    var sisa = parseInt($('#'+prefix+'_sisa').val()) || 0;
+                    if (jumlahkirim > sisa) {
+                        $('#'+prefix+'_jumlahkirim').val(sisa);
+                    }
+                }
+            }
+    },
+    "invoice_detail": {
+        "x_idorder_detail": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+            //        var prefix = this.id.split('_')[0];
+            //        setTimeout(function() {
+            //            $('#'+prefix+'_totalnondiskon').change();
+            //        }, 500);
+                }
+            },
+        "x_jumlahkirim": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var jumlahorder = parseInt($('#'+prefix+'_jumlahorder').val()) || 0;
+                    var stockdo = parseInt($('#'+prefix+'_stockdo').val()) || 0;
+                    var jumlahkirim = parseInt($('#'+prefix+'_jumlahkirim').val()) || 0;
+                    var harga = parseInt($('#'+prefix+'_harga').val()) || 0;
+                    if (jumlahkirim < 0 || jumlahkirim > stockdo) {
+                        jumlahkirim = stockdo;
+                        $('#'+prefix+'_jumlahkirim').val(stockdo);
+                    }
+                    if (jumlahkirim > jumlahorder) {
+                        jumlahkirim = jumlahorder;
+                        $('#'+prefix+'_jumlahkirim').val(jumlahorder);
+                    }
+                    $('#'+prefix+'_totalnondiskon').val(harga*jumlahkirim).change();
+                    $('#'+prefix+'_jumlahbonus').val(stockdo-jumlahkirim).change();
+                }
+            },
+        "x_harga": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var jumlahkirim = parseInt($('#'+prefix+'_jumlahkirim').val()) || 0;
+                    var harga = parseInt($('#'+prefix+'_harga').val()) || 0;
+                    var bonus = parseFloat($('#'+prefix+'_bonus').val()) || 0;
+                    $('#'+prefix+'_totalnondiskon').val(harga*jumlahkirim).change();
+                }
+            },
+        "x_totalnondiskon": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var totalnondiskon = parseInt($('#'+prefix+'_totalnondiskon').val()) || 0;
+                    var diskonpayment = parseFloat($('#'+prefix+'_diskonpayment').val()) || 0;
+                    var bbpersen = parseFloat($('#'+prefix+'_bbpersen').val()) || 0;
+                    var totaltagihan = totalnondiskon - (totalnondiskon*(diskonpayment/100));
+                    var blackbonus = (totalnondiskon*(bbpersen/100));
+                    $('#'+prefix+'_totaltagihan').val(totaltagihan).change();
+                    $('#'+prefix+'_blackbonus').val(blackbonus).change();
+                }
+            },
+        "x_diskonpayment": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var totalnondiskon = parseInt($('#'+prefix+'_totalnondiskon').val()) || 0;
+                    var diskonpayment = parseFloat($('#'+prefix+'_diskonpayment').val()) || 0;
+                    var bbpersen = parseFloat($('#'+prefix+'_bbpersen').val()) || 0;
+                    var totaltagihan = totalnondiskon - (totalnondiskon*(diskonpayment/100));
+                    var blackbonus = (totalnondiskon*(bbpersen/100));
+                    $('#'+prefix+'_totaltagihan').val(totaltagihan).change();
+                    $('#'+prefix+'_blackbonus').val(blackbonus).change();
+                }
+            },
+        "x_bbpersen": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    var prefix = this.id.split('_')[0];
+                    var totalnondiskon = parseInt($('#'+prefix+'_totalnondiskon').val()) || 0;
+                    var bbpersen = parseFloat($('#'+prefix+'_bbpersen').val()) || 0;
+                    var blackbonus = (totalnondiskon*(bbpersen/100));
+                    $('#'+prefix+'_blackbonus').val(blackbonus).change();
+                }
+            }
+    },
+    "pembayaran": {
+        "x_jumlahbayar": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    var sisatagihan = parseInt($('#x_sisatagihan').val()) || 0;
+                    var jumlahbayar = parseInt($('#x_jumlahbayar').val()) || 0;
+                    if (jumlahbayar > sisatagihan) {
+                        $('#x_jumlahbayar').val(sisatagihan);
+                    }
+                }
+            }
+    },
+    "kpi_marketing": {
+        "x_target": { // keys = event types, values = handler functions
+                "change": function(e) {
+                    // Your code
+                    $(this).toLocaleString('id-ID', { timeZone: 'UTC' }));
+                }
+            }
+    }
+};
+
+// Chart user configurations
+ew.charts = {
+};
+
+// Global client script
+ew.clientScript = function() {
+    // Write your global client script here, no need to add script tags.
+};
+
+// Global startup script
+ew.startupScript = function() {
+    loadjs.ready("jquery",(function(){$(".ew-add-form").on("keydown","input, select",(function(e){var t,n;if("Enter"===e.key)return(n=(t=$(this).parents("form:eq(0)").find("input,select,textarea").filter(":visible")).eq(t.index(this)+1)).length?n.focus():e.preventDefault(),!1}))}));
+};

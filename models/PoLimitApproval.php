@@ -1533,6 +1533,13 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        // $current_date = date('Y-m-d H:i:s');
+        // ExecuteUpdate("UPDATE po_limit_approval SET created_at = '{$current_date}', updated_at = '{$current_date}', aktif = 1, sisalimitkredit = {$rsnew['limit_kredit']}, sisapoaktif = {$rsnew['limit_po_aktif']} WHERE id = {$rsnew['id']}");
+        $rsnew['created_at'] = date('Y-m-d H:i:s');
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
+        $rsnew['aktif'] = 1;
+        $rsnew['sisalimitkredit'] = $rsnew['limit_kredit'];
+        $rsnew['sisapoaktif'] = $rsnew['limit_po_aktif'];
         return true;
     }
 
@@ -1540,8 +1547,6 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $current_date = date('Y-m-d H:i:s');
-        ExecuteUpdate("UPDATE po_limit_approval SET created_at = '{$current_date}', updated_at = '{$current_date}', aktif = 1, sisalimitkredit = {$rsnew['limit_kredit']}, sisapoaktif = {$rsnew['limit_po_aktif']} WHERE id = {$rsnew['id']}");
     }
 
     // Row Updating event
@@ -1549,6 +1554,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
 
@@ -1556,7 +1562,6 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
-        ExecuteUpdate("UPDATE po_limit_approval SET updated_at = '".date('Y-m-d H:i:s')."' WHERE id = {$rsold['id']}");
     }
 
     // Row Update Conflict event

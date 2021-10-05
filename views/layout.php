@@ -171,9 +171,6 @@ loadjs.ready("datetimepicker", function() {
 <script>
 ew.ready("head", ew.PATH_BASE + "js/ewfixedheadertable.min.js", "fixedheadertable");
 </script>
-<?php
-// echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>';
-?>
 <!-- Navbar -->
 <script type="text/html" id="navbar-menu-items" class="ew-js-template" data-name="navbar" data-seq="10" data-data="navbar" data-method="appendTo" data-target="#ew-navbar">
 {{if items}}
@@ -358,6 +355,27 @@ if (isset($DebugTimer)) {
         <div class="ew-footer-text"><?= $Language->projectPhrase("FooterText") ?></div>
         <div class="float-right d-none d-sm-inline-block"></div>
     </footer>
+    <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Default Modal</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <embed src="http://pii.or.id/uploads/dummies.pdf" frameborder="0" width="100%" height="400px">
+                </div>
+                <div class="modal-footer justify-content-between">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
 </div>
 <!-- ./wrapper -->
 <?php } ?>

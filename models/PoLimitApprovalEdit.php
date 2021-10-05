@@ -468,16 +468,16 @@ class PoLimitApprovalEdit extends PoLimitApproval
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->idpegawai->Visible = false;
-        $this->idcustomer->Visible = false;
-        $this->limit_kredit->setVisibility();
-        $this->limit_po_aktif->setVisibility();
+        $this->idpegawai->setVisibility();
+        $this->idcustomer->setVisibility();
+        $this->limit_kredit->Visible = false;
+        $this->limit_po_aktif->Visible = false;
         $this->lampiran->setVisibility();
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
-        $this->sisalimitkredit->setVisibility();
-        $this->sisapoaktif->setVisibility();
+        $this->sisalimitkredit->Visible = false;
+        $this->sisapoaktif->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -676,43 +676,23 @@ class PoLimitApprovalEdit extends PoLimitApproval
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'limit_kredit' first before field var 'x_limit_kredit'
-        $val = $CurrentForm->hasValue("limit_kredit") ? $CurrentForm->getValue("limit_kredit") : $CurrentForm->getValue("x_limit_kredit");
-        if (!$this->limit_kredit->IsDetailKey) {
+        // Check field name 'idpegawai' first before field var 'x_idpegawai'
+        $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
+        if (!$this->idpegawai->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->limit_kredit->Visible = false; // Disable update for API request
+                $this->idpegawai->Visible = false; // Disable update for API request
             } else {
-                $this->limit_kredit->setFormValue($val);
+                $this->idpegawai->setFormValue($val);
             }
         }
 
-        // Check field name 'limit_po_aktif' first before field var 'x_limit_po_aktif'
-        $val = $CurrentForm->hasValue("limit_po_aktif") ? $CurrentForm->getValue("limit_po_aktif") : $CurrentForm->getValue("x_limit_po_aktif");
-        if (!$this->limit_po_aktif->IsDetailKey) {
+        // Check field name 'idcustomer' first before field var 'x_idcustomer'
+        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
+        if (!$this->idcustomer->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->limit_po_aktif->Visible = false; // Disable update for API request
+                $this->idcustomer->Visible = false; // Disable update for API request
             } else {
-                $this->limit_po_aktif->setFormValue($val);
-            }
-        }
-
-        // Check field name 'sisalimitkredit' first before field var 'x_sisalimitkredit'
-        $val = $CurrentForm->hasValue("sisalimitkredit") ? $CurrentForm->getValue("sisalimitkredit") : $CurrentForm->getValue("x_sisalimitkredit");
-        if (!$this->sisalimitkredit->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->sisalimitkredit->Visible = false; // Disable update for API request
-            } else {
-                $this->sisalimitkredit->setFormValue($val);
-            }
-        }
-
-        // Check field name 'sisapoaktif' first before field var 'x_sisapoaktif'
-        $val = $CurrentForm->hasValue("sisapoaktif") ? $CurrentForm->getValue("sisapoaktif") : $CurrentForm->getValue("x_sisapoaktif");
-        if (!$this->sisapoaktif->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->sisapoaktif->Visible = false; // Disable update for API request
-            } else {
-                $this->sisapoaktif->setFormValue($val);
+                $this->idcustomer->setFormValue($val);
             }
         }
 
@@ -729,10 +709,8 @@ class PoLimitApprovalEdit extends PoLimitApproval
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
-        $this->limit_kredit->CurrentValue = $this->limit_kredit->FormValue;
-        $this->limit_po_aktif->CurrentValue = $this->limit_po_aktif->FormValue;
-        $this->sisalimitkredit->CurrentValue = $this->sisalimitkredit->FormValue;
-        $this->sisapoaktif->CurrentValue = $this->sisapoaktif->FormValue;
+        $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
+        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
     }
 
     /**
@@ -948,15 +926,15 @@ class PoLimitApprovalEdit extends PoLimitApproval
             $this->sisapoaktif->ViewValue = FormatNumber($this->sisapoaktif->ViewValue, 0, -2, -2, -2);
             $this->sisapoaktif->ViewCustomAttributes = "";
 
-            // limit_kredit
-            $this->limit_kredit->LinkCustomAttributes = "";
-            $this->limit_kredit->HrefValue = "";
-            $this->limit_kredit->TooltipValue = "";
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
+            $this->idpegawai->TooltipValue = "";
 
-            // limit_po_aktif
-            $this->limit_po_aktif->LinkCustomAttributes = "";
-            $this->limit_po_aktif->HrefValue = "";
-            $this->limit_po_aktif->TooltipValue = "";
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
@@ -971,28 +949,56 @@ class PoLimitApprovalEdit extends PoLimitApproval
             }
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
-
-            // sisalimitkredit
-            $this->sisalimitkredit->LinkCustomAttributes = "";
-            $this->sisalimitkredit->HrefValue = "";
-            $this->sisalimitkredit->TooltipValue = "";
-
-            // sisapoaktif
-            $this->sisapoaktif->LinkCustomAttributes = "";
-            $this->sisapoaktif->HrefValue = "";
-            $this->sisapoaktif->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // limit_kredit
-            $this->limit_kredit->EditAttrs["class"] = "form-control";
-            $this->limit_kredit->EditCustomAttributes = "";
-            $this->limit_kredit->EditValue = HtmlEncode($this->limit_kredit->CurrentValue);
-            $this->limit_kredit->PlaceHolder = RemoveHtml($this->limit_kredit->caption());
+            // idpegawai
+            $this->idpegawai->EditAttrs["class"] = "form-control";
+            $this->idpegawai->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idpegawai->CurrentValue));
+            if ($curVal != "") {
+                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
+            } else {
+                $this->idpegawai->ViewValue = $this->idpegawai->Lookup !== null && is_array($this->idpegawai->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idpegawai->ViewValue !== null) { // Load from cache
+                $this->idpegawai->EditValue = array_values($this->idpegawai->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idpegawai->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idpegawai->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idpegawai->EditValue = $arwrk;
+            }
+            $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
 
-            // limit_po_aktif
-            $this->limit_po_aktif->EditAttrs["class"] = "form-control";
-            $this->limit_po_aktif->EditCustomAttributes = "";
-            $this->limit_po_aktif->EditValue = HtmlEncode($this->limit_po_aktif->CurrentValue);
-            $this->limit_po_aktif->PlaceHolder = RemoveHtml($this->limit_po_aktif->caption());
+            // idcustomer
+            $this->idcustomer->EditAttrs["class"] = "form-control";
+            $this->idcustomer->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+            } else {
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
+            }
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // lampiran
             $this->lampiran->EditAttrs["class"] = "form-control";
@@ -1010,29 +1016,15 @@ class PoLimitApprovalEdit extends PoLimitApproval
                 RenderUploadField($this->lampiran);
             }
 
-            // sisalimitkredit
-            $this->sisalimitkredit->EditAttrs["class"] = "form-control";
-            $this->sisalimitkredit->EditCustomAttributes = "";
-            $this->sisalimitkredit->EditValue = $this->sisalimitkredit->CurrentValue;
-            $this->sisalimitkredit->EditValue = FormatCurrency($this->sisalimitkredit->EditValue, 2, -2, -2, -2);
-            $this->sisalimitkredit->ViewCustomAttributes = "";
-
-            // sisapoaktif
-            $this->sisapoaktif->EditAttrs["class"] = "form-control";
-            $this->sisapoaktif->EditCustomAttributes = "";
-            $this->sisapoaktif->EditValue = $this->sisapoaktif->CurrentValue;
-            $this->sisapoaktif->EditValue = FormatNumber($this->sisapoaktif->EditValue, 0, -2, -2, -2);
-            $this->sisapoaktif->ViewCustomAttributes = "";
-
             // Edit refer script
 
-            // limit_kredit
-            $this->limit_kredit->LinkCustomAttributes = "";
-            $this->limit_kredit->HrefValue = "";
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
 
-            // limit_po_aktif
-            $this->limit_po_aktif->LinkCustomAttributes = "";
-            $this->limit_po_aktif->HrefValue = "";
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
@@ -1046,16 +1038,6 @@ class PoLimitApprovalEdit extends PoLimitApproval
                 $this->lampiran->HrefValue = "";
             }
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
-
-            // sisalimitkredit
-            $this->sisalimitkredit->LinkCustomAttributes = "";
-            $this->sisalimitkredit->HrefValue = "";
-            $this->sisalimitkredit->TooltipValue = "";
-
-            // sisapoaktif
-            $this->sisapoaktif->LinkCustomAttributes = "";
-            $this->sisapoaktif->HrefValue = "";
-            $this->sisapoaktif->TooltipValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1076,35 +1058,19 @@ class PoLimitApprovalEdit extends PoLimitApproval
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->limit_kredit->Required) {
-            if (!$this->limit_kredit->IsDetailKey && EmptyValue($this->limit_kredit->FormValue)) {
-                $this->limit_kredit->addErrorMessage(str_replace("%s", $this->limit_kredit->caption(), $this->limit_kredit->RequiredErrorMessage));
+        if ($this->idpegawai->Required) {
+            if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
+                $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->limit_kredit->FormValue)) {
-            $this->limit_kredit->addErrorMessage($this->limit_kredit->getErrorMessage(false));
-        }
-        if ($this->limit_po_aktif->Required) {
-            if (!$this->limit_po_aktif->IsDetailKey && EmptyValue($this->limit_po_aktif->FormValue)) {
-                $this->limit_po_aktif->addErrorMessage(str_replace("%s", $this->limit_po_aktif->caption(), $this->limit_po_aktif->RequiredErrorMessage));
+        if ($this->idcustomer->Required) {
+            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
+                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->limit_po_aktif->FormValue)) {
-            $this->limit_po_aktif->addErrorMessage($this->limit_po_aktif->getErrorMessage(false));
         }
         if ($this->lampiran->Required) {
             if ($this->lampiran->Upload->FileName == "" && !$this->lampiran->Upload->KeepFile) {
                 $this->lampiran->addErrorMessage(str_replace("%s", $this->lampiran->caption(), $this->lampiran->RequiredErrorMessage));
-            }
-        }
-        if ($this->sisalimitkredit->Required) {
-            if (!$this->sisalimitkredit->IsDetailKey && EmptyValue($this->sisalimitkredit->FormValue)) {
-                $this->sisalimitkredit->addErrorMessage(str_replace("%s", $this->sisalimitkredit->caption(), $this->sisalimitkredit->RequiredErrorMessage));
-            }
-        }
-        if ($this->sisapoaktif->Required) {
-            if (!$this->sisapoaktif->IsDetailKey && EmptyValue($this->sisapoaktif->FormValue)) {
-                $this->sisapoaktif->addErrorMessage(str_replace("%s", $this->sisapoaktif->caption(), $this->sisapoaktif->RequiredErrorMessage));
             }
         }
 
@@ -1151,11 +1117,11 @@ class PoLimitApprovalEdit extends PoLimitApproval
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // limit_kredit
-            $this->limit_kredit->setDbValueDef($rsnew, $this->limit_kredit->CurrentValue, 0, $this->limit_kredit->ReadOnly);
+            // idpegawai
+            $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, $this->idpegawai->ReadOnly);
 
-            // limit_po_aktif
-            $this->limit_po_aktif->setDbValueDef($rsnew, $this->limit_po_aktif->CurrentValue, 0, $this->limit_po_aktif->ReadOnly);
+            // idcustomer
+            $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, $this->idcustomer->ReadOnly);
 
             // lampiran
             if ($this->lampiran->Visible && !$this->lampiran->ReadOnly && !$this->lampiran->Upload->KeepFile) {

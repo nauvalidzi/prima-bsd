@@ -574,3 +574,11 @@ function base_url() {
     $script = str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
     return $protocol . $_SERVER['HTTP_HOST'] . $script;
 }
+
+function check_kpi_existing($idpegawai, $bulan) {
+	$check = ExecuteRow("SELECT COUNT(*) as jumlah FROM kpi_marketing WHERE idpegawai = {$idpegawai} AND bulan = '".date('Y-m-01', strtotime($bulan))."'");
+    if ($check['jumlah'] > 0) {
+        return false;
+    } 
+    return true;
+}

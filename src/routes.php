@@ -1036,6 +1036,20 @@ return function (App $app) {
         }
     );
 
+    // kpi_marketing
+    $app->any('/KpiMarketingList[/{id}]', KpiMarketingController::class . ':list')->add(PermissionMiddleware::class)->setName('KpiMarketingList-kpi_marketing-list'); // list
+    $app->any('/KpiMarketingAdd[/{id}]', KpiMarketingController::class . ':add')->add(PermissionMiddleware::class)->setName('KpiMarketingAdd-kpi_marketing-add'); // add
+    $app->group(
+        '/kpi_marketing',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', KpiMarketingController::class . ':list')->add(PermissionMiddleware::class)->setName('kpi_marketing/list-kpi_marketing-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', KpiMarketingController::class . ':add')->add(PermissionMiddleware::class)->setName('kpi_marketing/add-kpi_marketing-add-2'); // add
+        }
+    );
+
+    // laporan_kpi_sales
+    $app->any('/LaporanKpiSales[/{params:.*}]', LaporanKpiSalesController::class)->add(PermissionMiddleware::class)->setName('LaporanKpiSales-laporan_kpi_sales-custom'); // custom
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 
