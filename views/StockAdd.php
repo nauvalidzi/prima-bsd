@@ -155,8 +155,8 @@ $Page->showMessage();
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aktif->cellAttributes() ?>>
 <span id="el_stock_aktif">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->aktif->isInvalidClass() ?>" data-table="stock" data-field="x_aktif" name="x_aktif[]" id="x_aktif_260929" value="1"<?= ConvertToBool($Page->aktif->CurrentValue) ? " checked" : "" ?><?= $Page->aktif->editAttributes() ?> aria-describedby="x_aktif_help">
-    <label class="custom-control-label" for="x_aktif_260929"></label>
+    <input type="checkbox" class="custom-control-input<?= $Page->aktif->isInvalidClass() ?>" data-table="stock" data-field="x_aktif" name="x_aktif[]" id="x_aktif_504205" value="1"<?= ConvertToBool($Page->aktif->CurrentValue) ? " checked" : "" ?><?= $Page->aktif->editAttributes() ?> aria-describedby="x_aktif_help">
+    <label class="custom-control-label" for="x_aktif_504205"></label>
 </div>
 <?= $Page->aktif->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->aktif->getErrorMessage() ?></div>
