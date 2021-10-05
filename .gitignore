@@ -2,4 +2,4 @@
 src/config.php
 src/config.development.php
 src/config.production.php
-tbs_us/database.php
+files/*
