@@ -19,4 +19,22 @@ class KpiMarketingController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "KpiMarketingAdd");
     }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "KpiMarketingEdit");
+    }
+
+    // update
+    public function update(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "KpiMarketingUpdate");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "KpiMarketingDelete");
+    }
 }
