@@ -126,6 +126,7 @@ return [
     "po_limit_approval_detail" => \DI\create(PoLimitApprovalDetail::class),
     "kpi_marketing" => \DI\create(KpiMarketing::class),
     "laporan_kpi_sales" => \DI\create(LaporanKpiSales::class),
+    "laporan_kpi_detail" => \DI\create(LaporanKpiDetail::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

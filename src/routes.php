@@ -1056,6 +1056,9 @@ return function (App $app) {
     // laporan_kpi_sales
     $app->any('/LaporanKpiSales[/{params:.*}]', LaporanKpiSalesController::class)->add(PermissionMiddleware::class)->setName('LaporanKpiSales-laporan_kpi_sales-custom'); // custom
 
+    // laporan_kpi_detail
+    $app->any('/LaporanKpiDetail[/{params:.*}]', LaporanKpiDetailController::class)->add(PermissionMiddleware::class)->setName('LaporanKpiDetail-laporan_kpi_detail-custom'); // custom
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

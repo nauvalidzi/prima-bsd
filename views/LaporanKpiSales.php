@@ -5,8 +5,7 @@ namespace PHPMaker2021\distributor;
 // Page object
 $LaporanKpiSales = &$Page;
 ?>
-<?php 
-
+<?php
 	if(isset($_POST['srhDate'])){
 		$dateFrom = !empty($_POST['dateFrom']) ? date('Y-m-01', strtotime($_POST['dateFrom'])) : date('Y-m-01');
 		$dateTo = !empty($_POST['dateTo']) ? date('Y-m-t', strtotime($_POST['dateTo'])) : date('Y-m-t');
@@ -20,7 +19,7 @@ $LaporanKpiSales = &$Page;
 			$tgl = strtotime("+1 month", $tgl);
 		}
 
-		$query = "SELECT date_format(po.tanggal, '%b %y') as tanggal, p.id, p.kode as kodepegawai, p.nama AS namapegawai, 
+		$query = "SELECT date_format(po.tanggal, '%b %y') as tanggal, p.id as idpegawai, p.nama AS namapegawai, 
 					SUM(IFNULL(po.totalpenjualan,0)) AS totalpenjualan, IFNULL(kpi_marketing.target,0) AS target
 				  FROM pegawai p
 				  LEFT JOIN (
@@ -38,19 +37,11 @@ $LaporanKpiSales = &$Page;
 		$data = [];
 
 		foreach($result as $row) {
-			$data[$row['kodepegawai']]['namapegawai'] = $row['namapegawai'];
-			$data[$row['kodepegawai']]['order'][$row['tanggal']] = $row['totalpenjualan'];
-			$data[$row['kodepegawai']]['kpi_marketing'][$row['tanggal']] = $row['target'];
+			$data[$row['idpegawai']]['idpegawai'] = $row['idpegawai'];
+			$data[$row['idpegawai']]['namapegawai'] = $row['namapegawai'];
+			$data[$row['idpegawai']]['order'][$row['tanggal']] = $row['totalpenjualan'];
+			$data[$row['idpegawai']]['kpi_marketing'][$row['tanggal']] = $row['target'];
 		}
-
-		// print_r($Periode); die;
-
-		// $target = [];
-
-		// foreach($result as $row) {
-		// 	$target[$row['kodepegawai']]['namapegawai'] = $row['namapegawai'];
-		// 	$target[$row['kodepegawai']]['order'][$row['tanggal']] = $row['totalpenjualan'];
-		// }
 	}
 ?>
 <style>
@@ -76,11 +67,11 @@ $LaporanKpiSales = &$Page;
 				<ul class="list-unstyled">
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="month" class="form-control input-md" name="dateFrom" value="<?php echo date('F Y') ?>">
+						<input type="month" class="form-control input-md" name="dateFrom" value="<?php echo date('Y-m', strtotime($dateFrom)) ?>">
 					</li>
 					to
 					<li class="d-inline-block">
-						<input type="month" class="form-control input-md" name="dateTo">
+						<input type="month" class="form-control input-md" name="dateTo" value="<?php echo date('Y-m', strtotime($dateTo)) ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
@@ -101,7 +92,7 @@ $LaporanKpiSales = &$Page;
 				<tr>
 					<th colspan="<?php echo count($period) + 5 ?>" class="text-center" width="100%">
 						<h4 class="my-2">Laporan KPI Marketing</h4>
-						<p class="mt-3">Periode: <?php echo tgl_indo($dateFrom) . ' - ' . tgl_indo($dateTo) ?></p>
+						<p class="mt-3">Periode: <?php echo date('F Y', strtotime($dateFrom)) . ' - ' . date('F Y', strtotime($dateTo)) ?></p>
 					</th>
 				</tr>
 	    		<tr>
@@ -130,7 +121,7 @@ $LaporanKpiSales = &$Page;
 								$target = isset($value['kpi_marketing'][$date]) ? $value['kpi_marketing'][$date] : 0 ;
 		    				 ?>
 		    				Rp. <?php echo rupiah($target) ?><br>
-		    				Rp. <?php echo rupiah($aktual) ?><br>
+		    				<a href="LaporanKpiDetail?mr=<?php echo $value['idpegawai']?>">Rp. <?php echo rupiah($aktual) ?></a><br>
 		    				<?php echo ($aktual > 0 && $target > 0) ? round(($aktual / $target) * 100 ) : 0; ?>&#37;
 		    			</td>
 		    			<?php $subtotal['target'] += $target; ?>
