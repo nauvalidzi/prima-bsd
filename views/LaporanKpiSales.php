@@ -6,42 +6,38 @@ namespace PHPMaker2021\distributor;
 $LaporanKpiSales = &$Page;
 ?>
 <?php
+	$dateFrom = date('Y-m-01');
+	$dateTo = date('Y-m-t');
+
 	if(isset($_POST['srhDate'])){
-		$dateFrom = !empty($_POST['dateFrom']) ? date('Y-m-01', strtotime($_POST['dateFrom'])) : date('Y-m-01');
-		$dateTo = !empty($_POST['dateTo']) ? date('Y-m-t', strtotime($_POST['dateTo'])) : date('Y-m-t');
+		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
+		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 
-		$tgl = strtotime($dateFrom);
-		$period = [];
+				$query = "SELECT c.kode AS kode_customer, c.nama AS nama_customer,
+							pg.nama AS nama_pegawai,
+							GROUP_CONCAT(DISTINCT o.kode) AS kode_po, 
+							IFNULL(GROUP_CONCAT(DISTINCT d.kode),'-') AS kode_do,
+							b.title AS brands,
+							p.id AS idproduk,
+							p.nama AS nama_produk, 
+							SUM(od.jumlah) AS jumlahorder, 
+							SUM(od.bonus) AS bonus, 
+							SUM(od.sisa) AS sisa, 
+							SUM(od.total) AS totaltagihan,
+							 SUM(i.sisabayar) AS sisabayar
+						  FROM product p
+						  JOIN order_detail od ON p.id = od.idproduct
+						  JOIN `order` o ON o.id = od.idorder
+						  JOIN pegawai pg ON pg.id = o.idpegawai
+						  JOIN customer c ON c.id = o.idcustomer
+						  JOIN brand b ON p.idbrand = b.id
+						  LEFT JOIN invoice i ON i.idorder = o.id
+						  LEFT JOIN deliveryorder_detail dt ON dt.idorder = o.id
+						  LEFT JOIN deliveryorder d ON d.id = dt.iddeliveryorder
+						  WHERE o.tanggal BETWEEN  '{$dateFrom}' AND '{$dateTo}'
+						  GROUP BY od.idproduct, b.id, c.id, pg.id";
 
-		while($tgl <= strtotime($dateTo))
-		{
-			$period[] = date('M y', $tgl);
-			$tgl = strtotime("+1 month", $tgl);
-		}
-
-		$query = "SELECT date_format(po.tanggal, '%b %y') as tanggal, p.id as idpegawai, p.nama AS namapegawai, 
-					SUM(IFNULL(po.totalpenjualan,0)) AS totalpenjualan, IFNULL(kpi_marketing.target,0) AS target
-				  FROM pegawai p
-				  LEFT JOIN (
-				  	SELECT idpegawai, SUM(order_detail.total) AS totalpenjualan, `order`.tanggal
-					FROM `order`
-					JOIN order_detail ON order_detail.idorder = `order`.id
-					WHERE `order`.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}'
-					GROUP BY `order`.id
-				  ) po ON p.id = po.idpegawai
-				  LEFT JOIN kpi_marketing ON kpi_marketing.idpegawai = p.id AND kpi_marketing.bulan = '{$dateFrom}'
-				  GROUP BY p.id, kpi_marketing.target, DATE_FORMAT(po.tanggal, '%b %y')";
-
-		$result = ExecuteQuery($query)->fetchAll();
-
-		$data = [];
-
-		foreach($result as $row) {
-			$data[$row['idpegawai']]['idpegawai'] = $row['idpegawai'];
-			$data[$row['idpegawai']]['namapegawai'] = $row['namapegawai'];
-			$data[$row['idpegawai']]['order'][$row['tanggal']] = $row['totalpenjualan'];
-			$data[$row['idpegawai']]['kpi_marketing'][$row['tanggal']] = $row['target'];
-		}
+		$results = ExecuteQuery($query)->fetchAll();
 	}
 ?>
 <style>
@@ -67,11 +63,11 @@ $LaporanKpiSales = &$Page;
 				<ul class="list-unstyled">
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="month" class="form-control input-md" name="dateFrom" value="<?php echo date('Y-m', strtotime($dateFrom)) ?>">
+						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo $dateFrom ?>">
 					</li>
 					to
 					<li class="d-inline-block">
-						<input type="month" class="form-control input-md" name="dateTo" value="<?php echo date('Y-m', strtotime($dateTo)) ?>">
+						<input type="date" class="form-control input-md" name="dateTo" value="<?php echo $dateTo ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
@@ -86,54 +82,55 @@ $LaporanKpiSales = &$Page;
 		</form>
 	</div>
     <?php if(isset($_POST['srhDate'])) : ?>
-	<div style="overflow-x: scroll; width: 100%; height: 100%;" id="printTable">
+	<div id="printTable">
 	    <table class="table table-bordered">
 	    	<thead>
 				<tr>
-					<th colspan="<?php echo count($period) + 5 ?>" class="text-center" width="100%">
-						<h4 class="my-2">Laporan KPI Marketing</h4>
-						<p class="mt-3">Periode: <?php echo date('F Y', strtotime($dateFrom)) . ' - ' . date('F Y', strtotime($dateTo)) ?></p>
+					<th colspan="13" class="text-center" width="100%">
+						<h4 class="my-2">Laporan KPI Sales</h4>
+						<p class="mt-3">Periode: <?php echo tgl_indo($dateFrom) . ' - ' . tgl_indo($dateTo) ?></p>
 					</th>
 				</tr>
 	    		<tr>
-	    			<th width="5%" class="text-center">No.</th>
-		    		<th class="col-description" colspan="2">Marketing</th>
-		    		<?php foreach($period as $date): ?>
-						<th class="col-flex text-center"><?php echo date("M' y", strtotime($date)) ?></th>
-					<?php endforeach; ?>
-		    		<th class="col-flex text-center">Total</th>
-		    		<th class="col-flex text-center">AVG</th>
+	    			<th width="3%">No. </th>
+	    			<th class="col-flex">Kode Pelanggan</th>
+					<th class="col-flex">Kode Pelanggan</th>
+					<th class="col-flex">Nama Pegawai</th>
+					<th class="col-description">No. PO</th>
+					<th class="col-description">No. Delivery</th>
+					<th class="col-flex">Brand</th>
+					<th class="col-description	">Produk</th>
+					<th class="col-flex">Jumlah</th>
+					<th class="col-flex">Bonus</th>
+					<th class="col-flex">Jumlah Sisa Kirim</th>
+					<th class="col-flex">Total Tagihan</th>
+					<th class="col-flex">Sisa Bayar</th>
 	    		</tr>
 	    	</thead>
 	    	<tbody>
-    		<?php if (!empty($result)): ?>
+    		<?php if (!empty($results)): ?>
     			<?php $i = 1; ?>
-	    		<?php foreach($data as $key => $value): ?>
+	    		<?php foreach($results as $row): ?>
+    			<?php $sisabayar = ($row['sisabayar'] == null) ? $row['totaltagihan'] : $row['sisabayar'] ?>
 	    		<tr>
 	    			<td class="text-center"><?php echo $i; ?></td>
-		    		<td><?php echo $value['namapegawai'] ?></td>
-		    		<td>Target<br>Aktual<br>&#37;</td>
-		    		<?php $subtotal = ['target' => 0, 'aktual' => 0] ?>
-		    		<?php foreach($period as $date) : ?>
-		    			<td class="text-center">
-		    				<?php 
-		    					$aktual = isset($value['order'][$date]) ? $value['order'][$date] : 0 ;
-								$target = isset($value['kpi_marketing'][$date]) ? $value['kpi_marketing'][$date] : 0 ;
-		    				 ?>
-		    				Rp. <?php echo rupiah($target) ?><br>
-		    				<a href="LaporanKpiDetail?mr=<?php echo $value['idpegawai']?>">Rp. <?php echo rupiah($aktual) ?></a><br>
-		    				<?php echo ($aktual > 0 && $target > 0) ? round(($aktual / $target) * 100 ) : 0; ?>&#37;
-		    			</td>
-		    			<?php $subtotal['target'] += $target; ?>
-		    			<?php $subtotal['aktual'] += $aktual; ?>
-		    		<?php endforeach ?>
-		    		<td class="text-center">Rp. <?php echo rupiah($subtotal['target']) ?><br>Rp. <?php echo rupiah($subtotal['aktual']) ?></td>
-		    		<td class="text-center">Rp .<?php echo rupiah(round($subtotal['target'] / count($period))) ?><br>Rp. <?php echo rupiah(round($subtotal['aktual'] / count($period))) ?></td>
+		    		<td><?php echo $row['kode_customer'] ?></td>
+		    		<td><?php echo $row['nama_customer'] ?></td>
+		    		<td><?php echo $row['nama_pegawai'] ?></td>
+		    		<td><?php echo $row['kode_po'] ?></td>
+		    		<td><?php echo $row['kode_do'] ?></td>
+		    		<td><?php echo $row['brands'] ?></td>
+		    		<td><?php echo $row['nama_produk'] ?></td>
+		    		<td><?php echo $row['jumlahorder'] ?></td>
+		    		<td><?php echo $row['bonus'] ?></td>
+		    		<td><?php echo $row['sisa'] ?></td>
+					<td><?php echo rupiah($row['totaltagihan']) ?></td>
+					<td><?php echo rupiah($sisabayar) ?></td>
 	    		</tr>
 		    	<?php $i++; endforeach; ?>
 	    	<?php else: ?>
 	    		<tr>
-	    			<td colspan="<?php echo count($period) + 5 ?>" class="text-center">Tidak ada data.</td>
+	    			<td colspan="13" class="text-center">Tidak ada data.</td>
 	    		</tr>
 	    	<?php endif; ?>
 	    	</tbody>
