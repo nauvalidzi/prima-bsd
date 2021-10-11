@@ -6,11 +6,13 @@ namespace PHPMaker2021\distributor;
 $Laporansales = &$Page;
 ?>
 <?php
+	$dateFrom = date('Y-m-01');
+	$dateTo = date('Y-m-t');
 	$listmarketing = ExecuteQuery("SELECT id, kode, nama FROM pegawai ORDER BY id ASC")->fetchAll();
 
 	if(isset($_POST['srhDate'])){
-		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
-		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
+		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
+		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 
 		if ($_POST['marketing'] == "all") {
 			$query = "SELECT p.id, p.nama AS namapegawai, IFNULL(vlo.totalcustomer,0) AS totalcustomer, IFNULL(vlo.totalorder,0) AS totalorder, 
@@ -68,11 +70,11 @@ $Laporansales = &$Page;
 					</li>
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="date" class="form-control input-md" name="dateFrom">
+						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo $dateFrom ?>">
 					</li>
 					to
 					<li class="d-inline-block">
-						<input type="date" class="form-control input-md" name="dateTo">
+						<input type="date" class="form-control input-md" name="dateTo" value="<?php echo $dateTo ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
@@ -114,7 +116,7 @@ $Laporansales = &$Page;
 						<td class="text-center"><?= $data['totalcustomer'] ?></td>
 						<td class="text-center"><?= $data['totalorder'] ?></td>
 						<td class="text-center"><?= $data['totalbarang'] ?></td>
-						<td>Rp. <span class="float-right"><?php echo number_format($data['totaltagihan']) ?></span></td>
+						<td>Rp. <span class="float-right"><?php echo rupiah($data['totaltagihan']) ?></span></td>
 					</tr>
 					<?php
 						$total['customer'] += $data['totalcustomer'];
@@ -136,7 +138,7 @@ $Laporansales = &$Page;
 					<td class="text-center"><b><?= $total['customer'] ?></b></td>
 					<td class="text-center"><b><?= $total['order'] ?></b></td>
 					<td class="text-center"><b><?= $total['barang'] ?></b></td>
-					<td><strong>Rp. <span class="float-right"><?php echo number_format($total['jumlah']) ?></strong></td>
+					<td><strong>Rp. <span class="float-right"><?php echo rupiah($total['jumlah']) ?></strong></td>
 				</tr>
 			</tfoot>
 			<?php endif; ?>
@@ -166,7 +168,7 @@ $Laporansales = &$Page;
 						<td><?= tgl_indo($data['tanggal']) ?></td>
 						<td><?= $data['kode'] ?></td>
 						<td><?= $data['customer'] ?></td>
-						<td>Rp <span class="float-right"><?php echo number_format($data['total']) ?></span></td>
+						<td>Rp <span class="float-right"><?php echo rupiah($data['total']) ?></span></td>
 					</tr>
 					<?php $total += $data['total']; ?>
 					<?php endforeach; ?>
@@ -180,7 +182,7 @@ $Laporansales = &$Page;
 			<tfoot>
 				<tr>
 					<td colspan="4" class="text-right"><strong>Grand Total :</strong></td>
-					<td><strong>Rp. <span class="float-right"><?php echo number_format($total) ?></span></strong></td>
+					<td><strong>Rp. <span class="float-right"><?php echo rupiah($total) ?></span></strong></td>
 				</tr>
 			</tfoot>
 			<?php endif; ?>

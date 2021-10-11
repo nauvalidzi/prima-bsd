@@ -8,10 +8,12 @@ $LaporanDeliveryOrder = &$Page;
 <?php
 	$status_selected = "all";
 	$status = null;
+	$dateFrom = date('Y-m-01');
+	$dateTo = date('Y-m-t');
 
 	if(isset($_POST['srhDate'])){
-		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
-		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
+		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
+		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 		
 		if ($_POST['status'] == 'lunas') {
 			$status = " AND jumlahkirim = sisa";
@@ -61,11 +63,11 @@ $LaporanDeliveryOrder = &$Page;
 					</li>
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="date" class="form-control input-md" name="dateFrom">
+						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo $dateFrom ?>">
 					</li>
 					to
 					<li class="d-inline-block">
-						<input type="date" class="form-control input-md" name="dateTo">
+						<input type="date" class="form-control input-md" name="dateTo" value="<?php echo $dateTo ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
@@ -90,27 +92,27 @@ $LaporanDeliveryOrder = &$Page;
 				</th>
 			</tr>
 		    <tr>
-		        <th>No</th>
-		        <th>Tanggal</th>
-		        <th>Kode D.O</th>
-		        <th>Kode P.O.</th>
+		        <th class="text-center">No</th>
+		        <th class="text-center">Tanggal</th>
+		        <th class="text-center">Kode D.O</th>
+		        <th class="text-center">Kode P.O.</th>
 		        <th class="text-center">Jumlah Kirim</th>
 			    <?php if ($_POST['status'] == "all" || $_POST['status'] == "sisa") : ?>
 		        <th class="text-center">Sisa</th>
 			    <?php endif; ?>
 		        <?php if ($_POST['status'] == "all") : ?>
-		        <th>Status</th>
+		        <th class="text-center">Status</th>
 			    <?php endif; ?>
 		    </tr>
 		  </thead>
 		  <tbody>
 		  	<?php if (!empty($result)): ?>
-			  	<?php $ext = ['total_kirim' => 0, 'total_sisa' => 0, 'total_po' => 0]; $i = 1; ?>
+			  	<?php $ext = ['total_kirim' => 0, 'total_sisa' => 0]; $i = 1; ?>
 			    <?php foreach($result as $row) : ?>
 			    <?php $status = $row['jumlah_kirim'] == $row['jumlah_sisa'] ? 'Lunas' : 'Sisa'; ?>
 			    <?php $sisa = $row['jumlah_sisa'] - $row['jumlah_kirim']; ?>
 			    <tr>
-			      <td><?php echo $i?></td>
+			      <td class="text-center"><?php echo $i?></td>
 			      <td><?php echo tgl_indo($row['tanggal']) ?></td>
 			      <td><a href="<?php echo base_url() ?>DeliveryorderDetailList?showmaster=deliveryorder&fk_id=<?php echo $row['do_id'] ?>" target="_blank"><?php echo $row['kode_do'] ?></a></td>
 			      <td><?php echo $row['kode_po'] ?></td>
@@ -125,7 +127,6 @@ $LaporanDeliveryOrder = &$Page;
 			    <?php 
 			    	$ext['total_kirim'] += $row['jumlah_kirim'];
 			    	$ext['total_sisa'] += $sisa;
-			    	$ext['total_po'] += count(explode(',', $row['kode_po']));
 			     ?>
 			    <?php $i++; endforeach;?>
 	    	<?php else: ?>
@@ -136,8 +137,7 @@ $LaporanDeliveryOrder = &$Page;
 		  </tbody>
 		  <?php if (!empty($result)): ?>
 		  <tfoot>
-		  	<th class="text-right" colspan="3">Grand Total :</th>
-		  	<th><?php echo $ext['total_po'] ?></th>
+		  	<th class="text-right" colspan="4">Grand Total :</th>
 		  	<th class="text-center"><?php echo number_format($ext['total_kirim'], 0, ",", ".") ?></th>
 			<?php if ($_POST['status'] == "all" || $_POST['status'] == "sisa") : ?>
 		  	<th class="text-center"><?php echo number_format($ext['total_sisa'], 0, ",", ".") ?></th>

@@ -10,11 +10,13 @@ $LaporanPurchaseOrder = &$Page;
 	$status = null;
 
 	$marketing = "all";
+	$dateFrom = date('Y-m-01');
+	$dateTo = date('Y-m-t');
 	$listmarketing = ExecuteQuery("SELECT id, kode, nama FROM pegawai ORDER BY id ASC")->fetchAll();
 
 	if(isset($_POST['srhDate'])){
-		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
-		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
+		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
+		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 		$marketing = ($_POST['marketing'] != "all") ? " AND `order`.`idpegawai` = ".$_POST['marketing'] : "";
 
 		if ($_POST['status'] == 'processed') {
@@ -70,11 +72,11 @@ $LaporanPurchaseOrder = &$Page;
 					</li>
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo (!empty($dateFrom)) ? $dateFrom : date('d/m/Y') ?>">
+						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo $dateFrom ?>">
 					</li>
 					to
 					<li class="d-inline-block">
-						<input type="date" class="form-control input-md" name="dateTo">
+						<input type="date" class="form-control input-md" name="dateTo" value="<?php echo $dateTo ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
@@ -99,15 +101,15 @@ $LaporanPurchaseOrder = &$Page;
 				</th>
 			</tr>
 		    <tr>
-		        <th>No</th>
-		        <th>Kode</th>
-		        <th>Tanggal</th>
-		        <th>Customer</th>
+		        <th class="text-center">No</th>
+		        <th class="text-center">Kode</th>
+		        <th class="text-center">Tanggal</th>
+		        <th class="text-center">Customer</th>
 		        <th class="text-center">Jenis Barang</th>
 		        <th class="text-center">Jumlah Barang</th>
 		        <th class="text-center">Total Harga</th>
 		        <?php if ($_POST['marketing'] == "all") : ?>
-		        <th>Pegawai</th>
+		        <th class="text-center">Pegawai</th>
 			    <?php endif; ?>
 		    </tr>
 		  </thead>
@@ -116,7 +118,7 @@ $LaporanPurchaseOrder = &$Page;
 			    <?php $i = 1; $ext = ['total_barang' => 0, 'total_harga' => 0] ?>
 			    <?php foreach($result as $row): ?>
 			    <tr>
-			      <td><?php echo $i ?></td>
+			      <td class="text-center"><?php echo $i ?></td>
 			      <td><a href="<?php echo base_url() ?>OrderDetailList?showmaster=order&fk_id=<?php echo $row['order_id'] ?>" target="_blank"><?php echo $row['kode'] ?></a></td>
 			      <td><?php echo tgl_indo($row['tanggal']) ?></td>
 			      <td><?php echo $row['nama_customer'] ?></td>

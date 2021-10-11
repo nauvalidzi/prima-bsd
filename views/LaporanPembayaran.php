@@ -6,9 +6,12 @@ namespace PHPMaker2021\distributor;
 $LaporanPembayaran = &$Page;
 ?>
 <?php
+	$dateFrom = date('Y-m-01');
+	$dateTo = date('Y-m-t');
+
 	if(isset($_POST['srhDate'])) {
-		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
-		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
+		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
+		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 		
 		$query = "SELECT pembayaran.id, pembayaran.tanggal AS tgl_bayar, pembayaran.kode AS kode_bayar, 
 					invoice.kode AS kode_invoice, customer.nama AS nama_customer, 
@@ -33,11 +36,11 @@ $LaporanPembayaran = &$Page;
 				<ul class="list-unstyled">
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="date" class="form-control input-md" name="dateFrom">
+						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo $dateFrom ?>">
 					</li>
 					to
 					<li class="d-inline-block">
-						<input type="date" class="form-control input-md" name="dateTo">
+						<input type="date" class="form-control input-md" name="dateTo" value="<?php echo $dateTo ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
@@ -63,10 +66,10 @@ $LaporanPembayaran = &$Page;
 			</tr>
 		    <tr>
 		        <th class="text-center">No</th>
-		        <th>Tgl. Bayar</th>
-		        <th>Kode Bayar</th>
-		        <th>Kode Invoice</th>
-		        <th>Customer</th>
+		        <th class="text-center">Tgl. Bayar</th>
+		        <th class="text-center">Kode Bayar</th>
+		        <th class="text-center">Kode Invoice</th>
+		        <th class="text-center">Nama Pelanggan</th>
 		        <th class="text-center">Total Tagihan</th>
 		        <th class="text-center">Sisa Tagihan</th>
 		        <th class="text-center">Jumlah Bayar</th>

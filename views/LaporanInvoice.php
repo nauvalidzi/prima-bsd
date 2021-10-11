@@ -12,9 +12,12 @@ $LaporanInvoice = &$Page;
 	$payment = "all";
 	$listpayment = ExecuteQuery("SELECT * FROM tipepayment ORDER BY id ASC")->fetchAll();
 
+	$dateFrom = date('Y-m-01');
+	$dateTo = date('Y-m-t');
+
 	if(isset($_POST['srhDate'])){
-		$dateFrom = !empty($_POST['dateFrom']) ? $_POST['dateFrom'] : date('Y-m-01');
-		$dateTo = !empty($_POST['dateTo']) ? $_POST['dateTo'] : date('Y-m-t');
+		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
+		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 
 		if ($_POST['status'] == 'lunas') {
 			$status = " AND invoice.aktif = 0";
@@ -73,11 +76,11 @@ $LaporanInvoice = &$Page;
 					</li>
 					<li class="d-inline-block">
 						<label class="d-block">Date Range</label>
-						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo (!empty($dateFrom)) ? $dateFrom : date('d/m/Y') ?>">
+						<input type="date" class="form-control input-md" name="dateFrom" value="<?php echo $dateFrom ?>">
 					</li>
 					to
 					<li class="d-inline-block">
-						<input type="date" class="form-control input-md" name="dateTo">
+						<input type="date" class="form-control input-md" name="dateTo" value="<?php echo $dateTo ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit" name="srhDate">Search <i class="fa fa-search h-3"></i></button>
@@ -102,17 +105,17 @@ $LaporanInvoice = &$Page;
 					</th>
 				</tr>
 	    		<tr>
-	    			<th>No.</th>
-		    		<th>Tgl Invoice</th>
-		    		<th>Kode</th>
-		    		<th>Kode P.O.</th>
+	    			<th class="text-center">No.</th>
+		    		<th class="text-center">Tgl Invoice</th>
+		    		<th class="text-center">Kode</th>
+		    		<th class="text-center">Kode P.O.</th>
 		    		<th class="text-center">Total Tagihan</th>
 		    		<th class="text-center">Sisa Bayar</th>
 		    		<?php if ($_POST['payment'] == "all"): ?>
 		    		<th class="text-center">Pembayaran</th>
 			    	<?php endif; ?>
 		    		<?php if ($status_selected == "all"): ?>
-		    		<th>Status</th>
+		    		<th class="text-center">Status</th>
 			    	<?php endif; ?>
 	    		</tr>
 	    	</thead>
@@ -122,7 +125,7 @@ $LaporanInvoice = &$Page;
 	    		<?php foreach($result as $row): ?>
 	    		<?php $status = $row['aktif'] != 0 ? 'Lunas' : 'Belum Lunas'; ?>
 	    		<tr>
-	    			<td><?php echo $i; ?></td>
+	    			<td class="text-center"><?php echo $i; ?></td>
 		    		<td><?php echo tgl_indo($row['tglinvoice']) ?></td>
 		    		<td><?php echo $row['kode_invoice'] ?></td>
 		    		<td><?php echo $row['kode_po'] . ', ' . $row['nama_customer'] ?></td>
@@ -132,7 +135,7 @@ $LaporanInvoice = &$Page;
 		    		<td class="text-center"><?php echo $row['payment'] ?></td>
 			    	<?php endif; ?>
 		    		<?php if ($status_selected == "all"): ?>
-		    		<td><?php echo $status ?></td>
+		    		<td class="text-center"><?php echo $status ?></td>
 			    	<?php endif; ?>
 	    		</tr>
 	    		<?php 

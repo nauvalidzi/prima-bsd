@@ -13,29 +13,29 @@ $LaporanKpiSales = &$Page;
 		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
 		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 
-				$query = "SELECT c.kode AS kode_customer, c.nama AS nama_customer,
-							pg.nama AS nama_pegawai,
-							GROUP_CONCAT(DISTINCT o.kode) AS kode_po, 
-							IFNULL(GROUP_CONCAT(DISTINCT d.kode),'-') AS kode_do,
-							b.title AS brands,
-							p.id AS idproduk,
-							p.nama AS nama_produk, 
-							SUM(od.jumlah) AS jumlahorder, 
-							SUM(od.bonus) AS bonus, 
-							SUM(od.sisa) AS sisa, 
-							SUM(od.total) AS totaltagihan,
-							 SUM(i.sisabayar) AS sisabayar
-						  FROM product p
-						  JOIN order_detail od ON p.id = od.idproduct
-						  JOIN `order` o ON o.id = od.idorder
-						  JOIN pegawai pg ON pg.id = o.idpegawai
-						  JOIN customer c ON c.id = o.idcustomer
-						  JOIN brand b ON p.idbrand = b.id
-						  LEFT JOIN invoice i ON i.idorder = o.id
-						  LEFT JOIN deliveryorder_detail dt ON dt.idorder = o.id
-						  LEFT JOIN deliveryorder d ON d.id = dt.iddeliveryorder
-						  WHERE o.tanggal BETWEEN  '{$dateFrom}' AND '{$dateTo}'
-						  GROUP BY od.idproduct, b.id, c.id, pg.id";
+		$query = "SELECT c.kode AS kode_customer, c.nama AS nama_customer,
+					pg.nama AS nama_pegawai,
+					GROUP_CONCAT(DISTINCT o.kode) AS kode_po, 
+					IFNULL(GROUP_CONCAT(DISTINCT d.kode),'-') AS kode_do,
+					b.title AS brands,
+					p.id AS idproduk,
+					p.nama AS nama_produk, 
+					SUM(od.jumlah) AS jumlahorder, 
+					SUM(od.bonus) AS bonus, 
+					SUM(od.sisa) AS sisa, 
+					SUM(od.total) AS totaltagihan,
+					 SUM(i.sisabayar) AS sisabayar
+				  FROM product p
+				  JOIN order_detail od ON p.id = od.idproduct
+				  JOIN `order` o ON o.id = od.idorder
+				  JOIN pegawai pg ON pg.id = o.idpegawai
+				  JOIN customer c ON c.id = o.idcustomer
+				  JOIN brand b ON p.idbrand = b.id
+				  LEFT JOIN invoice i ON i.idorder = o.id
+				  LEFT JOIN deliveryorder_detail dt ON dt.idorder = o.id
+				  LEFT JOIN deliveryorder d ON d.id = dt.iddeliveryorder
+				  WHERE o.tanggal BETWEEN  '{$dateFrom}' AND '{$dateTo}'
+				  GROUP BY od.idproduct, b.id, c.id, pg.id";
 
 		$results = ExecuteQuery($query)->fetchAll();
 	}
@@ -92,19 +92,19 @@ $LaporanKpiSales = &$Page;
 					</th>
 				</tr>
 	    		<tr>
-	    			<th width="3%">No. </th>
-	    			<th class="col-flex">Kode Pelanggan</th>
-					<th class="col-flex">Kode Pelanggan</th>
-					<th class="col-flex">Nama Pegawai</th>
-					<th class="col-description">No. PO</th>
-					<th class="col-description">No. Delivery</th>
-					<th class="col-flex">Brand</th>
-					<th class="col-description	">Produk</th>
-					<th class="col-flex">Jumlah</th>
-					<th class="col-flex">Bonus</th>
-					<th class="col-flex">Jumlah Sisa Kirim</th>
-					<th class="col-flex">Total Tagihan</th>
-					<th class="col-flex">Sisa Bayar</th>
+	    			<th class="text-center" width="3%">No. </th>
+	    			<th class="text-center col-flex">Kode Pelanggan</th>
+					<th class="text-center col-flex">Kode Pelanggan</th>
+					<th class="text-center col-flex">Nama Pegawai</th>
+					<th class="text-center col-description">No. PO</th>
+					<th class="text-center col-description">No. Delivery</th>
+					<th class="text-center col-flex">Brand</th>
+					<th class="text-center col-description	">Produk</th>
+					<th class="text-center col-flex">Jumlah</th>
+					<th class="text-center col-flex">Bonus</th>
+					<th class="text-center col-flex">Jumlah Sisa Kirim</th>
+					<th class="text-center col-flex">Total Tagihan</th>
+					<th class="text-center col-flex">Sisa Bayar</th>
 	    		</tr>
 	    	</thead>
 	    	<tbody>
@@ -121,11 +121,11 @@ $LaporanKpiSales = &$Page;
 		    		<td><?php echo $row['kode_do'] ?></td>
 		    		<td><?php echo $row['brands'] ?></td>
 		    		<td><?php echo $row['nama_produk'] ?></td>
-		    		<td><?php echo $row['jumlahorder'] ?></td>
-		    		<td><?php echo $row['bonus'] ?></td>
-		    		<td><?php echo $row['sisa'] ?></td>
-					<td><?php echo rupiah($row['totaltagihan']) ?></td>
-					<td><?php echo rupiah($sisabayar) ?></td>
+		    		<td class="text-center"><?php echo $row['jumlahorder'] ?></td>
+		    		<td class="text-center"><?php echo $row['bonus'] ?></td>
+		    		<td class="text-center"><?php echo $row['sisa'] ?></td>
+					<td>Rp. <span class="float-right"><?php echo rupiah($row['totaltagihan']) ?></span></td>
+					<td>Rp. <span class="float-right"><?php echo rupiah($sisabayar) ?></span></td>
 	    		</tr>
 		    	<?php $i++; endforeach; ?>
 	    	<?php else: ?>
