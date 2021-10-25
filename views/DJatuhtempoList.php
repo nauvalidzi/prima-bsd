@@ -136,19 +136,22 @@ $Page->renderListOptions();
 $Page->ListOptions->render("header", "left");
 ?>
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <th data-name="idpegawai" class="<?= $Page->idpegawai->headerCellClass() ?>"><div id="elh_d_jatuhtempo_idpegawai" class="d_jatuhtempo_idpegawai"><?= $Page->renderSort($Page->idpegawai) ?></div></th>
+        <th data-name="idpegawai" class="<?= $Page->idpegawai->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_d_jatuhtempo_idpegawai" class="d_jatuhtempo_idpegawai"><?= $Page->renderSort($Page->idpegawai) ?></div></th>
 <?php } ?>
 <?php if ($Page->namapegawai->Visible) { // namapegawai ?>
         <th data-name="namapegawai" class="<?= $Page->namapegawai->headerCellClass() ?>"><div id="elh_d_jatuhtempo_namapegawai" class="d_jatuhtempo_namapegawai"><?= $Page->renderSort($Page->namapegawai) ?></div></th>
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_d_jatuhtempo_idcustomer" class="d_jatuhtempo_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
+        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_d_jatuhtempo_idcustomer" class="d_jatuhtempo_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
 <?php } ?>
 <?php if ($Page->namacustomer->Visible) { // namacustomer ?>
         <th data-name="namacustomer" class="<?= $Page->namacustomer->headerCellClass() ?>"><div id="elh_d_jatuhtempo_namacustomer" class="d_jatuhtempo_namacustomer"><?= $Page->renderSort($Page->namacustomer) ?></div></th>
 <?php } ?>
 <?php if ($Page->idinvoice->Visible) { // idinvoice ?>
-        <th data-name="idinvoice" class="<?= $Page->idinvoice->headerCellClass() ?>"><div id="elh_d_jatuhtempo_idinvoice" class="d_jatuhtempo_idinvoice"><?= $Page->renderSort($Page->idinvoice) ?></div></th>
+        <th data-name="idinvoice" class="<?= $Page->idinvoice->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_d_jatuhtempo_idinvoice" class="d_jatuhtempo_idinvoice"><?= $Page->renderSort($Page->idinvoice) ?></div></th>
+<?php } ?>
+<?php if ($Page->kodeinvoice->Visible) { // kodeinvoice ?>
+        <th data-name="kodeinvoice" class="<?= $Page->kodeinvoice->headerCellClass() ?>"><div id="elh_d_jatuhtempo_kodeinvoice" class="d_jatuhtempo_kodeinvoice"><?= $Page->renderSort($Page->kodeinvoice) ?></div></th>
 <?php } ?>
 <?php if ($Page->sisabayar->Visible) { // sisabayar ?>
         <th data-name="sisabayar" class="<?= $Page->sisabayar->headerCellClass() ?>"><div id="elh_d_jatuhtempo_sisabayar" class="d_jatuhtempo_sisabayar"><?= $Page->renderSort($Page->sisabayar) ?></div></th>
@@ -158,9 +161,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->sisahari->Visible) { // sisahari ?>
         <th data-name="sisahari" class="<?= $Page->sisahari->headerCellClass() ?>"><div id="elh_d_jatuhtempo_sisahari" class="d_jatuhtempo_sisahari"><?= $Page->renderSort($Page->sisahari) ?></div></th>
-<?php } ?>
-<?php if ($Page->kodeinvoice->Visible) { // kodeinvoice ?>
-        <th data-name="kodeinvoice" class="<?= $Page->kodeinvoice->headerCellClass() ?>"><div id="elh_d_jatuhtempo_kodeinvoice" class="d_jatuhtempo_kodeinvoice"><?= $Page->renderSort($Page->kodeinvoice) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -269,6 +269,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->kodeinvoice->Visible) { // kodeinvoice ?>
+        <td data-name="kodeinvoice" <?= $Page->kodeinvoice->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_d_jatuhtempo_kodeinvoice">
+<span<?= $Page->kodeinvoice->viewAttributes() ?>>
+<?= $Page->kodeinvoice->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->sisabayar->Visible) { // sisabayar ?>
         <td data-name="sisabayar" <?= $Page->sisabayar->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_d_jatuhtempo_sisabayar">
@@ -290,14 +298,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_d_jatuhtempo_sisahari">
 <span<?= $Page->sisahari->viewAttributes() ?>>
 <?= $Page->sisahari->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->kodeinvoice->Visible) { // kodeinvoice ?>
-        <td data-name="kodeinvoice" <?= $Page->kodeinvoice->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_d_jatuhtempo_kodeinvoice">
-<span<?= $Page->kodeinvoice->viewAttributes() ?>>
-<?= $Page->kodeinvoice->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

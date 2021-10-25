@@ -17,6 +17,18 @@ loadjs.ready("head", function () {
     fv_bonuscustomer_detaillist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
     loadjs.done("fv_bonuscustomer_detaillist");
 });
+var fv_bonuscustomer_detaillistsrch, currentSearchForm, currentAdvancedSearchForm;
+loadjs.ready("head", function () {
+    var $ = jQuery;
+    // Form object for search
+    fv_bonuscustomer_detaillistsrch = currentSearchForm = new ew.Form("fv_bonuscustomer_detaillistsrch");
+
+    // Dynamic selection lists
+
+    // Filters
+    fv_bonuscustomer_detaillistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fv_bonuscustomer_detaillistsrch");
+});
 </script>
 <style>
 .ew-table-preview-row { /* main table preview row color */
@@ -56,6 +68,12 @@ loadjs.ready("head", function () {
 <?php if ($Page->ImportOptions->visible()) { ?>
 <?php $Page->ImportOptions->render("body") ?>
 <?php } ?>
+<?php if ($Page->SearchOptions->visible()) { ?>
+<?php $Page->SearchOptions->render("body") ?>
+<?php } ?>
+<?php if ($Page->FilterOptions->visible()) { ?>
+<?php $Page->FilterOptions->render("body") ?>
+<?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -71,6 +89,34 @@ if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "v_bonuscus
 <?php
 $Page->renderOtherOptions();
 ?>
+<?php if ($Security->canSearch()) { ?>
+<?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
+<form name="fv_bonuscustomer_detaillistsrch" id="fv_bonuscustomer_detaillistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fv_bonuscustomer_detaillistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<input type="hidden" name="cmd" value="search">
+<input type="hidden" name="t" value="v_bonuscustomer_detail">
+    <div class="ew-extended-search">
+<div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
+    <div class="ew-quick-search input-group">
+        <input type="text" name="<?= Config("TABLE_BASIC_SEARCH") ?>" id="<?= Config("TABLE_BASIC_SEARCH") ?>" class="form-control" value="<?= HtmlEncode($Page->BasicSearch->getKeyword()) ?>" placeholder="<?= HtmlEncode($Language->phrase("Search")) ?>">
+        <input type="hidden" name="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" value="<?= HtmlEncode($Page->BasicSearch->getType()) ?>">
+        <div class="input-group-append">
+            <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span></button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this);"><?= $Language->phrase("QuickSearchAuto") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "=") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, '=');"><?= $Language->phrase("QuickSearchExact") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "AND") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'AND');"><?= $Language->phrase("QuickSearchAll") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "OR") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'OR');"><?= $Language->phrase("QuickSearchAny") ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+    </div><!-- /.ew-extended-search -->
+</div><!-- /.ew-search-panel -->
+</form>
+<?php } ?>
+<?php } ?>
 <?php $Page->showPageHeader(); ?>
 <?php
 $Page->showMessage();
@@ -102,11 +148,11 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_idcustomer" class="v_bonuscustomer_detail_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
+<?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+        <th data-name="nama_customer" class="<?= $Page->nama_customer->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_nama_customer" class="v_bonuscustomer_detail_nama_customer"><?= $Page->renderSort($Page->nama_customer) ?></div></th>
 <?php } ?>
-<?php if ($Page->idinvoice->Visible) { // idinvoice ?>
-        <th data-name="idinvoice" class="<?= $Page->idinvoice->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_idinvoice" class="v_bonuscustomer_detail_idinvoice"><?= $Page->renderSort($Page->idinvoice) ?></div></th>
+<?php if ($Page->kode_invoice->Visible) { // kode_invoice ?>
+        <th data-name="kode_invoice" class="<?= $Page->kode_invoice->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_kode_invoice" class="v_bonuscustomer_detail_kode_invoice"><?= $Page->renderSort($Page->kode_invoice) ?></div></th>
 <?php } ?>
 <?php if ($Page->blackbonus->Visible) { // blackbonus ?>
         <th data-name="blackbonus" class="<?= $Page->blackbonus->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_blackbonus" class="v_bonuscustomer_detail_blackbonus"><?= $Page->renderSort($Page->blackbonus) ?></div></th>
@@ -178,19 +224,19 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_bonuscustomer_detail_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
+    <?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+        <td data-name="nama_customer" <?= $Page->nama_customer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_bonuscustomer_detail_nama_customer">
+<span<?= $Page->nama_customer->viewAttributes() ?>>
+<?= $Page->nama_customer->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idinvoice->Visible) { // idinvoice ?>
-        <td data-name="idinvoice" <?= $Page->idinvoice->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_bonuscustomer_detail_idinvoice">
-<span<?= $Page->idinvoice->viewAttributes() ?>>
-<?= $Page->idinvoice->getViewValue() ?></span>
+    <?php if ($Page->kode_invoice->Visible) { // kode_invoice ?>
+        <td data-name="kode_invoice" <?= $Page->kode_invoice->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_bonuscustomer_detail_kode_invoice">
+<span<?= $Page->kode_invoice->viewAttributes() ?>>
+<?= $Page->kode_invoice->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

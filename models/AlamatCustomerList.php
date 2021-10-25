@@ -571,12 +571,13 @@ class AlamatCustomerList extends AlamatCustomer
         $this->id->Visible = false;
         $this->idcustomer->Visible = false;
         $this->alias->setVisibility();
+        $this->penerima->setVisibility();
+        $this->telepon->setVisibility();
+        $this->alamat->setVisibility();
         $this->idprovinsi->setVisibility();
         $this->idkabupaten->setVisibility();
         $this->idkecamatan->setVisibility();
         $this->idkelurahan->setVisibility();
-        $this->alamat->setVisibility();
-        $this->penerima->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -898,12 +899,13 @@ class AlamatCustomerList extends AlamatCustomer
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
         $filterList = Concat($filterList, $this->alias->AdvancedSearch->toJson(), ","); // Field alias
+        $filterList = Concat($filterList, $this->penerima->AdvancedSearch->toJson(), ","); // Field penerima
+        $filterList = Concat($filterList, $this->telepon->AdvancedSearch->toJson(), ","); // Field telepon
+        $filterList = Concat($filterList, $this->alamat->AdvancedSearch->toJson(), ","); // Field alamat
         $filterList = Concat($filterList, $this->idprovinsi->AdvancedSearch->toJson(), ","); // Field idprovinsi
         $filterList = Concat($filterList, $this->idkabupaten->AdvancedSearch->toJson(), ","); // Field idkabupaten
         $filterList = Concat($filterList, $this->idkecamatan->AdvancedSearch->toJson(), ","); // Field idkecamatan
         $filterList = Concat($filterList, $this->idkelurahan->AdvancedSearch->toJson(), ","); // Field idkelurahan
-        $filterList = Concat($filterList, $this->alamat->AdvancedSearch->toJson(), ","); // Field alamat
-        $filterList = Concat($filterList, $this->penerima->AdvancedSearch->toJson(), ","); // Field penerima
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -968,6 +970,30 @@ class AlamatCustomerList extends AlamatCustomer
         $this->alias->AdvancedSearch->SearchOperator2 = @$filter["w_alias"];
         $this->alias->AdvancedSearch->save();
 
+        // Field penerima
+        $this->penerima->AdvancedSearch->SearchValue = @$filter["x_penerima"];
+        $this->penerima->AdvancedSearch->SearchOperator = @$filter["z_penerima"];
+        $this->penerima->AdvancedSearch->SearchCondition = @$filter["v_penerima"];
+        $this->penerima->AdvancedSearch->SearchValue2 = @$filter["y_penerima"];
+        $this->penerima->AdvancedSearch->SearchOperator2 = @$filter["w_penerima"];
+        $this->penerima->AdvancedSearch->save();
+
+        // Field telepon
+        $this->telepon->AdvancedSearch->SearchValue = @$filter["x_telepon"];
+        $this->telepon->AdvancedSearch->SearchOperator = @$filter["z_telepon"];
+        $this->telepon->AdvancedSearch->SearchCondition = @$filter["v_telepon"];
+        $this->telepon->AdvancedSearch->SearchValue2 = @$filter["y_telepon"];
+        $this->telepon->AdvancedSearch->SearchOperator2 = @$filter["w_telepon"];
+        $this->telepon->AdvancedSearch->save();
+
+        // Field alamat
+        $this->alamat->AdvancedSearch->SearchValue = @$filter["x_alamat"];
+        $this->alamat->AdvancedSearch->SearchOperator = @$filter["z_alamat"];
+        $this->alamat->AdvancedSearch->SearchCondition = @$filter["v_alamat"];
+        $this->alamat->AdvancedSearch->SearchValue2 = @$filter["y_alamat"];
+        $this->alamat->AdvancedSearch->SearchOperator2 = @$filter["w_alamat"];
+        $this->alamat->AdvancedSearch->save();
+
         // Field idprovinsi
         $this->idprovinsi->AdvancedSearch->SearchValue = @$filter["x_idprovinsi"];
         $this->idprovinsi->AdvancedSearch->SearchOperator = @$filter["z_idprovinsi"];
@@ -999,22 +1025,6 @@ class AlamatCustomerList extends AlamatCustomer
         $this->idkelurahan->AdvancedSearch->SearchValue2 = @$filter["y_idkelurahan"];
         $this->idkelurahan->AdvancedSearch->SearchOperator2 = @$filter["w_idkelurahan"];
         $this->idkelurahan->AdvancedSearch->save();
-
-        // Field alamat
-        $this->alamat->AdvancedSearch->SearchValue = @$filter["x_alamat"];
-        $this->alamat->AdvancedSearch->SearchOperator = @$filter["z_alamat"];
-        $this->alamat->AdvancedSearch->SearchCondition = @$filter["v_alamat"];
-        $this->alamat->AdvancedSearch->SearchValue2 = @$filter["y_alamat"];
-        $this->alamat->AdvancedSearch->SearchOperator2 = @$filter["w_alamat"];
-        $this->alamat->AdvancedSearch->save();
-
-        // Field penerima
-        $this->penerima->AdvancedSearch->SearchValue = @$filter["x_penerima"];
-        $this->penerima->AdvancedSearch->SearchOperator = @$filter["z_penerima"];
-        $this->penerima->AdvancedSearch->SearchCondition = @$filter["v_penerima"];
-        $this->penerima->AdvancedSearch->SearchValue2 = @$filter["y_penerima"];
-        $this->penerima->AdvancedSearch->SearchOperator2 = @$filter["w_penerima"];
-        $this->penerima->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1024,8 +1034,9 @@ class AlamatCustomerList extends AlamatCustomer
     {
         $where = "";
         $this->buildBasicSearchSql($where, $this->alias, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->alamat, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->penerima, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->telepon, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->alamat, $arKeywords, $type);
         return $where;
     }
 
@@ -1189,12 +1200,13 @@ class AlamatCustomerList extends AlamatCustomer
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->alias); // alias
+            $this->updateSort($this->penerima); // penerima
+            $this->updateSort($this->telepon); // telepon
+            $this->updateSort($this->alamat); // alamat
             $this->updateSort($this->idprovinsi); // idprovinsi
             $this->updateSort($this->idkabupaten); // idkabupaten
             $this->updateSort($this->idkecamatan); // idkecamatan
             $this->updateSort($this->idkelurahan); // idkelurahan
-            $this->updateSort($this->alamat); // alamat
-            $this->updateSort($this->penerima); // penerima
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1249,12 +1261,13 @@ class AlamatCustomerList extends AlamatCustomer
                 $this->id->setSort("");
                 $this->idcustomer->setSort("");
                 $this->alias->setSort("");
+                $this->penerima->setSort("");
+                $this->telepon->setSort("");
+                $this->alamat->setSort("");
                 $this->idprovinsi->setSort("");
                 $this->idkabupaten->setSort("");
                 $this->idkecamatan->setSort("");
                 $this->idkelurahan->setSort("");
-                $this->alamat->setSort("");
-                $this->penerima->setSort("");
             }
 
             // Reset start position
@@ -1651,12 +1664,13 @@ class AlamatCustomerList extends AlamatCustomer
         $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->alias->setDbValue($row['alias']);
+        $this->penerima->setDbValue($row['penerima']);
+        $this->telepon->setDbValue($row['telepon']);
+        $this->alamat->setDbValue($row['alamat']);
         $this->idprovinsi->setDbValue($row['idprovinsi']);
         $this->idkabupaten->setDbValue($row['idkabupaten']);
         $this->idkecamatan->setDbValue($row['idkecamatan']);
         $this->idkelurahan->setDbValue($row['idkelurahan']);
-        $this->alamat->setDbValue($row['alamat']);
-        $this->penerima->setDbValue($row['penerima']);
     }
 
     // Return a row with default values
@@ -1666,12 +1680,13 @@ class AlamatCustomerList extends AlamatCustomer
         $row['id'] = null;
         $row['idcustomer'] = null;
         $row['alias'] = null;
+        $row['penerima'] = null;
+        $row['telepon'] = null;
+        $row['alamat'] = null;
         $row['idprovinsi'] = null;
         $row['idkabupaten'] = null;
         $row['idkecamatan'] = null;
         $row['idkelurahan'] = null;
-        $row['alamat'] = null;
-        $row['penerima'] = null;
         return $row;
     }
 
@@ -1715,6 +1730,12 @@ class AlamatCustomerList extends AlamatCustomer
 
         // alias
 
+        // penerima
+
+        // telepon
+
+        // alamat
+
         // idprovinsi
 
         // idkabupaten
@@ -1722,10 +1743,6 @@ class AlamatCustomerList extends AlamatCustomer
         // idkecamatan
 
         // idkelurahan
-
-        // alamat
-
-        // penerima
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1755,6 +1772,18 @@ class AlamatCustomerList extends AlamatCustomer
             // alias
             $this->alias->ViewValue = $this->alias->CurrentValue;
             $this->alias->ViewCustomAttributes = "";
+
+            // penerima
+            $this->penerima->ViewValue = $this->penerima->CurrentValue;
+            $this->penerima->ViewCustomAttributes = "";
+
+            // telepon
+            $this->telepon->ViewValue = $this->telepon->CurrentValue;
+            $this->telepon->ViewCustomAttributes = "";
+
+            // alamat
+            $this->alamat->ViewValue = $this->alamat->CurrentValue;
+            $this->alamat->ViewCustomAttributes = "";
 
             // idprovinsi
             $curVal = trim(strval($this->idprovinsi->CurrentValue));
@@ -1840,18 +1869,25 @@ class AlamatCustomerList extends AlamatCustomer
             }
             $this->idkelurahan->ViewCustomAttributes = "";
 
-            // alamat
-            $this->alamat->ViewValue = $this->alamat->CurrentValue;
-            $this->alamat->ViewCustomAttributes = "";
-
-            // penerima
-            $this->penerima->ViewValue = $this->penerima->CurrentValue;
-            $this->penerima->ViewCustomAttributes = "";
-
             // alias
             $this->alias->LinkCustomAttributes = "";
             $this->alias->HrefValue = "";
             $this->alias->TooltipValue = "";
+
+            // penerima
+            $this->penerima->LinkCustomAttributes = "";
+            $this->penerima->HrefValue = "";
+            $this->penerima->TooltipValue = "";
+
+            // telepon
+            $this->telepon->LinkCustomAttributes = "";
+            $this->telepon->HrefValue = "";
+            $this->telepon->TooltipValue = "";
+
+            // alamat
+            $this->alamat->LinkCustomAttributes = "";
+            $this->alamat->HrefValue = "";
+            $this->alamat->TooltipValue = "";
 
             // idprovinsi
             $this->idprovinsi->LinkCustomAttributes = "";
@@ -1872,16 +1908,6 @@ class AlamatCustomerList extends AlamatCustomer
             $this->idkelurahan->LinkCustomAttributes = "";
             $this->idkelurahan->HrefValue = "";
             $this->idkelurahan->TooltipValue = "";
-
-            // alamat
-            $this->alamat->LinkCustomAttributes = "";
-            $this->alamat->HrefValue = "";
-            $this->alamat->TooltipValue = "";
-
-            // penerima
-            $this->penerima->LinkCustomAttributes = "";
-            $this->penerima->HrefValue = "";
-            $this->penerima->TooltipValue = "";
         }
 
         // Call Row Rendered event

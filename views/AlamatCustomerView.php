@@ -56,6 +56,39 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->penerima->Visible) { // penerima ?>
+    <tr id="r_penerima">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_alamat_customer_penerima"><?= $Page->penerima->caption() ?></span></td>
+        <td data-name="penerima" <?= $Page->penerima->cellAttributes() ?>>
+<span id="el_alamat_customer_penerima">
+<span<?= $Page->penerima->viewAttributes() ?>>
+<?= $Page->penerima->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->telepon->Visible) { // telepon ?>
+    <tr id="r_telepon">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_alamat_customer_telepon"><?= $Page->telepon->caption() ?></span></td>
+        <td data-name="telepon" <?= $Page->telepon->cellAttributes() ?>>
+<span id="el_alamat_customer_telepon">
+<span<?= $Page->telepon->viewAttributes() ?>>
+<?= $Page->telepon->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->alamat->Visible) { // alamat ?>
+    <tr id="r_alamat">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_alamat_customer_alamat"><?= $Page->alamat->caption() ?></span></td>
+        <td data-name="alamat" <?= $Page->alamat->cellAttributes() ?>>
+<span id="el_alamat_customer_alamat">
+<span<?= $Page->alamat->viewAttributes() ?>>
+<?= $Page->alamat->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->idprovinsi->Visible) { // idprovinsi ?>
     <tr id="r_idprovinsi">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_alamat_customer_idprovinsi"><?= $Page->idprovinsi->caption() ?></span></td>
@@ -96,28 +129,6 @@ $Page->showMessage();
 <span id="el_alamat_customer_idkelurahan">
 <span<?= $Page->idkelurahan->viewAttributes() ?>>
 <?= $Page->idkelurahan->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->alamat->Visible) { // alamat ?>
-    <tr id="r_alamat">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_alamat_customer_alamat"><?= $Page->alamat->caption() ?></span></td>
-        <td data-name="alamat" <?= $Page->alamat->cellAttributes() ?>>
-<span id="el_alamat_customer_alamat">
-<span<?= $Page->alamat->viewAttributes() ?>>
-<?= $Page->alamat->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->penerima->Visible) { // penerima ?>
-    <tr id="r_penerima">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_alamat_customer_penerima"><?= $Page->penerima->caption() ?></span></td>
-        <td data-name="penerima" <?= $Page->penerima->cellAttributes() ?>>
-<span id="el_alamat_customer_penerima">
-<span<?= $Page->penerima->viewAttributes() ?>>
-<?= $Page->penerima->getViewValue() ?></span>
 </span>
 </td>
     </tr>

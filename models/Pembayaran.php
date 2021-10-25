@@ -122,6 +122,7 @@ class Pembayaran extends DbTable
 
         // idinvoice
         $this->idinvoice = new DbField('pembayaran', 'pembayaran', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 3, 11, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idinvoice->IsForeignKey = true; // Foreign key field
         $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Required = true; // Required field
         $this->idinvoice->Sortable = true; // Allow sort
@@ -241,6 +242,32 @@ class Pembayaran extends DbTable
         } else {
             $fld->setSort("");
         }
+    }
+
+    // Current detail table name
+    public function getCurrentDetailTable()
+    {
+        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE"));
+    }
+
+    public function setCurrentDetailTable($v)
+    {
+        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE")] = $v;
+    }
+
+    // Get detail url
+    public function getDetailUrl()
+    {
+        // Detail url
+        $detailUrl = "";
+        if ($this->getCurrentDetailTable() == "invoice") {
+            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+            $detailUrl .= "&" . GetForeignKeyUrl("fk_idinvoice", $this->idinvoice->CurrentValue);
+        }
+        if ($detailUrl == "") {
+            $detailUrl = "PembayaranList";
+        }
+        return $detailUrl;
     }
 
     // Table level SQL
@@ -785,7 +812,11 @@ class Pembayaran extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("PembayaranEdit", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("PembayaranEdit", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("PembayaranEdit", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 
@@ -799,7 +830,11 @@ class Pembayaran extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("PembayaranAdd", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("PembayaranAdd", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("PembayaranAdd", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 
@@ -1619,6 +1654,19 @@ SORTHTML;
     {
         //Log("Row Inserted");
         checkReadOnly("invoice", $rsnew['idinvoice']);
+
+        // START NOTIF BOT WASAP //
+        $status = 0;
+        $row = ExecuteRow("SELECT i.kode as no_faktur, c.nama as nama_customer, c.hp as nomor_handphone FROM invoice i JOIN customer c ON c.id = i.idcustomer WHERE i.id = {$rsnew['idinvoice']}");
+        if (!empty($row['nomor_handphone']) or strlen($row['nomor_handphone']) <= 10) {
+            $send = json_encode([
+                'to' => $row['nomor_handphone'],
+                'message' => "Selamat siang {$row['nama_customer']}. Pembayaran Faktur No. {$row['no_faktur']} sudah kami terima. Terima kasih atas kerjasamanya. Semoga {$row['nama_customer']} sehat selalu.",
+            ]);
+            $status = 1;
+        }
+        ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
+        // END NOTIF BOT WASAP //
     }
 
     // Row Updating event

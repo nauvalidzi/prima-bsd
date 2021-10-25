@@ -42,7 +42,8 @@ loadjs.ready("head", function () {
         ["_email", [], fields._email.isInvalid],
         ["website", [], fields.website.isInvalid],
         ["foto", [], fields.foto.isInvalid],
-        ["budget_bonus_persen", [ew.Validators.float], fields.budget_bonus_persen.isInvalid],
+        ["level_customer_id", [], fields.level_customer_id.isInvalid],
+        ["jatuh_tempo_invoice", [ew.Validators.integer], fields.jatuh_tempo_invoice.isInvalid],
         ["keterangan", [], fields.keterangan.isInvalid],
         ["aktif", [], fields.aktif.isInvalid],
         ["created_at", [], fields.created_at.isInvalid],
@@ -92,6 +93,7 @@ loadjs.ready("head", function () {
     fcustomersearch.lists.idkab = <?= $Page->idkab->toClientList($Page) ?>;
     fcustomersearch.lists.idkec = <?= $Page->idkec->toClientList($Page) ?>;
     fcustomersearch.lists.idkel = <?= $Page->idkel->toClientList($Page) ?>;
+    fcustomersearch.lists.level_customer_id = <?= $Page->level_customer_id->toClientList($Page) ?>;
     fcustomersearch.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
     loadjs.done("fcustomersearch");
 });
@@ -531,18 +533,55 @@ loadjs.ready("head", function() {
         </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->budget_bonus_persen->Visible) { // budget_bonus_persen ?>
-    <div id="r_budget_bonus_persen" class="form-group row">
-        <label for="x_budget_bonus_persen" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_budget_bonus_persen"><?= $Page->budget_bonus_persen->caption() ?></span>
+<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
+    <div id="r_level_customer_id" class="form-group row">
+        <label for="x_level_customer_id" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_level_customer_id"><?= $Page->level_customer_id->caption() ?></span>
         <span class="ew-search-operator">
 <?= $Language->phrase("=") ?>
-<input type="hidden" name="z_budget_bonus_persen" id="z_budget_bonus_persen" value="=">
+<input type="hidden" name="z_level_customer_id" id="z_level_customer_id" value="=">
 </span>
         </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->budget_bonus_persen->cellAttributes() ?>>
-            <span id="el_customer_budget_bonus_persen" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->budget_bonus_persen->getInputTextType() ?>" data-table="customer" data-field="x_budget_bonus_persen" name="x_budget_bonus_persen" id="x_budget_bonus_persen" size="5" placeholder="<?= HtmlEncode($Page->budget_bonus_persen->getPlaceHolder()) ?>" value="<?= $Page->budget_bonus_persen->EditValue ?>"<?= $Page->budget_bonus_persen->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->budget_bonus_persen->getErrorMessage(false) ?></div>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->level_customer_id->cellAttributes() ?>>
+            <span id="el_customer_level_customer_id" class="ew-search-field ew-search-field-single">
+    <select
+        id="x_level_customer_id"
+        name="x_level_customer_id"
+        class="form-control ew-select<?= $Page->level_customer_id->isInvalidClass() ?>"
+        data-select2-id="customer_x_level_customer_id"
+        data-table="customer"
+        data-field="x_level_customer_id"
+        data-value-separator="<?= $Page->level_customer_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->level_customer_id->getPlaceHolder()) ?>"
+        <?= $Page->level_customer_id->editAttributes() ?>>
+        <?= $Page->level_customer_id->selectOptionListHtml("x_level_customer_id") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Page->level_customer_id->getErrorMessage(false) ?></div>
+<?= $Page->level_customer_id->Lookup->getParamTag($Page, "p_x_level_customer_id") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='customer_x_level_customer_id']"),
+        options = { name: "x_level_customer_id", selectId: "customer_x_level_customer_id", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.customer.fields.level_customer_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+        </div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->jatuh_tempo_invoice->Visible) { // jatuh_tempo_invoice ?>
+    <div id="r_jatuh_tempo_invoice" class="form-group row">
+        <label for="x_jatuh_tempo_invoice" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_jatuh_tempo_invoice"><?= $Page->jatuh_tempo_invoice->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_jatuh_tempo_invoice" id="z_jatuh_tempo_invoice" value="=">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jatuh_tempo_invoice->cellAttributes() ?>>
+            <span id="el_customer_jatuh_tempo_invoice" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->jatuh_tempo_invoice->getInputTextType() ?>" data-table="customer" data-field="x_jatuh_tempo_invoice" name="x_jatuh_tempo_invoice" id="x_jatuh_tempo_invoice" size="30" placeholder="<?= HtmlEncode($Page->jatuh_tempo_invoice->getPlaceHolder()) ?>" value="<?= $Page->jatuh_tempo_invoice->EditValue ?>"<?= $Page->jatuh_tempo_invoice->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->jatuh_tempo_invoice->getErrorMessage(false) ?></div>
 </span>
         </div></div>
     </div>

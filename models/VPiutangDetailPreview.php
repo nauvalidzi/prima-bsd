@@ -391,10 +391,10 @@ class VPiutangDetailPreview extends VPiutangDetail
         // Set up list options
         $this->setupListOptions();
         $this->idcustomer->Visible = false;
-        $this->idinvoice->setVisibility();
-        $this->totaltagihan->setVisibility();
+        $this->idinvoice->Visible = false;
+        $this->tglinvoice->setVisibility();
         $this->sisabayar->setVisibility();
-        $this->tglinvoice->Visible = false;
+        $this->totaltagihan->setVisibility();
         $this->jatuhtempo->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -413,8 +413,6 @@ class VPiutangDetailPreview extends VPiutangDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idinvoice);
 
         // Load filter
         $filter = Get("f", "");
@@ -485,9 +483,9 @@ class VPiutangDetailPreview extends VPiutangDetail
             $this->CurrentOrderType = "";
             $this->idcustomer->setSort("");
             $this->idinvoice->setSort("");
-            $this->totaltagihan->setSort("");
-            $this->sisabayar->setSort("");
             $this->tglinvoice->setSort("");
+            $this->sisabayar->setSort("");
+            $this->totaltagihan->setSort("");
             $this->jatuhtempo->setSort("");
 
             // Save sort to session
@@ -500,9 +498,9 @@ class VPiutangDetailPreview extends VPiutangDetail
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->idinvoice); // idinvoice
-            $this->updateSort($this->totaltagihan); // totaltagihan
+            $this->updateSort($this->tglinvoice); // tglinvoice
             $this->updateSort($this->sisabayar); // sisabayar
+            $this->updateSort($this->totaltagihan); // totaltagihan
             $this->updateSort($this->jatuhtempo); // jatuhtempo
         }
     }
@@ -646,10 +644,6 @@ class VPiutangDetailPreview extends VPiutangDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
-                case "x_idinvoice":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

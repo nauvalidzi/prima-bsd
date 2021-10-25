@@ -1440,12 +1440,6 @@ class OrderDetailEdit extends OrderDetail
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
-        $count = ExecuteScalar("SELECT hutang_max FROM customer WHERE id = '".$this->kodenpd->FormValue."' AND id NOT IN (".$this->id->CurrentValue.")");
-        if ($count>0) {
-        	$customError = "Kode NPD sudah terpakai.";
-    //        $this->kodenpd->addErrorMessage("Kode NPD sudah terpakai.");
-            return false;
-        }
         return true;
     }
 }

@@ -40,7 +40,8 @@ loadjs.ready("head", function () {
         ["_email", [fields._email.visible && fields._email.required ? ew.Validators.required(fields._email.caption) : null], fields._email.isInvalid],
         ["website", [fields.website.visible && fields.website.required ? ew.Validators.required(fields.website.caption) : null], fields.website.isInvalid],
         ["foto", [fields.foto.visible && fields.foto.required ? ew.Validators.fileRequired(fields.foto.caption) : null], fields.foto.isInvalid],
-        ["budget_bonus_persen", [fields.budget_bonus_persen.visible && fields.budget_bonus_persen.required ? ew.Validators.required(fields.budget_bonus_persen.caption) : null, ew.Validators.float], fields.budget_bonus_persen.isInvalid],
+        ["level_customer_id", [fields.level_customer_id.visible && fields.level_customer_id.required ? ew.Validators.required(fields.level_customer_id.caption) : null], fields.level_customer_id.isInvalid],
+        ["jatuh_tempo_invoice", [fields.jatuh_tempo_invoice.visible && fields.jatuh_tempo_invoice.required ? ew.Validators.required(fields.jatuh_tempo_invoice.caption) : null, ew.Validators.integer], fields.jatuh_tempo_invoice.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
@@ -116,6 +117,7 @@ loadjs.ready("head", function () {
     fcustomeradd.lists.idkab = <?= $Page->idkab->toClientList($Page) ?>;
     fcustomeradd.lists.idkec = <?= $Page->idkec->toClientList($Page) ?>;
     fcustomeradd.lists.idkel = <?= $Page->idkel->toClientList($Page) ?>;
+    fcustomeradd.lists.level_customer_id = <?= $Page->level_customer_id->toClientList($Page) ?>;
     fcustomeradd.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
     loadjs.done("fcustomeradd");
 });
@@ -560,14 +562,47 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->budget_bonus_persen->Visible) { // budget_bonus_persen ?>
-    <div id="r_budget_bonus_persen" class="form-group row">
-        <label id="elh_customer_budget_bonus_persen" for="x_budget_bonus_persen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->budget_bonus_persen->caption() ?><?= $Page->budget_bonus_persen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->budget_bonus_persen->cellAttributes() ?>>
-<span id="el_customer_budget_bonus_persen">
-<input type="<?= $Page->budget_bonus_persen->getInputTextType() ?>" data-table="customer" data-field="x_budget_bonus_persen" name="x_budget_bonus_persen" id="x_budget_bonus_persen" size="5" placeholder="<?= HtmlEncode($Page->budget_bonus_persen->getPlaceHolder()) ?>" value="<?= $Page->budget_bonus_persen->EditValue ?>"<?= $Page->budget_bonus_persen->editAttributes() ?> aria-describedby="x_budget_bonus_persen_help">
-<?= $Page->budget_bonus_persen->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->budget_bonus_persen->getErrorMessage() ?></div>
+<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
+    <div id="r_level_customer_id" class="form-group row">
+        <label id="elh_customer_level_customer_id" for="x_level_customer_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->level_customer_id->caption() ?><?= $Page->level_customer_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->level_customer_id->cellAttributes() ?>>
+<span id="el_customer_level_customer_id">
+    <select
+        id="x_level_customer_id"
+        name="x_level_customer_id"
+        class="form-control ew-select<?= $Page->level_customer_id->isInvalidClass() ?>"
+        data-select2-id="customer_x_level_customer_id"
+        data-table="customer"
+        data-field="x_level_customer_id"
+        data-value-separator="<?= $Page->level_customer_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->level_customer_id->getPlaceHolder()) ?>"
+        <?= $Page->level_customer_id->editAttributes() ?>>
+        <?= $Page->level_customer_id->selectOptionListHtml("x_level_customer_id") ?>
+    </select>
+    <?= $Page->level_customer_id->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->level_customer_id->getErrorMessage() ?></div>
+<?= $Page->level_customer_id->Lookup->getParamTag($Page, "p_x_level_customer_id") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='customer_x_level_customer_id']"),
+        options = { name: "x_level_customer_id", selectId: "customer_x_level_customer_id", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.customer.fields.level_customer_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->jatuh_tempo_invoice->Visible) { // jatuh_tempo_invoice ?>
+    <div id="r_jatuh_tempo_invoice" class="form-group row">
+        <label id="elh_customer_jatuh_tempo_invoice" for="x_jatuh_tempo_invoice" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jatuh_tempo_invoice->caption() ?><?= $Page->jatuh_tempo_invoice->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jatuh_tempo_invoice->cellAttributes() ?>>
+<span id="el_customer_jatuh_tempo_invoice">
+<input type="<?= $Page->jatuh_tempo_invoice->getInputTextType() ?>" data-table="customer" data-field="x_jatuh_tempo_invoice" name="x_jatuh_tempo_invoice" id="x_jatuh_tempo_invoice" size="30" placeholder="<?= HtmlEncode($Page->jatuh_tempo_invoice->getPlaceHolder()) ?>" value="<?= $Page->jatuh_tempo_invoice->EditValue ?>"<?= $Page->jatuh_tempo_invoice->editAttributes() ?> aria-describedby="x_jatuh_tempo_invoice_help">
+<?= $Page->jatuh_tempo_invoice->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->jatuh_tempo_invoice->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -648,6 +683,26 @@ loadjs.ready("head", function() {
 <?php
     }
 ?>
+<?php
+    if (in_array("order", explode(",", $Page->getCurrentDetailTable())) && $order->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "order") {
+            $firstActiveDetailTable = "order";
+        }
+?>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("order") ?>" href="#tab_order" data-toggle="tab"><?= $Language->tablePhrase("order", "TblCaption") ?></a></li>
+<?php
+    }
+?>
+<?php
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
+        }
+?>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?></a></li>
+<?php
+    }
+?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
 <?php
@@ -668,6 +723,26 @@ loadjs.ready("head", function() {
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand") ?>" id="tab_brand"><!-- page* -->
 <?php include_once "BrandGrid.php" ?>
+        </div><!-- /page* -->
+<?php } ?>
+<?php
+    if (in_array("order", explode(",", $Page->getCurrentDetailTable())) && $order->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "order") {
+            $firstActiveDetailTable = "order";
+        }
+?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("order") ?>" id="tab_order"><!-- page* -->
+<?php include_once "OrderGrid.php" ?>
+        </div><!-- /page* -->
+<?php } ?>
+<?php
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
+        }
+?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
+<?php include_once "InvoiceGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->
@@ -696,6 +771,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("/bsd/api/nextKode/customer/0",(function(e){$("#x_kode").val(e)}))}));
+    loadjs.ready("jquery",(function(){$.get("/bsd/api/nextKode/customer/0",(function(a){$("#x_kode").val(a)}))})),$("input[data-field=x_alias]").attr("placeholder","(Cth: Klinik/Apartemen/Rumah)");
 });
 </script>

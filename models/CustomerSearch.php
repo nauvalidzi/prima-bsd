@@ -479,8 +479,8 @@ class CustomerSearch extends Customer
         $this->_email->setVisibility();
         $this->website->setVisibility();
         $this->foto->setVisibility();
-        $this->budget_bonus_persen->setVisibility();
-        $this->hutang_max->Visible = false;
+        $this->level_customer_id->setVisibility();
+        $this->jatuh_tempo_invoice->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->setVisibility();
@@ -506,6 +506,7 @@ class CustomerSearch extends Customer
         $this->setupLookupOptions($this->idkab);
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
+        $this->setupLookupOptions($this->level_customer_id);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -588,7 +589,8 @@ class CustomerSearch extends Customer
         $this->buildSearchUrl($srchUrl, $this->_email); // email
         $this->buildSearchUrl($srchUrl, $this->website); // website
         $this->buildSearchUrl($srchUrl, $this->foto); // foto
-        $this->buildSearchUrl($srchUrl, $this->budget_bonus_persen); // budget_bonus_persen
+        $this->buildSearchUrl($srchUrl, $this->level_customer_id); // level_customer_id
+        $this->buildSearchUrl($srchUrl, $this->jatuh_tempo_invoice); // jatuh_tempo_invoice
         $this->buildSearchUrl($srchUrl, $this->keterangan); // keterangan
         $this->buildSearchUrl($srchUrl, $this->aktif); // aktif
         $this->buildSearchUrl($srchUrl, $this->created_at); // created_at
@@ -728,7 +730,10 @@ class CustomerSearch extends Customer
         if ($this->foto->AdvancedSearch->post()) {
             $hasValue = true;
         }
-        if ($this->budget_bonus_persen->AdvancedSearch->post()) {
+        if ($this->level_customer_id->AdvancedSearch->post()) {
+            $hasValue = true;
+        }
+        if ($this->jatuh_tempo_invoice->AdvancedSearch->post()) {
             $hasValue = true;
         }
         if ($this->keterangan->AdvancedSearch->post()) {
@@ -755,11 +760,6 @@ class CustomerSearch extends Customer
         global $Security, $Language, $CurrentLanguage;
 
         // Initialize URLs
-
-        // Convert decimal values if posted back
-        if ($this->budget_bonus_persen->FormValue == $this->budget_bonus_persen->CurrentValue && is_numeric(ConvertToFloatString($this->budget_bonus_persen->CurrentValue))) {
-            $this->budget_bonus_persen->CurrentValue = ConvertToFloatString($this->budget_bonus_persen->CurrentValue);
-        }
 
         // Call Row_Rendering event
         $this->rowRendering();
@@ -808,9 +808,9 @@ class CustomerSearch extends Customer
 
         // foto
 
-        // budget_bonus_persen
+        // level_customer_id
 
-        // hutang_max
+        // jatuh_tempo_invoice
 
         // keterangan
 
@@ -1025,10 +1025,31 @@ class CustomerSearch extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->ViewValue = $this->budget_bonus_persen->CurrentValue;
-            $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
-            $this->budget_bonus_persen->ViewCustomAttributes = "";
+            // level_customer_id
+            $curVal = trim(strval($this->level_customer_id->CurrentValue));
+            if ($curVal != "") {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
+                    } else {
+                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
+                    }
+                }
+            } else {
+                $this->level_customer_id->ViewValue = null;
+            }
+            $this->level_customer_id->ViewCustomAttributes = "";
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
+            $this->jatuh_tempo_invoice->ViewValue = FormatNumber($this->jatuh_tempo_invoice->ViewValue, 0, -2, -2, -2);
+            $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -1197,10 +1218,15 @@ class CustomerSearch extends Customer
                 $this->foto->LinkAttrs->appendClass("ew-lightbox");
             }
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->LinkCustomAttributes = "";
-            $this->budget_bonus_persen->HrefValue = "";
-            $this->budget_bonus_persen->TooltipValue = "";
+            // level_customer_id
+            $this->level_customer_id->LinkCustomAttributes = "";
+            $this->level_customer_id->HrefValue = "";
+            $this->level_customer_id->TooltipValue = "";
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
+            $this->jatuh_tempo_invoice->HrefValue = "";
+            $this->jatuh_tempo_invoice->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1513,11 +1539,38 @@ class CustomerSearch extends Customer
             $this->foto->EditValue = HtmlEncode($this->foto->AdvancedSearch->SearchValue);
             $this->foto->PlaceHolder = RemoveHtml($this->foto->caption());
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->EditAttrs["class"] = "form-control";
-            $this->budget_bonus_persen->EditCustomAttributes = "";
-            $this->budget_bonus_persen->EditValue = HtmlEncode($this->budget_bonus_persen->AdvancedSearch->SearchValue);
-            $this->budget_bonus_persen->PlaceHolder = RemoveHtml($this->budget_bonus_persen->caption());
+            // level_customer_id
+            $this->level_customer_id->EditAttrs["class"] = "form-control";
+            $this->level_customer_id->EditCustomAttributes = "";
+            $curVal = trim(strval($this->level_customer_id->AdvancedSearch->SearchValue));
+            if ($curVal != "") {
+                $this->level_customer_id->AdvancedSearch->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+            } else {
+                $this->level_customer_id->AdvancedSearch->ViewValue = $this->level_customer_id->Lookup !== null && is_array($this->level_customer_id->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->level_customer_id->AdvancedSearch->ViewValue !== null) { // Load from cache
+                $this->level_customer_id->EditValue = array_values($this->level_customer_id->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->level_customer_id->AdvancedSearch->SearchValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->level_customer_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->level_customer_id->Lookup->renderViewRow($row);
+                $this->level_customer_id->EditValue = $arwrk;
+            }
+            $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
+            $this->jatuh_tempo_invoice->EditCustomAttributes = "";
+            $this->jatuh_tempo_invoice->EditValue = HtmlEncode($this->jatuh_tempo_invoice->AdvancedSearch->SearchValue);
+            $this->jatuh_tempo_invoice->PlaceHolder = RemoveHtml($this->jatuh_tempo_invoice->caption());
 
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
@@ -1565,8 +1618,8 @@ class CustomerSearch extends Customer
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if (!CheckNumber($this->budget_bonus_persen->AdvancedSearch->SearchValue)) {
-            $this->budget_bonus_persen->addErrorMessage($this->budget_bonus_persen->getErrorMessage(false));
+        if (!CheckInteger($this->jatuh_tempo_invoice->AdvancedSearch->SearchValue)) {
+            $this->jatuh_tempo_invoice->addErrorMessage($this->jatuh_tempo_invoice->getErrorMessage(false));
         }
 
         // Return validate result
@@ -1602,7 +1655,8 @@ class CustomerSearch extends Customer
         $this->_email->AdvancedSearch->load();
         $this->website->AdvancedSearch->load();
         $this->foto->AdvancedSearch->load();
-        $this->budget_bonus_persen->AdvancedSearch->load();
+        $this->level_customer_id->AdvancedSearch->load();
+        $this->jatuh_tempo_invoice->AdvancedSearch->load();
         $this->keterangan->AdvancedSearch->load();
         $this->aktif->AdvancedSearch->load();
         $this->created_at->AdvancedSearch->load();
@@ -1645,6 +1699,8 @@ class CustomerSearch extends Customer
                 case "x_idkec":
                     break;
                 case "x_idkel":
+                    break;
+                case "x_level_customer_id":
                     break;
                 case "x_aktif":
                     break;

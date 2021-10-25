@@ -127,6 +127,14 @@ $Page->showMessage();
 <?php } ?>
 </div><!-- /page* -->
     <input type="hidden" data-table="suratjalan_detail" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<?php
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("invoice", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "InvoiceGrid.php" ?>
+<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

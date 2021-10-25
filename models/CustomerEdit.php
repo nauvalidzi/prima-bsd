@@ -489,8 +489,8 @@ class CustomerEdit extends Customer
         $this->_email->setVisibility();
         $this->website->setVisibility();
         $this->foto->setVisibility();
-        $this->budget_bonus_persen->setVisibility();
-        $this->hutang_max->Visible = false;
+        $this->level_customer_id->setVisibility();
+        $this->jatuh_tempo_invoice->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->Visible = false;
@@ -519,6 +519,7 @@ class CustomerEdit extends Customer
         $this->setupLookupOptions($this->idkab);
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
+        $this->setupLookupOptions($this->level_customer_id);
 
         // Check modal
         if ($this->IsModal) {
@@ -870,13 +871,23 @@ class CustomerEdit extends Customer
             }
         }
 
-        // Check field name 'budget_bonus_persen' first before field var 'x_budget_bonus_persen'
-        $val = $CurrentForm->hasValue("budget_bonus_persen") ? $CurrentForm->getValue("budget_bonus_persen") : $CurrentForm->getValue("x_budget_bonus_persen");
-        if (!$this->budget_bonus_persen->IsDetailKey) {
+        // Check field name 'level_customer_id' first before field var 'x_level_customer_id'
+        $val = $CurrentForm->hasValue("level_customer_id") ? $CurrentForm->getValue("level_customer_id") : $CurrentForm->getValue("x_level_customer_id");
+        if (!$this->level_customer_id->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->budget_bonus_persen->Visible = false; // Disable update for API request
+                $this->level_customer_id->Visible = false; // Disable update for API request
             } else {
-                $this->budget_bonus_persen->setFormValue($val);
+                $this->level_customer_id->setFormValue($val);
+            }
+        }
+
+        // Check field name 'jatuh_tempo_invoice' first before field var 'x_jatuh_tempo_invoice'
+        $val = $CurrentForm->hasValue("jatuh_tempo_invoice") ? $CurrentForm->getValue("jatuh_tempo_invoice") : $CurrentForm->getValue("x_jatuh_tempo_invoice");
+        if (!$this->jatuh_tempo_invoice->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->jatuh_tempo_invoice->Visible = false; // Disable update for API request
+            } else {
+                $this->jatuh_tempo_invoice->setFormValue($val);
             }
         }
 
@@ -929,7 +940,8 @@ class CustomerEdit extends Customer
         $this->hp->CurrentValue = $this->hp->FormValue;
         $this->_email->CurrentValue = $this->_email->FormValue;
         $this->website->CurrentValue = $this->website->FormValue;
-        $this->budget_bonus_persen->CurrentValue = $this->budget_bonus_persen->FormValue;
+        $this->level_customer_id->CurrentValue = $this->level_customer_id->FormValue;
+        $this->jatuh_tempo_invoice->CurrentValue = $this->jatuh_tempo_invoice->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
         $this->aktif->CurrentValue = $this->aktif->FormValue;
     }
@@ -1009,8 +1021,8 @@ class CustomerEdit extends Customer
         $this->website->setDbValue($row['website']);
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
-        $this->budget_bonus_persen->setDbValue($row['budget_bonus_persen']);
-        $this->hutang_max->setDbValue($row['hutang_max']);
+        $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1043,8 +1055,8 @@ class CustomerEdit extends Customer
         $row['email'] = null;
         $row['website'] = null;
         $row['foto'] = null;
-        $row['budget_bonus_persen'] = null;
-        $row['hutang_max'] = null;
+        $row['level_customer_id'] = null;
+        $row['jatuh_tempo_invoice'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
@@ -1075,11 +1087,6 @@ class CustomerEdit extends Customer
         global $Security, $Language, $CurrentLanguage;
 
         // Initialize URLs
-
-        // Convert decimal values if posted back
-        if ($this->budget_bonus_persen->FormValue == $this->budget_bonus_persen->CurrentValue && is_numeric(ConvertToFloatString($this->budget_bonus_persen->CurrentValue))) {
-            $this->budget_bonus_persen->CurrentValue = ConvertToFloatString($this->budget_bonus_persen->CurrentValue);
-        }
 
         // Call Row_Rendering event
         $this->rowRendering();
@@ -1128,9 +1135,9 @@ class CustomerEdit extends Customer
 
         // foto
 
-        // budget_bonus_persen
+        // level_customer_id
 
-        // hutang_max
+        // jatuh_tempo_invoice
 
         // keterangan
 
@@ -1345,10 +1352,31 @@ class CustomerEdit extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->ViewValue = $this->budget_bonus_persen->CurrentValue;
-            $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
-            $this->budget_bonus_persen->ViewCustomAttributes = "";
+            // level_customer_id
+            $curVal = trim(strval($this->level_customer_id->CurrentValue));
+            if ($curVal != "") {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
+                    } else {
+                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
+                    }
+                }
+            } else {
+                $this->level_customer_id->ViewValue = null;
+            }
+            $this->level_customer_id->ViewCustomAttributes = "";
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
+            $this->jatuh_tempo_invoice->ViewValue = FormatNumber($this->jatuh_tempo_invoice->ViewValue, 0, -2, -2, -2);
+            $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -1512,10 +1540,15 @@ class CustomerEdit extends Customer
                 $this->foto->LinkAttrs->appendClass("ew-lightbox");
             }
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->LinkCustomAttributes = "";
-            $this->budget_bonus_persen->HrefValue = "";
-            $this->budget_bonus_persen->TooltipValue = "";
+            // level_customer_id
+            $this->level_customer_id->LinkCustomAttributes = "";
+            $this->level_customer_id->HrefValue = "";
+            $this->level_customer_id->TooltipValue = "";
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
+            $this->jatuh_tempo_invoice->HrefValue = "";
+            $this->jatuh_tempo_invoice->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1840,14 +1873,38 @@ class CustomerEdit extends Customer
                 RenderUploadField($this->foto);
             }
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->EditAttrs["class"] = "form-control";
-            $this->budget_bonus_persen->EditCustomAttributes = "";
-            $this->budget_bonus_persen->EditValue = HtmlEncode($this->budget_bonus_persen->CurrentValue);
-            $this->budget_bonus_persen->PlaceHolder = RemoveHtml($this->budget_bonus_persen->caption());
-            if (strval($this->budget_bonus_persen->EditValue) != "" && is_numeric($this->budget_bonus_persen->EditValue)) {
-                $this->budget_bonus_persen->EditValue = FormatNumber($this->budget_bonus_persen->EditValue, -2, -2, -2, -2);
+            // level_customer_id
+            $this->level_customer_id->EditAttrs["class"] = "form-control";
+            $this->level_customer_id->EditCustomAttributes = "";
+            $curVal = trim(strval($this->level_customer_id->CurrentValue));
+            if ($curVal != "") {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+            } else {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->Lookup !== null && is_array($this->level_customer_id->Lookup->Options) ? $curVal : null;
             }
+            if ($this->level_customer_id->ViewValue !== null) { // Load from cache
+                $this->level_customer_id->EditValue = array_values($this->level_customer_id->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->level_customer_id->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->level_customer_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->level_customer_id->Lookup->renderViewRow($row);
+                $this->level_customer_id->EditValue = $arwrk;
+            }
+            $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
+            $this->jatuh_tempo_invoice->EditCustomAttributes = "";
+            $this->jatuh_tempo_invoice->EditValue = HtmlEncode($this->jatuh_tempo_invoice->CurrentValue);
+            $this->jatuh_tempo_invoice->PlaceHolder = RemoveHtml($this->jatuh_tempo_invoice->caption());
 
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
@@ -1971,9 +2028,13 @@ class CustomerEdit extends Customer
             }
             $this->foto->ExportHrefValue = $this->foto->UploadPath . $this->foto->Upload->DbValue;
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->LinkCustomAttributes = "";
-            $this->budget_bonus_persen->HrefValue = "";
+            // level_customer_id
+            $this->level_customer_id->LinkCustomAttributes = "";
+            $this->level_customer_id->HrefValue = "";
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
+            $this->jatuh_tempo_invoice->HrefValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -2097,13 +2158,18 @@ class CustomerEdit extends Customer
                 $this->foto->addErrorMessage(str_replace("%s", $this->foto->caption(), $this->foto->RequiredErrorMessage));
             }
         }
-        if ($this->budget_bonus_persen->Required) {
-            if (!$this->budget_bonus_persen->IsDetailKey && EmptyValue($this->budget_bonus_persen->FormValue)) {
-                $this->budget_bonus_persen->addErrorMessage(str_replace("%s", $this->budget_bonus_persen->caption(), $this->budget_bonus_persen->RequiredErrorMessage));
+        if ($this->level_customer_id->Required) {
+            if (!$this->level_customer_id->IsDetailKey && EmptyValue($this->level_customer_id->FormValue)) {
+                $this->level_customer_id->addErrorMessage(str_replace("%s", $this->level_customer_id->caption(), $this->level_customer_id->RequiredErrorMessage));
             }
         }
-        if (!CheckNumber($this->budget_bonus_persen->FormValue)) {
-            $this->budget_bonus_persen->addErrorMessage($this->budget_bonus_persen->getErrorMessage(false));
+        if ($this->jatuh_tempo_invoice->Required) {
+            if (!$this->jatuh_tempo_invoice->IsDetailKey && EmptyValue($this->jatuh_tempo_invoice->FormValue)) {
+                $this->jatuh_tempo_invoice->addErrorMessage(str_replace("%s", $this->jatuh_tempo_invoice->caption(), $this->jatuh_tempo_invoice->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->jatuh_tempo_invoice->FormValue)) {
+            $this->jatuh_tempo_invoice->addErrorMessage($this->jatuh_tempo_invoice->getErrorMessage(false));
         }
         if ($this->keterangan->Required) {
             if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
@@ -2124,6 +2190,14 @@ class CustomerEdit extends Customer
         }
         $detailPage = Container("BrandGrid");
         if (in_array("brand", $detailTblVar) && $detailPage->DetailEdit) {
+            $detailPage->validateGridForm();
+        }
+        $detailPage = Container("OrderGrid");
+        if (in_array("order", $detailTblVar) && $detailPage->DetailEdit) {
+            $detailPage->validateGridForm();
+        }
+        $detailPage = Container("InvoiceGrid");
+        if (in_array("invoice", $detailTblVar) && $detailPage->DetailEdit) {
             $detailPage->validateGridForm();
         }
 
@@ -2244,8 +2318,11 @@ class CustomerEdit extends Customer
                 }
             }
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->setDbValueDef($rsnew, $this->budget_bonus_persen->CurrentValue, null, $this->budget_bonus_persen->ReadOnly);
+            // level_customer_id
+            $this->level_customer_id->setDbValueDef($rsnew, $this->level_customer_id->CurrentValue, null, $this->level_customer_id->ReadOnly);
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, $this->jatuh_tempo_invoice->ReadOnly);
 
             // keterangan
             $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
@@ -2354,6 +2431,22 @@ class CustomerEdit extends Customer
                     $detailPage = Container("BrandGrid");
                     if (in_array("brand", $detailTblVar) && $detailPage->DetailEdit) {
                         $Security->loadCurrentUserLevel($this->ProjectID . "brand"); // Load user level of detail table
+                        $editRow = $detailPage->gridUpdate();
+                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+                    }
+                }
+                if ($editRow) {
+                    $detailPage = Container("OrderGrid");
+                    if (in_array("order", $detailTblVar) && $detailPage->DetailEdit) {
+                        $Security->loadCurrentUserLevel($this->ProjectID . "order"); // Load user level of detail table
+                        $editRow = $detailPage->gridUpdate();
+                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+                    }
+                }
+                if ($editRow) {
+                    $detailPage = Container("InvoiceGrid");
+                    if (in_array("invoice", $detailTblVar) && $detailPage->DetailEdit) {
+                        $Security->loadCurrentUserLevel($this->ProjectID . "invoice"); // Load user level of detail table
                         $editRow = $detailPage->gridUpdate();
                         $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                     }
@@ -2515,6 +2608,35 @@ class CustomerEdit extends Customer
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
                 }
             }
+            if (in_array("order", $detailTblVar)) {
+                $detailPageObj = Container("OrderGrid");
+                if ($detailPageObj->DetailEdit) {
+                    $detailPageObj->CurrentMode = "edit";
+                    $detailPageObj->CurrentAction = "gridedit";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idcustomer->IsDetailKey = true;
+                    $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
+                }
+            }
+            if (in_array("invoice", $detailTblVar)) {
+                $detailPageObj = Container("InvoiceGrid");
+                if ($detailPageObj->DetailEdit) {
+                    $detailPageObj->CurrentMode = "edit";
+                    $detailPageObj->CurrentAction = "gridedit";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idcustomer->IsDetailKey = true;
+                    $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
+                    $detailPageObj->id->setSessionValue(""); // Clear session key
+                }
+            }
         }
     }
 
@@ -2536,6 +2658,8 @@ class CustomerEdit extends Customer
         $pages->Style = "tabs";
         $pages->add('alamat_customer');
         $pages->add('brand');
+        $pages->add('order');
+        $pages->add('invoice');
         $this->DetailPages = $pages;
     }
 
@@ -2563,6 +2687,8 @@ class CustomerEdit extends Customer
                 case "x_idkec":
                     break;
                 case "x_idkel":
+                    break;
+                case "x_level_customer_id":
                     break;
                 case "x_aktif":
                     break;

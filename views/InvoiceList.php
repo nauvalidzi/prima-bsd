@@ -77,6 +77,29 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
+<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
+<?php
+if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "suratjalan_detail") {
+    if ($Page->MasterRecordExists) {
+        include_once "views/SuratjalanDetailMaster.php";
+    }
+}
+?>
+<?php
+if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "pembayaran") {
+    if ($Page->MasterRecordExists) {
+        include_once "views/PembayaranMaster.php";
+    }
+}
+?>
+<?php
+if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "customer") {
+    if ($Page->MasterRecordExists) {
+        include_once "views/CustomerMaster.php";
+    }
+}
+?>
+<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
@@ -120,6 +143,18 @@ $Page->showMessage();
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
 <input type="hidden" name="t" value="invoice">
+<?php if ($Page->getCurrentMasterTable() == "suratjalan_detail" && $Page->CurrentAction) { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="suratjalan_detail">
+<input type="hidden" name="fk_idinvoice" value="<?= HtmlEncode($Page->id->getSessionValue()) ?>">
+<?php } ?>
+<?php if ($Page->getCurrentMasterTable() == "pembayaran" && $Page->CurrentAction) { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="pembayaran">
+<input type="hidden" name="fk_idinvoice" value="<?= HtmlEncode($Page->id->getSessionValue()) ?>">
+<?php } ?>
+<?php if ($Page->getCurrentMasterTable() == "customer" && $Page->CurrentAction) { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="customer">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
+<?php } ?>
 <div id="gmp_invoice" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
 <table id="tbl_invoicelist" class="table ew-table"><!-- .ew-table -->
@@ -248,7 +283,12 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td data-name="idorder" <?= $Page->idorder->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_invoice_idorder">
 <span<?= $Page->idorder->viewAttributes() ?>>
-<?= $Page->idorder->getViewValue() ?></span>
+<?php if (!EmptyString($Page->idorder->getViewValue()) && $Page->idorder->linkAttributes() != "") { ?>
+<a<?= $Page->idorder->linkAttributes() ?>><?= $Page->idorder->getViewValue() ?></a>
+<?php } else { ?>
+<?= $Page->idorder->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
     <?php } ?>

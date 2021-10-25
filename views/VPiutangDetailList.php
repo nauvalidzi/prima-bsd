@@ -102,14 +102,14 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idinvoice->Visible) { // idinvoice ?>
-        <th data-name="idinvoice" class="<?= $Page->idinvoice->headerCellClass() ?>"><div id="elh_v_piutang_detail_idinvoice" class="v_piutang_detail_idinvoice"><?= $Page->renderSort($Page->idinvoice) ?></div></th>
-<?php } ?>
-<?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
-        <th data-name="totaltagihan" class="<?= $Page->totaltagihan->headerCellClass() ?>"><div id="elh_v_piutang_detail_totaltagihan" class="v_piutang_detail_totaltagihan"><?= $Page->renderSort($Page->totaltagihan) ?></div></th>
+<?php if ($Page->tglinvoice->Visible) { // tglinvoice ?>
+        <th data-name="tglinvoice" class="<?= $Page->tglinvoice->headerCellClass() ?>"><div id="elh_v_piutang_detail_tglinvoice" class="v_piutang_detail_tglinvoice"><?= $Page->renderSort($Page->tglinvoice) ?></div></th>
 <?php } ?>
 <?php if ($Page->sisabayar->Visible) { // sisabayar ?>
         <th data-name="sisabayar" class="<?= $Page->sisabayar->headerCellClass() ?>"><div id="elh_v_piutang_detail_sisabayar" class="v_piutang_detail_sisabayar"><?= $Page->renderSort($Page->sisabayar) ?></div></th>
+<?php } ?>
+<?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
+        <th data-name="totaltagihan" class="<?= $Page->totaltagihan->headerCellClass() ?>"><div id="elh_v_piutang_detail_totaltagihan" class="v_piutang_detail_totaltagihan"><?= $Page->renderSort($Page->totaltagihan) ?></div></th>
 <?php } ?>
 <?php if ($Page->jatuhtempo->Visible) { // jatuhtempo ?>
         <th data-name="jatuhtempo" class="<?= $Page->jatuhtempo->headerCellClass() ?>"><div id="elh_v_piutang_detail_jatuhtempo" class="v_piutang_detail_jatuhtempo"><?= $Page->renderSort($Page->jatuhtempo) ?></div></th>
@@ -181,19 +181,11 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idinvoice->Visible) { // idinvoice ?>
-        <td data-name="idinvoice" <?= $Page->idinvoice->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_piutang_detail_idinvoice">
-<span<?= $Page->idinvoice->viewAttributes() ?>>
-<?= $Page->idinvoice->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
-        <td data-name="totaltagihan" <?= $Page->totaltagihan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_piutang_detail_totaltagihan">
-<span<?= $Page->totaltagihan->viewAttributes() ?>>
-<?= $Page->totaltagihan->getViewValue() ?></span>
+    <?php if ($Page->tglinvoice->Visible) { // tglinvoice ?>
+        <td data-name="tglinvoice" <?= $Page->tglinvoice->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_piutang_detail_tglinvoice">
+<span<?= $Page->tglinvoice->viewAttributes() ?>>
+<?= $Page->tglinvoice->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -202,6 +194,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_piutang_detail_sisabayar">
 <span<?= $Page->sisabayar->viewAttributes() ?>>
 <?= $Page->sisabayar->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
+        <td data-name="totaltagihan" <?= $Page->totaltagihan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_piutang_detail_totaltagihan">
+<span<?= $Page->totaltagihan->viewAttributes() ?>>
+<?= $Page->totaltagihan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

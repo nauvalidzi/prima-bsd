@@ -569,10 +569,10 @@ class VPiutangDetailList extends VPiutangDetail
         // Set up list options
         $this->setupListOptions();
         $this->idcustomer->Visible = false;
-        $this->idinvoice->setVisibility();
-        $this->totaltagihan->setVisibility();
+        $this->idinvoice->Visible = false;
+        $this->tglinvoice->setVisibility();
         $this->sisabayar->setVisibility();
-        $this->tglinvoice->Visible = false;
+        $this->totaltagihan->setVisibility();
         $this->jatuhtempo->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -604,8 +604,6 @@ class VPiutangDetailList extends VPiutangDetail
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idinvoice);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -845,9 +843,9 @@ class VPiutangDetailList extends VPiutangDetail
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idinvoice); // idinvoice
-            $this->updateSort($this->totaltagihan); // totaltagihan
+            $this->updateSort($this->tglinvoice); // tglinvoice
             $this->updateSort($this->sisabayar); // sisabayar
+            $this->updateSort($this->totaltagihan); // totaltagihan
             $this->updateSort($this->jatuhtempo); // jatuhtempo
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -893,9 +891,9 @@ class VPiutangDetailList extends VPiutangDetail
                 $this->setSessionOrderBy($orderBy);
                 $this->idcustomer->setSort("");
                 $this->idinvoice->setSort("");
-                $this->totaltagihan->setSort("");
-                $this->sisabayar->setSort("");
                 $this->tglinvoice->setSort("");
+                $this->sisabayar->setSort("");
+                $this->totaltagihan->setSort("");
                 $this->jatuhtempo->setSort("");
             }
 
@@ -1232,9 +1230,9 @@ class VPiutangDetailList extends VPiutangDetail
         }
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idinvoice->setDbValue($row['idinvoice']);
-        $this->totaltagihan->setDbValue($row['totaltagihan']);
-        $this->sisabayar->setDbValue($row['sisabayar']);
         $this->tglinvoice->setDbValue($row['tglinvoice']);
+        $this->sisabayar->setDbValue($row['sisabayar']);
+        $this->totaltagihan->setDbValue($row['totaltagihan']);
         $this->jatuhtempo->setDbValue($row['jatuhtempo']);
     }
 
@@ -1244,9 +1242,9 @@ class VPiutangDetailList extends VPiutangDetail
         $row = [];
         $row['idcustomer'] = null;
         $row['idinvoice'] = null;
-        $row['totaltagihan'] = null;
-        $row['sisabayar'] = null;
         $row['tglinvoice'] = null;
+        $row['sisabayar'] = null;
+        $row['totaltagihan'] = null;
         $row['jatuhtempo'] = null;
         return $row;
     }
@@ -1286,95 +1284,62 @@ class VPiutangDetailList extends VPiutangDetail
         // Common render codes for all row types
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
 
         // idinvoice
+        $this->idinvoice->CellCssStyle = "white-space: nowrap;";
 
-        // totaltagihan
+        // tglinvoice
 
         // sisabayar
 
-        // tglinvoice
+        // totaltagihan
 
         // jatuhtempo
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
             $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-            $curVal = trim(strval($this->idinvoice->CurrentValue));
-            if ($curVal != "") {
-                $this->idinvoice->ViewValue = $this->idinvoice->lookupCacheOption($curVal);
-                if ($this->idinvoice->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                        $this->idinvoice->ViewValue = $this->idinvoice->displayValue($arwrk);
-                    } else {
-                        $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idinvoice->ViewValue = null;
-            }
             $this->idinvoice->ViewCustomAttributes = "";
-
-            // totaltagihan
-            $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
-            $this->totaltagihan->ViewValue = FormatCurrency($this->totaltagihan->ViewValue, 2, -2, -2, -2);
-            $this->totaltagihan->ViewCustomAttributes = "";
-
-            // sisabayar
-            $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
-            $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
-            $this->sisabayar->ViewCustomAttributes = "";
 
             // tglinvoice
             $this->tglinvoice->ViewValue = $this->tglinvoice->CurrentValue;
             $this->tglinvoice->ViewValue = FormatDateTime($this->tglinvoice->ViewValue, 0);
             $this->tglinvoice->ViewCustomAttributes = "";
 
+            // sisabayar
+            $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
+            $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
+            $this->sisabayar->ViewCustomAttributes = "";
+
+            // totaltagihan
+            $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
+            $this->totaltagihan->ViewValue = FormatCurrency($this->totaltagihan->ViewValue, 2, -2, -2, -2);
+            $this->totaltagihan->ViewCustomAttributes = "";
+
             // jatuhtempo
             $this->jatuhtempo->ViewValue = $this->jatuhtempo->CurrentValue;
             $this->jatuhtempo->ViewValue = FormatDateTime($this->jatuhtempo->ViewValue, 0);
             $this->jatuhtempo->ViewCustomAttributes = "";
 
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
-            $this->idinvoice->TooltipValue = "";
-
-            // totaltagihan
-            $this->totaltagihan->LinkCustomAttributes = "";
-            $this->totaltagihan->HrefValue = "";
-            $this->totaltagihan->TooltipValue = "";
+            // tglinvoice
+            $this->tglinvoice->LinkCustomAttributes = "";
+            $this->tglinvoice->HrefValue = "";
+            $this->tglinvoice->TooltipValue = "";
 
             // sisabayar
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
             $this->sisabayar->TooltipValue = "";
+
+            // totaltagihan
+            $this->totaltagihan->LinkCustomAttributes = "";
+            $this->totaltagihan->HrefValue = "";
+            $this->totaltagihan->TooltipValue = "";
 
             // jatuhtempo
             $this->jatuhtempo->LinkCustomAttributes = "";
@@ -1514,10 +1479,6 @@ class VPiutangDetailList extends VPiutangDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
-                case "x_idinvoice":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

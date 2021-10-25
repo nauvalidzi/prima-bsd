@@ -29,7 +29,13 @@ class VBonuscustomer extends DbTable
 
     // Fields
     public $idpegawai;
+    public $kode_pegawai;
+    public $pegawai;
+    public $nama_pegawai;
     public $idcustomer;
+    public $kode_customer;
+    public $nama_customer;
+    public $customer;
     public $blackbonus;
 
     // Page ID
@@ -69,8 +75,7 @@ class VBonuscustomer extends DbTable
         // idpegawai
         $this->idpegawai = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idpegawai->Nullable = false; // NOT NULL field
-        $this->idpegawai->Required = true; // Required field
-        $this->idpegawai->Sortable = true; // Allow sort
+        $this->idpegawai->Sortable = false; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
                 $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
@@ -83,11 +88,35 @@ class VBonuscustomer extends DbTable
         $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
+        // kode_pegawai
+        $this->kode_pegawai = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_kode_pegawai', 'kode_pegawai', '`kode_pegawai`', '`kode_pegawai`', 200, 20, -1, false, '`kode_pegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_pegawai->Nullable = false; // NOT NULL field
+        $this->kode_pegawai->Required = true; // Required field
+        $this->kode_pegawai->Sortable = false; // Allow sort
+        $this->kode_pegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_pegawai->Param, "CustomMsg");
+        $this->Fields['kode_pegawai'] = &$this->kode_pegawai;
+
+        // pegawai
+        $this->pegawai = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_pegawai', 'pegawai', '`pegawai`', '`pegawai`', 200, 122, -1, false, '`pegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->pegawai->Nullable = false; // NOT NULL field
+        $this->pegawai->Required = true; // Required field
+        $this->pegawai->Sortable = true; // Allow sort
+        $this->pegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->pegawai->Param, "CustomMsg");
+        $this->Fields['pegawai'] = &$this->pegawai;
+
+        // nama_pegawai
+        $this->nama_pegawai = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_nama_pegawai', 'nama_pegawai', '`nama_pegawai`', '`nama_pegawai`', 200, 100, -1, false, '`nama_pegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_pegawai->Nullable = false; // NOT NULL field
+        $this->nama_pegawai->Required = true; // Required field
+        $this->nama_pegawai->Sortable = false; // Allow sort
+        $this->nama_pegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_pegawai->Param, "CustomMsg");
+        $this->Fields['nama_pegawai'] = &$this->nama_pegawai;
+
         // idcustomer
         $this->idcustomer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
-        $this->idcustomer->Sortable = true; // Allow sort
+        $this->idcustomer->Sortable = false; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
                 $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
@@ -99,6 +128,30 @@ class VBonuscustomer extends DbTable
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->Fields['idcustomer'] = &$this->idcustomer;
+
+        // kode_customer
+        $this->kode_customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_kode_customer', 'kode_customer', '`kode_customer`', '`kode_customer`', 200, 20, -1, false, '`kode_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_customer->Nullable = false; // NOT NULL field
+        $this->kode_customer->Required = true; // Required field
+        $this->kode_customer->Sortable = false; // Allow sort
+        $this->kode_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_customer->Param, "CustomMsg");
+        $this->Fields['kode_customer'] = &$this->kode_customer;
+
+        // nama_customer
+        $this->nama_customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 100, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_customer->Nullable = false; // NOT NULL field
+        $this->nama_customer->Required = true; // Required field
+        $this->nama_customer->Sortable = false; // Allow sort
+        $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
+        $this->Fields['nama_customer'] = &$this->nama_customer;
+
+        // customer
+        $this->customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_customer', 'customer', '`customer`', '`customer`', 200, 122, -1, false, '`customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->customer->Nullable = false; // NOT NULL field
+        $this->customer->Required = true; // Required field
+        $this->customer->Sortable = true; // Allow sort
+        $this->customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->customer->Param, "CustomMsg");
+        $this->Fields['customer'] = &$this->customer;
 
         // blackbonus
         $this->blackbonus = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 131, 42, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -551,7 +604,13 @@ class VBonuscustomer extends DbTable
             return;
         }
         $this->idpegawai->DbValue = $row['idpegawai'];
+        $this->kode_pegawai->DbValue = $row['kode_pegawai'];
+        $this->pegawai->DbValue = $row['pegawai'];
+        $this->nama_pegawai->DbValue = $row['nama_pegawai'];
         $this->idcustomer->DbValue = $row['idcustomer'];
+        $this->kode_customer->DbValue = $row['kode_customer'];
+        $this->nama_customer->DbValue = $row['nama_customer'];
+        $this->customer->DbValue = $row['customer'];
         $this->blackbonus->DbValue = $row['blackbonus'];
     }
 
@@ -828,7 +887,13 @@ SORTHTML;
             return;
         }
         $this->idpegawai->setDbValue($row['idpegawai']);
+        $this->kode_pegawai->setDbValue($row['kode_pegawai']);
+        $this->pegawai->setDbValue($row['pegawai']);
+        $this->nama_pegawai->setDbValue($row['nama_pegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kode_customer->setDbValue($row['kode_customer']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
+        $this->customer->setDbValue($row['customer']);
         $this->blackbonus->setDbValue($row['blackbonus']);
     }
 
@@ -843,8 +908,26 @@ SORTHTML;
         // Common render codes
 
         // idpegawai
+        $this->idpegawai->CellCssStyle = "white-space: nowrap;";
+
+        // kode_pegawai
+        $this->kode_pegawai->CellCssStyle = "white-space: nowrap;";
+
+        // pegawai
+
+        // nama_pegawai
+        $this->nama_pegawai->CellCssStyle = "white-space: nowrap;";
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
+
+        // kode_customer
+        $this->kode_customer->CellCssStyle = "white-space: nowrap;";
+
+        // nama_customer
+        $this->nama_customer->CellCssStyle = "white-space: nowrap;";
+
+        // customer
 
         // blackbonus
 
@@ -870,6 +953,18 @@ SORTHTML;
         }
         $this->idpegawai->ViewCustomAttributes = "";
 
+        // kode_pegawai
+        $this->kode_pegawai->ViewValue = $this->kode_pegawai->CurrentValue;
+        $this->kode_pegawai->ViewCustomAttributes = "";
+
+        // pegawai
+        $this->pegawai->ViewValue = $this->pegawai->CurrentValue;
+        $this->pegawai->ViewCustomAttributes = "";
+
+        // nama_pegawai
+        $this->nama_pegawai->ViewValue = $this->nama_pegawai->CurrentValue;
+        $this->nama_pegawai->ViewCustomAttributes = "";
+
         // idcustomer
         $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
         $curVal = trim(strval($this->idcustomer->CurrentValue));
@@ -892,6 +987,18 @@ SORTHTML;
         }
         $this->idcustomer->ViewCustomAttributes = "";
 
+        // kode_customer
+        $this->kode_customer->ViewValue = $this->kode_customer->CurrentValue;
+        $this->kode_customer->ViewCustomAttributes = "";
+
+        // nama_customer
+        $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->ViewCustomAttributes = "";
+
+        // customer
+        $this->customer->ViewValue = $this->customer->CurrentValue;
+        $this->customer->ViewCustomAttributes = "";
+
         // blackbonus
         $this->blackbonus->ViewValue = $this->blackbonus->CurrentValue;
         $this->blackbonus->ViewValue = FormatCurrency($this->blackbonus->ViewValue, 2, -2, -2, -2);
@@ -902,10 +1009,40 @@ SORTHTML;
         $this->idpegawai->HrefValue = "";
         $this->idpegawai->TooltipValue = "";
 
+        // kode_pegawai
+        $this->kode_pegawai->LinkCustomAttributes = "";
+        $this->kode_pegawai->HrefValue = "";
+        $this->kode_pegawai->TooltipValue = "";
+
+        // pegawai
+        $this->pegawai->LinkCustomAttributes = "";
+        $this->pegawai->HrefValue = "";
+        $this->pegawai->TooltipValue = "";
+
+        // nama_pegawai
+        $this->nama_pegawai->LinkCustomAttributes = "";
+        $this->nama_pegawai->HrefValue = "";
+        $this->nama_pegawai->TooltipValue = "";
+
         // idcustomer
         $this->idcustomer->LinkCustomAttributes = "";
         $this->idcustomer->HrefValue = "";
         $this->idcustomer->TooltipValue = "";
+
+        // kode_customer
+        $this->kode_customer->LinkCustomAttributes = "";
+        $this->kode_customer->HrefValue = "";
+        $this->kode_customer->TooltipValue = "";
+
+        // nama_customer
+        $this->nama_customer->LinkCustomAttributes = "";
+        $this->nama_customer->HrefValue = "";
+        $this->nama_customer->TooltipValue = "";
+
+        // customer
+        $this->customer->LinkCustomAttributes = "";
+        $this->customer->HrefValue = "";
+        $this->customer->TooltipValue = "";
 
         // blackbonus
         $this->blackbonus->LinkCustomAttributes = "";
@@ -936,11 +1073,65 @@ SORTHTML;
             $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
         }
 
+        // kode_pegawai
+        $this->kode_pegawai->EditAttrs["class"] = "form-control";
+        $this->kode_pegawai->EditCustomAttributes = "";
+        if (!$this->kode_pegawai->Raw) {
+            $this->kode_pegawai->CurrentValue = HtmlDecode($this->kode_pegawai->CurrentValue);
+        }
+        $this->kode_pegawai->EditValue = $this->kode_pegawai->CurrentValue;
+        $this->kode_pegawai->PlaceHolder = RemoveHtml($this->kode_pegawai->caption());
+
+        // pegawai
+        $this->pegawai->EditAttrs["class"] = "form-control";
+        $this->pegawai->EditCustomAttributes = "";
+        if (!$this->pegawai->Raw) {
+            $this->pegawai->CurrentValue = HtmlDecode($this->pegawai->CurrentValue);
+        }
+        $this->pegawai->EditValue = $this->pegawai->CurrentValue;
+        $this->pegawai->PlaceHolder = RemoveHtml($this->pegawai->caption());
+
+        // nama_pegawai
+        $this->nama_pegawai->EditAttrs["class"] = "form-control";
+        $this->nama_pegawai->EditCustomAttributes = "";
+        if (!$this->nama_pegawai->Raw) {
+            $this->nama_pegawai->CurrentValue = HtmlDecode($this->nama_pegawai->CurrentValue);
+        }
+        $this->nama_pegawai->EditValue = $this->nama_pegawai->CurrentValue;
+        $this->nama_pegawai->PlaceHolder = RemoveHtml($this->nama_pegawai->caption());
+
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+
+        // kode_customer
+        $this->kode_customer->EditAttrs["class"] = "form-control";
+        $this->kode_customer->EditCustomAttributes = "";
+        if (!$this->kode_customer->Raw) {
+            $this->kode_customer->CurrentValue = HtmlDecode($this->kode_customer->CurrentValue);
+        }
+        $this->kode_customer->EditValue = $this->kode_customer->CurrentValue;
+        $this->kode_customer->PlaceHolder = RemoveHtml($this->kode_customer->caption());
+
+        // nama_customer
+        $this->nama_customer->EditAttrs["class"] = "form-control";
+        $this->nama_customer->EditCustomAttributes = "";
+        if (!$this->nama_customer->Raw) {
+            $this->nama_customer->CurrentValue = HtmlDecode($this->nama_customer->CurrentValue);
+        }
+        $this->nama_customer->EditValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
+
+        // customer
+        $this->customer->EditAttrs["class"] = "form-control";
+        $this->customer->EditCustomAttributes = "";
+        if (!$this->customer->Raw) {
+            $this->customer->CurrentValue = HtmlDecode($this->customer->CurrentValue);
+        }
+        $this->customer->EditValue = $this->customer->CurrentValue;
+        $this->customer->PlaceHolder = RemoveHtml($this->customer->caption());
 
         // blackbonus
         $this->blackbonus->EditAttrs["class"] = "form-control";
@@ -979,12 +1170,12 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->pegawai);
+                    $doc->exportCaption($this->customer);
                     $doc->exportCaption($this->blackbonus);
                 } else {
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->pegawai);
+                    $doc->exportCaption($this->customer);
                     $doc->exportCaption($this->blackbonus);
                 }
                 $doc->endExportRow();
@@ -1015,12 +1206,12 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->pegawai);
+                        $doc->exportField($this->customer);
                         $doc->exportField($this->blackbonus);
                     } else {
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->pegawai);
+                        $doc->exportField($this->customer);
                         $doc->exportField($this->blackbonus);
                     }
                     $doc->endExportRow($rowCnt);

@@ -49,8 +49,8 @@ class Customer extends DbTable
     public $_email;
     public $website;
     public $foto;
-    public $budget_bonus_persen;
-    public $hutang_max;
+    public $level_customer_id;
+    public $jatuh_tempo_invoice;
     public $keterangan;
     public $aktif;
     public $created_at;
@@ -298,20 +298,29 @@ class Customer extends DbTable
         $this->foto->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->foto->Param, "CustomMsg");
         $this->Fields['foto'] = &$this->foto;
 
-        // budget_bonus_persen
-        $this->budget_bonus_persen = new DbField('customer', 'customer', 'x_budget_bonus_persen', 'budget_bonus_persen', '`budget_bonus_persen`', '`budget_bonus_persen`', 5, 22, -1, false, '`budget_bonus_persen`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->budget_bonus_persen->Sortable = true; // Allow sort
-        $this->budget_bonus_persen->DefaultDecimalPrecision = 2; // Default decimal precision
-        $this->budget_bonus_persen->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
-        $this->budget_bonus_persen->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->budget_bonus_persen->Param, "CustomMsg");
-        $this->Fields['budget_bonus_persen'] = &$this->budget_bonus_persen;
+        // level_customer_id
+        $this->level_customer_id = new DbField('customer', 'customer', 'x_level_customer_id', 'level_customer_id', '`level_customer_id`', '`level_customer_id`', 3, 11, -1, false, '`level_customer_id`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->level_customer_id->Sortable = true; // Allow sort
+        $this->level_customer_id->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->level_customer_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->level_customer_id->Lookup = new Lookup('level_customer_id', 'level_customer', false, 'id', ["level","limit_kredit","diskon",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->level_customer_id->Lookup = new Lookup('level_customer_id', 'level_customer', false, 'id', ["level","limit_kredit","diskon",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->level_customer_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->level_customer_id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->level_customer_id->Param, "CustomMsg");
+        $this->Fields['level_customer_id'] = &$this->level_customer_id;
 
-        // hutang_max
-        $this->hutang_max = new DbField('customer', 'customer', 'x_hutang_max', 'hutang_max', '`hutang_max`', '`hutang_max`', 20, 20, -1, false, '`hutang_max`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->hutang_max->Sortable = false; // Allow sort
-        $this->hutang_max->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->hutang_max->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hutang_max->Param, "CustomMsg");
-        $this->Fields['hutang_max'] = &$this->hutang_max;
+        // jatuh_tempo_invoice
+        $this->jatuh_tempo_invoice = new DbField('customer', 'customer', 'x_jatuh_tempo_invoice', 'jatuh_tempo_invoice', '`jatuh_tempo_invoice`', '`jatuh_tempo_invoice`', 2, 6, -1, false, '`jatuh_tempo_invoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jatuh_tempo_invoice->Sortable = true; // Allow sort
+        $this->jatuh_tempo_invoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->jatuh_tempo_invoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jatuh_tempo_invoice->Param, "CustomMsg");
+        $this->Fields['jatuh_tempo_invoice'] = &$this->jatuh_tempo_invoice;
 
         // keterangan
         $this->keterangan = new DbField('customer', 'customer', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, 255, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
@@ -338,7 +347,6 @@ class Customer extends DbTable
 
         // created_at
         $this->created_at = new DbField('customer', 'customer', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_at->Nullable = false; // NOT NULL field
         $this->created_at->Sortable = true; // Allow sort
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
@@ -346,7 +354,6 @@ class Customer extends DbTable
 
         // updated_at
         $this->updated_at = new DbField('customer', 'customer', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->updated_at->Nullable = false; // NOT NULL field
         $this->updated_at->Sortable = true; // Allow sort
         $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
@@ -471,6 +478,14 @@ class Customer extends DbTable
         }
         if ($this->getCurrentDetailTable() == "brand") {
             $detailUrl = Container("brand")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
+        }
+        if ($this->getCurrentDetailTable() == "order") {
+            $detailUrl = Container("order")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
+        }
+        if ($this->getCurrentDetailTable() == "invoice") {
+            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -881,8 +896,8 @@ class Customer extends DbTable
         $this->_email->DbValue = $row['email'];
         $this->website->DbValue = $row['website'];
         $this->foto->Upload->DbValue = $row['foto'];
-        $this->budget_bonus_persen->DbValue = $row['budget_bonus_persen'];
-        $this->hutang_max->DbValue = $row['hutang_max'];
+        $this->level_customer_id->DbValue = $row['level_customer_id'];
+        $this->jatuh_tempo_invoice->DbValue = $row['jatuh_tempo_invoice'];
         $this->keterangan->DbValue = $row['keterangan'];
         $this->aktif->DbValue = $row['aktif'];
         $this->created_at->DbValue = $row['created_at'];
@@ -1254,8 +1269,8 @@ SORTHTML;
         $this->website->setDbValue($row['website']);
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
-        $this->budget_bonus_persen->setDbValue($row['budget_bonus_persen']);
-        $this->hutang_max->setDbValue($row['hutang_max']);
+        $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1315,10 +1330,9 @@ SORTHTML;
 
         // foto
 
-        // budget_bonus_persen
+        // level_customer_id
 
-        // hutang_max
-        $this->hutang_max->CellCssStyle = "white-space: nowrap;";
+        // jatuh_tempo_invoice
 
         // keterangan
 
@@ -1533,15 +1547,31 @@ SORTHTML;
         }
         $this->foto->ViewCustomAttributes = "";
 
-        // budget_bonus_persen
-        $this->budget_bonus_persen->ViewValue = $this->budget_bonus_persen->CurrentValue;
-        $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
-        $this->budget_bonus_persen->ViewCustomAttributes = "";
+        // level_customer_id
+        $curVal = trim(strval($this->level_customer_id->CurrentValue));
+        if ($curVal != "") {
+            $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+            if ($this->level_customer_id->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
+                    $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
+                } else {
+                    $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
+                }
+            }
+        } else {
+            $this->level_customer_id->ViewValue = null;
+        }
+        $this->level_customer_id->ViewCustomAttributes = "";
 
-        // hutang_max
-        $this->hutang_max->ViewValue = $this->hutang_max->CurrentValue;
-        $this->hutang_max->ViewValue = FormatCurrency($this->hutang_max->ViewValue, 2, -2, -2, -2);
-        $this->hutang_max->ViewCustomAttributes = "";
+        // jatuh_tempo_invoice
+        $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
+        $this->jatuh_tempo_invoice->ViewValue = FormatNumber($this->jatuh_tempo_invoice->ViewValue, 0, -2, -2, -2);
+        $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
         // keterangan
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -1715,15 +1745,15 @@ SORTHTML;
             $this->foto->LinkAttrs->appendClass("ew-lightbox");
         }
 
-        // budget_bonus_persen
-        $this->budget_bonus_persen->LinkCustomAttributes = "";
-        $this->budget_bonus_persen->HrefValue = "";
-        $this->budget_bonus_persen->TooltipValue = "";
+        // level_customer_id
+        $this->level_customer_id->LinkCustomAttributes = "";
+        $this->level_customer_id->HrefValue = "";
+        $this->level_customer_id->TooltipValue = "";
 
-        // hutang_max
-        $this->hutang_max->LinkCustomAttributes = "";
-        $this->hutang_max->HrefValue = "";
-        $this->hutang_max->TooltipValue = "";
+        // jatuh_tempo_invoice
+        $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
+        $this->jatuh_tempo_invoice->HrefValue = "";
+        $this->jatuh_tempo_invoice->TooltipValue = "";
 
         // keterangan
         $this->keterangan->LinkCustomAttributes = "";
@@ -1964,20 +1994,16 @@ SORTHTML;
             $this->foto->Upload->FileName = $this->foto->CurrentValue;
         }
 
-        // budget_bonus_persen
-        $this->budget_bonus_persen->EditAttrs["class"] = "form-control";
-        $this->budget_bonus_persen->EditCustomAttributes = "";
-        $this->budget_bonus_persen->EditValue = $this->budget_bonus_persen->CurrentValue;
-        $this->budget_bonus_persen->PlaceHolder = RemoveHtml($this->budget_bonus_persen->caption());
-        if (strval($this->budget_bonus_persen->EditValue) != "" && is_numeric($this->budget_bonus_persen->EditValue)) {
-            $this->budget_bonus_persen->EditValue = FormatNumber($this->budget_bonus_persen->EditValue, -2, -2, -2, -2);
-        }
+        // level_customer_id
+        $this->level_customer_id->EditAttrs["class"] = "form-control";
+        $this->level_customer_id->EditCustomAttributes = "";
+        $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
 
-        // hutang_max
-        $this->hutang_max->EditAttrs["class"] = "form-control";
-        $this->hutang_max->EditCustomAttributes = "";
-        $this->hutang_max->EditValue = $this->hutang_max->CurrentValue;
-        $this->hutang_max->PlaceHolder = RemoveHtml($this->hutang_max->caption());
+        // jatuh_tempo_invoice
+        $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
+        $this->jatuh_tempo_invoice->EditCustomAttributes = "";
+        $this->jatuh_tempo_invoice->EditValue = $this->jatuh_tempo_invoice->CurrentValue;
+        $this->jatuh_tempo_invoice->PlaceHolder = RemoveHtml($this->jatuh_tempo_invoice->caption());
 
         // keterangan
         $this->keterangan->EditAttrs["class"] = "form-control";
@@ -2052,7 +2078,8 @@ SORTHTML;
                     $doc->exportCaption($this->_email);
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
-                    $doc->exportCaption($this->budget_bonus_persen);
+                    $doc->exportCaption($this->level_customer_id);
+                    $doc->exportCaption($this->jatuh_tempo_invoice);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                 } else {
@@ -2077,7 +2104,8 @@ SORTHTML;
                     $doc->exportCaption($this->_email);
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
-                    $doc->exportCaption($this->budget_bonus_persen);
+                    $doc->exportCaption($this->level_customer_id);
+                    $doc->exportCaption($this->jatuh_tempo_invoice);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->created_at);
@@ -2132,7 +2160,8 @@ SORTHTML;
                         $doc->exportField($this->_email);
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
-                        $doc->exportField($this->budget_bonus_persen);
+                        $doc->exportField($this->level_customer_id);
+                        $doc->exportField($this->jatuh_tempo_invoice);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                     } else {
@@ -2157,7 +2186,8 @@ SORTHTML;
                         $doc->exportField($this->_email);
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
-                        $doc->exportField($this->budget_bonus_persen);
+                        $doc->exportField($this->level_customer_id);
+                        $doc->exportField($this->jatuh_tempo_invoice);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->created_at);
@@ -2374,6 +2404,7 @@ SORTHTML;
         // Enter your code here
         // To cancel, set return value to false
         $rsnew['kode'] = getNextKode('customer', 0);
+        $rsnew['created_at'] = date('Y-m-d H:i:s');
         return true;
     }
 
@@ -2390,6 +2421,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
 

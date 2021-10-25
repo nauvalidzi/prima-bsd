@@ -30,6 +30,8 @@ class VBonuscustomerDetail extends DbTable
     // Fields
     public $idcustomer;
     public $idinvoice;
+    public $nama_customer;
+    public $kode_invoice;
     public $blackbonus;
 
     // Page ID
@@ -100,6 +102,22 @@ class VBonuscustomerDetail extends DbTable
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idinvoice->Param, "CustomMsg");
         $this->Fields['idinvoice'] = &$this->idinvoice;
+
+        // nama_customer
+        $this->nama_customer = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 100, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_customer->Nullable = false; // NOT NULL field
+        $this->nama_customer->Required = true; // Required field
+        $this->nama_customer->Sortable = true; // Allow sort
+        $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
+        $this->Fields['nama_customer'] = &$this->nama_customer;
+
+        // kode_invoice
+        $this->kode_invoice = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_kode_invoice', 'kode_invoice', '`kode_invoice`', '`kode_invoice`', 200, 50, -1, false, '`kode_invoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_invoice->Nullable = false; // NOT NULL field
+        $this->kode_invoice->Required = true; // Required field
+        $this->kode_invoice->Sortable = true; // Allow sort
+        $this->kode_invoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_invoice->Param, "CustomMsg");
+        $this->Fields['kode_invoice'] = &$this->kode_invoice;
 
         // blackbonus
         $this->blackbonus = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 131, 41, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -586,6 +604,8 @@ class VBonuscustomerDetail extends DbTable
         }
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->idinvoice->DbValue = $row['idinvoice'];
+        $this->nama_customer->DbValue = $row['nama_customer'];
+        $this->kode_invoice->DbValue = $row['kode_invoice'];
         $this->blackbonus->DbValue = $row['blackbonus'];
     }
 
@@ -913,6 +933,8 @@ SORTHTML;
         }
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idinvoice->setDbValue($row['idinvoice']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
+        $this->kode_invoice->setDbValue($row['kode_invoice']);
         $this->blackbonus->setDbValue($row['blackbonus']);
     }
 
@@ -929,6 +951,10 @@ SORTHTML;
         // idcustomer
 
         // idinvoice
+
+        // nama_customer
+
+        // kode_invoice
 
         // blackbonus
 
@@ -976,6 +1002,14 @@ SORTHTML;
         }
         $this->idinvoice->ViewCustomAttributes = "";
 
+        // nama_customer
+        $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->ViewCustomAttributes = "";
+
+        // kode_invoice
+        $this->kode_invoice->ViewValue = $this->kode_invoice->CurrentValue;
+        $this->kode_invoice->ViewCustomAttributes = "";
+
         // blackbonus
         $this->blackbonus->ViewValue = $this->blackbonus->CurrentValue;
         $this->blackbonus->ViewValue = FormatCurrency($this->blackbonus->ViewValue, 2, -2, -2, -2);
@@ -990,6 +1024,16 @@ SORTHTML;
         $this->idinvoice->LinkCustomAttributes = "";
         $this->idinvoice->HrefValue = "";
         $this->idinvoice->TooltipValue = "";
+
+        // nama_customer
+        $this->nama_customer->LinkCustomAttributes = "";
+        $this->nama_customer->HrefValue = "";
+        $this->nama_customer->TooltipValue = "";
+
+        // kode_invoice
+        $this->kode_invoice->LinkCustomAttributes = "";
+        $this->kode_invoice->HrefValue = "";
+        $this->kode_invoice->TooltipValue = "";
 
         // blackbonus
         $this->blackbonus->LinkCustomAttributes = "";
@@ -1065,6 +1109,24 @@ SORTHTML;
         }
         $this->idinvoice->ViewCustomAttributes = "";
 
+        // nama_customer
+        $this->nama_customer->EditAttrs["class"] = "form-control";
+        $this->nama_customer->EditCustomAttributes = "";
+        if (!$this->nama_customer->Raw) {
+            $this->nama_customer->CurrentValue = HtmlDecode($this->nama_customer->CurrentValue);
+        }
+        $this->nama_customer->EditValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
+
+        // kode_invoice
+        $this->kode_invoice->EditAttrs["class"] = "form-control";
+        $this->kode_invoice->EditCustomAttributes = "";
+        if (!$this->kode_invoice->Raw) {
+            $this->kode_invoice->CurrentValue = HtmlDecode($this->kode_invoice->CurrentValue);
+        }
+        $this->kode_invoice->EditValue = $this->kode_invoice->CurrentValue;
+        $this->kode_invoice->PlaceHolder = RemoveHtml($this->kode_invoice->caption());
+
         // blackbonus
         $this->blackbonus->EditAttrs["class"] = "form-control";
         $this->blackbonus->EditCustomAttributes = "";
@@ -1104,10 +1166,14 @@ SORTHTML;
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->idinvoice);
+                    $doc->exportCaption($this->nama_customer);
+                    $doc->exportCaption($this->kode_invoice);
                     $doc->exportCaption($this->blackbonus);
                 } else {
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->idinvoice);
+                    $doc->exportCaption($this->nama_customer);
+                    $doc->exportCaption($this->kode_invoice);
                     $doc->exportCaption($this->blackbonus);
                 }
                 $doc->endExportRow();
@@ -1140,10 +1206,14 @@ SORTHTML;
                     if ($exportPageType == "view") {
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->idinvoice);
+                        $doc->exportField($this->nama_customer);
+                        $doc->exportField($this->kode_invoice);
                         $doc->exportField($this->blackbonus);
                     } else {
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->idinvoice);
+                        $doc->exportField($this->nama_customer);
+                        $doc->exportField($this->kode_invoice);
                         $doc->exportField($this->blackbonus);
                     }
                     $doc->endExportRow($rowCnt);

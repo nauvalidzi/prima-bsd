@@ -22,8 +22,8 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.v_bonuscustomer_detail)
         ew.vars.tables.v_bonuscustomer_detail = currentTable;
     fv_bonuscustomer_detailgrid.addFields([
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null, ew.Validators.integer], fields.idcustomer.isInvalid],
-        ["idinvoice", [fields.idinvoice.visible && fields.idinvoice.required ? ew.Validators.required(fields.idinvoice.caption) : null, ew.Validators.integer], fields.idinvoice.isInvalid],
+        ["nama_customer", [fields.nama_customer.visible && fields.nama_customer.required ? ew.Validators.required(fields.nama_customer.caption) : null], fields.nama_customer.isInvalid],
+        ["kode_invoice", [fields.kode_invoice.visible && fields.kode_invoice.required ? ew.Validators.required(fields.kode_invoice.caption) : null], fields.kode_invoice.isInvalid],
         ["blackbonus", [fields.blackbonus.visible && fields.blackbonus.required ? ew.Validators.required(fields.blackbonus.caption) : null, ew.Validators.float], fields.blackbonus.isInvalid]
     ]);
 
@@ -78,6 +78,10 @@ loadjs.ready("head", function () {
     // Check empty row
     fv_bonuscustomer_detailgrid.emptyRow = function (rowIndex) {
         var fobj = this.getForm();
+        if (ew.valueChanged(fobj, rowIndex, "nama_customer", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "kode_invoice", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "blackbonus", false))
             return false;
         return true;
@@ -93,8 +97,6 @@ loadjs.ready("head", function () {
     fv_bonuscustomer_detailgrid.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fv_bonuscustomer_detailgrid.lists.idcustomer = <?= $Grid->idcustomer->toClientList($Grid) ?>;
-    fv_bonuscustomer_detailgrid.lists.idinvoice = <?= $Grid->idinvoice->toClientList($Grid) ?>;
     loadjs.done("fv_bonuscustomer_detailgrid");
 });
 </script>
@@ -119,11 +121,11 @@ $Grid->renderListOptions();
 // Render list options (header, left)
 $Grid->ListOptions->render("header", "left");
 ?>
-<?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Grid->idcustomer->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_idcustomer" class="v_bonuscustomer_detail_idcustomer"><?= $Grid->renderSort($Grid->idcustomer) ?></div></th>
+<?php if ($Grid->nama_customer->Visible) { // nama_customer ?>
+        <th data-name="nama_customer" class="<?= $Grid->nama_customer->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_nama_customer" class="v_bonuscustomer_detail_nama_customer"><?= $Grid->renderSort($Grid->nama_customer) ?></div></th>
 <?php } ?>
-<?php if ($Grid->idinvoice->Visible) { // idinvoice ?>
-        <th data-name="idinvoice" class="<?= $Grid->idinvoice->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_idinvoice" class="v_bonuscustomer_detail_idinvoice"><?= $Grid->renderSort($Grid->idinvoice) ?></div></th>
+<?php if ($Grid->kode_invoice->Visible) { // kode_invoice ?>
+        <th data-name="kode_invoice" class="<?= $Grid->kode_invoice->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_kode_invoice" class="v_bonuscustomer_detail_kode_invoice"><?= $Grid->renderSort($Grid->kode_invoice) ?></div></th>
 <?php } ?>
 <?php if ($Grid->blackbonus->Visible) { // blackbonus ?>
         <th data-name="blackbonus" class="<?= $Grid->blackbonus->headerCellClass() ?>"><div id="elh_v_bonuscustomer_detail_blackbonus" class="v_bonuscustomer_detail_blackbonus"><?= $Grid->renderSort($Grid->blackbonus) ?></div></th>
@@ -241,78 +243,59 @@ while ($Grid->RecordCount < $Grid->StopRecord) {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 ?>
-    <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer" <?= $Grid->idcustomer->cellAttributes() ?>>
+    <?php if ($Grid->nama_customer->Visible) { // nama_customer ?>
+        <td data-name="nama_customer" <?= $Grid->nama_customer->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_idcustomer" class="form-group"></span>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_nama_customer" class="form-group">
+<input type="<?= $Grid->nama_customer->getInputTextType() ?>" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" name="x<?= $Grid->RowIndex ?>_nama_customer" id="x<?= $Grid->RowIndex ?>_nama_customer" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->nama_customer->getPlaceHolder()) ?>" value="<?= $Grid->nama_customer->EditValue ?>"<?= $Grid->nama_customer->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->nama_customer->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_nama_customer" id="o<?= $Grid->RowIndex ?>_nama_customer" value="<?= HtmlEncode($Grid->nama_customer->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_idcustomer" class="form-group">
-<span<?= $Grid->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
+<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_nama_customer" class="form-group">
+<input type="<?= $Grid->nama_customer->getInputTextType() ?>" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" name="x<?= $Grid->RowIndex ?>_nama_customer" id="x<?= $Grid->RowIndex ?>_nama_customer" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->nama_customer->getPlaceHolder()) ?>" value="<?= $Grid->nama_customer->EditValue ?>"<?= $Grid->nama_customer->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->nama_customer->getErrorMessage() ?></div>
 </span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_idcustomer" class="form-group">
-<?php
-$onchange = $Grid->idcustomer->EditAttrs->prepend("onchange", "");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Grid->idcustomer->EditAttrs["onchange"] = "";
-?>
-<span id="as_x<?= $Grid->RowIndex ?>_idcustomer" class="ew-auto-suggest">
-    <input type="<?= $Grid->idcustomer->getInputTextType() ?>" class="form-control" name="sv_x<?= $Grid->RowIndex ?>_idcustomer" id="sv_x<?= $Grid->RowIndex ?>_idcustomer" value="<?= RemoveHtml($Grid->idcustomer->EditValue) ?>" placeholder="<?= HtmlEncode($Grid->idcustomer->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Grid->idcustomer->getPlaceHolder()) ?>"<?= $Grid->idcustomer->editAttributes() ?>>
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="v_bonuscustomer_detail" data-field="x_idcustomer" data-input="sv_x<?= $Grid->RowIndex ?>_idcustomer" data-value-separator="<?= $Grid->idcustomer->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_idcustomer" id="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>"<?= $onchange ?>>
-<div class="invalid-feedback"><?= $Grid->idcustomer->getErrorMessage() ?></div>
-<script>
-loadjs.ready(["fv_bonuscustomer_detailgrid"], function() {
-    fv_bonuscustomer_detailgrid.createAutoSuggest(Object.assign({"id":"x<?= $Grid->RowIndex ?>_idcustomer","forceSelect":false}, ew.vars.tables.v_bonuscustomer_detail.fields.idcustomer.autoSuggestOptions));
-});
-</script>
-<?= $Grid->idcustomer->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idcustomer") ?>
-</span>
-<?php } ?>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_idcustomer">
-<span<?= $Grid->idcustomer->viewAttributes() ?>>
-<?= $Grid->idcustomer->getViewValue() ?></span>
+<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_nama_customer">
+<span<?= $Grid->nama_customer->viewAttributes() ?>>
+<?= $Grid->nama_customer->getViewValue() ?></span>
 </span>
 <?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idcustomer" data-hidden="1" name="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_idcustomer" id="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->FormValue) ?>">
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idcustomer" data-hidden="1" name="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_idcustomer" id="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" data-hidden="1" name="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_nama_customer" id="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_nama_customer" value="<?= HtmlEncode($Grid->nama_customer->FormValue) ?>">
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" data-hidden="1" name="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_nama_customer" id="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_nama_customer" value="<?= HtmlEncode($Grid->nama_customer->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->idinvoice->Visible) { // idinvoice ?>
-        <td data-name="idinvoice" <?= $Grid->idinvoice->cellAttributes() ?>>
+    <?php if ($Grid->kode_invoice->Visible) { // kode_invoice ?>
+        <td data-name="kode_invoice" <?= $Grid->kode_invoice->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_idinvoice" class="form-group"></span>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idinvoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idinvoice" id="o<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->OldValue) ?>">
+<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_kode_invoice" class="form-group">
+<input type="<?= $Grid->kode_invoice->getInputTextType() ?>" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" name="x<?= $Grid->RowIndex ?>_kode_invoice" id="x<?= $Grid->RowIndex ?>_kode_invoice" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->kode_invoice->getPlaceHolder()) ?>" value="<?= $Grid->kode_invoice->EditValue ?>"<?= $Grid->kode_invoice->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode_invoice->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode_invoice" id="o<?= $Grid->RowIndex ?>_kode_invoice" value="<?= HtmlEncode($Grid->kode_invoice->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_idinvoice" class="form-group">
-<span<?= $Grid->idinvoice->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idinvoice->getDisplayValue($Grid->idinvoice->EditValue))) ?>"></span>
+<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_kode_invoice" class="form-group">
+<input type="<?= $Grid->kode_invoice->getInputTextType() ?>" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" name="x<?= $Grid->RowIndex ?>_kode_invoice" id="x<?= $Grid->RowIndex ?>_kode_invoice" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->kode_invoice->getPlaceHolder()) ?>" value="<?= $Grid->kode_invoice->EditValue ?>"<?= $Grid->kode_invoice->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode_invoice->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idinvoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idinvoice" id="x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->CurrentValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_idinvoice">
-<span<?= $Grid->idinvoice->viewAttributes() ?>>
-<?= $Grid->idinvoice->getViewValue() ?></span>
+<span id="el<?= $Grid->RowCount ?>_v_bonuscustomer_detail_kode_invoice">
+<span<?= $Grid->kode_invoice->viewAttributes() ?>>
+<?= $Grid->kode_invoice->getViewValue() ?></span>
 </span>
 <?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idinvoice" data-hidden="1" name="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_idinvoice" id="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->FormValue) ?>">
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idinvoice" data-hidden="1" name="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_idinvoice" id="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->OldValue) ?>">
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" data-hidden="1" name="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_kode_invoice" id="fv_bonuscustomer_detailgrid$x<?= $Grid->RowIndex ?>_kode_invoice" value="<?= HtmlEncode($Grid->kode_invoice->FormValue) ?>">
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" data-hidden="1" name="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_kode_invoice" id="fv_bonuscustomer_detailgrid$o<?= $Grid->RowIndex ?>_kode_invoice" value="<?= HtmlEncode($Grid->kode_invoice->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
-    <?php } else { ?>
-            <input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idinvoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idinvoice" id="x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->CurrentValue) ?>">
     <?php } ?>
     <?php if ($Grid->blackbonus->Visible) { // blackbonus ?>
         <td data-name="blackbonus" <?= $Grid->blackbonus->cellAttributes() ?>>
@@ -385,32 +368,38 @@ loadjs.ready(["fv_bonuscustomer_detailgrid","load"], function () {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 ?>
-    <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer">
+    <?php if ($Grid->nama_customer->Visible) { // nama_customer ?>
+        <td data-name="nama_customer">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_v_bonuscustomer_detail_idcustomer" class="form-group v_bonuscustomer_detail_idcustomer"></span>
-<?php } else { ?>
-<span id="el$rowindex$_v_bonuscustomer_detail_idcustomer" class="form-group v_bonuscustomer_detail_idcustomer">
-<span<?= $Grid->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
+<span id="el$rowindex$_v_bonuscustomer_detail_nama_customer" class="form-group v_bonuscustomer_detail_nama_customer">
+<input type="<?= $Grid->nama_customer->getInputTextType() ?>" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" name="x<?= $Grid->RowIndex ?>_nama_customer" id="x<?= $Grid->RowIndex ?>_nama_customer" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->nama_customer->getPlaceHolder()) ?>" value="<?= $Grid->nama_customer->EditValue ?>"<?= $Grid->nama_customer->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->nama_customer->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idcustomer" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idcustomer" id="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->FormValue) ?>">
+<?php } else { ?>
+<span id="el$rowindex$_v_bonuscustomer_detail_nama_customer" class="form-group v_bonuscustomer_detail_nama_customer">
+<span<?= $Grid->nama_customer->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->nama_customer->getDisplayValue($Grid->nama_customer->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" data-hidden="1" name="x<?= $Grid->RowIndex ?>_nama_customer" id="x<?= $Grid->RowIndex ?>_nama_customer" value="<?= HtmlEncode($Grid->nama_customer->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_nama_customer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_nama_customer" id="o<?= $Grid->RowIndex ?>_nama_customer" value="<?= HtmlEncode($Grid->nama_customer->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->idinvoice->Visible) { // idinvoice ?>
-        <td data-name="idinvoice">
+    <?php if ($Grid->kode_invoice->Visible) { // kode_invoice ?>
+        <td data-name="kode_invoice">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_v_bonuscustomer_detail_idinvoice" class="form-group v_bonuscustomer_detail_idinvoice"></span>
-<?php } else { ?>
-<span id="el$rowindex$_v_bonuscustomer_detail_idinvoice" class="form-group v_bonuscustomer_detail_idinvoice">
-<span<?= $Grid->idinvoice->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idinvoice->getDisplayValue($Grid->idinvoice->ViewValue))) ?>"></span>
+<span id="el$rowindex$_v_bonuscustomer_detail_kode_invoice" class="form-group v_bonuscustomer_detail_kode_invoice">
+<input type="<?= $Grid->kode_invoice->getInputTextType() ?>" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" name="x<?= $Grid->RowIndex ?>_kode_invoice" id="x<?= $Grid->RowIndex ?>_kode_invoice" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->kode_invoice->getPlaceHolder()) ?>" value="<?= $Grid->kode_invoice->EditValue ?>"<?= $Grid->kode_invoice->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode_invoice->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idinvoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idinvoice" id="x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->FormValue) ?>">
+<?php } else { ?>
+<span id="el$rowindex$_v_bonuscustomer_detail_kode_invoice" class="form-group v_bonuscustomer_detail_kode_invoice">
+<span<?= $Grid->kode_invoice->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->kode_invoice->getDisplayValue($Grid->kode_invoice->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_kode_invoice" id="x<?= $Grid->RowIndex ?>_kode_invoice" value="<?= HtmlEncode($Grid->kode_invoice->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_idinvoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idinvoice" id="o<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->OldValue) ?>">
+<input type="hidden" data-table="v_bonuscustomer_detail" data-field="x_kode_invoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode_invoice" id="o<?= $Grid->RowIndex ?>_kode_invoice" value="<?= HtmlEncode($Grid->kode_invoice->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->blackbonus->Visible) { // blackbonus ?>

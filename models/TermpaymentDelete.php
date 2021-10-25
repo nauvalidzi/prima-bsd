@@ -374,7 +374,7 @@ class TermpaymentDelete extends Termpayment
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->title->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -584,6 +584,11 @@ class TermpaymentDelete extends Termpayment
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewValue = FormatNumber($this->value->ViewValue, 0, -2, -2, -2);
             $this->value->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // title
             $this->title->LinkCustomAttributes = "";

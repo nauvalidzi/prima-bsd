@@ -33,10 +33,10 @@ class DJatuhtempo extends DbTable
     public $idcustomer;
     public $namacustomer;
     public $idinvoice;
+    public $kodeinvoice;
     public $sisabayar;
     public $jatuhtempo;
     public $sisahari;
-    public $kodeinvoice;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -70,11 +70,13 @@ class DJatuhtempo extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idpegawai
         $this->idpegawai = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idpegawai->IsAutoIncrement = true; // Autoincrement field
+        $this->idpegawai->IsPrimaryKey = true; // Primary key field
         $this->idpegawai->Sortable = true; // Allow sort
         $this->idpegawai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
@@ -91,6 +93,7 @@ class DJatuhtempo extends DbTable
         // idcustomer
         $this->idcustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
+        $this->idcustomer->IsPrimaryKey = true; // Primary key field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
@@ -113,6 +116,14 @@ class DJatuhtempo extends DbTable
         $this->idinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idinvoice->Param, "CustomMsg");
         $this->Fields['idinvoice'] = &$this->idinvoice;
 
+        // kodeinvoice
+        $this->kodeinvoice = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_kodeinvoice', 'kodeinvoice', '`kodeinvoice`', '`kodeinvoice`', 200, 50, -1, false, '`kodeinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodeinvoice->Nullable = false; // NOT NULL field
+        $this->kodeinvoice->Required = true; // Required field
+        $this->kodeinvoice->Sortable = true; // Allow sort
+        $this->kodeinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeinvoice->Param, "CustomMsg");
+        $this->Fields['kodeinvoice'] = &$this->kodeinvoice;
+
         // sisabayar
         $this->sisabayar = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisabayar->Nullable = false; // NOT NULL field
@@ -134,14 +145,6 @@ class DJatuhtempo extends DbTable
         $this->sisahari->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisahari->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisahari->Param, "CustomMsg");
         $this->Fields['sisahari'] = &$this->sisahari;
-
-        // kodeinvoice
-        $this->kodeinvoice = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_kodeinvoice', 'kodeinvoice', '`kodeinvoice`', '`kodeinvoice`', 200, 50, -1, false, '`kodeinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kodeinvoice->Nullable = false; // NOT NULL field
-        $this->kodeinvoice->Required = true; // Required field
-        $this->kodeinvoice->Sortable = true; // Allow sort
-        $this->kodeinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeinvoice->Param, "CustomMsg");
-        $this->Fields['kodeinvoice'] = &$this->kodeinvoice;
     }
 
     // Field Visibility
@@ -278,11 +281,6 @@ class DJatuhtempo extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -543,6 +541,12 @@ class DJatuhtempo extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
+            if (array_key_exists('idpegawai', $rs)) {
+                AddFilter($where, QuotedName('idpegawai', $this->Dbid) . '=' . QuotedValue($rs['idpegawai'], $this->idpegawai->DataType, $this->Dbid));
+            }
+            if (array_key_exists('idcustomer', $rs)) {
+                AddFilter($where, QuotedName('idcustomer', $this->Dbid) . '=' . QuotedValue($rs['idcustomer'], $this->idcustomer->DataType, $this->Dbid));
+            }
             if (array_key_exists('idinvoice', $rs)) {
                 AddFilter($where, QuotedName('idinvoice', $this->Dbid) . '=' . QuotedValue($rs['idinvoice'], $this->idinvoice->DataType, $this->Dbid));
             }
@@ -573,10 +577,10 @@ class DJatuhtempo extends DbTable
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->namacustomer->DbValue = $row['namacustomer'];
         $this->idinvoice->DbValue = $row['idinvoice'];
+        $this->kodeinvoice->DbValue = $row['kodeinvoice'];
         $this->sisabayar->DbValue = $row['sisabayar'];
         $this->jatuhtempo->DbValue = $row['jatuhtempo'];
         $this->sisahari->DbValue = $row['sisahari'];
-        $this->kodeinvoice->DbValue = $row['kodeinvoice'];
     }
 
     // Delete uploaded files
@@ -588,13 +592,25 @@ class DJatuhtempo extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`idinvoice` = @idinvoice@";
+        return "`idpegawai` = @idpegawai@ AND `idcustomer` = @idcustomer@ AND `idinvoice` = @idinvoice@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
+        $val = $current ? $this->idpegawai->CurrentValue : $this->idpegawai->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
+        $val = $current ? $this->idcustomer->CurrentValue : $this->idcustomer->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
         $val = $current ? $this->idinvoice->CurrentValue : $this->idinvoice->OldValue;
         if (EmptyValue($val)) {
             return "";
@@ -609,11 +625,21 @@ class DJatuhtempo extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
+        if (count($keys) == 3) {
             if ($current) {
-                $this->idinvoice->CurrentValue = $keys[0];
+                $this->idpegawai->CurrentValue = $keys[0];
             } else {
-                $this->idinvoice->OldValue = $keys[0];
+                $this->idpegawai->OldValue = $keys[0];
+            }
+            if ($current) {
+                $this->idcustomer->CurrentValue = $keys[1];
+            } else {
+                $this->idcustomer->OldValue = $keys[1];
+            }
+            if ($current) {
+                $this->idinvoice->CurrentValue = $keys[2];
+            } else {
+                $this->idinvoice->OldValue = $keys[2];
             }
         }
     }
@@ -622,6 +648,32 @@ class DJatuhtempo extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
+        if (is_array($row)) {
+            $val = array_key_exists('idpegawai', $row) ? $row['idpegawai'] : null;
+        } else {
+            $val = $this->idpegawai->OldValue !== null ? $this->idpegawai->OldValue : $this->idpegawai->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@idpegawai@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
+        if (is_array($row)) {
+            $val = array_key_exists('idcustomer', $row) ? $row['idcustomer'] : null;
+        } else {
+            $val = $this->idcustomer->OldValue !== null ? $this->idcustomer->OldValue : $this->idcustomer->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@idcustomer@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
         if (is_array($row)) {
             $val = array_key_exists('idinvoice', $row) ? $row['idinvoice'] : null;
         } else {
@@ -762,7 +814,9 @@ class DJatuhtempo extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "idinvoice:" . JsonEncode($this->idinvoice->CurrentValue, "number");
+        $json .= "idpegawai:" . JsonEncode($this->idpegawai->CurrentValue, "number");
+        $json .= ",idcustomer:" . JsonEncode($this->idcustomer->CurrentValue, "number");
+        $json .= ",idinvoice:" . JsonEncode($this->idinvoice->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -773,6 +827,16 @@ class DJatuhtempo extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
+        if ($this->idpegawai->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idpegawai->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
+        if ($this->idcustomer->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idcustomer->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
         if ($this->idinvoice->CurrentValue !== null) {
             $url .= "/" . rawurlencode($this->idinvoice->CurrentValue);
         } else {
@@ -835,13 +899,33 @@ SORTHTML;
         if (Param("key_m") !== null) {
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
+            for ($i = 0; $i < $cnt; $i++) {
+                $arKeys[$i] = explode(Config("COMPOSITE_KEY_SEPARATOR"), $arKeys[$i]);
+            }
         } else {
-            if (($keyValue = Param("idinvoice") ?? Route("idinvoice")) !== null) {
-                $arKeys[] = $keyValue;
+            if (($keyValue = Param("idpegawai") ?? Route("idpegawai")) !== null) {
+                $arKey[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
+                $arKey[] = $keyValue;
             } else {
                 $arKeys = null; // Do not setup
+            }
+            if (($keyValue = Param("idcustomer") ?? Route("idcustomer")) !== null) {
+                $arKey[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(1) ?? Route(3)) !== null)) {
+                $arKey[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+            if (($keyValue = Param("idinvoice") ?? Route("idinvoice")) !== null) {
+                $arKey[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(2) ?? Route(4)) !== null)) {
+                $arKey[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+            if (is_array($arKeys)) {
+                $arKeys[] = $arKey;
             }
 
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
@@ -850,7 +934,16 @@ SORTHTML;
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
+                if (!is_array($key) || count($key) != 3) {
+                    continue; // Just skip so other keys will still work
+                }
+                if (!is_numeric($key[0])) { // idpegawai
+                    continue;
+                }
+                if (!is_numeric($key[1])) { // idcustomer
+                    continue;
+                }
+                if (!is_numeric($key[2])) { // idinvoice
                     continue;
                 }
                 $ar[] = $key;
@@ -869,9 +962,19 @@ SORTHTML;
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->idinvoice->CurrentValue = $key;
+                $this->idpegawai->CurrentValue = $key[0];
             } else {
-                $this->idinvoice->OldValue = $key;
+                $this->idpegawai->OldValue = $key[0];
+            }
+            if ($setCurrent) {
+                $this->idcustomer->CurrentValue = $key[1];
+            } else {
+                $this->idcustomer->OldValue = $key[1];
+            }
+            if ($setCurrent) {
+                $this->idinvoice->CurrentValue = $key[2];
+            } else {
+                $this->idinvoice->OldValue = $key[2];
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -902,10 +1005,10 @@ SORTHTML;
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->namacustomer->setDbValue($row['namacustomer']);
         $this->idinvoice->setDbValue($row['idinvoice']);
+        $this->kodeinvoice->setDbValue($row['kodeinvoice']);
         $this->sisabayar->setDbValue($row['sisabayar']);
         $this->jatuhtempo->setDbValue($row['jatuhtempo']);
         $this->sisahari->setDbValue($row['sisahari']);
-        $this->kodeinvoice->setDbValue($row['kodeinvoice']);
     }
 
     // Render list row values
@@ -919,22 +1022,25 @@ SORTHTML;
         // Common render codes
 
         // idpegawai
+        $this->idpegawai->CellCssStyle = "white-space: nowrap;";
 
         // namapegawai
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
 
         // namacustomer
 
         // idinvoice
+        $this->idinvoice->CellCssStyle = "white-space: nowrap;";
+
+        // kodeinvoice
 
         // sisabayar
 
         // jatuhtempo
 
         // sisahari
-
-        // kodeinvoice
 
         // idpegawai
         $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
@@ -956,9 +1062,13 @@ SORTHTML;
         $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
         $this->idinvoice->ViewCustomAttributes = "";
 
+        // kodeinvoice
+        $this->kodeinvoice->ViewValue = $this->kodeinvoice->CurrentValue;
+        $this->kodeinvoice->ViewCustomAttributes = "";
+
         // sisabayar
         $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
-        $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
+        $this->sisabayar->ViewValue = FormatNumber($this->sisabayar->ViewValue, 0, -2, -2, -2);
         $this->sisabayar->ViewCustomAttributes = "";
 
         // jatuhtempo
@@ -970,10 +1080,6 @@ SORTHTML;
         $this->sisahari->ViewValue = $this->sisahari->CurrentValue;
         $this->sisahari->ViewValue = FormatNumber($this->sisahari->ViewValue, 0, -2, -2, -2);
         $this->sisahari->ViewCustomAttributes = "";
-
-        // kodeinvoice
-        $this->kodeinvoice->ViewValue = $this->kodeinvoice->CurrentValue;
-        $this->kodeinvoice->ViewCustomAttributes = "";
 
         // idpegawai
         $this->idpegawai->LinkCustomAttributes = "";
@@ -1000,6 +1106,11 @@ SORTHTML;
         $this->idinvoice->HrefValue = "";
         $this->idinvoice->TooltipValue = "";
 
+        // kodeinvoice
+        $this->kodeinvoice->LinkCustomAttributes = "";
+        $this->kodeinvoice->HrefValue = "";
+        $this->kodeinvoice->TooltipValue = "";
+
         // sisabayar
         $this->sisabayar->LinkCustomAttributes = "";
         $this->sisabayar->HrefValue = "";
@@ -1014,11 +1125,6 @@ SORTHTML;
         $this->sisahari->LinkCustomAttributes = "";
         $this->sisahari->HrefValue = "";
         $this->sisahari->TooltipValue = "";
-
-        // kodeinvoice
-        $this->kodeinvoice->LinkCustomAttributes = "";
-        $this->kodeinvoice->HrefValue = "";
-        $this->kodeinvoice->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1038,11 +1144,8 @@ SORTHTML;
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
         $this->idpegawai->EditCustomAttributes = "";
-        if (!$Security->isAdmin() && $Security->isLoggedIn() && !$this->userIDAllow("info")) { // Non system admin
-        } else {
-            $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
-            $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
-        }
+        $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
+        $this->idpegawai->ViewCustomAttributes = "";
 
         // namapegawai
         $this->namapegawai->EditAttrs["class"] = "form-control";
@@ -1057,7 +1160,7 @@ SORTHTML;
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        $this->idcustomer->ViewCustomAttributes = "";
 
         // namacustomer
         $this->namacustomer->EditAttrs["class"] = "form-control";
@@ -1073,6 +1176,15 @@ SORTHTML;
         $this->idinvoice->EditCustomAttributes = "";
         $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
         $this->idinvoice->ViewCustomAttributes = "";
+
+        // kodeinvoice
+        $this->kodeinvoice->EditAttrs["class"] = "form-control";
+        $this->kodeinvoice->EditCustomAttributes = "";
+        if (!$this->kodeinvoice->Raw) {
+            $this->kodeinvoice->CurrentValue = HtmlDecode($this->kodeinvoice->CurrentValue);
+        }
+        $this->kodeinvoice->EditValue = $this->kodeinvoice->CurrentValue;
+        $this->kodeinvoice->PlaceHolder = RemoveHtml($this->kodeinvoice->caption());
 
         // sisabayar
         $this->sisabayar->EditAttrs["class"] = "form-control";
@@ -1091,15 +1203,6 @@ SORTHTML;
         $this->sisahari->EditCustomAttributes = "";
         $this->sisahari->EditValue = $this->sisahari->CurrentValue;
         $this->sisahari->PlaceHolder = RemoveHtml($this->sisahari->caption());
-
-        // kodeinvoice
-        $this->kodeinvoice->EditAttrs["class"] = "form-control";
-        $this->kodeinvoice->EditCustomAttributes = "";
-        if (!$this->kodeinvoice->Raw) {
-            $this->kodeinvoice->CurrentValue = HtmlDecode($this->kodeinvoice->CurrentValue);
-        }
-        $this->kodeinvoice->EditValue = $this->kodeinvoice->CurrentValue;
-        $this->kodeinvoice->PlaceHolder = RemoveHtml($this->kodeinvoice->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1134,20 +1237,20 @@ SORTHTML;
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->namacustomer);
                     $doc->exportCaption($this->idinvoice);
+                    $doc->exportCaption($this->kodeinvoice);
                     $doc->exportCaption($this->sisabayar);
                     $doc->exportCaption($this->jatuhtempo);
                     $doc->exportCaption($this->sisahari);
-                    $doc->exportCaption($this->kodeinvoice);
                 } else {
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->namapegawai);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->namacustomer);
                     $doc->exportCaption($this->idinvoice);
+                    $doc->exportCaption($this->kodeinvoice);
                     $doc->exportCaption($this->sisabayar);
                     $doc->exportCaption($this->jatuhtempo);
                     $doc->exportCaption($this->sisahari);
-                    $doc->exportCaption($this->kodeinvoice);
                 }
                 $doc->endExportRow();
             }
@@ -1182,20 +1285,20 @@ SORTHTML;
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->namacustomer);
                         $doc->exportField($this->idinvoice);
+                        $doc->exportField($this->kodeinvoice);
                         $doc->exportField($this->sisabayar);
                         $doc->exportField($this->jatuhtempo);
                         $doc->exportField($this->sisahari);
-                        $doc->exportField($this->kodeinvoice);
                     } else {
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->namapegawai);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->namacustomer);
                         $doc->exportField($this->idinvoice);
+                        $doc->exportField($this->kodeinvoice);
                         $doc->exportField($this->sisabayar);
                         $doc->exportField($this->jatuhtempo);
                         $doc->exportField($this->sisahari);
-                        $doc->exportField($this->kodeinvoice);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1210,53 +1313,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`idpegawai` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `d_jatuhtempo`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
     }
 
     // Get file data

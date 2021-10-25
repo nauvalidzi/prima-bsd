@@ -1408,7 +1408,9 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
-        $this->kodepo->ViewValue = "<a href=\"OrderDetailList?showmaster=order&fk_id=".$this->idorder->CurrentValue."\">".$this->kodepo->ViewValue."</a>";
+        if (CurrentPageID() == 'list') {
+        	$this->kodepo->ViewValue = "<a href=\"OrderDetailList?showmaster=order&fk_id=".$this->idorder->CurrentValue."\">".$this->kodepo->ViewValue."</a>";
+        }
     }
 
     // User ID Filtering event

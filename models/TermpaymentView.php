@@ -786,6 +786,11 @@ class TermpaymentView extends Termpayment
             $this->value->ViewValue = FormatNumber($this->value->ViewValue, 0, -2, -2, -2);
             $this->value->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // title
             $this->title->LinkCustomAttributes = "";
             $this->title->HrefValue = "";

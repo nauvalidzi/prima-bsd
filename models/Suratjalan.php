@@ -136,10 +136,10 @@ class Suratjalan extends DbTable
         $this->idalamat_customer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idalamat_customer->Lookup = new Lookup('idalamat_customer', 'alamat_customer', false, 'id', ["alias","penerima","alamat",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idalamat_customer->Lookup = new Lookup('idalamat_customer', 'alamat_customer', false, 'id', ["alias","","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
             default:
-                $this->idalamat_customer->Lookup = new Lookup('idalamat_customer', 'alamat_customer', false, 'id', ["alias","penerima","alamat",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idalamat_customer->Lookup = new Lookup('idalamat_customer', 'alamat_customer', false, 'id', ["alias","","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
         }
         $this->idalamat_customer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1401,7 +1401,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-    //    $rsnew['kode'] = getNextKode('suratjalan', 0);
+        $rsnew['kode'] = getNextKode('suratjalan', 0);
         return true;
     }
 

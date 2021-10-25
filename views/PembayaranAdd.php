@@ -318,6 +318,14 @@ loadjs.ready("head", function() {
     <input type="hidden" data-table="pembayaran" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
     </span>
 </div><!-- /page* -->
+<?php
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailAdd) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("invoice", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "InvoiceGrid.php" ?>
+<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

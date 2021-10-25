@@ -168,6 +168,14 @@ loadjs.ready("head", function() {
     <?php if (strval($Page->idsuratjalan->getSessionValue()) != "") { ?>
     <input type="hidden" name="x_idsuratjalan" id="x_idsuratjalan" value="<?= HtmlEncode(strval($Page->idsuratjalan->getSessionValue())) ?>">
     <?php } ?>
+<?php
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailAdd) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("invoice", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "InvoiceGrid.php" ?>
+<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

@@ -47,6 +47,15 @@ $Page->showMessage();
 <?php if ($Page->alias->Visible) { // alias ?>
         <th class="<?= $Page->alias->headerCellClass() ?>"><span id="elh_alamat_customer_alias" class="alamat_customer_alias"><?= $Page->alias->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->penerima->Visible) { // penerima ?>
+        <th class="<?= $Page->penerima->headerCellClass() ?>"><span id="elh_alamat_customer_penerima" class="alamat_customer_penerima"><?= $Page->penerima->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->telepon->Visible) { // telepon ?>
+        <th class="<?= $Page->telepon->headerCellClass() ?>"><span id="elh_alamat_customer_telepon" class="alamat_customer_telepon"><?= $Page->telepon->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->alamat->Visible) { // alamat ?>
+        <th class="<?= $Page->alamat->headerCellClass() ?>"><span id="elh_alamat_customer_alamat" class="alamat_customer_alamat"><?= $Page->alamat->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->idprovinsi->Visible) { // idprovinsi ?>
         <th class="<?= $Page->idprovinsi->headerCellClass() ?>"><span id="elh_alamat_customer_idprovinsi" class="alamat_customer_idprovinsi"><?= $Page->idprovinsi->caption() ?></span></th>
 <?php } ?>
@@ -58,12 +67,6 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->idkelurahan->Visible) { // idkelurahan ?>
         <th class="<?= $Page->idkelurahan->headerCellClass() ?>"><span id="elh_alamat_customer_idkelurahan" class="alamat_customer_idkelurahan"><?= $Page->idkelurahan->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->alamat->Visible) { // alamat ?>
-        <th class="<?= $Page->alamat->headerCellClass() ?>"><span id="elh_alamat_customer_alamat" class="alamat_customer_alamat"><?= $Page->alamat->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->penerima->Visible) { // penerima ?>
-        <th class="<?= $Page->penerima->headerCellClass() ?>"><span id="elh_alamat_customer_penerima" class="alamat_customer_penerima"><?= $Page->penerima->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -91,6 +94,30 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_alamat_customer_alias" class="alamat_customer_alias">
 <span<?= $Page->alias->viewAttributes() ?>>
 <?= $Page->alias->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->penerima->Visible) { // penerima ?>
+        <td <?= $Page->penerima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_alamat_customer_penerima" class="alamat_customer_penerima">
+<span<?= $Page->penerima->viewAttributes() ?>>
+<?= $Page->penerima->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->telepon->Visible) { // telepon ?>
+        <td <?= $Page->telepon->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_alamat_customer_telepon" class="alamat_customer_telepon">
+<span<?= $Page->telepon->viewAttributes() ?>>
+<?= $Page->telepon->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->alamat->Visible) { // alamat ?>
+        <td <?= $Page->alamat->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_alamat_customer_alamat" class="alamat_customer_alamat">
+<span<?= $Page->alamat->viewAttributes() ?>>
+<?= $Page->alamat->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -123,22 +150,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_alamat_customer_idkelurahan" class="alamat_customer_idkelurahan">
 <span<?= $Page->idkelurahan->viewAttributes() ?>>
 <?= $Page->idkelurahan->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->alamat->Visible) { // alamat ?>
-        <td <?= $Page->alamat->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_alamat_customer_alamat" class="alamat_customer_alamat">
-<span<?= $Page->alamat->viewAttributes() ?>>
-<?= $Page->alamat->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->penerima->Visible) { // penerima ?>
-        <td <?= $Page->penerima->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_alamat_customer_penerima" class="alamat_customer_penerima">
-<span<?= $Page->penerima->viewAttributes() ?>>
-<?= $Page->penerima->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

@@ -22,9 +22,9 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.v_piutang_detail)
         ew.vars.tables.v_piutang_detail = currentTable;
     fv_piutang_detailgrid.addFields([
-        ["idinvoice", [fields.idinvoice.visible && fields.idinvoice.required ? ew.Validators.required(fields.idinvoice.caption) : null, ew.Validators.integer], fields.idinvoice.isInvalid],
-        ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
+        ["tglinvoice", [fields.tglinvoice.visible && fields.tglinvoice.required ? ew.Validators.required(fields.tglinvoice.caption) : null, ew.Validators.datetime(0)], fields.tglinvoice.isInvalid],
         ["sisabayar", [fields.sisabayar.visible && fields.sisabayar.required ? ew.Validators.required(fields.sisabayar.caption) : null, ew.Validators.integer], fields.sisabayar.isInvalid],
+        ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
         ["jatuhtempo", [fields.jatuhtempo.visible && fields.jatuhtempo.required ? ew.Validators.required(fields.jatuhtempo.caption) : null, ew.Validators.datetime(0)], fields.jatuhtempo.isInvalid]
     ]);
 
@@ -79,9 +79,11 @@ loadjs.ready("head", function () {
     // Check empty row
     fv_piutang_detailgrid.emptyRow = function (rowIndex) {
         var fobj = this.getForm();
-        if (ew.valueChanged(fobj, rowIndex, "totaltagihan", false))
+        if (ew.valueChanged(fobj, rowIndex, "tglinvoice", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "sisabayar", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "totaltagihan", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "jatuhtempo", false))
             return false;
@@ -98,7 +100,6 @@ loadjs.ready("head", function () {
     fv_piutang_detailgrid.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fv_piutang_detailgrid.lists.idinvoice = <?= $Grid->idinvoice->toClientList($Grid) ?>;
     loadjs.done("fv_piutang_detailgrid");
 });
 </script>
@@ -123,14 +124,14 @@ $Grid->renderListOptions();
 // Render list options (header, left)
 $Grid->ListOptions->render("header", "left");
 ?>
-<?php if ($Grid->idinvoice->Visible) { // idinvoice ?>
-        <th data-name="idinvoice" class="<?= $Grid->idinvoice->headerCellClass() ?>"><div id="elh_v_piutang_detail_idinvoice" class="v_piutang_detail_idinvoice"><?= $Grid->renderSort($Grid->idinvoice) ?></div></th>
-<?php } ?>
-<?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
-        <th data-name="totaltagihan" class="<?= $Grid->totaltagihan->headerCellClass() ?>"><div id="elh_v_piutang_detail_totaltagihan" class="v_piutang_detail_totaltagihan"><?= $Grid->renderSort($Grid->totaltagihan) ?></div></th>
+<?php if ($Grid->tglinvoice->Visible) { // tglinvoice ?>
+        <th data-name="tglinvoice" class="<?= $Grid->tglinvoice->headerCellClass() ?>"><div id="elh_v_piutang_detail_tglinvoice" class="v_piutang_detail_tglinvoice"><?= $Grid->renderSort($Grid->tglinvoice) ?></div></th>
 <?php } ?>
 <?php if ($Grid->sisabayar->Visible) { // sisabayar ?>
         <th data-name="sisabayar" class="<?= $Grid->sisabayar->headerCellClass() ?>"><div id="elh_v_piutang_detail_sisabayar" class="v_piutang_detail_sisabayar"><?= $Grid->renderSort($Grid->sisabayar) ?></div></th>
+<?php } ?>
+<?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
+        <th data-name="totaltagihan" class="<?= $Grid->totaltagihan->headerCellClass() ?>"><div id="elh_v_piutang_detail_totaltagihan" class="v_piutang_detail_totaltagihan"><?= $Grid->renderSort($Grid->totaltagihan) ?></div></th>
 <?php } ?>
 <?php if ($Grid->jatuhtempo->Visible) { // jatuhtempo ?>
         <th data-name="jatuhtempo" class="<?= $Grid->jatuhtempo->headerCellClass() ?>"><div id="elh_v_piutang_detail_jatuhtempo" class="v_piutang_detail_jatuhtempo"><?= $Grid->renderSort($Grid->jatuhtempo) ?></div></th>
@@ -248,56 +249,43 @@ while ($Grid->RecordCount < $Grid->StopRecord) {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 ?>
-    <?php if ($Grid->idinvoice->Visible) { // idinvoice ?>
-        <td data-name="idinvoice" <?= $Grid->idinvoice->cellAttributes() ?>>
+    <?php if ($Grid->tglinvoice->Visible) { // tglinvoice ?>
+        <td data-name="tglinvoice" <?= $Grid->tglinvoice->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_idinvoice" class="form-group"></span>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_idinvoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idinvoice" id="o<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->OldValue) ?>">
+<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_tglinvoice" class="form-group">
+<input type="<?= $Grid->tglinvoice->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_tglinvoice" name="x<?= $Grid->RowIndex ?>_tglinvoice" id="x<?= $Grid->RowIndex ?>_tglinvoice" placeholder="<?= HtmlEncode($Grid->tglinvoice->getPlaceHolder()) ?>" value="<?= $Grid->tglinvoice->EditValue ?>"<?= $Grid->tglinvoice->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->tglinvoice->getErrorMessage() ?></div>
+<?php if (!$Grid->tglinvoice->ReadOnly && !$Grid->tglinvoice->Disabled && !isset($Grid->tglinvoice->EditAttrs["readonly"]) && !isset($Grid->tglinvoice->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fv_piutang_detailgrid", "datetimepicker"], function() {
+    ew.createDateTimePicker("fv_piutang_detailgrid", "x<?= $Grid->RowIndex ?>_tglinvoice", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="v_piutang_detail" data-field="x_tglinvoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tglinvoice" id="o<?= $Grid->RowIndex ?>_tglinvoice" value="<?= HtmlEncode($Grid->tglinvoice->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_idinvoice" class="form-group">
-<span<?= $Grid->idinvoice->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idinvoice->getDisplayValue($Grid->idinvoice->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_idinvoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idinvoice" id="x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->CurrentValue) ?>">
+<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_tglinvoice" class="form-group">
+<input type="<?= $Grid->tglinvoice->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_tglinvoice" name="x<?= $Grid->RowIndex ?>_tglinvoice" id="x<?= $Grid->RowIndex ?>_tglinvoice" placeholder="<?= HtmlEncode($Grid->tglinvoice->getPlaceHolder()) ?>" value="<?= $Grid->tglinvoice->EditValue ?>"<?= $Grid->tglinvoice->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->tglinvoice->getErrorMessage() ?></div>
+<?php if (!$Grid->tglinvoice->ReadOnly && !$Grid->tglinvoice->Disabled && !isset($Grid->tglinvoice->EditAttrs["readonly"]) && !isset($Grid->tglinvoice->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fv_piutang_detailgrid", "datetimepicker"], function() {
+    ew.createDateTimePicker("fv_piutang_detailgrid", "x<?= $Grid->RowIndex ?>_tglinvoice", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
 <?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_idinvoice">
-<span<?= $Grid->idinvoice->viewAttributes() ?>>
-<?= $Grid->idinvoice->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_idinvoice" data-hidden="1" name="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_idinvoice" id="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->FormValue) ?>">
-<input type="hidden" data-table="v_piutang_detail" data-field="x_idinvoice" data-hidden="1" name="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_idinvoice" id="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } else { ?>
-            <input type="hidden" data-table="v_piutang_detail" data-field="x_idinvoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idinvoice" id="x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->CurrentValue) ?>">
-    <?php } ?>
-    <?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
-        <td data-name="totaltagihan" <?= $Grid->totaltagihan->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_totaltagihan" class="form-group">
-<input type="<?= $Grid->totaltagihan->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_totaltagihan" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" size="30" placeholder="<?= HtmlEncode($Grid->totaltagihan->getPlaceHolder()) ?>" value="<?= $Grid->totaltagihan->EditValue ?>"<?= $Grid->totaltagihan->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->totaltagihan->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totaltagihan" id="o<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_totaltagihan" class="form-group">
-<input type="<?= $Grid->totaltagihan->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_totaltagihan" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" size="30" placeholder="<?= HtmlEncode($Grid->totaltagihan->getPlaceHolder()) ?>" value="<?= $Grid->totaltagihan->EditValue ?>"<?= $Grid->totaltagihan->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->totaltagihan->getErrorMessage() ?></div>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_totaltagihan">
-<span<?= $Grid->totaltagihan->viewAttributes() ?>>
-<?= $Grid->totaltagihan->getViewValue() ?></span>
+<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_tglinvoice">
+<span<?= $Grid->tglinvoice->viewAttributes() ?>>
+<?= $Grid->tglinvoice->getViewValue() ?></span>
 </span>
 <?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_totaltagihan" id="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->FormValue) ?>">
-<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_totaltagihan" id="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->OldValue) ?>">
+<input type="hidden" data-table="v_piutang_detail" data-field="x_tglinvoice" data-hidden="1" name="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_tglinvoice" id="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_tglinvoice" value="<?= HtmlEncode($Grid->tglinvoice->FormValue) ?>">
+<input type="hidden" data-table="v_piutang_detail" data-field="x_tglinvoice" data-hidden="1" name="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_tglinvoice" id="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_tglinvoice" value="<?= HtmlEncode($Grid->tglinvoice->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -325,6 +313,33 @@ $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="v_piutang_detail" data-field="x_sisabayar" data-hidden="1" name="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_sisabayar" id="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->FormValue) ?>">
 <input type="hidden" data-table="v_piutang_detail" data-field="x_sisabayar" data-hidden="1" name="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_sisabayar" id="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
+        <td data-name="totaltagihan" <?= $Grid->totaltagihan->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_totaltagihan" class="form-group">
+<input type="<?= $Grid->totaltagihan->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_totaltagihan" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" size="30" placeholder="<?= HtmlEncode($Grid->totaltagihan->getPlaceHolder()) ?>" value="<?= $Grid->totaltagihan->EditValue ?>"<?= $Grid->totaltagihan->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totaltagihan->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totaltagihan" id="o<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_totaltagihan" class="form-group">
+<input type="<?= $Grid->totaltagihan->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_totaltagihan" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" size="30" placeholder="<?= HtmlEncode($Grid->totaltagihan->getPlaceHolder()) ?>" value="<?= $Grid->totaltagihan->EditValue ?>"<?= $Grid->totaltagihan->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totaltagihan->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_v_piutang_detail_totaltagihan">
+<span<?= $Grid->totaltagihan->viewAttributes() ?>>
+<?= $Grid->totaltagihan->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_totaltagihan" id="fv_piutang_detailgrid$x<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->FormValue) ?>">
+<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_totaltagihan" id="fv_piutang_detailgrid$o<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -414,35 +429,28 @@ loadjs.ready(["fv_piutang_detailgrid","load"], function () {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 ?>
-    <?php if ($Grid->idinvoice->Visible) { // idinvoice ?>
-        <td data-name="idinvoice">
+    <?php if ($Grid->tglinvoice->Visible) { // tglinvoice ?>
+        <td data-name="tglinvoice">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_v_piutang_detail_idinvoice" class="form-group v_piutang_detail_idinvoice"></span>
-<?php } else { ?>
-<span id="el$rowindex$_v_piutang_detail_idinvoice" class="form-group v_piutang_detail_idinvoice">
-<span<?= $Grid->idinvoice->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idinvoice->getDisplayValue($Grid->idinvoice->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_idinvoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idinvoice" id="x<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->FormValue) ?>">
+<span id="el$rowindex$_v_piutang_detail_tglinvoice" class="form-group v_piutang_detail_tglinvoice">
+<input type="<?= $Grid->tglinvoice->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_tglinvoice" name="x<?= $Grid->RowIndex ?>_tglinvoice" id="x<?= $Grid->RowIndex ?>_tglinvoice" placeholder="<?= HtmlEncode($Grid->tglinvoice->getPlaceHolder()) ?>" value="<?= $Grid->tglinvoice->EditValue ?>"<?= $Grid->tglinvoice->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->tglinvoice->getErrorMessage() ?></div>
+<?php if (!$Grid->tglinvoice->ReadOnly && !$Grid->tglinvoice->Disabled && !isset($Grid->tglinvoice->EditAttrs["readonly"]) && !isset($Grid->tglinvoice->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fv_piutang_detailgrid", "datetimepicker"], function() {
+    ew.createDateTimePicker("fv_piutang_detailgrid", "x<?= $Grid->RowIndex ?>_tglinvoice", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
 <?php } ?>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_idinvoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idinvoice" id="o<?= $Grid->RowIndex ?>_idinvoice" value="<?= HtmlEncode($Grid->idinvoice->OldValue) ?>">
-</td>
-    <?php } ?>
-    <?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
-        <td data-name="totaltagihan">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_v_piutang_detail_totaltagihan" class="form-group v_piutang_detail_totaltagihan">
-<input type="<?= $Grid->totaltagihan->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_totaltagihan" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" size="30" placeholder="<?= HtmlEncode($Grid->totaltagihan->getPlaceHolder()) ?>" value="<?= $Grid->totaltagihan->EditValue ?>"<?= $Grid->totaltagihan->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->totaltagihan->getErrorMessage() ?></div>
 </span>
 <?php } else { ?>
-<span id="el$rowindex$_v_piutang_detail_totaltagihan" class="form-group v_piutang_detail_totaltagihan">
-<span<?= $Grid->totaltagihan->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->totaltagihan->getDisplayValue($Grid->totaltagihan->ViewValue))) ?>"></span>
+<span id="el$rowindex$_v_piutang_detail_tglinvoice" class="form-group v_piutang_detail_tglinvoice">
+<span<?= $Grid->tglinvoice->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->tglinvoice->getDisplayValue($Grid->tglinvoice->ViewValue))) ?>"></span>
 </span>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->FormValue) ?>">
+<input type="hidden" data-table="v_piutang_detail" data-field="x_tglinvoice" data-hidden="1" name="x<?= $Grid->RowIndex ?>_tglinvoice" id="x<?= $Grid->RowIndex ?>_tglinvoice" value="<?= HtmlEncode($Grid->tglinvoice->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totaltagihan" id="o<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->OldValue) ?>">
+<input type="hidden" data-table="v_piutang_detail" data-field="x_tglinvoice" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tglinvoice" id="o<?= $Grid->RowIndex ?>_tglinvoice" value="<?= HtmlEncode($Grid->tglinvoice->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->sisabayar->Visible) { // sisabayar ?>
@@ -460,6 +468,23 @@ $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 <input type="hidden" data-table="v_piutang_detail" data-field="x_sisabayar" data-hidden="1" name="x<?= $Grid->RowIndex ?>_sisabayar" id="x<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="v_piutang_detail" data-field="x_sisabayar" data-hidden="1" name="o<?= $Grid->RowIndex ?>_sisabayar" id="o<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
+        <td data-name="totaltagihan">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_v_piutang_detail_totaltagihan" class="form-group v_piutang_detail_totaltagihan">
+<input type="<?= $Grid->totaltagihan->getInputTextType() ?>" data-table="v_piutang_detail" data-field="x_totaltagihan" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" size="30" placeholder="<?= HtmlEncode($Grid->totaltagihan->getPlaceHolder()) ?>" value="<?= $Grid->totaltagihan->EditValue ?>"<?= $Grid->totaltagihan->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totaltagihan->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_v_piutang_detail_totaltagihan" class="form-group v_piutang_detail_totaltagihan">
+<span<?= $Grid->totaltagihan->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->totaltagihan->getDisplayValue($Grid->totaltagihan->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_totaltagihan" id="x<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="v_piutang_detail" data-field="x_totaltagihan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totaltagihan" id="o<?= $Grid->RowIndex ?>_totaltagihan" value="<?= HtmlEncode($Grid->totaltagihan->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->jatuhtempo->Visible) { // jatuhtempo ?>

@@ -565,7 +565,13 @@ class VPiutangList extends VPiutang
         // Set up list options
         $this->setupListOptions();
         $this->idpegawai->Visible = false;
-        $this->idcustomer->setVisibility();
+        $this->kodepegawai->Visible = false;
+        $this->namapegawai->Visible = false;
+        $this->pegawai->setVisibility();
+        $this->idcustomer->Visible = false;
+        $this->kodecustomer->Visible = false;
+        $this->namacustomer->Visible = false;
+        $this->customer->setVisibility();
         $this->totaltagihan->setVisibility();
         $this->totalpiutang->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -861,7 +867,13 @@ class VPiutangList extends VPiutang
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
+        $filterList = Concat($filterList, $this->kodepegawai->AdvancedSearch->toJson(), ","); // Field kodepegawai
+        $filterList = Concat($filterList, $this->namapegawai->AdvancedSearch->toJson(), ","); // Field namapegawai
+        $filterList = Concat($filterList, $this->pegawai->AdvancedSearch->toJson(), ","); // Field pegawai
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
+        $filterList = Concat($filterList, $this->kodecustomer->AdvancedSearch->toJson(), ","); // Field kodecustomer
+        $filterList = Concat($filterList, $this->namacustomer->AdvancedSearch->toJson(), ","); // Field namacustomer
+        $filterList = Concat($filterList, $this->customer->AdvancedSearch->toJson(), ","); // Field customer
         $filterList = Concat($filterList, $this->totaltagihan->AdvancedSearch->toJson(), ","); // Field totaltagihan
         $filterList = Concat($filterList, $this->totalpiutang->AdvancedSearch->toJson(), ","); // Field totalpiutang
         if ($this->BasicSearch->Keyword != "") {
@@ -912,6 +924,30 @@ class VPiutangList extends VPiutang
         $this->idpegawai->AdvancedSearch->SearchOperator2 = @$filter["w_idpegawai"];
         $this->idpegawai->AdvancedSearch->save();
 
+        // Field kodepegawai
+        $this->kodepegawai->AdvancedSearch->SearchValue = @$filter["x_kodepegawai"];
+        $this->kodepegawai->AdvancedSearch->SearchOperator = @$filter["z_kodepegawai"];
+        $this->kodepegawai->AdvancedSearch->SearchCondition = @$filter["v_kodepegawai"];
+        $this->kodepegawai->AdvancedSearch->SearchValue2 = @$filter["y_kodepegawai"];
+        $this->kodepegawai->AdvancedSearch->SearchOperator2 = @$filter["w_kodepegawai"];
+        $this->kodepegawai->AdvancedSearch->save();
+
+        // Field namapegawai
+        $this->namapegawai->AdvancedSearch->SearchValue = @$filter["x_namapegawai"];
+        $this->namapegawai->AdvancedSearch->SearchOperator = @$filter["z_namapegawai"];
+        $this->namapegawai->AdvancedSearch->SearchCondition = @$filter["v_namapegawai"];
+        $this->namapegawai->AdvancedSearch->SearchValue2 = @$filter["y_namapegawai"];
+        $this->namapegawai->AdvancedSearch->SearchOperator2 = @$filter["w_namapegawai"];
+        $this->namapegawai->AdvancedSearch->save();
+
+        // Field pegawai
+        $this->pegawai->AdvancedSearch->SearchValue = @$filter["x_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchOperator = @$filter["z_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchCondition = @$filter["v_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchValue2 = @$filter["y_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchOperator2 = @$filter["w_pegawai"];
+        $this->pegawai->AdvancedSearch->save();
+
         // Field idcustomer
         $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
         $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
@@ -919,6 +955,30 @@ class VPiutangList extends VPiutang
         $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
         $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
         $this->idcustomer->AdvancedSearch->save();
+
+        // Field kodecustomer
+        $this->kodecustomer->AdvancedSearch->SearchValue = @$filter["x_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchOperator = @$filter["z_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchCondition = @$filter["v_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchValue2 = @$filter["y_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->SearchOperator2 = @$filter["w_kodecustomer"];
+        $this->kodecustomer->AdvancedSearch->save();
+
+        // Field namacustomer
+        $this->namacustomer->AdvancedSearch->SearchValue = @$filter["x_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchOperator = @$filter["z_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchCondition = @$filter["v_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchValue2 = @$filter["y_namacustomer"];
+        $this->namacustomer->AdvancedSearch->SearchOperator2 = @$filter["w_namacustomer"];
+        $this->namacustomer->AdvancedSearch->save();
+
+        // Field customer
+        $this->customer->AdvancedSearch->SearchValue = @$filter["x_customer"];
+        $this->customer->AdvancedSearch->SearchOperator = @$filter["z_customer"];
+        $this->customer->AdvancedSearch->SearchCondition = @$filter["v_customer"];
+        $this->customer->AdvancedSearch->SearchValue2 = @$filter["y_customer"];
+        $this->customer->AdvancedSearch->SearchOperator2 = @$filter["w_customer"];
+        $this->customer->AdvancedSearch->save();
 
         // Field totaltagihan
         $this->totaltagihan->AdvancedSearch->SearchValue = @$filter["x_totaltagihan"];
@@ -943,7 +1003,8 @@ class VPiutangList extends VPiutang
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->idcustomer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->pegawai, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->customer, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->totaltagihan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->totalpiutang, $arKeywords, $type);
         return $where;
@@ -1108,7 +1169,8 @@ class VPiutangList extends VPiutang
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->pegawai); // pegawai
+            $this->updateSort($this->customer); // customer
             $this->updateSort($this->totaltagihan); // totaltagihan
             $this->updateSort($this->totalpiutang); // totalpiutang
             $this->setStartRecordNumber(1); // Reset start position
@@ -1155,7 +1217,13 @@ class VPiutangList extends VPiutang
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->idpegawai->setSort("");
+                $this->kodepegawai->setSort("");
+                $this->namapegawai->setSort("");
+                $this->pegawai->setSort("");
                 $this->idcustomer->setSort("");
+                $this->kodecustomer->setSort("");
+                $this->namacustomer->setSort("");
+                $this->customer->setSort("");
                 $this->totaltagihan->setSort("");
                 $this->totalpiutang->setSort("");
             }
@@ -1627,7 +1695,13 @@ class VPiutangList extends VPiutang
             return;
         }
         $this->idpegawai->setDbValue($row['idpegawai']);
+        $this->kodepegawai->setDbValue($row['kodepegawai']);
+        $this->namapegawai->setDbValue($row['namapegawai']);
+        $this->pegawai->setDbValue($row['pegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kodecustomer->setDbValue($row['kodecustomer']);
+        $this->namacustomer->setDbValue($row['namacustomer']);
+        $this->customer->setDbValue($row['customer']);
         $this->totaltagihan->setDbValue($row['totaltagihan']);
         $this->totalpiutang->setDbValue($row['totalpiutang']);
     }
@@ -1637,7 +1711,13 @@ class VPiutangList extends VPiutang
     {
         $row = [];
         $row['idpegawai'] = null;
+        $row['kodepegawai'] = null;
+        $row['namapegawai'] = null;
+        $row['pegawai'] = null;
         $row['idcustomer'] = null;
+        $row['kodecustomer'] = null;
+        $row['namacustomer'] = null;
+        $row['customer'] = null;
         $row['totaltagihan'] = null;
         $row['totalpiutang'] = null;
         return $row;
@@ -1678,56 +1758,38 @@ class VPiutangList extends VPiutang
         // Common render codes for all row types
 
         // idpegawai
+        $this->idpegawai->CellCssStyle = "white-space: nowrap;";
+
+        // kodepegawai
+        $this->kodepegawai->CellCssStyle = "white-space: nowrap;";
+
+        // namapegawai
+        $this->namapegawai->CellCssStyle = "white-space: nowrap;";
+
+        // pegawai
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
+
+        // kodecustomer
+        $this->kodecustomer->CellCssStyle = "white-space: nowrap;";
+
+        // namacustomer
+        $this->namacustomer->CellCssStyle = "white-space: nowrap;";
+
+        // customer
 
         // totaltagihan
 
         // totalpiutang
         if ($this->RowType == ROWTYPE_VIEW) {
-            // idpegawai
-            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
-            if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                    } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idpegawai->ViewValue = null;
-            }
-            $this->idpegawai->ViewCustomAttributes = "";
+            // pegawai
+            $this->pegawai->ViewValue = $this->pegawai->CurrentValue;
+            $this->pegawai->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
+            // customer
+            $this->customer->ViewValue = $this->customer->CurrentValue;
+            $this->customer->ViewCustomAttributes = "";
 
             // totaltagihan
             $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
@@ -1739,10 +1801,15 @@ class VPiutangList extends VPiutang
             $this->totalpiutang->ViewValue = FormatCurrency($this->totalpiutang->ViewValue, 2, -2, -2, -2);
             $this->totalpiutang->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // pegawai
+            $this->pegawai->LinkCustomAttributes = "";
+            $this->pegawai->HrefValue = "";
+            $this->pegawai->TooltipValue = "";
+
+            // customer
+            $this->customer->LinkCustomAttributes = "";
+            $this->customer->HrefValue = "";
+            $this->customer->TooltipValue = "";
 
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";

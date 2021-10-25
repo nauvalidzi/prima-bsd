@@ -70,6 +70,7 @@ class Crosstab1 extends CrosstabTable
         $this->idpegawai = new ReportField('Crosstab1', 'Crosstab1', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idpegawai->GroupingFieldId = 1;
         $this->idpegawai->IsAutoIncrement = true; // Autoincrement field
+        $this->idpegawai->IsPrimaryKey = true; // Primary key field
         $this->idpegawai->Sortable = true; // Allow sort
         $this->idpegawai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
@@ -88,6 +89,7 @@ class Crosstab1 extends CrosstabTable
         // idcustomer
         $this->idcustomer = new ReportField('Crosstab1', 'Crosstab1', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
+        $this->idcustomer->IsPrimaryKey = true; // Primary key field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
@@ -645,13 +647,25 @@ class Crosstab1 extends CrosstabTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`idinvoice` = @idinvoice@";
+        return "`idpegawai` = @idpegawai@ AND `idcustomer` = @idcustomer@ AND `idinvoice` = @idinvoice@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
+        $val = $current ? $this->idpegawai->CurrentValue : $this->idpegawai->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
+        $val = $current ? $this->idcustomer->CurrentValue : $this->idcustomer->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
         $val = $current ? $this->idinvoice->CurrentValue : $this->idinvoice->OldValue;
         if (EmptyValue($val)) {
             return "";
@@ -666,11 +680,21 @@ class Crosstab1 extends CrosstabTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
+        if (count($keys) == 3) {
             if ($current) {
-                $this->idinvoice->CurrentValue = $keys[0];
+                $this->idpegawai->CurrentValue = $keys[0];
             } else {
-                $this->idinvoice->OldValue = $keys[0];
+                $this->idpegawai->OldValue = $keys[0];
+            }
+            if ($current) {
+                $this->idcustomer->CurrentValue = $keys[1];
+            } else {
+                $this->idcustomer->OldValue = $keys[1];
+            }
+            if ($current) {
+                $this->idinvoice->CurrentValue = $keys[2];
+            } else {
+                $this->idinvoice->OldValue = $keys[2];
             }
         }
     }
@@ -679,6 +703,32 @@ class Crosstab1 extends CrosstabTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
+        if (is_array($row)) {
+            $val = array_key_exists('idpegawai', $row) ? $row['idpegawai'] : null;
+        } else {
+            $val = $this->idpegawai->OldValue !== null ? $this->idpegawai->OldValue : $this->idpegawai->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@idpegawai@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
+        if (is_array($row)) {
+            $val = array_key_exists('idcustomer', $row) ? $row['idcustomer'] : null;
+        } else {
+            $val = $this->idcustomer->OldValue !== null ? $this->idcustomer->OldValue : $this->idcustomer->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@idcustomer@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
         if (is_array($row)) {
             $val = array_key_exists('idinvoice', $row) ? $row['idinvoice'] : null;
         } else {
@@ -819,7 +869,9 @@ class Crosstab1 extends CrosstabTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "idinvoice:" . JsonEncode($this->idinvoice->CurrentValue, "number");
+        $json .= "idpegawai:" . JsonEncode($this->idpegawai->CurrentValue, "number");
+        $json .= ",idcustomer:" . JsonEncode($this->idcustomer->CurrentValue, "number");
+        $json .= ",idinvoice:" . JsonEncode($this->idinvoice->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -830,6 +882,16 @@ class Crosstab1 extends CrosstabTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
+        if ($this->idpegawai->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idpegawai->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
+        if ($this->idcustomer->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idcustomer->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
         if ($this->idinvoice->CurrentValue !== null) {
             $url .= "/" . rawurlencode($this->idinvoice->CurrentValue);
         } else {
@@ -894,13 +956,33 @@ SORTHTML;
         if (Param("key_m") !== null) {
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
+            for ($i = 0; $i < $cnt; $i++) {
+                $arKeys[$i] = explode(Config("COMPOSITE_KEY_SEPARATOR"), $arKeys[$i]);
+            }
         } else {
-            if (($keyValue = Param("idinvoice") ?? Route("idinvoice")) !== null) {
-                $arKeys[] = $keyValue;
+            if (($keyValue = Param("idpegawai") ?? Route("idpegawai")) !== null) {
+                $arKey[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
+                $arKey[] = $keyValue;
             } else {
                 $arKeys = null; // Do not setup
+            }
+            if (($keyValue = Param("idcustomer") ?? Route("idcustomer")) !== null) {
+                $arKey[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(1) ?? Route(3)) !== null)) {
+                $arKey[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+            if (($keyValue = Param("idinvoice") ?? Route("idinvoice")) !== null) {
+                $arKey[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(2) ?? Route(4)) !== null)) {
+                $arKey[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+            if (is_array($arKeys)) {
+                $arKeys[] = $arKey;
             }
 
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
@@ -909,7 +991,16 @@ SORTHTML;
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
+                if (!is_array($key) || count($key) != 3) {
+                    continue; // Just skip so other keys will still work
+                }
+                if (!is_numeric($key[0])) { // idpegawai
+                    continue;
+                }
+                if (!is_numeric($key[1])) { // idcustomer
+                    continue;
+                }
+                if (!is_numeric($key[2])) { // idinvoice
                     continue;
                 }
                 $ar[] = $key;
@@ -928,9 +1019,19 @@ SORTHTML;
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->idinvoice->CurrentValue = $key;
+                $this->idpegawai->CurrentValue = $key[0];
             } else {
-                $this->idinvoice->OldValue = $key;
+                $this->idpegawai->OldValue = $key[0];
+            }
+            if ($setCurrent) {
+                $this->idcustomer->CurrentValue = $key[1];
+            } else {
+                $this->idcustomer->OldValue = $key[1];
+            }
+            if ($setCurrent) {
+                $this->idinvoice->CurrentValue = $key[2];
+            } else {
+                $this->idinvoice->OldValue = $key[2];
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }

@@ -48,7 +48,12 @@ $invoice = Container("invoice");
             <td <?= $invoice->idorder->cellAttributes() ?>>
 <span id="el_invoice_idorder">
 <span<?= $invoice->idorder->viewAttributes() ?>>
-<?= $invoice->idorder->getViewValue() ?></span>
+<?php if (!EmptyString($invoice->idorder->getViewValue()) && $invoice->idorder->linkAttributes() != "") { ?>
+<a<?= $invoice->idorder->linkAttributes() ?>><?= $invoice->idorder->getViewValue() ?></a>
+<?php } else { ?>
+<?= $invoice->idorder->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
         </tr>

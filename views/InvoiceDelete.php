@@ -111,7 +111,12 @@ while (!$Page->Recordset->EOF) {
         <td <?= $Page->idorder->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_invoice_idorder" class="invoice_idorder">
 <span<?= $Page->idorder->viewAttributes() ?>>
-<?= $Page->idorder->getViewValue() ?></span>
+<?php if (!EmptyString($Page->idorder->getViewValue()) && $Page->idorder->linkAttributes() != "") { ?>
+<a<?= $Page->idorder->linkAttributes() ?>><?= $Page->idorder->getViewValue() ?></a>
+<?php } else { ?>
+<?= $Page->idorder->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
 <?php } ?>

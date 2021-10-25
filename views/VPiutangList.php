@@ -135,8 +135,11 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_v_piutang_idcustomer" class="v_piutang_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
+<?php if ($Page->pegawai->Visible) { // pegawai ?>
+        <th data-name="pegawai" class="<?= $Page->pegawai->headerCellClass() ?>"><div id="elh_v_piutang_pegawai" class="v_piutang_pegawai"><?= $Page->renderSort($Page->pegawai) ?></div></th>
+<?php } ?>
+<?php if ($Page->customer->Visible) { // customer ?>
+        <th data-name="customer" class="<?= $Page->customer->headerCellClass() ?>"><div id="elh_v_piutang_customer" class="v_piutang_customer"><?= $Page->renderSort($Page->customer) ?></div></th>
 <?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <th data-name="totaltagihan" class="<?= $Page->totaltagihan->headerCellClass() ?>"><div id="elh_v_piutang_totaltagihan" class="v_piutang_totaltagihan"><?= $Page->renderSort($Page->totaltagihan) ?></div></th>
@@ -211,11 +214,19 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_piutang_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
+    <?php if ($Page->pegawai->Visible) { // pegawai ?>
+        <td data-name="pegawai" <?= $Page->pegawai->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_piutang_pegawai">
+<span<?= $Page->pegawai->viewAttributes() ?>>
+<?= $Page->pegawai->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->customer->Visible) { // customer ?>
+        <td data-name="customer" <?= $Page->customer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_piutang_customer">
+<span<?= $Page->customer->viewAttributes() ?>>
+<?= $Page->customer->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

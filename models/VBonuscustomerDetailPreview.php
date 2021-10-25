@@ -393,8 +393,10 @@ class VBonuscustomerDetailPreview extends VBonuscustomerDetail
 
         // Set up list options
         $this->setupListOptions();
-        $this->idcustomer->setVisibility();
-        $this->idinvoice->setVisibility();
+        $this->idcustomer->Visible = false;
+        $this->idinvoice->Visible = false;
+        $this->nama_customer->setVisibility();
+        $this->kode_invoice->setVisibility();
         $this->blackbonus->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -485,6 +487,8 @@ class VBonuscustomerDetailPreview extends VBonuscustomerDetail
             $this->CurrentOrderType = "";
             $this->idcustomer->setSort("");
             $this->idinvoice->setSort("");
+            $this->nama_customer->setSort("");
+            $this->kode_invoice->setSort("");
             $this->blackbonus->setSort("");
 
             // Save sort to session
@@ -497,8 +501,8 @@ class VBonuscustomerDetailPreview extends VBonuscustomerDetail
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->idinvoice); // idinvoice
+            $this->updateSort($this->nama_customer); // nama_customer
+            $this->updateSort($this->kode_invoice); // kode_invoice
             $this->updateSort($this->blackbonus); // blackbonus
         }
     }

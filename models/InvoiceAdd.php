@@ -497,6 +497,7 @@ class InvoiceAdd extends Invoice
         // Set up lookup cache
         $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idorder);
+        $this->setupLookupOptions($this->idtermpayment);
         $this->setupLookupOptions($this->idtipepayment);
 
         // Check modal
@@ -531,6 +532,10 @@ class InvoiceAdd extends Invoice
 
         // Load old record / default values
         $loaded = $this->loadOldRecord();
+
+        // Set up master/detail parameters
+        // NOTE: must be after loadOldRecord to prevent master key values overwritten
+        $this->setupMasterParms();
 
         // Load form values
         if ($postBack) {
@@ -1072,8 +1077,24 @@ class InvoiceAdd extends Invoice
             $this->sisabayar->ViewCustomAttributes = "";
 
             // idtermpayment
-            $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-            $this->idtermpayment->ViewValue = FormatNumber($this->idtermpayment->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idtermpayment->CurrentValue));
+            if ($curVal != "") {
+                $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
+                if ($this->idtermpayment->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idtermpayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idtermpayment->Lookup->renderViewRow($rswrk[0]);
+                        $this->idtermpayment->ViewValue = $this->idtermpayment->displayValue($arwrk);
+                    } else {
+                        $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idtermpayment->ViewValue = null;
+            }
             $this->idtermpayment->ViewCustomAttributes = "";
 
             // idtipepayment
@@ -1140,7 +1161,15 @@ class InvoiceAdd extends Invoice
 
             // idorder
             $this->idorder->LinkCustomAttributes = "";
-            $this->idorder->HrefValue = "";
+            if (!EmptyValue($this->idorder->CurrentValue)) {
+                $this->idorder->HrefValue = $this->idorder->CurrentValue; // Add prefix/suffix
+                $this->idorder->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->idorder->HrefValue = FullUrl($this->idorder->HrefValue, "href");
+                }
+            } else {
+                $this->idorder->HrefValue = "";
+            }
             $this->idorder->TooltipValue = "";
 
             // totalnonpajak
@@ -1201,31 +1230,58 @@ class InvoiceAdd extends Invoice
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            } else {
-                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
+            if ($this->idcustomer->getSessionValue() != "") {
+                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
+                $curVal = trim(strval($this->idcustomer->CurrentValue));
+                if ($curVal != "") {
+                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $lookupFilter = function() {
+                            return (CurrentPageID() == "add") ? "jumlah > 0" : "";
+                        };
+                        $lookupFilter = $lookupFilter->bindTo($this);
+                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                        } else {
+                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                        }
+                    }
                 } else {
-                    $filterWrk = "`idcustomer`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                    $this->idcustomer->ViewValue = null;
                 }
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "jumlah > 0" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idcustomer->EditValue = $arwrk;
+                $this->idcustomer->ViewCustomAttributes = "";
+            } else {
+                $curVal = trim(strval($this->idcustomer->CurrentValue));
+                if ($curVal != "") {
+                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                } else {
+                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+                }
+                if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+                } else { // Lookup from database
+                    if ($curVal == "") {
+                        $filterWrk = "0=1";
+                    } else {
+                        $filterWrk = "`idcustomer`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                    }
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add") ? "jumlah > 0" : "";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    $arwrk = $rswrk;
+                    $this->idcustomer->EditValue = $arwrk;
+                }
+                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
             }
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // idorder
             $this->idorder->EditAttrs["class"] = "form-control";
@@ -1282,7 +1338,26 @@ class InvoiceAdd extends Invoice
             // idtermpayment
             $this->idtermpayment->EditAttrs["class"] = "form-control";
             $this->idtermpayment->EditCustomAttributes = "";
-            $this->idtermpayment->EditValue = HtmlEncode($this->idtermpayment->CurrentValue);
+            $curVal = trim(strval($this->idtermpayment->CurrentValue));
+            if ($curVal != "") {
+                $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
+            } else {
+                $this->idtermpayment->ViewValue = $this->idtermpayment->Lookup !== null && is_array($this->idtermpayment->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idtermpayment->ViewValue !== null) { // Load from cache
+                $this->idtermpayment->EditValue = array_values($this->idtermpayment->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idtermpayment->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idtermpayment->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idtermpayment->EditValue = $arwrk;
+            }
             $this->idtermpayment->PlaceHolder = RemoveHtml($this->idtermpayment->caption());
 
             // idtipepayment
@@ -1342,7 +1417,15 @@ class InvoiceAdd extends Invoice
 
             // idorder
             $this->idorder->LinkCustomAttributes = "";
-            $this->idorder->HrefValue = "";
+            if (!EmptyValue($this->idorder->CurrentValue)) {
+                $this->idorder->HrefValue = $this->idorder->CurrentValue; // Add prefix/suffix
+                $this->idorder->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->idorder->HrefValue = FullUrl($this->idorder->HrefValue, "href");
+                }
+            } else {
+                $this->idorder->HrefValue = "";
+            }
 
             // totalnonpajak
             $this->totalnonpajak->LinkCustomAttributes = "";
@@ -1447,9 +1530,6 @@ class InvoiceAdd extends Invoice
                 $this->idtermpayment->addErrorMessage(str_replace("%s", $this->idtermpayment->caption(), $this->idtermpayment->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idtermpayment->FormValue)) {
-            $this->idtermpayment->addErrorMessage($this->idtermpayment->getErrorMessage(false));
-        }
         if ($this->idtipepayment->Required) {
             if (!$this->idtipepayment->IsDetailKey && EmptyValue($this->idtipepayment->FormValue)) {
                 $this->idtipepayment->addErrorMessage(str_replace("%s", $this->idtipepayment->caption(), $this->idtipepayment->RequiredErrorMessage));
@@ -1506,6 +1586,54 @@ class InvoiceAdd extends Invoice
                 return false;
             }
         }
+
+        // Check if valid key values for master user
+        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
+            $masterFilter = $this->sqlMasterFilter_suratjalan_detail();
+            if (strval($this->id->CurrentValue) != "") {
+                $masterFilter = str_replace("@idinvoice@", AdjustSql($this->id->CurrentValue, "DB"), $masterFilter);
+            } else {
+                $masterFilter = "";
+            }
+            if ($masterFilter != "") {
+                $rsmaster = Container("suratjalan_detail")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
+                $masterRecordExists = $rsmaster !== false;
+                $validMasterKey = true;
+                if ($masterRecordExists) {
+                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
+                } elseif ($this->getCurrentMasterTable() == "suratjalan_detail") {
+                    $validMasterKey = false;
+                }
+                if (!$validMasterKey) {
+                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
+                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
+                    $this->setFailureMessage($masterUserIdMsg);
+                    return false;
+                }
+            }
+            $masterFilter = $this->sqlMasterFilter_pembayaran();
+            if (strval($this->id->CurrentValue) != "") {
+                $masterFilter = str_replace("@idinvoice@", AdjustSql($this->id->CurrentValue, "DB"), $masterFilter);
+            } else {
+                $masterFilter = "";
+            }
+            if ($masterFilter != "") {
+                $rsmaster = Container("pembayaran")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
+                $masterRecordExists = $rsmaster !== false;
+                $validMasterKey = true;
+                if ($masterRecordExists) {
+                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
+                } elseif ($this->getCurrentMasterTable() == "pembayaran") {
+                    $validMasterKey = false;
+                }
+                if (!$validMasterKey) {
+                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
+                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
+                    $this->setFailureMessage($masterUserIdMsg);
+                    return false;
+                }
+            }
+        }
         $conn = $this->getConnection();
 
         // Begin transaction
@@ -1554,6 +1682,11 @@ class InvoiceAdd extends Invoice
 
         // readonly
         $this->readonly->setDbValueDef($rsnew, $this->readonly->CurrentValue, 0, strval($this->readonly->CurrentValue) == "");
+
+        // id
+        if ($this->id->getSessionValue() != "") {
+            $rsnew['id'] = $this->id->getSessionValue();
+        }
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -1628,6 +1761,141 @@ class InvoiceAdd extends Invoice
         return true;
     }
 
+    // Set up master/detail based on QueryString
+    protected function setupMasterParms()
+    {
+        $validMaster = false;
+        // Get the keys for master table
+        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
+            $masterTblVar = $master;
+            if ($masterTblVar == "") {
+                $validMaster = true;
+                $this->DbMasterFilter = "";
+                $this->DbDetailFilter = "";
+            }
+            if ($masterTblVar == "suratjalan_detail") {
+                $validMaster = true;
+                $masterTbl = Container("suratjalan_detail");
+                if (($parm = Get("fk_idinvoice", Get("id"))) !== null) {
+                    $masterTbl->idinvoice->setQueryStringValue($parm);
+                    $this->id->setQueryStringValue($masterTbl->idinvoice->QueryStringValue);
+                    $this->id->setSessionValue($this->id->QueryStringValue);
+                    if (!is_numeric($masterTbl->idinvoice->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "pembayaran") {
+                $validMaster = true;
+                $masterTbl = Container("pembayaran");
+                if (($parm = Get("fk_idinvoice", Get("id"))) !== null) {
+                    $masterTbl->idinvoice->setQueryStringValue($parm);
+                    $this->id->setQueryStringValue($masterTbl->idinvoice->QueryStringValue);
+                    $this->id->setSessionValue($this->id->QueryStringValue);
+                    if (!is_numeric($masterTbl->idinvoice->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "customer") {
+                $validMaster = true;
+                $masterTbl = Container("customer");
+                if (($parm = Get("fk_id", Get("idcustomer"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idcustomer->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idcustomer->setSessionValue($this->idcustomer->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
+            $masterTblVar = $master;
+            if ($masterTblVar == "") {
+                    $validMaster = true;
+                    $this->DbMasterFilter = "";
+                    $this->DbDetailFilter = "";
+            }
+            if ($masterTblVar == "suratjalan_detail") {
+                $validMaster = true;
+                $masterTbl = Container("suratjalan_detail");
+                if (($parm = Post("fk_idinvoice", Post("id"))) !== null) {
+                    $masterTbl->idinvoice->setFormValue($parm);
+                    $this->id->setFormValue($masterTbl->idinvoice->FormValue);
+                    $this->id->setSessionValue($this->id->FormValue);
+                    if (!is_numeric($masterTbl->idinvoice->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "pembayaran") {
+                $validMaster = true;
+                $masterTbl = Container("pembayaran");
+                if (($parm = Post("fk_idinvoice", Post("id"))) !== null) {
+                    $masterTbl->idinvoice->setFormValue($parm);
+                    $this->id->setFormValue($masterTbl->idinvoice->FormValue);
+                    $this->id->setSessionValue($this->id->FormValue);
+                    if (!is_numeric($masterTbl->idinvoice->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "customer") {
+                $validMaster = true;
+                $masterTbl = Container("customer");
+                if (($parm = Post("fk_id", Post("idcustomer"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idcustomer->setFormValue($masterTbl->id->FormValue);
+                    $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+        }
+        if ($validMaster) {
+            // Save current master table
+            $this->setCurrentMasterTable($masterTblVar);
+
+            // Reset start record counter (new master key)
+            if (!$this->isAddOrEdit()) {
+                $this->StartRecord = 1;
+                $this->setStartRecordNumber($this->StartRecord);
+            }
+
+            // Clear previous master key from Session
+            if ($masterTblVar != "suratjalan_detail") {
+                if ($this->id->CurrentValue == "") {
+                    $this->id->setSessionValue("");
+                }
+            }
+            if ($masterTblVar != "pembayaran") {
+                if ($this->id->CurrentValue == "") {
+                    $this->id->setSessionValue("");
+                }
+            }
+            if ($masterTblVar != "customer") {
+                if ($this->idcustomer->CurrentValue == "") {
+                    $this->idcustomer->setSessionValue("");
+                }
+            }
+        }
+        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
+        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
+    }
+
     // Set up detail parms based on QueryString
     protected function setupDetailParms()
     {
@@ -1696,6 +1964,8 @@ class InvoiceAdd extends Invoice
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "jumlah > 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_idtermpayment":
                     break;
                 case "x_idtipepayment":
                     break;

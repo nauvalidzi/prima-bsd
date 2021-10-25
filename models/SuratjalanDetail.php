@@ -90,6 +90,7 @@ class SuratjalanDetail extends DbTable
 
         // idinvoice
         $this->idinvoice = new DbField('suratjalan_detail', 'suratjalan_detail', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 3, 11, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idinvoice->IsForeignKey = true; // Foreign key field
         $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Required = true; // Required field
         $this->idinvoice->Sortable = true; // Allow sort
@@ -215,6 +216,32 @@ class SuratjalanDetail extends DbTable
     public function sqlDetailFilter_suratjalan()
     {
         return "`idsuratjalan`=@idsuratjalan@";
+    }
+
+    // Current detail table name
+    public function getCurrentDetailTable()
+    {
+        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE"));
+    }
+
+    public function setCurrentDetailTable($v)
+    {
+        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE")] = $v;
+    }
+
+    // Get detail url
+    public function getDetailUrl()
+    {
+        // Detail url
+        $detailUrl = "";
+        if ($this->getCurrentDetailTable() == "invoice") {
+            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+            $detailUrl .= "&" . GetForeignKeyUrl("fk_idinvoice", $this->idinvoice->CurrentValue);
+        }
+        if ($detailUrl == "") {
+            $detailUrl = "SuratjalanDetailList";
+        }
+        return $detailUrl;
     }
 
     // Table level SQL
@@ -747,7 +774,11 @@ class SuratjalanDetail extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("SuratjalanDetailEdit", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("SuratjalanDetailEdit", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("SuratjalanDetailEdit", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 
@@ -761,7 +792,11 @@ class SuratjalanDetail extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("SuratjalanDetailAdd", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("SuratjalanDetailAdd", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("SuratjalanDetailAdd", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 

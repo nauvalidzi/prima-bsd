@@ -23,12 +23,13 @@ loadjs.ready("head", function () {
         ew.vars.tables.alamat_customer = currentTable;
     falamat_customergrid.addFields([
         ["alias", [fields.alias.visible && fields.alias.required ? ew.Validators.required(fields.alias.caption) : null], fields.alias.isInvalid],
+        ["penerima", [fields.penerima.visible && fields.penerima.required ? ew.Validators.required(fields.penerima.caption) : null], fields.penerima.isInvalid],
+        ["telepon", [fields.telepon.visible && fields.telepon.required ? ew.Validators.required(fields.telepon.caption) : null], fields.telepon.isInvalid],
+        ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
         ["idprovinsi", [fields.idprovinsi.visible && fields.idprovinsi.required ? ew.Validators.required(fields.idprovinsi.caption) : null], fields.idprovinsi.isInvalid],
         ["idkabupaten", [fields.idkabupaten.visible && fields.idkabupaten.required ? ew.Validators.required(fields.idkabupaten.caption) : null], fields.idkabupaten.isInvalid],
         ["idkecamatan", [fields.idkecamatan.visible && fields.idkecamatan.required ? ew.Validators.required(fields.idkecamatan.caption) : null], fields.idkecamatan.isInvalid],
-        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null], fields.idkelurahan.isInvalid],
-        ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
-        ["penerima", [fields.penerima.visible && fields.penerima.required ? ew.Validators.required(fields.penerima.caption) : null], fields.penerima.isInvalid]
+        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null], fields.idkelurahan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -84,6 +85,12 @@ loadjs.ready("head", function () {
         var fobj = this.getForm();
         if (ew.valueChanged(fobj, rowIndex, "alias", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "penerima", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "telepon", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "alamat", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "idprovinsi", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idkabupaten", false))
@@ -91,10 +98,6 @@ loadjs.ready("head", function () {
         if (ew.valueChanged(fobj, rowIndex, "idkecamatan", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idkelurahan", false))
-            return false;
-        if (ew.valueChanged(fobj, rowIndex, "alamat", false))
-            return false;
-        if (ew.valueChanged(fobj, rowIndex, "penerima", false))
             return false;
         return true;
     }
@@ -140,6 +143,15 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->alias->Visible) { // alias ?>
         <th data-name="alias" class="<?= $Grid->alias->headerCellClass() ?>"><div id="elh_alamat_customer_alias" class="alamat_customer_alias"><?= $Grid->renderSort($Grid->alias) ?></div></th>
 <?php } ?>
+<?php if ($Grid->penerima->Visible) { // penerima ?>
+        <th data-name="penerima" class="<?= $Grid->penerima->headerCellClass() ?>"><div id="elh_alamat_customer_penerima" class="alamat_customer_penerima"><?= $Grid->renderSort($Grid->penerima) ?></div></th>
+<?php } ?>
+<?php if ($Grid->telepon->Visible) { // telepon ?>
+        <th data-name="telepon" class="<?= $Grid->telepon->headerCellClass() ?>"><div id="elh_alamat_customer_telepon" class="alamat_customer_telepon"><?= $Grid->renderSort($Grid->telepon) ?></div></th>
+<?php } ?>
+<?php if ($Grid->alamat->Visible) { // alamat ?>
+        <th data-name="alamat" class="<?= $Grid->alamat->headerCellClass() ?>"><div id="elh_alamat_customer_alamat" class="alamat_customer_alamat"><?= $Grid->renderSort($Grid->alamat) ?></div></th>
+<?php } ?>
 <?php if ($Grid->idprovinsi->Visible) { // idprovinsi ?>
         <th data-name="idprovinsi" class="<?= $Grid->idprovinsi->headerCellClass() ?>"><div id="elh_alamat_customer_idprovinsi" class="alamat_customer_idprovinsi"><?= $Grid->renderSort($Grid->idprovinsi) ?></div></th>
 <?php } ?>
@@ -151,12 +163,6 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->idkelurahan->Visible) { // idkelurahan ?>
         <th data-name="idkelurahan" class="<?= $Grid->idkelurahan->headerCellClass() ?>"><div id="elh_alamat_customer_idkelurahan" class="alamat_customer_idkelurahan"><?= $Grid->renderSort($Grid->idkelurahan) ?></div></th>
-<?php } ?>
-<?php if ($Grid->alamat->Visible) { // alamat ?>
-        <th data-name="alamat" class="<?= $Grid->alamat->headerCellClass() ?>"><div id="elh_alamat_customer_alamat" class="alamat_customer_alamat"><?= $Grid->renderSort($Grid->alamat) ?></div></th>
-<?php } ?>
-<?php if ($Grid->penerima->Visible) { // penerima ?>
-        <th data-name="penerima" class="<?= $Grid->penerima->headerCellClass() ?>"><div id="elh_alamat_customer_penerima" class="alamat_customer_penerima"><?= $Grid->renderSort($Grid->penerima) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -294,6 +300,87 @@ $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="alamat_customer" data-field="x_alias" data-hidden="1" name="falamat_customergrid$x<?= $Grid->RowIndex ?>_alias" id="falamat_customergrid$x<?= $Grid->RowIndex ?>_alias" value="<?= HtmlEncode($Grid->alias->FormValue) ?>">
 <input type="hidden" data-table="alamat_customer" data-field="x_alias" data-hidden="1" name="falamat_customergrid$o<?= $Grid->RowIndex ?>_alias" id="falamat_customergrid$o<?= $Grid->RowIndex ?>_alias" value="<?= HtmlEncode($Grid->alias->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->penerima->Visible) { // penerima ?>
+        <td data-name="penerima" <?= $Grid->penerima->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_penerima" class="form-group">
+<input type="<?= $Grid->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->penerima->getPlaceHolder()) ?>" value="<?= $Grid->penerima->EditValue ?>"<?= $Grid->penerima->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->penerima->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="o<?= $Grid->RowIndex ?>_penerima" id="o<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_penerima" class="form-group">
+<input type="<?= $Grid->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->penerima->getPlaceHolder()) ?>" value="<?= $Grid->penerima->EditValue ?>"<?= $Grid->penerima->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->penerima->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_penerima">
+<span<?= $Grid->penerima->viewAttributes() ?>>
+<?= $Grid->penerima->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="falamat_customergrid$x<?= $Grid->RowIndex ?>_penerima" id="falamat_customergrid$x<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->FormValue) ?>">
+<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="falamat_customergrid$o<?= $Grid->RowIndex ?>_penerima" id="falamat_customergrid$o<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->telepon->Visible) { // telepon ?>
+        <td data-name="telepon" <?= $Grid->telepon->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_telepon" class="form-group">
+<input type="<?= $Grid->telepon->getInputTextType() ?>" data-table="alamat_customer" data-field="x_telepon" name="x<?= $Grid->RowIndex ?>_telepon" id="x<?= $Grid->RowIndex ?>_telepon" size="30" maxlength="15" placeholder="<?= HtmlEncode($Grid->telepon->getPlaceHolder()) ?>" value="<?= $Grid->telepon->EditValue ?>"<?= $Grid->telepon->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->telepon->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="alamat_customer" data-field="x_telepon" data-hidden="1" name="o<?= $Grid->RowIndex ?>_telepon" id="o<?= $Grid->RowIndex ?>_telepon" value="<?= HtmlEncode($Grid->telepon->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_telepon" class="form-group">
+<input type="<?= $Grid->telepon->getInputTextType() ?>" data-table="alamat_customer" data-field="x_telepon" name="x<?= $Grid->RowIndex ?>_telepon" id="x<?= $Grid->RowIndex ?>_telepon" size="30" maxlength="15" placeholder="<?= HtmlEncode($Grid->telepon->getPlaceHolder()) ?>" value="<?= $Grid->telepon->EditValue ?>"<?= $Grid->telepon->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->telepon->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_telepon">
+<span<?= $Grid->telepon->viewAttributes() ?>>
+<?= $Grid->telepon->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="alamat_customer" data-field="x_telepon" data-hidden="1" name="falamat_customergrid$x<?= $Grid->RowIndex ?>_telepon" id="falamat_customergrid$x<?= $Grid->RowIndex ?>_telepon" value="<?= HtmlEncode($Grid->telepon->FormValue) ?>">
+<input type="hidden" data-table="alamat_customer" data-field="x_telepon" data-hidden="1" name="falamat_customergrid$o<?= $Grid->RowIndex ?>_telepon" id="falamat_customergrid$o<?= $Grid->RowIndex ?>_telepon" value="<?= HtmlEncode($Grid->telepon->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->alamat->Visible) { // alamat ?>
+        <td data-name="alamat" <?= $Grid->alamat->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_alamat" class="form-group">
+<textarea data-table="alamat_customer" data-field="x_alamat" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->alamat->getPlaceHolder()) ?>"<?= $Grid->alamat->editAttributes() ?>><?= $Grid->alamat->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->alamat->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="o<?= $Grid->RowIndex ?>_alamat" id="o<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_alamat" class="form-group">
+<textarea data-table="alamat_customer" data-field="x_alamat" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->alamat->getPlaceHolder()) ?>"<?= $Grid->alamat->editAttributes() ?>><?= $Grid->alamat->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->alamat->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_alamat_customer_alamat">
+<span<?= $Grid->alamat->viewAttributes() ?>>
+<?= $Grid->alamat->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="falamat_customergrid$x<?= $Grid->RowIndex ?>_alamat" id="falamat_customergrid$x<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->FormValue) ?>">
+<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="falamat_customergrid$o<?= $Grid->RowIndex ?>_alamat" id="falamat_customergrid$o<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -580,60 +667,6 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->alamat->Visible) { // alamat ?>
-        <td data-name="alamat" <?= $Grid->alamat->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_alamat_customer_alamat" class="form-group">
-<input type="<?= $Grid->alamat->getInputTextType() ?>" data-table="alamat_customer" data-field="x_alamat" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" size="30" maxlength="255" placeholder="<?= HtmlEncode($Grid->alamat->getPlaceHolder()) ?>" value="<?= $Grid->alamat->EditValue ?>"<?= $Grid->alamat->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->alamat->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="o<?= $Grid->RowIndex ?>_alamat" id="o<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_alamat_customer_alamat" class="form-group">
-<input type="<?= $Grid->alamat->getInputTextType() ?>" data-table="alamat_customer" data-field="x_alamat" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" size="30" maxlength="255" placeholder="<?= HtmlEncode($Grid->alamat->getPlaceHolder()) ?>" value="<?= $Grid->alamat->EditValue ?>"<?= $Grid->alamat->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->alamat->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_alamat_customer_alamat">
-<span<?= $Grid->alamat->viewAttributes() ?>>
-<?= $Grid->alamat->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="falamat_customergrid$x<?= $Grid->RowIndex ?>_alamat" id="falamat_customergrid$x<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->FormValue) ?>">
-<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="falamat_customergrid$o<?= $Grid->RowIndex ?>_alamat" id="falamat_customergrid$o<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
-    <?php if ($Grid->penerima->Visible) { // penerima ?>
-        <td data-name="penerima" <?= $Grid->penerima->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_alamat_customer_penerima" class="form-group">
-<input type="<?= $Grid->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->penerima->getPlaceHolder()) ?>" value="<?= $Grid->penerima->EditValue ?>"<?= $Grid->penerima->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->penerima->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="o<?= $Grid->RowIndex ?>_penerima" id="o<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_alamat_customer_penerima" class="form-group">
-<input type="<?= $Grid->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->penerima->getPlaceHolder()) ?>" value="<?= $Grid->penerima->EditValue ?>"<?= $Grid->penerima->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->penerima->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_alamat_customer_penerima">
-<span<?= $Grid->penerima->viewAttributes() ?>>
-<?= $Grid->penerima->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="falamat_customergrid$x<?= $Grid->RowIndex ?>_penerima" id="falamat_customergrid$x<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->FormValue) ?>">
-<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="falamat_customergrid$o<?= $Grid->RowIndex ?>_penerima" id="falamat_customergrid$o<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -693,6 +726,57 @@ $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 <input type="hidden" data-table="alamat_customer" data-field="x_alias" data-hidden="1" name="x<?= $Grid->RowIndex ?>_alias" id="x<?= $Grid->RowIndex ?>_alias" value="<?= HtmlEncode($Grid->alias->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="alamat_customer" data-field="x_alias" data-hidden="1" name="o<?= $Grid->RowIndex ?>_alias" id="o<?= $Grid->RowIndex ?>_alias" value="<?= HtmlEncode($Grid->alias->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->penerima->Visible) { // penerima ?>
+        <td data-name="penerima">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_alamat_customer_penerima" class="form-group alamat_customer_penerima">
+<input type="<?= $Grid->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->penerima->getPlaceHolder()) ?>" value="<?= $Grid->penerima->EditValue ?>"<?= $Grid->penerima->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->penerima->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_alamat_customer_penerima" class="form-group alamat_customer_penerima">
+<span<?= $Grid->penerima->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->penerima->getDisplayValue($Grid->penerima->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="o<?= $Grid->RowIndex ?>_penerima" id="o<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->telepon->Visible) { // telepon ?>
+        <td data-name="telepon">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_alamat_customer_telepon" class="form-group alamat_customer_telepon">
+<input type="<?= $Grid->telepon->getInputTextType() ?>" data-table="alamat_customer" data-field="x_telepon" name="x<?= $Grid->RowIndex ?>_telepon" id="x<?= $Grid->RowIndex ?>_telepon" size="30" maxlength="15" placeholder="<?= HtmlEncode($Grid->telepon->getPlaceHolder()) ?>" value="<?= $Grid->telepon->EditValue ?>"<?= $Grid->telepon->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->telepon->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_alamat_customer_telepon" class="form-group alamat_customer_telepon">
+<span<?= $Grid->telepon->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->telepon->getDisplayValue($Grid->telepon->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="alamat_customer" data-field="x_telepon" data-hidden="1" name="x<?= $Grid->RowIndex ?>_telepon" id="x<?= $Grid->RowIndex ?>_telepon" value="<?= HtmlEncode($Grid->telepon->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="alamat_customer" data-field="x_telepon" data-hidden="1" name="o<?= $Grid->RowIndex ?>_telepon" id="o<?= $Grid->RowIndex ?>_telepon" value="<?= HtmlEncode($Grid->telepon->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->alamat->Visible) { // alamat ?>
+        <td data-name="alamat">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_alamat_customer_alamat" class="form-group alamat_customer_alamat">
+<textarea data-table="alamat_customer" data-field="x_alamat" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->alamat->getPlaceHolder()) ?>"<?= $Grid->alamat->editAttributes() ?>><?= $Grid->alamat->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->alamat->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_alamat_customer_alamat" class="form-group alamat_customer_alamat">
+<span<?= $Grid->alamat->viewAttributes() ?>>
+<?= $Grid->alamat->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="o<?= $Grid->RowIndex ?>_alamat" id="o<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->idprovinsi->Visible) { // idprovinsi ?>
@@ -848,40 +932,6 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="alamat_customer" data-field="x_idkelurahan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idkelurahan" id="x<?= $Grid->RowIndex ?>_idkelurahan" value="<?= HtmlEncode($Grid->idkelurahan->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="alamat_customer" data-field="x_idkelurahan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idkelurahan" id="o<?= $Grid->RowIndex ?>_idkelurahan" value="<?= HtmlEncode($Grid->idkelurahan->OldValue) ?>">
-</td>
-    <?php } ?>
-    <?php if ($Grid->alamat->Visible) { // alamat ?>
-        <td data-name="alamat">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_alamat_customer_alamat" class="form-group alamat_customer_alamat">
-<input type="<?= $Grid->alamat->getInputTextType() ?>" data-table="alamat_customer" data-field="x_alamat" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" size="30" maxlength="255" placeholder="<?= HtmlEncode($Grid->alamat->getPlaceHolder()) ?>" value="<?= $Grid->alamat->EditValue ?>"<?= $Grid->alamat->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->alamat->getErrorMessage() ?></div>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_alamat_customer_alamat" class="form-group alamat_customer_alamat">
-<span<?= $Grid->alamat->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->alamat->getDisplayValue($Grid->alamat->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="x<?= $Grid->RowIndex ?>_alamat" id="x<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="alamat_customer" data-field="x_alamat" data-hidden="1" name="o<?= $Grid->RowIndex ?>_alamat" id="o<?= $Grid->RowIndex ?>_alamat" value="<?= HtmlEncode($Grid->alamat->OldValue) ?>">
-</td>
-    <?php } ?>
-    <?php if ($Grid->penerima->Visible) { // penerima ?>
-        <td data-name="penerima">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_alamat_customer_penerima" class="form-group alamat_customer_penerima">
-<input type="<?= $Grid->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->penerima->getPlaceHolder()) ?>" value="<?= $Grid->penerima->EditValue ?>"<?= $Grid->penerima->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->penerima->getErrorMessage() ?></div>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_alamat_customer_penerima" class="form-group alamat_customer_penerima">
-<span<?= $Grid->penerima->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->penerima->getDisplayValue($Grid->penerima->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="x<?= $Grid->RowIndex ?>_penerima" id="x<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="alamat_customer" data-field="x_penerima" data-hidden="1" name="o<?= $Grid->RowIndex ?>_penerima" id="o<?= $Grid->RowIndex ?>_penerima" value="<?= HtmlEncode($Grid->penerima->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

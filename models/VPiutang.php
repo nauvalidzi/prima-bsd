@@ -29,7 +29,13 @@ class VPiutang extends DbTable
 
     // Fields
     public $idpegawai;
+    public $kodepegawai;
+    public $namapegawai;
+    public $pegawai;
     public $idcustomer;
+    public $kodecustomer;
+    public $namacustomer;
+    public $customer;
     public $totaltagihan;
     public $totalpiutang;
 
@@ -70,8 +76,7 @@ class VPiutang extends DbTable
         // idpegawai
         $this->idpegawai = new DbField('v_piutang', 'v_piutang', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idpegawai->Nullable = false; // NOT NULL field
-        $this->idpegawai->Required = true; // Required field
-        $this->idpegawai->Sortable = true; // Allow sort
+        $this->idpegawai->Sortable = false; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
                 $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
@@ -84,11 +89,35 @@ class VPiutang extends DbTable
         $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
+        // kodepegawai
+        $this->kodepegawai = new DbField('v_piutang', 'v_piutang', 'x_kodepegawai', 'kodepegawai', '`kodepegawai`', '`kodepegawai`', 200, 20, -1, false, '`kodepegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodepegawai->Nullable = false; // NOT NULL field
+        $this->kodepegawai->Required = true; // Required field
+        $this->kodepegawai->Sortable = false; // Allow sort
+        $this->kodepegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodepegawai->Param, "CustomMsg");
+        $this->Fields['kodepegawai'] = &$this->kodepegawai;
+
+        // namapegawai
+        $this->namapegawai = new DbField('v_piutang', 'v_piutang', 'x_namapegawai', 'namapegawai', '`namapegawai`', '`namapegawai`', 200, 100, -1, false, '`namapegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namapegawai->Nullable = false; // NOT NULL field
+        $this->namapegawai->Required = true; // Required field
+        $this->namapegawai->Sortable = false; // Allow sort
+        $this->namapegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namapegawai->Param, "CustomMsg");
+        $this->Fields['namapegawai'] = &$this->namapegawai;
+
+        // pegawai
+        $this->pegawai = new DbField('v_piutang', 'v_piutang', 'x_pegawai', 'pegawai', '`pegawai`', '`pegawai`', 200, 122, -1, false, '`pegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->pegawai->Nullable = false; // NOT NULL field
+        $this->pegawai->Required = true; // Required field
+        $this->pegawai->Sortable = true; // Allow sort
+        $this->pegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->pegawai->Param, "CustomMsg");
+        $this->Fields['pegawai'] = &$this->pegawai;
+
         // idcustomer
         $this->idcustomer = new DbField('v_piutang', 'v_piutang', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
-        $this->idcustomer->Sortable = true; // Allow sort
+        $this->idcustomer->Sortable = false; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
                 $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
@@ -100,6 +129,30 @@ class VPiutang extends DbTable
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->Fields['idcustomer'] = &$this->idcustomer;
+
+        // kodecustomer
+        $this->kodecustomer = new DbField('v_piutang', 'v_piutang', 'x_kodecustomer', 'kodecustomer', '`kodecustomer`', '`kodecustomer`', 200, 20, -1, false, '`kodecustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodecustomer->Nullable = false; // NOT NULL field
+        $this->kodecustomer->Required = true; // Required field
+        $this->kodecustomer->Sortable = false; // Allow sort
+        $this->kodecustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodecustomer->Param, "CustomMsg");
+        $this->Fields['kodecustomer'] = &$this->kodecustomer;
+
+        // namacustomer
+        $this->namacustomer = new DbField('v_piutang', 'v_piutang', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 100, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namacustomer->Nullable = false; // NOT NULL field
+        $this->namacustomer->Required = true; // Required field
+        $this->namacustomer->Sortable = false; // Allow sort
+        $this->namacustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namacustomer->Param, "CustomMsg");
+        $this->Fields['namacustomer'] = &$this->namacustomer;
+
+        // customer
+        $this->customer = new DbField('v_piutang', 'v_piutang', 'x_customer', 'customer', '`customer`', '`customer`', 200, 122, -1, false, '`customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->customer->Nullable = false; // NOT NULL field
+        $this->customer->Required = true; // Required field
+        $this->customer->Sortable = true; // Allow sort
+        $this->customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->customer->Param, "CustomMsg");
+        $this->Fields['customer'] = &$this->customer;
 
         // totaltagihan
         $this->totaltagihan = new DbField('v_piutang', 'v_piutang', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 131, 41, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -555,7 +608,13 @@ class VPiutang extends DbTable
             return;
         }
         $this->idpegawai->DbValue = $row['idpegawai'];
+        $this->kodepegawai->DbValue = $row['kodepegawai'];
+        $this->namapegawai->DbValue = $row['namapegawai'];
+        $this->pegawai->DbValue = $row['pegawai'];
         $this->idcustomer->DbValue = $row['idcustomer'];
+        $this->kodecustomer->DbValue = $row['kodecustomer'];
+        $this->namacustomer->DbValue = $row['namacustomer'];
+        $this->customer->DbValue = $row['customer'];
         $this->totaltagihan->DbValue = $row['totaltagihan'];
         $this->totalpiutang->DbValue = $row['totalpiutang'];
     }
@@ -833,7 +892,13 @@ SORTHTML;
             return;
         }
         $this->idpegawai->setDbValue($row['idpegawai']);
+        $this->kodepegawai->setDbValue($row['kodepegawai']);
+        $this->namapegawai->setDbValue($row['namapegawai']);
+        $this->pegawai->setDbValue($row['pegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kodecustomer->setDbValue($row['kodecustomer']);
+        $this->namacustomer->setDbValue($row['namacustomer']);
+        $this->customer->setDbValue($row['customer']);
         $this->totaltagihan->setDbValue($row['totaltagihan']);
         $this->totalpiutang->setDbValue($row['totalpiutang']);
     }
@@ -849,8 +914,26 @@ SORTHTML;
         // Common render codes
 
         // idpegawai
+        $this->idpegawai->CellCssStyle = "white-space: nowrap;";
+
+        // kodepegawai
+        $this->kodepegawai->CellCssStyle = "white-space: nowrap;";
+
+        // namapegawai
+        $this->namapegawai->CellCssStyle = "white-space: nowrap;";
+
+        // pegawai
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
+
+        // kodecustomer
+        $this->kodecustomer->CellCssStyle = "white-space: nowrap;";
+
+        // namacustomer
+        $this->namacustomer->CellCssStyle = "white-space: nowrap;";
+
+        // customer
 
         // totaltagihan
 
@@ -878,6 +961,18 @@ SORTHTML;
         }
         $this->idpegawai->ViewCustomAttributes = "";
 
+        // kodepegawai
+        $this->kodepegawai->ViewValue = $this->kodepegawai->CurrentValue;
+        $this->kodepegawai->ViewCustomAttributes = "";
+
+        // namapegawai
+        $this->namapegawai->ViewValue = $this->namapegawai->CurrentValue;
+        $this->namapegawai->ViewCustomAttributes = "";
+
+        // pegawai
+        $this->pegawai->ViewValue = $this->pegawai->CurrentValue;
+        $this->pegawai->ViewCustomAttributes = "";
+
         // idcustomer
         $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
         $curVal = trim(strval($this->idcustomer->CurrentValue));
@@ -900,6 +995,18 @@ SORTHTML;
         }
         $this->idcustomer->ViewCustomAttributes = "";
 
+        // kodecustomer
+        $this->kodecustomer->ViewValue = $this->kodecustomer->CurrentValue;
+        $this->kodecustomer->ViewCustomAttributes = "";
+
+        // namacustomer
+        $this->namacustomer->ViewValue = $this->namacustomer->CurrentValue;
+        $this->namacustomer->ViewCustomAttributes = "";
+
+        // customer
+        $this->customer->ViewValue = $this->customer->CurrentValue;
+        $this->customer->ViewCustomAttributes = "";
+
         // totaltagihan
         $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
         $this->totaltagihan->ViewValue = FormatCurrency($this->totaltagihan->ViewValue, 2, -2, -2, -2);
@@ -915,10 +1022,40 @@ SORTHTML;
         $this->idpegawai->HrefValue = "";
         $this->idpegawai->TooltipValue = "";
 
+        // kodepegawai
+        $this->kodepegawai->LinkCustomAttributes = "";
+        $this->kodepegawai->HrefValue = "";
+        $this->kodepegawai->TooltipValue = "";
+
+        // namapegawai
+        $this->namapegawai->LinkCustomAttributes = "";
+        $this->namapegawai->HrefValue = "";
+        $this->namapegawai->TooltipValue = "";
+
+        // pegawai
+        $this->pegawai->LinkCustomAttributes = "";
+        $this->pegawai->HrefValue = "";
+        $this->pegawai->TooltipValue = "";
+
         // idcustomer
         $this->idcustomer->LinkCustomAttributes = "";
         $this->idcustomer->HrefValue = "";
         $this->idcustomer->TooltipValue = "";
+
+        // kodecustomer
+        $this->kodecustomer->LinkCustomAttributes = "";
+        $this->kodecustomer->HrefValue = "";
+        $this->kodecustomer->TooltipValue = "";
+
+        // namacustomer
+        $this->namacustomer->LinkCustomAttributes = "";
+        $this->namacustomer->HrefValue = "";
+        $this->namacustomer->TooltipValue = "";
+
+        // customer
+        $this->customer->LinkCustomAttributes = "";
+        $this->customer->HrefValue = "";
+        $this->customer->TooltipValue = "";
 
         // totaltagihan
         $this->totaltagihan->LinkCustomAttributes = "";
@@ -954,11 +1091,65 @@ SORTHTML;
             $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
         }
 
+        // kodepegawai
+        $this->kodepegawai->EditAttrs["class"] = "form-control";
+        $this->kodepegawai->EditCustomAttributes = "";
+        if (!$this->kodepegawai->Raw) {
+            $this->kodepegawai->CurrentValue = HtmlDecode($this->kodepegawai->CurrentValue);
+        }
+        $this->kodepegawai->EditValue = $this->kodepegawai->CurrentValue;
+        $this->kodepegawai->PlaceHolder = RemoveHtml($this->kodepegawai->caption());
+
+        // namapegawai
+        $this->namapegawai->EditAttrs["class"] = "form-control";
+        $this->namapegawai->EditCustomAttributes = "";
+        if (!$this->namapegawai->Raw) {
+            $this->namapegawai->CurrentValue = HtmlDecode($this->namapegawai->CurrentValue);
+        }
+        $this->namapegawai->EditValue = $this->namapegawai->CurrentValue;
+        $this->namapegawai->PlaceHolder = RemoveHtml($this->namapegawai->caption());
+
+        // pegawai
+        $this->pegawai->EditAttrs["class"] = "form-control";
+        $this->pegawai->EditCustomAttributes = "";
+        if (!$this->pegawai->Raw) {
+            $this->pegawai->CurrentValue = HtmlDecode($this->pegawai->CurrentValue);
+        }
+        $this->pegawai->EditValue = $this->pegawai->CurrentValue;
+        $this->pegawai->PlaceHolder = RemoveHtml($this->pegawai->caption());
+
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+
+        // kodecustomer
+        $this->kodecustomer->EditAttrs["class"] = "form-control";
+        $this->kodecustomer->EditCustomAttributes = "";
+        if (!$this->kodecustomer->Raw) {
+            $this->kodecustomer->CurrentValue = HtmlDecode($this->kodecustomer->CurrentValue);
+        }
+        $this->kodecustomer->EditValue = $this->kodecustomer->CurrentValue;
+        $this->kodecustomer->PlaceHolder = RemoveHtml($this->kodecustomer->caption());
+
+        // namacustomer
+        $this->namacustomer->EditAttrs["class"] = "form-control";
+        $this->namacustomer->EditCustomAttributes = "";
+        if (!$this->namacustomer->Raw) {
+            $this->namacustomer->CurrentValue = HtmlDecode($this->namacustomer->CurrentValue);
+        }
+        $this->namacustomer->EditValue = $this->namacustomer->CurrentValue;
+        $this->namacustomer->PlaceHolder = RemoveHtml($this->namacustomer->caption());
+
+        // customer
+        $this->customer->EditAttrs["class"] = "form-control";
+        $this->customer->EditCustomAttributes = "";
+        if (!$this->customer->Raw) {
+            $this->customer->CurrentValue = HtmlDecode($this->customer->CurrentValue);
+        }
+        $this->customer->EditValue = $this->customer->CurrentValue;
+        $this->customer->PlaceHolder = RemoveHtml($this->customer->caption());
 
         // totaltagihan
         $this->totaltagihan->EditAttrs["class"] = "form-control";
@@ -1006,13 +1197,13 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->pegawai);
+                    $doc->exportCaption($this->customer);
                     $doc->exportCaption($this->totaltagihan);
                     $doc->exportCaption($this->totalpiutang);
                 } else {
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->pegawai);
+                    $doc->exportCaption($this->customer);
                     $doc->exportCaption($this->totaltagihan);
                     $doc->exportCaption($this->totalpiutang);
                 }
@@ -1044,13 +1235,13 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->pegawai);
+                        $doc->exportField($this->customer);
                         $doc->exportField($this->totaltagihan);
                         $doc->exportField($this->totalpiutang);
                     } else {
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->pegawai);
+                        $doc->exportField($this->customer);
                         $doc->exportField($this->totaltagihan);
                         $doc->exportField($this->totalpiutang);
                     }

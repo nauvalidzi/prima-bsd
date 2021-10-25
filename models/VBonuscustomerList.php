@@ -565,7 +565,13 @@ class VBonuscustomerList extends VBonuscustomer
         // Set up list options
         $this->setupListOptions();
         $this->idpegawai->Visible = false;
-        $this->idcustomer->setVisibility();
+        $this->kode_pegawai->Visible = false;
+        $this->pegawai->setVisibility();
+        $this->nama_pegawai->Visible = false;
+        $this->idcustomer->Visible = false;
+        $this->kode_customer->Visible = false;
+        $this->nama_customer->Visible = false;
+        $this->customer->setVisibility();
         $this->blackbonus->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -859,8 +865,8 @@ class VBonuscustomerList extends VBonuscustomer
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
-        $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
+        $filterList = Concat($filterList, $this->pegawai->AdvancedSearch->toJson(), ","); // Field pegawai
+        $filterList = Concat($filterList, $this->customer->AdvancedSearch->toJson(), ","); // Field customer
         $filterList = Concat($filterList, $this->blackbonus->AdvancedSearch->toJson(), ","); // Field blackbonus
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -902,21 +908,21 @@ class VBonuscustomerList extends VBonuscustomer
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field idpegawai
-        $this->idpegawai->AdvancedSearch->SearchValue = @$filter["x_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator = @$filter["z_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchCondition = @$filter["v_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchValue2 = @$filter["y_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator2 = @$filter["w_idpegawai"];
-        $this->idpegawai->AdvancedSearch->save();
+        // Field pegawai
+        $this->pegawai->AdvancedSearch->SearchValue = @$filter["x_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchOperator = @$filter["z_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchCondition = @$filter["v_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchValue2 = @$filter["y_pegawai"];
+        $this->pegawai->AdvancedSearch->SearchOperator2 = @$filter["w_pegawai"];
+        $this->pegawai->AdvancedSearch->save();
 
-        // Field idcustomer
-        $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchCondition = @$filter["v_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
-        $this->idcustomer->AdvancedSearch->save();
+        // Field customer
+        $this->customer->AdvancedSearch->SearchValue = @$filter["x_customer"];
+        $this->customer->AdvancedSearch->SearchOperator = @$filter["z_customer"];
+        $this->customer->AdvancedSearch->SearchCondition = @$filter["v_customer"];
+        $this->customer->AdvancedSearch->SearchValue2 = @$filter["y_customer"];
+        $this->customer->AdvancedSearch->SearchOperator2 = @$filter["w_customer"];
+        $this->customer->AdvancedSearch->save();
 
         // Field blackbonus
         $this->blackbonus->AdvancedSearch->SearchValue = @$filter["x_blackbonus"];
@@ -933,8 +939,9 @@ class VBonuscustomerList extends VBonuscustomer
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->idpegawai, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->idcustomer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->pegawai, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->customer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->blackbonus, $arKeywords, $type);
         return $where;
     }
 
@@ -1097,7 +1104,8 @@ class VBonuscustomerList extends VBonuscustomer
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->pegawai); // pegawai
+            $this->updateSort($this->customer); // customer
             $this->updateSort($this->blackbonus); // blackbonus
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1139,7 +1147,13 @@ class VBonuscustomerList extends VBonuscustomer
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->idpegawai->setSort("");
+                $this->kode_pegawai->setSort("");
+                $this->pegawai->setSort("");
+                $this->nama_pegawai->setSort("");
                 $this->idcustomer->setSort("");
+                $this->kode_customer->setSort("");
+                $this->nama_customer->setSort("");
+                $this->customer->setSort("");
                 $this->blackbonus->setSort("");
             }
 
@@ -1663,7 +1677,13 @@ class VBonuscustomerList extends VBonuscustomer
             return;
         }
         $this->idpegawai->setDbValue($row['idpegawai']);
+        $this->kode_pegawai->setDbValue($row['kode_pegawai']);
+        $this->pegawai->setDbValue($row['pegawai']);
+        $this->nama_pegawai->setDbValue($row['nama_pegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kode_customer->setDbValue($row['kode_customer']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
+        $this->customer->setDbValue($row['customer']);
         $this->blackbonus->setDbValue($row['blackbonus']);
     }
 
@@ -1672,7 +1692,13 @@ class VBonuscustomerList extends VBonuscustomer
     {
         $row = [];
         $row['idpegawai'] = null;
+        $row['kode_pegawai'] = null;
+        $row['pegawai'] = null;
+        $row['nama_pegawai'] = null;
         $row['idcustomer'] = null;
+        $row['kode_customer'] = null;
+        $row['nama_customer'] = null;
+        $row['customer'] = null;
         $row['blackbonus'] = null;
         return $row;
     }
@@ -1707,64 +1733,51 @@ class VBonuscustomerList extends VBonuscustomer
         // Common render codes for all row types
 
         // idpegawai
+        $this->idpegawai->CellCssStyle = "white-space: nowrap;";
+
+        // kode_pegawai
+        $this->kode_pegawai->CellCssStyle = "white-space: nowrap;";
+
+        // pegawai
+
+        // nama_pegawai
+        $this->nama_pegawai->CellCssStyle = "white-space: nowrap;";
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
+
+        // kode_customer
+        $this->kode_customer->CellCssStyle = "white-space: nowrap;";
+
+        // nama_customer
+        $this->nama_customer->CellCssStyle = "white-space: nowrap;";
+
+        // customer
 
         // blackbonus
         if ($this->RowType == ROWTYPE_VIEW) {
-            // idpegawai
-            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
-            if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                    } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idpegawai->ViewValue = null;
-            }
-            $this->idpegawai->ViewCustomAttributes = "";
+            // pegawai
+            $this->pegawai->ViewValue = $this->pegawai->CurrentValue;
+            $this->pegawai->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
+            // customer
+            $this->customer->ViewValue = $this->customer->CurrentValue;
+            $this->customer->ViewCustomAttributes = "";
 
             // blackbonus
             $this->blackbonus->ViewValue = $this->blackbonus->CurrentValue;
             $this->blackbonus->ViewValue = FormatCurrency($this->blackbonus->ViewValue, 2, -2, -2, -2);
             $this->blackbonus->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // pegawai
+            $this->pegawai->LinkCustomAttributes = "";
+            $this->pegawai->HrefValue = "";
+            $this->pegawai->TooltipValue = "";
+
+            // customer
+            $this->customer->LinkCustomAttributes = "";
+            $this->customer->HrefValue = "";
+            $this->customer->TooltipValue = "";
 
             // blackbonus
             $this->blackbonus->LinkCustomAttributes = "";

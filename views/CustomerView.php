@@ -268,13 +268,24 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->budget_bonus_persen->Visible) { // budget_bonus_persen ?>
-    <tr id="r_budget_bonus_persen">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_budget_bonus_persen"><?= $Page->budget_bonus_persen->caption() ?></span></td>
-        <td data-name="budget_bonus_persen" <?= $Page->budget_bonus_persen->cellAttributes() ?>>
-<span id="el_customer_budget_bonus_persen">
-<span<?= $Page->budget_bonus_persen->viewAttributes() ?>>
-<?= $Page->budget_bonus_persen->getViewValue() ?></span>
+<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
+    <tr id="r_level_customer_id">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_level_customer_id"><?= $Page->level_customer_id->caption() ?></span></td>
+        <td data-name="level_customer_id" <?= $Page->level_customer_id->cellAttributes() ?>>
+<span id="el_customer_level_customer_id">
+<span<?= $Page->level_customer_id->viewAttributes() ?>>
+<?= $Page->level_customer_id->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->jatuh_tempo_invoice->Visible) { // jatuh_tempo_invoice ?>
+    <tr id="r_jatuh_tempo_invoice">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_jatuh_tempo_invoice"><?= $Page->jatuh_tempo_invoice->caption() ?></span></td>
+        <td data-name="jatuh_tempo_invoice" <?= $Page->jatuh_tempo_invoice->cellAttributes() ?>>
+<span id="el_customer_jatuh_tempo_invoice">
+<span<?= $Page->jatuh_tempo_invoice->viewAttributes() ?>>
+<?= $Page->jatuh_tempo_invoice->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -330,6 +341,26 @@ $Page->showMessage();
 <?php
     }
 ?>
+<?php
+    if (in_array("order", explode(",", $Page->getCurrentDetailTable())) && $order->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "order") {
+            $firstActiveDetailTable = "order";
+        }
+?>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("order") ?>" href="#tab_order" data-toggle="tab"><?= $Language->tablePhrase("order", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("order")->Count, $Language->phrase("DetailCount")) ?></a></li>
+<?php
+    }
+?>
+<?php
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
+        }
+?>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")) ?></a></li>
+<?php
+    }
+?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
 <?php
@@ -350,6 +381,26 @@ $Page->showMessage();
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand") ?>" id="tab_brand"><!-- page* -->
 <?php include_once "BrandGrid.php" ?>
+        </div><!-- /page* -->
+<?php } ?>
+<?php
+    if (in_array("order", explode(",", $Page->getCurrentDetailTable())) && $order->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "order") {
+            $firstActiveDetailTable = "order";
+        }
+?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("order") ?>" id="tab_order"><!-- page* -->
+<?php include_once "OrderGrid.php" ?>
+        </div><!-- /page* -->
+<?php } ?>
+<?php
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
+        }
+?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
+<?php include_once "InvoiceGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

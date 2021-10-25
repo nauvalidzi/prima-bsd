@@ -44,6 +44,9 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
+<?php if ($Page->id->Visible) { // id ?>
+        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_termpayment_id" class="termpayment_id"><?= $Page->id->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
         <th class="<?= $Page->title->headerCellClass() ?>"><span id="elh_termpayment_title" class="termpayment_title"><?= $Page->title->caption() ?></span></th>
 <?php } ?>
@@ -71,6 +74,14 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
+<?php if ($Page->id->Visible) { // id ?>
+        <td <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_termpayment_id" class="termpayment_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
         <td <?= $Page->title->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_termpayment_title" class="termpayment_title">

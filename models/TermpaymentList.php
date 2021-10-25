@@ -568,7 +568,7 @@ class TermpaymentList extends Termpayment
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->title->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -1098,6 +1098,7 @@ class TermpaymentList extends Termpayment
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->id); // id
             $this->updateSort($this->title); // title
             $this->updateSort($this->value); // value
             $this->setStartRecordNumber(1); // Reset start position
@@ -1201,14 +1202,6 @@ class TermpaymentList extends Termpayment
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
-        // "sequence"
-        $item = &$this->ListOptions->add("sequence");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = true;
-        $item->OnLeft = true; // Always on left
-        $item->ShowInDropDown = false;
-        $item->ShowInButtonGroup = false;
-
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1234,10 +1227,6 @@ class TermpaymentList extends Termpayment
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
-
-        // "sequence"
-        $opt = $this->ListOptions["sequence"];
-        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1629,6 +1618,11 @@ class TermpaymentList extends Termpayment
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewValue = FormatNumber($this->value->ViewValue, 0, -2, -2, -2);
             $this->value->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // title
             $this->title->LinkCustomAttributes = "";

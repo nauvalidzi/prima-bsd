@@ -284,14 +284,6 @@ function get_approval($cust_id) {
 	return ExecuteRow("SELECT * FROM po_limit_approval WHERE aktif = 1 AND idcustomer = {$cust_id} ORDER BY id DESC");
 }
 
-function domain() {
-	return sprintf(
-    	"%s://%s/bsd/",
-    	isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-    	$_SERVER['SERVER_NAME']
-    );
-}
-
 // dipanggil di deliveryorder_detail, invoice_detail
 function addStock($idorderdetail, $jumlah) {
 	$idProduct = ExecuteScalar("SELECT idproduct FROM order_detail WHERE id = ".$idorderdetail);
@@ -503,16 +495,19 @@ function tgl_indo($tanggal, $format='date'){
 		'November',
 		'Desember'
 	);
-	$pecahkan = explode('-', $tanggal);
-
-	// variabel pecahkan 0 = tanggal
-	// variabel pecahkan 1 = bulan
-	// variabel pecahkan 2 = tahun
-	$pecahkan2 = explode(' ', $pecahkan[2]);
-	if ($format == 'datetime'){
-		return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
-	}
-	return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+	$pecahkan = explode('-', $tanggal);	
+    switch ($format) {
+        case 'datetime':            
+            $pecahkan2 = explode(' ', $pecahkan[2]);
+            return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
+            break;
+        case 'month-year':
+            return $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+            break;
+        default:
+            return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+            break;
+    }
 }
 
 function cek_po_aktif($idcustomer) {
@@ -550,7 +545,7 @@ function cek_totaltagihan_po_aktif($idcustomer) {
 }
 
 /*
-CATATAN LIMIT PO AKTIF & NOMINAL PO
+CATATAN TRANSAKSI PENJUALAN
 order baru => order.aktif = 1 & order.readonly = 0
 order masuk do, kirim sebagian => order.aktif = 1 & order.readonly = 1
 order masuk do, dengan jumlah penuh => order.aktif = 0 & order.readonly = 1 & do.readonly = 0
@@ -559,14 +554,21 @@ order masuk surat jalan => invoice.sent = 1
 order masuk bayar sebagian => invoice.aktif = 1 & invoice.readonly = 1 invoice.sent = 0
 order masuk bayar lunas => invoice.aktif = 0
 */
-function rupiah($number) {
+function rupiah($number, $decimal='with-decimal') {
     if (!is_numeric($number)) {
         return "Bad Format!";
     }
     if ($number < 1000) {
         return $number;
     }
-    return number_format($number, 2, ",", ".");
+    switch ($decimal) {
+        case 'without-decimal':
+            return number_format($number, 0, ",", ".");
+            break;
+        default:
+            return number_format($number, 2, ",", ".");
+            break;
+    }
 }
 
 function base_url() {
@@ -582,3 +584,35 @@ function check_kpi_existing($idpegawai, $bulan) {
     } 
     return true;
 }
+$API_ACTIONS['send-reminder'] = function(Request $request, Response &$response) {
+    $kode = urldecode(Param("id", Route(1)));
+    if (empty($kode)) {
+        echo json_encode([]); die;
+    }
+    $row = ExecuteRow("SELECT * FROM v_penagihan WHERE kodeorder = '{$kode}'");
+    $send = json_encode([
+        'to' => $row['nomor_handphone'],
+        'message' => "Selamat Siang {$row['nama_customer']}, kami dari CV. Beautie Surya Derma mau menginformasikan tagihan berikut. No. Faktur {$row['kodeorder']} tanggal {$row['tgl_order']} Senilai Rp. {$row['tgl_jatuhtempo']}. Pembayaran bisa melalui transfer ke rekening kami di BCA no rek. 8290977593 An. Suryo Sudibyo SE. Untuk memudahkan proses tracking tagihan serta menghindari penagihan kembali, mohon jika melakukan pembayaran melalui transfer dengan memberi keterangan pada berita “Nama dokter/Klinik/Merek_Nomor Faktur”. Mohon infonya apabila sudah melakukan pembayaran dengan mengirim WA bukti transfer ke nomor ini. Terima kasih atas kepercayaan kepada kami. Semoga {$row['nama_customer']} sehat selalu.",
+    ]);
+    $status = 0;
+    if ($send) {
+        $status = 1;
+    }
+    ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Penagihan Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
+};
+$API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$response) {
+    $faktur = urldecode(Param("faktur", Route(1)));
+    $status = 0;
+    if (empty($faktur)) {
+        echo json_encode([]); die;
+    }
+    $row = ExecuteRow("SELECT i.kode as no_faktur, c.nama as nama_customer, c.hp as nomor_handphone FROM invoice i JOIN customer c ON c.id = i.idcustomer WHERE i.kode = '{$faktur}'");
+    if (!empty($row['nomor_handphone']) or strlen($row['nomor_handphone']) <= 10) {
+        $send = json_encode([
+            'to' => $row['nomor_handphone'],
+            'message' => "Selamat siang {$row['nama_customer']}. Pembayaran Faktur No. {$row['no_faktur']} sudah kami terima. Terima kasih atas kerjasamanya. Semoga {$row['nama_customer']} sehat selalu.",
+        ]);
+        $status = 1;
+    }
+    ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
+};

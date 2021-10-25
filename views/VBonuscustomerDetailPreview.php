@@ -22,21 +22,21 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-    <?php if ($Page->SortUrl($Page->idcustomer) == "") { ?>
-        <th class="<?= $Page->idcustomer->headerCellClass() ?>"><?= $Page->idcustomer->caption() ?></th>
+<?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+    <?php if ($Page->SortUrl($Page->nama_customer) == "") { ?>
+        <th class="<?= $Page->nama_customer->headerCellClass() ?>"><?= $Page->nama_customer->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->idcustomer->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idcustomer->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idcustomer->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idcustomer->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idcustomer->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idcustomer->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->nama_customer->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->nama_customer->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->nama_customer->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->nama_customer->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->nama_customer->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->nama_customer->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->idinvoice->Visible) { // idinvoice ?>
-    <?php if ($Page->SortUrl($Page->idinvoice) == "") { ?>
-        <th class="<?= $Page->idinvoice->headerCellClass() ?>"><?= $Page->idinvoice->caption() ?></th>
+<?php if ($Page->kode_invoice->Visible) { // kode_invoice ?>
+    <?php if ($Page->SortUrl($Page->kode_invoice) == "") { ?>
+        <th class="<?= $Page->kode_invoice->headerCellClass() ?>"><?= $Page->kode_invoice->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->idinvoice->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idinvoice->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idinvoice->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idinvoice->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idinvoice->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idinvoice->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->kode_invoice->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->kode_invoice->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->kode_invoice->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->kode_invoice->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->kode_invoice->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->kode_invoice->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -79,18 +79,18 @@ while ($Page->Recordset && !$Page->Recordset->EOF) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <!-- idcustomer -->
-        <td<?= $Page->idcustomer->cellAttributes() ?>>
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
+<?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+        <!-- nama_customer -->
+        <td<?= $Page->nama_customer->cellAttributes() ?>>
+<span<?= $Page->nama_customer->viewAttributes() ?>>
+<?= $Page->nama_customer->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->idinvoice->Visible) { // idinvoice ?>
-        <!-- idinvoice -->
-        <td<?= $Page->idinvoice->cellAttributes() ?>>
-<span<?= $Page->idinvoice->viewAttributes() ?>>
-<?= $Page->idinvoice->getViewValue() ?></span>
+<?php if ($Page->kode_invoice->Visible) { // kode_invoice ?>
+        <!-- kode_invoice -->
+        <td<?= $Page->kode_invoice->cellAttributes() ?>>
+<span<?= $Page->kode_invoice->viewAttributes() ?>>
+<?= $Page->kode_invoice->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->blackbonus->Visible) { // blackbonus ?>

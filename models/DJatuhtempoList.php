@@ -426,6 +426,8 @@ class DJatuhtempoList extends DJatuhtempo
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['idpegawai'] . Config("COMPOSITE_KEY_SEPARATOR");
+            $key .= @$ar['idcustomer'] . Config("COMPOSITE_KEY_SEPARATOR");
             $key .= @$ar['idinvoice'];
         }
         return $key;
@@ -438,10 +440,10 @@ class DJatuhtempoList extends DJatuhtempo
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAddOrEdit()) {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
             $this->idpegawai->Visible = false;
         }
-        if ($this->isAddOrEdit()) {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
             $this->idcustomer->Visible = false;
         }
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
@@ -579,10 +581,10 @@ class DJatuhtempoList extends DJatuhtempo
         $this->idcustomer->setVisibility();
         $this->namacustomer->setVisibility();
         $this->idinvoice->setVisibility();
+        $this->kodeinvoice->setVisibility();
         $this->sisabayar->setVisibility();
         $this->jatuhtempo->setVisibility();
         $this->sisahari->setVisibility();
-        $this->kodeinvoice->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -878,10 +880,10 @@ class DJatuhtempoList extends DJatuhtempo
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
         $filterList = Concat($filterList, $this->namacustomer->AdvancedSearch->toJson(), ","); // Field namacustomer
         $filterList = Concat($filterList, $this->idinvoice->AdvancedSearch->toJson(), ","); // Field idinvoice
+        $filterList = Concat($filterList, $this->kodeinvoice->AdvancedSearch->toJson(), ","); // Field kodeinvoice
         $filterList = Concat($filterList, $this->sisabayar->AdvancedSearch->toJson(), ","); // Field sisabayar
         $filterList = Concat($filterList, $this->jatuhtempo->AdvancedSearch->toJson(), ","); // Field jatuhtempo
         $filterList = Concat($filterList, $this->sisahari->AdvancedSearch->toJson(), ","); // Field sisahari
-        $filterList = Concat($filterList, $this->kodeinvoice->AdvancedSearch->toJson(), ","); // Field kodeinvoice
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -962,6 +964,14 @@ class DJatuhtempoList extends DJatuhtempo
         $this->idinvoice->AdvancedSearch->SearchOperator2 = @$filter["w_idinvoice"];
         $this->idinvoice->AdvancedSearch->save();
 
+        // Field kodeinvoice
+        $this->kodeinvoice->AdvancedSearch->SearchValue = @$filter["x_kodeinvoice"];
+        $this->kodeinvoice->AdvancedSearch->SearchOperator = @$filter["z_kodeinvoice"];
+        $this->kodeinvoice->AdvancedSearch->SearchCondition = @$filter["v_kodeinvoice"];
+        $this->kodeinvoice->AdvancedSearch->SearchValue2 = @$filter["y_kodeinvoice"];
+        $this->kodeinvoice->AdvancedSearch->SearchOperator2 = @$filter["w_kodeinvoice"];
+        $this->kodeinvoice->AdvancedSearch->save();
+
         // Field sisabayar
         $this->sisabayar->AdvancedSearch->SearchValue = @$filter["x_sisabayar"];
         $this->sisabayar->AdvancedSearch->SearchOperator = @$filter["z_sisabayar"];
@@ -985,14 +995,6 @@ class DJatuhtempoList extends DJatuhtempo
         $this->sisahari->AdvancedSearch->SearchValue2 = @$filter["y_sisahari"];
         $this->sisahari->AdvancedSearch->SearchOperator2 = @$filter["w_sisahari"];
         $this->sisahari->AdvancedSearch->save();
-
-        // Field kodeinvoice
-        $this->kodeinvoice->AdvancedSearch->SearchValue = @$filter["x_kodeinvoice"];
-        $this->kodeinvoice->AdvancedSearch->SearchOperator = @$filter["z_kodeinvoice"];
-        $this->kodeinvoice->AdvancedSearch->SearchCondition = @$filter["v_kodeinvoice"];
-        $this->kodeinvoice->AdvancedSearch->SearchValue2 = @$filter["y_kodeinvoice"];
-        $this->kodeinvoice->AdvancedSearch->SearchOperator2 = @$filter["w_kodeinvoice"];
-        $this->kodeinvoice->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1171,10 +1173,10 @@ class DJatuhtempoList extends DJatuhtempo
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->namacustomer); // namacustomer
             $this->updateSort($this->idinvoice); // idinvoice
+            $this->updateSort($this->kodeinvoice); // kodeinvoice
             $this->updateSort($this->sisabayar); // sisabayar
             $this->updateSort($this->jatuhtempo); // jatuhtempo
             $this->updateSort($this->sisahari); // sisahari
-            $this->updateSort($this->kodeinvoice); // kodeinvoice
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1219,10 +1221,10 @@ class DJatuhtempoList extends DJatuhtempo
                 $this->idcustomer->setSort("");
                 $this->namacustomer->setSort("");
                 $this->idinvoice->setSort("");
+                $this->kodeinvoice->setSort("");
                 $this->sisabayar->setSort("");
                 $this->jatuhtempo->setSort("");
                 $this->sisahari->setSort("");
-                $this->kodeinvoice->setSort("");
             }
 
             // Reset start position
@@ -1320,7 +1322,7 @@ class DJatuhtempoList extends DJatuhtempo
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->idinvoice->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->idpegawai->CurrentValue . Config("COMPOSITE_KEY_SEPARATOR") . $this->idcustomer->CurrentValue . Config("COMPOSITE_KEY_SEPARATOR") . $this->idinvoice->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1571,10 +1573,10 @@ class DJatuhtempoList extends DJatuhtempo
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->namacustomer->setDbValue($row['namacustomer']);
         $this->idinvoice->setDbValue($row['idinvoice']);
+        $this->kodeinvoice->setDbValue($row['kodeinvoice']);
         $this->sisabayar->setDbValue($row['sisabayar']);
         $this->jatuhtempo->setDbValue($row['jatuhtempo']);
         $this->sisahari->setDbValue($row['sisahari']);
-        $this->kodeinvoice->setDbValue($row['kodeinvoice']);
     }
 
     // Return a row with default values
@@ -1586,10 +1588,10 @@ class DJatuhtempoList extends DJatuhtempo
         $row['idcustomer'] = null;
         $row['namacustomer'] = null;
         $row['idinvoice'] = null;
+        $row['kodeinvoice'] = null;
         $row['sisabayar'] = null;
         $row['jatuhtempo'] = null;
         $row['sisahari'] = null;
-        $row['kodeinvoice'] = null;
         return $row;
     }
 
@@ -1628,22 +1630,25 @@ class DJatuhtempoList extends DJatuhtempo
         // Common render codes for all row types
 
         // idpegawai
+        $this->idpegawai->CellCssStyle = "white-space: nowrap;";
 
         // namapegawai
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
 
         // namacustomer
 
         // idinvoice
+        $this->idinvoice->CellCssStyle = "white-space: nowrap;";
+
+        // kodeinvoice
 
         // sisabayar
 
         // jatuhtempo
 
         // sisahari
-
-        // kodeinvoice
         if ($this->RowType == ROWTYPE_VIEW) {
             // idpegawai
             $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
@@ -1665,9 +1670,13 @@ class DJatuhtempoList extends DJatuhtempo
             $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
             $this->idinvoice->ViewCustomAttributes = "";
 
+            // kodeinvoice
+            $this->kodeinvoice->ViewValue = $this->kodeinvoice->CurrentValue;
+            $this->kodeinvoice->ViewCustomAttributes = "";
+
             // sisabayar
             $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
-            $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
+            $this->sisabayar->ViewValue = FormatNumber($this->sisabayar->ViewValue, 0, -2, -2, -2);
             $this->sisabayar->ViewCustomAttributes = "";
 
             // jatuhtempo
@@ -1679,10 +1688,6 @@ class DJatuhtempoList extends DJatuhtempo
             $this->sisahari->ViewValue = $this->sisahari->CurrentValue;
             $this->sisahari->ViewValue = FormatNumber($this->sisahari->ViewValue, 0, -2, -2, -2);
             $this->sisahari->ViewCustomAttributes = "";
-
-            // kodeinvoice
-            $this->kodeinvoice->ViewValue = $this->kodeinvoice->CurrentValue;
-            $this->kodeinvoice->ViewCustomAttributes = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -1709,6 +1714,11 @@ class DJatuhtempoList extends DJatuhtempo
             $this->idinvoice->HrefValue = "";
             $this->idinvoice->TooltipValue = "";
 
+            // kodeinvoice
+            $this->kodeinvoice->LinkCustomAttributes = "";
+            $this->kodeinvoice->HrefValue = "";
+            $this->kodeinvoice->TooltipValue = "";
+
             // sisabayar
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
@@ -1723,11 +1733,6 @@ class DJatuhtempoList extends DJatuhtempo
             $this->sisahari->LinkCustomAttributes = "";
             $this->sisahari->HrefValue = "";
             $this->sisahari->TooltipValue = "";
-
-            // kodeinvoice
-            $this->kodeinvoice->LinkCustomAttributes = "";
-            $this->kodeinvoice->HrefValue = "";
-            $this->kodeinvoice->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1773,16 +1778,6 @@ class DJatuhtempoList extends DJatuhtempo
             $this->SearchOptions->hideAllOptions();
             $this->FilterOptions->hideAllOptions();
         }
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->idpegawai->CurrentValue);
-        }
-        return true;
     }
 
     // Set up Breadcrumb

@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class LaporanKpiSales
+class LaporanKpiMarketingDetail
 {
     use MessagesTrait;
 
@@ -18,10 +18,10 @@ class LaporanKpiSales
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'laporan_kpi_sales.php';
+    public $TableName = 'laporan_kpi_marketing_detail.php';
 
     // Page object name
-    public $PageObjName = "LaporanKpiSales";
+    public $PageObjName = "LaporanKpiMarketingDetail";
 
     // Rendering View
     public $RenderingView = false;
@@ -87,7 +87,7 @@ class LaporanKpiSales
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'laporan_kpi_sales.php');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'laporan_kpi_marketing_detail.php');
         }
 
         // Start timer
@@ -240,8 +240,8 @@ class LaporanKpiSales
     {
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
-        $Breadcrumb->add("custom", "laporan_kpi_sales", CurrentUrl(), "", "laporan_kpi_sales", true);
-        $this->Heading = $Language->TablePhrase("laporan_kpi_sales", "TblCaption");
+        $Breadcrumb->add("custom", "laporan_kpi_marketing_detail", CurrentUrl(), "", "laporan_kpi_marketing_detail", true);
+        $this->Heading = $Language->TablePhrase("laporan_kpi_marketing_detail", "TblCaption");
     }
 
     // Page Load event

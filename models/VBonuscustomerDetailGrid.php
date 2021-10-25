@@ -508,8 +508,10 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
 
         // Set up list options
         $this->setupListOptions();
-        $this->idcustomer->setVisibility();
-        $this->idinvoice->setVisibility();
+        $this->idcustomer->Visible = false;
+        $this->idinvoice->Visible = false;
+        $this->nama_customer->setVisibility();
+        $this->kode_invoice->setVisibility();
         $this->blackbonus->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -943,6 +945,12 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
     public function emptyRow()
     {
         global $CurrentForm;
+        if ($CurrentForm->hasValue("x_nama_customer") && $CurrentForm->hasValue("o_nama_customer") && $this->nama_customer->CurrentValue != $this->nama_customer->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_kode_invoice") && $CurrentForm->hasValue("o_kode_invoice") && $this->kode_invoice->CurrentValue != $this->kode_invoice->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_blackbonus") && $CurrentForm->hasValue("o_blackbonus") && $this->blackbonus->CurrentValue != $this->blackbonus->OldValue) {
             return false;
         }
@@ -1027,8 +1035,8 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
     // Reset form status
     public function resetFormError()
     {
-        $this->idcustomer->clearErrorMessage();
-        $this->idinvoice->clearErrorMessage();
+        $this->nama_customer->clearErrorMessage();
+        $this->kode_invoice->clearErrorMessage();
         $this->blackbonus->clearErrorMessage();
     }
 
@@ -1234,6 +1242,10 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
         $this->idinvoice->CurrentValue = null;
         $this->idinvoice->OldValue = $this->idinvoice->CurrentValue;
+        $this->nama_customer->CurrentValue = null;
+        $this->nama_customer->OldValue = $this->nama_customer->CurrentValue;
+        $this->kode_invoice->CurrentValue = null;
+        $this->kode_invoice->OldValue = $this->kode_invoice->CurrentValue;
         $this->blackbonus->CurrentValue = null;
         $this->blackbonus->OldValue = $this->blackbonus->CurrentValue;
     }
@@ -1245,16 +1257,30 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         global $CurrentForm;
         $CurrentForm->FormName = $this->FormName;
 
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
-            $this->idcustomer->setFormValue($val);
+        // Check field name 'nama_customer' first before field var 'x_nama_customer'
+        $val = $CurrentForm->hasValue("nama_customer") ? $CurrentForm->getValue("nama_customer") : $CurrentForm->getValue("x_nama_customer");
+        if (!$this->nama_customer->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->nama_customer->Visible = false; // Disable update for API request
+            } else {
+                $this->nama_customer->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_nama_customer")) {
+            $this->nama_customer->setOldValue($CurrentForm->getValue("o_nama_customer"));
         }
 
-        // Check field name 'idinvoice' first before field var 'x_idinvoice'
-        $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
-        if (!$this->idinvoice->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
-            $this->idinvoice->setFormValue($val);
+        // Check field name 'kode_invoice' first before field var 'x_kode_invoice'
+        $val = $CurrentForm->hasValue("kode_invoice") ? $CurrentForm->getValue("kode_invoice") : $CurrentForm->getValue("x_kode_invoice");
+        if (!$this->kode_invoice->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode_invoice->Visible = false; // Disable update for API request
+            } else {
+                $this->kode_invoice->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_kode_invoice")) {
+            $this->kode_invoice->setOldValue($CurrentForm->getValue("o_kode_invoice"));
         }
 
         // Check field name 'blackbonus' first before field var 'x_blackbonus'
@@ -1269,6 +1295,12 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         if ($CurrentForm->hasValue("o_blackbonus")) {
             $this->blackbonus->setOldValue($CurrentForm->getValue("o_blackbonus"));
         }
+
+        // Check field name 'idinvoice' first before field var 'x_idinvoice'
+        $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
+        if (!$this->idinvoice->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
+            $this->idinvoice->setFormValue($val);
+        }
     }
 
     // Restore form values
@@ -1276,11 +1308,10 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
     {
         global $CurrentForm;
         if (!$this->isGridAdd() && !$this->isAdd()) {
-            $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        }
-        if (!$this->isGridAdd() && !$this->isAdd()) {
             $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
         }
+        $this->nama_customer->CurrentValue = $this->nama_customer->FormValue;
+        $this->kode_invoice->CurrentValue = $this->kode_invoice->FormValue;
         $this->blackbonus->CurrentValue = $this->blackbonus->FormValue;
     }
 
@@ -1354,6 +1385,8 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         }
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idinvoice->setDbValue($row['idinvoice']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
+        $this->kode_invoice->setDbValue($row['kode_invoice']);
         $this->blackbonus->setDbValue($row['blackbonus']);
     }
 
@@ -1364,6 +1397,8 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         $row = [];
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['idinvoice'] = $this->idinvoice->CurrentValue;
+        $row['nama_customer'] = $this->nama_customer->CurrentValue;
+        $row['kode_invoice'] = $this->kode_invoice->CurrentValue;
         $row['blackbonus'] = $this->blackbonus->CurrentValue;
         return $row;
     }
@@ -1408,6 +1443,10 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         // idcustomer
 
         // idinvoice
+
+        // nama_customer
+
+        // kode_invoice
 
         // blackbonus
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1455,29 +1494,51 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
             }
             $this->idinvoice->ViewCustomAttributes = "";
 
+            // nama_customer
+            $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+            $this->nama_customer->ViewCustomAttributes = "";
+
+            // kode_invoice
+            $this->kode_invoice->ViewValue = $this->kode_invoice->CurrentValue;
+            $this->kode_invoice->ViewCustomAttributes = "";
+
             // blackbonus
             $this->blackbonus->ViewValue = $this->blackbonus->CurrentValue;
             $this->blackbonus->ViewValue = FormatCurrency($this->blackbonus->ViewValue, 2, -2, -2, -2);
             $this->blackbonus->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // nama_customer
+            $this->nama_customer->LinkCustomAttributes = "";
+            $this->nama_customer->HrefValue = "";
+            $this->nama_customer->TooltipValue = "";
 
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
-            $this->idinvoice->TooltipValue = "";
+            // kode_invoice
+            $this->kode_invoice->LinkCustomAttributes = "";
+            $this->kode_invoice->HrefValue = "";
+            $this->kode_invoice->TooltipValue = "";
 
             // blackbonus
             $this->blackbonus->LinkCustomAttributes = "";
             $this->blackbonus->HrefValue = "";
             $this->blackbonus->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // idcustomer
+            // nama_customer
+            $this->nama_customer->EditAttrs["class"] = "form-control";
+            $this->nama_customer->EditCustomAttributes = "";
+            if (!$this->nama_customer->Raw) {
+                $this->nama_customer->CurrentValue = HtmlDecode($this->nama_customer->CurrentValue);
+            }
+            $this->nama_customer->EditValue = HtmlEncode($this->nama_customer->CurrentValue);
+            $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
 
-            // idinvoice
+            // kode_invoice
+            $this->kode_invoice->EditAttrs["class"] = "form-control";
+            $this->kode_invoice->EditCustomAttributes = "";
+            if (!$this->kode_invoice->Raw) {
+                $this->kode_invoice->CurrentValue = HtmlDecode($this->kode_invoice->CurrentValue);
+            }
+            $this->kode_invoice->EditValue = HtmlEncode($this->kode_invoice->CurrentValue);
+            $this->kode_invoice->PlaceHolder = RemoveHtml($this->kode_invoice->caption());
 
             // blackbonus
             $this->blackbonus->EditAttrs["class"] = "form-control";
@@ -1491,90 +1552,35 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
 
             // Add refer script
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
+            // nama_customer
+            $this->nama_customer->LinkCustomAttributes = "";
+            $this->nama_customer->HrefValue = "";
 
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
+            // kode_invoice
+            $this->kode_invoice->LinkCustomAttributes = "";
+            $this->kode_invoice->HrefValue = "";
 
             // blackbonus
             $this->blackbonus->LinkCustomAttributes = "";
             $this->blackbonus->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-                $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
-            } else {
-                $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->EditValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->EditValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
-                        }
-                    }
-                } else {
-                    $this->idcustomer->EditValue = null;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+            // nama_customer
+            $this->nama_customer->EditAttrs["class"] = "form-control";
+            $this->nama_customer->EditCustomAttributes = "";
+            if (!$this->nama_customer->Raw) {
+                $this->nama_customer->CurrentValue = HtmlDecode($this->nama_customer->CurrentValue);
             }
+            $this->nama_customer->EditValue = HtmlEncode($this->nama_customer->CurrentValue);
+            $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
 
-            // idinvoice
-            $this->idinvoice->EditAttrs["class"] = "form-control";
-            $this->idinvoice->EditCustomAttributes = "";
-            $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-            $curVal = trim(strval($this->idinvoice->CurrentValue));
-            if ($curVal != "") {
-                $this->idinvoice->EditValue = $this->idinvoice->lookupCacheOption($curVal);
-                if ($this->idinvoice->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                        $this->idinvoice->EditValue = $this->idinvoice->displayValue($arwrk);
-                    } else {
-                        $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idinvoice->EditValue = null;
+            // kode_invoice
+            $this->kode_invoice->EditAttrs["class"] = "form-control";
+            $this->kode_invoice->EditCustomAttributes = "";
+            if (!$this->kode_invoice->Raw) {
+                $this->kode_invoice->CurrentValue = HtmlDecode($this->kode_invoice->CurrentValue);
             }
-            $this->idinvoice->ViewCustomAttributes = "";
+            $this->kode_invoice->EditValue = HtmlEncode($this->kode_invoice->CurrentValue);
+            $this->kode_invoice->PlaceHolder = RemoveHtml($this->kode_invoice->caption());
 
             // blackbonus
             $this->blackbonus->EditAttrs["class"] = "form-control";
@@ -1588,13 +1594,13 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
 
             // Edit refer script
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
+            // nama_customer
+            $this->nama_customer->LinkCustomAttributes = "";
+            $this->nama_customer->HrefValue = "";
 
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
+            // kode_invoice
+            $this->kode_invoice->LinkCustomAttributes = "";
+            $this->kode_invoice->HrefValue = "";
 
             // blackbonus
             $this->blackbonus->LinkCustomAttributes = "";
@@ -1619,21 +1625,15 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+        if ($this->nama_customer->Required) {
+            if (!$this->nama_customer->IsDetailKey && EmptyValue($this->nama_customer->FormValue)) {
+                $this->nama_customer->addErrorMessage(str_replace("%s", $this->nama_customer->caption(), $this->nama_customer->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idcustomer->FormValue)) {
-            $this->idcustomer->addErrorMessage($this->idcustomer->getErrorMessage(false));
-        }
-        if ($this->idinvoice->Required) {
-            if (!$this->idinvoice->IsDetailKey && EmptyValue($this->idinvoice->FormValue)) {
-                $this->idinvoice->addErrorMessage(str_replace("%s", $this->idinvoice->caption(), $this->idinvoice->RequiredErrorMessage));
+        if ($this->kode_invoice->Required) {
+            if (!$this->kode_invoice->IsDetailKey && EmptyValue($this->kode_invoice->FormValue)) {
+                $this->kode_invoice->addErrorMessage(str_replace("%s", $this->kode_invoice->caption(), $this->kode_invoice->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->idinvoice->FormValue)) {
-            $this->idinvoice->addErrorMessage($this->idinvoice->getErrorMessage(false));
         }
         if ($this->blackbonus->Required) {
             if (!$this->blackbonus->IsDetailKey && EmptyValue($this->blackbonus->FormValue)) {
@@ -1752,6 +1752,12 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // nama_customer
+            $this->nama_customer->setDbValueDef($rsnew, $this->nama_customer->CurrentValue, "", $this->nama_customer->ReadOnly);
+
+            // kode_invoice
+            $this->kode_invoice->setDbValueDef($rsnew, $this->kode_invoice->CurrentValue, "", $this->kode_invoice->ReadOnly);
+
             // blackbonus
             $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, null, $this->blackbonus->ReadOnly);
 
@@ -1842,8 +1848,19 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         }
         $rsnew = [];
 
+        // nama_customer
+        $this->nama_customer->setDbValueDef($rsnew, $this->nama_customer->CurrentValue, "", false);
+
+        // kode_invoice
+        $this->kode_invoice->setDbValueDef($rsnew, $this->kode_invoice->CurrentValue, "", false);
+
         // blackbonus
         $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, null, false);
+
+        // idcustomer
+        if ($this->idcustomer->getSessionValue() != "") {
+            $rsnew['idcustomer'] = $this->idcustomer->getSessionValue();
+        }
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

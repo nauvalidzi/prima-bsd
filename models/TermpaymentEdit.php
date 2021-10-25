@@ -467,7 +467,7 @@ class TermpaymentEdit extends Termpayment
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->title->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -650,6 +650,12 @@ class TermpaymentEdit extends Termpayment
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
+
         // Check field name 'title' first before field var 'x_title'
         $val = $CurrentForm->hasValue("title") ? $CurrentForm->getValue("title") : $CurrentForm->getValue("x_title");
         if (!$this->title->IsDetailKey) {
@@ -668,12 +674,6 @@ class TermpaymentEdit extends Termpayment
             } else {
                 $this->value->setFormValue($val);
             }
-        }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
         }
     }
 
@@ -795,6 +795,11 @@ class TermpaymentEdit extends Termpayment
             $this->value->ViewValue = FormatNumber($this->value->ViewValue, 0, -2, -2, -2);
             $this->value->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // title
             $this->title->LinkCustomAttributes = "";
             $this->title->HrefValue = "";
@@ -805,6 +810,12 @@ class TermpaymentEdit extends Termpayment
             $this->value->HrefValue = "";
             $this->value->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
             // title
             $this->title->EditAttrs["class"] = "form-control";
             $this->title->EditCustomAttributes = "";
@@ -821,6 +832,10 @@ class TermpaymentEdit extends Termpayment
             $this->value->PlaceHolder = RemoveHtml($this->value->caption());
 
             // Edit refer script
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
 
             // title
             $this->title->LinkCustomAttributes = "";
@@ -848,6 +863,11 @@ class TermpaymentEdit extends Termpayment
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
         }
         if ($this->title->Required) {
             if (!$this->title->IsDetailKey && EmptyValue($this->title->FormValue)) {

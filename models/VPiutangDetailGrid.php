@@ -506,10 +506,10 @@ class VPiutangDetailGrid extends VPiutangDetail
         // Set up list options
         $this->setupListOptions();
         $this->idcustomer->Visible = false;
-        $this->idinvoice->setVisibility();
-        $this->totaltagihan->setVisibility();
+        $this->idinvoice->Visible = false;
+        $this->tglinvoice->setVisibility();
         $this->sisabayar->setVisibility();
-        $this->tglinvoice->Visible = false;
+        $this->totaltagihan->setVisibility();
         $this->jatuhtempo->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -528,8 +528,6 @@ class VPiutangDetailGrid extends VPiutangDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idinvoice);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -942,10 +940,13 @@ class VPiutangDetailGrid extends VPiutangDetail
     public function emptyRow()
     {
         global $CurrentForm;
-        if ($CurrentForm->hasValue("x_totaltagihan") && $CurrentForm->hasValue("o_totaltagihan") && $this->totaltagihan->CurrentValue != $this->totaltagihan->OldValue) {
+        if ($CurrentForm->hasValue("x_tglinvoice") && $CurrentForm->hasValue("o_tglinvoice") && $this->tglinvoice->CurrentValue != $this->tglinvoice->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_sisabayar") && $CurrentForm->hasValue("o_sisabayar") && $this->sisabayar->CurrentValue != $this->sisabayar->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_totaltagihan") && $CurrentForm->hasValue("o_totaltagihan") && $this->totaltagihan->CurrentValue != $this->totaltagihan->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_jatuhtempo") && $CurrentForm->hasValue("o_jatuhtempo") && $this->jatuhtempo->CurrentValue != $this->jatuhtempo->OldValue) {
@@ -1032,9 +1033,9 @@ class VPiutangDetailGrid extends VPiutangDetail
     // Reset form status
     public function resetFormError()
     {
-        $this->idinvoice->clearErrorMessage();
-        $this->totaltagihan->clearErrorMessage();
+        $this->tglinvoice->clearErrorMessage();
         $this->sisabayar->clearErrorMessage();
+        $this->totaltagihan->clearErrorMessage();
         $this->jatuhtempo->clearErrorMessage();
     }
 
@@ -1240,12 +1241,12 @@ class VPiutangDetailGrid extends VPiutangDetail
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
         $this->idinvoice->CurrentValue = null;
         $this->idinvoice->OldValue = $this->idinvoice->CurrentValue;
-        $this->totaltagihan->CurrentValue = 0;
-        $this->totaltagihan->OldValue = $this->totaltagihan->CurrentValue;
-        $this->sisabayar->CurrentValue = 0;
-        $this->sisabayar->OldValue = $this->sisabayar->CurrentValue;
         $this->tglinvoice->CurrentValue = null;
         $this->tglinvoice->OldValue = $this->tglinvoice->CurrentValue;
+        $this->sisabayar->CurrentValue = 0;
+        $this->sisabayar->OldValue = $this->sisabayar->CurrentValue;
+        $this->totaltagihan->CurrentValue = 0;
+        $this->totaltagihan->OldValue = $this->totaltagihan->CurrentValue;
         $this->jatuhtempo->CurrentValue = null;
         $this->jatuhtempo->OldValue = $this->jatuhtempo->CurrentValue;
     }
@@ -1257,23 +1258,18 @@ class VPiutangDetailGrid extends VPiutangDetail
         global $CurrentForm;
         $CurrentForm->FormName = $this->FormName;
 
-        // Check field name 'idinvoice' first before field var 'x_idinvoice'
-        $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
-        if (!$this->idinvoice->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
-            $this->idinvoice->setFormValue($val);
-        }
-
-        // Check field name 'totaltagihan' first before field var 'x_totaltagihan'
-        $val = $CurrentForm->hasValue("totaltagihan") ? $CurrentForm->getValue("totaltagihan") : $CurrentForm->getValue("x_totaltagihan");
-        if (!$this->totaltagihan->IsDetailKey) {
+        // Check field name 'tglinvoice' first before field var 'x_tglinvoice'
+        $val = $CurrentForm->hasValue("tglinvoice") ? $CurrentForm->getValue("tglinvoice") : $CurrentForm->getValue("x_tglinvoice");
+        if (!$this->tglinvoice->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->totaltagihan->Visible = false; // Disable update for API request
+                $this->tglinvoice->Visible = false; // Disable update for API request
             } else {
-                $this->totaltagihan->setFormValue($val);
+                $this->tglinvoice->setFormValue($val);
             }
+            $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
         }
-        if ($CurrentForm->hasValue("o_totaltagihan")) {
-            $this->totaltagihan->setOldValue($CurrentForm->getValue("o_totaltagihan"));
+        if ($CurrentForm->hasValue("o_tglinvoice")) {
+            $this->tglinvoice->setOldValue($CurrentForm->getValue("o_tglinvoice"));
         }
 
         // Check field name 'sisabayar' first before field var 'x_sisabayar'
@@ -1289,6 +1285,19 @@ class VPiutangDetailGrid extends VPiutangDetail
             $this->sisabayar->setOldValue($CurrentForm->getValue("o_sisabayar"));
         }
 
+        // Check field name 'totaltagihan' first before field var 'x_totaltagihan'
+        $val = $CurrentForm->hasValue("totaltagihan") ? $CurrentForm->getValue("totaltagihan") : $CurrentForm->getValue("x_totaltagihan");
+        if (!$this->totaltagihan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->totaltagihan->Visible = false; // Disable update for API request
+            } else {
+                $this->totaltagihan->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_totaltagihan")) {
+            $this->totaltagihan->setOldValue($CurrentForm->getValue("o_totaltagihan"));
+        }
+
         // Check field name 'jatuhtempo' first before field var 'x_jatuhtempo'
         $val = $CurrentForm->hasValue("jatuhtempo") ? $CurrentForm->getValue("jatuhtempo") : $CurrentForm->getValue("x_jatuhtempo");
         if (!$this->jatuhtempo->IsDetailKey) {
@@ -1302,6 +1311,12 @@ class VPiutangDetailGrid extends VPiutangDetail
         if ($CurrentForm->hasValue("o_jatuhtempo")) {
             $this->jatuhtempo->setOldValue($CurrentForm->getValue("o_jatuhtempo"));
         }
+
+        // Check field name 'idinvoice' first before field var 'x_idinvoice'
+        $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
+        if (!$this->idinvoice->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
+            $this->idinvoice->setFormValue($val);
+        }
     }
 
     // Restore form values
@@ -1311,8 +1326,10 @@ class VPiutangDetailGrid extends VPiutangDetail
         if (!$this->isGridAdd() && !$this->isAdd()) {
             $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
         }
-        $this->totaltagihan->CurrentValue = $this->totaltagihan->FormValue;
+        $this->tglinvoice->CurrentValue = $this->tglinvoice->FormValue;
+        $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
         $this->sisabayar->CurrentValue = $this->sisabayar->FormValue;
+        $this->totaltagihan->CurrentValue = $this->totaltagihan->FormValue;
         $this->jatuhtempo->CurrentValue = $this->jatuhtempo->FormValue;
         $this->jatuhtempo->CurrentValue = UnFormatDateTime($this->jatuhtempo->CurrentValue, 0);
     }
@@ -1387,9 +1404,9 @@ class VPiutangDetailGrid extends VPiutangDetail
         }
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idinvoice->setDbValue($row['idinvoice']);
-        $this->totaltagihan->setDbValue($row['totaltagihan']);
-        $this->sisabayar->setDbValue($row['sisabayar']);
         $this->tglinvoice->setDbValue($row['tglinvoice']);
+        $this->sisabayar->setDbValue($row['sisabayar']);
+        $this->totaltagihan->setDbValue($row['totaltagihan']);
         $this->jatuhtempo->setDbValue($row['jatuhtempo']);
     }
 
@@ -1400,9 +1417,9 @@ class VPiutangDetailGrid extends VPiutangDetail
         $row = [];
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['idinvoice'] = $this->idinvoice->CurrentValue;
-        $row['totaltagihan'] = $this->totaltagihan->CurrentValue;
-        $row['sisabayar'] = $this->sisabayar->CurrentValue;
         $row['tglinvoice'] = $this->tglinvoice->CurrentValue;
+        $row['sisabayar'] = $this->sisabayar->CurrentValue;
+        $row['totaltagihan'] = $this->totaltagihan->CurrentValue;
         $row['jatuhtempo'] = $this->jatuhtempo->CurrentValue;
         return $row;
     }
@@ -1440,114 +1457,85 @@ class VPiutangDetailGrid extends VPiutangDetail
         // Common render codes for all row types
 
         // idcustomer
+        $this->idcustomer->CellCssStyle = "white-space: nowrap;";
 
         // idinvoice
+        $this->idinvoice->CellCssStyle = "white-space: nowrap;";
 
-        // totaltagihan
+        // tglinvoice
 
         // sisabayar
 
-        // tglinvoice
+        // totaltagihan
 
         // jatuhtempo
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
             $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-            $curVal = trim(strval($this->idinvoice->CurrentValue));
-            if ($curVal != "") {
-                $this->idinvoice->ViewValue = $this->idinvoice->lookupCacheOption($curVal);
-                if ($this->idinvoice->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                        $this->idinvoice->ViewValue = $this->idinvoice->displayValue($arwrk);
-                    } else {
-                        $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idinvoice->ViewValue = null;
-            }
             $this->idinvoice->ViewCustomAttributes = "";
-
-            // totaltagihan
-            $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
-            $this->totaltagihan->ViewValue = FormatCurrency($this->totaltagihan->ViewValue, 2, -2, -2, -2);
-            $this->totaltagihan->ViewCustomAttributes = "";
-
-            // sisabayar
-            $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
-            $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
-            $this->sisabayar->ViewCustomAttributes = "";
 
             // tglinvoice
             $this->tglinvoice->ViewValue = $this->tglinvoice->CurrentValue;
             $this->tglinvoice->ViewValue = FormatDateTime($this->tglinvoice->ViewValue, 0);
             $this->tglinvoice->ViewCustomAttributes = "";
 
+            // sisabayar
+            $this->sisabayar->ViewValue = $this->sisabayar->CurrentValue;
+            $this->sisabayar->ViewValue = FormatCurrency($this->sisabayar->ViewValue, 2, -2, -2, -2);
+            $this->sisabayar->ViewCustomAttributes = "";
+
+            // totaltagihan
+            $this->totaltagihan->ViewValue = $this->totaltagihan->CurrentValue;
+            $this->totaltagihan->ViewValue = FormatCurrency($this->totaltagihan->ViewValue, 2, -2, -2, -2);
+            $this->totaltagihan->ViewCustomAttributes = "";
+
             // jatuhtempo
             $this->jatuhtempo->ViewValue = $this->jatuhtempo->CurrentValue;
             $this->jatuhtempo->ViewValue = FormatDateTime($this->jatuhtempo->ViewValue, 0);
             $this->jatuhtempo->ViewCustomAttributes = "";
 
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
-            $this->idinvoice->TooltipValue = "";
-
-            // totaltagihan
-            $this->totaltagihan->LinkCustomAttributes = "";
-            $this->totaltagihan->HrefValue = "";
-            $this->totaltagihan->TooltipValue = "";
+            // tglinvoice
+            $this->tglinvoice->LinkCustomAttributes = "";
+            $this->tglinvoice->HrefValue = "";
+            $this->tglinvoice->TooltipValue = "";
 
             // sisabayar
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
             $this->sisabayar->TooltipValue = "";
 
+            // totaltagihan
+            $this->totaltagihan->LinkCustomAttributes = "";
+            $this->totaltagihan->HrefValue = "";
+            $this->totaltagihan->TooltipValue = "";
+
             // jatuhtempo
             $this->jatuhtempo->LinkCustomAttributes = "";
             $this->jatuhtempo->HrefValue = "";
             $this->jatuhtempo->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // idinvoice
-
-            // totaltagihan
-            $this->totaltagihan->EditAttrs["class"] = "form-control";
-            $this->totaltagihan->EditCustomAttributes = "";
-            $this->totaltagihan->EditValue = HtmlEncode($this->totaltagihan->CurrentValue);
-            $this->totaltagihan->PlaceHolder = RemoveHtml($this->totaltagihan->caption());
+            // tglinvoice
+            $this->tglinvoice->EditAttrs["class"] = "form-control";
+            $this->tglinvoice->EditCustomAttributes = "";
+            $this->tglinvoice->EditValue = HtmlEncode(FormatDateTime($this->tglinvoice->CurrentValue, 8));
+            $this->tglinvoice->PlaceHolder = RemoveHtml($this->tglinvoice->caption());
 
             // sisabayar
             $this->sisabayar->EditAttrs["class"] = "form-control";
             $this->sisabayar->EditCustomAttributes = "";
             $this->sisabayar->EditValue = HtmlEncode($this->sisabayar->CurrentValue);
             $this->sisabayar->PlaceHolder = RemoveHtml($this->sisabayar->caption());
+
+            // totaltagihan
+            $this->totaltagihan->EditAttrs["class"] = "form-control";
+            $this->totaltagihan->EditCustomAttributes = "";
+            $this->totaltagihan->EditValue = HtmlEncode($this->totaltagihan->CurrentValue);
+            $this->totaltagihan->PlaceHolder = RemoveHtml($this->totaltagihan->caption());
 
             // jatuhtempo
             $this->jatuhtempo->EditAttrs["class"] = "form-control";
@@ -1557,57 +1545,39 @@ class VPiutangDetailGrid extends VPiutangDetail
 
             // Add refer script
 
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
-
-            // totaltagihan
-            $this->totaltagihan->LinkCustomAttributes = "";
-            $this->totaltagihan->HrefValue = "";
+            // tglinvoice
+            $this->tglinvoice->LinkCustomAttributes = "";
+            $this->tglinvoice->HrefValue = "";
 
             // sisabayar
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
 
+            // totaltagihan
+            $this->totaltagihan->LinkCustomAttributes = "";
+            $this->totaltagihan->HrefValue = "";
+
             // jatuhtempo
             $this->jatuhtempo->LinkCustomAttributes = "";
             $this->jatuhtempo->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // idinvoice
-            $this->idinvoice->EditAttrs["class"] = "form-control";
-            $this->idinvoice->EditCustomAttributes = "";
-            $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-            $curVal = trim(strval($this->idinvoice->CurrentValue));
-            if ($curVal != "") {
-                $this->idinvoice->EditValue = $this->idinvoice->lookupCacheOption($curVal);
-                if ($this->idinvoice->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                        $this->idinvoice->EditValue = $this->idinvoice->displayValue($arwrk);
-                    } else {
-                        $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idinvoice->EditValue = null;
-            }
-            $this->idinvoice->ViewCustomAttributes = "";
-
-            // totaltagihan
-            $this->totaltagihan->EditAttrs["class"] = "form-control";
-            $this->totaltagihan->EditCustomAttributes = "";
-            $this->totaltagihan->EditValue = HtmlEncode($this->totaltagihan->CurrentValue);
-            $this->totaltagihan->PlaceHolder = RemoveHtml($this->totaltagihan->caption());
+            // tglinvoice
+            $this->tglinvoice->EditAttrs["class"] = "form-control";
+            $this->tglinvoice->EditCustomAttributes = "";
+            $this->tglinvoice->EditValue = HtmlEncode(FormatDateTime($this->tglinvoice->CurrentValue, 8));
+            $this->tglinvoice->PlaceHolder = RemoveHtml($this->tglinvoice->caption());
 
             // sisabayar
             $this->sisabayar->EditAttrs["class"] = "form-control";
             $this->sisabayar->EditCustomAttributes = "";
             $this->sisabayar->EditValue = HtmlEncode($this->sisabayar->CurrentValue);
             $this->sisabayar->PlaceHolder = RemoveHtml($this->sisabayar->caption());
+
+            // totaltagihan
+            $this->totaltagihan->EditAttrs["class"] = "form-control";
+            $this->totaltagihan->EditCustomAttributes = "";
+            $this->totaltagihan->EditValue = HtmlEncode($this->totaltagihan->CurrentValue);
+            $this->totaltagihan->PlaceHolder = RemoveHtml($this->totaltagihan->caption());
 
             // jatuhtempo
             $this->jatuhtempo->EditAttrs["class"] = "form-control";
@@ -1617,17 +1587,17 @@ class VPiutangDetailGrid extends VPiutangDetail
 
             // Edit refer script
 
-            // idinvoice
-            $this->idinvoice->LinkCustomAttributes = "";
-            $this->idinvoice->HrefValue = "";
-
-            // totaltagihan
-            $this->totaltagihan->LinkCustomAttributes = "";
-            $this->totaltagihan->HrefValue = "";
+            // tglinvoice
+            $this->tglinvoice->LinkCustomAttributes = "";
+            $this->tglinvoice->HrefValue = "";
 
             // sisabayar
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
+
+            // totaltagihan
+            $this->totaltagihan->LinkCustomAttributes = "";
+            $this->totaltagihan->HrefValue = "";
 
             // jatuhtempo
             $this->jatuhtempo->LinkCustomAttributes = "";
@@ -1652,21 +1622,13 @@ class VPiutangDetailGrid extends VPiutangDetail
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->idinvoice->Required) {
-            if (!$this->idinvoice->IsDetailKey && EmptyValue($this->idinvoice->FormValue)) {
-                $this->idinvoice->addErrorMessage(str_replace("%s", $this->idinvoice->caption(), $this->idinvoice->RequiredErrorMessage));
+        if ($this->tglinvoice->Required) {
+            if (!$this->tglinvoice->IsDetailKey && EmptyValue($this->tglinvoice->FormValue)) {
+                $this->tglinvoice->addErrorMessage(str_replace("%s", $this->tglinvoice->caption(), $this->tglinvoice->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idinvoice->FormValue)) {
-            $this->idinvoice->addErrorMessage($this->idinvoice->getErrorMessage(false));
-        }
-        if ($this->totaltagihan->Required) {
-            if (!$this->totaltagihan->IsDetailKey && EmptyValue($this->totaltagihan->FormValue)) {
-                $this->totaltagihan->addErrorMessage(str_replace("%s", $this->totaltagihan->caption(), $this->totaltagihan->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->totaltagihan->FormValue)) {
-            $this->totaltagihan->addErrorMessage($this->totaltagihan->getErrorMessage(false));
+        if (!CheckDate($this->tglinvoice->FormValue)) {
+            $this->tglinvoice->addErrorMessage($this->tglinvoice->getErrorMessage(false));
         }
         if ($this->sisabayar->Required) {
             if (!$this->sisabayar->IsDetailKey && EmptyValue($this->sisabayar->FormValue)) {
@@ -1675,6 +1637,14 @@ class VPiutangDetailGrid extends VPiutangDetail
         }
         if (!CheckInteger($this->sisabayar->FormValue)) {
             $this->sisabayar->addErrorMessage($this->sisabayar->getErrorMessage(false));
+        }
+        if ($this->totaltagihan->Required) {
+            if (!$this->totaltagihan->IsDetailKey && EmptyValue($this->totaltagihan->FormValue)) {
+                $this->totaltagihan->addErrorMessage(str_replace("%s", $this->totaltagihan->caption(), $this->totaltagihan->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->totaltagihan->FormValue)) {
+            $this->totaltagihan->addErrorMessage($this->totaltagihan->getErrorMessage(false));
         }
         if ($this->jatuhtempo->Required) {
             if (!$this->jatuhtempo->IsDetailKey && EmptyValue($this->jatuhtempo->FormValue)) {
@@ -1793,11 +1763,14 @@ class VPiutangDetailGrid extends VPiutangDetail
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // totaltagihan
-            $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, $this->totaltagihan->ReadOnly);
+            // tglinvoice
+            $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), $this->tglinvoice->ReadOnly);
 
             // sisabayar
             $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, $this->sisabayar->ReadOnly);
+
+            // totaltagihan
+            $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, $this->totaltagihan->ReadOnly);
 
             // jatuhtempo
             $this->jatuhtempo->setDbValueDef($rsnew, UnFormatDateTime($this->jatuhtempo->CurrentValue, 0), null, $this->jatuhtempo->ReadOnly);
@@ -1889,11 +1862,14 @@ class VPiutangDetailGrid extends VPiutangDetail
         }
         $rsnew = [];
 
-        // totaltagihan
-        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
+        // tglinvoice
+        $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), false);
 
         // sisabayar
         $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, strval($this->sisabayar->CurrentValue) == "");
+
+        // totaltagihan
+        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // jatuhtempo
         $this->jatuhtempo->setDbValueDef($rsnew, UnFormatDateTime($this->jatuhtempo->CurrentValue, 0), null, false);
@@ -1971,10 +1947,6 @@ class VPiutangDetailGrid extends VPiutangDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
-                case "x_idinvoice":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

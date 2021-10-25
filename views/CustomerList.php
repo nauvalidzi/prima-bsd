@@ -166,6 +166,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->hp->Visible) { // hp ?>
         <th data-name="hp" class="<?= $Page->hp->headerCellClass() ?>"><div id="elh_customer_hp" class="customer_hp"><?= $Page->renderSort($Page->hp) ?></div></th>
 <?php } ?>
+<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
+        <th data-name="level_customer_id" class="<?= $Page->level_customer_id->headerCellClass() ?>"><div id="elh_customer_level_customer_id" class="customer_level_customer_id"><?= $Page->renderSort($Page->level_customer_id) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -278,6 +281,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_customer_hp">
 <span<?= $Page->hp->viewAttributes() ?>>
 <?= $Page->hp->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
+        <td data-name="level_customer_id" <?= $Page->level_customer_id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_customer_level_customer_id">
+<span<?= $Page->level_customer_id->viewAttributes() ?>>
+<?= $Page->level_customer_id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -9,13 +9,24 @@ $v_piutang = Container("v_piutang");
 <div class="ew-master-div">
 <table id="tbl_v_piutangmaster" class="table ew-view-table ew-master-table ew-vertical">
     <tbody>
-<?php if ($v_piutang->idcustomer->Visible) { // idcustomer ?>
-        <tr id="r_idcustomer">
-            <td class="<?= $v_piutang->TableLeftColumnClass ?>"><?= $v_piutang->idcustomer->caption() ?></td>
-            <td <?= $v_piutang->idcustomer->cellAttributes() ?>>
-<span id="el_v_piutang_idcustomer">
-<span<?= $v_piutang->idcustomer->viewAttributes() ?>>
-<?= $v_piutang->idcustomer->getViewValue() ?></span>
+<?php if ($v_piutang->pegawai->Visible) { // pegawai ?>
+        <tr id="r_pegawai">
+            <td class="<?= $v_piutang->TableLeftColumnClass ?>"><?= $v_piutang->pegawai->caption() ?></td>
+            <td <?= $v_piutang->pegawai->cellAttributes() ?>>
+<span id="el_v_piutang_pegawai">
+<span<?= $v_piutang->pegawai->viewAttributes() ?>>
+<?= $v_piutang->pegawai->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($v_piutang->customer->Visible) { // customer ?>
+        <tr id="r_customer">
+            <td class="<?= $v_piutang->TableLeftColumnClass ?>"><?= $v_piutang->customer->caption() ?></td>
+            <td <?= $v_piutang->customer->cellAttributes() ?>>
+<span id="el_v_piutang_customer">
+<span<?= $v_piutang->customer->viewAttributes() ?>>
+<?= $v_piutang->customer->getViewValue() ?></span>
 </span>
 </td>
         </tr>

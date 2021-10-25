@@ -521,12 +521,13 @@ class AlamatCustomerView extends AlamatCustomer
         $this->id->setVisibility();
         $this->idcustomer->setVisibility();
         $this->alias->setVisibility();
+        $this->penerima->setVisibility();
+        $this->telepon->setVisibility();
+        $this->alamat->setVisibility();
         $this->idprovinsi->setVisibility();
         $this->idkabupaten->setVisibility();
         $this->idkecamatan->setVisibility();
         $this->idkelurahan->setVisibility();
-        $this->alamat->setVisibility();
-        $this->penerima->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -741,12 +742,13 @@ class AlamatCustomerView extends AlamatCustomer
         $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->alias->setDbValue($row['alias']);
+        $this->penerima->setDbValue($row['penerima']);
+        $this->telepon->setDbValue($row['telepon']);
+        $this->alamat->setDbValue($row['alamat']);
         $this->idprovinsi->setDbValue($row['idprovinsi']);
         $this->idkabupaten->setDbValue($row['idkabupaten']);
         $this->idkecamatan->setDbValue($row['idkecamatan']);
         $this->idkelurahan->setDbValue($row['idkelurahan']);
-        $this->alamat->setDbValue($row['alamat']);
-        $this->penerima->setDbValue($row['penerima']);
     }
 
     // Return a row with default values
@@ -756,12 +758,13 @@ class AlamatCustomerView extends AlamatCustomer
         $row['id'] = null;
         $row['idcustomer'] = null;
         $row['alias'] = null;
+        $row['penerima'] = null;
+        $row['telepon'] = null;
+        $row['alamat'] = null;
         $row['idprovinsi'] = null;
         $row['idkabupaten'] = null;
         $row['idkecamatan'] = null;
         $row['idkelurahan'] = null;
-        $row['alamat'] = null;
-        $row['penerima'] = null;
         return $row;
     }
 
@@ -789,6 +792,12 @@ class AlamatCustomerView extends AlamatCustomer
 
         // alias
 
+        // penerima
+
+        // telepon
+
+        // alamat
+
         // idprovinsi
 
         // idkabupaten
@@ -796,10 +805,6 @@ class AlamatCustomerView extends AlamatCustomer
         // idkecamatan
 
         // idkelurahan
-
-        // alamat
-
-        // penerima
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -829,6 +834,18 @@ class AlamatCustomerView extends AlamatCustomer
             // alias
             $this->alias->ViewValue = $this->alias->CurrentValue;
             $this->alias->ViewCustomAttributes = "";
+
+            // penerima
+            $this->penerima->ViewValue = $this->penerima->CurrentValue;
+            $this->penerima->ViewCustomAttributes = "";
+
+            // telepon
+            $this->telepon->ViewValue = $this->telepon->CurrentValue;
+            $this->telepon->ViewCustomAttributes = "";
+
+            // alamat
+            $this->alamat->ViewValue = $this->alamat->CurrentValue;
+            $this->alamat->ViewCustomAttributes = "";
 
             // idprovinsi
             $curVal = trim(strval($this->idprovinsi->CurrentValue));
@@ -914,18 +931,25 @@ class AlamatCustomerView extends AlamatCustomer
             }
             $this->idkelurahan->ViewCustomAttributes = "";
 
-            // alamat
-            $this->alamat->ViewValue = $this->alamat->CurrentValue;
-            $this->alamat->ViewCustomAttributes = "";
-
-            // penerima
-            $this->penerima->ViewValue = $this->penerima->CurrentValue;
-            $this->penerima->ViewCustomAttributes = "";
-
             // alias
             $this->alias->LinkCustomAttributes = "";
             $this->alias->HrefValue = "";
             $this->alias->TooltipValue = "";
+
+            // penerima
+            $this->penerima->LinkCustomAttributes = "";
+            $this->penerima->HrefValue = "";
+            $this->penerima->TooltipValue = "";
+
+            // telepon
+            $this->telepon->LinkCustomAttributes = "";
+            $this->telepon->HrefValue = "";
+            $this->telepon->TooltipValue = "";
+
+            // alamat
+            $this->alamat->LinkCustomAttributes = "";
+            $this->alamat->HrefValue = "";
+            $this->alamat->TooltipValue = "";
 
             // idprovinsi
             $this->idprovinsi->LinkCustomAttributes = "";
@@ -946,16 +970,6 @@ class AlamatCustomerView extends AlamatCustomer
             $this->idkelurahan->LinkCustomAttributes = "";
             $this->idkelurahan->HrefValue = "";
             $this->idkelurahan->TooltipValue = "";
-
-            // alamat
-            $this->alamat->LinkCustomAttributes = "";
-            $this->alamat->HrefValue = "";
-            $this->alamat->TooltipValue = "";
-
-            // penerima
-            $this->penerima->LinkCustomAttributes = "";
-            $this->penerima->HrefValue = "";
-            $this->penerima->TooltipValue = "";
         }
 
         // Call Row Rendered event

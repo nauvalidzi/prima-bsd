@@ -526,8 +526,8 @@ class CustomerGrid extends Customer
         $this->_email->Visible = false;
         $this->website->Visible = false;
         $this->foto->Visible = false;
-        $this->budget_bonus_persen->Visible = false;
-        $this->hutang_max->Visible = false;
+        $this->level_customer_id->setVisibility();
+        $this->jatuh_tempo_invoice->Visible = false;
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
@@ -556,6 +556,7 @@ class CustomerGrid extends Customer
         $this->setupLookupOptions($this->idkab);
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
+        $this->setupLookupOptions($this->level_customer_id);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -986,6 +987,9 @@ class CustomerGrid extends Customer
         if ($CurrentForm->hasValue("x_hp") && $CurrentForm->hasValue("o_hp") && $this->hp->CurrentValue != $this->hp->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_level_customer_id") && $CurrentForm->hasValue("o_level_customer_id") && $this->level_customer_id->CurrentValue != $this->level_customer_id->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1073,6 +1077,7 @@ class CustomerGrid extends Customer
         $this->nama->clearErrorMessage();
         $this->kodenpd->clearErrorMessage();
         $this->hp->clearErrorMessage();
+        $this->level_customer_id->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1398,6 +1403,72 @@ class CustomerGrid extends Customer
                 $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
             }
         }
+        $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
+
+        // Column "detail_order"
+        if ($this->DetailPages && $this->DetailPages["order"] && $this->DetailPages["order"]->Visible) {
+            $link = "";
+            $option = $this->ListOptions["detail_order"];
+            $url = "OrderPreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"order\" data-url=\"" . $url . "\">";
+            if ($Security->allowList(CurrentProjectID() . 'customer')) {
+                $label = $Language->TablePhrase("order", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("order")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"order\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $links .= $link;
+                $detaillnk = JsEncodeAttribute("OrderList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("order", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+            }
+            $detailPageObj = Container("OrderGrid");
+            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
+                $caption = $Language->phrase("MasterDetailViewLink");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=order");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
+                $caption = $Language->phrase("MasterDetailEditLink");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            $btngrp .= "</div>";
+            if ($link != "") {
+                $btngrps .= $btngrp;
+                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
+            }
+        }
+        $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
+
+        // Column "detail_invoice"
+        if ($this->DetailPages && $this->DetailPages["invoice"] && $this->DetailPages["invoice"]->Visible) {
+            $link = "";
+            $option = $this->ListOptions["detail_invoice"];
+            $url = "InvoicePreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"invoice\" data-url=\"" . $url . "\">";
+            if ($Security->allowList(CurrentProjectID() . 'customer')) {
+                $label = $Language->TablePhrase("invoice", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"invoice\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $links .= $link;
+                $detaillnk = JsEncodeAttribute("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("invoice", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+            }
+            $detailPageObj = Container("InvoiceGrid");
+            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
+                $caption = $Language->phrase("MasterDetailViewLink");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
+                $caption = $Language->phrase("MasterDetailEditLink");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            $btngrp .= "</div>";
+            if ($link != "") {
+                $btngrps .= $btngrp;
+                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
+            }
+        }
 
         // Hide detail items if necessary
         $this->ListOptions->hideDetailItemsForDropDown();
@@ -1488,10 +1559,10 @@ class CustomerGrid extends Customer
         $this->foto->Upload->DbValue = null;
         $this->foto->OldValue = $this->foto->Upload->DbValue;
         $this->foto->Upload->Index = $this->RowIndex;
-        $this->budget_bonus_persen->CurrentValue = null;
-        $this->budget_bonus_persen->OldValue = $this->budget_bonus_persen->CurrentValue;
-        $this->hutang_max->CurrentValue = null;
-        $this->hutang_max->OldValue = $this->hutang_max->CurrentValue;
+        $this->level_customer_id->CurrentValue = null;
+        $this->level_customer_id->OldValue = $this->level_customer_id->CurrentValue;
+        $this->jatuh_tempo_invoice->CurrentValue = 30;
+        $this->jatuh_tempo_invoice->OldValue = $this->jatuh_tempo_invoice->CurrentValue;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
         $this->aktif->CurrentValue = 1;
@@ -1589,6 +1660,19 @@ class CustomerGrid extends Customer
             $this->hp->setOldValue($CurrentForm->getValue("o_hp"));
         }
 
+        // Check field name 'level_customer_id' first before field var 'x_level_customer_id'
+        $val = $CurrentForm->hasValue("level_customer_id") ? $CurrentForm->getValue("level_customer_id") : $CurrentForm->getValue("x_level_customer_id");
+        if (!$this->level_customer_id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->level_customer_id->Visible = false; // Disable update for API request
+            } else {
+                $this->level_customer_id->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_level_customer_id")) {
+            $this->level_customer_id->setOldValue($CurrentForm->getValue("o_level_customer_id"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1609,6 +1693,7 @@ class CustomerGrid extends Customer
         $this->nama->CurrentValue = $this->nama->FormValue;
         $this->kodenpd->CurrentValue = $this->kodenpd->FormValue;
         $this->hp->CurrentValue = $this->hp->FormValue;
+        $this->level_customer_id->CurrentValue = $this->level_customer_id->FormValue;
     }
 
     // Load recordset
@@ -1710,8 +1795,8 @@ class CustomerGrid extends Customer
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->foto->Upload->Index = $this->RowIndex;
-        $this->budget_bonus_persen->setDbValue($row['budget_bonus_persen']);
-        $this->hutang_max->setDbValue($row['hutang_max']);
+        $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1745,8 +1830,8 @@ class CustomerGrid extends Customer
         $row['email'] = $this->_email->CurrentValue;
         $row['website'] = $this->website->CurrentValue;
         $row['foto'] = $this->foto->Upload->DbValue;
-        $row['budget_bonus_persen'] = $this->budget_bonus_persen->CurrentValue;
-        $row['hutang_max'] = $this->hutang_max->CurrentValue;
+        $row['level_customer_id'] = $this->level_customer_id->CurrentValue;
+        $row['jatuh_tempo_invoice'] = $this->jatuh_tempo_invoice->CurrentValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
@@ -1829,10 +1914,9 @@ class CustomerGrid extends Customer
 
         // foto
 
-        // budget_bonus_persen
+        // level_customer_id
 
-        // hutang_max
-        $this->hutang_max->CellCssStyle = "white-space: nowrap;";
+        // jatuh_tempo_invoice
 
         // keterangan
 
@@ -2047,10 +2131,31 @@ class CustomerGrid extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // budget_bonus_persen
-            $this->budget_bonus_persen->ViewValue = $this->budget_bonus_persen->CurrentValue;
-            $this->budget_bonus_persen->ViewValue = FormatNumber($this->budget_bonus_persen->ViewValue, 2, -2, -2, -2);
-            $this->budget_bonus_persen->ViewCustomAttributes = "";
+            // level_customer_id
+            $curVal = trim(strval($this->level_customer_id->CurrentValue));
+            if ($curVal != "") {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
+                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
+                    } else {
+                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
+                    }
+                }
+            } else {
+                $this->level_customer_id->ViewValue = null;
+            }
+            $this->level_customer_id->ViewCustomAttributes = "";
+
+            // jatuh_tempo_invoice
+            $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
+            $this->jatuh_tempo_invoice->ViewValue = FormatNumber($this->jatuh_tempo_invoice->ViewValue, 0, -2, -2, -2);
+            $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -2108,6 +2213,11 @@ class CustomerGrid extends Customer
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
+
+            // level_customer_id
+            $this->level_customer_id->LinkCustomAttributes = "";
+            $this->level_customer_id->HrefValue = "";
+            $this->level_customer_id->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -2219,6 +2329,33 @@ class CustomerGrid extends Customer
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
 
+            // level_customer_id
+            $this->level_customer_id->EditAttrs["class"] = "form-control";
+            $this->level_customer_id->EditCustomAttributes = "";
+            $curVal = trim(strval($this->level_customer_id->CurrentValue));
+            if ($curVal != "") {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+            } else {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->Lookup !== null && is_array($this->level_customer_id->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->level_customer_id->ViewValue !== null) { // Load from cache
+                $this->level_customer_id->EditValue = array_values($this->level_customer_id->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->level_customer_id->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->level_customer_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->level_customer_id->Lookup->renderViewRow($row);
+                $this->level_customer_id->EditValue = $arwrk;
+            }
+            $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
+
             // Add refer script
 
             // kode
@@ -2244,6 +2381,10 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
+
+            // level_customer_id
+            $this->level_customer_id->LinkCustomAttributes = "";
+            $this->level_customer_id->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -2355,6 +2496,33 @@ class CustomerGrid extends Customer
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
 
+            // level_customer_id
+            $this->level_customer_id->EditAttrs["class"] = "form-control";
+            $this->level_customer_id->EditCustomAttributes = "";
+            $curVal = trim(strval($this->level_customer_id->CurrentValue));
+            if ($curVal != "") {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
+            } else {
+                $this->level_customer_id->ViewValue = $this->level_customer_id->Lookup !== null && is_array($this->level_customer_id->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->level_customer_id->ViewValue !== null) { // Load from cache
+                $this->level_customer_id->EditValue = array_values($this->level_customer_id->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->level_customer_id->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->level_customer_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->level_customer_id->Lookup->renderViewRow($row);
+                $this->level_customer_id->EditValue = $arwrk;
+            }
+            $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
+
             // Edit refer script
 
             // kode
@@ -2380,6 +2548,10 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
+
+            // level_customer_id
+            $this->level_customer_id->LinkCustomAttributes = "";
+            $this->level_customer_id->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2428,6 +2600,11 @@ class CustomerGrid extends Customer
         if ($this->hp->Required) {
             if (!$this->hp->IsDetailKey && EmptyValue($this->hp->FormValue)) {
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
+            }
+        }
+        if ($this->level_customer_id->Required) {
+            if (!$this->level_customer_id->IsDetailKey && EmptyValue($this->level_customer_id->FormValue)) {
+                $this->level_customer_id->addErrorMessage(str_replace("%s", $this->level_customer_id->caption(), $this->level_customer_id->RequiredErrorMessage));
             }
         }
 
@@ -2560,6 +2737,9 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", $this->hp->ReadOnly);
 
+            // level_customer_id
+            $this->level_customer_id->setDbValueDef($rsnew, $this->level_customer_id->CurrentValue, null, $this->level_customer_id->ReadOnly);
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2665,6 +2845,9 @@ class CustomerGrid extends Customer
         // hp
         $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", false);
 
+        // level_customer_id
+        $this->level_customer_id->setDbValueDef($rsnew, $this->level_customer_id->CurrentValue, null, false);
+
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
         $addRow = false;
@@ -2744,6 +2927,8 @@ class CustomerGrid extends Customer
                 case "x_idkec":
                     break;
                 case "x_idkel":
+                    break;
+                case "x_level_customer_id":
                     break;
                 case "x_aktif":
                     break;

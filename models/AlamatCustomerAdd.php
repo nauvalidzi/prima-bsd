@@ -467,12 +467,13 @@ class AlamatCustomerAdd extends AlamatCustomer
         $this->id->Visible = false;
         $this->idcustomer->setVisibility();
         $this->alias->setVisibility();
+        $this->penerima->setVisibility();
+        $this->telepon->setVisibility();
+        $this->alamat->setVisibility();
         $this->idprovinsi->setVisibility();
         $this->idkabupaten->setVisibility();
         $this->idkecamatan->setVisibility();
         $this->idkelurahan->setVisibility();
-        $this->alamat->setVisibility();
-        $this->penerima->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -634,6 +635,12 @@ class AlamatCustomerAdd extends AlamatCustomer
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
         $this->alias->CurrentValue = null;
         $this->alias->OldValue = $this->alias->CurrentValue;
+        $this->penerima->CurrentValue = null;
+        $this->penerima->OldValue = $this->penerima->CurrentValue;
+        $this->telepon->CurrentValue = null;
+        $this->telepon->OldValue = $this->telepon->CurrentValue;
+        $this->alamat->CurrentValue = null;
+        $this->alamat->OldValue = $this->alamat->CurrentValue;
         $this->idprovinsi->CurrentValue = null;
         $this->idprovinsi->OldValue = $this->idprovinsi->CurrentValue;
         $this->idkabupaten->CurrentValue = null;
@@ -642,10 +649,6 @@ class AlamatCustomerAdd extends AlamatCustomer
         $this->idkecamatan->OldValue = $this->idkecamatan->CurrentValue;
         $this->idkelurahan->CurrentValue = null;
         $this->idkelurahan->OldValue = $this->idkelurahan->CurrentValue;
-        $this->alamat->CurrentValue = null;
-        $this->alamat->OldValue = $this->alamat->CurrentValue;
-        $this->penerima->CurrentValue = null;
-        $this->penerima->OldValue = $this->penerima->CurrentValue;
     }
 
     // Load form values
@@ -671,6 +674,36 @@ class AlamatCustomerAdd extends AlamatCustomer
                 $this->alias->Visible = false; // Disable update for API request
             } else {
                 $this->alias->setFormValue($val);
+            }
+        }
+
+        // Check field name 'penerima' first before field var 'x_penerima'
+        $val = $CurrentForm->hasValue("penerima") ? $CurrentForm->getValue("penerima") : $CurrentForm->getValue("x_penerima");
+        if (!$this->penerima->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->penerima->Visible = false; // Disable update for API request
+            } else {
+                $this->penerima->setFormValue($val);
+            }
+        }
+
+        // Check field name 'telepon' first before field var 'x_telepon'
+        $val = $CurrentForm->hasValue("telepon") ? $CurrentForm->getValue("telepon") : $CurrentForm->getValue("x_telepon");
+        if (!$this->telepon->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->telepon->Visible = false; // Disable update for API request
+            } else {
+                $this->telepon->setFormValue($val);
+            }
+        }
+
+        // Check field name 'alamat' first before field var 'x_alamat'
+        $val = $CurrentForm->hasValue("alamat") ? $CurrentForm->getValue("alamat") : $CurrentForm->getValue("x_alamat");
+        if (!$this->alamat->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->alamat->Visible = false; // Disable update for API request
+            } else {
+                $this->alamat->setFormValue($val);
             }
         }
 
@@ -714,26 +747,6 @@ class AlamatCustomerAdd extends AlamatCustomer
             }
         }
 
-        // Check field name 'alamat' first before field var 'x_alamat'
-        $val = $CurrentForm->hasValue("alamat") ? $CurrentForm->getValue("alamat") : $CurrentForm->getValue("x_alamat");
-        if (!$this->alamat->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->alamat->Visible = false; // Disable update for API request
-            } else {
-                $this->alamat->setFormValue($val);
-            }
-        }
-
-        // Check field name 'penerima' first before field var 'x_penerima'
-        $val = $CurrentForm->hasValue("penerima") ? $CurrentForm->getValue("penerima") : $CurrentForm->getValue("x_penerima");
-        if (!$this->penerima->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->penerima->Visible = false; // Disable update for API request
-            } else {
-                $this->penerima->setFormValue($val);
-            }
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -744,12 +757,13 @@ class AlamatCustomerAdd extends AlamatCustomer
         global $CurrentForm;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->alias->CurrentValue = $this->alias->FormValue;
+        $this->penerima->CurrentValue = $this->penerima->FormValue;
+        $this->telepon->CurrentValue = $this->telepon->FormValue;
+        $this->alamat->CurrentValue = $this->alamat->FormValue;
         $this->idprovinsi->CurrentValue = $this->idprovinsi->FormValue;
         $this->idkabupaten->CurrentValue = $this->idkabupaten->FormValue;
         $this->idkecamatan->CurrentValue = $this->idkecamatan->FormValue;
         $this->idkelurahan->CurrentValue = $this->idkelurahan->FormValue;
-        $this->alamat->CurrentValue = $this->alamat->FormValue;
-        $this->penerima->CurrentValue = $this->penerima->FormValue;
     }
 
     /**
@@ -802,12 +816,13 @@ class AlamatCustomerAdd extends AlamatCustomer
         $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->alias->setDbValue($row['alias']);
+        $this->penerima->setDbValue($row['penerima']);
+        $this->telepon->setDbValue($row['telepon']);
+        $this->alamat->setDbValue($row['alamat']);
         $this->idprovinsi->setDbValue($row['idprovinsi']);
         $this->idkabupaten->setDbValue($row['idkabupaten']);
         $this->idkecamatan->setDbValue($row['idkecamatan']);
         $this->idkelurahan->setDbValue($row['idkelurahan']);
-        $this->alamat->setDbValue($row['alamat']);
-        $this->penerima->setDbValue($row['penerima']);
     }
 
     // Return a row with default values
@@ -818,12 +833,13 @@ class AlamatCustomerAdd extends AlamatCustomer
         $row['id'] = $this->id->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['alias'] = $this->alias->CurrentValue;
+        $row['penerima'] = $this->penerima->CurrentValue;
+        $row['telepon'] = $this->telepon->CurrentValue;
+        $row['alamat'] = $this->alamat->CurrentValue;
         $row['idprovinsi'] = $this->idprovinsi->CurrentValue;
         $row['idkabupaten'] = $this->idkabupaten->CurrentValue;
         $row['idkecamatan'] = $this->idkecamatan->CurrentValue;
         $row['idkelurahan'] = $this->idkelurahan->CurrentValue;
-        $row['alamat'] = $this->alamat->CurrentValue;
-        $row['penerima'] = $this->penerima->CurrentValue;
         return $row;
     }
 
@@ -861,6 +877,12 @@ class AlamatCustomerAdd extends AlamatCustomer
 
         // alias
 
+        // penerima
+
+        // telepon
+
+        // alamat
+
         // idprovinsi
 
         // idkabupaten
@@ -868,10 +890,6 @@ class AlamatCustomerAdd extends AlamatCustomer
         // idkecamatan
 
         // idkelurahan
-
-        // alamat
-
-        // penerima
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -901,6 +919,18 @@ class AlamatCustomerAdd extends AlamatCustomer
             // alias
             $this->alias->ViewValue = $this->alias->CurrentValue;
             $this->alias->ViewCustomAttributes = "";
+
+            // penerima
+            $this->penerima->ViewValue = $this->penerima->CurrentValue;
+            $this->penerima->ViewCustomAttributes = "";
+
+            // telepon
+            $this->telepon->ViewValue = $this->telepon->CurrentValue;
+            $this->telepon->ViewCustomAttributes = "";
+
+            // alamat
+            $this->alamat->ViewValue = $this->alamat->CurrentValue;
+            $this->alamat->ViewCustomAttributes = "";
 
             // idprovinsi
             $curVal = trim(strval($this->idprovinsi->CurrentValue));
@@ -986,14 +1016,6 @@ class AlamatCustomerAdd extends AlamatCustomer
             }
             $this->idkelurahan->ViewCustomAttributes = "";
 
-            // alamat
-            $this->alamat->ViewValue = $this->alamat->CurrentValue;
-            $this->alamat->ViewCustomAttributes = "";
-
-            // penerima
-            $this->penerima->ViewValue = $this->penerima->CurrentValue;
-            $this->penerima->ViewCustomAttributes = "";
-
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
@@ -1003,6 +1025,21 @@ class AlamatCustomerAdd extends AlamatCustomer
             $this->alias->LinkCustomAttributes = "";
             $this->alias->HrefValue = "";
             $this->alias->TooltipValue = "";
+
+            // penerima
+            $this->penerima->LinkCustomAttributes = "";
+            $this->penerima->HrefValue = "";
+            $this->penerima->TooltipValue = "";
+
+            // telepon
+            $this->telepon->LinkCustomAttributes = "";
+            $this->telepon->HrefValue = "";
+            $this->telepon->TooltipValue = "";
+
+            // alamat
+            $this->alamat->LinkCustomAttributes = "";
+            $this->alamat->HrefValue = "";
+            $this->alamat->TooltipValue = "";
 
             // idprovinsi
             $this->idprovinsi->LinkCustomAttributes = "";
@@ -1023,16 +1060,6 @@ class AlamatCustomerAdd extends AlamatCustomer
             $this->idkelurahan->LinkCustomAttributes = "";
             $this->idkelurahan->HrefValue = "";
             $this->idkelurahan->TooltipValue = "";
-
-            // alamat
-            $this->alamat->LinkCustomAttributes = "";
-            $this->alamat->HrefValue = "";
-            $this->alamat->TooltipValue = "";
-
-            // penerima
-            $this->penerima->LinkCustomAttributes = "";
-            $this->penerima->HrefValue = "";
-            $this->penerima->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
@@ -1090,6 +1117,30 @@ class AlamatCustomerAdd extends AlamatCustomer
             }
             $this->alias->EditValue = HtmlEncode($this->alias->CurrentValue);
             $this->alias->PlaceHolder = RemoveHtml($this->alias->caption());
+
+            // penerima
+            $this->penerima->EditAttrs["class"] = "form-control";
+            $this->penerima->EditCustomAttributes = "";
+            if (!$this->penerima->Raw) {
+                $this->penerima->CurrentValue = HtmlDecode($this->penerima->CurrentValue);
+            }
+            $this->penerima->EditValue = HtmlEncode($this->penerima->CurrentValue);
+            $this->penerima->PlaceHolder = RemoveHtml($this->penerima->caption());
+
+            // telepon
+            $this->telepon->EditAttrs["class"] = "form-control";
+            $this->telepon->EditCustomAttributes = "";
+            if (!$this->telepon->Raw) {
+                $this->telepon->CurrentValue = HtmlDecode($this->telepon->CurrentValue);
+            }
+            $this->telepon->EditValue = HtmlEncode($this->telepon->CurrentValue);
+            $this->telepon->PlaceHolder = RemoveHtml($this->telepon->caption());
+
+            // alamat
+            $this->alamat->EditAttrs["class"] = "form-control";
+            $this->alamat->EditCustomAttributes = "";
+            $this->alamat->EditValue = HtmlEncode($this->alamat->CurrentValue);
+            $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
 
             // idprovinsi
             $this->idprovinsi->EditAttrs["class"] = "form-control";
@@ -1191,24 +1242,6 @@ class AlamatCustomerAdd extends AlamatCustomer
             }
             $this->idkelurahan->PlaceHolder = RemoveHtml($this->idkelurahan->caption());
 
-            // alamat
-            $this->alamat->EditAttrs["class"] = "form-control";
-            $this->alamat->EditCustomAttributes = "";
-            if (!$this->alamat->Raw) {
-                $this->alamat->CurrentValue = HtmlDecode($this->alamat->CurrentValue);
-            }
-            $this->alamat->EditValue = HtmlEncode($this->alamat->CurrentValue);
-            $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
-
-            // penerima
-            $this->penerima->EditAttrs["class"] = "form-control";
-            $this->penerima->EditCustomAttributes = "";
-            if (!$this->penerima->Raw) {
-                $this->penerima->CurrentValue = HtmlDecode($this->penerima->CurrentValue);
-            }
-            $this->penerima->EditValue = HtmlEncode($this->penerima->CurrentValue);
-            $this->penerima->PlaceHolder = RemoveHtml($this->penerima->caption());
-
             // Add refer script
 
             // idcustomer
@@ -1218,6 +1251,18 @@ class AlamatCustomerAdd extends AlamatCustomer
             // alias
             $this->alias->LinkCustomAttributes = "";
             $this->alias->HrefValue = "";
+
+            // penerima
+            $this->penerima->LinkCustomAttributes = "";
+            $this->penerima->HrefValue = "";
+
+            // telepon
+            $this->telepon->LinkCustomAttributes = "";
+            $this->telepon->HrefValue = "";
+
+            // alamat
+            $this->alamat->LinkCustomAttributes = "";
+            $this->alamat->HrefValue = "";
 
             // idprovinsi
             $this->idprovinsi->LinkCustomAttributes = "";
@@ -1234,14 +1279,6 @@ class AlamatCustomerAdd extends AlamatCustomer
             // idkelurahan
             $this->idkelurahan->LinkCustomAttributes = "";
             $this->idkelurahan->HrefValue = "";
-
-            // alamat
-            $this->alamat->LinkCustomAttributes = "";
-            $this->alamat->HrefValue = "";
-
-            // penerima
-            $this->penerima->LinkCustomAttributes = "";
-            $this->penerima->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1272,6 +1309,21 @@ class AlamatCustomerAdd extends AlamatCustomer
                 $this->alias->addErrorMessage(str_replace("%s", $this->alias->caption(), $this->alias->RequiredErrorMessage));
             }
         }
+        if ($this->penerima->Required) {
+            if (!$this->penerima->IsDetailKey && EmptyValue($this->penerima->FormValue)) {
+                $this->penerima->addErrorMessage(str_replace("%s", $this->penerima->caption(), $this->penerima->RequiredErrorMessage));
+            }
+        }
+        if ($this->telepon->Required) {
+            if (!$this->telepon->IsDetailKey && EmptyValue($this->telepon->FormValue)) {
+                $this->telepon->addErrorMessage(str_replace("%s", $this->telepon->caption(), $this->telepon->RequiredErrorMessage));
+            }
+        }
+        if ($this->alamat->Required) {
+            if (!$this->alamat->IsDetailKey && EmptyValue($this->alamat->FormValue)) {
+                $this->alamat->addErrorMessage(str_replace("%s", $this->alamat->caption(), $this->alamat->RequiredErrorMessage));
+            }
+        }
         if ($this->idprovinsi->Required) {
             if (!$this->idprovinsi->IsDetailKey && EmptyValue($this->idprovinsi->FormValue)) {
                 $this->idprovinsi->addErrorMessage(str_replace("%s", $this->idprovinsi->caption(), $this->idprovinsi->RequiredErrorMessage));
@@ -1290,16 +1342,6 @@ class AlamatCustomerAdd extends AlamatCustomer
         if ($this->idkelurahan->Required) {
             if (!$this->idkelurahan->IsDetailKey && EmptyValue($this->idkelurahan->FormValue)) {
                 $this->idkelurahan->addErrorMessage(str_replace("%s", $this->idkelurahan->caption(), $this->idkelurahan->RequiredErrorMessage));
-            }
-        }
-        if ($this->alamat->Required) {
-            if (!$this->alamat->IsDetailKey && EmptyValue($this->alamat->FormValue)) {
-                $this->alamat->addErrorMessage(str_replace("%s", $this->alamat->caption(), $this->alamat->RequiredErrorMessage));
-            }
-        }
-        if ($this->penerima->Required) {
-            if (!$this->penerima->IsDetailKey && EmptyValue($this->penerima->FormValue)) {
-                $this->penerima->addErrorMessage(str_replace("%s", $this->penerima->caption(), $this->penerima->RequiredErrorMessage));
             }
         }
 
@@ -1328,10 +1370,19 @@ class AlamatCustomerAdd extends AlamatCustomer
         $rsnew = [];
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // alias
         $this->alias->setDbValueDef($rsnew, $this->alias->CurrentValue, "", false);
+
+        // penerima
+        $this->penerima->setDbValueDef($rsnew, $this->penerima->CurrentValue, "", false);
+
+        // telepon
+        $this->telepon->setDbValueDef($rsnew, $this->telepon->CurrentValue, "", strval($this->telepon->CurrentValue) == "");
+
+        // alamat
+        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, false);
 
         // idprovinsi
         $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, "", false);
@@ -1344,12 +1395,6 @@ class AlamatCustomerAdd extends AlamatCustomer
 
         // idkelurahan
         $this->idkelurahan->setDbValueDef($rsnew, $this->idkelurahan->CurrentValue, null, false);
-
-        // alamat
-        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, "", false);
-
-        // penerima
-        $this->penerima->setDbValueDef($rsnew, $this->penerima->CurrentValue, "", false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

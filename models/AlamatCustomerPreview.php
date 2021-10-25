@@ -393,12 +393,13 @@ class AlamatCustomerPreview extends AlamatCustomer
         $this->id->Visible = false;
         $this->idcustomer->Visible = false;
         $this->alias->setVisibility();
+        $this->penerima->setVisibility();
+        $this->telepon->setVisibility();
+        $this->alamat->setVisibility();
         $this->idprovinsi->setVisibility();
         $this->idkabupaten->setVisibility();
         $this->idkecamatan->setVisibility();
         $this->idkelurahan->setVisibility();
-        $this->alamat->setVisibility();
-        $this->penerima->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -492,12 +493,13 @@ class AlamatCustomerPreview extends AlamatCustomer
             $this->id->setSort("");
             $this->idcustomer->setSort("");
             $this->alias->setSort("");
+            $this->penerima->setSort("");
+            $this->telepon->setSort("");
+            $this->alamat->setSort("");
             $this->idprovinsi->setSort("");
             $this->idkabupaten->setSort("");
             $this->idkecamatan->setSort("");
             $this->idkelurahan->setSort("");
-            $this->alamat->setSort("");
-            $this->penerima->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -510,12 +512,13 @@ class AlamatCustomerPreview extends AlamatCustomer
         // Check for sort field
         if ($this->CurrentOrder !== "") {
             $this->updateSort($this->alias); // alias
+            $this->updateSort($this->penerima); // penerima
+            $this->updateSort($this->telepon); // telepon
+            $this->updateSort($this->alamat); // alamat
             $this->updateSort($this->idprovinsi); // idprovinsi
             $this->updateSort($this->idkabupaten); // idkabupaten
             $this->updateSort($this->idkecamatan); // idkecamatan
             $this->updateSort($this->idkelurahan); // idkelurahan
-            $this->updateSort($this->alamat); // alamat
-            $this->updateSort($this->penerima); // penerima
         }
     }
 

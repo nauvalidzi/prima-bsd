@@ -151,6 +151,15 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->alias->Visible) { // alias ?>
         <th data-name="alias" class="<?= $Page->alias->headerCellClass() ?>"><div id="elh_alamat_customer_alias" class="alamat_customer_alias"><?= $Page->renderSort($Page->alias) ?></div></th>
 <?php } ?>
+<?php if ($Page->penerima->Visible) { // penerima ?>
+        <th data-name="penerima" class="<?= $Page->penerima->headerCellClass() ?>"><div id="elh_alamat_customer_penerima" class="alamat_customer_penerima"><?= $Page->renderSort($Page->penerima) ?></div></th>
+<?php } ?>
+<?php if ($Page->telepon->Visible) { // telepon ?>
+        <th data-name="telepon" class="<?= $Page->telepon->headerCellClass() ?>"><div id="elh_alamat_customer_telepon" class="alamat_customer_telepon"><?= $Page->renderSort($Page->telepon) ?></div></th>
+<?php } ?>
+<?php if ($Page->alamat->Visible) { // alamat ?>
+        <th data-name="alamat" class="<?= $Page->alamat->headerCellClass() ?>"><div id="elh_alamat_customer_alamat" class="alamat_customer_alamat"><?= $Page->renderSort($Page->alamat) ?></div></th>
+<?php } ?>
 <?php if ($Page->idprovinsi->Visible) { // idprovinsi ?>
         <th data-name="idprovinsi" class="<?= $Page->idprovinsi->headerCellClass() ?>"><div id="elh_alamat_customer_idprovinsi" class="alamat_customer_idprovinsi"><?= $Page->renderSort($Page->idprovinsi) ?></div></th>
 <?php } ?>
@@ -162,12 +171,6 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->idkelurahan->Visible) { // idkelurahan ?>
         <th data-name="idkelurahan" class="<?= $Page->idkelurahan->headerCellClass() ?>"><div id="elh_alamat_customer_idkelurahan" class="alamat_customer_idkelurahan"><?= $Page->renderSort($Page->idkelurahan) ?></div></th>
-<?php } ?>
-<?php if ($Page->alamat->Visible) { // alamat ?>
-        <th data-name="alamat" class="<?= $Page->alamat->headerCellClass() ?>"><div id="elh_alamat_customer_alamat" class="alamat_customer_alamat"><?= $Page->renderSort($Page->alamat) ?></div></th>
-<?php } ?>
-<?php if ($Page->penerima->Visible) { // penerima ?>
-        <th data-name="penerima" class="<?= $Page->penerima->headerCellClass() ?>"><div id="elh_alamat_customer_penerima" class="alamat_customer_penerima"><?= $Page->renderSort($Page->penerima) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -244,6 +247,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->penerima->Visible) { // penerima ?>
+        <td data-name="penerima" <?= $Page->penerima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_alamat_customer_penerima">
+<span<?= $Page->penerima->viewAttributes() ?>>
+<?= $Page->penerima->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->telepon->Visible) { // telepon ?>
+        <td data-name="telepon" <?= $Page->telepon->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_alamat_customer_telepon">
+<span<?= $Page->telepon->viewAttributes() ?>>
+<?= $Page->telepon->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->alamat->Visible) { // alamat ?>
+        <td data-name="alamat" <?= $Page->alamat->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_alamat_customer_alamat">
+<span<?= $Page->alamat->viewAttributes() ?>>
+<?= $Page->alamat->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->idprovinsi->Visible) { // idprovinsi ?>
         <td data-name="idprovinsi" <?= $Page->idprovinsi->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_alamat_customer_idprovinsi">
@@ -273,22 +300,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_alamat_customer_idkelurahan">
 <span<?= $Page->idkelurahan->viewAttributes() ?>>
 <?= $Page->idkelurahan->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->alamat->Visible) { // alamat ?>
-        <td data-name="alamat" <?= $Page->alamat->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_alamat_customer_alamat">
-<span<?= $Page->alamat->viewAttributes() ?>>
-<?= $Page->alamat->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->penerima->Visible) { // penerima ?>
-        <td data-name="penerima" <?= $Page->penerima->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_alamat_customer_penerima">
-<span<?= $Page->penerima->viewAttributes() ?>>
-<?= $Page->penerima->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

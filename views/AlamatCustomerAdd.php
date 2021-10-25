@@ -22,12 +22,13 @@ loadjs.ready("head", function () {
     falamat_customeradd.addFields([
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["alias", [fields.alias.visible && fields.alias.required ? ew.Validators.required(fields.alias.caption) : null], fields.alias.isInvalid],
+        ["penerima", [fields.penerima.visible && fields.penerima.required ? ew.Validators.required(fields.penerima.caption) : null], fields.penerima.isInvalid],
+        ["telepon", [fields.telepon.visible && fields.telepon.required ? ew.Validators.required(fields.telepon.caption) : null], fields.telepon.isInvalid],
+        ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
         ["idprovinsi", [fields.idprovinsi.visible && fields.idprovinsi.required ? ew.Validators.required(fields.idprovinsi.caption) : null], fields.idprovinsi.isInvalid],
         ["idkabupaten", [fields.idkabupaten.visible && fields.idkabupaten.required ? ew.Validators.required(fields.idkabupaten.caption) : null], fields.idkabupaten.isInvalid],
         ["idkecamatan", [fields.idkecamatan.visible && fields.idkecamatan.required ? ew.Validators.required(fields.idkecamatan.caption) : null], fields.idkecamatan.isInvalid],
-        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null], fields.idkelurahan.isInvalid],
-        ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
-        ["penerima", [fields.penerima.visible && fields.penerima.required ? ew.Validators.required(fields.penerima.caption) : null], fields.penerima.isInvalid]
+        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null], fields.idkelurahan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -178,6 +179,42 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->penerima->Visible) { // penerima ?>
+    <div id="r_penerima" class="form-group row">
+        <label id="elh_alamat_customer_penerima" for="x_penerima" class="<?= $Page->LeftColumnClass ?>"><?= $Page->penerima->caption() ?><?= $Page->penerima->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->penerima->cellAttributes() ?>>
+<span id="el_alamat_customer_penerima">
+<input type="<?= $Page->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x_penerima" id="x_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->penerima->getPlaceHolder()) ?>" value="<?= $Page->penerima->EditValue ?>"<?= $Page->penerima->editAttributes() ?> aria-describedby="x_penerima_help">
+<?= $Page->penerima->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->penerima->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->telepon->Visible) { // telepon ?>
+    <div id="r_telepon" class="form-group row">
+        <label id="elh_alamat_customer_telepon" for="x_telepon" class="<?= $Page->LeftColumnClass ?>"><?= $Page->telepon->caption() ?><?= $Page->telepon->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->telepon->cellAttributes() ?>>
+<span id="el_alamat_customer_telepon">
+<input type="<?= $Page->telepon->getInputTextType() ?>" data-table="alamat_customer" data-field="x_telepon" name="x_telepon" id="x_telepon" size="30" maxlength="15" placeholder="<?= HtmlEncode($Page->telepon->getPlaceHolder()) ?>" value="<?= $Page->telepon->EditValue ?>"<?= $Page->telepon->editAttributes() ?> aria-describedby="x_telepon_help">
+<?= $Page->telepon->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->telepon->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->alamat->Visible) { // alamat ?>
+    <div id="r_alamat" class="form-group row">
+        <label id="elh_alamat_customer_alamat" for="x_alamat" class="<?= $Page->LeftColumnClass ?>"><?= $Page->alamat->caption() ?><?= $Page->alamat->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->alamat->cellAttributes() ?>>
+<span id="el_alamat_customer_alamat">
+<textarea data-table="alamat_customer" data-field="x_alamat" name="x_alamat" id="x_alamat" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->alamat->getPlaceHolder()) ?>"<?= $Page->alamat->editAttributes() ?> aria-describedby="x_alamat_help"><?= $Page->alamat->EditValue ?></textarea>
+<?= $Page->alamat->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->alamat->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->idprovinsi->Visible) { // idprovinsi ?>
     <div id="r_idprovinsi" class="form-group row">
         <label id="elh_alamat_customer_idprovinsi" for="x_idprovinsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idprovinsi->caption() ?><?= $Page->idprovinsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -313,30 +350,6 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->alamat->Visible) { // alamat ?>
-    <div id="r_alamat" class="form-group row">
-        <label id="elh_alamat_customer_alamat" for="x_alamat" class="<?= $Page->LeftColumnClass ?>"><?= $Page->alamat->caption() ?><?= $Page->alamat->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->alamat->cellAttributes() ?>>
-<span id="el_alamat_customer_alamat">
-<input type="<?= $Page->alamat->getInputTextType() ?>" data-table="alamat_customer" data-field="x_alamat" name="x_alamat" id="x_alamat" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->alamat->getPlaceHolder()) ?>" value="<?= $Page->alamat->EditValue ?>"<?= $Page->alamat->editAttributes() ?> aria-describedby="x_alamat_help">
-<?= $Page->alamat->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->alamat->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->penerima->Visible) { // penerima ?>
-    <div id="r_penerima" class="form-group row">
-        <label id="elh_alamat_customer_penerima" for="x_penerima" class="<?= $Page->LeftColumnClass ?>"><?= $Page->penerima->caption() ?><?= $Page->penerima->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->penerima->cellAttributes() ?>>
-<span id="el_alamat_customer_penerima">
-<input type="<?= $Page->penerima->getInputTextType() ?>" data-table="alamat_customer" data-field="x_penerima" name="x_penerima" id="x_penerima" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->penerima->getPlaceHolder()) ?>" value="<?= $Page->penerima->EditValue ?>"<?= $Page->penerima->editAttributes() ?> aria-describedby="x_penerima_help">
-<?= $Page->penerima->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->penerima->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 </div><!-- /page* -->
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
@@ -359,6 +372,7 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $("input[data-field=x_alias]").attr("placeholder","(Cth: Klinik/Apartemen/Rumah)");
 });
 </script>

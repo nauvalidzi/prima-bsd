@@ -75,6 +75,17 @@ $customer = Container("customer");
 </td>
         </tr>
 <?php } ?>
+<?php if ($customer->level_customer_id->Visible) { // level_customer_id ?>
+        <tr id="r_level_customer_id">
+            <td class="<?= $customer->TableLeftColumnClass ?>"><?= $customer->level_customer_id->caption() ?></td>
+            <td <?= $customer->level_customer_id->cellAttributes() ?>>
+<span id="el_customer_level_customer_id">
+<span<?= $customer->level_customer_id->viewAttributes() ?>>
+<?= $customer->level_customer_id->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
     </tbody>
 </table>
 </div>

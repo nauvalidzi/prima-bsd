@@ -37,4 +37,10 @@ class InvoiceController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "InvoiceDelete");
     }
+
+    // preview
+    public function preview(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "InvoicePreview", false);
+    }
 }

@@ -31,6 +31,33 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->penerima->Visible) { // penerima ?>
+    <?php if ($Page->SortUrl($Page->penerima) == "") { ?>
+        <th class="<?= $Page->penerima->headerCellClass() ?>"><?= $Page->penerima->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->penerima->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->penerima->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->penerima->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->penerima->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->penerima->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->penerima->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->telepon->Visible) { // telepon ?>
+    <?php if ($Page->SortUrl($Page->telepon) == "") { ?>
+        <th class="<?= $Page->telepon->headerCellClass() ?>"><?= $Page->telepon->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->telepon->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->telepon->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->telepon->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->telepon->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->telepon->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->telepon->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->alamat->Visible) { // alamat ?>
+    <?php if ($Page->SortUrl($Page->alamat) == "") { ?>
+        <th class="<?= $Page->alamat->headerCellClass() ?>"><?= $Page->alamat->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->alamat->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->alamat->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->alamat->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->alamat->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->alamat->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->alamat->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->idprovinsi->Visible) { // idprovinsi ?>
     <?php if ($Page->SortUrl($Page->idprovinsi) == "") { ?>
         <th class="<?= $Page->idprovinsi->headerCellClass() ?>"><?= $Page->idprovinsi->caption() ?></th>
@@ -64,24 +91,6 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->idkelurahan->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idkelurahan->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idkelurahan->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idkelurahan->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idkelurahan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idkelurahan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
-<?php if ($Page->alamat->Visible) { // alamat ?>
-    <?php if ($Page->SortUrl($Page->alamat) == "") { ?>
-        <th class="<?= $Page->alamat->headerCellClass() ?>"><?= $Page->alamat->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->alamat->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->alamat->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->alamat->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->alamat->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->alamat->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->alamat->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
-<?php if ($Page->penerima->Visible) { // penerima ?>
-    <?php if ($Page->SortUrl($Page->penerima) == "") { ?>
-        <th class="<?= $Page->penerima->headerCellClass() ?>"><?= $Page->penerima->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->penerima->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->penerima->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->penerima->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->penerima->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->penerima->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->penerima->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -122,6 +131,27 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->alias->getViewValue() ?></span>
 </td>
 <?php } ?>
+<?php if ($Page->penerima->Visible) { // penerima ?>
+        <!-- penerima -->
+        <td<?= $Page->penerima->cellAttributes() ?>>
+<span<?= $Page->penerima->viewAttributes() ?>>
+<?= $Page->penerima->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->telepon->Visible) { // telepon ?>
+        <!-- telepon -->
+        <td<?= $Page->telepon->cellAttributes() ?>>
+<span<?= $Page->telepon->viewAttributes() ?>>
+<?= $Page->telepon->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->alamat->Visible) { // alamat ?>
+        <!-- alamat -->
+        <td<?= $Page->alamat->cellAttributes() ?>>
+<span<?= $Page->alamat->viewAttributes() ?>>
+<?= $Page->alamat->getViewValue() ?></span>
+</td>
+<?php } ?>
 <?php if ($Page->idprovinsi->Visible) { // idprovinsi ?>
         <!-- idprovinsi -->
         <td<?= $Page->idprovinsi->cellAttributes() ?>>
@@ -148,20 +178,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->idkelurahan->cellAttributes() ?>>
 <span<?= $Page->idkelurahan->viewAttributes() ?>>
 <?= $Page->idkelurahan->getViewValue() ?></span>
-</td>
-<?php } ?>
-<?php if ($Page->alamat->Visible) { // alamat ?>
-        <!-- alamat -->
-        <td<?= $Page->alamat->cellAttributes() ?>>
-<span<?= $Page->alamat->viewAttributes() ?>>
-<?= $Page->alamat->getViewValue() ?></span>
-</td>
-<?php } ?>
-<?php if ($Page->penerima->Visible) { // penerima ?>
-        <!-- penerima -->
-        <td<?= $Page->penerima->cellAttributes() ?>>
-<span<?= $Page->penerima->viewAttributes() ?>>
-<?= $Page->penerima->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

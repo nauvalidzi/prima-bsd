@@ -524,6 +524,10 @@ class OrderAdd extends Order
         // Load old record / default values
         $loaded = $this->loadOldRecord();
 
+        // Set up master/detail parameters
+        // NOTE: must be after loadOldRecord to prevent master key values overwritten
+        $this->setupMasterParms();
+
         // Load form values
         if ($postBack) {
             $this->loadFormValues(); // Load form values
@@ -1022,27 +1026,50 @@ class OrderAdd extends Order
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            } else {
-                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
+            if ($this->idcustomer->getSessionValue() != "") {
+                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
+                $curVal = trim(strval($this->idcustomer->CurrentValue));
+                if ($curVal != "") {
+                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                        } else {
+                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                        }
+                    }
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                    $this->idcustomer->ViewValue = null;
                 }
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idcustomer->EditValue = $arwrk;
+                $this->idcustomer->ViewCustomAttributes = "";
+            } else {
+                $curVal = trim(strval($this->idcustomer->CurrentValue));
+                if ($curVal != "") {
+                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                } else {
+                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+                }
+                if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+                } else { // Lookup from database
+                    if ($curVal == "") {
+                        $filterWrk = "0=1";
+                    } else {
+                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                    }
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    $arwrk = $rswrk;
+                    $this->idcustomer->EditValue = $arwrk;
+                }
+                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
             }
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // dokumen
             $this->dokumen->EditAttrs["class"] = "form-control";
@@ -1362,6 +1389,75 @@ class OrderAdd extends Order
             return $Security->isValidUserID($this->created_by->CurrentValue);
         }
         return true;
+    }
+
+    // Set up master/detail based on QueryString
+    protected function setupMasterParms()
+    {
+        $validMaster = false;
+        // Get the keys for master table
+        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
+            $masterTblVar = $master;
+            if ($masterTblVar == "") {
+                $validMaster = true;
+                $this->DbMasterFilter = "";
+                $this->DbDetailFilter = "";
+            }
+            if ($masterTblVar == "customer") {
+                $validMaster = true;
+                $masterTbl = Container("customer");
+                if (($parm = Get("fk_id", Get("idcustomer"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idcustomer->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idcustomer->setSessionValue($this->idcustomer->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
+            $masterTblVar = $master;
+            if ($masterTblVar == "") {
+                    $validMaster = true;
+                    $this->DbMasterFilter = "";
+                    $this->DbDetailFilter = "";
+            }
+            if ($masterTblVar == "customer") {
+                $validMaster = true;
+                $masterTbl = Container("customer");
+                if (($parm = Post("fk_id", Post("idcustomer"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idcustomer->setFormValue($masterTbl->id->FormValue);
+                    $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+        }
+        if ($validMaster) {
+            // Save current master table
+            $this->setCurrentMasterTable($masterTblVar);
+
+            // Reset start record counter (new master key)
+            if (!$this->isAddOrEdit()) {
+                $this->StartRecord = 1;
+                $this->setStartRecordNumber($this->StartRecord);
+            }
+
+            // Clear previous master key from Session
+            if ($masterTblVar != "customer") {
+                if ($this->idcustomer->CurrentValue == "") {
+                    $this->idcustomer->setSessionValue("");
+                }
+            }
+        }
+        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
+        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
     }
 
     // Set up detail parms based on QueryString

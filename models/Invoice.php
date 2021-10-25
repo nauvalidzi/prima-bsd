@@ -74,7 +74,7 @@ class Invoice extends DbTable
         $this->ExportWordColumnWidth = null; // Cell width (PHPWord only)
         $this->DetailAdd = false; // Allow detail add
         $this->DetailEdit = false; // Allow detail edit
-        $this->DetailView = false; // Allow detail view
+        $this->DetailView = true; // Allow detail view
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
@@ -109,6 +109,7 @@ class Invoice extends DbTable
 
         // idcustomer
         $this->idcustomer = new DbField('invoice', 'invoice', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -179,10 +180,20 @@ class Invoice extends DbTable
         $this->Fields['sisabayar'] = &$this->sisabayar;
 
         // idtermpayment
-        $this->idtermpayment = new DbField('invoice', 'invoice', 'x_idtermpayment', 'idtermpayment', '`idtermpayment`', '`idtermpayment`', 3, 11, -1, false, '`idtermpayment`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idtermpayment = new DbField('invoice', 'invoice', 'x_idtermpayment', 'idtermpayment', '`idtermpayment`', '`idtermpayment`', 3, 11, -1, false, '`idtermpayment`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idtermpayment->Nullable = false; // NOT NULL field
         $this->idtermpayment->Required = true; // Required field
         $this->idtermpayment->Sortable = true; // Allow sort
+        $this->idtermpayment->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idtermpayment->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idtermpayment->Lookup = new Lookup('idtermpayment', 'termpayment', false, 'id', ["title","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idtermpayment->Lookup = new Lookup('idtermpayment', 'termpayment', false, 'id', ["title","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
         $this->idtermpayment->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idtermpayment->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idtermpayment->Param, "CustomMsg");
         $this->Fields['idtermpayment'] = &$this->idtermpayment;
@@ -304,6 +315,108 @@ class Invoice extends DbTable
         } else {
             $fld->setSort("");
         }
+    }
+
+    // Current master table name
+    public function getCurrentMasterTable()
+    {
+        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
+    }
+
+    public function setCurrentMasterTable($v)
+    {
+        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
+    }
+
+    // Session master WHERE clause
+    public function getMasterFilter()
+    {
+        // Master filter
+        $masterFilter = "";
+        if ($this->getCurrentMasterTable() == "suratjalan_detail") {
+            if ($this->id->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`idinvoice`", $this->id->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        if ($this->getCurrentMasterTable() == "pembayaran") {
+            if ($this->id->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`idinvoice`", $this->id->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        if ($this->getCurrentMasterTable() == "customer") {
+            if ($this->idcustomer->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        return $masterFilter;
+    }
+
+    // Session detail WHERE clause
+    public function getDetailFilter()
+    {
+        // Detail filter
+        $detailFilter = "";
+        if ($this->getCurrentMasterTable() == "suratjalan_detail") {
+            if ($this->id->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`id`", $this->id->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        if ($this->getCurrentMasterTable() == "pembayaran") {
+            if ($this->id->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`id`", $this->id->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        if ($this->getCurrentMasterTable() == "customer") {
+            if ($this->idcustomer->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`idcustomer`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        return $detailFilter;
+    }
+
+    // Master filter
+    public function sqlMasterFilter_suratjalan_detail()
+    {
+        return "`idinvoice`=@idinvoice@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_suratjalan_detail()
+    {
+        return "`id`=@id@";
+    }
+
+    // Master filter
+    public function sqlMasterFilter_pembayaran()
+    {
+        return "`idinvoice`=@idinvoice@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_pembayaran()
+    {
+        return "`id`=@id@";
+    }
+
+    // Master filter
+    public function sqlMasterFilter_customer()
+    {
+        return "`id`=@id@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_customer()
+    {
+        return "`idcustomer`=@idcustomer@";
     }
 
     // Current detail table name
@@ -915,6 +1028,18 @@ class Invoice extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
+        if ($this->getCurrentMasterTable() == "suratjalan_detail" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_idinvoice", $this->id->CurrentValue ?? $this->id->getSessionValue());
+        }
+        if ($this->getCurrentMasterTable() == "pembayaran" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_idinvoice", $this->id->CurrentValue ?? $this->id->getSessionValue());
+        }
+        if ($this->getCurrentMasterTable() == "customer" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idcustomer->CurrentValue ?? $this->idcustomer->getSessionValue());
+        }
         return $url;
     }
 
@@ -1204,8 +1329,24 @@ SORTHTML;
         $this->sisabayar->ViewCustomAttributes = "";
 
         // idtermpayment
-        $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
-        $this->idtermpayment->ViewValue = FormatNumber($this->idtermpayment->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->idtermpayment->CurrentValue));
+        if ($curVal != "") {
+            $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
+            if ($this->idtermpayment->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idtermpayment->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idtermpayment->Lookup->renderViewRow($rswrk[0]);
+                    $this->idtermpayment->ViewValue = $this->idtermpayment->displayValue($arwrk);
+                } else {
+                    $this->idtermpayment->ViewValue = $this->idtermpayment->CurrentValue;
+                }
+            }
+        } else {
+            $this->idtermpayment->ViewValue = null;
+        }
         $this->idtermpayment->ViewCustomAttributes = "";
 
         // idtipepayment
@@ -1285,7 +1426,15 @@ SORTHTML;
 
         // idorder
         $this->idorder->LinkCustomAttributes = "";
-        $this->idorder->HrefValue = "";
+        if (!EmptyValue($this->idorder->CurrentValue)) {
+            $this->idorder->HrefValue = $this->idorder->CurrentValue; // Add prefix/suffix
+            $this->idorder->LinkAttrs["target"] = ""; // Add target
+            if ($this->isExport()) {
+                $this->idorder->HrefValue = FullUrl($this->idorder->HrefValue, "href");
+            }
+        } else {
+            $this->idorder->HrefValue = "";
+        }
         $this->idorder->TooltipValue = "";
 
         // totalnonpajak
@@ -1387,7 +1536,34 @@ SORTHTML;
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        if ($this->idcustomer->getSessionValue() != "") {
+            $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add") ? "jumlah > 0" : "";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idcustomer->ViewValue = null;
+            }
+            $this->idcustomer->ViewCustomAttributes = "";
+        } else {
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        }
 
         // idorder
         $this->idorder->EditAttrs["class"] = "form-control";
@@ -1424,7 +1600,6 @@ SORTHTML;
         // idtermpayment
         $this->idtermpayment->EditAttrs["class"] = "form-control";
         $this->idtermpayment->EditCustomAttributes = "";
-        $this->idtermpayment->EditValue = $this->idtermpayment->CurrentValue;
         $this->idtermpayment->PlaceHolder = RemoveHtml($this->idtermpayment->caption());
 
         // idtipepayment
@@ -1636,6 +1811,40 @@ SORTHTML;
         return $wrk;
     }
 
+    // Add master User ID filter
+    public function addMasterUserIDFilter($filter, $currentMasterTable)
+    {
+        $filterWrk = $filter;
+        if ($currentMasterTable == "suratjalan_detail") {
+            $filterWrk = Container("suratjalan_detail")->addUserIDFilter($filterWrk);
+        }
+        if ($currentMasterTable == "pembayaran") {
+            $filterWrk = Container("pembayaran")->addUserIDFilter($filterWrk);
+        }
+        return $filterWrk;
+    }
+
+    // Add detail User ID filter
+    public function addDetailUserIDFilter($filter, $currentMasterTable)
+    {
+        $filterWrk = $filter;
+        if ($currentMasterTable == "suratjalan_detail") {
+            $mastertable = Container("suratjalan_detail");
+            if (!$mastertable->userIdAllow()) {
+                $subqueryWrk = $mastertable->getUserIDSubquery($this->id, $mastertable->idinvoice);
+                AddFilter($filterWrk, $subqueryWrk);
+            }
+        }
+        if ($currentMasterTable == "pembayaran") {
+            $mastertable = Container("pembayaran");
+            if (!$mastertable->userIdAllow()) {
+                $subqueryWrk = $mastertable->getUserIDSubquery($this->id, $mastertable->idinvoice);
+                AddFilter($filterWrk, $subqueryWrk);
+            }
+        }
+        return $filterWrk;
+    }
+
     // Get file data
     public function getFileData($fldparm, $key, $resize, $width = 0, $height = 0, $plugins = [])
     {
@@ -1813,6 +2022,7 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        $this->idorder->ViewValue = "<a href=\"OrderDetailList?showmaster=order&fk_id={$this->idorder->CurrentValue}\" target=\"_blank\">{$this->idorder->ViewValue}</a>";
     }
 
     // User ID Filtering event

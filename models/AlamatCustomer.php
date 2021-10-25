@@ -31,12 +31,13 @@ class AlamatCustomer extends DbTable
     public $id;
     public $idcustomer;
     public $alias;
+    public $penerima;
+    public $telepon;
+    public $alamat;
     public $idprovinsi;
     public $idkabupaten;
     public $idkecamatan;
     public $idkelurahan;
-    public $alamat;
-    public $penerima;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -85,6 +86,8 @@ class AlamatCustomer extends DbTable
         // idcustomer
         $this->idcustomer = new DbField('alamat_customer', 'alamat_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -107,6 +110,27 @@ class AlamatCustomer extends DbTable
         $this->alias->Sortable = true; // Allow sort
         $this->alias->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alias->Param, "CustomMsg");
         $this->Fields['alias'] = &$this->alias;
+
+        // penerima
+        $this->penerima = new DbField('alamat_customer', 'alamat_customer', 'x_penerima', 'penerima', '`penerima`', '`penerima`', 200, 255, -1, false, '`penerima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->penerima->Nullable = false; // NOT NULL field
+        $this->penerima->Required = true; // Required field
+        $this->penerima->Sortable = true; // Allow sort
+        $this->penerima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->penerima->Param, "CustomMsg");
+        $this->Fields['penerima'] = &$this->penerima;
+
+        // telepon
+        $this->telepon = new DbField('alamat_customer', 'alamat_customer', 'x_telepon', 'telepon', '`telepon`', '`telepon`', 200, 15, -1, false, '`telepon`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->telepon->Nullable = false; // NOT NULL field
+        $this->telepon->Sortable = true; // Allow sort
+        $this->telepon->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->telepon->Param, "CustomMsg");
+        $this->Fields['telepon'] = &$this->telepon;
+
+        // alamat
+        $this->alamat = new DbField('alamat_customer', 'alamat_customer', 'x_alamat', 'alamat', '`alamat`', '`alamat`', 201, 65535, -1, false, '`alamat`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->alamat->Sortable = true; // Allow sort
+        $this->alamat->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alamat->Param, "CustomMsg");
+        $this->Fields['alamat'] = &$this->alamat;
 
         // idprovinsi
         $this->idprovinsi = new DbField('alamat_customer', 'alamat_customer', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 200, 2, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -177,22 +201,6 @@ class AlamatCustomer extends DbTable
         }
         $this->idkelurahan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkelurahan->Param, "CustomMsg");
         $this->Fields['idkelurahan'] = &$this->idkelurahan;
-
-        // alamat
-        $this->alamat = new DbField('alamat_customer', 'alamat_customer', 'x_alamat', 'alamat', '`alamat`', '`alamat`', 200, 255, -1, false, '`alamat`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->alamat->Nullable = false; // NOT NULL field
-        $this->alamat->Required = true; // Required field
-        $this->alamat->Sortable = true; // Allow sort
-        $this->alamat->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alamat->Param, "CustomMsg");
-        $this->Fields['alamat'] = &$this->alamat;
-
-        // penerima
-        $this->penerima = new DbField('alamat_customer', 'alamat_customer', 'x_penerima', 'penerima', '`penerima`', '`penerima`', 200, 100, -1, false, '`penerima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->penerima->Nullable = false; // NOT NULL field
-        $this->penerima->Required = true; // Required field
-        $this->penerima->Sortable = true; // Allow sort
-        $this->penerima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->penerima->Param, "CustomMsg");
-        $this->Fields['penerima'] = &$this->penerima;
     }
 
     // Field Visibility
@@ -661,12 +669,13 @@ class AlamatCustomer extends DbTable
         $this->id->DbValue = $row['id'];
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->alias->DbValue = $row['alias'];
+        $this->penerima->DbValue = $row['penerima'];
+        $this->telepon->DbValue = $row['telepon'];
+        $this->alamat->DbValue = $row['alamat'];
         $this->idprovinsi->DbValue = $row['idprovinsi'];
         $this->idkabupaten->DbValue = $row['idkabupaten'];
         $this->idkecamatan->DbValue = $row['idkecamatan'];
         $this->idkelurahan->DbValue = $row['idkelurahan'];
-        $this->alamat->DbValue = $row['alamat'];
-        $this->penerima->DbValue = $row['penerima'];
     }
 
     // Delete uploaded files
@@ -994,12 +1003,13 @@ SORTHTML;
         $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->alias->setDbValue($row['alias']);
+        $this->penerima->setDbValue($row['penerima']);
+        $this->telepon->setDbValue($row['telepon']);
+        $this->alamat->setDbValue($row['alamat']);
         $this->idprovinsi->setDbValue($row['idprovinsi']);
         $this->idkabupaten->setDbValue($row['idkabupaten']);
         $this->idkecamatan->setDbValue($row['idkecamatan']);
         $this->idkelurahan->setDbValue($row['idkelurahan']);
-        $this->alamat->setDbValue($row['alamat']);
-        $this->penerima->setDbValue($row['penerima']);
     }
 
     // Render list row values
@@ -1018,6 +1028,12 @@ SORTHTML;
 
         // alias
 
+        // penerima
+
+        // telepon
+
+        // alamat
+
         // idprovinsi
 
         // idkabupaten
@@ -1025,10 +1041,6 @@ SORTHTML;
         // idkecamatan
 
         // idkelurahan
-
-        // alamat
-
-        // penerima
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1058,6 +1070,18 @@ SORTHTML;
         // alias
         $this->alias->ViewValue = $this->alias->CurrentValue;
         $this->alias->ViewCustomAttributes = "";
+
+        // penerima
+        $this->penerima->ViewValue = $this->penerima->CurrentValue;
+        $this->penerima->ViewCustomAttributes = "";
+
+        // telepon
+        $this->telepon->ViewValue = $this->telepon->CurrentValue;
+        $this->telepon->ViewCustomAttributes = "";
+
+        // alamat
+        $this->alamat->ViewValue = $this->alamat->CurrentValue;
+        $this->alamat->ViewCustomAttributes = "";
 
         // idprovinsi
         $curVal = trim(strval($this->idprovinsi->CurrentValue));
@@ -1143,14 +1167,6 @@ SORTHTML;
         }
         $this->idkelurahan->ViewCustomAttributes = "";
 
-        // alamat
-        $this->alamat->ViewValue = $this->alamat->CurrentValue;
-        $this->alamat->ViewCustomAttributes = "";
-
-        // penerima
-        $this->penerima->ViewValue = $this->penerima->CurrentValue;
-        $this->penerima->ViewCustomAttributes = "";
-
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
@@ -1165,6 +1181,21 @@ SORTHTML;
         $this->alias->LinkCustomAttributes = "";
         $this->alias->HrefValue = "";
         $this->alias->TooltipValue = "";
+
+        // penerima
+        $this->penerima->LinkCustomAttributes = "";
+        $this->penerima->HrefValue = "";
+        $this->penerima->TooltipValue = "";
+
+        // telepon
+        $this->telepon->LinkCustomAttributes = "";
+        $this->telepon->HrefValue = "";
+        $this->telepon->TooltipValue = "";
+
+        // alamat
+        $this->alamat->LinkCustomAttributes = "";
+        $this->alamat->HrefValue = "";
+        $this->alamat->TooltipValue = "";
 
         // idprovinsi
         $this->idprovinsi->LinkCustomAttributes = "";
@@ -1185,16 +1216,6 @@ SORTHTML;
         $this->idkelurahan->LinkCustomAttributes = "";
         $this->idkelurahan->HrefValue = "";
         $this->idkelurahan->TooltipValue = "";
-
-        // alamat
-        $this->alamat->LinkCustomAttributes = "";
-        $this->alamat->HrefValue = "";
-        $this->alamat->TooltipValue = "";
-
-        // penerima
-        $this->penerima->LinkCustomAttributes = "";
-        $this->penerima->HrefValue = "";
-        $this->penerima->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1254,6 +1275,30 @@ SORTHTML;
         $this->alias->EditValue = $this->alias->CurrentValue;
         $this->alias->PlaceHolder = RemoveHtml($this->alias->caption());
 
+        // penerima
+        $this->penerima->EditAttrs["class"] = "form-control";
+        $this->penerima->EditCustomAttributes = "";
+        if (!$this->penerima->Raw) {
+            $this->penerima->CurrentValue = HtmlDecode($this->penerima->CurrentValue);
+        }
+        $this->penerima->EditValue = $this->penerima->CurrentValue;
+        $this->penerima->PlaceHolder = RemoveHtml($this->penerima->caption());
+
+        // telepon
+        $this->telepon->EditAttrs["class"] = "form-control";
+        $this->telepon->EditCustomAttributes = "";
+        if (!$this->telepon->Raw) {
+            $this->telepon->CurrentValue = HtmlDecode($this->telepon->CurrentValue);
+        }
+        $this->telepon->EditValue = $this->telepon->CurrentValue;
+        $this->telepon->PlaceHolder = RemoveHtml($this->telepon->caption());
+
+        // alamat
+        $this->alamat->EditAttrs["class"] = "form-control";
+        $this->alamat->EditCustomAttributes = "";
+        $this->alamat->EditValue = $this->alamat->CurrentValue;
+        $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
+
         // idprovinsi
         $this->idprovinsi->EditAttrs["class"] = "form-control";
         $this->idprovinsi->EditCustomAttributes = "";
@@ -1273,24 +1318,6 @@ SORTHTML;
         $this->idkelurahan->EditAttrs["class"] = "form-control";
         $this->idkelurahan->EditCustomAttributes = "";
         $this->idkelurahan->PlaceHolder = RemoveHtml($this->idkelurahan->caption());
-
-        // alamat
-        $this->alamat->EditAttrs["class"] = "form-control";
-        $this->alamat->EditCustomAttributes = "";
-        if (!$this->alamat->Raw) {
-            $this->alamat->CurrentValue = HtmlDecode($this->alamat->CurrentValue);
-        }
-        $this->alamat->EditValue = $this->alamat->CurrentValue;
-        $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
-
-        // penerima
-        $this->penerima->EditAttrs["class"] = "form-control";
-        $this->penerima->EditCustomAttributes = "";
-        if (!$this->penerima->Raw) {
-            $this->penerima->CurrentValue = HtmlDecode($this->penerima->CurrentValue);
-        }
-        $this->penerima->EditValue = $this->penerima->CurrentValue;
-        $this->penerima->PlaceHolder = RemoveHtml($this->penerima->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1321,22 +1348,24 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->alias);
+                    $doc->exportCaption($this->penerima);
+                    $doc->exportCaption($this->telepon);
+                    $doc->exportCaption($this->alamat);
                     $doc->exportCaption($this->idprovinsi);
                     $doc->exportCaption($this->idkabupaten);
                     $doc->exportCaption($this->idkecamatan);
                     $doc->exportCaption($this->idkelurahan);
-                    $doc->exportCaption($this->alamat);
-                    $doc->exportCaption($this->penerima);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->alias);
+                    $doc->exportCaption($this->penerima);
+                    $doc->exportCaption($this->telepon);
+                    $doc->exportCaption($this->alamat);
                     $doc->exportCaption($this->idprovinsi);
                     $doc->exportCaption($this->idkabupaten);
                     $doc->exportCaption($this->idkecamatan);
                     $doc->exportCaption($this->idkelurahan);
-                    $doc->exportCaption($this->alamat);
-                    $doc->exportCaption($this->penerima);
                 }
                 $doc->endExportRow();
             }
@@ -1367,22 +1396,24 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->alias);
+                        $doc->exportField($this->penerima);
+                        $doc->exportField($this->telepon);
+                        $doc->exportField($this->alamat);
                         $doc->exportField($this->idprovinsi);
                         $doc->exportField($this->idkabupaten);
                         $doc->exportField($this->idkecamatan);
                         $doc->exportField($this->idkelurahan);
-                        $doc->exportField($this->alamat);
-                        $doc->exportField($this->penerima);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->alias);
+                        $doc->exportField($this->penerima);
+                        $doc->exportField($this->telepon);
+                        $doc->exportField($this->alamat);
                         $doc->exportField($this->idprovinsi);
                         $doc->exportField($this->idkabupaten);
                         $doc->exportField($this->idkecamatan);
                         $doc->exportField($this->idkelurahan);
-                        $doc->exportField($this->alamat);
-                        $doc->exportField($this->penerima);
                     }
                     $doc->endExportRow($rowCnt);
                 }

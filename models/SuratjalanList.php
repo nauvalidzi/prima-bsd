@@ -2217,7 +2217,7 @@ class SuratjalanList extends Suratjalan
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        $this->ListOptions->Items["print"]->Body = "<a href=".domain()."psuratjalan?id=".$this->id->CurrentValue." target=_blank>Print Surat Jalan</a>";
+        $this->ListOptions->Items["print"]->Body = "<a href=\"PrintSuratjalan?id={$this->id->CurrentValue}\" target=\"_blank\">Print Surat Jalan</a>";
     }
 
     // Row Custom Action event
