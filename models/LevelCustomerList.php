@@ -438,6 +438,9 @@ class LevelCustomerList extends LevelCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -567,8 +570,10 @@ class LevelCustomerList extends LevelCustomer
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->level->setVisibility();
-        $this->limit_kredit->setVisibility();
-        $this->diskon->setVisibility();
+        $this->limit_kredit->Visible = false;
+        $this->limit_kredit_value->setVisibility();
+        $this->diskon->Visible = false;
+        $this->diskon_value->setVisibility();
         $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -862,8 +867,8 @@ class LevelCustomerList extends LevelCustomer
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->level->AdvancedSearch->toJson(), ","); // Field level
-        $filterList = Concat($filterList, $this->limit_kredit->AdvancedSearch->toJson(), ","); // Field limit_kredit
-        $filterList = Concat($filterList, $this->diskon->AdvancedSearch->toJson(), ","); // Field diskon
+        $filterList = Concat($filterList, $this->limit_kredit_value->AdvancedSearch->toJson(), ","); // Field limit_kredit_value
+        $filterList = Concat($filterList, $this->diskon_value->AdvancedSearch->toJson(), ","); // Field diskon_value
         $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -921,21 +926,21 @@ class LevelCustomerList extends LevelCustomer
         $this->level->AdvancedSearch->SearchOperator2 = @$filter["w_level"];
         $this->level->AdvancedSearch->save();
 
-        // Field limit_kredit
-        $this->limit_kredit->AdvancedSearch->SearchValue = @$filter["x_limit_kredit"];
-        $this->limit_kredit->AdvancedSearch->SearchOperator = @$filter["z_limit_kredit"];
-        $this->limit_kredit->AdvancedSearch->SearchCondition = @$filter["v_limit_kredit"];
-        $this->limit_kredit->AdvancedSearch->SearchValue2 = @$filter["y_limit_kredit"];
-        $this->limit_kredit->AdvancedSearch->SearchOperator2 = @$filter["w_limit_kredit"];
-        $this->limit_kredit->AdvancedSearch->save();
+        // Field limit_kredit_value
+        $this->limit_kredit_value->AdvancedSearch->SearchValue = @$filter["x_limit_kredit_value"];
+        $this->limit_kredit_value->AdvancedSearch->SearchOperator = @$filter["z_limit_kredit_value"];
+        $this->limit_kredit_value->AdvancedSearch->SearchCondition = @$filter["v_limit_kredit_value"];
+        $this->limit_kredit_value->AdvancedSearch->SearchValue2 = @$filter["y_limit_kredit_value"];
+        $this->limit_kredit_value->AdvancedSearch->SearchOperator2 = @$filter["w_limit_kredit_value"];
+        $this->limit_kredit_value->AdvancedSearch->save();
 
-        // Field diskon
-        $this->diskon->AdvancedSearch->SearchValue = @$filter["x_diskon"];
-        $this->diskon->AdvancedSearch->SearchOperator = @$filter["z_diskon"];
-        $this->diskon->AdvancedSearch->SearchCondition = @$filter["v_diskon"];
-        $this->diskon->AdvancedSearch->SearchValue2 = @$filter["y_diskon"];
-        $this->diskon->AdvancedSearch->SearchOperator2 = @$filter["w_diskon"];
-        $this->diskon->AdvancedSearch->save();
+        // Field diskon_value
+        $this->diskon_value->AdvancedSearch->SearchValue = @$filter["x_diskon_value"];
+        $this->diskon_value->AdvancedSearch->SearchOperator = @$filter["z_diskon_value"];
+        $this->diskon_value->AdvancedSearch->SearchCondition = @$filter["v_diskon_value"];
+        $this->diskon_value->AdvancedSearch->SearchValue2 = @$filter["y_diskon_value"];
+        $this->diskon_value->AdvancedSearch->SearchOperator2 = @$filter["w_diskon_value"];
+        $this->diskon_value->AdvancedSearch->save();
 
         // Field updated_at
         $this->updated_at->AdvancedSearch->SearchValue = @$filter["x_updated_at"];
@@ -1116,8 +1121,8 @@ class LevelCustomerList extends LevelCustomer
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->level); // level
-            $this->updateSort($this->limit_kredit); // limit_kredit
-            $this->updateSort($this->diskon); // diskon
+            $this->updateSort($this->limit_kredit_value); // limit_kredit_value
+            $this->updateSort($this->diskon_value); // diskon_value
             $this->updateSort($this->updated_at); // updated_at
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1161,7 +1166,9 @@ class LevelCustomerList extends LevelCustomer
                 $this->id->setSort("");
                 $this->level->setSort("");
                 $this->limit_kredit->setSort("");
+                $this->limit_kredit_value->setSort("");
                 $this->diskon->setSort("");
+                $this->diskon_value->setSort("");
                 $this->updated_at->setSort("");
             }
 
@@ -1574,7 +1581,9 @@ class LevelCustomerList extends LevelCustomer
         $this->id->setDbValue($row['id']);
         $this->level->setDbValue($row['level']);
         $this->limit_kredit->setDbValue($row['limit_kredit']);
+        $this->limit_kredit_value->setDbValue($row['limit_kredit_value']);
         $this->diskon->setDbValue($row['diskon']);
+        $this->diskon_value->setDbValue($row['diskon_value']);
         $this->updated_at->setDbValue($row['updated_at']);
     }
 
@@ -1585,7 +1594,9 @@ class LevelCustomerList extends LevelCustomer
         $row['id'] = null;
         $row['level'] = null;
         $row['limit_kredit'] = null;
+        $row['limit_kredit_value'] = null;
         $row['diskon'] = null;
+        $row['diskon_value'] = null;
         $row['updated_at'] = null;
         return $row;
     }
@@ -1619,6 +1630,11 @@ class LevelCustomerList extends LevelCustomer
         $this->InlineCopyUrl = $this->getInlineCopyUrl();
         $this->DeleteUrl = $this->getDeleteUrl();
 
+        // Convert decimal values if posted back
+        if ($this->diskon_value->FormValue == $this->diskon_value->CurrentValue && is_numeric(ConvertToFloatString($this->diskon_value->CurrentValue))) {
+            $this->diskon_value->CurrentValue = ConvertToFloatString($this->diskon_value->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -1629,8 +1645,14 @@ class LevelCustomerList extends LevelCustomer
         // level
 
         // limit_kredit
+        $this->limit_kredit->CellCssStyle = "white-space: nowrap;";
+
+        // limit_kredit_value
 
         // diskon
+        $this->diskon->CellCssStyle = "white-space: nowrap;";
+
+        // diskon_value
 
         // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1642,19 +1664,19 @@ class LevelCustomerList extends LevelCustomer
             $this->level->ViewValue = $this->level->CurrentValue;
             $this->level->ViewCustomAttributes = "";
 
-            // limit_kredit
-            $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 0, -2, -2, -2);
-            $this->limit_kredit->ViewCustomAttributes = "";
+            // limit_kredit_value
+            $this->limit_kredit_value->ViewValue = $this->limit_kredit_value->CurrentValue;
+            $this->limit_kredit_value->ViewValue = FormatCurrency($this->limit_kredit_value->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_value->ViewCustomAttributes = "";
 
-            // diskon
-            $this->diskon->ViewValue = $this->diskon->CurrentValue;
-            $this->diskon->ViewValue = FormatNumber($this->diskon->ViewValue, 0, -2, -2, -2);
-            $this->diskon->ViewCustomAttributes = "";
+            // diskon_value
+            $this->diskon_value->ViewValue = $this->diskon_value->CurrentValue;
+            $this->diskon_value->ViewValue = FormatNumber($this->diskon_value->ViewValue, 2, -2, -2, -2);
+            $this->diskon_value->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // level
@@ -1662,15 +1684,15 @@ class LevelCustomerList extends LevelCustomer
             $this->level->HrefValue = "";
             $this->level->TooltipValue = "";
 
-            // limit_kredit
-            $this->limit_kredit->LinkCustomAttributes = "";
-            $this->limit_kredit->HrefValue = "";
-            $this->limit_kredit->TooltipValue = "";
+            // limit_kredit_value
+            $this->limit_kredit_value->LinkCustomAttributes = "";
+            $this->limit_kredit_value->HrefValue = "";
+            $this->limit_kredit_value->TooltipValue = "";
 
-            // diskon
-            $this->diskon->LinkCustomAttributes = "";
-            $this->diskon->HrefValue = "";
-            $this->diskon->TooltipValue = "";
+            // diskon_value
+            $this->diskon_value->LinkCustomAttributes = "";
+            $this->diskon_value->HrefValue = "";
+            $this->diskon_value->TooltipValue = "";
 
             // updated_at
             $this->updated_at->LinkCustomAttributes = "";

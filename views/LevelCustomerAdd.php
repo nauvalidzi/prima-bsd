@@ -20,10 +20,9 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.level_customer)
         ew.vars.tables.level_customer = currentTable;
     flevel_customeradd.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["level", [fields.level.visible && fields.level.required ? ew.Validators.required(fields.level.caption) : null], fields.level.isInvalid],
-        ["limit_kredit", [fields.limit_kredit.visible && fields.limit_kredit.required ? ew.Validators.required(fields.limit_kredit.caption) : null, ew.Validators.integer], fields.limit_kredit.isInvalid],
-        ["diskon", [fields.diskon.visible && fields.diskon.required ? ew.Validators.required(fields.diskon.caption) : null, ew.Validators.integer], fields.diskon.isInvalid]
+        ["limit_kredit_value", [fields.limit_kredit_value.visible && fields.limit_kredit_value.required ? ew.Validators.required(fields.limit_kredit_value.caption) : null, ew.Validators.integer], fields.limit_kredit_value.isInvalid],
+        ["diskon_value", [fields.diskon_value.visible && fields.diskon_value.required ? ew.Validators.required(fields.diskon_value.caption) : null, ew.Validators.float], fields.diskon_value.isInvalid]
     ]);
 
     // Set invalid fields
@@ -112,18 +111,6 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id" class="form-group row">
-        <label id="elh_level_customer_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
-<span id="el_level_customer_id">
-<input type="<?= $Page->id->getInputTextType() ?>" data-table="level_customer" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
-<?= $Page->id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->level->Visible) { // level ?>
     <div id="r_level" class="form-group row">
         <label id="elh_level_customer_level" for="x_level" class="<?= $Page->LeftColumnClass ?>"><?= $Page->level->caption() ?><?= $Page->level->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -136,26 +123,26 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->limit_kredit->Visible) { // limit_kredit ?>
-    <div id="r_limit_kredit" class="form-group row">
-        <label id="elh_level_customer_limit_kredit" for="x_limit_kredit" class="<?= $Page->LeftColumnClass ?>"><?= $Page->limit_kredit->caption() ?><?= $Page->limit_kredit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->limit_kredit->cellAttributes() ?>>
-<span id="el_level_customer_limit_kredit">
-<input type="<?= $Page->limit_kredit->getInputTextType() ?>" data-table="level_customer" data-field="x_limit_kredit" name="x_limit_kredit" id="x_limit_kredit" size="30" placeholder="<?= HtmlEncode($Page->limit_kredit->getPlaceHolder()) ?>" value="<?= $Page->limit_kredit->EditValue ?>"<?= $Page->limit_kredit->editAttributes() ?> aria-describedby="x_limit_kredit_help">
-<?= $Page->limit_kredit->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->limit_kredit->getErrorMessage() ?></div>
+<?php if ($Page->limit_kredit_value->Visible) { // limit_kredit_value ?>
+    <div id="r_limit_kredit_value" class="form-group row">
+        <label id="elh_level_customer_limit_kredit_value" for="x_limit_kredit_value" class="<?= $Page->LeftColumnClass ?>"><?= $Page->limit_kredit_value->caption() ?><?= $Page->limit_kredit_value->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->limit_kredit_value->cellAttributes() ?>>
+<span id="el_level_customer_limit_kredit_value">
+<input type="<?= $Page->limit_kredit_value->getInputTextType() ?>" data-table="level_customer" data-field="x_limit_kredit_value" name="x_limit_kredit_value" id="x_limit_kredit_value" size="30" placeholder="<?= HtmlEncode($Page->limit_kredit_value->getPlaceHolder()) ?>" value="<?= $Page->limit_kredit_value->EditValue ?>"<?= $Page->limit_kredit_value->editAttributes() ?> aria-describedby="x_limit_kredit_value_help">
+<?= $Page->limit_kredit_value->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->limit_kredit_value->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->diskon->Visible) { // diskon ?>
-    <div id="r_diskon" class="form-group row">
-        <label id="elh_level_customer_diskon" for="x_diskon" class="<?= $Page->LeftColumnClass ?>"><?= $Page->diskon->caption() ?><?= $Page->diskon->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->diskon->cellAttributes() ?>>
-<span id="el_level_customer_diskon">
-<input type="<?= $Page->diskon->getInputTextType() ?>" data-table="level_customer" data-field="x_diskon" name="x_diskon" id="x_diskon" size="30" placeholder="<?= HtmlEncode($Page->diskon->getPlaceHolder()) ?>" value="<?= $Page->diskon->EditValue ?>"<?= $Page->diskon->editAttributes() ?> aria-describedby="x_diskon_help">
-<?= $Page->diskon->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->diskon->getErrorMessage() ?></div>
+<?php if ($Page->diskon_value->Visible) { // diskon_value ?>
+    <div id="r_diskon_value" class="form-group row">
+        <label id="elh_level_customer_diskon_value" for="x_diskon_value" class="<?= $Page->LeftColumnClass ?>"><?= $Page->diskon_value->caption() ?><?= $Page->diskon_value->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->diskon_value->cellAttributes() ?>>
+<span id="el_level_customer_diskon_value">
+<input type="<?= $Page->diskon_value->getInputTextType() ?>" data-table="level_customer" data-field="x_diskon_value" name="x_diskon_value" id="x_diskon_value" size="30" placeholder="<?= HtmlEncode($Page->diskon_value->getPlaceHolder()) ?>" value="<?= $Page->diskon_value->EditValue ?>"<?= $Page->diskon_value->editAttributes() ?> aria-describedby="x_diskon_value_help">
+<?= $Page->diskon_value->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->diskon_value->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

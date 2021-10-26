@@ -426,6 +426,7 @@ class PenomoranList extends Penomoran
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -437,6 +438,9 @@ class PenomoranList extends Penomoran
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -1273,6 +1277,7 @@ class PenomoranList extends Penomoran
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1549,7 +1554,17 @@ class PenomoranList extends Penomoran
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings

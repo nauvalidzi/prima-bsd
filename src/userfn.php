@@ -584,21 +584,78 @@ function check_kpi_existing($idpegawai, $bulan) {
     } 
     return true;
 }
-$API_ACTIONS['send-reminder'] = function(Request $request, Response &$response) {
-    $kode = urldecode(Param("id", Route(1)));
-    if (empty($kode)) {
+
+function curl_post($url, $data, $url_auth=""){
+    // Prepare new cURL resource
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+    // Authentication PHPMAKER
+    // $url_auth = 'http://localhost/pabrik/api/login?username=admin&password=admin123';
+    $token = null;
+    if (!empty($url_auth)) {
+        $token = json_decode(curl_get($url_auth), true)['JWT'];
+        $token = "X-Authorization: {$token}";
+    }
+
+    // Set HTTP Header for POST request
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Content-Type: application/json",
+        $token
+    ));
+
+    // Submit the POST request
+    $result = curl_exec($ch);
+
+    // Close cURL session handle
+    curl_close($ch);     
+    return $result;
+}
+
+function curl_get($url){
+    // persiapan curl
+    $ch = curl_init(); 
+
+    // set url 
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    // return the transfer as a string 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+
+    // $output contains the output string 
+    $output = curl_exec($ch); 
+
+    // tutup curl 
+    curl_close($ch);      
+
+    // menampilkan hasil curl
+    return $output;
+}
+$API_ACTIONS['mass-send-reminder'] = function(Request $request, Response &$response) {
+    $items = Param("items", Route(2));
+    if (empty($items)) {
         echo json_encode([]); die;
     }
-    $row = ExecuteRow("SELECT * FROM v_penagihan WHERE kodeorder = '{$kode}'");
-    $send = json_encode([
-        'to' => $row['nomor_handphone'],
-        'message' => "Selamat Siang {$row['nama_customer']}, kami dari CV. Beautie Surya Derma mau menginformasikan tagihan berikut. No. Faktur {$row['kodeorder']} tanggal {$row['tgl_order']} Senilai Rp. {$row['tgl_jatuhtempo']}. Pembayaran bisa melalui transfer ke rekening kami di BCA no rek. 8290977593 An. Suryo Sudibyo SE. Untuk memudahkan proses tracking tagihan serta menghindari penagihan kembali, mohon jika melakukan pembayaran melalui transfer dengan memberi keterangan pada berita “Nama dokter/Klinik/Merek_Nomor Faktur”. Mohon infonya apabila sudah melakukan pembayaran dengan mengirim WA bukti transfer ke nomor ini. Terima kasih atas kepercayaan kepada kami. Semoga {$row['nama_customer']} sehat selalu.",
-    ]);
-    $status = 0;
-    if ($send) {
-        $status = 1;
+    $export = [];
+    $data = explode(',', urldecode($items));
+    foreach ($data as $key => $value) { 
+        $row = ExecuteRow("SELECT * FROM v_penagihan WHERE kodeorder = '{$value}'");
+        $export[$key]['to'] = $row['nomor_handphone'];
+        $export[$key]['message'] = "Selamat Siang {$row['nama_customer']}, kami dari CV. Beautie Surya Derma mau menginformasikan tagihan berikut. No. Faktur {$row['kodeorder']} tanggal {$row['tgl_order']} Senilai Rp. {$row['tgl_jatuhtempo']}. Pembayaran bisa melalui transfer ke rekening kami di BCA no rek. 8290977593 An. Suryo Sudibyo SE. Untuk memudahkan proses tracking tagihan serta menghindari penagihan kembali, mohon jika melakukan pembayaran melalui transfer dengan memberi keterangan pada berita “Nama dokter/Klinik/Merek_Nomor Faktur”. Mohon infonya apabila sudah melakukan pembayaran dengan mengirim WA bukti transfer ke nomor ini. Terima kasih atas kepercayaan kepada kami. Semoga {$row['nama_customer']} sehat selalu.";
     }
-    ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Penagihan Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
+
+    //$send = curl_post($url, json_encode($export));
+
+    //$status = 0;
+    //if ($send) {
+    //    $status = 1;
+    //}
+
+    //ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Penagihan Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
+    WriteJson(['status' => ($status == 1) ? TRUE : FALSE]);
 };
 $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$response) {
     $faktur = urldecode(Param("faktur", Route(1)));

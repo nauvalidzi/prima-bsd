@@ -47,11 +47,11 @@ $Page->showMessage();
 <?php if ($Page->level->Visible) { // level ?>
         <th class="<?= $Page->level->headerCellClass() ?>"><span id="elh_level_customer_level" class="level_customer_level"><?= $Page->level->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->limit_kredit->Visible) { // limit_kredit ?>
-        <th class="<?= $Page->limit_kredit->headerCellClass() ?>"><span id="elh_level_customer_limit_kredit" class="level_customer_limit_kredit"><?= $Page->limit_kredit->caption() ?></span></th>
+<?php if ($Page->limit_kredit_value->Visible) { // limit_kredit_value ?>
+        <th class="<?= $Page->limit_kredit_value->headerCellClass() ?>"><span id="elh_level_customer_limit_kredit_value" class="level_customer_limit_kredit_value"><?= $Page->limit_kredit_value->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->diskon->Visible) { // diskon ?>
-        <th class="<?= $Page->diskon->headerCellClass() ?>"><span id="elh_level_customer_diskon" class="level_customer_diskon"><?= $Page->diskon->caption() ?></span></th>
+<?php if ($Page->diskon_value->Visible) { // diskon_value ?>
+        <th class="<?= $Page->diskon_value->headerCellClass() ?>"><span id="elh_level_customer_diskon_value" class="level_customer_diskon_value"><?= $Page->diskon_value->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->updated_at->Visible) { // updated_at ?>
         <th class="<?= $Page->updated_at->headerCellClass() ?>"><span id="elh_level_customer_updated_at" class="level_customer_updated_at"><?= $Page->updated_at->caption() ?></span></th>
@@ -85,19 +85,19 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->limit_kredit->Visible) { // limit_kredit ?>
-        <td <?= $Page->limit_kredit->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_level_customer_limit_kredit" class="level_customer_limit_kredit">
-<span<?= $Page->limit_kredit->viewAttributes() ?>>
-<?= $Page->limit_kredit->getViewValue() ?></span>
+<?php if ($Page->limit_kredit_value->Visible) { // limit_kredit_value ?>
+        <td <?= $Page->limit_kredit_value->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_level_customer_limit_kredit_value" class="level_customer_limit_kredit_value">
+<span<?= $Page->limit_kredit_value->viewAttributes() ?>>
+<?= $Page->limit_kredit_value->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->diskon->Visible) { // diskon ?>
-        <td <?= $Page->diskon->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_level_customer_diskon" class="level_customer_diskon">
-<span<?= $Page->diskon->viewAttributes() ?>>
-<?= $Page->diskon->getViewValue() ?></span>
+<?php if ($Page->diskon_value->Visible) { // diskon_value ?>
+        <td <?= $Page->diskon_value->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_level_customer_diskon_value" class="level_customer_diskon_value">
+<span<?= $Page->diskon_value->viewAttributes() ?>>
+<?= $Page->diskon_value->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

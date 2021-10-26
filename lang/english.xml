@@ -3414,9 +3414,15 @@
         <phrase id="fldcaption" value="Level" />
       </field>
       <field id="limit_kredit">
+        <phrase id="fldcaption" value="Limit Kredit View" />
+      </field>
+      <field id="limit_kredit_value">
         <phrase id="fldcaption" value="Limit Kredit" />
       </field>
       <field id="diskon">
+        <phrase id="fldcaption" value="Diskon View" />
+      </field>
+      <field id="diskon_value">
         <phrase id="fldcaption" value="Diskon" />
       </field>
       <field id="updated_at">

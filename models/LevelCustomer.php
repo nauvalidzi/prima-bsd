@@ -31,7 +31,9 @@ class LevelCustomer extends DbTable
     public $id;
     public $level;
     public $limit_kredit;
+    public $limit_kredit_value;
     public $diskon;
+    public $diskon_value;
     public $updated_at;
 
     // Page ID
@@ -70,17 +72,16 @@ class LevelCustomer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('level_customer', 'level_customer', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('level_customer', 'level_customer', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->Required = true; // Required field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // level
-        $this->level = new DbField('level_customer', 'level_customer', 'x_level', 'level', '`level`', '`level`', 200, 50, -1, false, '`level`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->level = new DbField('level_customer', 'level_customer', 'x_level', 'level', '`level`', '`level`', 200, 20, -1, false, '`level`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->level->Nullable = false; // NOT NULL field
         $this->level->Required = true; // Required field
         $this->level->Sortable = true; // Allow sort
@@ -88,27 +89,42 @@ class LevelCustomer extends DbTable
         $this->Fields['level'] = &$this->level;
 
         // limit_kredit
-        $this->limit_kredit = new DbField('level_customer', 'level_customer', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 3, 20, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit = new DbField('level_customer', 'level_customer', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 200, 50, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->limit_kredit->Nullable = false; // NOT NULL field
         $this->limit_kredit->Required = true; // Required field
-        $this->limit_kredit->Sortable = true; // Allow sort
-        $this->limit_kredit->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->limit_kredit->Sortable = false; // Allow sort
         $this->limit_kredit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->limit_kredit->Param, "CustomMsg");
         $this->Fields['limit_kredit'] = &$this->limit_kredit;
 
+        // limit_kredit_value
+        $this->limit_kredit_value = new DbField('level_customer', 'level_customer', 'x_limit_kredit_value', 'limit_kredit_value', '`limit_kredit_value`', '`limit_kredit_value`', 3, 20, -1, false, '`limit_kredit_value`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit_value->Nullable = false; // NOT NULL field
+        $this->limit_kredit_value->Required = true; // Required field
+        $this->limit_kredit_value->Sortable = true; // Allow sort
+        $this->limit_kredit_value->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->limit_kredit_value->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->limit_kredit_value->Param, "CustomMsg");
+        $this->Fields['limit_kredit_value'] = &$this->limit_kredit_value;
+
         // diskon
-        $this->diskon = new DbField('level_customer', 'level_customer', 'x_diskon', 'diskon', '`diskon`', '`diskon`', 3, 11, -1, false, '`diskon`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->diskon = new DbField('level_customer', 'level_customer', 'x_diskon', 'diskon', '`diskon`', '`diskon`', 200, 20, -1, false, '`diskon`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->diskon->Nullable = false; // NOT NULL field
-        $this->diskon->Required = true; // Required field
-        $this->diskon->Sortable = true; // Allow sort
-        $this->diskon->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->diskon->Sortable = false; // Allow sort
         $this->diskon->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->diskon->Param, "CustomMsg");
         $this->Fields['diskon'] = &$this->diskon;
 
+        // diskon_value
+        $this->diskon_value = new DbField('level_customer', 'level_customer', 'x_diskon_value', 'diskon_value', '`diskon_value`', '`diskon_value`', 5, 22, -1, false, '`diskon_value`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->diskon_value->Nullable = false; // NOT NULL field
+        $this->diskon_value->Sortable = true; // Allow sort
+        $this->diskon_value->DefaultDecimalPrecision = 2; // Default decimal precision
+        $this->diskon_value->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
+        $this->diskon_value->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->diskon_value->Param, "CustomMsg");
+        $this->Fields['diskon_value'] = &$this->diskon_value;
+
         // updated_at
-        $this->updated_at = new DbField('level_customer', 'level_customer', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at = new DbField('level_customer', 'level_customer', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 11, "DB"), 135, 19, 11, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->updated_at->Sortable = true; // Allow sort
-        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
     }
@@ -437,6 +453,9 @@ class LevelCustomer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -524,7 +543,9 @@ class LevelCustomer extends DbTable
         $this->id->DbValue = $row['id'];
         $this->level->DbValue = $row['level'];
         $this->limit_kredit->DbValue = $row['limit_kredit'];
+        $this->limit_kredit_value->DbValue = $row['limit_kredit_value'];
         $this->diskon->DbValue = $row['diskon'];
+        $this->diskon_value->DbValue = $row['diskon_value'];
         $this->updated_at->DbValue = $row['updated_at'];
     }
 
@@ -849,7 +870,9 @@ SORTHTML;
         $this->id->setDbValue($row['id']);
         $this->level->setDbValue($row['level']);
         $this->limit_kredit->setDbValue($row['limit_kredit']);
+        $this->limit_kredit_value->setDbValue($row['limit_kredit_value']);
         $this->diskon->setDbValue($row['diskon']);
+        $this->diskon_value->setDbValue($row['diskon_value']);
         $this->updated_at->setDbValue($row['updated_at']);
     }
 
@@ -868,8 +891,14 @@ SORTHTML;
         // level
 
         // limit_kredit
+        $this->limit_kredit->CellCssStyle = "white-space: nowrap;";
+
+        // limit_kredit_value
 
         // diskon
+        $this->diskon->CellCssStyle = "white-space: nowrap;";
+
+        // diskon_value
 
         // updated_at
 
@@ -883,17 +912,25 @@ SORTHTML;
 
         // limit_kredit
         $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-        $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 0, -2, -2, -2);
         $this->limit_kredit->ViewCustomAttributes = "";
+
+        // limit_kredit_value
+        $this->limit_kredit_value->ViewValue = $this->limit_kredit_value->CurrentValue;
+        $this->limit_kredit_value->ViewValue = FormatCurrency($this->limit_kredit_value->ViewValue, 2, -2, -2, -2);
+        $this->limit_kredit_value->ViewCustomAttributes = "";
 
         // diskon
         $this->diskon->ViewValue = $this->diskon->CurrentValue;
-        $this->diskon->ViewValue = FormatNumber($this->diskon->ViewValue, 0, -2, -2, -2);
         $this->diskon->ViewCustomAttributes = "";
+
+        // diskon_value
+        $this->diskon_value->ViewValue = $this->diskon_value->CurrentValue;
+        $this->diskon_value->ViewValue = FormatNumber($this->diskon_value->ViewValue, 2, -2, -2, -2);
+        $this->diskon_value->ViewCustomAttributes = "";
 
         // updated_at
         $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
         $this->updated_at->ViewCustomAttributes = "";
 
         // id
@@ -911,10 +948,20 @@ SORTHTML;
         $this->limit_kredit->HrefValue = "";
         $this->limit_kredit->TooltipValue = "";
 
+        // limit_kredit_value
+        $this->limit_kredit_value->LinkCustomAttributes = "";
+        $this->limit_kredit_value->HrefValue = "";
+        $this->limit_kredit_value->TooltipValue = "";
+
         // diskon
         $this->diskon->LinkCustomAttributes = "";
         $this->diskon->HrefValue = "";
         $this->diskon->TooltipValue = "";
+
+        // diskon_value
+        $this->diskon_value->LinkCustomAttributes = "";
+        $this->diskon_value->HrefValue = "";
+        $this->diskon_value->TooltipValue = "";
 
         // updated_at
         $this->updated_at->LinkCustomAttributes = "";
@@ -940,7 +987,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // level
         $this->level->EditAttrs["class"] = "form-control";
@@ -954,19 +1001,40 @@ SORTHTML;
         // limit_kredit
         $this->limit_kredit->EditAttrs["class"] = "form-control";
         $this->limit_kredit->EditCustomAttributes = "";
+        if (!$this->limit_kredit->Raw) {
+            $this->limit_kredit->CurrentValue = HtmlDecode($this->limit_kredit->CurrentValue);
+        }
         $this->limit_kredit->EditValue = $this->limit_kredit->CurrentValue;
         $this->limit_kredit->PlaceHolder = RemoveHtml($this->limit_kredit->caption());
+
+        // limit_kredit_value
+        $this->limit_kredit_value->EditAttrs["class"] = "form-control";
+        $this->limit_kredit_value->EditCustomAttributes = "";
+        $this->limit_kredit_value->EditValue = $this->limit_kredit_value->CurrentValue;
+        $this->limit_kredit_value->PlaceHolder = RemoveHtml($this->limit_kredit_value->caption());
 
         // diskon
         $this->diskon->EditAttrs["class"] = "form-control";
         $this->diskon->EditCustomAttributes = "";
+        if (!$this->diskon->Raw) {
+            $this->diskon->CurrentValue = HtmlDecode($this->diskon->CurrentValue);
+        }
         $this->diskon->EditValue = $this->diskon->CurrentValue;
         $this->diskon->PlaceHolder = RemoveHtml($this->diskon->caption());
+
+        // diskon_value
+        $this->diskon_value->EditAttrs["class"] = "form-control";
+        $this->diskon_value->EditCustomAttributes = "";
+        $this->diskon_value->EditValue = $this->diskon_value->CurrentValue;
+        $this->diskon_value->PlaceHolder = RemoveHtml($this->diskon_value->caption());
+        if (strval($this->diskon_value->EditValue) != "" && is_numeric($this->diskon_value->EditValue)) {
+            $this->diskon_value->EditValue = FormatNumber($this->diskon_value->EditValue, -2, -2, -2, -2);
+        }
 
         // updated_at
         $this->updated_at->EditAttrs["class"] = "form-control";
         $this->updated_at->EditCustomAttributes = "";
-        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
+        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 11);
         $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
         // Call Row Rendered event
@@ -998,13 +1066,13 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->level);
-                    $doc->exportCaption($this->limit_kredit);
-                    $doc->exportCaption($this->diskon);
+                    $doc->exportCaption($this->limit_kredit_value);
+                    $doc->exportCaption($this->diskon_value);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->level);
-                    $doc->exportCaption($this->limit_kredit);
-                    $doc->exportCaption($this->diskon);
+                    $doc->exportCaption($this->limit_kredit_value);
+                    $doc->exportCaption($this->diskon_value);
                     $doc->exportCaption($this->updated_at);
                 }
                 $doc->endExportRow();
@@ -1036,13 +1104,13 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->level);
-                        $doc->exportField($this->limit_kredit);
-                        $doc->exportField($this->diskon);
+                        $doc->exportField($this->limit_kredit_value);
+                        $doc->exportField($this->diskon_value);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->level);
-                        $doc->exportField($this->limit_kredit);
-                        $doc->exportField($this->diskon);
+                        $doc->exportField($this->limit_kredit_value);
+                        $doc->exportField($this->diskon_value);
                         $doc->exportField($this->updated_at);
                     }
                     $doc->endExportRow($rowCnt);
@@ -1111,6 +1179,9 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $to_rupiah = rupiah($rsnew['limit_kredit_value']);
+        $rsnew['limit_kredit'] = "Limit Kredit Rp. {$to_rupiah}";
+        $rsnew['diskon'] = "Diskon {$rsnew['diskon_value']}%";
         $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
@@ -1126,6 +1197,13 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        if ($rsold['limit_kredit_value'] != $rsnew['limit_kredit_value']) {
+            $to_rupiah = rupiah($rsnew['limit_kredit_value']);
+            $rsnew['limit_kredit'] = "Limit Kredit Rp. {$to_rupiah}";
+        }
+        if ($rsold['diskon_value'] != $rsnew['diskon_value']) {
+            $rsnew['diskon'] = "Diskon {$rsnew['diskon_value']}%";
+        }
         $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
@@ -1211,6 +1289,7 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        $this->diskon_value->ViewValue = $this->diskon_value->CurrentValue . "%";
     }
 
     // User ID Filtering event

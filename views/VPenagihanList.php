@@ -44,7 +44,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("head", function () {
-    // Write your table-specific client script here, no need to add script tags.
+    // Client script
+    function checkSelected(){var e=$("input#check-all")[0],t=$("input#check-row").length,n=$("input#check-row:checked:checked").length;e.checked=n===t}$(".ew-list-other-options").append('<div class="ew-list-other-options"><span class="ew-add-edit-option ew-list-option-separator text-nowrap" data-name="button"><div class="btn-group btn-group-sm ew-btn-group"><button class="btn btn-default ew-add-edit ew-add send-reminder" title="" data-caption="Send" data-original-title="Send">Send</button></div></span></div>'),$(".send-reminder").on("click",(function(){var e=[];if($("input#check-row:checked:checked").each((function(t,n){e[t]=n.value})),e.length<1)return Swal.fire({icon:"error",title:"Oops...",text:"Pilih data terlebih dahulu!"}),!1;$.get("api/mass-send-reminder?items="+encodeURIComponent(e),(function(e){!1!==e.status?Swal.fire({icon:"success",title:"Success",text:"Data berhasil diproses!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Oops...",text:"Something went wrong!"}).then((function(){location.reload()}))}))})),$(document).on("click","input#check-all",(function(){var e=this.checked;$("input#check-row").each((function(t,n){n.checked=e}))})),$(document).on("click","#check-row",(function(){this.value;checkSelected()}));
 });
 </script>
 <?php } ?>

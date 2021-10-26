@@ -369,6 +369,9 @@ class LevelCustomerEdit extends LevelCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -466,8 +469,10 @@ class LevelCustomerEdit extends LevelCustomer
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->level->setVisibility();
-        $this->limit_kredit->setVisibility();
-        $this->diskon->setVisibility();
+        $this->limit_kredit->Visible = false;
+        $this->limit_kredit_value->setVisibility();
+        $this->diskon->Visible = false;
+        $this->diskon_value->setVisibility();
         $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -659,23 +664,23 @@ class LevelCustomerEdit extends LevelCustomer
             }
         }
 
-        // Check field name 'limit_kredit' first before field var 'x_limit_kredit'
-        $val = $CurrentForm->hasValue("limit_kredit") ? $CurrentForm->getValue("limit_kredit") : $CurrentForm->getValue("x_limit_kredit");
-        if (!$this->limit_kredit->IsDetailKey) {
+        // Check field name 'limit_kredit_value' first before field var 'x_limit_kredit_value'
+        $val = $CurrentForm->hasValue("limit_kredit_value") ? $CurrentForm->getValue("limit_kredit_value") : $CurrentForm->getValue("x_limit_kredit_value");
+        if (!$this->limit_kredit_value->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->limit_kredit->Visible = false; // Disable update for API request
+                $this->limit_kredit_value->Visible = false; // Disable update for API request
             } else {
-                $this->limit_kredit->setFormValue($val);
+                $this->limit_kredit_value->setFormValue($val);
             }
         }
 
-        // Check field name 'diskon' first before field var 'x_diskon'
-        $val = $CurrentForm->hasValue("diskon") ? $CurrentForm->getValue("diskon") : $CurrentForm->getValue("x_diskon");
-        if (!$this->diskon->IsDetailKey) {
+        // Check field name 'diskon_value' first before field var 'x_diskon_value'
+        $val = $CurrentForm->hasValue("diskon_value") ? $CurrentForm->getValue("diskon_value") : $CurrentForm->getValue("x_diskon_value");
+        if (!$this->diskon_value->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->diskon->Visible = false; // Disable update for API request
+                $this->diskon_value->Visible = false; // Disable update for API request
             } else {
-                $this->diskon->setFormValue($val);
+                $this->diskon_value->setFormValue($val);
             }
         }
 
@@ -690,10 +695,10 @@ class LevelCustomerEdit extends LevelCustomer
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->level->CurrentValue = $this->level->FormValue;
-        $this->limit_kredit->CurrentValue = $this->limit_kredit->FormValue;
-        $this->diskon->CurrentValue = $this->diskon->FormValue;
+        $this->limit_kredit_value->CurrentValue = $this->limit_kredit_value->FormValue;
+        $this->diskon_value->CurrentValue = $this->diskon_value->FormValue;
     }
 
     /**
@@ -746,7 +751,9 @@ class LevelCustomerEdit extends LevelCustomer
         $this->id->setDbValue($row['id']);
         $this->level->setDbValue($row['level']);
         $this->limit_kredit->setDbValue($row['limit_kredit']);
+        $this->limit_kredit_value->setDbValue($row['limit_kredit_value']);
         $this->diskon->setDbValue($row['diskon']);
+        $this->diskon_value->setDbValue($row['diskon_value']);
         $this->updated_at->setDbValue($row['updated_at']);
     }
 
@@ -757,7 +764,9 @@ class LevelCustomerEdit extends LevelCustomer
         $row['id'] = null;
         $row['level'] = null;
         $row['limit_kredit'] = null;
+        $row['limit_kredit_value'] = null;
         $row['diskon'] = null;
+        $row['diskon_value'] = null;
         $row['updated_at'] = null;
         return $row;
     }
@@ -785,6 +794,11 @@ class LevelCustomerEdit extends LevelCustomer
 
         // Initialize URLs
 
+        // Convert decimal values if posted back
+        if ($this->diskon_value->FormValue == $this->diskon_value->CurrentValue && is_numeric(ConvertToFloatString($this->diskon_value->CurrentValue))) {
+            $this->diskon_value->CurrentValue = ConvertToFloatString($this->diskon_value->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -796,7 +810,11 @@ class LevelCustomerEdit extends LevelCustomer
 
         // limit_kredit
 
+        // limit_kredit_value
+
         // diskon
+
+        // diskon_value
 
         // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -808,19 +826,19 @@ class LevelCustomerEdit extends LevelCustomer
             $this->level->ViewValue = $this->level->CurrentValue;
             $this->level->ViewCustomAttributes = "";
 
-            // limit_kredit
-            $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 0, -2, -2, -2);
-            $this->limit_kredit->ViewCustomAttributes = "";
+            // limit_kredit_value
+            $this->limit_kredit_value->ViewValue = $this->limit_kredit_value->CurrentValue;
+            $this->limit_kredit_value->ViewValue = FormatCurrency($this->limit_kredit_value->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_value->ViewCustomAttributes = "";
 
-            // diskon
-            $this->diskon->ViewValue = $this->diskon->CurrentValue;
-            $this->diskon->ViewValue = FormatNumber($this->diskon->ViewValue, 0, -2, -2, -2);
-            $this->diskon->ViewCustomAttributes = "";
+            // diskon_value
+            $this->diskon_value->ViewValue = $this->diskon_value->CurrentValue;
+            $this->diskon_value->ViewValue = FormatNumber($this->diskon_value->ViewValue, 2, -2, -2, -2);
+            $this->diskon_value->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // level
@@ -828,15 +846,15 @@ class LevelCustomerEdit extends LevelCustomer
             $this->level->HrefValue = "";
             $this->level->TooltipValue = "";
 
-            // limit_kredit
-            $this->limit_kredit->LinkCustomAttributes = "";
-            $this->limit_kredit->HrefValue = "";
-            $this->limit_kredit->TooltipValue = "";
+            // limit_kredit_value
+            $this->limit_kredit_value->LinkCustomAttributes = "";
+            $this->limit_kredit_value->HrefValue = "";
+            $this->limit_kredit_value->TooltipValue = "";
 
-            // diskon
-            $this->diskon->LinkCustomAttributes = "";
-            $this->diskon->HrefValue = "";
-            $this->diskon->TooltipValue = "";
+            // diskon_value
+            $this->diskon_value->LinkCustomAttributes = "";
+            $this->diskon_value->HrefValue = "";
+            $this->diskon_value->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // level
             $this->level->EditAttrs["class"] = "form-control";
@@ -847,17 +865,20 @@ class LevelCustomerEdit extends LevelCustomer
             $this->level->EditValue = HtmlEncode($this->level->CurrentValue);
             $this->level->PlaceHolder = RemoveHtml($this->level->caption());
 
-            // limit_kredit
-            $this->limit_kredit->EditAttrs["class"] = "form-control";
-            $this->limit_kredit->EditCustomAttributes = "";
-            $this->limit_kredit->EditValue = HtmlEncode($this->limit_kredit->CurrentValue);
-            $this->limit_kredit->PlaceHolder = RemoveHtml($this->limit_kredit->caption());
+            // limit_kredit_value
+            $this->limit_kredit_value->EditAttrs["class"] = "form-control";
+            $this->limit_kredit_value->EditCustomAttributes = "";
+            $this->limit_kredit_value->EditValue = HtmlEncode($this->limit_kredit_value->CurrentValue);
+            $this->limit_kredit_value->PlaceHolder = RemoveHtml($this->limit_kredit_value->caption());
 
-            // diskon
-            $this->diskon->EditAttrs["class"] = "form-control";
-            $this->diskon->EditCustomAttributes = "";
-            $this->diskon->EditValue = HtmlEncode($this->diskon->CurrentValue);
-            $this->diskon->PlaceHolder = RemoveHtml($this->diskon->caption());
+            // diskon_value
+            $this->diskon_value->EditAttrs["class"] = "form-control";
+            $this->diskon_value->EditCustomAttributes = "";
+            $this->diskon_value->EditValue = HtmlEncode($this->diskon_value->CurrentValue);
+            $this->diskon_value->PlaceHolder = RemoveHtml($this->diskon_value->caption());
+            if (strval($this->diskon_value->EditValue) != "" && is_numeric($this->diskon_value->EditValue)) {
+                $this->diskon_value->EditValue = FormatNumber($this->diskon_value->EditValue, -2, -2, -2, -2);
+            }
 
             // Edit refer script
 
@@ -865,13 +886,13 @@ class LevelCustomerEdit extends LevelCustomer
             $this->level->LinkCustomAttributes = "";
             $this->level->HrefValue = "";
 
-            // limit_kredit
-            $this->limit_kredit->LinkCustomAttributes = "";
-            $this->limit_kredit->HrefValue = "";
+            // limit_kredit_value
+            $this->limit_kredit_value->LinkCustomAttributes = "";
+            $this->limit_kredit_value->HrefValue = "";
 
-            // diskon
-            $this->diskon->LinkCustomAttributes = "";
-            $this->diskon->HrefValue = "";
+            // diskon_value
+            $this->diskon_value->LinkCustomAttributes = "";
+            $this->diskon_value->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -897,21 +918,21 @@ class LevelCustomerEdit extends LevelCustomer
                 $this->level->addErrorMessage(str_replace("%s", $this->level->caption(), $this->level->RequiredErrorMessage));
             }
         }
-        if ($this->limit_kredit->Required) {
-            if (!$this->limit_kredit->IsDetailKey && EmptyValue($this->limit_kredit->FormValue)) {
-                $this->limit_kredit->addErrorMessage(str_replace("%s", $this->limit_kredit->caption(), $this->limit_kredit->RequiredErrorMessage));
+        if ($this->limit_kredit_value->Required) {
+            if (!$this->limit_kredit_value->IsDetailKey && EmptyValue($this->limit_kredit_value->FormValue)) {
+                $this->limit_kredit_value->addErrorMessage(str_replace("%s", $this->limit_kredit_value->caption(), $this->limit_kredit_value->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->limit_kredit->FormValue)) {
-            $this->limit_kredit->addErrorMessage($this->limit_kredit->getErrorMessage(false));
+        if (!CheckInteger($this->limit_kredit_value->FormValue)) {
+            $this->limit_kredit_value->addErrorMessage($this->limit_kredit_value->getErrorMessage(false));
         }
-        if ($this->diskon->Required) {
-            if (!$this->diskon->IsDetailKey && EmptyValue($this->diskon->FormValue)) {
-                $this->diskon->addErrorMessage(str_replace("%s", $this->diskon->caption(), $this->diskon->RequiredErrorMessage));
+        if ($this->diskon_value->Required) {
+            if (!$this->diskon_value->IsDetailKey && EmptyValue($this->diskon_value->FormValue)) {
+                $this->diskon_value->addErrorMessage(str_replace("%s", $this->diskon_value->caption(), $this->diskon_value->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->diskon->FormValue)) {
-            $this->diskon->addErrorMessage($this->diskon->getErrorMessage(false));
+        if (!CheckNumber($this->diskon_value->FormValue)) {
+            $this->diskon_value->addErrorMessage($this->diskon_value->getErrorMessage(false));
         }
 
         // Return validate result
@@ -948,27 +969,14 @@ class LevelCustomerEdit extends LevelCustomer
             // level
             $this->level->setDbValueDef($rsnew, $this->level->CurrentValue, "", $this->level->ReadOnly);
 
-            // limit_kredit
-            $this->limit_kredit->setDbValueDef($rsnew, $this->limit_kredit->CurrentValue, 0, $this->limit_kredit->ReadOnly);
+            // limit_kredit_value
+            $this->limit_kredit_value->setDbValueDef($rsnew, $this->limit_kredit_value->CurrentValue, 0, $this->limit_kredit_value->ReadOnly);
 
-            // diskon
-            $this->diskon->setDbValueDef($rsnew, $this->diskon->CurrentValue, 0, $this->diskon->ReadOnly);
+            // diskon_value
+            $this->diskon_value->setDbValueDef($rsnew, $this->diskon_value->CurrentValue, 0, $this->diskon_value->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

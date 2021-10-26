@@ -79,8 +79,6 @@ class Crosstab1 extends CrosstabTable
 
         // namapegawai
         $this->namapegawai = new ReportField('Crosstab1', 'Crosstab1', 'x_namapegawai', 'namapegawai', '`namapegawai`', '`namapegawai`', 200, 123, -1, false, '`namapegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->namapegawai->Nullable = false; // NOT NULL field
-        $this->namapegawai->Required = true; // Required field
         $this->namapegawai->Sortable = true; // Allow sort
         $this->namapegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namapegawai->Param, "CustomMsg");
         $this->namapegawai->SourceTableVar = 'd_jatuhtempo';
@@ -98,8 +96,6 @@ class Crosstab1 extends CrosstabTable
 
         // namacustomer
         $this->namacustomer = new ReportField('Crosstab1', 'Crosstab1', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 123, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->namacustomer->Nullable = false; // NOT NULL field
-        $this->namacustomer->Required = true; // Required field
         $this->namacustomer->Sortable = true; // Allow sort
         $this->namacustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namacustomer->Param, "CustomMsg");
         $this->namacustomer->SourceTableVar = 'd_jatuhtempo';

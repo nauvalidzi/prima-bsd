@@ -2350,8 +2350,6 @@ class CustomerGrid extends Customer
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                foreach ($arwrk as &$row)
-                    $row = $this->level_customer_id->Lookup->renderViewRow($row);
                 $this->level_customer_id->EditValue = $arwrk;
             }
             $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
@@ -2517,8 +2515,6 @@ class CustomerGrid extends Customer
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                foreach ($arwrk as &$row)
-                    $row = $this->level_customer_id->Lookup->renderViewRow($row);
                 $this->level_customer_id->EditValue = $arwrk;
             }
             $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());

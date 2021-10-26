@@ -56,24 +56,24 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->limit_kredit->Visible) { // limit_kredit ?>
-    <tr id="r_limit_kredit">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_level_customer_limit_kredit"><?= $Page->limit_kredit->caption() ?></span></td>
-        <td data-name="limit_kredit" <?= $Page->limit_kredit->cellAttributes() ?>>
-<span id="el_level_customer_limit_kredit">
-<span<?= $Page->limit_kredit->viewAttributes() ?>>
-<?= $Page->limit_kredit->getViewValue() ?></span>
+<?php if ($Page->limit_kredit_value->Visible) { // limit_kredit_value ?>
+    <tr id="r_limit_kredit_value">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_level_customer_limit_kredit_value"><?= $Page->limit_kredit_value->caption() ?></span></td>
+        <td data-name="limit_kredit_value" <?= $Page->limit_kredit_value->cellAttributes() ?>>
+<span id="el_level_customer_limit_kredit_value">
+<span<?= $Page->limit_kredit_value->viewAttributes() ?>>
+<?= $Page->limit_kredit_value->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->diskon->Visible) { // diskon ?>
-    <tr id="r_diskon">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_level_customer_diskon"><?= $Page->diskon->caption() ?></span></td>
-        <td data-name="diskon" <?= $Page->diskon->cellAttributes() ?>>
-<span id="el_level_customer_diskon">
-<span<?= $Page->diskon->viewAttributes() ?>>
-<?= $Page->diskon->getViewValue() ?></span>
+<?php if ($Page->diskon_value->Visible) { // diskon_value ?>
+    <tr id="r_diskon_value">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_level_customer_diskon_value"><?= $Page->diskon_value->caption() ?></span></td>
+        <td data-name="diskon_value" <?= $Page->diskon_value->cellAttributes() ?>>
+<span id="el_level_customer_diskon_value">
+<span<?= $Page->diskon_value->viewAttributes() ?>>
+<?= $Page->diskon_value->getViewValue() ?></span>
 </span>
 </td>
     </tr>

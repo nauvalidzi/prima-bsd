@@ -1027,13 +1027,13 @@ return function (App $app) {
     );
 
     // penomoran
-    $app->any('/PenomoranList', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('PenomoranList-penomoran-list'); // list
-    $app->any('/PenomoranAdd', PenomoranController::class . ':add')->add(PermissionMiddleware::class)->setName('PenomoranAdd-penomoran-add'); // add
+    $app->any('/PenomoranList[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('PenomoranList-penomoran-list'); // list
+    $app->any('/PenomoranAdd[/{id}]', PenomoranController::class . ':add')->add(PermissionMiddleware::class)->setName('PenomoranAdd-penomoran-add'); // add
     $app->group(
         '/penomoran',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('penomoran/list-penomoran-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '', PenomoranController::class . ':add')->add(PermissionMiddleware::class)->setName('penomoran/add-penomoran-add-2'); // add
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('penomoran/list-penomoran-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', PenomoranController::class . ':add')->add(PermissionMiddleware::class)->setName('penomoran/add-penomoran-add-2'); // add
         }
     );
 

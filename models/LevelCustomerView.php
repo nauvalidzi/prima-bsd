@@ -424,6 +424,9 @@ class LevelCustomerView extends LevelCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -518,7 +521,9 @@ class LevelCustomerView extends LevelCustomer
         $this->id->setVisibility();
         $this->level->setVisibility();
         $this->limit_kredit->setVisibility();
+        $this->limit_kredit_value->setVisibility();
         $this->diskon->setVisibility();
+        $this->diskon_value->setVisibility();
         $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -736,7 +741,9 @@ class LevelCustomerView extends LevelCustomer
         $this->id->setDbValue($row['id']);
         $this->level->setDbValue($row['level']);
         $this->limit_kredit->setDbValue($row['limit_kredit']);
+        $this->limit_kredit_value->setDbValue($row['limit_kredit_value']);
         $this->diskon->setDbValue($row['diskon']);
+        $this->diskon_value->setDbValue($row['diskon_value']);
         $this->updated_at->setDbValue($row['updated_at']);
     }
 
@@ -747,7 +754,9 @@ class LevelCustomerView extends LevelCustomer
         $row['id'] = null;
         $row['level'] = null;
         $row['limit_kredit'] = null;
+        $row['limit_kredit_value'] = null;
         $row['diskon'] = null;
+        $row['diskon_value'] = null;
         $row['updated_at'] = null;
         return $row;
     }
@@ -765,6 +774,11 @@ class LevelCustomerView extends LevelCustomer
         $this->ListUrl = $this->getListUrl();
         $this->setupOtherOptions();
 
+        // Convert decimal values if posted back
+        if ($this->diskon_value->FormValue == $this->diskon_value->CurrentValue && is_numeric(ConvertToFloatString($this->diskon_value->CurrentValue))) {
+            $this->diskon_value->CurrentValue = ConvertToFloatString($this->diskon_value->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -776,7 +790,11 @@ class LevelCustomerView extends LevelCustomer
 
         // limit_kredit
 
+        // limit_kredit_value
+
         // diskon
+
+        // diskon_value
 
         // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -788,19 +806,19 @@ class LevelCustomerView extends LevelCustomer
             $this->level->ViewValue = $this->level->CurrentValue;
             $this->level->ViewCustomAttributes = "";
 
-            // limit_kredit
-            $this->limit_kredit->ViewValue = $this->limit_kredit->CurrentValue;
-            $this->limit_kredit->ViewValue = FormatNumber($this->limit_kredit->ViewValue, 0, -2, -2, -2);
-            $this->limit_kredit->ViewCustomAttributes = "";
+            // limit_kredit_value
+            $this->limit_kredit_value->ViewValue = $this->limit_kredit_value->CurrentValue;
+            $this->limit_kredit_value->ViewValue = FormatCurrency($this->limit_kredit_value->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_value->ViewCustomAttributes = "";
 
-            // diskon
-            $this->diskon->ViewValue = $this->diskon->CurrentValue;
-            $this->diskon->ViewValue = FormatNumber($this->diskon->ViewValue, 0, -2, -2, -2);
-            $this->diskon->ViewCustomAttributes = "";
+            // diskon_value
+            $this->diskon_value->ViewValue = $this->diskon_value->CurrentValue;
+            $this->diskon_value->ViewValue = FormatNumber($this->diskon_value->ViewValue, 2, -2, -2, -2);
+            $this->diskon_value->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // level
@@ -808,15 +826,15 @@ class LevelCustomerView extends LevelCustomer
             $this->level->HrefValue = "";
             $this->level->TooltipValue = "";
 
-            // limit_kredit
-            $this->limit_kredit->LinkCustomAttributes = "";
-            $this->limit_kredit->HrefValue = "";
-            $this->limit_kredit->TooltipValue = "";
+            // limit_kredit_value
+            $this->limit_kredit_value->LinkCustomAttributes = "";
+            $this->limit_kredit_value->HrefValue = "";
+            $this->limit_kredit_value->TooltipValue = "";
 
-            // diskon
-            $this->diskon->LinkCustomAttributes = "";
-            $this->diskon->HrefValue = "";
-            $this->diskon->TooltipValue = "";
+            // diskon_value
+            $this->diskon_value->LinkCustomAttributes = "";
+            $this->diskon_value->HrefValue = "";
+            $this->diskon_value->TooltipValue = "";
         }
 
         // Call Row Rendered event

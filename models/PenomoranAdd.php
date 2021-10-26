@@ -357,6 +357,7 @@ class PenomoranAdd extends Penomoran
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -368,6 +369,9 @@ class PenomoranAdd extends Penomoran
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -460,7 +464,7 @@ class PenomoranAdd extends Penomoran
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->_menu->setVisibility();
         $this->jumlah_digit->setVisibility();
         $this->format->setVisibility();
@@ -497,8 +501,13 @@ class PenomoranAdd extends Penomoran
             $this->CurrentAction = Post("action"); // Get form action
             $this->setKey(Post($this->OldKeyName));
             $postBack = true;
-        } else { // Not post back
-            $this->CopyRecord = false;
+        } else {
+            // Load key values from QueryString
+            if (($keyValue = Get("id") ?? Route("id")) !== null) {
+                $this->id->setQueryStringValue($keyValue);
+            }
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
+            $this->CopyRecord = !EmptyValue($this->OldKey);
             if ($this->CopyRecord) {
                 $this->CurrentAction = "copy"; // Copy record
             } else {
@@ -627,16 +636,6 @@ class PenomoranAdd extends Penomoran
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'menu' first before field var 'x__menu'
         $val = $CurrentForm->hasValue("menu") ? $CurrentForm->getValue("menu") : $CurrentForm->getValue("x__menu");
         if (!$this->_menu->IsDetailKey) {
@@ -676,13 +675,15 @@ class PenomoranAdd extends Penomoran
                 $this->display->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->_menu->CurrentValue = $this->_menu->FormValue;
         $this->jumlah_digit->CurrentValue = $this->jumlah_digit->FormValue;
         $this->format->CurrentValue = $this->format->FormValue;
@@ -761,7 +762,17 @@ class PenomoranAdd extends Penomoran
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -788,10 +799,6 @@ class PenomoranAdd extends Penomoran
 
         // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // menu
             $this->_menu->ViewValue = $this->_menu->CurrentValue;
             $this->_menu->ViewCustomAttributes = "";
@@ -814,11 +821,6 @@ class PenomoranAdd extends Penomoran
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // menu
             $this->_menu->LinkCustomAttributes = "";
             $this->_menu->HrefValue = "";
@@ -839,12 +841,6 @@ class PenomoranAdd extends Penomoran
             $this->display->HrefValue = "";
             $this->display->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // menu
             $this->_menu->EditAttrs["class"] = "form-control";
             $this->_menu->EditCustomAttributes = "";
@@ -880,10 +876,6 @@ class PenomoranAdd extends Penomoran
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // menu
             $this->_menu->LinkCustomAttributes = "";
             $this->_menu->HrefValue = "";
@@ -918,14 +910,6 @@ class PenomoranAdd extends Penomoran
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->_menu->Required) {
             if (!$this->_menu->IsDetailKey && EmptyValue($this->_menu->FormValue)) {
@@ -974,9 +958,6 @@ class PenomoranAdd extends Penomoran
         if ($rsold) {
         }
         $rsnew = [];
-
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, false);
 
         // menu
         $this->_menu->setDbValueDef($rsnew, $this->_menu->CurrentValue, "", false);

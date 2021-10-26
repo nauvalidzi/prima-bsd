@@ -1653,8 +1653,10 @@ class VPenagihanList extends VPenagihan
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
-        $item = &$this->ListOptions->add("SendReminder");
-        $item->Header = "Send Reminder";
+        $item = &$this->ListOptions->add("checkbox");
+        $item->Header = "<input type=\"checkbox\" id=\"check-all\">";
+        $item->OnLeft = true;
+        $item->moveTo(0); 
     }
 
     // ListOptions Rendering event
@@ -1670,7 +1672,7 @@ class VPenagihanList extends VPenagihan
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        $this->ListOptions["SendReminder"]->Body = "<a href=\"api/send-reminder?id={$this->kodeorder->CurrentValue}\">Send</a>";
+        $this->ListOptions["checkbox"]->Body = "<input type=\"checkbox\" id=\"check-row\" value=\"{$this->kodeorder->CurrentValue}\">";
     }
 
     // Row Custom Action event

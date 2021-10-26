@@ -20,7 +20,6 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.penomoran)
         ew.vars.tables.penomoran = currentTable;
     fpenomoranadd.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["_menu", [fields._menu.visible && fields._menu.required ? ew.Validators.required(fields._menu.caption) : null], fields._menu.isInvalid],
         ["jumlah_digit", [fields.jumlah_digit.visible && fields.jumlah_digit.required ? ew.Validators.required(fields.jumlah_digit.caption) : null, ew.Validators.integer], fields.jumlah_digit.isInvalid],
         ["format", [fields.format.visible && fields.format.required ? ew.Validators.required(fields.format.caption) : null], fields.format.isInvalid],
@@ -113,18 +112,6 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id" class="form-group row">
-        <label id="elh_penomoran_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
-<span id="el_penomoran_id">
-<input type="<?= $Page->id->getInputTextType() ?>" data-table="penomoran" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
-<?= $Page->id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->_menu->Visible) { // menu ?>
     <div id="r__menu" class="form-group row">
         <label id="elh_penomoran__menu" for="x__menu" class="<?= $Page->LeftColumnClass ?>"><?= $Page->_menu->caption() ?><?= $Page->_menu->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
