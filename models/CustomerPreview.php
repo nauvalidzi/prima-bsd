@@ -442,6 +442,7 @@ class CustomerPreview extends Customer
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
         $this->setupLookupOptions($this->level_customer_id);
+        $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
         // Load filter
         $filter = Get("f", "");
@@ -801,6 +802,8 @@ class CustomerPreview extends Customer
                 case "x_idkel":
                     break;
                 case "x_level_customer_id":
+                    break;
+                case "x_jatuh_tempo_invoice":
                     break;
                 case "x_aktif":
                     break;

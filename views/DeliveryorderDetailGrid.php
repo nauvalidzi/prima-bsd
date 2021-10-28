@@ -24,6 +24,7 @@ loadjs.ready("head", function () {
     fdeliveryorder_detailgrid.addFields([
         ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
         ["idorder_detail", [fields.idorder_detail.visible && fields.idorder_detail.required ? ew.Validators.required(fields.idorder_detail.caption) : null], fields.idorder_detail.isInvalid],
+        ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null], fields.totalorder.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
         ["jumlahkirim", [fields.jumlahkirim.visible && fields.jumlahkirim.required ? ew.Validators.required(fields.jumlahkirim.caption) : null, ew.Validators.integer], fields.jumlahkirim.isInvalid]
     ]);
@@ -83,6 +84,8 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idorder_detail", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "totalorder", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "sisa", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "jumlahkirim", false))
@@ -131,6 +134,9 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->idorder_detail->Visible) { // idorder_detail ?>
         <th data-name="idorder_detail" class="<?= $Grid->idorder_detail->headerCellClass() ?>"><div id="elh_deliveryorder_detail_idorder_detail" class="deliveryorder_detail_idorder_detail"><?= $Grid->renderSort($Grid->idorder_detail) ?></div></th>
+<?php } ?>
+<?php if ($Grid->totalorder->Visible) { // totalorder ?>
+        <th data-name="totalorder" class="<?= $Grid->totalorder->headerCellClass() ?>"><div id="elh_deliveryorder_detail_totalorder" class="deliveryorder_detail_totalorder"><?= $Grid->renderSort($Grid->totalorder) ?></div></th>
 <?php } ?>
 <?php if ($Grid->sisa->Visible) { // sisa ?>
         <th data-name="sisa" class="<?= $Grid->sisa->headerCellClass() ?>"><div id="elh_deliveryorder_detail_sisa" class="deliveryorder_detail_sisa"><?= $Grid->renderSort($Grid->sisa) ?></div></th>
@@ -393,6 +399,34 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->totalorder->Visible) { // totalorder ?>
+        <td data-name="totalorder" <?= $Grid->totalorder->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_deliveryorder_detail_totalorder" class="form-group">
+<input type="<?= $Grid->totalorder->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_totalorder" name="x<?= $Grid->RowIndex ?>_totalorder" id="x<?= $Grid->RowIndex ?>_totalorder" size="30" placeholder="<?= HtmlEncode($Grid->totalorder->getPlaceHolder()) ?>" value="<?= $Grid->totalorder->EditValue ?>"<?= $Grid->totalorder->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totalorder->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="deliveryorder_detail" data-field="x_totalorder" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totalorder" id="o<?= $Grid->RowIndex ?>_totalorder" value="<?= HtmlEncode($Grid->totalorder->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_deliveryorder_detail_totalorder" class="form-group">
+<span<?= $Grid->totalorder->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->totalorder->getDisplayValue($Grid->totalorder->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="deliveryorder_detail" data-field="x_totalorder" data-hidden="1" name="x<?= $Grid->RowIndex ?>_totalorder" id="x<?= $Grid->RowIndex ?>_totalorder" value="<?= HtmlEncode($Grid->totalorder->CurrentValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_deliveryorder_detail_totalorder">
+<span<?= $Grid->totalorder->viewAttributes() ?>>
+<?= $Grid->totalorder->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="deliveryorder_detail" data-field="x_totalorder" data-hidden="1" name="fdeliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_totalorder" id="fdeliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_totalorder" value="<?= HtmlEncode($Grid->totalorder->FormValue) ?>">
+<input type="hidden" data-table="deliveryorder_detail" data-field="x_totalorder" data-hidden="1" name="fdeliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_totalorder" id="fdeliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_totalorder" value="<?= HtmlEncode($Grid->totalorder->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
     <?php if ($Grid->sisa->Visible) { // sisa ?>
         <td data-name="sisa" <?= $Grid->sisa->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -567,6 +601,23 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="deliveryorder_detail" data-field="x_idorder_detail" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idorder_detail" id="x<?= $Grid->RowIndex ?>_idorder_detail" value="<?= HtmlEncode($Grid->idorder_detail->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="deliveryorder_detail" data-field="x_idorder_detail" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idorder_detail" id="o<?= $Grid->RowIndex ?>_idorder_detail" value="<?= HtmlEncode($Grid->idorder_detail->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->totalorder->Visible) { // totalorder ?>
+        <td data-name="totalorder">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_deliveryorder_detail_totalorder" class="form-group deliveryorder_detail_totalorder">
+<input type="<?= $Grid->totalorder->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_totalorder" name="x<?= $Grid->RowIndex ?>_totalorder" id="x<?= $Grid->RowIndex ?>_totalorder" size="30" placeholder="<?= HtmlEncode($Grid->totalorder->getPlaceHolder()) ?>" value="<?= $Grid->totalorder->EditValue ?>"<?= $Grid->totalorder->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totalorder->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_deliveryorder_detail_totalorder" class="form-group deliveryorder_detail_totalorder">
+<span<?= $Grid->totalorder->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->totalorder->getDisplayValue($Grid->totalorder->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="deliveryorder_detail" data-field="x_totalorder" data-hidden="1" name="x<?= $Grid->RowIndex ?>_totalorder" id="x<?= $Grid->RowIndex ?>_totalorder" value="<?= HtmlEncode($Grid->totalorder->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="deliveryorder_detail" data-field="x_totalorder" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totalorder" id="o<?= $Grid->RowIndex ?>_totalorder" value="<?= HtmlEncode($Grid->totalorder->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->sisa->Visible) { // sisa ?>

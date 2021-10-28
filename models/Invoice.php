@@ -182,6 +182,7 @@ class Invoice extends DbTable
         // idtermpayment
         $this->idtermpayment = new DbField('invoice', 'invoice', 'x_idtermpayment', 'idtermpayment', '`idtermpayment`', '`idtermpayment`', 3, 11, -1, false, '`idtermpayment`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idtermpayment->Nullable = false; // NOT NULL field
+        $this->idtermpayment->Required = true; // Required field
         $this->idtermpayment->Sortable = true; // Allow sort
         $this->idtermpayment->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idtermpayment->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text

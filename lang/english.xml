@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/10/26" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/10/28" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1073,28 +1073,31 @@
       <phrase id="menutext" value="Laporan" />
     </menu>
     <menu id="478">
-      <phrase id="menutext" value="Laporan Sales" />
+      <phrase id="menutext" value="Sales" />
     </menu>
     <menu id="583">
-      <phrase id="menutext" value="Laporan Purchase Order" />
+      <phrase id="menutext" value="Purchase Order" />
     </menu>
     <menu id="584">
-      <phrase id="menutext" value="Laporan Delivery Order" />
+      <phrase id="menutext" value="Delivery Order" />
     </menu>
     <menu id="585">
-      <phrase id="menutext" value="Laporan Invoice" />
+      <phrase id="menutext" value="Invoice" />
     </menu>
     <menu id="586">
-      <phrase id="menutext" value="Laporan Surat Jalan" />
+      <phrase id="menutext" value="Surat Jalan" />
     </menu>
     <menu id="587">
-      <phrase id="menutext" value="Laporan Pembayaran" />
+      <phrase id="menutext" value="Pembayaran" />
     </menu>
     <menu id="592">
-      <phrase id="menutext" value="Laporan KPI Marketing" />
+      <phrase id="menutext" value="KPI Marketing" />
     </menu>
     <menu id="593">
-      <phrase id="menutext" value="Laporan KPI Marketing Detail" />
+      <phrase id="menutext" value="KPI Marketing Detail" />
+    </menu>
+    <menu id="601">
+      <phrase id="menutext" value="Order Customer" />
     </menu>
     <menu id="567">
       <phrase id="menutext" value="Stok" />
@@ -2622,6 +2625,12 @@
       <field id="idorder">
         <phrase id="fldcaption" value="idorder" />
       </field>
+      <field id="harga">
+        <phrase id="fldcaption" value="harga" />
+      </field>
+      <field id="totalorder">
+        <phrase id="fldcaption" value="totalorder" />
+      </field>
       <field id="sisa">
         <phrase id="fldcaption" value="sisa" />
       </field>
@@ -2631,9 +2640,6 @@
         <phrase id="fldtagcaption1" value="Yes" />
         <phrase id="fldtagvalue2" value="0" />
         <phrase id="fldtagcaption2" value="No" />
-      </field>
-      <field id="harga">
-        <phrase id="fldcaption" value="harga" />
       </field>
     </table>
     <table id="v_stock">
@@ -2779,6 +2785,9 @@
       </field>
       <field id="idorder_detail">
         <phrase id="fldcaption" value="Produk" />
+      </field>
+      <field id="totalorder">
+        <phrase id="fldcaption" value="Total Order" />
       </field>
       <field id="sisa">
         <phrase id="fldcaption" value="Sisa Order" />
@@ -3575,6 +3584,9 @@
       <field id="value">
         <phrase id="fldcaption" value="value" />
       </field>
+    </table>
+    <table id="laporan_order_customer">
+      <phrase id="tblcaption" value="Laporan Order Customer" />
     </table>
   </project>
 </ew-language>

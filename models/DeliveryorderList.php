@@ -2124,6 +2124,9 @@ class DeliveryorderList extends Deliveryorder
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
+        $item = &$this->ListOptions->add("status");
+        $item->Header = "Status";
+        $item->MoveTo(1); 
     }
 
     // ListOptions Rendering event
@@ -2143,6 +2146,7 @@ class DeliveryorderList extends Deliveryorder
         	$this->ListOptions->Items["edit"]->Body = "";
         	$this->ListOptions->Items["delete"]->Body = "";
         }
+        $this->ListOptions->Items["status"]->Body = status_delivery($this->id->CurrentValue);
     }
 
     // Row Custom Action event

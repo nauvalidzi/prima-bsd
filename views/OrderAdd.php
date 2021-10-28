@@ -286,6 +286,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("/bsd/api/nextKode/order/0",(function(e){$("#x_kode").val(e)}))}));
+    loadjs.ready("jquery",(function(){$.get("api/nextKode/order/0",(function(e){$("#x_kode").val(e)}))}));
 });
 </script>

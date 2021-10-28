@@ -31,9 +31,10 @@ class VOrderdetail extends DbTable
     public $id;
     public $nama;
     public $idorder;
+    public $harga;
+    public $totalorder;
     public $sisa;
     public $aktif;
-    public $harga;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -96,6 +97,23 @@ class VOrderdetail extends DbTable
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
         $this->Fields['idorder'] = &$this->idorder;
 
+        // harga
+        $this->harga = new DbField('v_orderdetail', 'v_orderdetail', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->harga->Nullable = false; // NOT NULL field
+        $this->harga->Required = true; // Required field
+        $this->harga->Sortable = true; // Allow sort
+        $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");
+        $this->Fields['harga'] = &$this->harga;
+
+        // totalorder
+        $this->totalorder = new DbField('v_orderdetail', 'v_orderdetail', 'x_totalorder', 'totalorder', '`totalorder`', '`totalorder`', 20, 21, -1, false, '`totalorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totalorder->Nullable = false; // NOT NULL field
+        $this->totalorder->Sortable = true; // Allow sort
+        $this->totalorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->totalorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totalorder->Param, "CustomMsg");
+        $this->Fields['totalorder'] = &$this->totalorder;
+
         // sisa
         $this->sisa = new DbField('v_orderdetail', 'v_orderdetail', 'x_sisa', 'sisa', '`sisa`', '`sisa`', 20, 20, -1, false, '`sisa`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisa->Nullable = false; // NOT NULL field
@@ -122,15 +140,6 @@ class VOrderdetail extends DbTable
         $this->aktif->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->aktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktif->Param, "CustomMsg");
         $this->Fields['aktif'] = &$this->aktif;
-
-        // harga
-        $this->harga = new DbField('v_orderdetail', 'v_orderdetail', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->harga->Nullable = false; // NOT NULL field
-        $this->harga->Required = true; // Required field
-        $this->harga->Sortable = true; // Allow sort
-        $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");
-        $this->Fields['harga'] = &$this->harga;
     }
 
     // Field Visibility
@@ -547,9 +556,10 @@ class VOrderdetail extends DbTable
         $this->id->DbValue = $row['id'];
         $this->nama->DbValue = $row['nama'];
         $this->idorder->DbValue = $row['idorder'];
+        $this->harga->DbValue = $row['harga'];
+        $this->totalorder->DbValue = $row['totalorder'];
         $this->sisa->DbValue = $row['sisa'];
         $this->aktif->DbValue = $row['aktif'];
-        $this->harga->DbValue = $row['harga'];
     }
 
     // Delete uploaded files
@@ -873,9 +883,10 @@ SORTHTML;
         $this->id->setDbValue($row['id']);
         $this->nama->setDbValue($row['nama']);
         $this->idorder->setDbValue($row['idorder']);
+        $this->harga->setDbValue($row['harga']);
+        $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
         $this->aktif->setDbValue($row['aktif']);
-        $this->harga->setDbValue($row['harga']);
     }
 
     // Render list row values
@@ -894,11 +905,13 @@ SORTHTML;
 
         // idorder
 
+        // harga
+
+        // totalorder
+
         // sisa
 
         // aktif
-
-        // harga
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -913,6 +926,16 @@ SORTHTML;
         $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
         $this->idorder->ViewCustomAttributes = "";
 
+        // harga
+        $this->harga->ViewValue = $this->harga->CurrentValue;
+        $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
+        $this->harga->ViewCustomAttributes = "";
+
+        // totalorder
+        $this->totalorder->ViewValue = $this->totalorder->CurrentValue;
+        $this->totalorder->ViewValue = FormatNumber($this->totalorder->ViewValue, 0, -2, -2, -2);
+        $this->totalorder->ViewCustomAttributes = "";
+
         // sisa
         $this->sisa->ViewValue = $this->sisa->CurrentValue;
         $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
@@ -925,11 +948,6 @@ SORTHTML;
             $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
         }
         $this->aktif->ViewCustomAttributes = "";
-
-        // harga
-        $this->harga->ViewValue = $this->harga->CurrentValue;
-        $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-        $this->harga->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -946,6 +964,16 @@ SORTHTML;
         $this->idorder->HrefValue = "";
         $this->idorder->TooltipValue = "";
 
+        // harga
+        $this->harga->LinkCustomAttributes = "";
+        $this->harga->HrefValue = "";
+        $this->harga->TooltipValue = "";
+
+        // totalorder
+        $this->totalorder->LinkCustomAttributes = "";
+        $this->totalorder->HrefValue = "";
+        $this->totalorder->TooltipValue = "";
+
         // sisa
         $this->sisa->LinkCustomAttributes = "";
         $this->sisa->HrefValue = "";
@@ -955,11 +983,6 @@ SORTHTML;
         $this->aktif->LinkCustomAttributes = "";
         $this->aktif->HrefValue = "";
         $this->aktif->TooltipValue = "";
-
-        // harga
-        $this->harga->LinkCustomAttributes = "";
-        $this->harga->HrefValue = "";
-        $this->harga->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -997,6 +1020,18 @@ SORTHTML;
         $this->idorder->EditValue = $this->idorder->CurrentValue;
         $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
+        // harga
+        $this->harga->EditAttrs["class"] = "form-control";
+        $this->harga->EditCustomAttributes = "";
+        $this->harga->EditValue = $this->harga->CurrentValue;
+        $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
+
+        // totalorder
+        $this->totalorder->EditAttrs["class"] = "form-control";
+        $this->totalorder->EditCustomAttributes = "";
+        $this->totalorder->EditValue = $this->totalorder->CurrentValue;
+        $this->totalorder->PlaceHolder = RemoveHtml($this->totalorder->caption());
+
         // sisa
         $this->sisa->EditAttrs["class"] = "form-control";
         $this->sisa->EditCustomAttributes = "";
@@ -1007,12 +1042,6 @@ SORTHTML;
         $this->aktif->EditCustomAttributes = "";
         $this->aktif->EditValue = $this->aktif->options(false);
         $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
-
-        // harga
-        $this->harga->EditAttrs["class"] = "form-control";
-        $this->harga->EditCustomAttributes = "";
-        $this->harga->EditValue = $this->harga->CurrentValue;
-        $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1045,16 +1074,18 @@ SORTHTML;
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->idorder);
+                    $doc->exportCaption($this->harga);
+                    $doc->exportCaption($this->totalorder);
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->aktif);
-                    $doc->exportCaption($this->harga);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->idorder);
+                    $doc->exportCaption($this->harga);
+                    $doc->exportCaption($this->totalorder);
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->aktif);
-                    $doc->exportCaption($this->harga);
                 }
                 $doc->endExportRow();
             }
@@ -1087,16 +1118,18 @@ SORTHTML;
                         $doc->exportField($this->id);
                         $doc->exportField($this->nama);
                         $doc->exportField($this->idorder);
+                        $doc->exportField($this->harga);
+                        $doc->exportField($this->totalorder);
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->aktif);
-                        $doc->exportField($this->harga);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->nama);
                         $doc->exportField($this->idorder);
+                        $doc->exportField($this->harga);
+                        $doc->exportField($this->totalorder);
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->aktif);
-                        $doc->exportField($this->harga);
                     }
                     $doc->endExportRow($rowCnt);
                 }

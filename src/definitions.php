@@ -130,6 +130,7 @@ return [
     "bot_history" => \DI\create(BotHistory::class),
     "v_penagihan" => \DI\create(VPenagihan::class),
     "termpayment" => \DI\create(Termpayment::class),
+    "laporan_order_customer" => \DI\create(LaporanOrderCustomer::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

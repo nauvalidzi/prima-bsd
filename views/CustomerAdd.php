@@ -41,7 +41,7 @@ loadjs.ready("head", function () {
         ["website", [fields.website.visible && fields.website.required ? ew.Validators.required(fields.website.caption) : null], fields.website.isInvalid],
         ["foto", [fields.foto.visible && fields.foto.required ? ew.Validators.fileRequired(fields.foto.caption) : null], fields.foto.isInvalid],
         ["level_customer_id", [fields.level_customer_id.visible && fields.level_customer_id.required ? ew.Validators.required(fields.level_customer_id.caption) : null], fields.level_customer_id.isInvalid],
-        ["jatuh_tempo_invoice", [fields.jatuh_tempo_invoice.visible && fields.jatuh_tempo_invoice.required ? ew.Validators.required(fields.jatuh_tempo_invoice.caption) : null, ew.Validators.integer], fields.jatuh_tempo_invoice.isInvalid],
+        ["jatuh_tempo_invoice", [fields.jatuh_tempo_invoice.visible && fields.jatuh_tempo_invoice.required ? ew.Validators.required(fields.jatuh_tempo_invoice.caption) : null], fields.jatuh_tempo_invoice.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
@@ -118,6 +118,7 @@ loadjs.ready("head", function () {
     fcustomeradd.lists.idkec = <?= $Page->idkec->toClientList($Page) ?>;
     fcustomeradd.lists.idkel = <?= $Page->idkel->toClientList($Page) ?>;
     fcustomeradd.lists.level_customer_id = <?= $Page->level_customer_id->toClientList($Page) ?>;
+    fcustomeradd.lists.jatuh_tempo_invoice = <?= $Page->jatuh_tempo_invoice->toClientList($Page) ?>;
     fcustomeradd.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
     loadjs.done("fcustomeradd");
 });
@@ -600,9 +601,30 @@ loadjs.ready("head", function() {
         <label id="elh_customer_jatuh_tempo_invoice" for="x_jatuh_tempo_invoice" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jatuh_tempo_invoice->caption() ?><?= $Page->jatuh_tempo_invoice->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jatuh_tempo_invoice->cellAttributes() ?>>
 <span id="el_customer_jatuh_tempo_invoice">
-<input type="<?= $Page->jatuh_tempo_invoice->getInputTextType() ?>" data-table="customer" data-field="x_jatuh_tempo_invoice" name="x_jatuh_tempo_invoice" id="x_jatuh_tempo_invoice" size="30" placeholder="<?= HtmlEncode($Page->jatuh_tempo_invoice->getPlaceHolder()) ?>" value="<?= $Page->jatuh_tempo_invoice->EditValue ?>"<?= $Page->jatuh_tempo_invoice->editAttributes() ?> aria-describedby="x_jatuh_tempo_invoice_help">
-<?= $Page->jatuh_tempo_invoice->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jatuh_tempo_invoice->getErrorMessage() ?></div>
+    <select
+        id="x_jatuh_tempo_invoice"
+        name="x_jatuh_tempo_invoice"
+        class="form-control ew-select<?= $Page->jatuh_tempo_invoice->isInvalidClass() ?>"
+        data-select2-id="customer_x_jatuh_tempo_invoice"
+        data-table="customer"
+        data-field="x_jatuh_tempo_invoice"
+        data-value-separator="<?= $Page->jatuh_tempo_invoice->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->jatuh_tempo_invoice->getPlaceHolder()) ?>"
+        <?= $Page->jatuh_tempo_invoice->editAttributes() ?>>
+        <?= $Page->jatuh_tempo_invoice->selectOptionListHtml("x_jatuh_tempo_invoice") ?>
+    </select>
+    <?= $Page->jatuh_tempo_invoice->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->jatuh_tempo_invoice->getErrorMessage() ?></div>
+<?= $Page->jatuh_tempo_invoice->Lookup->getParamTag($Page, "p_x_jatuh_tempo_invoice") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='customer_x_jatuh_tempo_invoice']"),
+        options = { name: "x_jatuh_tempo_invoice", selectId: "customer_x_jatuh_tempo_invoice", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.customer.fields.jatuh_tempo_invoice.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>

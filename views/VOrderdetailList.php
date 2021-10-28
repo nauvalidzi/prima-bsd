@@ -144,14 +144,17 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idorder->Visible) { // idorder ?>
         <th data-name="idorder" class="<?= $Page->idorder->headerCellClass() ?>"><div id="elh_v_orderdetail_idorder" class="v_orderdetail_idorder"><?= $Page->renderSort($Page->idorder) ?></div></th>
 <?php } ?>
+<?php if ($Page->harga->Visible) { // harga ?>
+        <th data-name="harga" class="<?= $Page->harga->headerCellClass() ?>"><div id="elh_v_orderdetail_harga" class="v_orderdetail_harga"><?= $Page->renderSort($Page->harga) ?></div></th>
+<?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+        <th data-name="totalorder" class="<?= $Page->totalorder->headerCellClass() ?>"><div id="elh_v_orderdetail_totalorder" class="v_orderdetail_totalorder"><?= $Page->renderSort($Page->totalorder) ?></div></th>
+<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
         <th data-name="sisa" class="<?= $Page->sisa->headerCellClass() ?>"><div id="elh_v_orderdetail_sisa" class="v_orderdetail_sisa"><?= $Page->renderSort($Page->sisa) ?></div></th>
 <?php } ?>
 <?php if ($Page->aktif->Visible) { // aktif ?>
         <th data-name="aktif" class="<?= $Page->aktif->headerCellClass() ?>"><div id="elh_v_orderdetail_aktif" class="v_orderdetail_aktif"><?= $Page->renderSort($Page->aktif) ?></div></th>
-<?php } ?>
-<?php if ($Page->harga->Visible) { // harga ?>
-        <th data-name="harga" class="<?= $Page->harga->headerCellClass() ?>"><div id="elh_v_orderdetail_harga" class="v_orderdetail_harga"><?= $Page->renderSort($Page->harga) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -244,6 +247,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->harga->Visible) { // harga ?>
+        <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_orderdetail_harga">
+<span<?= $Page->harga->viewAttributes() ?>>
+<?= $Page->harga->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->totalorder->Visible) { // totalorder ?>
+        <td data-name="totalorder" <?= $Page->totalorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_orderdetail_totalorder">
+<span<?= $Page->totalorder->viewAttributes() ?>>
+<?= $Page->totalorder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->sisa->Visible) { // sisa ?>
         <td data-name="sisa" <?= $Page->sisa->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_v_orderdetail_sisa">
@@ -260,14 +279,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
     <input type="checkbox" id="x_aktif_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->aktif->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->aktif->CurrentValue)) { ?> checked<?php } ?>>
     <label class="custom-control-label" for="x_aktif_<?= $Page->RowCount ?>"></label>
 </div></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->harga->Visible) { // harga ?>
-        <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_orderdetail_harga">
-<span<?= $Page->harga->viewAttributes() ?>>
-<?= $Page->harga->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -25,58 +25,65 @@ $query_kpi = "SELECT p.id as idpegawai, p.nama AS namapegawai,
 
 $query_kpi = ExecuteQuery($query_kpi)->fetchAll();
 
-$customers = ExecuteScalar("SELECT count(id) FROM customer WHERE aktif = 1");
-$product = ExecuteScalar("SELECT count(id) FROM product WHERE aktif = 1");
-$npd = ExecuteScalar("SELECT count(id) FROM npd");
-$do = ExecuteScalar("SELECT count(id) FROM deliveryorder");
+// ORDERS PENDING & UNCOMPLETE
+$orders_unprocess = ExecuteRow("SELECT COUNT(DISTINCT idorder) AS total FROM order_detail WHERE sisa > 0")['total'];
+
+// UNCOMPLETE / PENDING DELIVERY ORDER
+$do_uncomplete = ExecuteRow("SELECT COUNT(DISTINCT dd.iddeliveryorder) as total FROM deliveryorder_detail dd JOIN order_detail od ON od.id = dd.idorder_detail WHERE od.sisa > 0")['total'];
+
+// INVOICE UNPAID
+$invoice_unpaid = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sisabayar > 0")['total'];
+
+// INVOICE UNSENT
+$invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent < 1")['total'];
 ?>
 <div class="row">
     <div class="col-lg-3 col-xs-6">
       <div class="small-box bg-blue">
         <div class="inner">
-          <h3><?php echo $customers ?></h3>
-          <p>Pelanggan</p>
+          <h3><?php echo $orders_unprocess ?></h3>
+          <p>P.O. Unprocess</p>
         </div>
         <div class="icon">
           <i class="fa fa-users"></i>
         </div>
-        <a href="CustomerList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="OrderList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
       <div class="small-box bg-green">
         <div class="inner">
-          <h3><?php echo $product ?></h3>
-          <p>Produk</p>
+          <h3><?php echo $do_uncomplete ?></h3>
+          <p>Pending Delivery Orders</p>
         </div>
         <div class="icon">
           <i class="fa fa-cubes"></i>
         </div>
-        <a href="ProductList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="DeliveryorderList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
       <div class="small-box bg-yellow">
         <div class="inner">
-          <h3><?php echo $npd ?></h3>
-          <p>Pengembangan Produk</p>
+          <h3><?php echo $invoice_unpaid ?></h3>
+          <p>Unpaid Invoices</p>
         </div>
         <div class="icon">
           <i class="fa fa-dice"></i>
         </div>
-        <a href="NpdList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="InvoiceList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
       <div class="small-box bg-red">
         <div class="inner">
-          <h3><?php echo $do ?></h3>
-          <p>Delivery Order</p>
+          <h3><?php echo $invoice_unsent ?></h3>
+          <p>Unsent Invoices</p>
         </div>
         <div class="icon">
           <i class="fa fa-truck-loading"></i>
         </div>
-        <a href="DeliveryorderList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="InvoiceList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
 </div>

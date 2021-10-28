@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.deliveryorder_detail)
         ew.vars.tables.deliveryorder_detail = currentTable;
     fdeliveryorder_detailedit.addFields([
+        ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null], fields.totalorder.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
         ["jumlahkirim", [fields.jumlahkirim.visible && fields.jumlahkirim.required ? ew.Validators.required(fields.jumlahkirim.caption) : null, ew.Validators.integer], fields.jumlahkirim.isInvalid]
     ]);
@@ -114,6 +115,18 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->iddeliveryorder->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-edit-div"><!-- page* -->
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+    <div id="r_totalorder" class="form-group row">
+        <label id="elh_deliveryorder_detail_totalorder" for="x_totalorder" class="<?= $Page->LeftColumnClass ?>"><?= $Page->totalorder->caption() ?><?= $Page->totalorder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->totalorder->cellAttributes() ?>>
+<span id="el_deliveryorder_detail_totalorder">
+<span<?= $Page->totalorder->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->totalorder->getDisplayValue($Page->totalorder->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="deliveryorder_detail" data-field="x_totalorder" data-hidden="1" name="x_totalorder" id="x_totalorder" value="<?= HtmlEncode($Page->totalorder->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
     <div id="r_sisa" class="form-group row">
         <label id="elh_deliveryorder_detail_sisa" for="x_sisa" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sisa->caption() ?><?= $Page->sisa->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

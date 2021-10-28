@@ -509,6 +509,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         $this->iddeliveryorder->Visible = false;
         $this->idorder->setVisibility();
         $this->idorder_detail->setVisibility();
+        $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
         $this->jumlahkirim->setVisibility();
         $this->created_at->Visible = false;
@@ -951,6 +952,9 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         if ($CurrentForm->hasValue("x_idorder_detail") && $CurrentForm->hasValue("o_idorder_detail") && $this->idorder_detail->CurrentValue != $this->idorder_detail->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_totalorder") && $CurrentForm->hasValue("o_totalorder") && $this->totalorder->CurrentValue != $this->totalorder->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_sisa") && $CurrentForm->hasValue("o_sisa") && $this->sisa->CurrentValue != $this->sisa->OldValue) {
             return false;
         }
@@ -1040,6 +1044,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
     {
         $this->idorder->clearErrorMessage();
         $this->idorder_detail->clearErrorMessage();
+        $this->totalorder->clearErrorMessage();
         $this->sisa->clearErrorMessage();
         $this->jumlahkirim->clearErrorMessage();
     }
@@ -1302,6 +1307,8 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         $this->idorder->OldValue = $this->idorder->CurrentValue;
         $this->idorder_detail->CurrentValue = null;
         $this->idorder_detail->OldValue = $this->idorder_detail->CurrentValue;
+        $this->totalorder->CurrentValue = null;
+        $this->totalorder->OldValue = $this->totalorder->CurrentValue;
         $this->sisa->CurrentValue = null;
         $this->sisa->OldValue = $this->sisa->CurrentValue;
         $this->jumlahkirim->CurrentValue = null;
@@ -1347,6 +1354,19 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             $this->idorder_detail->setOldValue($CurrentForm->getValue("o_idorder_detail"));
         }
 
+        // Check field name 'totalorder' first before field var 'x_totalorder'
+        $val = $CurrentForm->hasValue("totalorder") ? $CurrentForm->getValue("totalorder") : $CurrentForm->getValue("x_totalorder");
+        if (!$this->totalorder->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->totalorder->Visible = false; // Disable update for API request
+            } else {
+                $this->totalorder->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_totalorder")) {
+            $this->totalorder->setOldValue($CurrentForm->getValue("o_totalorder"));
+        }
+
         // Check field name 'sisa' first before field var 'x_sisa'
         $val = $CurrentForm->hasValue("sisa") ? $CurrentForm->getValue("sisa") : $CurrentForm->getValue("x_sisa");
         if (!$this->sisa->IsDetailKey) {
@@ -1389,6 +1409,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         }
         $this->idorder->CurrentValue = $this->idorder->FormValue;
         $this->idorder_detail->CurrentValue = $this->idorder_detail->FormValue;
+        $this->totalorder->CurrentValue = $this->totalorder->FormValue;
         $this->sisa->CurrentValue = $this->sisa->FormValue;
         $this->jumlahkirim->CurrentValue = $this->jumlahkirim->FormValue;
     }
@@ -1465,6 +1486,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         $this->iddeliveryorder->setDbValue($row['iddeliveryorder']);
         $this->idorder->setDbValue($row['idorder']);
         $this->idorder_detail->setDbValue($row['idorder_detail']);
+        $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
         $this->jumlahkirim->setDbValue($row['jumlahkirim']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1481,6 +1503,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         $row['iddeliveryorder'] = $this->iddeliveryorder->CurrentValue;
         $row['idorder'] = $this->idorder->CurrentValue;
         $row['idorder_detail'] = $this->idorder_detail->CurrentValue;
+        $row['totalorder'] = $this->totalorder->CurrentValue;
         $row['sisa'] = $this->sisa->CurrentValue;
         $row['jumlahkirim'] = $this->jumlahkirim->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
@@ -1528,6 +1551,8 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         // idorder
 
         // idorder_detail
+
+        // totalorder
 
         // sisa
 
@@ -1599,6 +1624,11 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             }
             $this->idorder_detail->ViewCustomAttributes = "";
 
+            // totalorder
+            $this->totalorder->ViewValue = $this->totalorder->CurrentValue;
+            $this->totalorder->ViewValue = FormatNumber($this->totalorder->ViewValue, 0, -2, -2, -2);
+            $this->totalorder->ViewCustomAttributes = "";
+
             // sisa
             $this->sisa->ViewValue = $this->sisa->CurrentValue;
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
@@ -1628,6 +1658,11 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             $this->idorder_detail->LinkCustomAttributes = "";
             $this->idorder_detail->HrefValue = "";
             $this->idorder_detail->TooltipValue = "";
+
+            // totalorder
+            $this->totalorder->LinkCustomAttributes = "";
+            $this->totalorder->HrefValue = "";
+            $this->totalorder->TooltipValue = "";
 
             // sisa
             $this->sisa->LinkCustomAttributes = "";
@@ -1697,6 +1732,12 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             }
             $this->idorder_detail->PlaceHolder = RemoveHtml($this->idorder_detail->caption());
 
+            // totalorder
+            $this->totalorder->EditAttrs["class"] = "form-control";
+            $this->totalorder->EditCustomAttributes = "readonly";
+            $this->totalorder->EditValue = HtmlEncode($this->totalorder->CurrentValue);
+            $this->totalorder->PlaceHolder = RemoveHtml($this->totalorder->caption());
+
             // sisa
             $this->sisa->EditAttrs["class"] = "form-control";
             $this->sisa->EditCustomAttributes = "readonly";
@@ -1718,6 +1759,10 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             // idorder_detail
             $this->idorder_detail->LinkCustomAttributes = "";
             $this->idorder_detail->HrefValue = "";
+
+            // totalorder
+            $this->totalorder->LinkCustomAttributes = "";
+            $this->totalorder->HrefValue = "";
 
             // sisa
             $this->sisa->LinkCustomAttributes = "";
@@ -1785,6 +1830,13 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             }
             $this->idorder_detail->PlaceHolder = RemoveHtml($this->idorder_detail->caption());
 
+            // totalorder
+            $this->totalorder->EditAttrs["class"] = "form-control";
+            $this->totalorder->EditCustomAttributes = "readonly";
+            $this->totalorder->EditValue = $this->totalorder->CurrentValue;
+            $this->totalorder->EditValue = FormatNumber($this->totalorder->EditValue, 0, -2, -2, -2);
+            $this->totalorder->ViewCustomAttributes = "";
+
             // sisa
             $this->sisa->EditAttrs["class"] = "form-control";
             $this->sisa->EditCustomAttributes = "readonly";
@@ -1806,6 +1858,11 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             // idorder_detail
             $this->idorder_detail->LinkCustomAttributes = "";
             $this->idorder_detail->HrefValue = "";
+
+            // totalorder
+            $this->totalorder->LinkCustomAttributes = "";
+            $this->totalorder->HrefValue = "";
+            $this->totalorder->TooltipValue = "";
 
             // sisa
             $this->sisa->LinkCustomAttributes = "";
@@ -1842,6 +1899,11 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         if ($this->idorder_detail->Required) {
             if (!$this->idorder_detail->IsDetailKey && EmptyValue($this->idorder_detail->FormValue)) {
                 $this->idorder_detail->addErrorMessage(str_replace("%s", $this->idorder_detail->caption(), $this->idorder_detail->RequiredErrorMessage));
+            }
+        }
+        if ($this->totalorder->Required) {
+            if (!$this->totalorder->IsDetailKey && EmptyValue($this->totalorder->FormValue)) {
+                $this->totalorder->addErrorMessage(str_replace("%s", $this->totalorder->caption(), $this->totalorder->RequiredErrorMessage));
             }
         }
         if ($this->sisa->Required) {
@@ -2085,6 +2147,9 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
 
         // idorder_detail
         $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, false);
+
+        // totalorder
+        $this->totalorder->setDbValueDef($rsnew, $this->totalorder->CurrentValue, 0, false);
 
         // sisa
         $this->sisa->setDbValueDef($rsnew, $this->sisa->CurrentValue, 0, false);

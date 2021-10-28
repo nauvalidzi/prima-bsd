@@ -48,7 +48,10 @@ $LaporanKpiMarketingDetail = &$Page;
 	}
 </style>
 <div class="container">
-	<table class="table table-bordered">
+	<li class="d-inline-block mb-2">
+		<button type="button" class="btn btn-info btn-md p-2" onclick="exportTableToExcel('printTable')"><i class="mr-2 far fa-file-excel"></i>Export to Excel</button>
+	</li>
+	<table class="table table-bordered" id="printTable">
 		<thead>
 			<tr>
 				<th colspan="10" class="text-center">
@@ -112,7 +115,40 @@ $LaporanKpiMarketingDetail = &$Page;
 			</tr>
 		</tfoot>
 		<?php endif; ?>
-	</table>
+	</table>	
+	<script>
+		function exportTableToExcel(tableID, filename = '') {
+			var downloadLink;
+			var dataType = 'data:application/vnd.ms-excel';
+			var tableSelect = document.getElementById(tableID);
+			var tableHTML = encodeURIComponent(tableSelect.outerHTML);
+			var d = new Date();
+
+			// Specify file name
+			filename = filename ? filename + '.xls' : 'Laporan KPI Marketing Detail (<?php echo $mr['kode'] . ' - ' . $mr['nama'] ?>) '+ d.toDateString() +'.xls';
+
+			// Create download link element
+			downloadLink = document.createElement("a");
+
+			document.body.appendChild(downloadLink);
+
+			if (navigator.msSaveOrOpenBlob) {
+				var blob = new Blob(['\ufeff', tableHTML], {
+					type: dataType
+				});
+				navigator.msSaveOrOpenBlob(blob, filename);
+			} else {
+				// Create a link to the file
+				downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+				// Setting the file name
+				downloadLink.download = filename;
+
+				//triggering the function
+				downloadLink.click();
+			}
+		}
+	</script>
 </div>
 
 <?= GetDebugMessage() ?>

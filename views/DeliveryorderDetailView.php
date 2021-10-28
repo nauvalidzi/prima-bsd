@@ -67,6 +67,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+    <tr id="r_totalorder">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_deliveryorder_detail_totalorder"><?= $Page->totalorder->caption() ?></span></td>
+        <td data-name="totalorder" <?= $Page->totalorder->cellAttributes() ?>>
+<span id="el_deliveryorder_detail_totalorder">
+<span<?= $Page->totalorder->viewAttributes() ?>>
+<?= $Page->totalorder->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
     <tr id="r_sisa">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_deliveryorder_detail_sisa"><?= $Page->sisa->caption() ?></span></td>

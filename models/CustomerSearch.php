@@ -507,6 +507,7 @@ class CustomerSearch extends Customer
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
         $this->setupLookupOptions($this->level_customer_id);
+        $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -1047,8 +1048,24 @@ class CustomerSearch extends Customer
             $this->level_customer_id->ViewCustomAttributes = "";
 
             // jatuh_tempo_invoice
-            $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
-            $this->jatuh_tempo_invoice->ViewValue = FormatNumber($this->jatuh_tempo_invoice->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
+            if ($curVal != "") {
+                $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->lookupCacheOption($curVal);
+                if ($this->jatuh_tempo_invoice->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->jatuh_tempo_invoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->jatuh_tempo_invoice->Lookup->renderViewRow($rswrk[0]);
+                        $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->displayValue($arwrk);
+                    } else {
+                        $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
+                    }
+                }
+            } else {
+                $this->jatuh_tempo_invoice->ViewValue = null;
+            }
             $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
             // keterangan
@@ -1567,7 +1584,26 @@ class CustomerSearch extends Customer
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
             $this->jatuh_tempo_invoice->EditCustomAttributes = "";
-            $this->jatuh_tempo_invoice->EditValue = HtmlEncode($this->jatuh_tempo_invoice->AdvancedSearch->SearchValue);
+            $curVal = trim(strval($this->jatuh_tempo_invoice->AdvancedSearch->SearchValue));
+            if ($curVal != "") {
+                $this->jatuh_tempo_invoice->AdvancedSearch->ViewValue = $this->jatuh_tempo_invoice->lookupCacheOption($curVal);
+            } else {
+                $this->jatuh_tempo_invoice->AdvancedSearch->ViewValue = $this->jatuh_tempo_invoice->Lookup !== null && is_array($this->jatuh_tempo_invoice->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->jatuh_tempo_invoice->AdvancedSearch->ViewValue !== null) { // Load from cache
+                $this->jatuh_tempo_invoice->EditValue = array_values($this->jatuh_tempo_invoice->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->jatuh_tempo_invoice->AdvancedSearch->SearchValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->jatuh_tempo_invoice->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->jatuh_tempo_invoice->EditValue = $arwrk;
+            }
             $this->jatuh_tempo_invoice->PlaceHolder = RemoveHtml($this->jatuh_tempo_invoice->caption());
 
             // keterangan
@@ -1615,9 +1651,6 @@ class CustomerSearch extends Customer
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if (!CheckInteger($this->jatuh_tempo_invoice->AdvancedSearch->SearchValue)) {
-            $this->jatuh_tempo_invoice->addErrorMessage($this->jatuh_tempo_invoice->getErrorMessage(false));
         }
 
         // Return validate result
@@ -1699,6 +1732,8 @@ class CustomerSearch extends Customer
                 case "x_idkel":
                     break;
                 case "x_level_customer_id":
+                    break;
+                case "x_jatuh_tempo_invoice":
                     break;
                 case "x_aktif":
                     break;

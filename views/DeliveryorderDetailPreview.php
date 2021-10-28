@@ -40,6 +40,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+    <?php if ($Page->SortUrl($Page->totalorder) == "") { ?>
+        <th class="<?= $Page->totalorder->headerCellClass() ?>"><?= $Page->totalorder->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->totalorder->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->totalorder->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->totalorder->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->totalorder->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->totalorder->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->totalorder->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
     <?php if ($Page->SortUrl($Page->sisa) == "") { ?>
         <th class="<?= $Page->sisa->headerCellClass() ?>"><?= $Page->sisa->caption() ?></th>
@@ -100,6 +109,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->idorder_detail->cellAttributes() ?>>
 <span<?= $Page->idorder_detail->viewAttributes() ?>>
 <?= $Page->idorder_detail->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+        <!-- totalorder -->
+        <td<?= $Page->totalorder->cellAttributes() ?>>
+<span<?= $Page->totalorder->viewAttributes() ?>>
+<?= $Page->totalorder->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>

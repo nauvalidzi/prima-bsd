@@ -22,6 +22,7 @@ loadjs.ready("head", function () {
     fdeliveryorder_detailadd.addFields([
         ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
         ["idorder_detail", [fields.idorder_detail.visible && fields.idorder_detail.required ? ew.Validators.required(fields.idorder_detail.caption) : null], fields.idorder_detail.isInvalid],
+        ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null, ew.Validators.integer], fields.totalorder.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
         ["jumlahkirim", [fields.jumlahkirim.visible && fields.jumlahkirim.required ? ew.Validators.required(fields.jumlahkirim.caption) : null, ew.Validators.integer], fields.jumlahkirim.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
@@ -183,6 +184,18 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+    <div id="r_totalorder" class="form-group row">
+        <label id="elh_deliveryorder_detail_totalorder" for="x_totalorder" class="<?= $Page->LeftColumnClass ?>"><?= $Page->totalorder->caption() ?><?= $Page->totalorder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->totalorder->cellAttributes() ?>>
+<span id="el_deliveryorder_detail_totalorder">
+<input type="<?= $Page->totalorder->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_totalorder" name="x_totalorder" id="x_totalorder" size="30" placeholder="<?= HtmlEncode($Page->totalorder->getPlaceHolder()) ?>" value="<?= $Page->totalorder->EditValue ?>"<?= $Page->totalorder->editAttributes() ?> aria-describedby="x_totalorder_help">
+<?= $Page->totalorder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->totalorder->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

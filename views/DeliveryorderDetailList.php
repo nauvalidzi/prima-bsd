@@ -108,6 +108,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idorder_detail->Visible) { // idorder_detail ?>
         <th data-name="idorder_detail" class="<?= $Page->idorder_detail->headerCellClass() ?>"><div id="elh_deliveryorder_detail_idorder_detail" class="deliveryorder_detail_idorder_detail"><?= $Page->renderSort($Page->idorder_detail) ?></div></th>
 <?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+        <th data-name="totalorder" class="<?= $Page->totalorder->headerCellClass() ?>"><div id="elh_deliveryorder_detail_totalorder" class="deliveryorder_detail_totalorder"><?= $Page->renderSort($Page->totalorder) ?></div></th>
+<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
         <th data-name="sisa" class="<?= $Page->sisa->headerCellClass() ?>"><div id="elh_deliveryorder_detail_sisa" class="deliveryorder_detail_sisa"><?= $Page->renderSort($Page->sisa) ?></div></th>
 <?php } ?>
@@ -194,6 +197,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_deliveryorder_detail_idorder_detail">
 <span<?= $Page->idorder_detail->viewAttributes() ?>>
 <?= $Page->idorder_detail->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->totalorder->Visible) { // totalorder ?>
+        <td data-name="totalorder" <?= $Page->totalorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_deliveryorder_detail_totalorder">
+<span<?= $Page->totalorder->viewAttributes() ?>>
+<?= $Page->totalorder->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

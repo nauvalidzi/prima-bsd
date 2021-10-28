@@ -839,6 +839,9 @@ class OrderPreview extends Order
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
+        $opt = &$this->ListOptions->Add("status");
+        $opt->Header = "Status";
+        $opt->MoveTo(1);
     }
 
     // ListOptions Rendering event
@@ -858,5 +861,6 @@ class OrderPreview extends Order
         	$this->ListOptions->Items["edit"]->Body = "";
         	$this->ListOptions->Items["delete"]->Body = "";
         }
+        $this->ListOptions->Items["status"]->Body = status_orders($this->id->CurrentValue);
     }
 }

@@ -521,9 +521,10 @@ class VOrderdetailView extends VOrderdetail
         $this->id->setVisibility();
         $this->nama->setVisibility();
         $this->idorder->setVisibility();
+        $this->harga->setVisibility();
+        $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
         $this->aktif->setVisibility();
-        $this->harga->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -701,9 +702,10 @@ class VOrderdetailView extends VOrderdetail
         $this->id->setDbValue($row['id']);
         $this->nama->setDbValue($row['nama']);
         $this->idorder->setDbValue($row['idorder']);
+        $this->harga->setDbValue($row['harga']);
+        $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
         $this->aktif->setDbValue($row['aktif']);
-        $this->harga->setDbValue($row['harga']);
     }
 
     // Return a row with default values
@@ -713,9 +715,10 @@ class VOrderdetailView extends VOrderdetail
         $row['id'] = null;
         $row['nama'] = null;
         $row['idorder'] = null;
+        $row['harga'] = null;
+        $row['totalorder'] = null;
         $row['sisa'] = null;
         $row['aktif'] = null;
-        $row['harga'] = null;
         return $row;
     }
 
@@ -743,11 +746,13 @@ class VOrderdetailView extends VOrderdetail
 
         // idorder
 
+        // harga
+
+        // totalorder
+
         // sisa
 
         // aktif
-
-        // harga
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -762,6 +767,16 @@ class VOrderdetailView extends VOrderdetail
             $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
 
+            // harga
+            $this->harga->ViewValue = $this->harga->CurrentValue;
+            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
+            $this->harga->ViewCustomAttributes = "";
+
+            // totalorder
+            $this->totalorder->ViewValue = $this->totalorder->CurrentValue;
+            $this->totalorder->ViewValue = FormatNumber($this->totalorder->ViewValue, 0, -2, -2, -2);
+            $this->totalorder->ViewCustomAttributes = "";
+
             // sisa
             $this->sisa->ViewValue = $this->sisa->CurrentValue;
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
@@ -774,11 +789,6 @@ class VOrderdetailView extends VOrderdetail
                 $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
             }
             $this->aktif->ViewCustomAttributes = "";
-
-            // harga
-            $this->harga->ViewValue = $this->harga->CurrentValue;
-            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-            $this->harga->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -795,6 +805,16 @@ class VOrderdetailView extends VOrderdetail
             $this->idorder->HrefValue = "";
             $this->idorder->TooltipValue = "";
 
+            // harga
+            $this->harga->LinkCustomAttributes = "";
+            $this->harga->HrefValue = "";
+            $this->harga->TooltipValue = "";
+
+            // totalorder
+            $this->totalorder->LinkCustomAttributes = "";
+            $this->totalorder->HrefValue = "";
+            $this->totalorder->TooltipValue = "";
+
             // sisa
             $this->sisa->LinkCustomAttributes = "";
             $this->sisa->HrefValue = "";
@@ -804,11 +824,6 @@ class VOrderdetailView extends VOrderdetail
             $this->aktif->LinkCustomAttributes = "";
             $this->aktif->HrefValue = "";
             $this->aktif->TooltipValue = "";
-
-            // harga
-            $this->harga->LinkCustomAttributes = "";
-            $this->harga->HrefValue = "";
-            $this->harga->TooltipValue = "";
         }
 
         // Call Row Rendered event

@@ -13,10 +13,4 @@ class PenomoranController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "PenomoranList");
     }
-
-    // add
-    public function add(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "PenomoranAdd");
-    }
 }

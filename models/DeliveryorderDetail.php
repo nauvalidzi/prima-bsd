@@ -32,6 +32,7 @@ class DeliveryorderDetail extends DbTable
     public $iddeliveryorder;
     public $idorder;
     public $idorder_detail;
+    public $totalorder;
     public $sisa;
     public $jumlahkirim;
     public $created_at;
@@ -121,15 +122,24 @@ class DeliveryorderDetail extends DbTable
         $this->idorder_detail->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idorder_detail->Lookup = new Lookup('idorder_detail', 'v_orderdetail', false, 'id', ["nama","","",""], ["x_idorder"], [], ["idorder"], ["x_idorder"], ["sisa"], ["x_sisa"], '', '');
+                $this->idorder_detail->Lookup = new Lookup('idorder_detail', 'v_orderdetail', false, 'id', ["nama","","",""], ["x_idorder"], [], ["idorder"], ["x_idorder"], ["totalorder","sisa"], ["x_totalorder","x_sisa"], '', '');
                 break;
             default:
-                $this->idorder_detail->Lookup = new Lookup('idorder_detail', 'v_orderdetail', false, 'id', ["nama","","",""], ["x_idorder"], [], ["idorder"], ["x_idorder"], ["sisa"], ["x_sisa"], '', '');
+                $this->idorder_detail->Lookup = new Lookup('idorder_detail', 'v_orderdetail', false, 'id', ["nama","","",""], ["x_idorder"], [], ["idorder"], ["x_idorder"], ["totalorder","sisa"], ["x_totalorder","x_sisa"], '', '');
                 break;
         }
         $this->idorder_detail->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder_detail->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder_detail->Param, "CustomMsg");
         $this->Fields['idorder_detail'] = &$this->idorder_detail;
+
+        // totalorder
+        $this->totalorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_totalorder', 'totalorder', '`totalorder`', '`totalorder`', 3, 11, -1, false, '`totalorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totalorder->Nullable = false; // NOT NULL field
+        $this->totalorder->Required = true; // Required field
+        $this->totalorder->Sortable = true; // Allow sort
+        $this->totalorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->totalorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totalorder->Param, "CustomMsg");
+        $this->Fields['totalorder'] = &$this->totalorder;
 
         // sisa
         $this->sisa = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_sisa', 'sisa', '`sisa`', '`sisa`', 3, 11, -1, false, '`sisa`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -644,6 +654,7 @@ class DeliveryorderDetail extends DbTable
         $this->iddeliveryorder->DbValue = $row['iddeliveryorder'];
         $this->idorder->DbValue = $row['idorder'];
         $this->idorder_detail->DbValue = $row['idorder_detail'];
+        $this->totalorder->DbValue = $row['totalorder'];
         $this->sisa->DbValue = $row['sisa'];
         $this->jumlahkirim->DbValue = $row['jumlahkirim'];
         $this->created_at->DbValue = $row['created_at'];
@@ -977,6 +988,7 @@ SORTHTML;
         $this->iddeliveryorder->setDbValue($row['iddeliveryorder']);
         $this->idorder->setDbValue($row['idorder']);
         $this->idorder_detail->setDbValue($row['idorder_detail']);
+        $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
         $this->jumlahkirim->setDbValue($row['jumlahkirim']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1001,6 +1013,8 @@ SORTHTML;
         // idorder
 
         // idorder_detail
+
+        // totalorder
 
         // sisa
 
@@ -1072,6 +1086,11 @@ SORTHTML;
         }
         $this->idorder_detail->ViewCustomAttributes = "";
 
+        // totalorder
+        $this->totalorder->ViewValue = $this->totalorder->CurrentValue;
+        $this->totalorder->ViewValue = FormatNumber($this->totalorder->ViewValue, 0, -2, -2, -2);
+        $this->totalorder->ViewCustomAttributes = "";
+
         // sisa
         $this->sisa->ViewValue = $this->sisa->CurrentValue;
         $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
@@ -1115,6 +1134,11 @@ SORTHTML;
         $this->idorder_detail->LinkCustomAttributes = "";
         $this->idorder_detail->HrefValue = "";
         $this->idorder_detail->TooltipValue = "";
+
+        // totalorder
+        $this->totalorder->LinkCustomAttributes = "";
+        $this->totalorder->HrefValue = "";
+        $this->totalorder->TooltipValue = "";
 
         // sisa
         $this->sisa->LinkCustomAttributes = "";
@@ -1184,6 +1208,13 @@ SORTHTML;
         $this->idorder_detail->EditCustomAttributes = "";
         $this->idorder_detail->PlaceHolder = RemoveHtml($this->idorder_detail->caption());
 
+        // totalorder
+        $this->totalorder->EditAttrs["class"] = "form-control";
+        $this->totalorder->EditCustomAttributes = "readonly";
+        $this->totalorder->EditValue = $this->totalorder->CurrentValue;
+        $this->totalorder->EditValue = FormatNumber($this->totalorder->EditValue, 0, -2, -2, -2);
+        $this->totalorder->ViewCustomAttributes = "";
+
         // sisa
         $this->sisa->EditAttrs["class"] = "form-control";
         $this->sisa->EditCustomAttributes = "readonly";
@@ -1240,6 +1271,7 @@ SORTHTML;
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->idorder_detail);
+                    $doc->exportCaption($this->totalorder);
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->jumlahkirim);
                 } else {
@@ -1247,6 +1279,7 @@ SORTHTML;
                     $doc->exportCaption($this->iddeliveryorder);
                     $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->idorder_detail);
+                    $doc->exportCaption($this->totalorder);
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->jumlahkirim);
                     $doc->exportCaption($this->created_at);
@@ -1282,6 +1315,7 @@ SORTHTML;
                     if ($exportPageType == "view") {
                         $doc->exportField($this->idorder);
                         $doc->exportField($this->idorder_detail);
+                        $doc->exportField($this->totalorder);
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->jumlahkirim);
                     } else {
@@ -1289,6 +1323,7 @@ SORTHTML;
                         $doc->exportField($this->iddeliveryorder);
                         $doc->exportField($this->idorder);
                         $doc->exportField($this->idorder_detail);
+                        $doc->exportField($this->totalorder);
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->jumlahkirim);
                         $doc->exportField($this->created_at);

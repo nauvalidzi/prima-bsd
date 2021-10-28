@@ -71,9 +71,9 @@ class Penomoran extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('penomoran', 'penomoran', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id = new DbField('penomoran', 'penomoran', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id->Nullable = false; // NOT NULL field
+        $this->id->Required = true; // Required field
         $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -114,8 +114,6 @@ class Penomoran extends DbTable
 
         // updated_at
         $this->updated_at = new DbField('penomoran', 'penomoran', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->updated_at->Nullable = false; // NOT NULL field
-        $this->updated_at->Required = true; // Required field
         $this->updated_at->Sortable = true; // Allow sort
         $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
@@ -446,9 +444,6 @@ class Penomoran extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -508,9 +503,6 @@ class Penomoran extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
-            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -550,19 +542,13 @@ class Penomoran extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
-        if (EmptyValue($val)) {
-            return "";
-        } else {
-            $keys[] = $val;
-        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -571,12 +557,7 @@ class Penomoran extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
-            if ($current) {
-                $this->id->CurrentValue = $keys[0];
-            } else {
-                $this->id->OldValue = $keys[0];
-            }
+        if (count($keys) == 0) {
         }
     }
 
@@ -584,19 +565,6 @@ class Penomoran extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
-        if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
-        } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
-        }
-        if (!is_numeric($val)) {
-            return "0=1"; // Invalid key
-        }
-        if ($val === null) {
-            return "0=1"; // Invalid key
-        } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
-        }
         return $keyFilter;
     }
 
@@ -724,7 +692,6 @@ class Penomoran extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -735,11 +702,6 @@ class Penomoran extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->id->CurrentValue);
-        } else {
-            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
-        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -798,23 +760,12 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
-                $arKeys[] = $keyValue;
-            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
-            } else {
-                $arKeys = null; // Do not setup
-            }
-
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
-                    continue;
-                }
                 $ar[] = $key;
             }
         }
@@ -829,11 +780,6 @@ SORTHTML;
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
-            }
-            if ($setCurrent) {
-                $this->id->CurrentValue = $key;
-            } else {
-                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -964,7 +910,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // menu
         $this->_menu->EditAttrs["class"] = "form-control";

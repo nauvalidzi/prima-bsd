@@ -571,9 +571,10 @@ class VOrderdetailList extends VOrderdetail
         $this->id->setVisibility();
         $this->nama->setVisibility();
         $this->idorder->setVisibility();
+        $this->harga->setVisibility();
+        $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
         $this->aktif->setVisibility();
-        $this->harga->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -867,9 +868,10 @@ class VOrderdetailList extends VOrderdetail
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
         $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
+        $filterList = Concat($filterList, $this->harga->AdvancedSearch->toJson(), ","); // Field harga
+        $filterList = Concat($filterList, $this->totalorder->AdvancedSearch->toJson(), ","); // Field totalorder
         $filterList = Concat($filterList, $this->sisa->AdvancedSearch->toJson(), ","); // Field sisa
         $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
-        $filterList = Concat($filterList, $this->harga->AdvancedSearch->toJson(), ","); // Field harga
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -934,6 +936,22 @@ class VOrderdetailList extends VOrderdetail
         $this->idorder->AdvancedSearch->SearchOperator2 = @$filter["w_idorder"];
         $this->idorder->AdvancedSearch->save();
 
+        // Field harga
+        $this->harga->AdvancedSearch->SearchValue = @$filter["x_harga"];
+        $this->harga->AdvancedSearch->SearchOperator = @$filter["z_harga"];
+        $this->harga->AdvancedSearch->SearchCondition = @$filter["v_harga"];
+        $this->harga->AdvancedSearch->SearchValue2 = @$filter["y_harga"];
+        $this->harga->AdvancedSearch->SearchOperator2 = @$filter["w_harga"];
+        $this->harga->AdvancedSearch->save();
+
+        // Field totalorder
+        $this->totalorder->AdvancedSearch->SearchValue = @$filter["x_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchOperator = @$filter["z_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchCondition = @$filter["v_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchValue2 = @$filter["y_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchOperator2 = @$filter["w_totalorder"];
+        $this->totalorder->AdvancedSearch->save();
+
         // Field sisa
         $this->sisa->AdvancedSearch->SearchValue = @$filter["x_sisa"];
         $this->sisa->AdvancedSearch->SearchOperator = @$filter["z_sisa"];
@@ -949,14 +967,6 @@ class VOrderdetailList extends VOrderdetail
         $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
         $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
         $this->aktif->AdvancedSearch->save();
-
-        // Field harga
-        $this->harga->AdvancedSearch->SearchValue = @$filter["x_harga"];
-        $this->harga->AdvancedSearch->SearchOperator = @$filter["z_harga"];
-        $this->harga->AdvancedSearch->SearchCondition = @$filter["v_harga"];
-        $this->harga->AdvancedSearch->SearchValue2 = @$filter["y_harga"];
-        $this->harga->AdvancedSearch->SearchOperator2 = @$filter["w_harga"];
-        $this->harga->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1131,9 +1141,10 @@ class VOrderdetailList extends VOrderdetail
             $this->updateSort($this->id); // id
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->idorder); // idorder
+            $this->updateSort($this->harga); // harga
+            $this->updateSort($this->totalorder); // totalorder
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->aktif); // aktif
-            $this->updateSort($this->harga); // harga
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1176,9 +1187,10 @@ class VOrderdetailList extends VOrderdetail
                 $this->id->setSort("");
                 $this->nama->setSort("");
                 $this->idorder->setSort("");
+                $this->harga->setSort("");
+                $this->totalorder->setSort("");
                 $this->sisa->setSort("");
                 $this->aktif->setSort("");
-                $this->harga->setSort("");
             }
 
             // Reset start position
@@ -1539,9 +1551,10 @@ class VOrderdetailList extends VOrderdetail
         $this->id->setDbValue($row['id']);
         $this->nama->setDbValue($row['nama']);
         $this->idorder->setDbValue($row['idorder']);
+        $this->harga->setDbValue($row['harga']);
+        $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
         $this->aktif->setDbValue($row['aktif']);
-        $this->harga->setDbValue($row['harga']);
     }
 
     // Return a row with default values
@@ -1551,9 +1564,10 @@ class VOrderdetailList extends VOrderdetail
         $row['id'] = null;
         $row['nama'] = null;
         $row['idorder'] = null;
+        $row['harga'] = null;
+        $row['totalorder'] = null;
         $row['sisa'] = null;
         $row['aktif'] = null;
-        $row['harga'] = null;
         return $row;
     }
 
@@ -1597,11 +1611,13 @@ class VOrderdetailList extends VOrderdetail
 
         // idorder
 
+        // harga
+
+        // totalorder
+
         // sisa
 
         // aktif
-
-        // harga
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1616,6 +1632,16 @@ class VOrderdetailList extends VOrderdetail
             $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
 
+            // harga
+            $this->harga->ViewValue = $this->harga->CurrentValue;
+            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
+            $this->harga->ViewCustomAttributes = "";
+
+            // totalorder
+            $this->totalorder->ViewValue = $this->totalorder->CurrentValue;
+            $this->totalorder->ViewValue = FormatNumber($this->totalorder->ViewValue, 0, -2, -2, -2);
+            $this->totalorder->ViewCustomAttributes = "";
+
             // sisa
             $this->sisa->ViewValue = $this->sisa->CurrentValue;
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
@@ -1628,11 +1654,6 @@ class VOrderdetailList extends VOrderdetail
                 $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
             }
             $this->aktif->ViewCustomAttributes = "";
-
-            // harga
-            $this->harga->ViewValue = $this->harga->CurrentValue;
-            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-            $this->harga->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1649,6 +1670,16 @@ class VOrderdetailList extends VOrderdetail
             $this->idorder->HrefValue = "";
             $this->idorder->TooltipValue = "";
 
+            // harga
+            $this->harga->LinkCustomAttributes = "";
+            $this->harga->HrefValue = "";
+            $this->harga->TooltipValue = "";
+
+            // totalorder
+            $this->totalorder->LinkCustomAttributes = "";
+            $this->totalorder->HrefValue = "";
+            $this->totalorder->TooltipValue = "";
+
             // sisa
             $this->sisa->LinkCustomAttributes = "";
             $this->sisa->HrefValue = "";
@@ -1658,11 +1689,6 @@ class VOrderdetailList extends VOrderdetail
             $this->aktif->LinkCustomAttributes = "";
             $this->aktif->HrefValue = "";
             $this->aktif->TooltipValue = "";
-
-            // harga
-            $this->harga->LinkCustomAttributes = "";
-            $this->harga->HrefValue = "";
-            $this->harga->TooltipValue = "";
         }
 
         // Call Row Rendered event

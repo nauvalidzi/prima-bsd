@@ -1027,13 +1027,11 @@ return function (App $app) {
     );
 
     // penomoran
-    $app->any('/PenomoranList[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('PenomoranList-penomoran-list'); // list
-    $app->any('/PenomoranAdd[/{id}]', PenomoranController::class . ':add')->add(PermissionMiddleware::class)->setName('PenomoranAdd-penomoran-add'); // add
+    $app->any('/PenomoranList', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('PenomoranList-penomoran-list'); // list
     $app->group(
         '/penomoran',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('penomoran/list-penomoran-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', PenomoranController::class . ':add')->add(PermissionMiddleware::class)->setName('penomoran/add-penomoran-add-2'); // add
+            $group->any('/' . Config("LIST_ACTION") . '', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('penomoran/list-penomoran-list-2'); // list
         }
     );
 
@@ -1091,6 +1089,9 @@ return function (App $app) {
             $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', TermpaymentController::class . ':delete')->add(PermissionMiddleware::class)->setName('termpayment/delete-termpayment-delete-2'); // delete
         }
     );
+
+    // laporan_order_customer
+    $app->any('/LaporanOrderCustomer[/{params:.*}]', LaporanOrderCustomerController::class)->add(PermissionMiddleware::class)->setName('LaporanOrderCustomer-laporan_order_customer-custom'); // custom
 
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');

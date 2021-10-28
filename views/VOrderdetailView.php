@@ -78,6 +78,28 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->harga->Visible) { // harga ?>
+    <tr id="r_harga">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_v_orderdetail_harga"><?= $Page->harga->caption() ?></span></td>
+        <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
+<span id="el_v_orderdetail_harga">
+<span<?= $Page->harga->viewAttributes() ?>>
+<?= $Page->harga->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+    <tr id="r_totalorder">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_v_orderdetail_totalorder"><?= $Page->totalorder->caption() ?></span></td>
+        <td data-name="totalorder" <?= $Page->totalorder->cellAttributes() ?>>
+<span id="el_v_orderdetail_totalorder">
+<span<?= $Page->totalorder->viewAttributes() ?>>
+<?= $Page->totalorder->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
     <tr id="r_sisa">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_v_orderdetail_sisa"><?= $Page->sisa->caption() ?></span></td>
@@ -99,17 +121,6 @@ $Page->showMessage();
     <input type="checkbox" id="x_aktif_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->aktif->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->aktif->CurrentValue)) { ?> checked<?php } ?>>
     <label class="custom-control-label" for="x_aktif_<?= $Page->RowCount ?>"></label>
 </div></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->harga->Visible) { // harga ?>
-    <tr id="r_harga">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_v_orderdetail_harga"><?= $Page->harga->caption() ?></span></td>
-        <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
-<span id="el_v_orderdetail_harga">
-<span<?= $Page->harga->viewAttributes() ?>>
-<?= $Page->harga->getViewValue() ?></span>
 </span>
 </td>
     </tr>

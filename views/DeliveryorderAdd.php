@@ -202,6 +202,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("/bsd/api/nextKode/deliveryorder/0").then((function(e){$("#x_kode").val(e)}))}));
+    loadjs.ready("jquery",(function(){$.get("api/nextKode/deliveryorder/0").then((function(e){$("#x_kode").val(e)}))}));
 });
 </script>

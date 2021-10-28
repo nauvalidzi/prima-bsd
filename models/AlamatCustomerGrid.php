@@ -2295,7 +2295,7 @@ class AlamatCustomerGrid extends AlamatCustomer
             $this->telepon->setDbValueDef($rsnew, $this->telepon->CurrentValue, "", $this->telepon->ReadOnly);
 
             // alamat
-            $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, "", $this->alamat->ReadOnly);
+            $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, $this->alamat->ReadOnly);
 
             // idprovinsi
             $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, "", $this->idprovinsi->ReadOnly);
@@ -2380,7 +2380,7 @@ class AlamatCustomerGrid extends AlamatCustomer
         $this->telepon->setDbValueDef($rsnew, $this->telepon->CurrentValue, "", strval($this->telepon->CurrentValue) == "");
 
         // alamat
-        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, "", false);
+        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, false);
 
         // idprovinsi
         $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, "", false);

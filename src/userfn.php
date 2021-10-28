@@ -284,6 +284,29 @@ function get_approval($cust_id) {
 	return ExecuteRow("SELECT * FROM po_limit_approval WHERE aktif = 1 AND idcustomer = {$cust_id} ORDER BY id DESC");
 }
 
+function status_delivery($iddeliveryorder, $detail = "undetail") {
+    $conditions = ($detail != "detail") ? " AND dd.iddeliveryorder = '{$iddeliveryorder}'" : " AND dd.id = '{$iddeliveryorder}'";
+    $row = ExecuteRow("SELECT SUM(od.sisa) AS totalsisa FROM deliveryorder_detail dd JOIN order_detail od ON od.id = dd.idorder_detail WHERE 1=1 {$conditions}");
+    if ($row['totalsisa'] > 0) {
+        return 'Belum Lengkap';
+    }
+    return 'Lengkap';
+}
+
+function status_orders($idorder) {
+    $row = ExecuteRow("SELECT SUM(od.jumlah) AS jumlah, SUM(od.bonus) AS bonus, SUM(od.sisa) AS sisa FROM `order` o JOIN order_detail od ON o.id = od.idorder WHERE o.id = '{$idorder}'");
+    $totalorder = $row['jumlah'] + $row['bonus'];
+    if ($row['sisa'] < 1) {
+        return 'Sudah Proses DO';
+    }
+    if ($row['sisa'] == $totalorder) {
+        return 'Belum Proses DO';
+    }
+    if ($row['sisa'] > 0) {
+        return 'Proses DO Sebagian';
+    }
+}
+
 // dipanggil di deliveryorder_detail, invoice_detail
 function addStock($idorderdetail, $jumlah) {
 	$idProduct = ExecuteScalar("SELECT idproduct FROM order_detail WHERE id = ".$idorderdetail);
@@ -583,6 +606,24 @@ function check_kpi_existing($idpegawai, $bulan) {
         return false;
     } 
     return true;
+}
+
+function penomoran($format)	{
+	if (strpos($format, "%YEAR") !== false) {
+		$format = str_replace("%YEAR", date('Y'), $format);
+	}
+	if (strpos($format, "%MONTH") !== false) {
+		$format = str_replace("%MONTH", date('m'), $format);
+	}
+	if (strpos($format, "%DATE") !== false) {
+		$format = str_replace("%DATE", date('d'), $format);
+	}
+	if (strpos($format, "%URUTAN") !== false) {
+		$nomor = 1;
+		if (empty($nomor)) $nomor = 0;
+		$format = str_replace("%URUTAN", str_pad(ltrim($nomor, '0')+1, 5, '0', STR_PAD_LEFT), $format);
+	}
+	return $format;
 }
 
 function curl_post($url, $data, $url_auth=""){

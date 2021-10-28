@@ -50,6 +50,9 @@ $Page->showMessage();
 <?php if ($Page->idorder_detail->Visible) { // idorder_detail ?>
         <th class="<?= $Page->idorder_detail->headerCellClass() ?>"><span id="elh_deliveryorder_detail_idorder_detail" class="deliveryorder_detail_idorder_detail"><?= $Page->idorder_detail->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+        <th class="<?= $Page->totalorder->headerCellClass() ?>"><span id="elh_deliveryorder_detail_totalorder" class="deliveryorder_detail_totalorder"><?= $Page->totalorder->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
         <th class="<?= $Page->sisa->headerCellClass() ?>"><span id="elh_deliveryorder_detail_sisa" class="deliveryorder_detail_sisa"><?= $Page->sisa->caption() ?></span></th>
 <?php } ?>
@@ -90,6 +93,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_deliveryorder_detail_idorder_detail" class="deliveryorder_detail_idorder_detail">
 <span<?= $Page->idorder_detail->viewAttributes() ?>>
 <?= $Page->idorder_detail->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->totalorder->Visible) { // totalorder ?>
+        <td <?= $Page->totalorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_deliveryorder_detail_totalorder" class="deliveryorder_detail_totalorder">
+<span<?= $Page->totalorder->viewAttributes() ?>>
+<?= $Page->totalorder->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

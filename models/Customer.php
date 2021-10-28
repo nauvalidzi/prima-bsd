@@ -300,6 +300,7 @@ class Customer extends DbTable
 
         // level_customer_id
         $this->level_customer_id = new DbField('customer', 'customer', 'x_level_customer_id', 'level_customer_id', '`level_customer_id`', '`level_customer_id`', 3, 11, -1, false, '`level_customer_id`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->level_customer_id->Required = true; // Required field
         $this->level_customer_id->Sortable = true; // Allow sort
         $this->level_customer_id->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->level_customer_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -316,8 +317,18 @@ class Customer extends DbTable
         $this->Fields['level_customer_id'] = &$this->level_customer_id;
 
         // jatuh_tempo_invoice
-        $this->jatuh_tempo_invoice = new DbField('customer', 'customer', 'x_jatuh_tempo_invoice', 'jatuh_tempo_invoice', '`jatuh_tempo_invoice`', '`jatuh_tempo_invoice`', 2, 6, -1, false, '`jatuh_tempo_invoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jatuh_tempo_invoice = new DbField('customer', 'customer', 'x_jatuh_tempo_invoice', 'jatuh_tempo_invoice', '`jatuh_tempo_invoice`', '`jatuh_tempo_invoice`', 2, 6, -1, false, '`jatuh_tempo_invoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->jatuh_tempo_invoice->Sortable = true; // Allow sort
+        $this->jatuh_tempo_invoice->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->jatuh_tempo_invoice->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->jatuh_tempo_invoice->Lookup = new Lookup('jatuh_tempo_invoice', 'termpayment', false, 'id', ["title","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->jatuh_tempo_invoice->Lookup = new Lookup('jatuh_tempo_invoice', 'termpayment', false, 'id', ["title","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
         $this->jatuh_tempo_invoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->jatuh_tempo_invoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jatuh_tempo_invoice->Param, "CustomMsg");
         $this->Fields['jatuh_tempo_invoice'] = &$this->jatuh_tempo_invoice;
@@ -1569,8 +1580,24 @@ SORTHTML;
         $this->level_customer_id->ViewCustomAttributes = "";
 
         // jatuh_tempo_invoice
-        $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
-        $this->jatuh_tempo_invoice->ViewValue = FormatNumber($this->jatuh_tempo_invoice->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
+        if ($curVal != "") {
+            $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->lookupCacheOption($curVal);
+            if ($this->jatuh_tempo_invoice->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->jatuh_tempo_invoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->jatuh_tempo_invoice->Lookup->renderViewRow($rswrk[0]);
+                    $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->displayValue($arwrk);
+                } else {
+                    $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
+                }
+            }
+        } else {
+            $this->jatuh_tempo_invoice->ViewValue = null;
+        }
         $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
         // keterangan
@@ -2002,7 +2029,6 @@ SORTHTML;
         // jatuh_tempo_invoice
         $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
         $this->jatuh_tempo_invoice->EditCustomAttributes = "";
-        $this->jatuh_tempo_invoice->EditValue = $this->jatuh_tempo_invoice->CurrentValue;
         $this->jatuh_tempo_invoice->PlaceHolder = RemoveHtml($this->jatuh_tempo_invoice->caption());
 
         // keterangan

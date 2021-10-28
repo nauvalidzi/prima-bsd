@@ -633,6 +633,7 @@ class CustomerList extends Customer
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
         $this->setupLookupOptions($this->level_customer_id);
+        $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -3218,8 +3219,24 @@ class CustomerList extends Customer
             $this->level_customer_id->ViewCustomAttributes = "";
 
             // jatuh_tempo_invoice
-            $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
-            $this->jatuh_tempo_invoice->ViewValue = FormatNumber($this->jatuh_tempo_invoice->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
+            if ($curVal != "") {
+                $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->lookupCacheOption($curVal);
+                if ($this->jatuh_tempo_invoice->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->jatuh_tempo_invoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->jatuh_tempo_invoice->Lookup->renderViewRow($rswrk[0]);
+                        $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->displayValue($arwrk);
+                    } else {
+                        $this->jatuh_tempo_invoice->ViewValue = $this->jatuh_tempo_invoice->CurrentValue;
+                    }
+                }
+            } else {
+                $this->jatuh_tempo_invoice->ViewValue = null;
+            }
             $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
             // keterangan
@@ -3500,6 +3517,8 @@ class CustomerList extends Customer
                 case "x_idkel":
                     break;
                 case "x_level_customer_id":
+                    break;
+                case "x_jatuh_tempo_invoice":
                     break;
                 case "x_aktif":
                     break;

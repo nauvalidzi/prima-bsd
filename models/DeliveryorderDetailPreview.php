@@ -394,6 +394,7 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
         $this->iddeliveryorder->Visible = false;
         $this->idorder->setVisibility();
         $this->idorder_detail->setVisibility();
+        $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
         $this->jumlahkirim->setVisibility();
         $this->created_at->Visible = false;
@@ -490,6 +491,7 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
             $this->iddeliveryorder->setSort("");
             $this->idorder->setSort("");
             $this->idorder_detail->setSort("");
+            $this->totalorder->setSort("");
             $this->sisa->setSort("");
             $this->jumlahkirim->setSort("");
             $this->created_at->setSort("");
@@ -508,6 +510,7 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
         if ($this->CurrentOrder !== "") {
             $this->updateSort($this->idorder); // idorder
             $this->updateSort($this->idorder_detail); // idorder_detail
+            $this->updateSort($this->totalorder); // totalorder
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->jumlahkirim); // jumlahkirim
         }
@@ -847,6 +850,9 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
+        $opt = &$this->ListOptions->Add("status");
+        $opt->Header = "Status";
+        $opt->MoveTo(1); 
     }
 
     // ListOptions Rendering event
@@ -866,5 +872,6 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
         	$this->ListOptions->Items["edit"]->Body = "";
         	$this->ListOptions->Items["delete"]->Body = "";
         }
+        $this->ListOptions->Items["status"]->Body = status_delivery($this->id->CurrentValue, 'detail');
     }
 }

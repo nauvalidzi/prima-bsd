@@ -572,6 +572,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $this->iddeliveryorder->Visible = false;
         $this->idorder->setVisibility();
         $this->idorder_detail->setVisibility();
+        $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
         $this->jumlahkirim->setVisibility();
         $this->created_at->Visible = false;
@@ -850,6 +851,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->idorder); // idorder
             $this->updateSort($this->idorder_detail); // idorder_detail
+            $this->updateSort($this->totalorder); // totalorder
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->jumlahkirim); // jumlahkirim
             $this->setStartRecordNumber(1); // Reset start position
@@ -898,6 +900,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
                 $this->iddeliveryorder->setSort("");
                 $this->idorder->setSort("");
                 $this->idorder_detail->setSort("");
+                $this->totalorder->setSort("");
                 $this->sisa->setSort("");
                 $this->jumlahkirim->setSort("");
                 $this->created_at->setSort("");
@@ -1290,6 +1293,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $this->iddeliveryorder->setDbValue($row['iddeliveryorder']);
         $this->idorder->setDbValue($row['idorder']);
         $this->idorder_detail->setDbValue($row['idorder_detail']);
+        $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
         $this->jumlahkirim->setDbValue($row['jumlahkirim']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1305,6 +1309,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         $row['iddeliveryorder'] = null;
         $row['idorder'] = null;
         $row['idorder_detail'] = null;
+        $row['totalorder'] = null;
         $row['sisa'] = null;
         $row['jumlahkirim'] = null;
         $row['created_at'] = null;
@@ -1354,6 +1359,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         // idorder
 
         // idorder_detail
+
+        // totalorder
 
         // sisa
 
@@ -1425,6 +1432,11 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             }
             $this->idorder_detail->ViewCustomAttributes = "";
 
+            // totalorder
+            $this->totalorder->ViewValue = $this->totalorder->CurrentValue;
+            $this->totalorder->ViewValue = FormatNumber($this->totalorder->ViewValue, 0, -2, -2, -2);
+            $this->totalorder->ViewCustomAttributes = "";
+
             // sisa
             $this->sisa->ViewValue = $this->sisa->CurrentValue;
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
@@ -1454,6 +1466,11 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             $this->idorder_detail->LinkCustomAttributes = "";
             $this->idorder_detail->HrefValue = "";
             $this->idorder_detail->TooltipValue = "";
+
+            // totalorder
+            $this->totalorder->LinkCustomAttributes = "";
+            $this->totalorder->HrefValue = "";
+            $this->totalorder->TooltipValue = "";
 
             // sisa
             $this->sisa->LinkCustomAttributes = "";
@@ -1753,6 +1770,9 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
+        $opt = &$this->ListOptions->Add("status");
+        $opt->Header = "Status";
+        $opt->MoveTo(1); 
     }
 
     // ListOptions Rendering event
@@ -1772,6 +1792,7 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         	$this->ListOptions->Items["edit"]->Body = "";
         	$this->ListOptions->Items["delete"]->Body = "";
         }
+        $this->ListOptions->Items["status"]->Body = status_delivery($this->id->CurrentValue, 'detail');
     }
 
     // Row Custom Action event

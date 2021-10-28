@@ -89,8 +89,7 @@ $LaporanKpiMarketing = &$Page;
 		</form>
 	</div>
     <?php if(isset($_POST['srhDate'])) : ?>
-	
-	    <table class="table table-bordered">
+		<table class="table table-bordered" id="printTable">
 	    	<thead>
 				<tr>
 					<th colspan="<?php echo count($period) + 5 ?>" class="text-center" width="100%">

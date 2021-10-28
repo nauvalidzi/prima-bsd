@@ -348,6 +348,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("/bsd/api/nextKode/pembayaran/0",(function(a){$("#x_kode").val(a)}))}));
+    loadjs.ready("jquery",(function(){$.get("api/nextKode/pembayaran/0",(function(a){$("#x_kode").val(a)}))}));
 });
 </script>
