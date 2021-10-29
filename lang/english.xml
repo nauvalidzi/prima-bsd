@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/10/28" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/10/30" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1108,8 +1108,17 @@
     <menu id="344">
       <phrase id="menutext" value="Stok" />
     </menu>
+    <menu id="695">
+      <phrase id="menutext" value="Penagihan Customer" />
+    </menu>
+    <menu id="602">
+      <phrase id="menutext" value="Filter Penagihan" />
+    </menu>
     <menu id="599">
       <phrase id="menutext" value="Penagihan" />
+    </menu>
+    <menu id="696">
+      <phrase id="menutext" value="Antrian Penagihan" />
     </menu>
     <menu id="570">
       <phrase id="menutext" value="Pengaturan" />
@@ -3533,35 +3542,11 @@
       <field id="tgl_order">
         <phrase id="fldcaption" value="Tgl Order" />
       </field>
-      <field id="tgl_reminder">
-        <phrase id="fldcaption" value="Rreminder" />
-      </field>
-      <field id="tgl_normalbilling">
-        <phrase id="fldcaption" value="Normal Billing" />
-      </field>
-      <field id="tgl_jatuhtempo">
-        <phrase id="fldcaption" value="Jatuh Tempo" />
-      </field>
-      <field id="tgl_intensbilling">
-        <phrase id="fldcaption" value="Intens Billing" />
-      </field>
-      <field id="tgl_actionplan">
-        <phrase id="fldcaption" value="Action Plan" />
-      </field>
-      <field id="kodeorder">
-        <phrase id="fldcaption" value="Kode Order" />
-      </field>
       <field id="nama_customer">
         <phrase id="fldcaption" value="Customer" />
       </field>
-      <field id="nominal">
-        <phrase id="fldcaption" value="Nominal" />
-      </field>
       <field id="nilai_po">
         <phrase id="fldcaption" value="Nilai PO" />
-      </field>
-      <field id="pembayaran">
-        <phrase id="fldcaption" value="Pembayaran" />
       </field>
       <field id="nilai_faktur">
         <phrase id="fldcaption" value="Nilai Faktur" />
@@ -3571,6 +3556,18 @@
       </field>
       <field id="nomor_handphone">
         <phrase id="fldcaption" value="Handphone" />
+      </field>
+      <field id="idorder">
+        <phrase id="fldcaption" value="idorder" />
+      </field>
+      <field id="kode_order">
+        <phrase id="fldcaption" value="kode order" />
+      </field>
+      <field id="tgl_faktur">
+        <phrase id="fldcaption" value="tgl faktur" />
+      </field>
+      <field id="umur_faktur">
+        <phrase id="fldcaption" value="umur faktur" />
       </field>
     </table>
     <table id="termpayment">
@@ -3587,6 +3584,63 @@
     </table>
     <table id="laporan_order_customer">
       <phrase id="tblcaption" value="Laporan Order Customer" />
+    </table>
+    <table id="penagihan_customer">
+      <phrase id="tblcaption" value="Penagihan Customer" />
+    </table>
+    <table id="penagihan">
+      <phrase id="tblcaption" value="Antrian Penagihan" />
+      <field id="idorder">
+        <phrase id="fldcaption" value="idorder" />
+      </field>
+      <field id="tgl_order">
+        <phrase id="fldcaption" value="Tgl Order" />
+      </field>
+      <field id="kode_order">
+        <phrase id="fldcaption" value="Kode Order" />
+      </field>
+      <field id="nama_customer">
+        <phrase id="fldcaption" value="Nama Customer" />
+      </field>
+      <field id="nomor_handphone">
+        <phrase id="fldcaption" value="Nomor HP" />
+      </field>
+      <field id="nilai_po">
+        <phrase id="fldcaption" value="Nilai PO" />
+      </field>
+      <field id="tgl_faktur">
+        <phrase id="fldcaption" value="Tgl Faktur" />
+      </field>
+      <field id="nilai_faktur">
+        <phrase id="fldcaption" value="Nilai Faktur" />
+      </field>
+      <field id="piutang">
+        <phrase id="fldcaption" value="Piutang" />
+      </field>
+      <field id="umur_faktur">
+        <phrase id="fldcaption" value="Umur Faktur" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+        <phrase id="fldtagvalue1" value="-1" />
+        <phrase id="fldtagcaption1" value="Cancel" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="Pending" />
+        <phrase id="fldtagvalue3" value="1" />
+        <phrase id="fldtagcaption3" value="Yes" />
+      </field>
+      <field id="tgl_antrian">
+        <phrase id="fldcaption" value="Tgl Antrian" />
+      </field>
+      <field id="tgl_penagihan">
+        <phrase id="fldcaption" value="Tgl Penagihan" />
+      </field>
+      <field id="tgl_return">
+        <phrase id="fldcaption" value="Tgl Return" />
+      </field>
+      <field id="tgl_cancel">
+        <phrase id="fldcaption" value="Tgl Cancel" />
+      </field>
     </table>
   </project>
 </ew-language>

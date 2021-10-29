@@ -1027,11 +1027,11 @@ return function (App $app) {
     );
 
     // penomoran
-    $app->any('/PenomoranList', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('PenomoranList-penomoran-list'); // list
+    $app->any('/PenomoranList[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('PenomoranList-penomoran-list'); // list
     $app->group(
         '/penomoran',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('penomoran/list-penomoran-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('penomoran/list-penomoran-list-2'); // list
         }
     );
 
@@ -1092,6 +1092,18 @@ return function (App $app) {
 
     // laporan_order_customer
     $app->any('/LaporanOrderCustomer[/{params:.*}]', LaporanOrderCustomerController::class)->add(PermissionMiddleware::class)->setName('LaporanOrderCustomer-laporan_order_customer-custom'); // custom
+
+    // penagihan_customer
+    $app->any('/PenagihanCustomer[/{params:.*}]', PenagihanCustomerController::class)->add(PermissionMiddleware::class)->setName('PenagihanCustomer-penagihan_customer-custom'); // custom
+
+    // penagihan
+    $app->any('/PenagihanList', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('PenagihanList-penagihan-list'); // list
+    $app->group(
+        '/penagihan',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('penagihan/list-penagihan-list-2'); // list
+        }
+    );
 
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');

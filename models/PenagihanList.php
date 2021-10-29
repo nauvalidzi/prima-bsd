@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class VPenagihanList extends VPenagihan
+class PenagihanList extends Penagihan
 {
     use MessagesTrait;
 
@@ -18,16 +18,16 @@ class VPenagihanList extends VPenagihan
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'v_penagihan';
+    public $TableName = 'penagihan';
 
     // Page object name
-    public $PageObjName = "VPenagihanList";
+    public $PageObjName = "PenagihanList";
 
     // Rendering View
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fv_penagihanlist";
+    public $FormName = "fpenagihanlist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -165,9 +165,9 @@ class VPenagihanList extends VPenagihan
         // Parent constuctor
         parent::__construct();
 
-        // Table object (v_penagihan)
-        if (!isset($GLOBALS["v_penagihan"]) || get_class($GLOBALS["v_penagihan"]) == PROJECT_NAMESPACE . "v_penagihan") {
-            $GLOBALS["v_penagihan"] = &$this;
+        // Table object (penagihan)
+        if (!isset($GLOBALS["penagihan"]) || get_class($GLOBALS["penagihan"]) == PROJECT_NAMESPACE . "penagihan") {
+            $GLOBALS["penagihan"] = &$this;
         }
 
         // Page URL
@@ -181,16 +181,16 @@ class VPenagihanList extends VPenagihan
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "VPenagihanAdd";
+        $this->AddUrl = "PenagihanAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "VPenagihanDelete";
-        $this->MultiUpdateUrl = "VPenagihanUpdate";
+        $this->MultiDeleteUrl = "PenagihanDelete";
+        $this->MultiUpdateUrl = "PenagihanUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'v_penagihan');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'penagihan');
         }
 
         // Start timer
@@ -230,7 +230,7 @@ class VPenagihanList extends VPenagihan
 
         // Filter options
         $this->FilterOptions = new ListOptions("div");
-        $this->FilterOptions->TagClassName = "ew-filter-option fv_penagihanlistsrch";
+        $this->FilterOptions->TagClassName = "ew-filter-option fpenagihanlistsrch";
 
         // List actions
         $this->ListActions = new ListActions();
@@ -305,7 +305,7 @@ class VPenagihanList extends VPenagihan
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("v_penagihan"));
+                $doc = new $class(Container("penagihan"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -564,16 +564,21 @@ class VPenagihanList extends VPenagihan
 
         // Set up list options
         $this->setupListOptions();
+        $this->idorder->Visible = false;
         $this->tgl_order->setVisibility();
+        $this->kode_order->setVisibility();
         $this->nama_customer->setVisibility();
+        $this->nomor_handphone->setVisibility();
         $this->nilai_po->setVisibility();
+        $this->tgl_faktur->setVisibility();
         $this->nilai_faktur->setVisibility();
         $this->piutang->setVisibility();
-        $this->nomor_handphone->setVisibility();
-        $this->idorder->setVisibility();
-        $this->kode_order->setVisibility();
-        $this->tgl_faktur->setVisibility();
         $this->umur_faktur->setVisibility();
+        $this->status->setVisibility();
+        $this->tgl_antrian->setVisibility();
+        $this->tgl_penagihan->setVisibility();
+        $this->tgl_return->setVisibility();
+        $this->tgl_cancel->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -650,8 +655,33 @@ class VPenagihanList extends VPenagihan
                 $this->OtherOptions->hideAllOptions();
             }
 
+            // Get default search criteria
+            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+            // Get basic search values
+            $this->loadBasicSearchValues();
+
+            // Process filter list
+            if ($this->processFilterList()) {
+                $this->terminate();
+                return;
+            }
+
+            // Restore search parms from Session if not searching / reset / export
+            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+                $this->restoreSearchParms();
+            }
+
+            // Call Recordset SearchValidated event
+            $this->recordsetSearchValidated();
+
             // Set up sorting order
             $this->setupSortOrder();
+
+            // Get basic search criteria
+            if (!$this->hasInvalidFields()) {
+                $srchBasic = $this->basicSearchWhere();
+            }
         }
 
         // Restore display records
@@ -665,6 +695,31 @@ class VPenagihanList extends VPenagihan
         // Load Sorting Order
         if ($this->Command != "json") {
             $this->loadSortOrder();
+        }
+
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms()) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere();
+            }
+        }
+
+        // Build search criteria
+        AddFilter($this->SearchWhere, $srchAdvanced);
+        AddFilter($this->SearchWhere, $srchBasic);
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json") {
+            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -806,6 +861,354 @@ class VPenagihanList extends VPenagihan
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        global $UserProfile;
+
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
+        $filterList = Concat($filterList, $this->tgl_order->AdvancedSearch->toJson(), ","); // Field tgl_order
+        $filterList = Concat($filterList, $this->kode_order->AdvancedSearch->toJson(), ","); // Field kode_order
+        $filterList = Concat($filterList, $this->nama_customer->AdvancedSearch->toJson(), ","); // Field nama_customer
+        $filterList = Concat($filterList, $this->nomor_handphone->AdvancedSearch->toJson(), ","); // Field nomor_handphone
+        $filterList = Concat($filterList, $this->nilai_po->AdvancedSearch->toJson(), ","); // Field nilai_po
+        $filterList = Concat($filterList, $this->tgl_faktur->AdvancedSearch->toJson(), ","); // Field tgl_faktur
+        $filterList = Concat($filterList, $this->nilai_faktur->AdvancedSearch->toJson(), ","); // Field nilai_faktur
+        $filterList = Concat($filterList, $this->piutang->AdvancedSearch->toJson(), ","); // Field piutang
+        $filterList = Concat($filterList, $this->umur_faktur->AdvancedSearch->toJson(), ","); // Field umur_faktur
+        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
+        $filterList = Concat($filterList, $this->tgl_antrian->AdvancedSearch->toJson(), ","); // Field tgl_antrian
+        $filterList = Concat($filterList, $this->tgl_penagihan->AdvancedSearch->toJson(), ","); // Field tgl_penagihan
+        $filterList = Concat($filterList, $this->tgl_return->AdvancedSearch->toJson(), ","); // Field tgl_return
+        $filterList = Concat($filterList, $this->tgl_cancel->AdvancedSearch->toJson(), ","); // Field tgl_cancel
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        global $UserProfile;
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            $UserProfile->setSearchFilters(CurrentUserName(), "fpenagihanlistsrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field idorder
+        $this->idorder->AdvancedSearch->SearchValue = @$filter["x_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator = @$filter["z_idorder"];
+        $this->idorder->AdvancedSearch->SearchCondition = @$filter["v_idorder"];
+        $this->idorder->AdvancedSearch->SearchValue2 = @$filter["y_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator2 = @$filter["w_idorder"];
+        $this->idorder->AdvancedSearch->save();
+
+        // Field tgl_order
+        $this->tgl_order->AdvancedSearch->SearchValue = @$filter["x_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchOperator = @$filter["z_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchCondition = @$filter["v_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchValue2 = @$filter["y_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_order"];
+        $this->tgl_order->AdvancedSearch->save();
+
+        // Field kode_order
+        $this->kode_order->AdvancedSearch->SearchValue = @$filter["x_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchOperator = @$filter["z_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchCondition = @$filter["v_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchValue2 = @$filter["y_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchOperator2 = @$filter["w_kode_order"];
+        $this->kode_order->AdvancedSearch->save();
+
+        // Field nama_customer
+        $this->nama_customer->AdvancedSearch->SearchValue = @$filter["x_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchOperator = @$filter["z_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchCondition = @$filter["v_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchValue2 = @$filter["y_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchOperator2 = @$filter["w_nama_customer"];
+        $this->nama_customer->AdvancedSearch->save();
+
+        // Field nomor_handphone
+        $this->nomor_handphone->AdvancedSearch->SearchValue = @$filter["x_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchOperator = @$filter["z_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchCondition = @$filter["v_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchValue2 = @$filter["y_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchOperator2 = @$filter["w_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->save();
+
+        // Field nilai_po
+        $this->nilai_po->AdvancedSearch->SearchValue = @$filter["x_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchOperator = @$filter["z_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchCondition = @$filter["v_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchValue2 = @$filter["y_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchOperator2 = @$filter["w_nilai_po"];
+        $this->nilai_po->AdvancedSearch->save();
+
+        // Field tgl_faktur
+        $this->tgl_faktur->AdvancedSearch->SearchValue = @$filter["x_tgl_faktur"];
+        $this->tgl_faktur->AdvancedSearch->SearchOperator = @$filter["z_tgl_faktur"];
+        $this->tgl_faktur->AdvancedSearch->SearchCondition = @$filter["v_tgl_faktur"];
+        $this->tgl_faktur->AdvancedSearch->SearchValue2 = @$filter["y_tgl_faktur"];
+        $this->tgl_faktur->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_faktur"];
+        $this->tgl_faktur->AdvancedSearch->save();
+
+        // Field nilai_faktur
+        $this->nilai_faktur->AdvancedSearch->SearchValue = @$filter["x_nilai_faktur"];
+        $this->nilai_faktur->AdvancedSearch->SearchOperator = @$filter["z_nilai_faktur"];
+        $this->nilai_faktur->AdvancedSearch->SearchCondition = @$filter["v_nilai_faktur"];
+        $this->nilai_faktur->AdvancedSearch->SearchValue2 = @$filter["y_nilai_faktur"];
+        $this->nilai_faktur->AdvancedSearch->SearchOperator2 = @$filter["w_nilai_faktur"];
+        $this->nilai_faktur->AdvancedSearch->save();
+
+        // Field piutang
+        $this->piutang->AdvancedSearch->SearchValue = @$filter["x_piutang"];
+        $this->piutang->AdvancedSearch->SearchOperator = @$filter["z_piutang"];
+        $this->piutang->AdvancedSearch->SearchCondition = @$filter["v_piutang"];
+        $this->piutang->AdvancedSearch->SearchValue2 = @$filter["y_piutang"];
+        $this->piutang->AdvancedSearch->SearchOperator2 = @$filter["w_piutang"];
+        $this->piutang->AdvancedSearch->save();
+
+        // Field umur_faktur
+        $this->umur_faktur->AdvancedSearch->SearchValue = @$filter["x_umur_faktur"];
+        $this->umur_faktur->AdvancedSearch->SearchOperator = @$filter["z_umur_faktur"];
+        $this->umur_faktur->AdvancedSearch->SearchCondition = @$filter["v_umur_faktur"];
+        $this->umur_faktur->AdvancedSearch->SearchValue2 = @$filter["y_umur_faktur"];
+        $this->umur_faktur->AdvancedSearch->SearchOperator2 = @$filter["w_umur_faktur"];
+        $this->umur_faktur->AdvancedSearch->save();
+
+        // Field status
+        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
+        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
+        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
+        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
+        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
+        $this->status->AdvancedSearch->save();
+
+        // Field tgl_antrian
+        $this->tgl_antrian->AdvancedSearch->SearchValue = @$filter["x_tgl_antrian"];
+        $this->tgl_antrian->AdvancedSearch->SearchOperator = @$filter["z_tgl_antrian"];
+        $this->tgl_antrian->AdvancedSearch->SearchCondition = @$filter["v_tgl_antrian"];
+        $this->tgl_antrian->AdvancedSearch->SearchValue2 = @$filter["y_tgl_antrian"];
+        $this->tgl_antrian->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_antrian"];
+        $this->tgl_antrian->AdvancedSearch->save();
+
+        // Field tgl_penagihan
+        $this->tgl_penagihan->AdvancedSearch->SearchValue = @$filter["x_tgl_penagihan"];
+        $this->tgl_penagihan->AdvancedSearch->SearchOperator = @$filter["z_tgl_penagihan"];
+        $this->tgl_penagihan->AdvancedSearch->SearchCondition = @$filter["v_tgl_penagihan"];
+        $this->tgl_penagihan->AdvancedSearch->SearchValue2 = @$filter["y_tgl_penagihan"];
+        $this->tgl_penagihan->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_penagihan"];
+        $this->tgl_penagihan->AdvancedSearch->save();
+
+        // Field tgl_return
+        $this->tgl_return->AdvancedSearch->SearchValue = @$filter["x_tgl_return"];
+        $this->tgl_return->AdvancedSearch->SearchOperator = @$filter["z_tgl_return"];
+        $this->tgl_return->AdvancedSearch->SearchCondition = @$filter["v_tgl_return"];
+        $this->tgl_return->AdvancedSearch->SearchValue2 = @$filter["y_tgl_return"];
+        $this->tgl_return->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_return"];
+        $this->tgl_return->AdvancedSearch->save();
+
+        // Field tgl_cancel
+        $this->tgl_cancel->AdvancedSearch->SearchValue = @$filter["x_tgl_cancel"];
+        $this->tgl_cancel->AdvancedSearch->SearchOperator = @$filter["z_tgl_cancel"];
+        $this->tgl_cancel->AdvancedSearch->SearchCondition = @$filter["v_tgl_cancel"];
+        $this->tgl_cancel->AdvancedSearch->SearchValue2 = @$filter["y_tgl_cancel"];
+        $this->tgl_cancel->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_cancel"];
+        $this->tgl_cancel->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Return basic search SQL
+    protected function basicSearchSql($arKeywords, $type)
+    {
+        $where = "";
+        $this->buildBasicSearchSql($where, $this->kode_order, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nama_customer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nomor_handphone, $arKeywords, $type);
+        return $where;
+    }
+
+    // Build basic search SQL
+    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
+    {
+        $defCond = ($type == "OR") ? "OR" : "AND";
+        $arSql = []; // Array for SQL parts
+        $arCond = []; // Array for search conditions
+        $cnt = count($arKeywords);
+        $j = 0; // Number of SQL parts
+        for ($i = 0; $i < $cnt; $i++) {
+            $keyword = $arKeywords[$i];
+            $keyword = trim($keyword);
+            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
+                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
+                $ar = explode("\\", $keyword);
+            } else {
+                $ar = [$keyword];
+            }
+            foreach ($ar as $keyword) {
+                if ($keyword != "") {
+                    $wrk = "";
+                    if ($keyword == "OR" && $type == "") {
+                        if ($j > 0) {
+                            $arCond[$j - 1] = "OR";
+                        }
+                    } elseif ($keyword == Config("NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NULL";
+                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NOT NULL";
+                    } elseif ($fld->IsVirtual && $fld->Visible) {
+                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
+                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    }
+                    if ($wrk != "") {
+                        $arSql[$j] = $wrk;
+                        $arCond[$j] = $defCond;
+                        $j += 1;
+                    }
+                }
+            }
+        }
+        $cnt = count($arSql);
+        $quoted = false;
+        $sql = "";
+        if ($cnt > 0) {
+            for ($i = 0; $i < $cnt - 1; $i++) {
+                if ($arCond[$i] == "OR") {
+                    if (!$quoted) {
+                        $sql .= "(";
+                    }
+                    $quoted = true;
+                }
+                $sql .= $arSql[$i];
+                if ($quoted && $arCond[$i] != "OR") {
+                    $sql .= ")";
+                    $quoted = false;
+                }
+                $sql .= " " . $arCond[$i] . " ";
+            }
+            $sql .= $arSql[$cnt - 1];
+            if ($quoted) {
+                $sql .= ")";
+            }
+        }
+        if ($sql != "") {
+            if ($where != "") {
+                $where .= " OR ";
+            }
+            $where .= "(" . $sql . ")";
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    protected function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            // Search keyword in any fields
+            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
+                foreach ($ar as $keyword) {
+                    if ($keyword != "") {
+                        if ($searchStr != "") {
+                            $searchStr .= " " . $searchType . " ";
+                        }
+                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
+                    }
+                }
+            } else {
+                $searchStr = $this->basicSearchSql($ar, $searchType);
+            }
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -814,15 +1217,19 @@ class VPenagihanList extends VPenagihan
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->tgl_order); // tgl_order
+            $this->updateSort($this->kode_order); // kode_order
             $this->updateSort($this->nama_customer); // nama_customer
+            $this->updateSort($this->nomor_handphone); // nomor_handphone
             $this->updateSort($this->nilai_po); // nilai_po
+            $this->updateSort($this->tgl_faktur); // tgl_faktur
             $this->updateSort($this->nilai_faktur); // nilai_faktur
             $this->updateSort($this->piutang); // piutang
-            $this->updateSort($this->nomor_handphone); // nomor_handphone
-            $this->updateSort($this->idorder); // idorder
-            $this->updateSort($this->kode_order); // kode_order
-            $this->updateSort($this->tgl_faktur); // tgl_faktur
             $this->updateSort($this->umur_faktur); // umur_faktur
+            $this->updateSort($this->status); // status
+            $this->updateSort($this->tgl_antrian); // tgl_antrian
+            $this->updateSort($this->tgl_penagihan); // tgl_penagihan
+            $this->updateSort($this->tgl_return); // tgl_return
+            $this->updateSort($this->tgl_cancel); // tgl_cancel
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -853,20 +1260,30 @@ class VPenagihanList extends VPenagihan
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
+            }
+
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
+                $this->idorder->setSort("");
                 $this->tgl_order->setSort("");
+                $this->kode_order->setSort("");
                 $this->nama_customer->setSort("");
+                $this->nomor_handphone->setSort("");
                 $this->nilai_po->setSort("");
+                $this->tgl_faktur->setSort("");
                 $this->nilai_faktur->setSort("");
                 $this->piutang->setSort("");
-                $this->nomor_handphone->setSort("");
-                $this->idorder->setSort("");
-                $this->kode_order->setSort("");
-                $this->tgl_faktur->setSort("");
                 $this->umur_faktur->setSort("");
+                $this->status->setSort("");
+                $this->tgl_antrian->setSort("");
+                $this->tgl_penagihan->setSort("");
+                $this->tgl_return->setSort("");
+                $this->tgl_cancel->setSort("");
             }
 
             // Reset start position
@@ -992,11 +1409,11 @@ class VPenagihanList extends VPenagihan
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fv_penagihanlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fpenagihanlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fv_penagihanlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fpenagihanlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1019,7 +1436,7 @@ class VPenagihanList extends VPenagihan
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fv_penagihanlist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
+                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fpenagihanlist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1131,6 +1548,16 @@ class VPenagihanList extends VPenagihan
         global $Security, $Language;
     }
 
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1199,32 +1626,42 @@ class VPenagihanList extends VPenagihan
         if (!$rs) {
             return;
         }
+        $this->idorder->setDbValue($row['idorder']);
         $this->tgl_order->setDbValue($row['tgl_order']);
+        $this->kode_order->setDbValue($row['kode_order']);
         $this->nama_customer->setDbValue($row['nama_customer']);
+        $this->nomor_handphone->setDbValue($row['nomor_handphone']);
         $this->nilai_po->setDbValue($row['nilai_po']);
+        $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
         $this->piutang->setDbValue($row['piutang']);
-        $this->nomor_handphone->setDbValue($row['nomor_handphone']);
-        $this->idorder->setDbValue($row['idorder']);
-        $this->kode_order->setDbValue($row['kode_order']);
-        $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->umur_faktur->setDbValue($row['umur_faktur']);
+        $this->status->setDbValue($row['status']);
+        $this->tgl_antrian->setDbValue($row['tgl_antrian']);
+        $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
+        $this->tgl_return->setDbValue($row['tgl_return']);
+        $this->tgl_cancel->setDbValue($row['tgl_cancel']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
+        $row['idorder'] = null;
         $row['tgl_order'] = null;
+        $row['kode_order'] = null;
         $row['nama_customer'] = null;
+        $row['nomor_handphone'] = null;
         $row['nilai_po'] = null;
+        $row['tgl_faktur'] = null;
         $row['nilai_faktur'] = null;
         $row['piutang'] = null;
-        $row['nomor_handphone'] = null;
-        $row['idorder'] = null;
-        $row['kode_order'] = null;
-        $row['tgl_faktur'] = null;
         $row['umur_faktur'] = null;
+        $row['status'] = null;
+        $row['tgl_antrian'] = null;
+        $row['tgl_penagihan'] = null;
+        $row['tgl_return'] = null;
+        $row['tgl_cancel'] = null;
         return $row;
     }
 
@@ -1247,105 +1684,141 @@ class VPenagihanList extends VPenagihan
         $this->InlineCopyUrl = $this->getInlineCopyUrl();
         $this->DeleteUrl = $this->getDeleteUrl();
 
-        // Convert decimal values if posted back
-        if ($this->nilai_po->FormValue == $this->nilai_po->CurrentValue && is_numeric(ConvertToFloatString($this->nilai_po->CurrentValue))) {
-            $this->nilai_po->CurrentValue = ConvertToFloatString($this->nilai_po->CurrentValue);
-        }
-
-        // Convert decimal values if posted back
-        if ($this->nilai_faktur->FormValue == $this->nilai_faktur->CurrentValue && is_numeric(ConvertToFloatString($this->nilai_faktur->CurrentValue))) {
-            $this->nilai_faktur->CurrentValue = ConvertToFloatString($this->nilai_faktur->CurrentValue);
-        }
-
-        // Convert decimal values if posted back
-        if ($this->piutang->FormValue == $this->piutang->CurrentValue && is_numeric(ConvertToFloatString($this->piutang->CurrentValue))) {
-            $this->piutang->CurrentValue = ConvertToFloatString($this->piutang->CurrentValue);
-        }
-
         // Call Row_Rendering event
         $this->rowRendering();
 
         // Common render codes for all row types
 
+        // idorder
+
         // tgl_order
+
+        // kode_order
 
         // nama_customer
 
+        // nomor_handphone
+
         // nilai_po
+
+        // tgl_faktur
 
         // nilai_faktur
 
         // piutang
 
-        // nomor_handphone
-
-        // idorder
-
-        // kode_order
-
-        // tgl_faktur
-
         // umur_faktur
+
+        // status
+
+        // tgl_antrian
+
+        // tgl_penagihan
+
+        // tgl_return
+
+        // tgl_cancel
         if ($this->RowType == ROWTYPE_VIEW) {
-            // tgl_order
-            $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
-            $this->tgl_order->ViewCustomAttributes = "";
-
-            // nama_customer
-            $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
-            $this->nama_customer->ViewCustomAttributes = "";
-
-            // nilai_po
-            $this->nilai_po->ViewValue = $this->nilai_po->CurrentValue;
-            $this->nilai_po->ViewValue = FormatNumber($this->nilai_po->ViewValue, 2, -2, -2, -2);
-            $this->nilai_po->ViewCustomAttributes = "";
-
-            // nilai_faktur
-            $this->nilai_faktur->ViewValue = $this->nilai_faktur->CurrentValue;
-            $this->nilai_faktur->ViewValue = FormatNumber($this->nilai_faktur->ViewValue, 2, -2, -2, -2);
-            $this->nilai_faktur->ViewCustomAttributes = "";
-
-            // piutang
-            $this->piutang->ViewValue = $this->piutang->CurrentValue;
-            $this->piutang->ViewValue = FormatNumber($this->piutang->ViewValue, 2, -2, -2, -2);
-            $this->piutang->ViewCustomAttributes = "";
-
-            // nomor_handphone
-            $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
-            $this->nomor_handphone->ViewCustomAttributes = "";
-
             // idorder
             $this->idorder->ViewValue = $this->idorder->CurrentValue;
             $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
 
+            // tgl_order
+            $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
+            $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 7);
+            $this->tgl_order->ViewCustomAttributes = "";
+
             // kode_order
             $this->kode_order->ViewValue = $this->kode_order->CurrentValue;
             $this->kode_order->ViewCustomAttributes = "";
 
+            // nama_customer
+            $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+            $this->nama_customer->ViewCustomAttributes = "";
+
+            // nomor_handphone
+            $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
+            $this->nomor_handphone->ViewCustomAttributes = "";
+
+            // nilai_po
+            $this->nilai_po->ViewValue = $this->nilai_po->CurrentValue;
+            $this->nilai_po->ViewValue = FormatCurrency($this->nilai_po->ViewValue, 2, -2, -2, -2);
+            $this->nilai_po->ViewCustomAttributes = "";
+
             // tgl_faktur
             $this->tgl_faktur->ViewValue = $this->tgl_faktur->CurrentValue;
+            $this->tgl_faktur->ViewValue = FormatDateTime($this->tgl_faktur->ViewValue, 7);
             $this->tgl_faktur->ViewCustomAttributes = "";
+
+            // nilai_faktur
+            $this->nilai_faktur->ViewValue = $this->nilai_faktur->CurrentValue;
+            $this->nilai_faktur->ViewValue = FormatCurrency($this->nilai_faktur->ViewValue, 2, -2, -2, -2);
+            $this->nilai_faktur->ViewCustomAttributes = "";
+
+            // piutang
+            $this->piutang->ViewValue = $this->piutang->CurrentValue;
+            $this->piutang->ViewValue = FormatCurrency($this->piutang->ViewValue, 2, -2, -2, -2);
+            $this->piutang->ViewCustomAttributes = "";
 
             // umur_faktur
             $this->umur_faktur->ViewValue = $this->umur_faktur->CurrentValue;
             $this->umur_faktur->ViewValue = FormatNumber($this->umur_faktur->ViewValue, 0, -2, -2, -2);
             $this->umur_faktur->ViewCustomAttributes = "";
 
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
+
+            // tgl_antrian
+            $this->tgl_antrian->ViewValue = $this->tgl_antrian->CurrentValue;
+            $this->tgl_antrian->ViewValue = FormatDateTime($this->tgl_antrian->ViewValue, 11);
+            $this->tgl_antrian->ViewCustomAttributes = "";
+
+            // tgl_penagihan
+            $this->tgl_penagihan->ViewValue = $this->tgl_penagihan->CurrentValue;
+            $this->tgl_penagihan->ViewValue = FormatDateTime($this->tgl_penagihan->ViewValue, 11);
+            $this->tgl_penagihan->ViewCustomAttributes = "";
+
+            // tgl_return
+            $this->tgl_return->ViewValue = $this->tgl_return->CurrentValue;
+            $this->tgl_return->ViewValue = FormatDateTime($this->tgl_return->ViewValue, 11);
+            $this->tgl_return->ViewCustomAttributes = "";
+
+            // tgl_cancel
+            $this->tgl_cancel->ViewValue = $this->tgl_cancel->CurrentValue;
+            $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 11);
+            $this->tgl_cancel->ViewCustomAttributes = "";
+
             // tgl_order
             $this->tgl_order->LinkCustomAttributes = "";
             $this->tgl_order->HrefValue = "";
             $this->tgl_order->TooltipValue = "";
+
+            // kode_order
+            $this->kode_order->LinkCustomAttributes = "";
+            $this->kode_order->HrefValue = "";
+            $this->kode_order->TooltipValue = "";
 
             // nama_customer
             $this->nama_customer->LinkCustomAttributes = "";
             $this->nama_customer->HrefValue = "";
             $this->nama_customer->TooltipValue = "";
 
+            // nomor_handphone
+            $this->nomor_handphone->LinkCustomAttributes = "";
+            $this->nomor_handphone->HrefValue = "";
+            $this->nomor_handphone->TooltipValue = "";
+
             // nilai_po
             $this->nilai_po->LinkCustomAttributes = "";
             $this->nilai_po->HrefValue = "";
             $this->nilai_po->TooltipValue = "";
+
+            // tgl_faktur
+            $this->tgl_faktur->LinkCustomAttributes = "";
+            $this->tgl_faktur->HrefValue = "";
+            $this->tgl_faktur->TooltipValue = "";
 
             // nilai_faktur
             $this->nilai_faktur->LinkCustomAttributes = "";
@@ -1357,30 +1830,35 @@ class VPenagihanList extends VPenagihan
             $this->piutang->HrefValue = "";
             $this->piutang->TooltipValue = "";
 
-            // nomor_handphone
-            $this->nomor_handphone->LinkCustomAttributes = "";
-            $this->nomor_handphone->HrefValue = "";
-            $this->nomor_handphone->TooltipValue = "";
-
-            // idorder
-            $this->idorder->LinkCustomAttributes = "";
-            $this->idorder->HrefValue = "";
-            $this->idorder->TooltipValue = "";
-
-            // kode_order
-            $this->kode_order->LinkCustomAttributes = "";
-            $this->kode_order->HrefValue = "";
-            $this->kode_order->TooltipValue = "";
-
-            // tgl_faktur
-            $this->tgl_faktur->LinkCustomAttributes = "";
-            $this->tgl_faktur->HrefValue = "";
-            $this->tgl_faktur->TooltipValue = "";
-
             // umur_faktur
             $this->umur_faktur->LinkCustomAttributes = "";
             $this->umur_faktur->HrefValue = "";
             $this->umur_faktur->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
+
+            // tgl_antrian
+            $this->tgl_antrian->LinkCustomAttributes = "";
+            $this->tgl_antrian->HrefValue = "";
+            $this->tgl_antrian->TooltipValue = "";
+
+            // tgl_penagihan
+            $this->tgl_penagihan->LinkCustomAttributes = "";
+            $this->tgl_penagihan->HrefValue = "";
+            $this->tgl_penagihan->TooltipValue = "";
+
+            // tgl_return
+            $this->tgl_return->LinkCustomAttributes = "";
+            $this->tgl_return->HrefValue = "";
+            $this->tgl_return->TooltipValue = "";
+
+            // tgl_cancel
+            $this->tgl_cancel->LinkCustomAttributes = "";
+            $this->tgl_cancel->HrefValue = "";
+            $this->tgl_cancel->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1396,6 +1874,17 @@ class VPenagihanList extends VPenagihan
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
+
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fpenagihanlistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1573,10 +2062,8 @@ class VPenagihanList extends VPenagihan
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
-        $item = &$this->ListOptions->add("checkbox");
-        $item->Header = "<input type=\"checkbox\" id=\"check-all\">";
-        $item->OnLeft = true;
-        $item->moveTo(0); 
+        $item = &$this->ListOptions->add("cancel");
+        $item->Header = "Cancel";
     }
 
     // ListOptions Rendering event
@@ -1592,7 +2079,15 @@ class VPenagihanList extends VPenagihan
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        $this->ListOptions["checkbox"]->Body = "<input type=\"checkbox\" id=\"check-row\" value=\"{$this->kodeorder->CurrentValue}\">";
+        if ($this->status->CurrentValue < 0) {
+        	$this->ListOptions->Items["cancel"]->Body = "Canceled!";
+        }
+        if ($this->status->CurrentValue == 0) {
+        	$this->ListOptions->Items["cancel"]->Body = "<button type=\"button\" data-value=\"{$this->idorder->CurrentValue}\" class=\"btn btn-warning btn-sm cancel-reminder\">Cancel Reminder</button>";
+        }
+        if ($this->status->CurrentValue > 0) {
+        	$this->ListOptions->Items["cancel"]->Body = "Delivered";
+        }
     }
 
     // Row Custom Action event

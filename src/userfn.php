@@ -522,7 +522,7 @@ function tgl_indo($tanggal, $format='date'){
     switch ($format) {
         case 'datetime':            
             $pecahkan2 = explode(' ', $pecahkan[2]);
-            return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
+            return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
             break;
         case 'month-year':
             return $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
@@ -675,17 +675,19 @@ function curl_get($url){
     // menampilkan hasil curl
     return $output;
 }
-$API_ACTIONS['mass-send-reminder'] = function(Request $request, Response &$response) {
+$API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) {
     $items = Param("items", Route(2));
     if (empty($items)) {
         echo json_encode([]); die;
     }
-    $export = [];
+    $status = true;
     $data = explode(',', urldecode($items));
-    foreach ($data as $key => $value) { 
-        $row = ExecuteRow("SELECT * FROM v_penagihan WHERE kodeorder = '{$value}'");
-        $export[$key]['to'] = $row['nomor_handphone'];
-        $export[$key]['message'] = "Selamat Siang {$row['nama_customer']}, kami dari CV. Beautie Surya Derma mau menginformasikan tagihan berikut. No. Faktur {$row['kodeorder']} tanggal {$row['tgl_order']} Senilai Rp. {$row['tgl_jatuhtempo']}. Pembayaran bisa melalui transfer ke rekening kami di BCA no rek. 8290977593 An. Suryo Sudibyo SE. Untuk memudahkan proses tracking tagihan serta menghindari penagihan kembali, mohon jika melakukan pembayaran melalui transfer dengan memberi keterangan pada berita “Nama dokter/Klinik/Merek_Nomor Faktur”. Mohon infonya apabila sudah melakukan pembayaran dengan mengirim WA bukti transfer ke nomor ini. Terima kasih atas kepercayaan kepada kami. Semoga {$row['nama_customer']} sehat selalu.";
+    foreach ($data as $value) { 
+        $row = ExecuteRow("SELECT * FROM v_penagihan WHERE idorder = '{$value}'");
+        $insert = ExecuteUpdate("INSERT INTO penagihan (idorder, tgl_order, kode_order, nama_customer, nomor_handphone, nilai_po, tgl_faktur, nilai_faktur, piutang, umur_faktur, tgl_antrian) VALUES ({$row['idorder']}, '{$row['tgl_order']}', '{$row['kode_order']}', '{$row['nama_customer']}', '{$row['nomor_handphone']}', '{$row['nilai_po']}', '{$row['tgl_faktur']}', '{$row['nilai_faktur']}', '{$row['piutang']}', '{$row['umur_faktur']}', '".date('Y-m-d H:i:s')."')");
+        if (!$insert) $status = false;
+        // $export[$key]['to'] = $row['nomor_handphone'];
+        // $export[$key]['message'] = "Selamat Siang {$row['nama_customer']}, kami dari CV. Beautie Surya Derma mau menginformasikan tagihan berikut. No. Faktur {$row['kodeorder']} tanggal {$row['tgl_order']} Senilai Rp. {$row['tgl_jatuhtempo']}. Pembayaran bisa melalui transfer ke rekening kami di BCA no rek. 8290977593 An. Suryo Sudibyo SE. Untuk memudahkan proses tracking tagihan serta menghindari penagihan kembali, mohon jika melakukan pembayaran melalui transfer dengan memberi keterangan pada berita “Nama dokter/Klinik/Merek_Nomor Faktur”. Mohon infonya apabila sudah melakukan pembayaran dengan mengirim WA bukti transfer ke nomor ini. Terima kasih atas kepercayaan kepada kami. Semoga {$row['nama_customer']} sehat selalu.";
     }
 
     //$send = curl_post($url, json_encode($export));
@@ -696,7 +698,16 @@ $API_ACTIONS['mass-send-reminder'] = function(Request $request, Response &$respo
     //}
 
     //ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Penagihan Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
-    WriteJson(['status' => ($status == 1) ? TRUE : FALSE]);
+    WriteJson(['status' => $status]);
+};
+$API_ACTIONS['cancel-reminder'] = function(Request $request, Response &$response) {
+    $order = urldecode(Param("id", Route(1)));
+    $status = true;
+    $row = ExecuteUpdate("UPDATE penagihan SET status = '-1', tgl_cancel = '".date('Y-m-d H:i:s')."' WHERE idorder = {$order}");
+    if (!$row) {
+        $status = false;
+    }
+    WriteJson(['status' => $status]);
 };
 $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$response) {
     $faktur = urldecode(Param("faktur", Route(1)));

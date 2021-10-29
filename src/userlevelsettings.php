@@ -248,7 +248,13 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}termpayment","1","288"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_order_customer.php","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_order_customer.php","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_order_customer.php","1","0"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_order_customer.php","1","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan_customer.php","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan_customer.php","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan_customer.php","1","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","1","288"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Manajemen User",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -329,4 +335,6 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["bot_history","bot_history","Bot History",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","BotHistoryList"],
     ["v_penagihan","v_penagihan","Penagihan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VPenagihanList"],
     ["termpayment","termpayment","termpayment",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","TermpaymentList"],
-    ["laporan_order_customer.php","laporan_order_customer","Laporan Order Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanOrderCustomer"]];
+    ["laporan_order_customer.php","laporan_order_customer","Laporan Order Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanOrderCustomer"],
+    ["penagihan_customer.php","penagihan_customer","Penagihan Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanCustomer"],
+    ["penagihan","penagihan","Antrian Penagihan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanList"]];

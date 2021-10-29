@@ -131,6 +131,8 @@ return [
     "v_penagihan" => \DI\create(VPenagihan::class),
     "termpayment" => \DI\create(Termpayment::class),
     "laporan_order_customer" => \DI\create(LaporanOrderCustomer::class),
+    "penagihan_customer" => \DI\create(PenagihanCustomer::class),
+    "penagihan" => \DI\create(Penagihan::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),
