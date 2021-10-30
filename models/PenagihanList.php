@@ -565,20 +565,21 @@ class PenagihanList extends Penagihan
         // Set up list options
         $this->setupListOptions();
         $this->idorder->Visible = false;
-        $this->tgl_order->setVisibility();
-        $this->kode_order->setVisibility();
-        $this->nama_customer->setVisibility();
-        $this->nomor_handphone->setVisibility();
-        $this->nilai_po->setVisibility();
         $this->tgl_faktur->setVisibility();
         $this->nilai_faktur->setVisibility();
         $this->piutang->setVisibility();
         $this->umur_faktur->setVisibility();
+        $this->nomor_handphone->setVisibility();
         $this->status->setVisibility();
+        $this->messages->setVisibility();
+        $this->nama_customer->setVisibility();
         $this->tgl_antrian->setVisibility();
         $this->tgl_penagihan->setVisibility();
         $this->tgl_return->setVisibility();
         $this->tgl_cancel->setVisibility();
+        $this->tgl_order->Visible = false;
+        $this->kode_order->Visible = false;
+        $this->nilai_po->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -870,20 +871,21 @@ class PenagihanList extends Penagihan
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
-        $filterList = Concat($filterList, $this->tgl_order->AdvancedSearch->toJson(), ","); // Field tgl_order
-        $filterList = Concat($filterList, $this->kode_order->AdvancedSearch->toJson(), ","); // Field kode_order
-        $filterList = Concat($filterList, $this->nama_customer->AdvancedSearch->toJson(), ","); // Field nama_customer
-        $filterList = Concat($filterList, $this->nomor_handphone->AdvancedSearch->toJson(), ","); // Field nomor_handphone
-        $filterList = Concat($filterList, $this->nilai_po->AdvancedSearch->toJson(), ","); // Field nilai_po
         $filterList = Concat($filterList, $this->tgl_faktur->AdvancedSearch->toJson(), ","); // Field tgl_faktur
         $filterList = Concat($filterList, $this->nilai_faktur->AdvancedSearch->toJson(), ","); // Field nilai_faktur
         $filterList = Concat($filterList, $this->piutang->AdvancedSearch->toJson(), ","); // Field piutang
         $filterList = Concat($filterList, $this->umur_faktur->AdvancedSearch->toJson(), ","); // Field umur_faktur
+        $filterList = Concat($filterList, $this->nomor_handphone->AdvancedSearch->toJson(), ","); // Field nomor_handphone
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
+        $filterList = Concat($filterList, $this->messages->AdvancedSearch->toJson(), ","); // Field messages
+        $filterList = Concat($filterList, $this->nama_customer->AdvancedSearch->toJson(), ","); // Field nama_customer
         $filterList = Concat($filterList, $this->tgl_antrian->AdvancedSearch->toJson(), ","); // Field tgl_antrian
         $filterList = Concat($filterList, $this->tgl_penagihan->AdvancedSearch->toJson(), ","); // Field tgl_penagihan
         $filterList = Concat($filterList, $this->tgl_return->AdvancedSearch->toJson(), ","); // Field tgl_return
         $filterList = Concat($filterList, $this->tgl_cancel->AdvancedSearch->toJson(), ","); // Field tgl_cancel
+        $filterList = Concat($filterList, $this->tgl_order->AdvancedSearch->toJson(), ","); // Field tgl_order
+        $filterList = Concat($filterList, $this->kode_order->AdvancedSearch->toJson(), ","); // Field kode_order
+        $filterList = Concat($filterList, $this->nilai_po->AdvancedSearch->toJson(), ","); // Field nilai_po
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -932,46 +934,6 @@ class PenagihanList extends Penagihan
         $this->idorder->AdvancedSearch->SearchOperator2 = @$filter["w_idorder"];
         $this->idorder->AdvancedSearch->save();
 
-        // Field tgl_order
-        $this->tgl_order->AdvancedSearch->SearchValue = @$filter["x_tgl_order"];
-        $this->tgl_order->AdvancedSearch->SearchOperator = @$filter["z_tgl_order"];
-        $this->tgl_order->AdvancedSearch->SearchCondition = @$filter["v_tgl_order"];
-        $this->tgl_order->AdvancedSearch->SearchValue2 = @$filter["y_tgl_order"];
-        $this->tgl_order->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_order"];
-        $this->tgl_order->AdvancedSearch->save();
-
-        // Field kode_order
-        $this->kode_order->AdvancedSearch->SearchValue = @$filter["x_kode_order"];
-        $this->kode_order->AdvancedSearch->SearchOperator = @$filter["z_kode_order"];
-        $this->kode_order->AdvancedSearch->SearchCondition = @$filter["v_kode_order"];
-        $this->kode_order->AdvancedSearch->SearchValue2 = @$filter["y_kode_order"];
-        $this->kode_order->AdvancedSearch->SearchOperator2 = @$filter["w_kode_order"];
-        $this->kode_order->AdvancedSearch->save();
-
-        // Field nama_customer
-        $this->nama_customer->AdvancedSearch->SearchValue = @$filter["x_nama_customer"];
-        $this->nama_customer->AdvancedSearch->SearchOperator = @$filter["z_nama_customer"];
-        $this->nama_customer->AdvancedSearch->SearchCondition = @$filter["v_nama_customer"];
-        $this->nama_customer->AdvancedSearch->SearchValue2 = @$filter["y_nama_customer"];
-        $this->nama_customer->AdvancedSearch->SearchOperator2 = @$filter["w_nama_customer"];
-        $this->nama_customer->AdvancedSearch->save();
-
-        // Field nomor_handphone
-        $this->nomor_handphone->AdvancedSearch->SearchValue = @$filter["x_nomor_handphone"];
-        $this->nomor_handphone->AdvancedSearch->SearchOperator = @$filter["z_nomor_handphone"];
-        $this->nomor_handphone->AdvancedSearch->SearchCondition = @$filter["v_nomor_handphone"];
-        $this->nomor_handphone->AdvancedSearch->SearchValue2 = @$filter["y_nomor_handphone"];
-        $this->nomor_handphone->AdvancedSearch->SearchOperator2 = @$filter["w_nomor_handphone"];
-        $this->nomor_handphone->AdvancedSearch->save();
-
-        // Field nilai_po
-        $this->nilai_po->AdvancedSearch->SearchValue = @$filter["x_nilai_po"];
-        $this->nilai_po->AdvancedSearch->SearchOperator = @$filter["z_nilai_po"];
-        $this->nilai_po->AdvancedSearch->SearchCondition = @$filter["v_nilai_po"];
-        $this->nilai_po->AdvancedSearch->SearchValue2 = @$filter["y_nilai_po"];
-        $this->nilai_po->AdvancedSearch->SearchOperator2 = @$filter["w_nilai_po"];
-        $this->nilai_po->AdvancedSearch->save();
-
         // Field tgl_faktur
         $this->tgl_faktur->AdvancedSearch->SearchValue = @$filter["x_tgl_faktur"];
         $this->tgl_faktur->AdvancedSearch->SearchOperator = @$filter["z_tgl_faktur"];
@@ -1004,6 +966,14 @@ class PenagihanList extends Penagihan
         $this->umur_faktur->AdvancedSearch->SearchOperator2 = @$filter["w_umur_faktur"];
         $this->umur_faktur->AdvancedSearch->save();
 
+        // Field nomor_handphone
+        $this->nomor_handphone->AdvancedSearch->SearchValue = @$filter["x_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchOperator = @$filter["z_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchCondition = @$filter["v_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchValue2 = @$filter["y_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->SearchOperator2 = @$filter["w_nomor_handphone"];
+        $this->nomor_handphone->AdvancedSearch->save();
+
         // Field status
         $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
         $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
@@ -1011,6 +981,22 @@ class PenagihanList extends Penagihan
         $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
         $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
         $this->status->AdvancedSearch->save();
+
+        // Field messages
+        $this->messages->AdvancedSearch->SearchValue = @$filter["x_messages"];
+        $this->messages->AdvancedSearch->SearchOperator = @$filter["z_messages"];
+        $this->messages->AdvancedSearch->SearchCondition = @$filter["v_messages"];
+        $this->messages->AdvancedSearch->SearchValue2 = @$filter["y_messages"];
+        $this->messages->AdvancedSearch->SearchOperator2 = @$filter["w_messages"];
+        $this->messages->AdvancedSearch->save();
+
+        // Field nama_customer
+        $this->nama_customer->AdvancedSearch->SearchValue = @$filter["x_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchOperator = @$filter["z_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchCondition = @$filter["v_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchValue2 = @$filter["y_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchOperator2 = @$filter["w_nama_customer"];
+        $this->nama_customer->AdvancedSearch->save();
 
         // Field tgl_antrian
         $this->tgl_antrian->AdvancedSearch->SearchValue = @$filter["x_tgl_antrian"];
@@ -1043,6 +1029,30 @@ class PenagihanList extends Penagihan
         $this->tgl_cancel->AdvancedSearch->SearchValue2 = @$filter["y_tgl_cancel"];
         $this->tgl_cancel->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_cancel"];
         $this->tgl_cancel->AdvancedSearch->save();
+
+        // Field tgl_order
+        $this->tgl_order->AdvancedSearch->SearchValue = @$filter["x_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchOperator = @$filter["z_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchCondition = @$filter["v_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchValue2 = @$filter["y_tgl_order"];
+        $this->tgl_order->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_order"];
+        $this->tgl_order->AdvancedSearch->save();
+
+        // Field kode_order
+        $this->kode_order->AdvancedSearch->SearchValue = @$filter["x_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchOperator = @$filter["z_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchCondition = @$filter["v_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchValue2 = @$filter["y_kode_order"];
+        $this->kode_order->AdvancedSearch->SearchOperator2 = @$filter["w_kode_order"];
+        $this->kode_order->AdvancedSearch->save();
+
+        // Field nilai_po
+        $this->nilai_po->AdvancedSearch->SearchValue = @$filter["x_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchOperator = @$filter["z_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchCondition = @$filter["v_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchValue2 = @$filter["y_nilai_po"];
+        $this->nilai_po->AdvancedSearch->SearchOperator2 = @$filter["w_nilai_po"];
+        $this->nilai_po->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1051,9 +1061,10 @@ class PenagihanList extends Penagihan
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->kode_order, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->nama_customer, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->nomor_handphone, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->messages, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nama_customer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kode_order, $arKeywords, $type);
         return $where;
     }
 
@@ -1216,16 +1227,14 @@ class PenagihanList extends Penagihan
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->tgl_order); // tgl_order
-            $this->updateSort($this->kode_order); // kode_order
-            $this->updateSort($this->nama_customer); // nama_customer
-            $this->updateSort($this->nomor_handphone); // nomor_handphone
-            $this->updateSort($this->nilai_po); // nilai_po
             $this->updateSort($this->tgl_faktur); // tgl_faktur
             $this->updateSort($this->nilai_faktur); // nilai_faktur
             $this->updateSort($this->piutang); // piutang
             $this->updateSort($this->umur_faktur); // umur_faktur
+            $this->updateSort($this->nomor_handphone); // nomor_handphone
             $this->updateSort($this->status); // status
+            $this->updateSort($this->messages); // messages
+            $this->updateSort($this->nama_customer); // nama_customer
             $this->updateSort($this->tgl_antrian); // tgl_antrian
             $this->updateSort($this->tgl_penagihan); // tgl_penagihan
             $this->updateSort($this->tgl_return); // tgl_return
@@ -1270,20 +1279,21 @@ class PenagihanList extends Penagihan
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->idorder->setSort("");
-                $this->tgl_order->setSort("");
-                $this->kode_order->setSort("");
-                $this->nama_customer->setSort("");
-                $this->nomor_handphone->setSort("");
-                $this->nilai_po->setSort("");
                 $this->tgl_faktur->setSort("");
                 $this->nilai_faktur->setSort("");
                 $this->piutang->setSort("");
                 $this->umur_faktur->setSort("");
+                $this->nomor_handphone->setSort("");
                 $this->status->setSort("");
+                $this->messages->setSort("");
+                $this->nama_customer->setSort("");
                 $this->tgl_antrian->setSort("");
                 $this->tgl_penagihan->setSort("");
                 $this->tgl_return->setSort("");
                 $this->tgl_cancel->setSort("");
+                $this->tgl_order->setSort("");
+                $this->kode_order->setSort("");
+                $this->nilai_po->setSort("");
             }
 
             // Reset start position
@@ -1627,20 +1637,21 @@ class PenagihanList extends Penagihan
             return;
         }
         $this->idorder->setDbValue($row['idorder']);
-        $this->tgl_order->setDbValue($row['tgl_order']);
-        $this->kode_order->setDbValue($row['kode_order']);
-        $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->nomor_handphone->setDbValue($row['nomor_handphone']);
-        $this->nilai_po->setDbValue($row['nilai_po']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
         $this->piutang->setDbValue($row['piutang']);
         $this->umur_faktur->setDbValue($row['umur_faktur']);
+        $this->nomor_handphone->setDbValue($row['nomor_handphone']);
         $this->status->setDbValue($row['status']);
+        $this->messages->setDbValue($row['messages']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
         $this->tgl_antrian->setDbValue($row['tgl_antrian']);
         $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
         $this->tgl_return->setDbValue($row['tgl_return']);
         $this->tgl_cancel->setDbValue($row['tgl_cancel']);
+        $this->tgl_order->setDbValue($row['tgl_order']);
+        $this->kode_order->setDbValue($row['kode_order']);
+        $this->nilai_po->setDbValue($row['nilai_po']);
     }
 
     // Return a row with default values
@@ -1648,20 +1659,21 @@ class PenagihanList extends Penagihan
     {
         $row = [];
         $row['idorder'] = null;
-        $row['tgl_order'] = null;
-        $row['kode_order'] = null;
-        $row['nama_customer'] = null;
-        $row['nomor_handphone'] = null;
-        $row['nilai_po'] = null;
         $row['tgl_faktur'] = null;
         $row['nilai_faktur'] = null;
         $row['piutang'] = null;
         $row['umur_faktur'] = null;
+        $row['nomor_handphone'] = null;
         $row['status'] = null;
+        $row['messages'] = null;
+        $row['nama_customer'] = null;
         $row['tgl_antrian'] = null;
         $row['tgl_penagihan'] = null;
         $row['tgl_return'] = null;
         $row['tgl_cancel'] = null;
+        $row['tgl_order'] = null;
+        $row['kode_order'] = null;
+        $row['nilai_po'] = null;
         return $row;
     }
 
@@ -1691,16 +1703,6 @@ class PenagihanList extends Penagihan
 
         // idorder
 
-        // tgl_order
-
-        // kode_order
-
-        // nama_customer
-
-        // nomor_handphone
-
-        // nilai_po
-
         // tgl_faktur
 
         // nilai_faktur
@@ -1709,7 +1711,13 @@ class PenagihanList extends Penagihan
 
         // umur_faktur
 
+        // nomor_handphone
+
         // status
+
+        // messages
+
+        // nama_customer
 
         // tgl_antrian
 
@@ -1718,33 +1726,17 @@ class PenagihanList extends Penagihan
         // tgl_return
 
         // tgl_cancel
+
+        // tgl_order
+
+        // kode_order
+
+        // nilai_po
         if ($this->RowType == ROWTYPE_VIEW) {
             // idorder
             $this->idorder->ViewValue = $this->idorder->CurrentValue;
             $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
-
-            // tgl_order
-            $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
-            $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 7);
-            $this->tgl_order->ViewCustomAttributes = "";
-
-            // kode_order
-            $this->kode_order->ViewValue = $this->kode_order->CurrentValue;
-            $this->kode_order->ViewCustomAttributes = "";
-
-            // nama_customer
-            $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
-            $this->nama_customer->ViewCustomAttributes = "";
-
-            // nomor_handphone
-            $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
-            $this->nomor_handphone->ViewCustomAttributes = "";
-
-            // nilai_po
-            $this->nilai_po->ViewValue = $this->nilai_po->CurrentValue;
-            $this->nilai_po->ViewValue = FormatCurrency($this->nilai_po->ViewValue, 2, -2, -2, -2);
-            $this->nilai_po->ViewCustomAttributes = "";
 
             // tgl_faktur
             $this->tgl_faktur->ViewValue = $this->tgl_faktur->CurrentValue;
@@ -1766,9 +1758,21 @@ class PenagihanList extends Penagihan
             $this->umur_faktur->ViewValue = FormatNumber($this->umur_faktur->ViewValue, 0, -2, -2, -2);
             $this->umur_faktur->ViewCustomAttributes = "";
 
+            // nomor_handphone
+            $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
+            $this->nomor_handphone->ViewCustomAttributes = "";
+
             // status
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewCustomAttributes = "";
+
+            // messages
+            $this->messages->ViewValue = $this->messages->CurrentValue;
+            $this->messages->ViewCustomAttributes = "";
+
+            // nama_customer
+            $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+            $this->nama_customer->ViewCustomAttributes = "";
 
             // tgl_antrian
             $this->tgl_antrian->ViewValue = $this->tgl_antrian->CurrentValue;
@@ -1790,31 +1794,6 @@ class PenagihanList extends Penagihan
             $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 11);
             $this->tgl_cancel->ViewCustomAttributes = "";
 
-            // tgl_order
-            $this->tgl_order->LinkCustomAttributes = "";
-            $this->tgl_order->HrefValue = "";
-            $this->tgl_order->TooltipValue = "";
-
-            // kode_order
-            $this->kode_order->LinkCustomAttributes = "";
-            $this->kode_order->HrefValue = "";
-            $this->kode_order->TooltipValue = "";
-
-            // nama_customer
-            $this->nama_customer->LinkCustomAttributes = "";
-            $this->nama_customer->HrefValue = "";
-            $this->nama_customer->TooltipValue = "";
-
-            // nomor_handphone
-            $this->nomor_handphone->LinkCustomAttributes = "";
-            $this->nomor_handphone->HrefValue = "";
-            $this->nomor_handphone->TooltipValue = "";
-
-            // nilai_po
-            $this->nilai_po->LinkCustomAttributes = "";
-            $this->nilai_po->HrefValue = "";
-            $this->nilai_po->TooltipValue = "";
-
             // tgl_faktur
             $this->tgl_faktur->LinkCustomAttributes = "";
             $this->tgl_faktur->HrefValue = "";
@@ -1835,10 +1814,25 @@ class PenagihanList extends Penagihan
             $this->umur_faktur->HrefValue = "";
             $this->umur_faktur->TooltipValue = "";
 
+            // nomor_handphone
+            $this->nomor_handphone->LinkCustomAttributes = "";
+            $this->nomor_handphone->HrefValue = "";
+            $this->nomor_handphone->TooltipValue = "";
+
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // messages
+            $this->messages->LinkCustomAttributes = "";
+            $this->messages->HrefValue = "";
+            $this->messages->TooltipValue = "";
+
+            // nama_customer
+            $this->nama_customer->LinkCustomAttributes = "";
+            $this->nama_customer->HrefValue = "";
+            $this->nama_customer->TooltipValue = "";
 
             // tgl_antrian
             $this->tgl_antrian->LinkCustomAttributes = "";

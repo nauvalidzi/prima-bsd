@@ -6,47 +6,9 @@ namespace PHPMaker2021\distributor;
 $PenagihanCustomer = &$Page;
 ?>
 <?php
-	$jatuhtempo = null;
+	$jatuhtempo = date('Y-m-d');
 	if(isset($_GET['jatuhtempo'])) {
-		$jatuhtempo = $_GET['jatuhtempo'];
-		$day = 0;
-		switch ($jatuhtempo) {
-			case 'h-2':
-				$day = '-3';
-				$umurjatuhtempo = 'H-2';
-				break;
-			case 'h+1':
-				$day = '+2';
-				$umurjatuhtempo = 'H+1';
-				break;
-			case 'h+7':
-				$day = '+8';
-				$umurjatuhtempo = 'H+7';
-				break;
-			case 'h+14':
-				$day = '+15';
-				$umurjatuhtempo = 'H+14';
-				break;
-			case 'h+21':
-				$day = '+22';
-				$umurjatuhtempo = 'H+21';
-				break;
-			case 'h+28':
-				$day = '+29';
-				$umurjatuhtempo = 'H+28';
-				break;
-			case 'h+30':
-				$day = '+31';
-				$umurjatuhtempo = 'H+30';
-				break;
-			
-			default:
-				$day = '-1';
-				$umurjatuhtempo = null;
-				break;
-		}
-
-		$filter = " AND i.tglinvoice >= DATE_ADD(NOW(), INTERVAL {$day} DAY)";
+		$jatuhtempo = date('Y-m-d', strtotime($_GET['jatuhtempo']));
 		
 		$query = "SELECT o.id as idorder,
 					date_format(o.tanggal, '%Y-%m-%d') AS tgl_order,
@@ -70,7 +32,7 @@ $PenagihanCustomer = &$Page;
 				  JOIN customer c ON c.id = o.idcustomer
 				  LEFT JOIN invoice i ON i.idorder = o.id
 				  LEFT JOIN penagihan pn on o.id = pn.idorder
-				  WHERE 1=1 {$filter}
+				  WHERE i.tglinvoice <= '{$jatuhtempo}'
 				  GROUP BY o.id, c.id";
 
 		$result = ExecuteQuery($query)->fetchAll();
@@ -83,16 +45,8 @@ $PenagihanCustomer = &$Page;
 			<div class="col-md-12">
 				<ul class="list-unstyled">
 					<li class="d-inline-block">
-						<label class="d-block">Umur Jatuh Tempo</label>
-						<select name="jatuhtempo" class="form-control" style="width: 10em;">
-							<option value="h-2" <?php echo ($jatuhtempo == 'h-2') ? "selected" : "" ?>>H-2</option>
-							<option value="h+1" <?php echo ($jatuhtempo == 'h+1') ? "selected" : "" ?>>H+1</option>
-							<option value="h+7" <?php echo ($jatuhtempo == 'h+7') ? "selected" : "" ?>>H+7</option>
-							<option value="h+14" <?php echo ($jatuhtempo == 'h+14') ? "selected" : "" ?>>H+14</option>
-							<option value="h+21" <?php echo ($jatuhtempo == 'h+21') ? "selected" : "" ?>>H+21</option>
-							<option value="h+28" <?php echo ($jatuhtempo == 'h+28') ? "selected" : "" ?>>H+28</option>
-							<option value="h+30" <?php echo ($jatuhtempo == 'h+30') ? "selected" : "" ?>>H+30</option>
-						</select>
+						<label class="d-block">Tgl Jatuh Tempo</label>
+						<input type="date" class="form-control input-md" name="jatuhtempo" value="<?php echo $jatuhtempo ?>">
 					</li>
 					<li class="d-inline-block">
 						<button class="btn btn-primary btn-md p-2" type="submit">Search <i class="fa fa-search h-3"></i></button>
@@ -113,7 +67,7 @@ $PenagihanCustomer = &$Page;
 			<tr>
 				<th colspan="11" class="text-center">
 					<h4 class="my-2">Penagihan Customer</h4>
-					<p class="mt-3"><?php echo ($umurjatuhtempo != null) ? "Umur Jatuh Tempo: {$umurjatuhtempo}" : "" ?> </p>
+					<p class="mt-3">Tanggal Jatuh Tempo: <?php echo date('d/m/Y', strtotime($jatuhtempo)) ?> </p>
 				</th>
 			</tr>
 		    <tr>

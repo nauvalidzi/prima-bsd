@@ -136,21 +136,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->tgl_order->Visible) { // tgl_order ?>
-        <th data-name="tgl_order" class="<?= $Page->tgl_order->headerCellClass() ?>"><div id="elh_penagihan_tgl_order" class="penagihan_tgl_order"><?= $Page->renderSort($Page->tgl_order) ?></div></th>
-<?php } ?>
-<?php if ($Page->kode_order->Visible) { // kode_order ?>
-        <th data-name="kode_order" class="<?= $Page->kode_order->headerCellClass() ?>"><div id="elh_penagihan_kode_order" class="penagihan_kode_order"><?= $Page->renderSort($Page->kode_order) ?></div></th>
-<?php } ?>
-<?php if ($Page->nama_customer->Visible) { // nama_customer ?>
-        <th data-name="nama_customer" class="<?= $Page->nama_customer->headerCellClass() ?>"><div id="elh_penagihan_nama_customer" class="penagihan_nama_customer"><?= $Page->renderSort($Page->nama_customer) ?></div></th>
-<?php } ?>
-<?php if ($Page->nomor_handphone->Visible) { // nomor_handphone ?>
-        <th data-name="nomor_handphone" class="<?= $Page->nomor_handphone->headerCellClass() ?>"><div id="elh_penagihan_nomor_handphone" class="penagihan_nomor_handphone"><?= $Page->renderSort($Page->nomor_handphone) ?></div></th>
-<?php } ?>
-<?php if ($Page->nilai_po->Visible) { // nilai_po ?>
-        <th data-name="nilai_po" class="<?= $Page->nilai_po->headerCellClass() ?>"><div id="elh_penagihan_nilai_po" class="penagihan_nilai_po"><?= $Page->renderSort($Page->nilai_po) ?></div></th>
-<?php } ?>
 <?php if ($Page->tgl_faktur->Visible) { // tgl_faktur ?>
         <th data-name="tgl_faktur" class="<?= $Page->tgl_faktur->headerCellClass() ?>"><div id="elh_penagihan_tgl_faktur" class="penagihan_tgl_faktur"><?= $Page->renderSort($Page->tgl_faktur) ?></div></th>
 <?php } ?>
@@ -163,8 +148,17 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->umur_faktur->Visible) { // umur_faktur ?>
         <th data-name="umur_faktur" class="<?= $Page->umur_faktur->headerCellClass() ?>"><div id="elh_penagihan_umur_faktur" class="penagihan_umur_faktur"><?= $Page->renderSort($Page->umur_faktur) ?></div></th>
 <?php } ?>
+<?php if ($Page->nomor_handphone->Visible) { // nomor_handphone ?>
+        <th data-name="nomor_handphone" class="<?= $Page->nomor_handphone->headerCellClass() ?>"><div id="elh_penagihan_nomor_handphone" class="penagihan_nomor_handphone"><?= $Page->renderSort($Page->nomor_handphone) ?></div></th>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_penagihan_status" class="penagihan_status"><?= $Page->renderSort($Page->status) ?></div></th>
+<?php } ?>
+<?php if ($Page->messages->Visible) { // messages ?>
+        <th data-name="messages" class="<?= $Page->messages->headerCellClass() ?>"><div id="elh_penagihan_messages" class="penagihan_messages"><?= $Page->renderSort($Page->messages) ?></div></th>
+<?php } ?>
+<?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+        <th data-name="nama_customer" class="<?= $Page->nama_customer->headerCellClass() ?>"><div id="elh_penagihan_nama_customer" class="penagihan_nama_customer"><?= $Page->renderSort($Page->nama_customer) ?></div></th>
 <?php } ?>
 <?php if ($Page->tgl_antrian->Visible) { // tgl_antrian ?>
         <th data-name="tgl_antrian" class="<?= $Page->tgl_antrian->headerCellClass() ?>"><div id="elh_penagihan_tgl_antrian" class="penagihan_tgl_antrian"><?= $Page->renderSort($Page->tgl_antrian) ?></div></th>
@@ -245,46 +239,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->tgl_order->Visible) { // tgl_order ?>
-        <td data-name="tgl_order" <?= $Page->tgl_order->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_penagihan_tgl_order">
-<span<?= $Page->tgl_order->viewAttributes() ?>>
-<?= $Page->tgl_order->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->kode_order->Visible) { // kode_order ?>
-        <td data-name="kode_order" <?= $Page->kode_order->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_penagihan_kode_order">
-<span<?= $Page->kode_order->viewAttributes() ?>>
-<?= $Page->kode_order->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->nama_customer->Visible) { // nama_customer ?>
-        <td data-name="nama_customer" <?= $Page->nama_customer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_penagihan_nama_customer">
-<span<?= $Page->nama_customer->viewAttributes() ?>>
-<?= $Page->nama_customer->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->nomor_handphone->Visible) { // nomor_handphone ?>
-        <td data-name="nomor_handphone" <?= $Page->nomor_handphone->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_penagihan_nomor_handphone">
-<span<?= $Page->nomor_handphone->viewAttributes() ?>>
-<?= $Page->nomor_handphone->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->nilai_po->Visible) { // nilai_po ?>
-        <td data-name="nilai_po" <?= $Page->nilai_po->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_penagihan_nilai_po">
-<span<?= $Page->nilai_po->viewAttributes() ?>>
-<?= $Page->nilai_po->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->tgl_faktur->Visible) { // tgl_faktur ?>
         <td data-name="tgl_faktur" <?= $Page->tgl_faktur->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_penagihan_tgl_faktur">
@@ -317,11 +271,35 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->nomor_handphone->Visible) { // nomor_handphone ?>
+        <td data-name="nomor_handphone" <?= $Page->nomor_handphone->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_nomor_handphone">
+<span<?= $Page->nomor_handphone->viewAttributes() ?>>
+<?= $Page->nomor_handphone->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->status->Visible) { // status ?>
         <td data-name="status" <?= $Page->status->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_penagihan_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->messages->Visible) { // messages ?>
+        <td data-name="messages" <?= $Page->messages->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_messages">
+<span<?= $Page->messages->viewAttributes() ?>>
+<?= $Page->messages->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+        <td data-name="nama_customer" <?= $Page->nama_customer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_nama_customer">
+<span<?= $Page->nama_customer->viewAttributes() ?>>
+<?= $Page->nama_customer->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

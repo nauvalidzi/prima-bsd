@@ -2460,7 +2460,7 @@ class CustomerAdd extends Customer
         $this->level_customer_id->setDbValueDef($rsnew, $this->level_customer_id->CurrentValue, null, false);
 
         // jatuh_tempo_invoice
-        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, false);
+        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, strval($this->jatuh_tempo_invoice->CurrentValue) == "");
 
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);

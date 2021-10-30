@@ -29,20 +29,21 @@ class Penagihan extends DbTable
 
     // Fields
     public $idorder;
-    public $tgl_order;
-    public $kode_order;
-    public $nama_customer;
-    public $nomor_handphone;
-    public $nilai_po;
     public $tgl_faktur;
     public $nilai_faktur;
     public $piutang;
     public $umur_faktur;
+    public $nomor_handphone;
     public $status;
+    public $messages;
+    public $nama_customer;
     public $tgl_antrian;
     public $tgl_penagihan;
     public $tgl_return;
     public $tgl_cancel;
+    public $tgl_order;
+    public $kode_order;
+    public $nilai_po;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -88,48 +89,6 @@ class Penagihan extends DbTable
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
         $this->Fields['idorder'] = &$this->idorder;
 
-        // tgl_order
-        $this->tgl_order = new DbField('penagihan', 'penagihan', 'x_tgl_order', 'tgl_order', '`tgl_order`', CastDateFieldForLike("`tgl_order`", 7, "DB"), 133, 10, 7, false, '`tgl_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tgl_order->Nullable = false; // NOT NULL field
-        $this->tgl_order->Required = true; // Required field
-        $this->tgl_order->Sortable = true; // Allow sort
-        $this->tgl_order->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
-        $this->tgl_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_order->Param, "CustomMsg");
-        $this->Fields['tgl_order'] = &$this->tgl_order;
-
-        // kode_order
-        $this->kode_order = new DbField('penagihan', 'penagihan', 'x_kode_order', 'kode_order', '`kode_order`', '`kode_order`', 200, 255, -1, false, '`kode_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode_order->Nullable = false; // NOT NULL field
-        $this->kode_order->Required = true; // Required field
-        $this->kode_order->Sortable = true; // Allow sort
-        $this->kode_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_order->Param, "CustomMsg");
-        $this->Fields['kode_order'] = &$this->kode_order;
-
-        // nama_customer
-        $this->nama_customer = new DbField('penagihan', 'penagihan', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 255, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nama_customer->Nullable = false; // NOT NULL field
-        $this->nama_customer->Required = true; // Required field
-        $this->nama_customer->Sortable = true; // Allow sort
-        $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
-        $this->Fields['nama_customer'] = &$this->nama_customer;
-
-        // nomor_handphone
-        $this->nomor_handphone = new DbField('penagihan', 'penagihan', 'x_nomor_handphone', 'nomor_handphone', '`nomor_handphone`', '`nomor_handphone`', 200, 15, -1, false, '`nomor_handphone`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nomor_handphone->Nullable = false; // NOT NULL field
-        $this->nomor_handphone->Required = true; // Required field
-        $this->nomor_handphone->Sortable = true; // Allow sort
-        $this->nomor_handphone->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nomor_handphone->Param, "CustomMsg");
-        $this->Fields['nomor_handphone'] = &$this->nomor_handphone;
-
-        // nilai_po
-        $this->nilai_po = new DbField('penagihan', 'penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 3, 15, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nilai_po->Nullable = false; // NOT NULL field
-        $this->nilai_po->Required = true; // Required field
-        $this->nilai_po->Sortable = true; // Allow sort
-        $this->nilai_po->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->nilai_po->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nilai_po->Param, "CustomMsg");
-        $this->Fields['nilai_po'] = &$this->nilai_po;
-
         // tgl_faktur
         $this->tgl_faktur = new DbField('penagihan', 'penagihan', 'x_tgl_faktur', 'tgl_faktur', '`tgl_faktur`', CastDateFieldForLike("`tgl_faktur`", 7, "DB"), 133, 10, 7, false, '`tgl_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->tgl_faktur->Nullable = false; // NOT NULL field
@@ -166,12 +125,36 @@ class Penagihan extends DbTable
         $this->umur_faktur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->umur_faktur->Param, "CustomMsg");
         $this->Fields['umur_faktur'] = &$this->umur_faktur;
 
+        // nomor_handphone
+        $this->nomor_handphone = new DbField('penagihan', 'penagihan', 'x_nomor_handphone', 'nomor_handphone', '`nomor_handphone`', '`nomor_handphone`', 200, 15, -1, false, '`nomor_handphone`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nomor_handphone->Nullable = false; // NOT NULL field
+        $this->nomor_handphone->Required = true; // Required field
+        $this->nomor_handphone->Sortable = true; // Allow sort
+        $this->nomor_handphone->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nomor_handphone->Param, "CustomMsg");
+        $this->Fields['nomor_handphone'] = &$this->nomor_handphone;
+
         // status
         $this->status = new DbField('penagihan', 'penagihan', 'x_status', 'status', '`status`', '`status`', 16, 1, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->status->Sortable = true; // Allow sort
         $this->status->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
+
+        // messages
+        $this->messages = new DbField('penagihan', 'penagihan', 'x_messages', 'messages', '`messages`', '`messages`', 201, 65535, -1, false, '`messages`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->messages->Nullable = false; // NOT NULL field
+        $this->messages->Required = true; // Required field
+        $this->messages->Sortable = true; // Allow sort
+        $this->messages->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->messages->Param, "CustomMsg");
+        $this->Fields['messages'] = &$this->messages;
+
+        // nama_customer
+        $this->nama_customer = new DbField('penagihan', 'penagihan', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 255, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_customer->Nullable = false; // NOT NULL field
+        $this->nama_customer->Required = true; // Required field
+        $this->nama_customer->Sortable = true; // Allow sort
+        $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
+        $this->Fields['nama_customer'] = &$this->nama_customer;
 
         // tgl_antrian
         $this->tgl_antrian = new DbField('penagihan', 'penagihan', 'x_tgl_antrian', 'tgl_antrian', '`tgl_antrian`', CastDateFieldForLike("`tgl_antrian`", 11, "DB"), 135, 19, 11, false, '`tgl_antrian`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -200,6 +183,32 @@ class Penagihan extends DbTable
         $this->tgl_cancel->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->tgl_cancel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_cancel->Param, "CustomMsg");
         $this->Fields['tgl_cancel'] = &$this->tgl_cancel;
+
+        // tgl_order
+        $this->tgl_order = new DbField('penagihan', 'penagihan', 'x_tgl_order', 'tgl_order', '`tgl_order`', CastDateFieldForLike("`tgl_order`", 0, "DB"), 133, 10, 0, false, '`tgl_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tgl_order->Nullable = false; // NOT NULL field
+        $this->tgl_order->Required = true; // Required field
+        $this->tgl_order->Sortable = false; // Allow sort
+        $this->tgl_order->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tgl_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_order->Param, "CustomMsg");
+        $this->Fields['tgl_order'] = &$this->tgl_order;
+
+        // kode_order
+        $this->kode_order = new DbField('penagihan', 'penagihan', 'x_kode_order', 'kode_order', '`kode_order`', '`kode_order`', 200, 255, -1, false, '`kode_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_order->Nullable = false; // NOT NULL field
+        $this->kode_order->Required = true; // Required field
+        $this->kode_order->Sortable = false; // Allow sort
+        $this->kode_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_order->Param, "CustomMsg");
+        $this->Fields['kode_order'] = &$this->kode_order;
+
+        // nilai_po
+        $this->nilai_po = new DbField('penagihan', 'penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 3, 15, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nilai_po->Nullable = false; // NOT NULL field
+        $this->nilai_po->Required = true; // Required field
+        $this->nilai_po->Sortable = false; // Allow sort
+        $this->nilai_po->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->nilai_po->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nilai_po->Param, "CustomMsg");
+        $this->Fields['nilai_po'] = &$this->nilai_po;
     }
 
     // Field Visibility
@@ -608,20 +617,21 @@ class Penagihan extends DbTable
             return;
         }
         $this->idorder->DbValue = $row['idorder'];
-        $this->tgl_order->DbValue = $row['tgl_order'];
-        $this->kode_order->DbValue = $row['kode_order'];
-        $this->nama_customer->DbValue = $row['nama_customer'];
-        $this->nomor_handphone->DbValue = $row['nomor_handphone'];
-        $this->nilai_po->DbValue = $row['nilai_po'];
         $this->tgl_faktur->DbValue = $row['tgl_faktur'];
         $this->nilai_faktur->DbValue = $row['nilai_faktur'];
         $this->piutang->DbValue = $row['piutang'];
         $this->umur_faktur->DbValue = $row['umur_faktur'];
+        $this->nomor_handphone->DbValue = $row['nomor_handphone'];
         $this->status->DbValue = $row['status'];
+        $this->messages->DbValue = $row['messages'];
+        $this->nama_customer->DbValue = $row['nama_customer'];
         $this->tgl_antrian->DbValue = $row['tgl_antrian'];
         $this->tgl_penagihan->DbValue = $row['tgl_penagihan'];
         $this->tgl_return->DbValue = $row['tgl_return'];
         $this->tgl_cancel->DbValue = $row['tgl_cancel'];
+        $this->tgl_order->DbValue = $row['tgl_order'];
+        $this->kode_order->DbValue = $row['kode_order'];
+        $this->nilai_po->DbValue = $row['nilai_po'];
     }
 
     // Delete uploaded files
@@ -897,20 +907,21 @@ SORTHTML;
             return;
         }
         $this->idorder->setDbValue($row['idorder']);
-        $this->tgl_order->setDbValue($row['tgl_order']);
-        $this->kode_order->setDbValue($row['kode_order']);
-        $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->nomor_handphone->setDbValue($row['nomor_handphone']);
-        $this->nilai_po->setDbValue($row['nilai_po']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
         $this->piutang->setDbValue($row['piutang']);
         $this->umur_faktur->setDbValue($row['umur_faktur']);
+        $this->nomor_handphone->setDbValue($row['nomor_handphone']);
         $this->status->setDbValue($row['status']);
+        $this->messages->setDbValue($row['messages']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
         $this->tgl_antrian->setDbValue($row['tgl_antrian']);
         $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
         $this->tgl_return->setDbValue($row['tgl_return']);
         $this->tgl_cancel->setDbValue($row['tgl_cancel']);
+        $this->tgl_order->setDbValue($row['tgl_order']);
+        $this->kode_order->setDbValue($row['kode_order']);
+        $this->nilai_po->setDbValue($row['nilai_po']);
     }
 
     // Render list row values
@@ -925,16 +936,6 @@ SORTHTML;
 
         // idorder
 
-        // tgl_order
-
-        // kode_order
-
-        // nama_customer
-
-        // nomor_handphone
-
-        // nilai_po
-
         // tgl_faktur
 
         // nilai_faktur
@@ -943,7 +944,13 @@ SORTHTML;
 
         // umur_faktur
 
+        // nomor_handphone
+
         // status
+
+        // messages
+
+        // nama_customer
 
         // tgl_antrian
 
@@ -953,32 +960,16 @@ SORTHTML;
 
         // tgl_cancel
 
+        // tgl_order
+
+        // kode_order
+
+        // nilai_po
+
         // idorder
         $this->idorder->ViewValue = $this->idorder->CurrentValue;
         $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
         $this->idorder->ViewCustomAttributes = "";
-
-        // tgl_order
-        $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
-        $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 7);
-        $this->tgl_order->ViewCustomAttributes = "";
-
-        // kode_order
-        $this->kode_order->ViewValue = $this->kode_order->CurrentValue;
-        $this->kode_order->ViewCustomAttributes = "";
-
-        // nama_customer
-        $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
-        $this->nama_customer->ViewCustomAttributes = "";
-
-        // nomor_handphone
-        $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
-        $this->nomor_handphone->ViewCustomAttributes = "";
-
-        // nilai_po
-        $this->nilai_po->ViewValue = $this->nilai_po->CurrentValue;
-        $this->nilai_po->ViewValue = FormatCurrency($this->nilai_po->ViewValue, 2, -2, -2, -2);
-        $this->nilai_po->ViewCustomAttributes = "";
 
         // tgl_faktur
         $this->tgl_faktur->ViewValue = $this->tgl_faktur->CurrentValue;
@@ -1000,9 +991,21 @@ SORTHTML;
         $this->umur_faktur->ViewValue = FormatNumber($this->umur_faktur->ViewValue, 0, -2, -2, -2);
         $this->umur_faktur->ViewCustomAttributes = "";
 
+        // nomor_handphone
+        $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
+        $this->nomor_handphone->ViewCustomAttributes = "";
+
         // status
         $this->status->ViewValue = $this->status->CurrentValue;
         $this->status->ViewCustomAttributes = "";
+
+        // messages
+        $this->messages->ViewValue = $this->messages->CurrentValue;
+        $this->messages->ViewCustomAttributes = "";
+
+        // nama_customer
+        $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->ViewCustomAttributes = "";
 
         // tgl_antrian
         $this->tgl_antrian->ViewValue = $this->tgl_antrian->CurrentValue;
@@ -1024,35 +1027,24 @@ SORTHTML;
         $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 11);
         $this->tgl_cancel->ViewCustomAttributes = "";
 
+        // tgl_order
+        $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
+        $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 0);
+        $this->tgl_order->ViewCustomAttributes = "";
+
+        // kode_order
+        $this->kode_order->ViewValue = $this->kode_order->CurrentValue;
+        $this->kode_order->ViewCustomAttributes = "";
+
+        // nilai_po
+        $this->nilai_po->ViewValue = $this->nilai_po->CurrentValue;
+        $this->nilai_po->ViewValue = FormatNumber($this->nilai_po->ViewValue, 0, -2, -2, -2);
+        $this->nilai_po->ViewCustomAttributes = "";
+
         // idorder
         $this->idorder->LinkCustomAttributes = "";
         $this->idorder->HrefValue = "";
         $this->idorder->TooltipValue = "";
-
-        // tgl_order
-        $this->tgl_order->LinkCustomAttributes = "";
-        $this->tgl_order->HrefValue = "";
-        $this->tgl_order->TooltipValue = "";
-
-        // kode_order
-        $this->kode_order->LinkCustomAttributes = "";
-        $this->kode_order->HrefValue = "";
-        $this->kode_order->TooltipValue = "";
-
-        // nama_customer
-        $this->nama_customer->LinkCustomAttributes = "";
-        $this->nama_customer->HrefValue = "";
-        $this->nama_customer->TooltipValue = "";
-
-        // nomor_handphone
-        $this->nomor_handphone->LinkCustomAttributes = "";
-        $this->nomor_handphone->HrefValue = "";
-        $this->nomor_handphone->TooltipValue = "";
-
-        // nilai_po
-        $this->nilai_po->LinkCustomAttributes = "";
-        $this->nilai_po->HrefValue = "";
-        $this->nilai_po->TooltipValue = "";
 
         // tgl_faktur
         $this->tgl_faktur->LinkCustomAttributes = "";
@@ -1074,10 +1066,25 @@ SORTHTML;
         $this->umur_faktur->HrefValue = "";
         $this->umur_faktur->TooltipValue = "";
 
+        // nomor_handphone
+        $this->nomor_handphone->LinkCustomAttributes = "";
+        $this->nomor_handphone->HrefValue = "";
+        $this->nomor_handphone->TooltipValue = "";
+
         // status
         $this->status->LinkCustomAttributes = "";
         $this->status->HrefValue = "";
         $this->status->TooltipValue = "";
+
+        // messages
+        $this->messages->LinkCustomAttributes = "";
+        $this->messages->HrefValue = "";
+        $this->messages->TooltipValue = "";
+
+        // nama_customer
+        $this->nama_customer->LinkCustomAttributes = "";
+        $this->nama_customer->HrefValue = "";
+        $this->nama_customer->TooltipValue = "";
 
         // tgl_antrian
         $this->tgl_antrian->LinkCustomAttributes = "";
@@ -1099,6 +1106,21 @@ SORTHTML;
         $this->tgl_cancel->HrefValue = "";
         $this->tgl_cancel->TooltipValue = "";
 
+        // tgl_order
+        $this->tgl_order->LinkCustomAttributes = "";
+        $this->tgl_order->HrefValue = "";
+        $this->tgl_order->TooltipValue = "";
+
+        // kode_order
+        $this->kode_order->LinkCustomAttributes = "";
+        $this->kode_order->HrefValue = "";
+        $this->kode_order->TooltipValue = "";
+
+        // nilai_po
+        $this->nilai_po->LinkCustomAttributes = "";
+        $this->nilai_po->HrefValue = "";
+        $this->nilai_po->TooltipValue = "";
+
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1119,45 +1141,6 @@ SORTHTML;
         $this->idorder->EditCustomAttributes = "";
         $this->idorder->EditValue = $this->idorder->CurrentValue;
         $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
-
-        // tgl_order
-        $this->tgl_order->EditAttrs["class"] = "form-control";
-        $this->tgl_order->EditCustomAttributes = "";
-        $this->tgl_order->EditValue = FormatDateTime($this->tgl_order->CurrentValue, 7);
-        $this->tgl_order->PlaceHolder = RemoveHtml($this->tgl_order->caption());
-
-        // kode_order
-        $this->kode_order->EditAttrs["class"] = "form-control";
-        $this->kode_order->EditCustomAttributes = "";
-        if (!$this->kode_order->Raw) {
-            $this->kode_order->CurrentValue = HtmlDecode($this->kode_order->CurrentValue);
-        }
-        $this->kode_order->EditValue = $this->kode_order->CurrentValue;
-        $this->kode_order->PlaceHolder = RemoveHtml($this->kode_order->caption());
-
-        // nama_customer
-        $this->nama_customer->EditAttrs["class"] = "form-control";
-        $this->nama_customer->EditCustomAttributes = "";
-        if (!$this->nama_customer->Raw) {
-            $this->nama_customer->CurrentValue = HtmlDecode($this->nama_customer->CurrentValue);
-        }
-        $this->nama_customer->EditValue = $this->nama_customer->CurrentValue;
-        $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
-
-        // nomor_handphone
-        $this->nomor_handphone->EditAttrs["class"] = "form-control";
-        $this->nomor_handphone->EditCustomAttributes = "";
-        if (!$this->nomor_handphone->Raw) {
-            $this->nomor_handphone->CurrentValue = HtmlDecode($this->nomor_handphone->CurrentValue);
-        }
-        $this->nomor_handphone->EditValue = $this->nomor_handphone->CurrentValue;
-        $this->nomor_handphone->PlaceHolder = RemoveHtml($this->nomor_handphone->caption());
-
-        // nilai_po
-        $this->nilai_po->EditAttrs["class"] = "form-control";
-        $this->nilai_po->EditCustomAttributes = "";
-        $this->nilai_po->EditValue = $this->nilai_po->CurrentValue;
-        $this->nilai_po->PlaceHolder = RemoveHtml($this->nilai_po->caption());
 
         // tgl_faktur
         $this->tgl_faktur->EditAttrs["class"] = "form-control";
@@ -1183,11 +1166,35 @@ SORTHTML;
         $this->umur_faktur->EditValue = $this->umur_faktur->CurrentValue;
         $this->umur_faktur->PlaceHolder = RemoveHtml($this->umur_faktur->caption());
 
+        // nomor_handphone
+        $this->nomor_handphone->EditAttrs["class"] = "form-control";
+        $this->nomor_handphone->EditCustomAttributes = "";
+        if (!$this->nomor_handphone->Raw) {
+            $this->nomor_handphone->CurrentValue = HtmlDecode($this->nomor_handphone->CurrentValue);
+        }
+        $this->nomor_handphone->EditValue = $this->nomor_handphone->CurrentValue;
+        $this->nomor_handphone->PlaceHolder = RemoveHtml($this->nomor_handphone->caption());
+
         // status
         $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
         $this->status->EditValue = $this->status->CurrentValue;
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
+        // messages
+        $this->messages->EditAttrs["class"] = "form-control";
+        $this->messages->EditCustomAttributes = "";
+        $this->messages->EditValue = $this->messages->CurrentValue;
+        $this->messages->PlaceHolder = RemoveHtml($this->messages->caption());
+
+        // nama_customer
+        $this->nama_customer->EditAttrs["class"] = "form-control";
+        $this->nama_customer->EditCustomAttributes = "";
+        if (!$this->nama_customer->Raw) {
+            $this->nama_customer->CurrentValue = HtmlDecode($this->nama_customer->CurrentValue);
+        }
+        $this->nama_customer->EditValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
 
         // tgl_antrian
         $this->tgl_antrian->EditAttrs["class"] = "form-control";
@@ -1212,6 +1219,27 @@ SORTHTML;
         $this->tgl_cancel->EditCustomAttributes = "";
         $this->tgl_cancel->EditValue = FormatDateTime($this->tgl_cancel->CurrentValue, 11);
         $this->tgl_cancel->PlaceHolder = RemoveHtml($this->tgl_cancel->caption());
+
+        // tgl_order
+        $this->tgl_order->EditAttrs["class"] = "form-control";
+        $this->tgl_order->EditCustomAttributes = "";
+        $this->tgl_order->EditValue = FormatDateTime($this->tgl_order->CurrentValue, 8);
+        $this->tgl_order->PlaceHolder = RemoveHtml($this->tgl_order->caption());
+
+        // kode_order
+        $this->kode_order->EditAttrs["class"] = "form-control";
+        $this->kode_order->EditCustomAttributes = "";
+        if (!$this->kode_order->Raw) {
+            $this->kode_order->CurrentValue = HtmlDecode($this->kode_order->CurrentValue);
+        }
+        $this->kode_order->EditValue = $this->kode_order->CurrentValue;
+        $this->kode_order->PlaceHolder = RemoveHtml($this->kode_order->caption());
+
+        // nilai_po
+        $this->nilai_po->EditAttrs["class"] = "form-control";
+        $this->nilai_po->EditCustomAttributes = "";
+        $this->nilai_po->EditValue = $this->nilai_po->CurrentValue;
+        $this->nilai_po->PlaceHolder = RemoveHtml($this->nilai_po->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1242,32 +1270,31 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->idorder);
-                    $doc->exportCaption($this->tgl_order);
-                    $doc->exportCaption($this->kode_order);
-                    $doc->exportCaption($this->nama_customer);
-                    $doc->exportCaption($this->nomor_handphone);
-                    $doc->exportCaption($this->nilai_po);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->nilai_faktur);
                     $doc->exportCaption($this->piutang);
                     $doc->exportCaption($this->umur_faktur);
+                    $doc->exportCaption($this->nomor_handphone);
                     $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->messages);
+                    $doc->exportCaption($this->nama_customer);
                     $doc->exportCaption($this->tgl_antrian);
                     $doc->exportCaption($this->tgl_penagihan);
                     $doc->exportCaption($this->tgl_return);
                     $doc->exportCaption($this->tgl_cancel);
-                } else {
-                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->tgl_order);
                     $doc->exportCaption($this->kode_order);
-                    $doc->exportCaption($this->nama_customer);
-                    $doc->exportCaption($this->nomor_handphone);
                     $doc->exportCaption($this->nilai_po);
+                } else {
+                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->nilai_faktur);
                     $doc->exportCaption($this->piutang);
                     $doc->exportCaption($this->umur_faktur);
+                    $doc->exportCaption($this->nomor_handphone);
                     $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->messages);
+                    $doc->exportCaption($this->nama_customer);
                     $doc->exportCaption($this->tgl_antrian);
                     $doc->exportCaption($this->tgl_penagihan);
                     $doc->exportCaption($this->tgl_return);
@@ -1302,32 +1329,31 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->idorder);
-                        $doc->exportField($this->tgl_order);
-                        $doc->exportField($this->kode_order);
-                        $doc->exportField($this->nama_customer);
-                        $doc->exportField($this->nomor_handphone);
-                        $doc->exportField($this->nilai_po);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->nilai_faktur);
                         $doc->exportField($this->piutang);
                         $doc->exportField($this->umur_faktur);
+                        $doc->exportField($this->nomor_handphone);
                         $doc->exportField($this->status);
+                        $doc->exportField($this->messages);
+                        $doc->exportField($this->nama_customer);
                         $doc->exportField($this->tgl_antrian);
                         $doc->exportField($this->tgl_penagihan);
                         $doc->exportField($this->tgl_return);
                         $doc->exportField($this->tgl_cancel);
-                    } else {
-                        $doc->exportField($this->idorder);
                         $doc->exportField($this->tgl_order);
                         $doc->exportField($this->kode_order);
-                        $doc->exportField($this->nama_customer);
-                        $doc->exportField($this->nomor_handphone);
                         $doc->exportField($this->nilai_po);
+                    } else {
+                        $doc->exportField($this->idorder);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->nilai_faktur);
                         $doc->exportField($this->piutang);
                         $doc->exportField($this->umur_faktur);
+                        $doc->exportField($this->nomor_handphone);
                         $doc->exportField($this->status);
+                        $doc->exportField($this->messages);
+                        $doc->exportField($this->nama_customer);
                         $doc->exportField($this->tgl_antrian);
                         $doc->exportField($this->tgl_penagihan);
                         $doc->exportField($this->tgl_return);

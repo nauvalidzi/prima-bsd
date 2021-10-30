@@ -3593,21 +3593,6 @@
       <field id="idorder">
         <phrase id="fldcaption" value="idorder" />
       </field>
-      <field id="tgl_order">
-        <phrase id="fldcaption" value="Tgl Order" />
-      </field>
-      <field id="kode_order">
-        <phrase id="fldcaption" value="Kode Order" />
-      </field>
-      <field id="nama_customer">
-        <phrase id="fldcaption" value="Nama Customer" />
-      </field>
-      <field id="nomor_handphone">
-        <phrase id="fldcaption" value="Nomor HP" />
-      </field>
-      <field id="nilai_po">
-        <phrase id="fldcaption" value="Nilai PO" />
-      </field>
       <field id="tgl_faktur">
         <phrase id="fldcaption" value="Tgl Faktur" />
       </field>
@@ -3620,6 +3605,9 @@
       <field id="umur_faktur">
         <phrase id="fldcaption" value="Umur Faktur" />
       </field>
+      <field id="nomor_handphone">
+        <phrase id="fldcaption" value="nomor handphone" />
+      </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />
         <phrase id="fldtagvalue1" value="-1" />
@@ -3628,6 +3616,12 @@
         <phrase id="fldtagcaption2" value="Pending" />
         <phrase id="fldtagvalue3" value="1" />
         <phrase id="fldtagcaption3" value="Yes" />
+      </field>
+      <field id="messages">
+        <phrase id="fldcaption" value="messages" />
+      </field>
+      <field id="nama_customer">
+        <phrase id="fldcaption" value="nama customer" />
       </field>
       <field id="tgl_antrian">
         <phrase id="fldcaption" value="Tgl Antrian" />
@@ -3640,6 +3634,15 @@
       </field>
       <field id="tgl_cancel">
         <phrase id="fldcaption" value="Tgl Cancel" />
+      </field>
+      <field id="tgl_order">
+        <phrase id="fldcaption" value="tgl order" />
+      </field>
+      <field id="kode_order">
+        <phrase id="fldcaption" value="kode order" />
+      </field>
+      <field id="nilai_po">
+        <phrase id="fldcaption" value="nilai po" />
       </field>
     </table>
   </project>

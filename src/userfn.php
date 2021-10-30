@@ -684,7 +684,33 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     $data = explode(',', urldecode($items));
     foreach ($data as $value) { 
         $row = ExecuteRow("SELECT * FROM v_penagihan WHERE idorder = '{$value}'");
-        $insert = ExecuteUpdate("INSERT INTO penagihan (idorder, tgl_order, kode_order, nama_customer, nomor_handphone, nilai_po, tgl_faktur, nilai_faktur, piutang, umur_faktur, tgl_antrian) VALUES ({$row['idorder']}, '{$row['tgl_order']}', '{$row['kode_order']}', '{$row['nama_customer']}', '{$row['nomor_handphone']}', '{$row['nilai_po']}', '{$row['tgl_faktur']}', '{$row['nilai_faktur']}', '{$row['piutang']}', '{$row['umur_faktur']}', '".date('Y-m-d H:i:s')."')");
+        if ($row['umur_faktur'] < 29) {
+            $message = "Yth {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menyampaikan tentang adanya Faktur yang akan jatuh tempo dalam beberapa hari kedepan untuk mohon dapat dibantu pembayarannya.
+                \nNo Faktur : {$row['kode_order']}
+                \nNilai Faktur : Rp {$row['nilai_faktur']}
+                \nJatuh Tempo : {$row['tgl_faktur']}
+                \nMohon dapat diinformasikan kembali ke kami di Nomor ini apabila sudah ditransfer, dan mohon abaikan chat ini apabila sudah ditransfer.
+                \nTerimakasih atas kesetiaan dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
+        }
+        if ($row['umur_faktur'] > 28 && $row['umur_faktur'] < 32) {
+            $message = "Yth {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menginformasikan Tagihan Faktur sbb:
+                \nNo Faktur : {$row['kode_order']}
+                \nNilai Faktur : Rp {$row['nilai_faktur']}
+                \nJatuh Tempo : {$row['tgl_faktur']}
+                \nPembayaran bisa melalui transfer rekening BCA 8290977593 a/n. Suryo Sudibyo SE, dan utk memudahkan proses tracking serta menghindari penagihan kembali mohon pd saat transfer diberi keterangan “Nama_Klinik_Merek_Nomor Faktur”.
+                \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
+                \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
+        }
+        if ($row['umur_faktur'] > 32) {
+            $message = "Yth {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma mengingatkan kembali Tagihan Faktur sbb:
+                \nNo Faktur : {$row['kode_order']}
+                \nNilai Faktur : Rp {$row['nilai_faktur']}
+                \nJatuh Tempo : {$row['tgl_faktur']}
+                \nPembayaran bisa melalui transfer rekening BCA 8290977593 a/n. Suryo Sudibyo SE, dan utk memudahkan proses tracking serta menghindari penagihan kembali mohon pd saat transfer diberi keterangan “Nama_Klinik_Merek_Nomor Faktur”.
+                \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
+                \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
+        }
+        $insert = ExecuteUpdate("INSERT INTO penagihan (idorder, tgl_order, kode_order, nama_customer, nomor_handphone, nilai_po, tgl_faktur, nilai_faktur, piutang, umur_faktur, tgl_antrian, messages) VALUES ({$row['idorder']}, '{$row['tgl_order']}', '{$row['kode_order']}', '{$row['nama_customer']}', '{$row['nomor_handphone']}', '{$row['nilai_po']}', '{$row['tgl_faktur']}', '{$row['nilai_faktur']}', '{$row['piutang']}', '{$row['umur_faktur']}', '".date('Y-m-d H:i:s')."', '{$message}')");
         if (!$insert) $status = false;
         // $export[$key]['to'] = $row['nomor_handphone'];
         // $export[$key]['message'] = "Selamat Siang {$row['nama_customer']}, kami dari CV. Beautie Surya Derma mau menginformasikan tagihan berikut. No. Faktur {$row['kodeorder']} tanggal {$row['tgl_order']} Senilai Rp. {$row['tgl_jatuhtempo']}. Pembayaran bisa melalui transfer ke rekening kami di BCA no rek. 8290977593 An. Suryo Sudibyo SE. Untuk memudahkan proses tracking tagihan serta menghindari penagihan kembali, mohon jika melakukan pembayaran melalui transfer dengan memberi keterangan pada berita “Nama dokter/Klinik/Merek_Nomor Faktur”. Mohon infonya apabila sudah melakukan pembayaran dengan mengirim WA bukti transfer ke nomor ini. Terima kasih atas kepercayaan kepada kami. Semoga {$row['nama_customer']} sehat selalu.";
