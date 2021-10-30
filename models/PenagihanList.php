@@ -426,6 +426,7 @@ class PenagihanList extends Penagihan
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -437,6 +438,9 @@ class PenagihanList extends Penagihan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -564,6 +568,7 @@ class PenagihanList extends Penagihan
 
         // Set up list options
         $this->setupListOptions();
+        $this->id->setVisibility();
         $this->idorder->Visible = false;
         $this->tgl_faktur->setVisibility();
         $this->nilai_faktur->setVisibility();
@@ -870,6 +875,7 @@ class PenagihanList extends Penagihan
         // Initialize
         $filterList = "";
         $savedFilterList = "";
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
         $filterList = Concat($filterList, $this->tgl_faktur->AdvancedSearch->toJson(), ","); // Field tgl_faktur
         $filterList = Concat($filterList, $this->nilai_faktur->AdvancedSearch->toJson(), ","); // Field nilai_faktur
@@ -925,6 +931,14 @@ class PenagihanList extends Penagihan
         }
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
+
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
 
         // Field idorder
         $this->idorder->AdvancedSearch->SearchValue = @$filter["x_idorder"];
@@ -1227,6 +1241,7 @@ class PenagihanList extends Penagihan
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->id); // id
             $this->updateSort($this->tgl_faktur); // tgl_faktur
             $this->updateSort($this->nilai_faktur); // nilai_faktur
             $this->updateSort($this->piutang); // piutang
@@ -1278,6 +1293,7 @@ class PenagihanList extends Penagihan
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
+                $this->id->setSort("");
                 $this->idorder->setSort("");
                 $this->tgl_faktur->setSort("");
                 $this->nilai_faktur->setSort("");
@@ -1391,6 +1407,7 @@ class PenagihanList extends Penagihan
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1636,6 +1653,7 @@ class PenagihanList extends Penagihan
         if (!$rs) {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idorder->setDbValue($row['idorder']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
@@ -1658,6 +1676,7 @@ class PenagihanList extends Penagihan
     protected function newRow()
     {
         $row = [];
+        $row['id'] = null;
         $row['idorder'] = null;
         $row['tgl_faktur'] = null;
         $row['nilai_faktur'] = null;
@@ -1680,7 +1699,17 @@ class PenagihanList extends Penagihan
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -1700,6 +1729,8 @@ class PenagihanList extends Penagihan
         $this->rowRendering();
 
         // Common render codes for all row types
+
+        // id
 
         // idorder
 
@@ -1733,6 +1764,10 @@ class PenagihanList extends Penagihan
 
         // nilai_po
         if ($this->RowType == ROWTYPE_VIEW) {
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
             // idorder
             $this->idorder->ViewValue = $this->idorder->CurrentValue;
             $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
@@ -1793,6 +1828,11 @@ class PenagihanList extends Penagihan
             $this->tgl_cancel->ViewValue = $this->tgl_cancel->CurrentValue;
             $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 11);
             $this->tgl_cancel->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // tgl_faktur
             $this->tgl_faktur->LinkCustomAttributes = "";

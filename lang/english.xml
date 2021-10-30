@@ -3590,8 +3590,11 @@
     </table>
     <table id="penagihan">
       <phrase id="tblcaption" value="Antrian Penagihan" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
       <field id="idorder">
-        <phrase id="fldcaption" value="idorder" />
+        <phrase id="fldcaption" value="Order ID" />
       </field>
       <field id="tgl_faktur">
         <phrase id="fldcaption" value="Tgl Faktur" />
@@ -3618,10 +3621,10 @@
         <phrase id="fldtagcaption3" value="Yes" />
       </field>
       <field id="messages">
-        <phrase id="fldcaption" value="messages" />
+        <phrase id="fldcaption" value="Messages" />
       </field>
       <field id="nama_customer">
-        <phrase id="fldcaption" value="nama customer" />
+        <phrase id="fldcaption" value="Nama Customer" />
       </field>
       <field id="tgl_antrian">
         <phrase id="fldcaption" value="Tgl Antrian" />
@@ -3636,7 +3639,7 @@
         <phrase id="fldcaption" value="Tgl Cancel" />
       </field>
       <field id="tgl_order">
-        <phrase id="fldcaption" value="tgl order" />
+        <phrase id="fldcaption" value="Tgl Order" />
       </field>
       <field id="kode_order">
         <phrase id="fldcaption" value="kode order" />

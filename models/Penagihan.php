@@ -28,6 +28,7 @@ class Penagihan extends DbTable
     public $ExportDoc;
 
     // Fields
+    public $id;
     public $idorder;
     public $tgl_faktur;
     public $nilai_faktur;
@@ -79,6 +80,15 @@ class Penagihan extends DbTable
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
+
+        // id
+        $this->id = new DbField('penagihan', 'penagihan', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Sortable = true; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
 
         // idorder
         $this->idorder = new DbField('penagihan', 'penagihan', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -185,11 +195,11 @@ class Penagihan extends DbTable
         $this->Fields['tgl_cancel'] = &$this->tgl_cancel;
 
         // tgl_order
-        $this->tgl_order = new DbField('penagihan', 'penagihan', 'x_tgl_order', 'tgl_order', '`tgl_order`', CastDateFieldForLike("`tgl_order`", 0, "DB"), 133, 10, 0, false, '`tgl_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tgl_order = new DbField('penagihan', 'penagihan', 'x_tgl_order', 'tgl_order', '`tgl_order`', CastDateFieldForLike("`tgl_order`", 7, "DB"), 133, 10, 7, false, '`tgl_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->tgl_order->Nullable = false; // NOT NULL field
         $this->tgl_order->Required = true; // Required field
         $this->tgl_order->Sortable = false; // Allow sort
-        $this->tgl_order->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tgl_order->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->tgl_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_order->Param, "CustomMsg");
         $this->Fields['tgl_order'] = &$this->tgl_order;
 
@@ -535,6 +545,9 @@ class Penagihan extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -594,6 +607,9 @@ class Penagihan extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
+            if (array_key_exists('id', $rs)) {
+                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -616,6 +632,7 @@ class Penagihan extends DbTable
         if (!is_array($row)) {
             return;
         }
+        $this->id->DbValue = $row['id'];
         $this->idorder->DbValue = $row['idorder'];
         $this->tgl_faktur->DbValue = $row['tgl_faktur'];
         $this->nilai_faktur->DbValue = $row['nilai_faktur'];
@@ -643,13 +660,19 @@ class Penagihan extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "";
+        return "`id` = @id@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
+        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -658,7 +681,12 @@ class Penagihan extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 0) {
+        if (count($keys) == 1) {
+            if ($current) {
+                $this->id->CurrentValue = $keys[0];
+            } else {
+                $this->id->OldValue = $keys[0];
+            }
         }
     }
 
@@ -666,6 +694,19 @@ class Penagihan extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
+        if (is_array($row)) {
+            $val = array_key_exists('id', $row) ? $row['id'] : null;
+        } else {
+            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
         return $keyFilter;
     }
 
@@ -793,6 +834,7 @@ class Penagihan extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
+        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -803,6 +845,11 @@ class Penagihan extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
+        if ($this->id->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->id->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -861,12 +908,23 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
+            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+                $arKeys[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
+                $arKeys[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
+                if (!is_numeric($key)) {
+                    continue;
+                }
                 $ar[] = $key;
             }
         }
@@ -881,6 +939,11 @@ SORTHTML;
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
+            }
+            if ($setCurrent) {
+                $this->id->CurrentValue = $key;
+            } else {
+                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -906,6 +969,7 @@ SORTHTML;
         } else {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idorder->setDbValue($row['idorder']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
@@ -933,6 +997,8 @@ SORTHTML;
         $this->rowRendering();
 
         // Common render codes
+
+        // id
 
         // idorder
 
@@ -965,6 +1031,10 @@ SORTHTML;
         // kode_order
 
         // nilai_po
+
+        // id
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
 
         // idorder
         $this->idorder->ViewValue = $this->idorder->CurrentValue;
@@ -1029,7 +1099,7 @@ SORTHTML;
 
         // tgl_order
         $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
-        $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 0);
+        $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 7);
         $this->tgl_order->ViewCustomAttributes = "";
 
         // kode_order
@@ -1038,8 +1108,13 @@ SORTHTML;
 
         // nilai_po
         $this->nilai_po->ViewValue = $this->nilai_po->CurrentValue;
-        $this->nilai_po->ViewValue = FormatNumber($this->nilai_po->ViewValue, 0, -2, -2, -2);
+        $this->nilai_po->ViewValue = FormatCurrency($this->nilai_po->ViewValue, 2, -2, -2, -2);
         $this->nilai_po->ViewCustomAttributes = "";
+
+        // id
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
 
         // idorder
         $this->idorder->LinkCustomAttributes = "";
@@ -1136,6 +1211,12 @@ SORTHTML;
         // Call Row Rendering event
         $this->rowRendering();
 
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
+        $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
+
         // idorder
         $this->idorder->EditAttrs["class"] = "form-control";
         $this->idorder->EditCustomAttributes = "";
@@ -1223,7 +1304,7 @@ SORTHTML;
         // tgl_order
         $this->tgl_order->EditAttrs["class"] = "form-control";
         $this->tgl_order->EditCustomAttributes = "";
-        $this->tgl_order->EditValue = FormatDateTime($this->tgl_order->CurrentValue, 8);
+        $this->tgl_order->EditValue = FormatDateTime($this->tgl_order->CurrentValue, 7);
         $this->tgl_order->PlaceHolder = RemoveHtml($this->tgl_order->caption());
 
         // kode_order
@@ -1269,6 +1350,7 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
+                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->nilai_faktur);
@@ -1286,6 +1368,7 @@ SORTHTML;
                     $doc->exportCaption($this->kode_order);
                     $doc->exportCaption($this->nilai_po);
                 } else {
+                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->nilai_faktur);
@@ -1328,6 +1411,7 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
+                        $doc->exportField($this->id);
                         $doc->exportField($this->idorder);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->nilai_faktur);
@@ -1345,6 +1429,7 @@ SORTHTML;
                         $doc->exportField($this->kode_order);
                         $doc->exportField($this->nilai_po);
                     } else {
+                        $doc->exportField($this->id);
                         $doc->exportField($this->idorder);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->nilai_faktur);

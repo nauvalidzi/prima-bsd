@@ -1097,11 +1097,11 @@ return function (App $app) {
     $app->any('/PenagihanCustomer[/{params:.*}]', PenagihanCustomerController::class)->add(PermissionMiddleware::class)->setName('PenagihanCustomer-penagihan_customer-custom'); // custom
 
     // penagihan
-    $app->any('/PenagihanList', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('PenagihanList-penagihan-list'); // list
+    $app->any('/PenagihanList[/{id}]', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('PenagihanList-penagihan-list'); // list
     $app->group(
         '/penagihan',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('penagihan/list-penagihan-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('penagihan/list-penagihan-list-2'); // list
         }
     );
 
