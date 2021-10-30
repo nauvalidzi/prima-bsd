@@ -107,6 +107,8 @@ class VPiutang extends DbTable
 
         // pegawai
         $this->pegawai = new DbField('v_piutang', 'v_piutang', 'x_pegawai', 'pegawai', '`pegawai`', '`pegawai`', 200, 122, -1, false, '`pegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->pegawai->Nullable = false; // NOT NULL field
+        $this->pegawai->Required = true; // Required field
         $this->pegawai->Sortable = true; // Allow sort
         $this->pegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->pegawai->Param, "CustomMsg");
         $this->Fields['pegawai'] = &$this->pegawai;
@@ -146,6 +148,8 @@ class VPiutang extends DbTable
 
         // customer
         $this->customer = new DbField('v_piutang', 'v_piutang', 'x_customer', 'customer', '`customer`', '`customer`', 200, 122, -1, false, '`customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->customer->Nullable = false; // NOT NULL field
+        $this->customer->Required = true; // Required field
         $this->customer->Sortable = true; // Allow sort
         $this->customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->customer->Param, "CustomMsg");
         $this->Fields['customer'] = &$this->customer;
