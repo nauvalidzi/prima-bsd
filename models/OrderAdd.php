@@ -1606,9 +1606,10 @@ class OrderAdd extends Order
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
-        $limit_kredit = 5000000; // DEFAULT LIMA Juta;
-        $limit_poaktif = 3; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
         $idcustomer = $this->idcustomer->FormValue;
+        $default_limit_kredit = ExecuteRow("SELECT limit_kredit_value FROM level_customer JOIN customer ON customer.level_customer_id = level_customer.id WHERE customer.id = {$idcustomer}")['limit_kredit_value'];
+        $limit_kredit = $default_limit_kredit; // SET VARIBLE DEFAULT LIMIT KREDIT
+        $limit_poaktif = 3; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
 
         // CEK TOTAL PESANAN        
         $totalorder = 0; // DEFAULT 0
@@ -1630,7 +1631,7 @@ class OrderAdd extends Order
             $limit_poaktif = $approval['limit_po_aktif'];
         }
         if ($totalorder > $limit_kredit) {
-            if ($limit_kredit != 5000000) {
+            if ($limit_kredit != $default_limit_kredit) {
                 $customError = "Transaksi melebihi limit kredit dari pengajuan approval.<br />Limit Rp. ".rupiah($limit_kredit).".";
                 return false;
             }

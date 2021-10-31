@@ -182,6 +182,7 @@ class Invoice extends DbTable
         // idtermpayment
         $this->idtermpayment = new DbField('invoice', 'invoice', 'x_idtermpayment', 'idtermpayment', '`idtermpayment`', '`idtermpayment`', 3, 11, -1, false, '`idtermpayment`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idtermpayment->Nullable = false; // NOT NULL field
+        $this->idtermpayment->Required = true; // Required field
         $this->idtermpayment->Sortable = true; // Allow sort
         $this->idtermpayment->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idtermpayment->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -199,6 +200,7 @@ class Invoice extends DbTable
 
         // idtipepayment
         $this->idtipepayment = new DbField('invoice', 'invoice', 'x_idtipepayment', 'idtipepayment', '`idtipepayment`', '`idtipepayment`', 3, 11, -1, false, '`idtipepayment`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idtipepayment->Required = true; // Required field
         $this->idtipepayment->Sortable = true; // Allow sort
         $this->idtipepayment->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idtipepayment->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -1904,6 +1906,16 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
+        $idorder = $rsnew['idorder'];
+        $totaltagihan = $rsnew['totaltagihan'];
+        $exist = ExecuteRow("SELECT id FROM faktur WHERE idorder = {$idorder}");
+        
+        if (!$exist) {
+            $kode = getNextKode('faktur', 0);
+            ExecuteUpdate("INSERT INTO faktur (idorder, tanggal, kode, tagihan, piutang, updated_at) VALUES ({$idorder}, '".date('Y-m-d', strtotime($rsnew['tglinvoice']))."', '{$kode}', '{$totaltagihan}', '{$totaltagihan}', '".date('Y-m-d H:i:s')."')");
+        } else {
+            ExecuteUpdate("UPDATE faktur SET tagihan = tagihan+{$totaltagihan}, piutang = piutang+{$totaltagihan}, updated_at = '".date('Y-m-d H:i:s')."' WHERE idorder = {$idorder}");
+        }
     }
 
     // Row Updating event
@@ -1973,7 +1985,8 @@ SORTHTML;
         $deleteChild = ExecuteUpdate("DELETE FROM invoice_detail WHERE idinvoice=".$rs['id']);
         foreach ($children as $child) {
         	// update stock
-        	addStock($child['idorder_detail'], $child['jumlahkirim']);
+            $jumlahtotal = $child['jumlahkirim'] + $child['jumlahbonus'];
+          	addStock($child['idorder_detail'], $jumlahtotal);
 
         	// update read only deliveryorder_detail dan deliveryorder
             $update = ExecuteUpdate("UPDATE deliveryorder_detail SET readonly=0 WHERE idorder_detail=".$child['idorder_detail']);
@@ -1987,6 +2000,8 @@ SORTHTML;
         		}
         	}
         }
+        // UPDATE FAKTUR
+        ExecuteUpdate("UPDATE faktur SET tagihan = tagihan-{$rs['totaltagihan']}, piutang = piutang-{$rs['totaltagihan']}, updated_at = '".date('Y-m-d H:i:s')."' WHERE idorder = {$rs['idorder']}");
         return true;
     }
 
@@ -2021,7 +2036,7 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
-        $this->idorder->ViewValue = "<a href=\"OrderDetailList?showmaster=order&fk_id={$this->idorder->CurrentValue}\" target=\"_blank\">{$this->idorder->ViewValue}</a>";
+        $this->idorder->ViewValue = "<a href=\"OrderDetailList?showmaster=order&fk_id={$this->idorder->CurrentValue}\" target=\"_blank\">".get_kodeorder($this->idorder->CurrentValue)."</a>";
     }
 
     // User ID Filtering event

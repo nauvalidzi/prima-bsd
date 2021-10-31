@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/10/30" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/10/31" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,6 +925,9 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2020 PT. Prima Visi Globalindo" />
+    <menu id="697">
+      <phrase id="menutext" value="faktur" />
+    </menu>
     <menu id="596">
       <phrase id="menutext" value="d jatuhtempo" />
     </menu>
@@ -2848,7 +2851,7 @@
         <phrase id="fldcaption" value="Sisa Bayar" />
       </field>
       <field id="idtermpayment">
-        <phrase id="fldcaption" value="Term Payment (hari)" />
+        <phrase id="fldcaption" value="Term Payment" />
       </field>
       <field id="idtipepayment">
         <phrase id="fldcaption" value="Tipe Pembayaran" />
@@ -3646,6 +3649,30 @@
       </field>
       <field id="nilai_po">
         <phrase id="fldcaption" value="nilai po" />
+      </field>
+    </table>
+    <table id="faktur">
+      <phrase id="tblcaption" value="faktur" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="idorder">
+        <phrase id="fldcaption" value="Kode Order" />
+      </field>
+      <field id="tanggal">
+        <phrase id="fldcaption" value="Tanggal" />
+      </field>
+      <field id="kode">
+        <phrase id="fldcaption" value="Kode" />
+      </field>
+      <field id="tagihan">
+        <phrase id="fldcaption" value="Tagihan" />
+      </field>
+      <field id="piutang">
+        <phrase id="fldcaption" value="Piutang" />
+      </field>
+      <field id="updated_at">
+        <phrase id="fldcaption" value="Last Update" />
       </field>
     </table>
   </project>

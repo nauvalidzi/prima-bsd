@@ -254,7 +254,10 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan_customer.php","1","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","1","288"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","1","288"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur","1","288"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Manajemen User",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -337,4 +340,5 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["termpayment","termpayment","termpayment",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","TermpaymentList"],
     ["laporan_order_customer.php","laporan_order_customer","Laporan Order Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanOrderCustomer"],
     ["penagihan_customer.php","penagihan_customer","Penagihan Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanCustomer"],
-    ["penagihan","penagihan","Antrian Penagihan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanList"]];
+    ["penagihan","penagihan","Antrian Penagihan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanList"],
+    ["faktur","faktur","faktur",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","FakturList"]];

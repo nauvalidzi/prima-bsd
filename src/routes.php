@@ -1105,6 +1105,15 @@ return function (App $app) {
         }
     );
 
+    // faktur
+    $app->any('/FakturList[/{id}]', FakturController::class . ':list')->add(PermissionMiddleware::class)->setName('FakturList-faktur-list'); // list
+    $app->group(
+        '/faktur',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', FakturController::class . ':list')->add(PermissionMiddleware::class)->setName('faktur/list-faktur-list-2'); // list
+        }
+    );
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

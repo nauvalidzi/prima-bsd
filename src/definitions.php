@@ -133,6 +133,7 @@ return [
     "laporan_order_customer" => \DI\create(LaporanOrderCustomer::class),
     "penagihan_customer" => \DI\create(PenagihanCustomer::class),
     "penagihan" => \DI\create(Penagihan::class),
+    "faktur" => \DI\create(Faktur::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

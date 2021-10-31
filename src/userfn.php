@@ -302,10 +302,62 @@ function status_orders($idorder) {
     if ($row['sisa'] == $totalorder) {
         return 'Belum Proses DO';
     }
-    if ($row['sisa'] > 0) {
-        return 'Proses DO Sebagian';
-    }
+    return 'Proses DO Sebagian';
 }
+
+function status_pembayaran($idinvoice) {
+    $row = ExecuteRow("SELECT SUM(sisabayar) AS sisabayar, totaltagihan FROM invoice WHERE id = '{$idinvoice}' GROUP BY id");
+    if ($row['sisabayar'] < 1) {
+        return 'Lunas';
+    }
+    if ($row['sisabayar'] == $row['totaltagihan']) {
+        return 'Belum Lunas';
+    }
+    return 'Lunas Sebagian';
+}
+
+function get_kodeorder($idorder) {
+    return ExecuteRow("SELECT kode FROM `order` WHERE id = '{$idorder}'")['kode'];
+}
+
+//-- FUNGSI TERBILANG --//
+	function penyebut($nilai) {
+		$nilai = abs($nilai);
+		$huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+		$temp = "";
+		if ($nilai < 12) {
+			$temp = " ". $huruf[$nilai];
+		} else if ($nilai <20) {
+			$temp = penyebut($nilai - 10). " belas";
+		} else if ($nilai < 100) {
+			$temp = penyebut($nilai/10)." puluh". penyebut($nilai % 10);
+		} else if ($nilai < 200) {
+			$temp = " seratus" . penyebut($nilai - 100);
+		} else if ($nilai < 1000) {
+			$temp = penyebut($nilai/100) . " ratus" . penyebut($nilai % 100);
+		} else if ($nilai < 2000) {
+			$temp = " seribu" . penyebut($nilai - 1000);
+		} else if ($nilai < 1000000) {
+			$temp = penyebut($nilai/1000) . " ribu" . penyebut($nilai % 1000);
+		} else if ($nilai < 1000000000) {
+			$temp = penyebut($nilai/1000000) . " juta" . penyebut($nilai % 1000000);
+		} else if ($nilai < 1000000000000) {
+			$temp = penyebut($nilai/1000000000) . " milyar" . penyebut(fmod($nilai,1000000000));
+		} else if ($nilai < 1000000000000000) {
+			$temp = penyebut($nilai/1000000000000) . " trilyun" . penyebut(fmod($nilai,1000000000000));
+		}     
+		return $temp;
+	}
+
+	function terbilang($nilai) {
+		if($nilai<0) {
+			$hasil = "minus ". trim(penyebut($nilai));
+		} else {
+			$hasil = trim(penyebut($nilai));
+		}     		
+		return $hasil;
+	}
+//!-- FUNGSI TERBILANG --//
 
 // dipanggil di deliveryorder_detail, invoice_detail
 function addStock($idorderdetail, $jumlah) {
@@ -472,7 +524,11 @@ function getNextKode($tipe, $id) {
    		$table = "pembayaran";
    		$column = "kode";
    		$kode = "PB-";
-   	}
+   	} elseif ($tipe == "faktur") {
+        $table = "faktur";
+        $column = "kode";
+        $kode = "FK-";
+    }
    	$maxKode = ExecuteScalar("SELECT MAX(".$column.") FROM ".$table);
    	if ($maxKode == null) {
    		$kode = $kode."0001";
@@ -520,15 +576,14 @@ function tgl_indo($tanggal, $format='date'){
 	);
 	$pecahkan = explode('-', $tanggal);	
     switch ($format) {
-        case 'datetime':            
-            $pecahkan2 = explode(' ', $pecahkan[2]);
-            return $pecahkan2[0] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0] .  ' ' . $pecahkan2[1];
+        case 'datetime':
+            return date('d', strtotime($tanggal)) . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . date('Y', strtotime($tanggal)) .  ' ' . date('H:i:s', strtotime($tanggal));
             break;
         case 'month-year':
-            return $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+            return $bulan[ (int)$pecahkan[1] ] . ' ' . date('Y', strtotime($tanggal));
             break;
         default:
-            return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+            return date('d', strtotime($tanggal)) . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . date('Y', strtotime($tanggal));
             break;
     }
 }

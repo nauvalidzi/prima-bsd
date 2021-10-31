@@ -13,18 +13,31 @@ $LaporanPembayaran = &$Page;
 		$dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
 		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 		
-		$query = "SELECT pembayaran.id, pembayaran.tanggal AS tgl_bayar, pembayaran.kode AS kode_bayar, 
-					invoice.kode AS kode_invoice, customer.nama AS nama_customer, 
-					pembayaran.totaltagihan, pembayaran.sisatagihan, pembayaran.jumlahbayar
-				  FROM pembayaran
-				  JOIN invoice ON pembayaran.idinvoice = invoice.id
-				  JOIN customer ON customer.id = pembayaran.idcustomer
-				  WHERE pembayaran.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}'
-				  ORDER BY pembayaran.id ASC";
+		$query = "SELECT p.id, p.tanggal AS tgl_bayar, p.kode AS kode_bayar, 
+					i.kode AS kode_invoice, o.kode AS kode_order, c.nama AS nama_customer, 
+					p.totaltagihan, p.sisatagihan, p.jumlahbayar
+				  FROM pembayaran p
+				  JOIN invoice i ON p.idinvoice = i.id
+				  JOIN customer c ON c.id = p.idcustomer
+				  JOIN `order` o ON o.id = i.idorder
+				  WHERE p.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}'
+				  ORDER BY p.id ASC";
 
 		$result = ExecuteQuery($query)->fetchAll();
 	}
 ?>
+<style>
+	.col-flex {
+		width: 150px;
+		min-width: 150px;
+		max-width: 150px;
+	}
+	.col-description {
+		width: 250px;
+		min-width: 250px;
+		max-width: 250px;
+	}
+</style>
 <div class="container">
  	<div class="row">
 		<form method="post" action="<?php echo CurrentPage()->PageObjName ?>">
@@ -66,13 +79,14 @@ $LaporanPembayaran = &$Page;
 			</tr>
 		    <tr>
 		        <th class="text-center">No</th>
-		        <th class="text-center">Tgl. Bayar</th>
-		        <th class="text-center">Kode Bayar</th>
-		        <th class="text-center">Kode Invoice</th>
-		        <th class="text-center">Nama Pelanggan</th>
-		        <th class="text-center">Total Tagihan</th>
-		        <th class="text-center">Sisa Tagihan</th>
-		        <th class="text-center">Jumlah Bayar</th>
+		        <th class="text-center col-flex">Tgl. Bayar</th>
+		        <th class="text-center col-flex">Kode Bayar</th>
+		        <th class="text-center col-flex">Kode Invoice</th>
+		        <th class="text-center col-flex">Kode Order</th>
+		        <th class="text-center col-description">Nama Pelanggan</th>
+		        <th class="text-center col-description">Total Tagihan</th>
+		        <th class="text-center col-description">Sisa Tagihan</th>
+		        <th class="text-center col-description">Jumlah Bayar</th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -81,9 +95,10 @@ $LaporanPembayaran = &$Page;
 			    <?php foreach($result as $row): ?>
 			    <tr>
 			      <td class="text-center"><?php echo $i?></td>
-			      <td><?php echo tgl_indo($row['tgl_bayar']) ?></td>
-			      <td><?php echo $row['kode_bayar'] ?></td>
-			      <td><?php echo $row['kode_invoice'] ?></td>
+			      <td class="text-center"><?php echo tgl_indo($row['tgl_bayar']) ?></td>
+			      <td class="text-center"><?php echo $row['kode_bayar'] ?></td>
+			      <td class="text-center"><?php echo $row['kode_invoice'] ?></td>
+			      <td class="text-center"><?php echo $row['kode_order'] ?></td>
 			      <td><?php echo $row['nama_customer'] ?></td>
 			      <td>Rp. <span class="float-right"><?php echo number_format($row['totaltagihan'], 2, ",", ".") ?></span></td>
 			      <td>Rp. <span class="float-right"><?php echo number_format($row['sisatagihan'], 2, ",", ".") ?></span></td>
@@ -97,14 +112,14 @@ $LaporanPembayaran = &$Page;
 				<?php $i++; endforeach; ?>
 	    	<?php else: ?>
 	    		<tr>
-	    			<td colspan="8" class="text-center">Tidak ada data.</td>
+	    			<td colspan="10" class="text-center">Tidak ada data.</td>
 	    		</tr>
 	    	<?php endif; ?>
 		  </tbody>
 	  	  <?php if (!empty($result)): ?>
 		  <tfoot>
 		  	<tr>
-		  		<th colspan="5" class="text-right">Grand Total :</th>
+		  		<th colspan="6" class="text-right">Grand Total :</th>
 		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['totaltagihan'], 2, ",", ".") ?></span></th>
 		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['sisatagihan'], 2, ",", ".") ?></span></th>
 		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['jumlahbayar'], 2, ",", ".") ?></span></th>
