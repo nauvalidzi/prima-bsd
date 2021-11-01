@@ -496,7 +496,6 @@ class PegawaiEdit extends Pegawai
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->wa);
         $this->setupLookupOptions($this->level);
 
         // Check modal
@@ -1010,24 +1009,6 @@ class PegawaiEdit extends Pegawai
 
             // wa
             $this->wa->ViewValue = $this->wa->CurrentValue;
-            $curVal = trim(strval($this->wa->CurrentValue));
-            if ($curVal != "") {
-                $this->wa->ViewValue = $this->wa->lookupCacheOption($curVal);
-                if ($this->wa->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->wa->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->wa->Lookup->renderViewRow($rswrk[0]);
-                        $this->wa->ViewValue = $this->wa->displayValue($arwrk);
-                    } else {
-                        $this->wa->ViewValue = $this->wa->CurrentValue;
-                    }
-                }
-            } else {
-                $this->wa->ViewValue = null;
-            }
             $this->wa->ViewCustomAttributes = "";
 
             // hp
@@ -1201,24 +1182,6 @@ class PegawaiEdit extends Pegawai
                 $this->wa->CurrentValue = HtmlDecode($this->wa->CurrentValue);
             }
             $this->wa->EditValue = HtmlEncode($this->wa->CurrentValue);
-            $curVal = trim(strval($this->wa->CurrentValue));
-            if ($curVal != "") {
-                $this->wa->EditValue = $this->wa->lookupCacheOption($curVal);
-                if ($this->wa->EditValue === null) { // Lookup from database
-                    $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->wa->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->wa->Lookup->renderViewRow($rswrk[0]);
-                        $this->wa->EditValue = $this->wa->displayValue($arwrk);
-                    } else {
-                        $this->wa->EditValue = HtmlEncode($this->wa->CurrentValue);
-                    }
-                }
-            } else {
-                $this->wa->EditValue = null;
-            }
             $this->wa->PlaceHolder = RemoveHtml($this->wa->caption());
 
             // hp
@@ -1484,6 +1447,57 @@ class PegawaiEdit extends Pegawai
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
+        if ($this->_email->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`email` = '" . AdjustSql($this->_email->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->_email->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->_email->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
+        if ($this->wa->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`wa` = '" . AdjustSql($this->wa->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->wa->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->wa->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
+        if ($this->_username->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`username` = '" . AdjustSql($this->_username->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->_username->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->_username->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);
@@ -1752,8 +1766,6 @@ class PegawaiEdit extends Pegawai
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_wa":
-                    break;
                 case "x_level":
                     break;
                 case "x_aktif":

@@ -123,21 +123,15 @@ class Pegawai extends DbTable
 
         // email
         $this->_email = new DbField('pegawai', 'pegawai', 'x__email', 'email', '`email`', '`email`', 200, 100, -1, false, '`email`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->_email->Required = true; // Required field
         $this->_email->Sortable = true; // Allow sort
         $this->_email->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->_email->Param, "CustomMsg");
         $this->Fields['email'] = &$this->_email;
 
         // wa
         $this->wa = new DbField('pegawai', 'pegawai', 'x_wa', 'wa', '`wa`', '`wa`', 200, 20, -1, false, '`wa`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->wa->Required = true; // Required field
         $this->wa->Sortable = true; // Allow sort
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->wa->Lookup = new Lookup('wa', 'userlevels', false, 'userlevelid', ["userlevelname","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->wa->Lookup = new Lookup('wa', 'userlevels', false, 'userlevelid', ["userlevelname","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->wa->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->wa->Param, "CustomMsg");
         $this->Fields['wa'] = &$this->wa;
 
@@ -188,6 +182,7 @@ class Pegawai extends DbTable
         // level
         $this->level = new DbField('pegawai', 'pegawai', 'x_level', 'level', '`level`', '`level`', 3, 11, -1, false, '`level`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->level->Nullable = false; // NOT NULL field
+        $this->level->Required = true; // Required field
         $this->level->Sortable = true; // Allow sort
         $this->level->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->level->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -1106,24 +1101,6 @@ SORTHTML;
 
         // wa
         $this->wa->ViewValue = $this->wa->CurrentValue;
-        $curVal = trim(strval($this->wa->CurrentValue));
-        if ($curVal != "") {
-            $this->wa->ViewValue = $this->wa->lookupCacheOption($curVal);
-            if ($this->wa->ViewValue === null) { // Lookup from database
-                $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->wa->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->wa->Lookup->renderViewRow($rswrk[0]);
-                    $this->wa->ViewValue = $this->wa->displayValue($arwrk);
-                } else {
-                    $this->wa->ViewValue = $this->wa->CurrentValue;
-                }
-            }
-        } else {
-            $this->wa->ViewValue = null;
-        }
         $this->wa->ViewCustomAttributes = "";
 
         // hp

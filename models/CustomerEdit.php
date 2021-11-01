@@ -2177,10 +2177,16 @@ class CustomerEdit extends Customer
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
         }
+        if (!CheckByRegEx($this->hp->FormValue, '^(62)8[1-9][0-9]{7,11}$')) {
+            $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
+        }
         if ($this->_email->Required) {
             if (!$this->_email->IsDetailKey && EmptyValue($this->_email->FormValue)) {
                 $this->_email->addErrorMessage(str_replace("%s", $this->_email->caption(), $this->_email->RequiredErrorMessage));
             }
+        }
+        if (!CheckEmail($this->_email->FormValue)) {
+            $this->_email->addErrorMessage($this->_email->getErrorMessage(false));
         }
         if ($this->website->Required) {
             if (!$this->website->IsDetailKey && EmptyValue($this->website->FormValue)) {
@@ -2251,6 +2257,40 @@ class CustomerEdit extends Customer
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
+        if ($this->telpon->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`telpon` = '" . AdjustSql($this->telpon->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->telpon->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->telpon->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
+        if ($this->hp->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->hp->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->hp->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);

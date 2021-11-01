@@ -1652,6 +1652,9 @@ class CustomerSearch extends Customer
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if (!CheckByRegEx($this->hp->AdvancedSearch->SearchValue, '^(62)8[1-9][0-9]{7,11}$')) {
+            $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
+        }
 
         // Return validate result
         $validateSearch = !$this->hasInvalidFields();

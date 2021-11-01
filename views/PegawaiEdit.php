@@ -99,7 +99,6 @@ loadjs.ready("head", function () {
     fpegawaiedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fpegawaiedit.lists.wa = <?= $Page->wa->toClientList($Page) ?>;
     fpegawaiedit.lists.level = <?= $Page->level->toClientList($Page) ?>;
     fpegawaiedit.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
     loadjs.done("fpegawaiedit");
@@ -174,26 +173,12 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->wa->Visible) { // wa ?>
     <div id="r_wa" class="form-group row">
-        <label id="elh_pegawai_wa" class="<?= $Page->LeftColumnClass ?>"><?= $Page->wa->caption() ?><?= $Page->wa->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_pegawai_wa" for="x_wa" class="<?= $Page->LeftColumnClass ?>"><?= $Page->wa->caption() ?><?= $Page->wa->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->wa->cellAttributes() ?>>
 <span id="el_pegawai_wa">
-<?php
-$onchange = $Page->wa->EditAttrs->prepend("onchange", "");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->wa->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_wa" class="ew-auto-suggest">
-    <input type="<?= $Page->wa->getInputTextType() ?>" class="form-control" name="sv_x_wa" id="sv_x_wa" value="<?= RemoveHtml($Page->wa->EditValue) ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->wa->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->wa->getPlaceHolder()) ?>"<?= $Page->wa->editAttributes() ?> aria-describedby="x_wa_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="pegawai" data-field="x_wa" data-input="sv_x_wa" data-value-separator="<?= $Page->wa->displayValueSeparatorAttribute() ?>" name="x_wa" id="x_wa" value="<?= HtmlEncode($Page->wa->CurrentValue) ?>"<?= $onchange ?>>
+<input type="<?= $Page->wa->getInputTextType() ?>" data-table="pegawai" data-field="x_wa" name="x_wa" id="x_wa" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->wa->getPlaceHolder()) ?>" value="<?= $Page->wa->EditValue ?>"<?= $Page->wa->editAttributes() ?> aria-describedby="x_wa_help">
 <?= $Page->wa->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->wa->getErrorMessage() ?></div>
-<script>
-loadjs.ready(["fpegawaiedit"], function() {
-    fpegawaiedit.createAutoSuggest(Object.assign({"id":"x_wa","forceSelect":false}, ew.vars.tables.pegawai.fields.wa.autoSuggestOptions));
-});
-</script>
-<?= $Page->wa->Lookup->getParamTag($Page, "p_x_wa") ?>
 </span>
 </div></div>
     </div>

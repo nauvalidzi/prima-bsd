@@ -18,7 +18,6 @@ echo $topMenu->toScript();
 
 // Sidebar menu
 $sideMenu = new Menu("menu", true, false);
-$sideMenu->addMenuItem(697, "mi_faktur", $MenuLanguage->MenuPhrase("697", "MenuText"), $MenuRelativePath . "FakturList", -1, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur'), false, false, "", "", false);
 $sideMenu->addMenuItem(473, "mi_dashboard2", $MenuLanguage->MenuPhrase("473", "MenuText"), $MenuRelativePath . "Dashboard2", -1, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}dashboard.php'), false, false, "fas fa-home", "", false);
 $sideMenu->addMenuItem(15, "mi_pegawai", $MenuLanguage->MenuPhrase("15", "MenuText"), $MenuRelativePath . "PegawaiList", -1, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai'), false, false, "fa-id-card-alt", "", false);
 $sideMenu->addMenuItem(8, "mi_customer", $MenuLanguage->MenuPhrase("8", "MenuText"), $MenuRelativePath . "CustomerList?cmd=resetall", -1, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}customer'), false, false, "fa-users", "", false);
@@ -39,6 +38,7 @@ $sideMenu->addMenuItem(334, "mi_pembayaran", $MenuLanguage->MenuPhrase("334", "M
 $sideMenu->addMenuItem(49, "mci_Akuntansi", $MenuLanguage->MenuPhrase("49", "MenuText"), "", -1, "", IsLoggedIn(), false, true, "fa-calculator", "", false);
 $sideMenu->addMenuItem(348, "mi_v_bonuscustomer", $MenuLanguage->MenuPhrase("348", "MenuText"), $MenuRelativePath . "VBonuscustomerList", 49, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_bonuscustomer'), false, false, "far fa-circle", "", false);
 $sideMenu->addMenuItem(346, "mi_v_piutang", $MenuLanguage->MenuPhrase("346", "MenuText"), $MenuRelativePath . "VPiutangList", 49, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_piutang'), false, false, "far fa-circle", "", false);
+$sideMenu->addMenuItem(697, "mi_faktur", $MenuLanguage->MenuPhrase("697", "MenuText"), $MenuRelativePath . "FakturList", 49, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur'), false, false, "far fa-circle", "", false);
 $sideMenu->addMenuItem(547, "mci_Laporan", $MenuLanguage->MenuPhrase("547", "MenuText"), "", -1, "", true, false, true, "fa-file-archive", "", false);
 $sideMenu->addMenuItem(478, "mi_laporansales", $MenuLanguage->MenuPhrase("478", "MenuText"), $MenuRelativePath . "Laporansales", 547, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporansales.php'), false, false, "far fa-circle", "", false);
 $sideMenu->addMenuItem(583, "mi_laporan_purchase_order", $MenuLanguage->MenuPhrase("583", "MenuText"), $MenuRelativePath . "LaporanPurchaseOrder", 547, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_purchase_order.php'), false, false, "far fa-circle", "", false);

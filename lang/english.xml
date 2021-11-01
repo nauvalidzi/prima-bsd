@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/10/31" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/11/1" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,9 +925,6 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2020 PT. Prima Visi Globalindo" />
-    <menu id="697">
-      <phrase id="menutext" value="faktur" />
-    </menu>
     <menu id="596">
       <phrase id="menutext" value="d jatuhtempo" />
     </menu>
@@ -1071,6 +1068,9 @@
     </menu>
     <menu id="346">
       <phrase id="menutext" value="Piutang Customer" />
+    </menu>
+    <menu id="697">
+      <phrase id="menutext" value="faktur" />
     </menu>
     <menu id="547">
       <phrase id="menutext" value="Laporan" />
@@ -1399,7 +1399,9 @@
         <phrase id="fldcaption" value="Telpon" />
       </field>
       <field id="hp">
-        <phrase id="fldcaption" value="HP" />
+        <phrase id="fldcaption" value="HP/WhatsApp" />
+        <phrase id="flderrmsg" value="Gunakan format 62812345xxx" />
+        <phrase id="custommsg" value="Gunakan format 62812345xxx" />
       </field>
       <field id="_email">
         <phrase id="fldcaption" value="Email" />

@@ -274,12 +274,14 @@ class Customer extends DbTable
         $this->hp->Nullable = false; // NOT NULL field
         $this->hp->Required = true; // Required field
         $this->hp->Sortable = true; // Allow sort
+        $this->hp->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->hp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hp->Param, "CustomMsg");
         $this->Fields['hp'] = &$this->hp;
 
         // email
         $this->_email = new DbField('customer', 'customer', 'x__email', 'email', '`email`', '`email`', 200, 100, -1, false, '`email`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->_email->Sortable = true; // Allow sort
+        $this->_email->DefaultErrorMessage = $Language->phrase("IncorrectEmail");
         $this->_email->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->_email->Param, "CustomMsg");
         $this->Fields['email'] = &$this->_email;
 

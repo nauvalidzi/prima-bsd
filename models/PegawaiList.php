@@ -610,7 +610,6 @@ class PegawaiList extends Pegawai
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->wa);
         $this->setupLookupOptions($this->level);
 
         // Search filters
@@ -2012,24 +2011,6 @@ class PegawaiList extends Pegawai
 
             // wa
             $this->wa->ViewValue = $this->wa->CurrentValue;
-            $curVal = trim(strval($this->wa->CurrentValue));
-            if ($curVal != "") {
-                $this->wa->ViewValue = $this->wa->lookupCacheOption($curVal);
-                if ($this->wa->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`userlevelid`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->wa->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->wa->Lookup->renderViewRow($rswrk[0]);
-                        $this->wa->ViewValue = $this->wa->displayValue($arwrk);
-                    } else {
-                        $this->wa->ViewValue = $this->wa->CurrentValue;
-                    }
-                }
-            } else {
-                $this->wa->ViewValue = null;
-            }
             $this->wa->ViewCustomAttributes = "";
 
             // hp
@@ -2198,8 +2179,6 @@ class PegawaiList extends Pegawai
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_wa":
-                    break;
                 case "x_level":
                     break;
                 case "x_aktif":

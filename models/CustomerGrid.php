@@ -2615,6 +2615,9 @@ class CustomerGrid extends Customer
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
         }
+        if (!CheckByRegEx($this->hp->FormValue, '^(62)8[1-9][0-9]{7,11}$')) {
+            $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
+        }
         if ($this->level_customer_id->Required) {
             if (!$this->level_customer_id->IsDetailKey && EmptyValue($this->level_customer_id->FormValue)) {
                 $this->level_customer_id->addErrorMessage(str_replace("%s", $this->level_customer_id->caption(), $this->level_customer_id->RequiredErrorMessage));
@@ -2717,6 +2720,23 @@ class CustomerGrid extends Customer
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
+        if ($this->hp->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->hp->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->hp->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);
@@ -2831,6 +2851,16 @@ class CustomerGrid extends Customer
         // Set up foreign key field value from Session
         if ($this->getCurrentMasterTable() == "pegawai") {
             $this->idpegawai->CurrentValue = $this->idpegawai->getSessionValue();
+        }
+        if ($this->hp->CurrentValue != "") { // Check field with unique index
+            $filter = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $idxErrMsg = str_replace("%f", $this->hp->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->hp->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
         }
         $conn = $this->getConnection();
 
