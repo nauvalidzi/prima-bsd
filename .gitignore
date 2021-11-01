@@ -3,3 +3,5 @@ src/config.php
 src/config.development.php
 src/config.production.php
 files/*
+api/db.php
+api/kirimdata.php
