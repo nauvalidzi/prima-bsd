@@ -782,9 +782,9 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     WriteJson(['status' => $status]);
 };
 $API_ACTIONS['cancel-reminder'] = function(Request $request, Response &$response) {
-    $order = urldecode(Param("id", Route(1)));
+    $id = urldecode(Param("id", Route(1)));
     $status = true;
-    $row = ExecuteUpdate("UPDATE penagihan SET status = '-1', tgl_cancel = '".date('Y-m-d H:i:s')."' WHERE idorder = {$order}");
+    $row = ExecuteUpdate("UPDATE penagihan SET status = '-1', tgl_cancel = '".date('Y-m-d H:i:s')."' WHERE id = {$id}");
     if (!$row) {
         $status = false;
     }

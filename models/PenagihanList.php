@@ -2117,7 +2117,7 @@ class PenagihanList extends Penagihan
         	$this->ListOptions->Items["cancel"]->Body = "Canceled!";
         }
         if ($this->status->CurrentValue == 0) {
-        	$this->ListOptions->Items["cancel"]->Body = "<button type=\"button\" data-value=\"{$this->idorder->CurrentValue}\" class=\"btn btn-warning btn-sm cancel-reminder\">Cancel Reminder</button>";
+        	$this->ListOptions->Items["cancel"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-warning btn-sm cancel-reminder\">Cancel Reminder</button>";
         }
         if ($this->status->CurrentValue > 0) {
         	$this->ListOptions->Items["cancel"]->Body = "Delivered";

@@ -92,7 +92,6 @@ class Penagihan extends DbTable
 
         // idorder
         $this->idorder = new DbField('penagihan', 'penagihan', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -101,7 +100,6 @@ class Penagihan extends DbTable
 
         // tgl_faktur
         $this->tgl_faktur = new DbField('penagihan', 'penagihan', 'x_tgl_faktur', 'tgl_faktur', '`tgl_faktur`', CastDateFieldForLike("`tgl_faktur`", 7, "DB"), 133, 10, 7, false, '`tgl_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tgl_faktur->Nullable = false; // NOT NULL field
         $this->tgl_faktur->Required = true; // Required field
         $this->tgl_faktur->Sortable = true; // Allow sort
         $this->tgl_faktur->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
@@ -110,7 +108,6 @@ class Penagihan extends DbTable
 
         // nilai_faktur
         $this->nilai_faktur = new DbField('penagihan', 'penagihan', 'x_nilai_faktur', 'nilai_faktur', '`nilai_faktur`', '`nilai_faktur`', 3, 15, -1, false, '`nilai_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nilai_faktur->Nullable = false; // NOT NULL field
         $this->nilai_faktur->Required = true; // Required field
         $this->nilai_faktur->Sortable = true; // Allow sort
         $this->nilai_faktur->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -119,7 +116,6 @@ class Penagihan extends DbTable
 
         // piutang
         $this->piutang = new DbField('penagihan', 'penagihan', 'x_piutang', 'piutang', '`piutang`', '`piutang`', 3, 15, -1, false, '`piutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->piutang->Nullable = false; // NOT NULL field
         $this->piutang->Required = true; // Required field
         $this->piutang->Sortable = true; // Allow sort
         $this->piutang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -128,8 +124,6 @@ class Penagihan extends DbTable
 
         // umur_faktur
         $this->umur_faktur = new DbField('penagihan', 'penagihan', 'x_umur_faktur', 'umur_faktur', '`umur_faktur`', '`umur_faktur`', 3, 11, -1, false, '`umur_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->umur_faktur->Nullable = false; // NOT NULL field
-        $this->umur_faktur->Required = true; // Required field
         $this->umur_faktur->Sortable = true; // Allow sort
         $this->umur_faktur->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->umur_faktur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->umur_faktur->Param, "CustomMsg");
@@ -160,8 +154,6 @@ class Penagihan extends DbTable
 
         // nama_customer
         $this->nama_customer = new DbField('penagihan', 'penagihan', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 255, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nama_customer->Nullable = false; // NOT NULL field
-        $this->nama_customer->Required = true; // Required field
         $this->nama_customer->Sortable = true; // Allow sort
         $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
         $this->Fields['nama_customer'] = &$this->nama_customer;
@@ -196,8 +188,6 @@ class Penagihan extends DbTable
 
         // tgl_order
         $this->tgl_order = new DbField('penagihan', 'penagihan', 'x_tgl_order', 'tgl_order', '`tgl_order`', CastDateFieldForLike("`tgl_order`", 7, "DB"), 133, 10, 7, false, '`tgl_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tgl_order->Nullable = false; // NOT NULL field
-        $this->tgl_order->Required = true; // Required field
         $this->tgl_order->Sortable = false; // Allow sort
         $this->tgl_order->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->tgl_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_order->Param, "CustomMsg");
@@ -205,16 +195,12 @@ class Penagihan extends DbTable
 
         // kode_order
         $this->kode_order = new DbField('penagihan', 'penagihan', 'x_kode_order', 'kode_order', '`kode_order`', '`kode_order`', 200, 255, -1, false, '`kode_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode_order->Nullable = false; // NOT NULL field
-        $this->kode_order->Required = true; // Required field
         $this->kode_order->Sortable = false; // Allow sort
         $this->kode_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_order->Param, "CustomMsg");
         $this->Fields['kode_order'] = &$this->kode_order;
 
         // nilai_po
         $this->nilai_po = new DbField('penagihan', 'penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 3, 15, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nilai_po->Nullable = false; // NOT NULL field
-        $this->nilai_po->Required = true; // Required field
         $this->nilai_po->Sortable = false; // Allow sort
         $this->nilai_po->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->nilai_po->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nilai_po->Param, "CustomMsg");
