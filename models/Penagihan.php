@@ -1599,6 +1599,7 @@ SORTHTML;
         }
         if ($this->status->CurrentValue == 0) {
             $this->status->ViewValue = 'Pending';
+            $this->tgl_cancel->ViewValue = '-';
         }
         if ($this->status->CurrentValue == 1) {
             $this->status->ViewValue = 'Delivered';

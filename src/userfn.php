@@ -781,14 +781,22 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     //ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Penagihan Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
     WriteJson(['status' => $status]);
 };
-$API_ACTIONS['cancel-reminder'] = function(Request $request, Response &$response) {
-    $id = urldecode(Param("id", Route(1)));
-    $status = true;
-    $row = ExecuteUpdate("UPDATE penagihan SET status = '-1', tgl_cancel = '".date('Y-m-d H:i:s')."' WHERE id = {$id}");
-    if (!$row) {
-        $status = false;
+$API_ACTIONS['action-reminder'] = function(Request $request, Response &$response) {
+    $id = urldecode(Param("id", Route(2)));
+    $type = urldecode(Param("type", Route(1)));
+    $process = true;
+    if ($type == 'cancel') {
+        $status = '-1';
+        $date_cancel = ", tgl_cancel = '".date('Y-m-d H:i:s')."'";
+    } else {
+        $status = '0';
+        $date_cancel = null;
     }
-    WriteJson(['status' => $status]);
+    $row = ExecuteUpdate("UPDATE penagihan SET status = '{$status}' {$date_cancel} WHERE id = {$id}");
+    if (!$row) {
+        $process = false;
+    }
+    WriteJson(['status' => $process]);
 };
 $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$response) {
     $faktur = urldecode(Param("faktur", Route(1)));

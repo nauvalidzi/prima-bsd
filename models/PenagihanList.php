@@ -2114,14 +2114,14 @@ class PenagihanList extends Penagihan
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
         if ($this->status->CurrentValue < 0) {
-        	$this->ListOptions->Items["cancel"]->Body = "Canceled!";
+        	$this->ListOptions->Items["cancel"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-primary btn-sm action-reminder\" data-type=\"activate\">Activate Reminder</button>";
         }
         if ($this->status->CurrentValue == 0) {
-        	$this->ListOptions->Items["cancel"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-warning btn-sm cancel-reminder\">Cancel Reminder</button>";
+        	$this->ListOptions->Items["cancel"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-warning btn-sm action-reminder\" data-type=\"cancel\">Cancel Reminder</button>";
         }
         if ($this->status->CurrentValue > 0) {
         	$this->ListOptions->Items["cancel"]->Body = "Delivered";
-        }
+        }    
     }
 
     // Row Custom Action event
