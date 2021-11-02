@@ -15,13 +15,13 @@ $LaporanPembayaran = &$Page;
 		
 		$query = "SELECT p.id, p.tanggal AS tgl_bayar, p.kode AS kode_bayar, 
 					i.kode AS kode_invoice, o.kode AS kode_order, c.nama AS nama_customer, 
-					p.totaltagihan, p.sisatagihan, p.jumlahbayar
+					p.totaltagihan, i.sisabayar as sisatagihan, p.jumlahbayar
 				  FROM pembayaran p
 				  JOIN invoice i ON p.idinvoice = i.id
 				  JOIN customer c ON c.id = p.idcustomer
 				  JOIN `order` o ON o.id = i.idorder
 				  WHERE p.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}'
-				  ORDER BY p.id ASC";
+				  ORDER BY p.tanggal, p.kode, i.kode, o.kode ASC";
 
 		$result = ExecuteQuery($query)->fetchAll();
 	}
