@@ -50,6 +50,7 @@ class Customer extends DbTable
     public $website;
     public $foto;
     public $level_customer_id;
+    public $limit_kredit_order;
     public $jatuh_tempo_invoice;
     public $keterangan;
     public $aktif;
@@ -302,8 +303,7 @@ class Customer extends DbTable
 
         // level_customer_id
         $this->level_customer_id = new DbField('customer', 'customer', 'x_level_customer_id', 'level_customer_id', '`level_customer_id`', '`level_customer_id`', 3, 11, -1, false, '`level_customer_id`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->level_customer_id->Required = true; // Required field
-        $this->level_customer_id->Sortable = true; // Allow sort
+        $this->level_customer_id->Sortable = false; // Allow sort
         $this->level_customer_id->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->level_customer_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
@@ -317,6 +317,15 @@ class Customer extends DbTable
         $this->level_customer_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->level_customer_id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->level_customer_id->Param, "CustomMsg");
         $this->Fields['level_customer_id'] = &$this->level_customer_id;
+
+        // limit_kredit_order
+        $this->limit_kredit_order = new DbField('customer', 'customer', 'x_limit_kredit_order', 'limit_kredit_order', '`limit_kredit_order`', '`limit_kredit_order`', 3, 15, -1, false, '`limit_kredit_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit_order->Nullable = false; // NOT NULL field
+        $this->limit_kredit_order->Required = true; // Required field
+        $this->limit_kredit_order->Sortable = true; // Allow sort
+        $this->limit_kredit_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->limit_kredit_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->limit_kredit_order->Param, "CustomMsg");
+        $this->Fields['limit_kredit_order'] = &$this->limit_kredit_order;
 
         // jatuh_tempo_invoice
         $this->jatuh_tempo_invoice = new DbField('customer', 'customer', 'x_jatuh_tempo_invoice', 'jatuh_tempo_invoice', '`jatuh_tempo_invoice`', '`jatuh_tempo_invoice`', 2, 6, -1, false, '`jatuh_tempo_invoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -910,6 +919,7 @@ class Customer extends DbTable
         $this->website->DbValue = $row['website'];
         $this->foto->Upload->DbValue = $row['foto'];
         $this->level_customer_id->DbValue = $row['level_customer_id'];
+        $this->limit_kredit_order->DbValue = $row['limit_kredit_order'];
         $this->jatuh_tempo_invoice->DbValue = $row['jatuh_tempo_invoice'];
         $this->keterangan->DbValue = $row['keterangan'];
         $this->aktif->DbValue = $row['aktif'];
@@ -1283,6 +1293,7 @@ SORTHTML;
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
@@ -1344,6 +1355,9 @@ SORTHTML;
         // foto
 
         // level_customer_id
+        $this->level_customer_id->CellCssStyle = "white-space: nowrap;";
+
+        // limit_kredit_order
 
         // jatuh_tempo_invoice
 
@@ -1581,6 +1595,11 @@ SORTHTML;
         }
         $this->level_customer_id->ViewCustomAttributes = "";
 
+        // limit_kredit_order
+        $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
+        $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
+        $this->limit_kredit_order->ViewCustomAttributes = "";
+
         // jatuh_tempo_invoice
         $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
         if ($curVal != "") {
@@ -1779,6 +1798,11 @@ SORTHTML;
         $this->level_customer_id->HrefValue = "";
         $this->level_customer_id->TooltipValue = "";
 
+        // limit_kredit_order
+        $this->limit_kredit_order->LinkCustomAttributes = "";
+        $this->limit_kredit_order->HrefValue = "";
+        $this->limit_kredit_order->TooltipValue = "";
+
         // jatuh_tempo_invoice
         $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
         $this->jatuh_tempo_invoice->HrefValue = "";
@@ -1832,7 +1856,7 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "readonly";
+        $this->kode->EditCustomAttributes = "";
         if (!$this->kode->Raw) {
             $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
         }
@@ -2028,6 +2052,12 @@ SORTHTML;
         $this->level_customer_id->EditCustomAttributes = "";
         $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
 
+        // limit_kredit_order
+        $this->limit_kredit_order->EditAttrs["class"] = "form-control";
+        $this->limit_kredit_order->EditCustomAttributes = "";
+        $this->limit_kredit_order->EditValue = $this->limit_kredit_order->CurrentValue;
+        $this->limit_kredit_order->PlaceHolder = RemoveHtml($this->limit_kredit_order->caption());
+
         // jatuh_tempo_invoice
         $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
         $this->jatuh_tempo_invoice->EditCustomAttributes = "";
@@ -2107,6 +2137,7 @@ SORTHTML;
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
                     $doc->exportCaption($this->level_customer_id);
+                    $doc->exportCaption($this->limit_kredit_order);
                     $doc->exportCaption($this->jatuh_tempo_invoice);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
@@ -2132,7 +2163,7 @@ SORTHTML;
                     $doc->exportCaption($this->_email);
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
-                    $doc->exportCaption($this->level_customer_id);
+                    $doc->exportCaption($this->limit_kredit_order);
                     $doc->exportCaption($this->jatuh_tempo_invoice);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
@@ -2189,6 +2220,7 @@ SORTHTML;
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
                         $doc->exportField($this->level_customer_id);
+                        $doc->exportField($this->limit_kredit_order);
                         $doc->exportField($this->jatuh_tempo_invoice);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
@@ -2214,7 +2246,7 @@ SORTHTML;
                         $doc->exportField($this->_email);
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
-                        $doc->exportField($this->level_customer_id);
+                        $doc->exportField($this->limit_kredit_order);
                         $doc->exportField($this->jatuh_tempo_invoice);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);

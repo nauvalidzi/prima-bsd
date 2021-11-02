@@ -388,6 +388,11 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("/bsd/api/nextKode/pegawai/0",(function(e){$("#x_kode").val(e)}))}));
+    // Write your table-specific startup script here, no need to add script tags.
+    //loadjs.ready('jquery', function(){
+    //	$.get('/bsd/api/nextKode/pegawai/0', function(data) {
+    //		$('#x_kode').val(data);
+    //	});
+    //});
 });
 </script>

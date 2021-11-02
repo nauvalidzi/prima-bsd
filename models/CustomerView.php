@@ -541,6 +541,7 @@ class CustomerView extends Customer
         $this->website->setVisibility();
         $this->foto->setVisibility();
         $this->level_customer_id->setVisibility();
+        $this->limit_kredit_order->setVisibility();
         $this->jatuh_tempo_invoice->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
@@ -987,6 +988,7 @@ class CustomerView extends Customer
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
@@ -1045,6 +1047,7 @@ class CustomerView extends Customer
         $row['website'] = null;
         $row['foto'] = null;
         $row['level_customer_id'] = null;
+        $row['limit_kredit_order'] = null;
         $row['jatuh_tempo_invoice'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
@@ -1115,6 +1118,8 @@ class CustomerView extends Customer
         // foto
 
         // level_customer_id
+
+        // limit_kredit_order
 
         // jatuh_tempo_invoice
 
@@ -1352,6 +1357,11 @@ class CustomerView extends Customer
             }
             $this->level_customer_id->ViewCustomAttributes = "";
 
+            // limit_kredit_order
+            $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
+            $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_order->ViewCustomAttributes = "";
+
             // jatuh_tempo_invoice
             $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
             if ($curVal != "") {
@@ -1544,6 +1554,11 @@ class CustomerView extends Customer
             $this->level_customer_id->LinkCustomAttributes = "";
             $this->level_customer_id->HrefValue = "";
             $this->level_customer_id->TooltipValue = "";
+
+            // limit_kredit_order
+            $this->limit_kredit_order->LinkCustomAttributes = "";
+            $this->limit_kredit_order->HrefValue = "";
+            $this->limit_kredit_order->TooltipValue = "";
 
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->LinkCustomAttributes = "";

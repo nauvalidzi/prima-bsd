@@ -133,6 +133,6 @@ echo GetDebugMessage();
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$(".login-logo").html("<center><img src='images/logobsd.png' width=300 /></center>"),$(".login-box-msg").html("Log in ke SIM BSD")}));
+    loadjs.ready("jquery",(function(){$(".login-logo").html("<center><img src='images/logobsd.png' width=300 /></center>"),$(".login-box-msg").html("Log in ke SIM BSD"),$("input[name=username]").focus()}));
 });
 </script>

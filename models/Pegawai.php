@@ -1275,7 +1275,7 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "readonly";
+        $this->kode->EditCustomAttributes = "";
         if (!$this->kode->Raw) {
             $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
         }
@@ -1748,7 +1748,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        $rsnew['kode'] = getNextKode('pegawai', 0);
+        //$rsnew['kode'] = getNextKode('pegawai', 0);
         return true;
     }
 

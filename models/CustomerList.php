@@ -589,7 +589,8 @@ class CustomerList extends Customer
         $this->_email->Visible = false;
         $this->website->Visible = false;
         $this->foto->Visible = false;
-        $this->level_customer_id->setVisibility();
+        $this->level_customer_id->Visible = false;
+        $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -964,7 +965,7 @@ class CustomerList extends Customer
         $filterList = Concat($filterList, $this->_email->AdvancedSearch->toJson(), ","); // Field email
         $filterList = Concat($filterList, $this->website->AdvancedSearch->toJson(), ","); // Field website
         $filterList = Concat($filterList, $this->foto->AdvancedSearch->toJson(), ","); // Field foto
-        $filterList = Concat($filterList, $this->level_customer_id->AdvancedSearch->toJson(), ","); // Field level_customer_id
+        $filterList = Concat($filterList, $this->limit_kredit_order->AdvancedSearch->toJson(), ","); // Field limit_kredit_order
         $filterList = Concat($filterList, $this->jatuh_tempo_invoice->AdvancedSearch->toJson(), ","); // Field jatuh_tempo_invoice
         $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
         $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
@@ -1155,13 +1156,13 @@ class CustomerList extends Customer
         $this->foto->AdvancedSearch->SearchOperator2 = @$filter["w_foto"];
         $this->foto->AdvancedSearch->save();
 
-        // Field level_customer_id
-        $this->level_customer_id->AdvancedSearch->SearchValue = @$filter["x_level_customer_id"];
-        $this->level_customer_id->AdvancedSearch->SearchOperator = @$filter["z_level_customer_id"];
-        $this->level_customer_id->AdvancedSearch->SearchCondition = @$filter["v_level_customer_id"];
-        $this->level_customer_id->AdvancedSearch->SearchValue2 = @$filter["y_level_customer_id"];
-        $this->level_customer_id->AdvancedSearch->SearchOperator2 = @$filter["w_level_customer_id"];
-        $this->level_customer_id->AdvancedSearch->save();
+        // Field limit_kredit_order
+        $this->limit_kredit_order->AdvancedSearch->SearchValue = @$filter["x_limit_kredit_order"];
+        $this->limit_kredit_order->AdvancedSearch->SearchOperator = @$filter["z_limit_kredit_order"];
+        $this->limit_kredit_order->AdvancedSearch->SearchCondition = @$filter["v_limit_kredit_order"];
+        $this->limit_kredit_order->AdvancedSearch->SearchValue2 = @$filter["y_limit_kredit_order"];
+        $this->limit_kredit_order->AdvancedSearch->SearchOperator2 = @$filter["w_limit_kredit_order"];
+        $this->limit_kredit_order->AdvancedSearch->save();
 
         // Field jatuh_tempo_invoice
         $this->jatuh_tempo_invoice->AdvancedSearch->SearchValue = @$filter["x_jatuh_tempo_invoice"];
@@ -1240,7 +1241,7 @@ class CustomerList extends Customer
         $this->buildSearchSql($where, $this->_email, $default, false); // email
         $this->buildSearchSql($where, $this->website, $default, false); // website
         $this->buildSearchSql($where, $this->foto, $default, false); // foto
-        $this->buildSearchSql($where, $this->level_customer_id, $default, false); // level_customer_id
+        $this->buildSearchSql($where, $this->limit_kredit_order, $default, false); // limit_kredit_order
         $this->buildSearchSql($where, $this->jatuh_tempo_invoice, $default, false); // jatuh_tempo_invoice
         $this->buildSearchSql($where, $this->keterangan, $default, false); // keterangan
         $this->buildSearchSql($where, $this->aktif, $default, false); // aktif
@@ -1271,7 +1272,7 @@ class CustomerList extends Customer
             $this->_email->AdvancedSearch->save(); // email
             $this->website->AdvancedSearch->save(); // website
             $this->foto->AdvancedSearch->save(); // foto
-            $this->level_customer_id->AdvancedSearch->save(); // level_customer_id
+            $this->limit_kredit_order->AdvancedSearch->save(); // limit_kredit_order
             $this->jatuh_tempo_invoice->AdvancedSearch->save(); // jatuh_tempo_invoice
             $this->keterangan->AdvancedSearch->save(); // keterangan
             $this->aktif->AdvancedSearch->save(); // aktif
@@ -1536,7 +1537,7 @@ class CustomerList extends Customer
         if ($this->foto->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->level_customer_id->AdvancedSearch->issetSession()) {
+        if ($this->limit_kredit_order->AdvancedSearch->issetSession()) {
             return true;
         }
         if ($this->jatuh_tempo_invoice->AdvancedSearch->issetSession()) {
@@ -1607,7 +1608,7 @@ class CustomerList extends Customer
                 $this->_email->AdvancedSearch->unsetSession();
                 $this->website->AdvancedSearch->unsetSession();
                 $this->foto->AdvancedSearch->unsetSession();
-                $this->level_customer_id->AdvancedSearch->unsetSession();
+                $this->limit_kredit_order->AdvancedSearch->unsetSession();
                 $this->jatuh_tempo_invoice->AdvancedSearch->unsetSession();
                 $this->keterangan->AdvancedSearch->unsetSession();
                 $this->aktif->AdvancedSearch->unsetSession();
@@ -1643,7 +1644,7 @@ class CustomerList extends Customer
                 $this->_email->AdvancedSearch->load();
                 $this->website->AdvancedSearch->load();
                 $this->foto->AdvancedSearch->load();
-                $this->level_customer_id->AdvancedSearch->load();
+                $this->limit_kredit_order->AdvancedSearch->load();
                 $this->jatuh_tempo_invoice->AdvancedSearch->load();
                 $this->keterangan->AdvancedSearch->load();
                 $this->aktif->AdvancedSearch->load();
@@ -1665,7 +1666,6 @@ class CustomerList extends Customer
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->kodenpd); // kodenpd
             $this->updateSort($this->hp); // hp
-            $this->updateSort($this->level_customer_id); // level_customer_id
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1737,6 +1737,7 @@ class CustomerList extends Customer
                 $this->website->setSort("");
                 $this->foto->setSort("");
                 $this->level_customer_id->setSort("");
+                $this->limit_kredit_order->setSort("");
                 $this->jatuh_tempo_invoice->setSort("");
                 $this->keterangan->setSort("");
                 $this->aktif->setSort("");
@@ -2682,10 +2683,10 @@ class CustomerList extends Customer
             }
         }
 
-        // level_customer_id
-        if (!$this->isAddOrEdit() && $this->level_customer_id->AdvancedSearch->get()) {
+        // limit_kredit_order
+        if (!$this->isAddOrEdit() && $this->limit_kredit_order->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->level_customer_id->AdvancedSearch->SearchValue != "" || $this->level_customer_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->limit_kredit_order->AdvancedSearch->SearchValue != "" || $this->limit_kredit_order->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -2837,6 +2838,7 @@ class CustomerList extends Customer
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
@@ -2895,6 +2897,7 @@ class CustomerList extends Customer
         $row['website'] = null;
         $row['foto'] = null;
         $row['level_customer_id'] = null;
+        $row['limit_kredit_order'] = null;
         $row['jatuh_tempo_invoice'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
@@ -2981,6 +2984,9 @@ class CustomerList extends Customer
         // foto
 
         // level_customer_id
+        $this->level_customer_id->CellCssStyle = "white-space: nowrap;";
+
+        // limit_kredit_order
 
         // jatuh_tempo_invoice
 
@@ -3197,26 +3203,10 @@ class CustomerList extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // level_customer_id
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
-                    } else {
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->level_customer_id->ViewValue = null;
-            }
-            $this->level_customer_id->ViewCustomAttributes = "";
+            // limit_kredit_order
+            $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
+            $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_order->ViewCustomAttributes = "";
 
             // jatuh_tempo_invoice
             $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
@@ -3295,11 +3285,6 @@ class CustomerList extends Customer
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
-
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
-            $this->level_customer_id->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -3349,7 +3334,7 @@ class CustomerList extends Customer
         $this->_email->AdvancedSearch->load();
         $this->website->AdvancedSearch->load();
         $this->foto->AdvancedSearch->load();
-        $this->level_customer_id->AdvancedSearch->load();
+        $this->limit_kredit_order->AdvancedSearch->load();
         $this->jatuh_tempo_invoice->AdvancedSearch->load();
         $this->keterangan->AdvancedSearch->load();
         $this->aktif->AdvancedSearch->load();

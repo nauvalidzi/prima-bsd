@@ -279,6 +279,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->limit_kredit_order->Visible) { // limit_kredit_order ?>
+    <tr id="r_limit_kredit_order">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_limit_kredit_order"><?= $Page->limit_kredit_order->caption() ?></span></td>
+        <td data-name="limit_kredit_order" <?= $Page->limit_kredit_order->cellAttributes() ?>>
+<span id="el_customer_limit_kredit_order">
+<span<?= $Page->limit_kredit_order->viewAttributes() ?>>
+<?= $Page->limit_kredit_order->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->jatuh_tempo_invoice->Visible) { // jatuh_tempo_invoice ?>
     <tr id="r_jatuh_tempo_invoice">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_jatuh_tempo_invoice"><?= $Page->jatuh_tempo_invoice->caption() ?></span></td>

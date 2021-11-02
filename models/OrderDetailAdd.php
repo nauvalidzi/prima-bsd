@@ -639,8 +639,7 @@ class OrderDetailAdd extends OrderDetail
         $this->idproduct->OldValue = $this->idproduct->CurrentValue;
         $this->jumlah->CurrentValue = null;
         $this->jumlah->OldValue = $this->jumlah->CurrentValue;
-        $this->bonus->CurrentValue = null;
-        $this->bonus->OldValue = $this->bonus->CurrentValue;
+        $this->bonus->CurrentValue = 0;
         $this->sisa->CurrentValue = null;
         $this->sisa->OldValue = $this->sisa->CurrentValue;
         $this->harga->CurrentValue = null;

@@ -1415,6 +1415,9 @@
       <field id="level_customer_id">
         <phrase id="fldcaption" value="Level Customer" />
       </field>
+      <field id="limit_kredit_order">
+        <phrase id="fldcaption" value="Limit Kredit Order" />
+      </field>
       <field id="jatuh_tempo_invoice">
         <phrase id="fldcaption" value="Jatuh Tempo Invoice" />
       </field>

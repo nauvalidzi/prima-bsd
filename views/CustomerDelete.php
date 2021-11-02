@@ -62,9 +62,6 @@ $Page->showMessage();
 <?php if ($Page->hp->Visible) { // hp ?>
         <th class="<?= $Page->hp->headerCellClass() ?>"><span id="elh_customer_hp" class="customer_hp"><?= $Page->hp->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
-        <th class="<?= $Page->level_customer_id->headerCellClass() ?>"><span id="elh_customer_level_customer_id" class="customer_level_customer_id"><?= $Page->level_customer_id->caption() ?></span></th>
-<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -131,14 +128,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_customer_hp" class="customer_hp">
 <span<?= $Page->hp->viewAttributes() ?>>
 <?= $Page->hp->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
-        <td <?= $Page->level_customer_id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_customer_level_customer_id" class="customer_level_customer_id">
-<span<?= $Page->level_customer_id->viewAttributes() ?>>
-<?= $Page->level_customer_id->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

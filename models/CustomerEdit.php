@@ -489,7 +489,8 @@ class CustomerEdit extends Customer
         $this->_email->setVisibility();
         $this->website->setVisibility();
         $this->foto->setVisibility();
-        $this->level_customer_id->setVisibility();
+        $this->level_customer_id->Visible = false;
+        $this->limit_kredit_order->setVisibility();
         $this->jatuh_tempo_invoice->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
@@ -872,13 +873,13 @@ class CustomerEdit extends Customer
             }
         }
 
-        // Check field name 'level_customer_id' first before field var 'x_level_customer_id'
-        $val = $CurrentForm->hasValue("level_customer_id") ? $CurrentForm->getValue("level_customer_id") : $CurrentForm->getValue("x_level_customer_id");
-        if (!$this->level_customer_id->IsDetailKey) {
+        // Check field name 'limit_kredit_order' first before field var 'x_limit_kredit_order'
+        $val = $CurrentForm->hasValue("limit_kredit_order") ? $CurrentForm->getValue("limit_kredit_order") : $CurrentForm->getValue("x_limit_kredit_order");
+        if (!$this->limit_kredit_order->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->level_customer_id->Visible = false; // Disable update for API request
+                $this->limit_kredit_order->Visible = false; // Disable update for API request
             } else {
-                $this->level_customer_id->setFormValue($val);
+                $this->limit_kredit_order->setFormValue($val);
             }
         }
 
@@ -941,7 +942,7 @@ class CustomerEdit extends Customer
         $this->hp->CurrentValue = $this->hp->FormValue;
         $this->_email->CurrentValue = $this->_email->FormValue;
         $this->website->CurrentValue = $this->website->FormValue;
-        $this->level_customer_id->CurrentValue = $this->level_customer_id->FormValue;
+        $this->limit_kredit_order->CurrentValue = $this->limit_kredit_order->FormValue;
         $this->jatuh_tempo_invoice->CurrentValue = $this->jatuh_tempo_invoice->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
         $this->aktif->CurrentValue = $this->aktif->FormValue;
@@ -1023,6 +1024,7 @@ class CustomerEdit extends Customer
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
@@ -1057,6 +1059,7 @@ class CustomerEdit extends Customer
         $row['website'] = null;
         $row['foto'] = null;
         $row['level_customer_id'] = null;
+        $row['limit_kredit_order'] = null;
         $row['jatuh_tempo_invoice'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
@@ -1137,6 +1140,8 @@ class CustomerEdit extends Customer
         // foto
 
         // level_customer_id
+
+        // limit_kredit_order
 
         // jatuh_tempo_invoice
 
@@ -1353,26 +1358,10 @@ class CustomerEdit extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // level_customer_id
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
-                    } else {
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->level_customer_id->ViewValue = null;
-            }
-            $this->level_customer_id->ViewCustomAttributes = "";
+            // limit_kredit_order
+            $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
+            $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_order->ViewCustomAttributes = "";
 
             // jatuh_tempo_invoice
             $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
@@ -1557,10 +1546,10 @@ class CustomerEdit extends Customer
                 $this->foto->LinkAttrs->appendClass("ew-lightbox");
             }
 
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
-            $this->level_customer_id->TooltipValue = "";
+            // limit_kredit_order
+            $this->limit_kredit_order->LinkCustomAttributes = "";
+            $this->limit_kredit_order->HrefValue = "";
+            $this->limit_kredit_order->TooltipValue = "";
 
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
@@ -1890,30 +1879,11 @@ class CustomerEdit extends Customer
                 RenderUploadField($this->foto);
             }
 
-            // level_customer_id
-            $this->level_customer_id->EditAttrs["class"] = "form-control";
-            $this->level_customer_id->EditCustomAttributes = "";
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-            } else {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->Lookup !== null && is_array($this->level_customer_id->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->level_customer_id->ViewValue !== null) { // Load from cache
-                $this->level_customer_id->EditValue = array_values($this->level_customer_id->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->level_customer_id->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->level_customer_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->level_customer_id->EditValue = $arwrk;
-            }
-            $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
+            // limit_kredit_order
+            $this->limit_kredit_order->EditAttrs["class"] = "form-control";
+            $this->limit_kredit_order->EditCustomAttributes = "";
+            $this->limit_kredit_order->EditValue = HtmlEncode($this->limit_kredit_order->CurrentValue);
+            $this->limit_kredit_order->PlaceHolder = RemoveHtml($this->limit_kredit_order->caption());
 
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
@@ -2062,9 +2032,9 @@ class CustomerEdit extends Customer
             }
             $this->foto->ExportHrefValue = $this->foto->UploadPath . $this->foto->Upload->DbValue;
 
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
+            // limit_kredit_order
+            $this->limit_kredit_order->LinkCustomAttributes = "";
+            $this->limit_kredit_order->HrefValue = "";
 
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
@@ -2198,10 +2168,13 @@ class CustomerEdit extends Customer
                 $this->foto->addErrorMessage(str_replace("%s", $this->foto->caption(), $this->foto->RequiredErrorMessage));
             }
         }
-        if ($this->level_customer_id->Required) {
-            if (!$this->level_customer_id->IsDetailKey && EmptyValue($this->level_customer_id->FormValue)) {
-                $this->level_customer_id->addErrorMessage(str_replace("%s", $this->level_customer_id->caption(), $this->level_customer_id->RequiredErrorMessage));
+        if ($this->limit_kredit_order->Required) {
+            if (!$this->limit_kredit_order->IsDetailKey && EmptyValue($this->limit_kredit_order->FormValue)) {
+                $this->limit_kredit_order->addErrorMessage(str_replace("%s", $this->limit_kredit_order->caption(), $this->limit_kredit_order->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->limit_kredit_order->FormValue)) {
+            $this->limit_kredit_order->addErrorMessage($this->limit_kredit_order->getErrorMessage(false));
         }
         if ($this->jatuh_tempo_invoice->Required) {
             if (!$this->jatuh_tempo_invoice->IsDetailKey && EmptyValue($this->jatuh_tempo_invoice->FormValue)) {
@@ -2389,8 +2362,8 @@ class CustomerEdit extends Customer
                 }
             }
 
-            // level_customer_id
-            $this->level_customer_id->setDbValueDef($rsnew, $this->level_customer_id->CurrentValue, null, $this->level_customer_id->ReadOnly);
+            // limit_kredit_order
+            $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, 0, $this->limit_kredit_order->ReadOnly);
 
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, $this->jatuh_tempo_invoice->ReadOnly);

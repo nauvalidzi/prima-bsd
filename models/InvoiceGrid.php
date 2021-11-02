@@ -1935,7 +1935,7 @@ class InvoiceGrid extends Invoice
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditCustomAttributes = "";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -2084,7 +2084,7 @@ class InvoiceGrid extends Invoice
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditCustomAttributes = "";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -2386,6 +2386,23 @@ class InvoiceGrid extends Invoice
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
+        if ($this->kode->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);
@@ -2537,6 +2554,16 @@ class InvoiceGrid extends Invoice
         }
         if ($this->getCurrentMasterTable() == "customer") {
             $this->idcustomer->CurrentValue = $this->idcustomer->getSessionValue();
+        }
+        if ($this->kode->CurrentValue != "") { // Check field with unique index
+            $filter = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
         }
         $conn = $this->getConnection();
 

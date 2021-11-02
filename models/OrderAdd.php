@@ -985,7 +985,7 @@ class OrderAdd extends Order
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditCustomAttributes = "";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -1203,6 +1203,16 @@ class OrderAdd extends Order
                 $userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
                 $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
                 $this->setFailureMessage($userIdMsg);
+                return false;
+            }
+        }
+        if ($this->kode->CurrentValue != "") { // Check field with unique index
+            $filter = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
                 return false;
             }
         }
@@ -1605,10 +1615,9 @@ class OrderAdd extends Order
     // Form Custom Validate event
     public function formCustomValidate(&$customError)
     {
-        // Return error message in CustomError
         $idcustomer = $this->idcustomer->FormValue;
-        $default_limit_kredit = ExecuteRow("SELECT limit_kredit_value FROM level_customer JOIN customer ON customer.level_customer_id = level_customer.id WHERE customer.id = {$idcustomer}")['limit_kredit_value'];
-        $limit_kredit = $default_limit_kredit; // SET VARIBLE DEFAULT LIMIT KREDIT
+        $cust = ExecuteRow("SELECT limit_kredit_order FROM customer WHERE id = {$idcustomer}");
+        $limit_kredit = $cust['limit_kredit_order'] < 1 ? 5000000 : $cust['limit_kredit_order']; // SET VARIBLE DEFAULT LIMIT KREDIT
         $limit_poaktif = 3; // DEFAULT PO Aktif MAKSIMAL DUA P.O (Belum DIBAYAR/Belum LUNAS);
 
         // CEK TOTAL PESANAN        
@@ -1631,7 +1640,7 @@ class OrderAdd extends Order
             $limit_poaktif = $approval['limit_po_aktif'];
         }
         if ($totalorder > $limit_kredit) {
-            if ($limit_kredit != $default_limit_kredit) {
+            if ($limit_kredit != $cust['limit_kredit_order']) {
                 $customError = "Transaksi melebihi limit kredit dari pengajuan approval.<br />Limit Rp. ".rupiah($limit_kredit).".";
                 return false;
             }

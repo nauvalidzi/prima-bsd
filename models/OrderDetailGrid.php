@@ -1320,7 +1320,7 @@ class OrderDetailGrid extends OrderDetail
         $this->idproduct->OldValue = $this->idproduct->CurrentValue;
         $this->jumlah->CurrentValue = null;
         $this->jumlah->OldValue = $this->jumlah->CurrentValue;
-        $this->bonus->CurrentValue = null;
+        $this->bonus->CurrentValue = 0;
         $this->bonus->OldValue = $this->bonus->CurrentValue;
         $this->sisa->CurrentValue = null;
         $this->sisa->OldValue = $this->sisa->CurrentValue;
@@ -2470,7 +2470,7 @@ class OrderDetailGrid extends OrderDetail
     {
         // Example:
         //$header = "your header";
-        $readonly = ExecuteScalar("SELECT readonly FROM `order` WHERE id=".$this->idorder->CurrentValue);
+        $readonly = ExecuteRow("SELECT readonly FROM `order` WHERE id={$this->idorder->CurrentValue}");
         if($readonly) {
         	$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
         }

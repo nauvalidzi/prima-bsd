@@ -42,7 +42,7 @@ loadjs.ready("head", function () {
         ["_email", [], fields._email.isInvalid],
         ["website", [], fields.website.isInvalid],
         ["foto", [], fields.foto.isInvalid],
-        ["level_customer_id", [], fields.level_customer_id.isInvalid],
+        ["limit_kredit_order", [ew.Validators.integer], fields.limit_kredit_order.isInvalid],
         ["jatuh_tempo_invoice", [], fields.jatuh_tempo_invoice.isInvalid],
         ["keterangan", [], fields.keterangan.isInvalid],
         ["aktif", [], fields.aktif.isInvalid],
@@ -93,7 +93,6 @@ loadjs.ready("head", function () {
     fcustomersearch.lists.idkab = <?= $Page->idkab->toClientList($Page) ?>;
     fcustomersearch.lists.idkec = <?= $Page->idkec->toClientList($Page) ?>;
     fcustomersearch.lists.idkel = <?= $Page->idkel->toClientList($Page) ?>;
-    fcustomersearch.lists.level_customer_id = <?= $Page->level_customer_id->toClientList($Page) ?>;
     fcustomersearch.lists.jatuh_tempo_invoice = <?= $Page->jatuh_tempo_invoice->toClientList($Page) ?>;
     fcustomersearch.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
     loadjs.done("fcustomersearch");
@@ -534,39 +533,18 @@ loadjs.ready("head", function() {
         </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
-    <div id="r_level_customer_id" class="form-group row">
-        <label for="x_level_customer_id" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_level_customer_id"><?= $Page->level_customer_id->caption() ?></span>
+<?php if ($Page->limit_kredit_order->Visible) { // limit_kredit_order ?>
+    <div id="r_limit_kredit_order" class="form-group row">
+        <label for="x_limit_kredit_order" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_limit_kredit_order"><?= $Page->limit_kredit_order->caption() ?></span>
         <span class="ew-search-operator">
 <?= $Language->phrase("=") ?>
-<input type="hidden" name="z_level_customer_id" id="z_level_customer_id" value="=">
+<input type="hidden" name="z_limit_kredit_order" id="z_limit_kredit_order" value="=">
 </span>
         </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->level_customer_id->cellAttributes() ?>>
-            <span id="el_customer_level_customer_id" class="ew-search-field ew-search-field-single">
-    <select
-        id="x_level_customer_id"
-        name="x_level_customer_id"
-        class="form-control ew-select<?= $Page->level_customer_id->isInvalidClass() ?>"
-        data-select2-id="customer_x_level_customer_id"
-        data-table="customer"
-        data-field="x_level_customer_id"
-        data-value-separator="<?= $Page->level_customer_id->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->level_customer_id->getPlaceHolder()) ?>"
-        <?= $Page->level_customer_id->editAttributes() ?>>
-        <?= $Page->level_customer_id->selectOptionListHtml("x_level_customer_id") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Page->level_customer_id->getErrorMessage(false) ?></div>
-<?= $Page->level_customer_id->Lookup->getParamTag($Page, "p_x_level_customer_id") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_level_customer_id']"),
-        options = { name: "x_level_customer_id", selectId: "customer_x_level_customer_id", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.level_customer_id.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->limit_kredit_order->cellAttributes() ?>>
+            <span id="el_customer_limit_kredit_order" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->limit_kredit_order->getInputTextType() ?>" data-table="customer" data-field="x_limit_kredit_order" name="x_limit_kredit_order" id="x_limit_kredit_order" size="30" placeholder="<?= HtmlEncode($Page->limit_kredit_order->getPlaceHolder()) ?>" value="<?= $Page->limit_kredit_order->EditValue ?>"<?= $Page->limit_kredit_order->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->limit_kredit_order->getErrorMessage(false) ?></div>
 </span>
         </div></div>
     </div>

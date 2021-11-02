@@ -76,15 +76,6 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
-    <?php if ($Page->SortUrl($Page->level_customer_id) == "") { ?>
-        <th class="<?= $Page->level_customer_id->headerCellClass() ?>"><?= $Page->level_customer_id->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->level_customer_id->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->level_customer_id->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->level_customer_id->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->level_customer_id->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->level_customer_id->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->level_customer_id->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -155,13 +146,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->hp->cellAttributes() ?>>
 <span<?= $Page->hp->viewAttributes() ?>>
 <?= $Page->hp->getViewValue() ?></span>
-</td>
-<?php } ?>
-<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
-        <!-- level_customer_id -->
-        <td<?= $Page->level_customer_id->cellAttributes() ?>>
-<span<?= $Page->level_customer_id->viewAttributes() ?>>
-<?= $Page->level_customer_id->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

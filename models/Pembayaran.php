@@ -1247,7 +1247,7 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "readonly";
+        $this->kode->EditCustomAttributes = "";
         if (!$this->kode->Raw) {
             $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
         }
@@ -1643,7 +1643,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        $rsnew['kode'] = getNextKode('pembayaran', 0);
+        //$rsnew['kode'] = getNextKode('pembayaran', 0);
         $updateSisaBayar = ExecuteUpdate("UPDATE invoice SET sisabayar=sisabayar-(".$rsnew['jumlahbayar'].") WHERE id=".$rsnew['idinvoice']);
         checkCloseInvoice($rsnew['idinvoice']);
         return true;
@@ -1656,17 +1656,20 @@ SORTHTML;
         checkReadOnly("invoice", $rsnew['idinvoice']);
 
         // START NOTIF BOT WASAP //
-        $status = 0;
-        $row = ExecuteRow("SELECT i.kode as no_faktur, c.nama as nama_customer, c.hp as nomor_handphone FROM invoice i JOIN customer c ON c.id = i.idcustomer WHERE i.id = {$rsnew['idinvoice']}");
-        if (!empty($row['nomor_handphone']) or strlen($row['nomor_handphone']) <= 10) {
-            $export = json_encode([
-                'to' => $row['nomor_handphone'],
-                'message' => "Selamat siang {$row['nama_customer']}. Pembayaran Faktur No. {$row['no_faktur']} sudah kami terima. Terima kasih atas kerjasamanya. Semoga {$row['nama_customer']} sehat selalu.",
-            ]);
-            //curl_post($url, json_encode($export));
-            $status = 1;
-        }
-        ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
+        //$status = 0;
+        //$row = ExecuteRow("SELECT i.kode as no_faktur, c.nama as nama_customer, c.hp as nomor_handphone FROM invoice i JOIN customer c ON c.id = i.idcustomer WHERE i.id = {$rsnew['idinvoice']}");
+
+        //if (!empty($row['nomor_handphone']) or strlen($row['nomor_handphone']) <= 10) {
+        //    $export = json_encode([
+        //        'to' => $row['nomor_handphone'],
+        //        'message' => "Selamat siang {$row['nama_customer']}. Pembayaran Faktur No. {$row['no_faktur']} sudah kami terima. Terima kasih atas kerjasamanya. Semoga {$row['nama_customer']} sehat selalu.",
+        //    ]);
+        //    //curl_post($url, json_encode($export));
+
+        //    $status = 1;
+        //}
+
+        //ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
         // END NOTIF BOT WASAP //
     }
 

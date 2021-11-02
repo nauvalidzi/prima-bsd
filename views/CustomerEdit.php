@@ -39,7 +39,7 @@ loadjs.ready("head", function () {
         ["_email", [fields._email.visible && fields._email.required ? ew.Validators.required(fields._email.caption) : null, ew.Validators.email], fields._email.isInvalid],
         ["website", [fields.website.visible && fields.website.required ? ew.Validators.required(fields.website.caption) : null], fields.website.isInvalid],
         ["foto", [fields.foto.visible && fields.foto.required ? ew.Validators.fileRequired(fields.foto.caption) : null], fields.foto.isInvalid],
-        ["level_customer_id", [fields.level_customer_id.visible && fields.level_customer_id.required ? ew.Validators.required(fields.level_customer_id.caption) : null], fields.level_customer_id.isInvalid],
+        ["limit_kredit_order", [fields.limit_kredit_order.visible && fields.limit_kredit_order.required ? ew.Validators.required(fields.limit_kredit_order.caption) : null, ew.Validators.integer], fields.limit_kredit_order.isInvalid],
         ["jatuh_tempo_invoice", [fields.jatuh_tempo_invoice.visible && fields.jatuh_tempo_invoice.required ? ew.Validators.required(fields.jatuh_tempo_invoice.caption) : null], fields.jatuh_tempo_invoice.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
@@ -115,7 +115,6 @@ loadjs.ready("head", function () {
     fcustomeredit.lists.idkab = <?= $Page->idkab->toClientList($Page) ?>;
     fcustomeredit.lists.idkec = <?= $Page->idkec->toClientList($Page) ?>;
     fcustomeredit.lists.idkel = <?= $Page->idkel->toClientList($Page) ?>;
-    fcustomeredit.lists.level_customer_id = <?= $Page->level_customer_id->toClientList($Page) ?>;
     fcustomeredit.lists.jatuh_tempo_invoice = <?= $Page->jatuh_tempo_invoice->toClientList($Page) ?>;
     fcustomeredit.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
     loadjs.done("fcustomeredit");
@@ -549,35 +548,14 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
-    <div id="r_level_customer_id" class="form-group row">
-        <label id="elh_customer_level_customer_id" for="x_level_customer_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->level_customer_id->caption() ?><?= $Page->level_customer_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->level_customer_id->cellAttributes() ?>>
-<span id="el_customer_level_customer_id">
-    <select
-        id="x_level_customer_id"
-        name="x_level_customer_id"
-        class="form-control ew-select<?= $Page->level_customer_id->isInvalidClass() ?>"
-        data-select2-id="customer_x_level_customer_id"
-        data-table="customer"
-        data-field="x_level_customer_id"
-        data-value-separator="<?= $Page->level_customer_id->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->level_customer_id->getPlaceHolder()) ?>"
-        <?= $Page->level_customer_id->editAttributes() ?>>
-        <?= $Page->level_customer_id->selectOptionListHtml("x_level_customer_id") ?>
-    </select>
-    <?= $Page->level_customer_id->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->level_customer_id->getErrorMessage() ?></div>
-<?= $Page->level_customer_id->Lookup->getParamTag($Page, "p_x_level_customer_id") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_level_customer_id']"),
-        options = { name: "x_level_customer_id", selectId: "customer_x_level_customer_id", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.level_customer_id.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<?php if ($Page->limit_kredit_order->Visible) { // limit_kredit_order ?>
+    <div id="r_limit_kredit_order" class="form-group row">
+        <label id="elh_customer_limit_kredit_order" for="x_limit_kredit_order" class="<?= $Page->LeftColumnClass ?>"><?= $Page->limit_kredit_order->caption() ?><?= $Page->limit_kredit_order->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->limit_kredit_order->cellAttributes() ?>>
+<span id="el_customer_limit_kredit_order">
+<input type="<?= $Page->limit_kredit_order->getInputTextType() ?>" data-table="customer" data-field="x_limit_kredit_order" name="x_limit_kredit_order" id="x_limit_kredit_order" size="30" placeholder="<?= HtmlEncode($Page->limit_kredit_order->getPlaceHolder()) ?>" value="<?= $Page->limit_kredit_order->EditValue ?>"<?= $Page->limit_kredit_order->editAttributes() ?> aria-describedby="x_limit_kredit_order_help">
+<?= $Page->limit_kredit_order->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->limit_kredit_order->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

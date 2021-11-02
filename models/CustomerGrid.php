@@ -526,7 +526,8 @@ class CustomerGrid extends Customer
         $this->_email->Visible = false;
         $this->website->Visible = false;
         $this->foto->Visible = false;
-        $this->level_customer_id->setVisibility();
+        $this->level_customer_id->Visible = false;
+        $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -988,9 +989,6 @@ class CustomerGrid extends Customer
         if ($CurrentForm->hasValue("x_hp") && $CurrentForm->hasValue("o_hp") && $this->hp->CurrentValue != $this->hp->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_level_customer_id") && $CurrentForm->hasValue("o_level_customer_id") && $this->level_customer_id->CurrentValue != $this->level_customer_id->OldValue) {
-            return false;
-        }
         return true;
     }
 
@@ -1078,7 +1076,6 @@ class CustomerGrid extends Customer
         $this->nama->clearErrorMessage();
         $this->kodenpd->clearErrorMessage();
         $this->hp->clearErrorMessage();
-        $this->level_customer_id->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1562,7 +1559,9 @@ class CustomerGrid extends Customer
         $this->foto->Upload->Index = $this->RowIndex;
         $this->level_customer_id->CurrentValue = null;
         $this->level_customer_id->OldValue = $this->level_customer_id->CurrentValue;
-        $this->jatuh_tempo_invoice->CurrentValue = 30;
+        $this->limit_kredit_order->CurrentValue = null;
+        $this->limit_kredit_order->OldValue = $this->limit_kredit_order->CurrentValue;
+        $this->jatuh_tempo_invoice->CurrentValue = null;
         $this->jatuh_tempo_invoice->OldValue = $this->jatuh_tempo_invoice->CurrentValue;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
@@ -1661,19 +1660,6 @@ class CustomerGrid extends Customer
             $this->hp->setOldValue($CurrentForm->getValue("o_hp"));
         }
 
-        // Check field name 'level_customer_id' first before field var 'x_level_customer_id'
-        $val = $CurrentForm->hasValue("level_customer_id") ? $CurrentForm->getValue("level_customer_id") : $CurrentForm->getValue("x_level_customer_id");
-        if (!$this->level_customer_id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->level_customer_id->Visible = false; // Disable update for API request
-            } else {
-                $this->level_customer_id->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_level_customer_id")) {
-            $this->level_customer_id->setOldValue($CurrentForm->getValue("o_level_customer_id"));
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1694,7 +1680,6 @@ class CustomerGrid extends Customer
         $this->nama->CurrentValue = $this->nama->FormValue;
         $this->kodenpd->CurrentValue = $this->kodenpd->FormValue;
         $this->hp->CurrentValue = $this->hp->FormValue;
-        $this->level_customer_id->CurrentValue = $this->level_customer_id->FormValue;
     }
 
     // Load recordset
@@ -1797,6 +1782,7 @@ class CustomerGrid extends Customer
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->foto->Upload->Index = $this->RowIndex;
         $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
@@ -1832,6 +1818,7 @@ class CustomerGrid extends Customer
         $row['website'] = $this->website->CurrentValue;
         $row['foto'] = $this->foto->Upload->DbValue;
         $row['level_customer_id'] = $this->level_customer_id->CurrentValue;
+        $row['limit_kredit_order'] = $this->limit_kredit_order->CurrentValue;
         $row['jatuh_tempo_invoice'] = $this->jatuh_tempo_invoice->CurrentValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
@@ -1916,6 +1903,9 @@ class CustomerGrid extends Customer
         // foto
 
         // level_customer_id
+        $this->level_customer_id->CellCssStyle = "white-space: nowrap;";
+
+        // limit_kredit_order
 
         // jatuh_tempo_invoice
 
@@ -2132,26 +2122,10 @@ class CustomerGrid extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // level_customer_id
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
-                    } else {
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->level_customer_id->ViewValue = null;
-            }
-            $this->level_customer_id->ViewCustomAttributes = "";
+            // limit_kredit_order
+            $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
+            $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_order->ViewCustomAttributes = "";
 
             // jatuh_tempo_invoice
             $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
@@ -2230,15 +2204,10 @@ class CustomerGrid extends Customer
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
-
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
-            $this->level_customer_id->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditCustomAttributes = "";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -2345,31 +2314,6 @@ class CustomerGrid extends Customer
             }
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
-
-            // level_customer_id
-            $this->level_customer_id->EditAttrs["class"] = "form-control";
-            $this->level_customer_id->EditCustomAttributes = "";
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-            } else {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->Lookup !== null && is_array($this->level_customer_id->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->level_customer_id->ViewValue !== null) { // Load from cache
-                $this->level_customer_id->EditValue = array_values($this->level_customer_id->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->level_customer_id->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->level_customer_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->level_customer_id->EditValue = $arwrk;
-            }
-            $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
 
             // Add refer script
 
@@ -2396,14 +2340,10 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
-
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditCustomAttributes = "";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -2511,31 +2451,6 @@ class CustomerGrid extends Customer
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
 
-            // level_customer_id
-            $this->level_customer_id->EditAttrs["class"] = "form-control";
-            $this->level_customer_id->EditCustomAttributes = "";
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-            } else {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->Lookup !== null && is_array($this->level_customer_id->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->level_customer_id->ViewValue !== null) { // Load from cache
-                $this->level_customer_id->EditValue = array_values($this->level_customer_id->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->level_customer_id->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->level_customer_id->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->level_customer_id->EditValue = $arwrk;
-            }
-            $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
-
             // Edit refer script
 
             // kode
@@ -2561,10 +2476,6 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
-
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2617,11 +2528,6 @@ class CustomerGrid extends Customer
         }
         if (!CheckByRegEx($this->hp->FormValue, '^(62)8[1-9][0-9]{7,11}$')) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
-        }
-        if ($this->level_customer_id->Required) {
-            if (!$this->level_customer_id->IsDetailKey && EmptyValue($this->level_customer_id->FormValue)) {
-                $this->level_customer_id->addErrorMessage(str_replace("%s", $this->level_customer_id->caption(), $this->level_customer_id->RequiredErrorMessage));
-            }
         }
 
         // Return validate result
@@ -2720,6 +2626,23 @@ class CustomerGrid extends Customer
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
+        if ($this->kode->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
         if ($this->hp->CurrentValue != "") { // Check field with unique index
             $filterChk = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
             $filterChk .= " AND NOT (" . $filter . ")";
@@ -2769,9 +2692,6 @@ class CustomerGrid extends Customer
 
             // hp
             $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", $this->hp->ReadOnly);
-
-            // level_customer_id
-            $this->level_customer_id->setDbValueDef($rsnew, $this->level_customer_id->CurrentValue, null, $this->level_customer_id->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -2852,6 +2772,16 @@ class CustomerGrid extends Customer
         if ($this->getCurrentMasterTable() == "pegawai") {
             $this->idpegawai->CurrentValue = $this->idpegawai->getSessionValue();
         }
+        if ($this->kode->CurrentValue != "") { // Check field with unique index
+            $filter = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                return false;
+            }
+        }
         if ($this->hp->CurrentValue != "") { // Check field with unique index
             $filter = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
             $rsChk = $this->loadRs($filter)->fetch();
@@ -2887,9 +2817,6 @@ class CustomerGrid extends Customer
 
         // hp
         $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", false);
-
-        // level_customer_id
-        $this->level_customer_id->setDbValueDef($rsnew, $this->level_customer_id->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

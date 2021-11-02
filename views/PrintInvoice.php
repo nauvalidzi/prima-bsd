@@ -6,9 +6,7 @@ namespace PHPMaker2021\distributor;
 $PrintInvoice = &$Page;
 ?>
 <?php
-
 	$idInvoice = Get('id') ? Get('id') : die;
-
 	$invoiceDetail = ExecuteRow("SELECT i.id idinvoice, p.nama namapegawai, o.kode kodepo, o.tanggal tanggalpo, i.kode kodeinvoice, i.tglinvoice tanggalinvoice, t.title tempo, date_add(i.tglinvoice, interval t.value DAY) jatuhtempo, c.nama namacustomer, c.alamat alamat, kel.nama kel, kec.nama kec, kab.nama kab, prov.name prov, c.telpon telponcustomer, i.pajak FROM invoice i, pegawai p, `order` o, termpayment t, customer c LEFT JOIN kelurahan kel ON kel.id=c.idkel LEFT JOIN kecamatan kec ON kec.id=c.idkec LEFT JOIN kabupaten kab ON kab.id=c.idkab LEFT JOIN provinsi prov ON prov.id=c.idprov WHERE i.idcustomer = c.id AND p.id = c.idpegawai AND i.idorder = o.id AND t.id = i.idtermpayment AND i.id={$idInvoice}");
 
 	$query = ExecuteQuery("SELECT id.id, id.idinvoice, p.nama, id.jumlahkirim, id.jumlahbonus, id.harga, id.totalnondiskon, id.diskonpayment, id.totaltagihan FROM invoice_detail id, order_detail od, product p WHERE id.idorder_detail = od.id AND od.idproduct = p.id AND id.idinvoice={$idInvoice}");
@@ -358,6 +356,5 @@ $PrintInvoice = &$Page;
         
     </body>
 </html>
-
 
 <?= GetDebugMessage() ?>

@@ -395,7 +395,8 @@ class CustomerDelete extends Customer
         $this->_email->Visible = false;
         $this->website->Visible = false;
         $this->foto->Visible = false;
-        $this->level_customer_id->setVisibility();
+        $this->level_customer_id->Visible = false;
+        $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -604,6 +605,7 @@ class CustomerDelete extends Customer
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
@@ -638,6 +640,7 @@ class CustomerDelete extends Customer
         $row['website'] = null;
         $row['foto'] = null;
         $row['level_customer_id'] = null;
+        $row['limit_kredit_order'] = null;
         $row['jatuh_tempo_invoice'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
@@ -702,6 +705,9 @@ class CustomerDelete extends Customer
         // foto
 
         // level_customer_id
+        $this->level_customer_id->CellCssStyle = "white-space: nowrap;";
+
+        // limit_kredit_order
 
         // jatuh_tempo_invoice
 
@@ -918,26 +924,10 @@ class CustomerDelete extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // level_customer_id
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
-                    } else {
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->level_customer_id->ViewValue = null;
-            }
-            $this->level_customer_id->ViewCustomAttributes = "";
+            // limit_kredit_order
+            $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
+            $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
+            $this->limit_kredit_order->ViewCustomAttributes = "";
 
             // jatuh_tempo_invoice
             $curVal = trim(strval($this->jatuh_tempo_invoice->CurrentValue));
@@ -1016,11 +1006,6 @@ class CustomerDelete extends Customer
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
-
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
-            $this->level_customer_id->TooltipValue = "";
         }
 
         // Call Row Rendered event

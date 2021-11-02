@@ -318,10 +318,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    // Write your table-specific startup script here, no need to add script tags.
-    //loadjs.ready('jquery', function() {
-    //	$('.ew-add-edit-option').hide();
-    //});
+    $(".ew-detail-add-group").html("Create Surat Jalan");
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

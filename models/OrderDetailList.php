@@ -1788,7 +1788,7 @@ class OrderDetailList extends OrderDetail
     {
         // Example:
         //$header = "your header";
-        $readonly = ExecuteScalar("SELECT readonly FROM `order` WHERE id=".$this->idorder->CurrentValue);
+        $readonly = ExecuteRow("SELECT readonly FROM `order` WHERE id={$this->idorder->CurrentValue}");
         if($readonly) {
         	$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
         }

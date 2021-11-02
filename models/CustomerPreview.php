@@ -411,7 +411,8 @@ class CustomerPreview extends Customer
         $this->_email->Visible = false;
         $this->website->Visible = false;
         $this->foto->Visible = false;
-        $this->level_customer_id->setVisibility();
+        $this->level_customer_id->Visible = false;
+        $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -531,6 +532,7 @@ class CustomerPreview extends Customer
             $this->website->setSort("");
             $this->foto->setSort("");
             $this->level_customer_id->setSort("");
+            $this->limit_kredit_order->setSort("");
             $this->jatuh_tempo_invoice->setSort("");
             $this->keterangan->setSort("");
             $this->aktif->setSort("");
@@ -554,7 +556,6 @@ class CustomerPreview extends Customer
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->kodenpd); // kodenpd
             $this->updateSort($this->hp); // hp
-            $this->updateSort($this->level_customer_id); // level_customer_id
         }
     }
 
