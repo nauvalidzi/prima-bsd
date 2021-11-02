@@ -22,10 +22,10 @@ $LaporanOrderCustomer = &$Page;
 		$query = "SELECT c.kode AS kode_customer, c.nama AS nama_customer, o.kode AS kode_po, 
 					DATE_FORMAT(o.tanggal, '%Y-%m-%d') AS tgl_po, 
 					p.kode AS kode_produk, p.nama AS nama_produk, b.title AS brand,
-					od.jumlah AS jumlah_po, p.kemasanbarang AS kemasan, od.harga AS harga_satuan,
-					i.kode as no_faktur, od.total AS nilai_po, i.diskonpayment AS diskon, 
-					i.totaltagihan AS nilai_faktur, pg.nama AS marketing,
-					DATE_FORMAT(i.due_date, '%Y-%m-%d') AS due_date
+					od.jumlah AS jumlahorder, od.bonus as bonus, p.kemasanbarang AS kemasan, 
+					od.harga AS harga_satuan, i.kode as no_faktur, od.total AS nilai_po, 
+					i.diskonpayment AS diskon, i.totaltagihan AS nilai_faktur, 
+					pg.nama AS marketing, DATE_FORMAT(i.due_date, '%Y-%m-%d') AS due_date
 				  FROM `order` o
 				  JOIN customer c ON c.id = o.idcustomer
 				  JOIN order_detail od ON od.idorder = o.id
@@ -115,7 +115,8 @@ $LaporanOrderCustomer = &$Page;
 		        <th class="text-center col-flex">Kode Produk</th>
 		        <th class="text-center col-description">Nama Produk</th>
 		        <th class="text-center col-flex">Brand</th>
-		        <th class="text-center col-flex">Jumlah P.O.</th>
+		        <th class="text-center col-flex">Jumlah Order</th>
+		        <th class="text-center col-flex">Bonus</th>
 		        <th class="text-center col-flex">Kemasan</th>
 		        <th class="text-center col-flex">Harga Satuan</th>
 		        <th class="text-center col-flex">No. Faktur</th>
@@ -133,17 +134,18 @@ $LaporanOrderCustomer = &$Page;
 			    <?php if ($kode_po != $row['kode_po']) $i++; ?>
 			    <tr>
 			      <td class="text-center"><?php echo $i; ?></td>
-			      <td><?php echo $row['kode_customer'] ?></td>
+			      <td class="text-center"><?php echo $row['kode_customer'] ?></td>
 			      <td><?php echo $row['nama_customer'] ?></td>
 			      <td class="text-center"><?php echo tgl_indo($row['tgl_po']) ?></td>
-			      <td><?php echo $row['kode_po'] ?></td>
-			      <td><?php echo $row['kode_produk'] ?></td>
+			      <td class="text-center"><?php echo $row['kode_po'] ?></td>
+			      <td class="text-center"><?php echo $row['kode_produk'] ?></td>
 			      <td><?php echo $row['nama_produk'] ?></td>
-			      <td><?php echo $row['brand'] ?></td>
-			      <td class="text-center"><?php echo $row['jumlah_po'] ?></td>
+			      <td class="text-center"><?php echo $row['brand'] ?></td>
+			      <td class="text-center"><?php echo $row['jumlahorder'] ?></td>
+			      <td class="text-center"><?php echo $row['bonus'] ?></td>
 			      <td><?php echo $row['kemasan'] ?></td>
 			      <td>Rp. <span class="float-right"><?php echo number_format($row['harga_satuan'], 2, ",", ".") ?></span></td>
-			      <td><?php echo ($row['no_faktur'] != null) ? $row['no_faktur'] : '-' ?></td>
+			      <td class="text-center"><?php echo ($row['no_faktur'] != null) ? $row['no_faktur'] : '-' ?></td>
 			      <td>Rp. <span class="float-right"><?php echo number_format($row['nilai_po'], 2, ",", ".") ?></span></td>
 			      <td class="text-center"><?php echo ($row['diskon'] != null) ? $row['diskon'] . '&#37;' : '-' ?></td>
 			      <td><?php echo ($row['nilai_faktur'] != null) ? "Rp. <span class=\"float-right\">".number_format($row['nilai_faktur'], 2, ',', '.')."</span>" : "-" ?></td>
