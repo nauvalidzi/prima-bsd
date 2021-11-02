@@ -16,34 +16,43 @@ $LaporanDeliveryOrder = &$Page;
 		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 		
 		if ($_POST['status'] == 'lunas') {
-			$status = " AND jumlahkirim = sisa";
+			$status = " AND od.isa < 1";
 			$status_selected = "lunas";
 		}
 
 		if ($_POST['status'] == 'sisa') {
-			$status = " AND jumlahkirim != sisa";
+			$status = " AND od.sisa > 0";
 			$status_selected = "sisa";
 		}
 
-		$query = "SELECT deliveryorder.id as do_id, deliveryorder.kode as kode_do, deliveryorder.tanggal, 
-					GROUP_CONCAT(DISTINCT deliveryorder_detail.kode_po) AS kode_po,
-					SUM(`deliveryorder_detail`.`jumlahkirim`) AS jumlah_kirim,
-					SUM(`deliveryorder_detail`.`sisa`) AS jumlah_sisa
-				  FROM `deliveryorder`
-				  JOIN (
-				  	SELECT kode AS kode_po, deliveryorder_detail.readonly,
-				  		deliveryorder_detail.jumlahkirim, deliveryorder_detail.sisa,
-						deliveryorder_detail.iddeliveryorder
-					FROM `order`
-					JOIN deliveryorder_detail ON deliveryorder_detail.idorder = `order`.id
-				  ) deliveryorder_detail ON deliveryorder_detail.iddeliveryorder = deliveryorder.id
-				  WHERE deliveryorder.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' {$status}
-				  GROUP BY deliveryorder.id
-				  ORDER BY deliveryorder.tanggal ASC";
+		$query = "SELECT d.id AS do_id, d.kode AS kode_do, d.tanggal AS tgl_do,
+					o.kode AS kode_order, b.title AS brand, p.kode AS kode_produk, 
+					p.nama AS nama_produk, od.jumlah + od.bonus AS jumlahorder,
+					od.sisa AS sisakirim, dd.jumlahkirim as jumlahkirim
+				FROM deliveryorder d
+				JOIN deliveryorder_detail dd ON dd.iddeliveryorder = d.id
+				JOIN order_detail od ON od.id = dd.idorder_detail
+				JOIN `order` o ON o.id = od.idorder
+				JOIN brand b ON b.id = od.idbrand
+				JOIN product p ON od.idproduct = p.id
+				WHERE d.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' {$status}
+				ORDER BY d.kode, d.tanggal ASC";
 
 		$result = ExecuteQuery($query)->fetchAll();
 	}
 ?>
+<style>
+	.col-flex {
+		width: 130px;
+		min-width: 130px;
+		max-width: 130px;
+	}
+	.col-description {
+		width: 270px;
+		min-width: 270px;
+		max-width: 270px;
+	}
+</style>
 <div class="container">
  	<div class="row">
 		<form method="post" action="<?php echo CurrentPage()->PageObjName ?>">
@@ -86,58 +95,68 @@ $LaporanDeliveryOrder = &$Page;
 	    <table class="table ew-table table-bordered" id="printTable">
 		  <thead>
 			<tr>
-				<th colspan="10" class="text-center">
+				<th colspan="11" class="text-center">
 					<h4 class="my-2">Laporan Delivery Order</h4>
 					<p class="mt-3">Status D.O: <?php echo ucwords($status_selected) ?><br />Periode: <?php echo tgl_indo($dateFrom) . ' - ' . tgl_indo($dateTo) ?></p>
 				</th>
 			</tr>
 		    <tr>
 		        <th class="text-center">No</th>
-		        <th class="text-center">Tanggal</th>
-		        <th class="text-center">Kode D.O</th>
-		        <th class="text-center">Kode P.O.</th>
-		        <th class="text-center">Jumlah Kirim</th>
+		        <th class="text-center col-flex">Tanggal DO</th>
+		        <th class="text-center col-flex">Kode D.O</th>
+		        <th class="text-center col-flex">Kode Order</th>
+		        <th class="text-center col-flex">Brand</th>
+		        <th class="text-center col-flex">Kode Barang</th>
+		        <th class="text-center col-description">Nama Barang</th>
+		        <th class="text-center col-flex">Jumlah Order</th>
+		        <th class="text-center col-flex">Jumlah Kirim</th>
 			    <?php if ($_POST['status'] == "all" || $_POST['status'] == "sisa") : ?>
-		        <th class="text-center">Sisa</th>
+		        <th class="text-center col-flex">Sisa</th>
 			    <?php endif; ?>
 		        <?php if ($_POST['status'] == "all") : ?>
-		        <th class="text-center">Status</th>
+		        <th class="text-center col-flex">Status</th>
 			    <?php endif; ?>
 		    </tr>
 		  </thead>
 		  <tbody>
 		  	<?php if (!empty($result)): ?>
-			  	<?php $ext = ['total_kirim' => 0, 'total_sisa' => 0]; $i = 1; ?>
+			  	<?php $ext = ['total_order' => 0, 'total_kirim' => 0, 'total_sisa' => 0]; $i = 0; $kode_do = ""; ?>
 			    <?php foreach($result as $row) : ?>
-			    <?php $status = $row['jumlah_kirim'] == $row['jumlah_sisa'] ? 'Lunas' : 'Sisa'; ?>
-			    <?php $sisa = $row['jumlah_sisa'] - $row['jumlah_kirim']; ?>
+			    <?php if ($kode_do != $row['kode_do']) $i++; ?>
 			    <tr>
 			      <td class="text-center"><?php echo $i?></td>
-			      <td><?php echo tgl_indo($row['tanggal']) ?></td>
-			      <td><a href="<?php echo base_url() ?>DeliveryorderDetailList?showmaster=deliveryorder&fk_id=<?php echo $row['do_id'] ?>" target="_blank"><?php echo $row['kode_do'] ?></a></td>
-			      <td><?php echo $row['kode_po'] ?></td>
-			      <td class="text-center"><?php echo $row['jumlah_kirim'] ?></td>
+			      <td class="text-center"><?php echo tgl_indo($row['tgl_do']) ?></td>
+			      <td class="text-center"><a href="<?php echo base_url() ?>DeliveryorderDetailList?showmaster=deliveryorder&fk_id=<?php echo $row['do_id'] ?>" target="_blank"><?php echo $row['kode_do'] ?></a></td>
+			      <td class="text-center"><?php echo $row['kode_order'] ?></td>
+			      <td class="text-center"><?php echo $row['brand'] ?></td>
+			      <td class="text-center"><?php echo $row['kode_produk'] ?></td>
+			      <td><?php echo $row['nama_produk'] ?></td>
+			      <td class="text-center"><?php echo $row['jumlahorder'] ?></td>
+			      <td class="text-center"><?php echo $row['jumlahkirim'] ?></td>
 			      <?php if ($_POST['status'] == "all" || $_POST['status'] == "sisa") : ?>
-			      <td class="text-center"><?php echo $sisa ?></td>
+			      <td class="text-center"><?php echo $row['sisakirim'] ?></td>
 				  <?php endif; ?>
 			      <?php if ($_POST['status'] == "all") : ?>
-			      <td><?php echo $status ?></td>
+			      <td class="text-center"><?php echo $row['sisakirim'] < 1 ? 'Lengkap' : 'Belum Lengkap'; ?></td>
 				  <?php endif; ?>
 			    </tr>
 			    <?php 
-			    	$ext['total_kirim'] += $row['jumlah_kirim'];
-			    	$ext['total_sisa'] += $sisa;
+			    	$ext['total_order'] += $row['jumlahorder'];
+			    	$ext['total_kirim'] += $row['jumlahkirim'];
+			    	$ext['total_sisa'] += $row['sisakirim'];
 			     ?>
-			    <?php $i++; endforeach;?>
+			    <?php $kode_do = $row['kode_do']; ?>
+			    <?php endforeach;?>
 	    	<?php else: ?>
 	    		<tr>
-	    			<td colspan="8" class="text-center">Tidak ada data.</td>
+	    			<td colspan="11" class="text-center">Tidak ada data.</td>
 	    		</tr>
 	    	<?php endif; ?>
 		  </tbody>
 		  <?php if (!empty($result)): ?>
 		  <tfoot>
-		  	<th class="text-right" colspan="4">Grand Total :</th>
+		  	<th class="text-right" colspan="7">Grand Total :</th>
+		  	<th class="text-center"><?php echo number_format($ext['total_order'], 0, ",", ".") ?></th>
 		  	<th class="text-center"><?php echo number_format($ext['total_kirim'], 0, ",", ".") ?></th>
 			<?php if ($_POST['status'] == "all" || $_POST['status'] == "sisa") : ?>
 		  	<th class="text-center"><?php echo number_format($ext['total_sisa'], 0, ",", ".") ?></th>

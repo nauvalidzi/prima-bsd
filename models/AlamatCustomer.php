@@ -120,6 +120,7 @@ class AlamatCustomer extends DbTable
         // telepon
         $this->telepon = new DbField('alamat_customer', 'alamat_customer', 'x_telepon', 'telepon', '`telepon`', '`telepon`', 200, 15, -1, false, '`telepon`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->telepon->Nullable = false; // NOT NULL field
+        $this->telepon->Required = true; // Required field
         $this->telepon->Sortable = true; // Allow sort
         $this->telepon->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->telepon->Param, "CustomMsg");
         $this->Fields['telepon'] = &$this->telepon;

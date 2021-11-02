@@ -20,12 +20,12 @@ $LaporanInvoice = &$Page;
 		$dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
 
 		if ($_POST['status'] == 'lunas') {
-			$status = " AND invoice.aktif = 0";
+			$status = " AND invoice.sisabayar < 1";
 			$status_selected = "lunas";
 		}
 
 		if ($_POST['status'] == 'belumlunas') {
-			$status = " AND invoice.aktif = 1";
+			$status = " AND invoice.sisabayar > 0";
 			$status_selected = "belumlunas";
 		}
 
@@ -107,7 +107,7 @@ $LaporanInvoice = &$Page;
 	    		<tr>
 	    			<th class="text-center">No.</th>
 		    		<th class="text-center">Tgl Invoice</th>
-		    		<th class="text-center">Kode</th>
+		    		<th class="text-center">Kode Invoice</th>
 		    		<th class="text-center">Kode P.O.</th>
 		    		<th class="text-center">Total Tagihan</th>
 		    		<th class="text-center">Sisa Bayar</th>
@@ -123,7 +123,6 @@ $LaporanInvoice = &$Page;
     		<?php if (!empty($result)): ?>
     			<?php $i = 1; $ext = ['totaltagihan' => 0, 'sisabayar' => 0]; ?>
 	    		<?php foreach($result as $row): ?>
-	    		<?php $status = $row['aktif'] != 0 ? 'Lunas' : 'Belum Lunas'; ?>
 	    		<tr>
 	    			<td class="text-center"><?php echo $i; ?></td>
 		    		<td><?php echo tgl_indo($row['tglinvoice']) ?></td>
@@ -135,7 +134,7 @@ $LaporanInvoice = &$Page;
 		    		<td class="text-center"><?php echo $row['payment'] ?></td>
 			    	<?php endif; ?>
 		    		<?php if ($status_selected == "all"): ?>
-		    		<td class="text-center"><?php echo $status ?></td>
+		    		<td class="text-center"><?php echo $row['sisabayar'] < 1 ? 'Lunas' : 'Belum Lunas';  ?></td>
 			    	<?php endif; ?>
 	    		</tr>
 	    		<?php 
