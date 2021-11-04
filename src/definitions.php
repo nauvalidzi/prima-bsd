@@ -112,7 +112,6 @@ return [
     "brand_link" => \DI\create(BrandLink::class),
     "v_brand_link" => \DI\create(VBrandLink::class),
     "v_order_customer" => \DI\create(VOrderCustomer::class),
-    "laporan_purchase_order" => \DI\create(LaporanPurchaseOrder::class),
     "laporan_delivery_order" => \DI\create(LaporanDeliveryOrder::class),
     "laporan_invoice" => \DI\create(LaporanInvoice::class),
     "laporan_surat_jalan" => \DI\create(LaporanSuratJalan::class),
@@ -133,7 +132,6 @@ return [
     "laporan_order_customer" => \DI\create(LaporanOrderCustomer::class),
     "penagihan_customer" => \DI\create(PenagihanCustomer::class),
     "penagihan" => \DI\create(Penagihan::class),
-    "faktur" => \DI\create(Faktur::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

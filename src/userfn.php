@@ -524,11 +524,7 @@ function getNextKode($tipe, $id) {
    		$table = "pembayaran";
    		$column = "kode";
    		$kode = "PB-";
-   	} elseif ($tipe == "faktur") {
-        $table = "faktur";
-        $column = "kode";
-        $kode = "FK-";
-    }
+   	}
    	$maxKode = ExecuteScalar("SELECT MAX(".$column.") FROM ".$table);
    	if ($maxKode == null) {
    		$kode = $kode."0001";

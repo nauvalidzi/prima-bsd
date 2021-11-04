@@ -34,7 +34,6 @@ class VPenagihan extends DbTable
     public $nilai_faktur;
     public $piutang;
     public $nomor_handphone;
-    public $idorder;
     public $kode_order;
     public $tgl_faktur;
     public $umur_faktur;
@@ -119,14 +118,6 @@ class VPenagihan extends DbTable
         $this->nomor_handphone->Sortable = true; // Allow sort
         $this->nomor_handphone->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nomor_handphone->Param, "CustomMsg");
         $this->Fields['nomor_handphone'] = &$this->nomor_handphone;
-
-        // idorder
-        $this->idorder = new DbField('v_penagihan', 'v_penagihan', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idorder->Nullable = false; // NOT NULL field
-        $this->idorder->Sortable = true; // Allow sort
-        $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
-        $this->Fields['idorder'] = &$this->idorder;
 
         // kode_order
         $this->kode_order = new DbField('v_penagihan', 'v_penagihan', 'x_kode_order', 'kode_order', '`kode_order`', '`kode_order`', 200, 50, -1, false, '`kode_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -561,7 +552,6 @@ class VPenagihan extends DbTable
         $this->nilai_faktur->DbValue = $row['nilai_faktur'];
         $this->piutang->DbValue = $row['piutang'];
         $this->nomor_handphone->DbValue = $row['nomor_handphone'];
-        $this->idorder->DbValue = $row['idorder'];
         $this->kode_order->DbValue = $row['kode_order'];
         $this->tgl_faktur->DbValue = $row['tgl_faktur'];
         $this->umur_faktur->DbValue = $row['umur_faktur'];
@@ -845,7 +835,6 @@ SORTHTML;
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
         $this->piutang->setDbValue($row['piutang']);
         $this->nomor_handphone->setDbValue($row['nomor_handphone']);
-        $this->idorder->setDbValue($row['idorder']);
         $this->kode_order->setDbValue($row['kode_order']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->umur_faktur->setDbValue($row['umur_faktur']);
@@ -872,8 +861,6 @@ SORTHTML;
         // piutang
 
         // nomor_handphone
-
-        // idorder
 
         // kode_order
 
@@ -907,11 +894,6 @@ SORTHTML;
         // nomor_handphone
         $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
         $this->nomor_handphone->ViewCustomAttributes = "";
-
-        // idorder
-        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-        $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
-        $this->idorder->ViewCustomAttributes = "";
 
         // kode_order
         $this->kode_order->ViewValue = $this->kode_order->CurrentValue;
@@ -955,11 +937,6 @@ SORTHTML;
         $this->nomor_handphone->LinkCustomAttributes = "";
         $this->nomor_handphone->HrefValue = "";
         $this->nomor_handphone->TooltipValue = "";
-
-        // idorder
-        $this->idorder->LinkCustomAttributes = "";
-        $this->idorder->HrefValue = "";
-        $this->idorder->TooltipValue = "";
 
         // kode_order
         $this->kode_order->LinkCustomAttributes = "";
@@ -1045,12 +1022,6 @@ SORTHTML;
         $this->nomor_handphone->EditValue = $this->nomor_handphone->CurrentValue;
         $this->nomor_handphone->PlaceHolder = RemoveHtml($this->nomor_handphone->caption());
 
-        // idorder
-        $this->idorder->EditAttrs["class"] = "form-control";
-        $this->idorder->EditCustomAttributes = "";
-        $this->idorder->EditValue = $this->idorder->CurrentValue;
-        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
-
         // kode_order
         $this->kode_order->EditAttrs["class"] = "form-control";
         $this->kode_order->EditCustomAttributes = "";
@@ -1109,7 +1080,6 @@ SORTHTML;
                     $doc->exportCaption($this->nilai_faktur);
                     $doc->exportCaption($this->piutang);
                     $doc->exportCaption($this->nomor_handphone);
-                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->kode_order);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->umur_faktur);
@@ -1120,7 +1090,6 @@ SORTHTML;
                     $doc->exportCaption($this->nilai_faktur);
                     $doc->exportCaption($this->piutang);
                     $doc->exportCaption($this->nomor_handphone);
-                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->kode_order);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->umur_faktur);
@@ -1159,7 +1128,6 @@ SORTHTML;
                         $doc->exportField($this->nilai_faktur);
                         $doc->exportField($this->piutang);
                         $doc->exportField($this->nomor_handphone);
-                        $doc->exportField($this->idorder);
                         $doc->exportField($this->kode_order);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->umur_faktur);
@@ -1170,7 +1138,6 @@ SORTHTML;
                         $doc->exportField($this->nilai_faktur);
                         $doc->exportField($this->piutang);
                         $doc->exportField($this->nomor_handphone);
-                        $doc->exportField($this->idorder);
                         $doc->exportField($this->kode_order);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->umur_faktur);

@@ -192,9 +192,6 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_order_customer","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_order_customer","0","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_order_customer","1","288"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_purchase_order.php","-2","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_purchase_order.php","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_purchase_order.php","1","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_delivery_order.php","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_delivery_order.php","0","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}laporan_delivery_order.php","1","0"],
@@ -254,10 +251,7 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan_customer.php","1","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","1","288"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur","-2","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}faktur","1","288"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}penagihan","1","288"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Manajemen User",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -320,7 +314,6 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["brand_link","brand_link","brand link",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","BrandLinkList"],
     ["v_brand_link","v_brand_link","v brand link",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VBrandLinkList"],
     ["v_order_customer","v_order_customer","v order customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VOrderCustomerList"],
-    ["laporan_purchase_order.php","laporan_purchase_order","Laporan Purchase Order",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanPurchaseOrder"],
     ["laporan_delivery_order.php","laporan_delivery_order","Laporan Delivery Order",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanDeliveryOrder"],
     ["laporan_invoice.php","laporan_invoice","Laporan Invoice",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanInvoice"],
     ["laporan_surat_jalan.php","laporan_surat_jalan","Laporan Surat Jalan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanSuratJalan"],
@@ -340,5 +333,4 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["termpayment","termpayment","termpayment",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","TermpaymentList"],
     ["laporan_order_customer.php","laporan_order_customer","Laporan Order Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","LaporanOrderCustomer"],
     ["penagihan_customer.php","penagihan_customer","Penagihan Customer",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanCustomer"],
-    ["penagihan","penagihan","Antrian Penagihan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanList"],
-    ["faktur","faktur","faktur",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","FakturList"]];
+    ["penagihan","penagihan","Antrian Penagihan",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PenagihanList"]];

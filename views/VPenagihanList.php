@@ -108,9 +108,6 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nomor_handphone->Visible) { // nomor_handphone ?>
         <th data-name="nomor_handphone" class="<?= $Page->nomor_handphone->headerCellClass() ?>"><div id="elh_v_penagihan_nomor_handphone" class="v_penagihan_nomor_handphone"><?= $Page->renderSort($Page->nomor_handphone) ?></div></th>
 <?php } ?>
-<?php if ($Page->idorder->Visible) { // idorder ?>
-        <th data-name="idorder" class="<?= $Page->idorder->headerCellClass() ?>"><div id="elh_v_penagihan_idorder" class="v_penagihan_idorder"><?= $Page->renderSort($Page->idorder) ?></div></th>
-<?php } ?>
 <?php if ($Page->kode_order->Visible) { // kode_order ?>
         <th data-name="kode_order" class="<?= $Page->kode_order->headerCellClass() ?>"><div id="elh_v_penagihan_kode_order" class="v_penagihan_kode_order"><?= $Page->renderSort($Page->kode_order) ?></div></th>
 <?php } ?>
@@ -232,14 +229,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_penagihan_nomor_handphone">
 <span<?= $Page->nomor_handphone->viewAttributes() ?>>
 <?= $Page->nomor_handphone->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->idorder->Visible) { // idorder ?>
-        <td data-name="idorder" <?= $Page->idorder->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_penagihan_idorder">
-<span<?= $Page->idorder->viewAttributes() ?>>
-<?= $Page->idorder->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

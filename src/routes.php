@@ -934,9 +934,6 @@ return function (App $app) {
         }
     );
 
-    // laporan_purchase_order
-    $app->any('/LaporanPurchaseOrder[/{params:.*}]', LaporanPurchaseOrderController::class)->add(PermissionMiddleware::class)->setName('LaporanPurchaseOrder-laporan_purchase_order-custom'); // custom
-
     // laporan_delivery_order
     $app->any('/LaporanDeliveryOrder[/{params:.*}]', LaporanDeliveryOrderController::class)->add(PermissionMiddleware::class)->setName('LaporanDeliveryOrder-laporan_delivery_order-custom'); // custom
 
@@ -1102,15 +1099,6 @@ return function (App $app) {
         '/penagihan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('penagihan/list-penagihan-list-2'); // list
-        }
-    );
-
-    // faktur
-    $app->any('/FakturList[/{id}]', FakturController::class . ':list')->add(PermissionMiddleware::class)->setName('FakturList-faktur-list'); // list
-    $app->group(
-        '/faktur',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', FakturController::class . ':list')->add(PermissionMiddleware::class)->setName('faktur/list-faktur-list-2'); // list
         }
     );
 

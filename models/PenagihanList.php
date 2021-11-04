@@ -569,7 +569,6 @@ class PenagihanList extends Penagihan
         // Set up list options
         $this->setupListOptions();
         $this->id->setVisibility();
-        $this->idorder->Visible = false;
         $this->tgl_faktur->setVisibility();
         $this->nilai_faktur->setVisibility();
         $this->piutang->setVisibility();
@@ -876,7 +875,6 @@ class PenagihanList extends Penagihan
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
         $filterList = Concat($filterList, $this->tgl_faktur->AdvancedSearch->toJson(), ","); // Field tgl_faktur
         $filterList = Concat($filterList, $this->nilai_faktur->AdvancedSearch->toJson(), ","); // Field nilai_faktur
         $filterList = Concat($filterList, $this->piutang->AdvancedSearch->toJson(), ","); // Field piutang
@@ -939,14 +937,6 @@ class PenagihanList extends Penagihan
         $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
-
-        // Field idorder
-        $this->idorder->AdvancedSearch->SearchValue = @$filter["x_idorder"];
-        $this->idorder->AdvancedSearch->SearchOperator = @$filter["z_idorder"];
-        $this->idorder->AdvancedSearch->SearchCondition = @$filter["v_idorder"];
-        $this->idorder->AdvancedSearch->SearchValue2 = @$filter["y_idorder"];
-        $this->idorder->AdvancedSearch->SearchOperator2 = @$filter["w_idorder"];
-        $this->idorder->AdvancedSearch->save();
 
         // Field tgl_faktur
         $this->tgl_faktur->AdvancedSearch->SearchValue = @$filter["x_tgl_faktur"];
@@ -1294,7 +1284,6 @@ class PenagihanList extends Penagihan
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->idorder->setSort("");
                 $this->tgl_faktur->setSort("");
                 $this->nilai_faktur->setSort("");
                 $this->piutang->setSort("");
@@ -1654,7 +1643,6 @@ class PenagihanList extends Penagihan
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idorder->setDbValue($row['idorder']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
         $this->piutang->setDbValue($row['piutang']);
@@ -1677,7 +1665,6 @@ class PenagihanList extends Penagihan
     {
         $row = [];
         $row['id'] = null;
-        $row['idorder'] = null;
         $row['tgl_faktur'] = null;
         $row['nilai_faktur'] = null;
         $row['piutang'] = null;
@@ -1732,8 +1719,6 @@ class PenagihanList extends Penagihan
 
         // id
 
-        // idorder
-
         // tgl_faktur
 
         // nilai_faktur
@@ -1767,11 +1752,6 @@ class PenagihanList extends Penagihan
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
-
-            // idorder
-            $this->idorder->ViewValue = $this->idorder->CurrentValue;
-            $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
-            $this->idorder->ViewCustomAttributes = "";
 
             // tgl_faktur
             $this->tgl_faktur->ViewValue = $this->tgl_faktur->CurrentValue;

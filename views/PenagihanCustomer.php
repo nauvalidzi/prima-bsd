@@ -9,6 +9,33 @@ $PenagihanCustomer = &$Page;
 	$jatuhtempo = date('Y-m-d');
 	if(isset($_GET['jatuhtempo'])) {
 		$jatuhtempo = date('Y-m-d', strtotime($_GET['jatuhtempo']));
+
+		switch (strtoupper($_GET['umur']) ?? '') {
+			case 'H-2':
+				$umur = "AND H-2";
+				break;
+			case 'H+1':
+				$umur = "AND H+1";
+				break;
+			case 'H+7':
+				$umur = "AND H+7";
+				break;
+			case 'H+14':
+				$umur = "AND H+14";
+				break;
+			case 'H+21':
+				$umur = "AND H+21";
+				break;
+			case 'H+28':
+				$umur = "AND H+28";
+				break;
+			case 'H+30':
+				$umur = "AND H+30";
+				break;
+            default:
+            	$umur = null;
+            	break;
+        }
 		
 		$query = "SELECT o.id as idorder,
 					date_format(o.tanggal, '%Y-%m-%d') AS tgl_order,
@@ -31,8 +58,8 @@ $PenagihanCustomer = &$Page;
 				  JOIN order_detail od ON od.idorder = o.id
 				  JOIN customer c ON c.id = o.idcustomer
 				  LEFT JOIN invoice i ON i.idorder = o.id
-				  LEFT JOIN penagihan pn on o.id = pn.idorder
-				  WHERE i.tglinvoice <= '{$jatuhtempo}'
+				  LEFT JOIN penagihan pn on o.kode = pn.kode_order
+				  WHERE i.sisabayar > 0 AND i.tglinvoice <= '{$jatuhtempo}'
 				  GROUP BY o.id, c.id";
 
 		$result = ExecuteQuery($query)->fetchAll();
@@ -40,10 +67,22 @@ $PenagihanCustomer = &$Page;
 ?>
 <div class="container">
  	<div class="row">
-		<form action="<?php echo CurrentPage()->PageObjName ?>">
+		<form action="<?php echo CurrentPage()->PageObjName ?>" enctype="application/x-www-form-urlencoded">
 			
 			<div class="col-md-12">
 				<ul class="list-unstyled">
+					<li class="d-inline-block">
+						<label class="d-block">Umur Faktur</label>
+						<select name="umur" class="form-control" style="width: 10em;">
+							<option value="h-2" <?php echo isset($_GET['umur']) == 'h-2' ? 'selected' : null ?>>H-2</option>
+							<option value="h+1" <?php echo isset($_GET['umur']) == 'h+1' ? 'selected' : null ?>>H+1</option>
+							<option value="h+72" <?php echo isset($_GET['umur']) == 'h+72' ? 'selected' : null ?>>H+7</option>
+							<option value="h+14" <?php echo isset($_GET['umur']) == 'h+14' ? 'selected' : null ?>>H+14</option>
+							<option value="h+21" <?php echo isset($_GET['umur']) == 'h+21' ? 'selected' : null ?>>H+21</option>
+							<option value="H+28" <?php echo isset($_GET['umur']) == 'H+28' ? 'selected' : null ?>>H+28</option>
+							<option value="h+30" <?php echo isset($_GET['umur']) == 'h+30' ? 'selected' : null ?>>H+30</option>
+						</select>
+					</li>
 					<li class="d-inline-block">
 						<label class="d-block">Tgl Jatuh Tempo</label>
 						<input type="date" class="form-control input-md" name="jatuhtempo" value="<?php echo $jatuhtempo ?>">
@@ -66,7 +105,7 @@ $PenagihanCustomer = &$Page;
 		  <thead>
 			<tr>
 				<th colspan="11" class="text-center">
-					<h4 class="my-2">Penagihan Customer</h4>
+					<h4 class="my-2">Penagihan Customer <?php echo $umur ?></h4>
 					<p class="mt-3">Tanggal Jatuh Tempo: <?php echo date('d/m/Y', strtotime($jatuhtempo)) ?> </p>
 				</th>
 			</tr>
@@ -81,7 +120,7 @@ $PenagihanCustomer = &$Page;
 		        <th class="text-center">Nilai Faktur</th>
 		        <th class="text-center">Piutang</th>
 		        <th class="text-center">Umur Faktur</th>
-		        <th class="text-center">Tgl Penagihan</th>
+		        <th class="text-center">Tgl Antrian Penagihan</th>
 		    </tr>
 		  </thead>
 		  <tbody>

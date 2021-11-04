@@ -29,7 +29,6 @@ class Penagihan extends DbTable
 
     // Fields
     public $id;
-    public $idorder;
     public $tgl_faktur;
     public $nilai_faktur;
     public $piutang;
@@ -89,14 +88,6 @@ class Penagihan extends DbTable
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
-
-        // idorder
-        $this->idorder = new DbField('penagihan', 'penagihan', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idorder->Required = true; // Required field
-        $this->idorder->Sortable = true; // Allow sort
-        $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
-        $this->Fields['idorder'] = &$this->idorder;
 
         // tgl_faktur
         $this->tgl_faktur = new DbField('penagihan', 'penagihan', 'x_tgl_faktur', 'tgl_faktur', '`tgl_faktur`', CastDateFieldForLike("`tgl_faktur`", 7, "DB"), 133, 10, 7, false, '`tgl_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -619,7 +610,6 @@ class Penagihan extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->idorder->DbValue = $row['idorder'];
         $this->tgl_faktur->DbValue = $row['tgl_faktur'];
         $this->nilai_faktur->DbValue = $row['nilai_faktur'];
         $this->piutang->DbValue = $row['piutang'];
@@ -956,7 +946,6 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idorder->setDbValue($row['idorder']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
         $this->piutang->setDbValue($row['piutang']);
@@ -985,8 +974,6 @@ SORTHTML;
         // Common render codes
 
         // id
-
-        // idorder
 
         // tgl_faktur
 
@@ -1021,11 +1008,6 @@ SORTHTML;
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
-
-        // idorder
-        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-        $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
-        $this->idorder->ViewCustomAttributes = "";
 
         // tgl_faktur
         $this->tgl_faktur->ViewValue = $this->tgl_faktur->CurrentValue;
@@ -1101,11 +1083,6 @@ SORTHTML;
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
-
-        // idorder
-        $this->idorder->LinkCustomAttributes = "";
-        $this->idorder->HrefValue = "";
-        $this->idorder->TooltipValue = "";
 
         // tgl_faktur
         $this->tgl_faktur->LinkCustomAttributes = "";
@@ -1202,12 +1179,6 @@ SORTHTML;
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
-
-        // idorder
-        $this->idorder->EditAttrs["class"] = "form-control";
-        $this->idorder->EditCustomAttributes = "";
-        $this->idorder->EditValue = $this->idorder->CurrentValue;
-        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
         // tgl_faktur
         $this->tgl_faktur->EditAttrs["class"] = "form-control";
@@ -1337,7 +1308,6 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->nilai_faktur);
                     $doc->exportCaption($this->piutang);
@@ -1355,7 +1325,6 @@ SORTHTML;
                     $doc->exportCaption($this->nilai_po);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->nilai_faktur);
                     $doc->exportCaption($this->piutang);
@@ -1398,7 +1367,6 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->idorder);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->nilai_faktur);
                         $doc->exportField($this->piutang);
@@ -1416,7 +1384,6 @@ SORTHTML;
                         $doc->exportField($this->nilai_po);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->idorder);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->nilai_faktur);
                         $doc->exportField($this->piutang);

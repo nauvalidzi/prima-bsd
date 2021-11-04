@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/11/2" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/11/4" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1069,17 +1069,14 @@
     <menu id="346">
       <phrase id="menutext" value="Piutang Customer" />
     </menu>
-    <menu id="697">
-      <phrase id="menutext" value="Faktur" />
-    </menu>
     <menu id="547">
       <phrase id="menutext" value="Laporan" />
     </menu>
     <menu id="478">
       <phrase id="menutext" value="Sales" />
     </menu>
-    <menu id="583">
-      <phrase id="menutext" value="Purchase Order" />
+    <menu id="601">
+      <phrase id="menutext" value="Order Customer" />
     </menu>
     <menu id="584">
       <phrase id="menutext" value="Delivery Order" />
@@ -1098,9 +1095,6 @@
     </menu>
     <menu id="593">
       <phrase id="menutext" value="KPI Marketing Detail" />
-    </menu>
-    <menu id="601">
-      <phrase id="menutext" value="Order Customer" />
     </menu>
     <menu id="567">
       <phrase id="menutext" value="Stok" />
@@ -3323,9 +3317,6 @@
         <phrase id="fldtagcaption2" value="No" />
       </field>
     </table>
-    <table id="laporan_purchase_order">
-      <phrase id="tblcaption" value="Laporan Purchase Order" />
-    </table>
     <table id="laporan_delivery_order">
       <phrase id="tblcaption" value="Laporan Delivery Order" />
     </table>
@@ -3565,9 +3556,6 @@
       <field id="nomor_handphone">
         <phrase id="fldcaption" value="Handphone" />
       </field>
-      <field id="idorder">
-        <phrase id="fldcaption" value="idorder" />
-      </field>
       <field id="kode_order">
         <phrase id="fldcaption" value="kode order" />
       </field>
@@ -3600,9 +3588,6 @@
       <phrase id="tblcaption" value="Antrian Penagihan" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
-      </field>
-      <field id="idorder">
-        <phrase id="fldcaption" value="Order ID" />
       </field>
       <field id="tgl_faktur">
         <phrase id="fldcaption" value="Tgl Faktur" />
@@ -3654,30 +3639,6 @@
       </field>
       <field id="nilai_po">
         <phrase id="fldcaption" value="nilai po" />
-      </field>
-    </table>
-    <table id="faktur">
-      <phrase id="tblcaption" value="faktur" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="idorder">
-        <phrase id="fldcaption" value="Kode Order" />
-      </field>
-      <field id="tanggal">
-        <phrase id="fldcaption" value="Tanggal" />
-      </field>
-      <field id="kode">
-        <phrase id="fldcaption" value="Kode" />
-      </field>
-      <field id="tagihan">
-        <phrase id="fldcaption" value="Tagihan" />
-      </field>
-      <field id="piutang">
-        <phrase id="fldcaption" value="Piutang" />
-      </field>
-      <field id="updated_at">
-        <phrase id="fldcaption" value="Last Update" />
       </field>
     </table>
   </project>

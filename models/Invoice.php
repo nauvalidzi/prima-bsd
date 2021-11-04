@@ -1906,15 +1906,6 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $idorder = $rsnew['idorder'];
-        $totaltagihan = $rsnew['totaltagihan'];
-        $exist = ExecuteRow("SELECT id FROM faktur WHERE idorder = {$idorder}");
-        if (!$exist) {
-            $kode = getNextKode('faktur', 0);
-            ExecuteUpdate("INSERT INTO faktur (idorder, tanggal, kode, tagihan, piutang, updated_at) VALUES ({$idorder}, '".date('Y-m-d', strtotime($rsnew['tglinvoice']))."', '{$kode}', '{$totaltagihan}', '{$totaltagihan}', '".date('Y-m-d H:i:s')."')");
-        } else {
-            ExecuteUpdate("UPDATE faktur SET tagihan = tagihan+{$totaltagihan}, piutang = piutang+{$totaltagihan}, updated_at = '".date('Y-m-d H:i:s')."' WHERE idorder = {$idorder}");
-        }
     }
 
     // Row Updating event

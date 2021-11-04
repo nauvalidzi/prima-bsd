@@ -570,7 +570,6 @@ class VPenagihanList extends VPenagihan
         $this->nilai_faktur->setVisibility();
         $this->piutang->setVisibility();
         $this->nomor_handphone->setVisibility();
-        $this->idorder->setVisibility();
         $this->kode_order->setVisibility();
         $this->tgl_faktur->setVisibility();
         $this->umur_faktur->setVisibility();
@@ -819,7 +818,6 @@ class VPenagihanList extends VPenagihan
             $this->updateSort($this->nilai_faktur); // nilai_faktur
             $this->updateSort($this->piutang); // piutang
             $this->updateSort($this->nomor_handphone); // nomor_handphone
-            $this->updateSort($this->idorder); // idorder
             $this->updateSort($this->kode_order); // kode_order
             $this->updateSort($this->tgl_faktur); // tgl_faktur
             $this->updateSort($this->umur_faktur); // umur_faktur
@@ -863,7 +861,6 @@ class VPenagihanList extends VPenagihan
                 $this->nilai_faktur->setSort("");
                 $this->piutang->setSort("");
                 $this->nomor_handphone->setSort("");
-                $this->idorder->setSort("");
                 $this->kode_order->setSort("");
                 $this->tgl_faktur->setSort("");
                 $this->umur_faktur->setSort("");
@@ -1205,7 +1202,6 @@ class VPenagihanList extends VPenagihan
         $this->nilai_faktur->setDbValue($row['nilai_faktur']);
         $this->piutang->setDbValue($row['piutang']);
         $this->nomor_handphone->setDbValue($row['nomor_handphone']);
-        $this->idorder->setDbValue($row['idorder']);
         $this->kode_order->setDbValue($row['kode_order']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->umur_faktur->setDbValue($row['umur_faktur']);
@@ -1221,7 +1217,6 @@ class VPenagihanList extends VPenagihan
         $row['nilai_faktur'] = null;
         $row['piutang'] = null;
         $row['nomor_handphone'] = null;
-        $row['idorder'] = null;
         $row['kode_order'] = null;
         $row['tgl_faktur'] = null;
         $row['umur_faktur'] = null;
@@ -1279,8 +1274,6 @@ class VPenagihanList extends VPenagihan
 
         // nomor_handphone
 
-        // idorder
-
         // kode_order
 
         // tgl_faktur
@@ -1313,11 +1306,6 @@ class VPenagihanList extends VPenagihan
             // nomor_handphone
             $this->nomor_handphone->ViewValue = $this->nomor_handphone->CurrentValue;
             $this->nomor_handphone->ViewCustomAttributes = "";
-
-            // idorder
-            $this->idorder->ViewValue = $this->idorder->CurrentValue;
-            $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
-            $this->idorder->ViewCustomAttributes = "";
 
             // kode_order
             $this->kode_order->ViewValue = $this->kode_order->CurrentValue;
@@ -1361,11 +1349,6 @@ class VPenagihanList extends VPenagihan
             $this->nomor_handphone->LinkCustomAttributes = "";
             $this->nomor_handphone->HrefValue = "";
             $this->nomor_handphone->TooltipValue = "";
-
-            // idorder
-            $this->idorder->LinkCustomAttributes = "";
-            $this->idorder->HrefValue = "";
-            $this->idorder->TooltipValue = "";
 
             // kode_order
             $this->kode_order->LinkCustomAttributes = "";
