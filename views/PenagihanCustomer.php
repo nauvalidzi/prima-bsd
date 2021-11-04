@@ -41,8 +41,7 @@ $PenagihanCustomer = &$Page;
 					o.kode AS kode_order,
 					c.nama AS nama_customer,
 					c.hp AS nomor_handphone, SUM(od.total) AS nilai_po, 
-					CASE WHEN i.kode IS NULL THEN '-'
-					ELSE i.kode END AS kode_faktur, 
+					i.kode AS kode_faktur, 
 					DATE_FORMAT(i.tglinvoice, '%Y-%m-%d') AS tgl_faktur, 
 					DATE_FORMAT(i.tglinvoice + INTERVAL `t`.`value` DAY, '%Y-%m-%d') AS jatuhtempo, 
 					TIMESTAMPDIFF(DAY, i.tglinvoice + INTERVAL `t`.`value` DAY, '{$jatuhtempo}') as umur_faktur,

@@ -3565,6 +3565,21 @@
       <field id="umur_faktur">
         <phrase id="fldcaption" value="umur faktur" />
       </field>
+      <field id="idorder">
+        <phrase id="fldcaption" value="idorder" />
+      </field>
+      <field id="kode_faktur">
+        <phrase id="fldcaption" value="kode faktur" />
+      </field>
+      <field id="jatuhtempo">
+        <phrase id="fldcaption" value="jatuhtempo" />
+      </field>
+      <field id="term_payment">
+        <phrase id="fldcaption" value="term payment" />
+      </field>
+      <field id="tgl_penagihan">
+        <phrase id="fldcaption" value="tgl penagihan" />
+      </field>
     </table>
     <table id="termpayment">
       <phrase id="tblcaption" value="termpayment" />

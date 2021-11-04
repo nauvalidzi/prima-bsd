@@ -573,6 +573,11 @@ class VPenagihanList extends VPenagihan
         $this->kode_order->setVisibility();
         $this->tgl_faktur->setVisibility();
         $this->umur_faktur->setVisibility();
+        $this->idorder->setVisibility();
+        $this->kode_faktur->setVisibility();
+        $this->jatuhtempo->setVisibility();
+        $this->term_payment->setVisibility();
+        $this->tgl_penagihan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -821,6 +826,11 @@ class VPenagihanList extends VPenagihan
             $this->updateSort($this->kode_order); // kode_order
             $this->updateSort($this->tgl_faktur); // tgl_faktur
             $this->updateSort($this->umur_faktur); // umur_faktur
+            $this->updateSort($this->idorder); // idorder
+            $this->updateSort($this->kode_faktur); // kode_faktur
+            $this->updateSort($this->jatuhtempo); // jatuhtempo
+            $this->updateSort($this->term_payment); // term_payment
+            $this->updateSort($this->tgl_penagihan); // tgl_penagihan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -864,6 +874,11 @@ class VPenagihanList extends VPenagihan
                 $this->kode_order->setSort("");
                 $this->tgl_faktur->setSort("");
                 $this->umur_faktur->setSort("");
+                $this->idorder->setSort("");
+                $this->kode_faktur->setSort("");
+                $this->jatuhtempo->setSort("");
+                $this->term_payment->setSort("");
+                $this->tgl_penagihan->setSort("");
             }
 
             // Reset start position
@@ -1205,6 +1220,11 @@ class VPenagihanList extends VPenagihan
         $this->kode_order->setDbValue($row['kode_order']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->umur_faktur->setDbValue($row['umur_faktur']);
+        $this->idorder->setDbValue($row['idorder']);
+        $this->kode_faktur->setDbValue($row['kode_faktur']);
+        $this->jatuhtempo->setDbValue($row['jatuhtempo']);
+        $this->term_payment->setDbValue($row['term_payment']);
+        $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
     }
 
     // Return a row with default values
@@ -1220,6 +1240,11 @@ class VPenagihanList extends VPenagihan
         $row['kode_order'] = null;
         $row['tgl_faktur'] = null;
         $row['umur_faktur'] = null;
+        $row['idorder'] = null;
+        $row['kode_faktur'] = null;
+        $row['jatuhtempo'] = null;
+        $row['term_payment'] = null;
+        $row['tgl_penagihan'] = null;
         return $row;
     }
 
@@ -1279,6 +1304,16 @@ class VPenagihanList extends VPenagihan
         // tgl_faktur
 
         // umur_faktur
+
+        // idorder
+
+        // kode_faktur
+
+        // jatuhtempo
+
+        // term_payment
+
+        // tgl_penagihan
         if ($this->RowType == ROWTYPE_VIEW) {
             // tgl_order
             $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
@@ -1319,6 +1354,28 @@ class VPenagihanList extends VPenagihan
             $this->umur_faktur->ViewValue = $this->umur_faktur->CurrentValue;
             $this->umur_faktur->ViewValue = FormatNumber($this->umur_faktur->ViewValue, 0, -2, -2, -2);
             $this->umur_faktur->ViewCustomAttributes = "";
+
+            // idorder
+            $this->idorder->ViewValue = $this->idorder->CurrentValue;
+            $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
+            $this->idorder->ViewCustomAttributes = "";
+
+            // kode_faktur
+            $this->kode_faktur->ViewValue = $this->kode_faktur->CurrentValue;
+            $this->kode_faktur->ViewCustomAttributes = "";
+
+            // jatuhtempo
+            $this->jatuhtempo->ViewValue = $this->jatuhtempo->CurrentValue;
+            $this->jatuhtempo->ViewCustomAttributes = "";
+
+            // term_payment
+            $this->term_payment->ViewValue = $this->term_payment->CurrentValue;
+            $this->term_payment->ViewValue = FormatNumber($this->term_payment->ViewValue, 0, -2, -2, -2);
+            $this->term_payment->ViewCustomAttributes = "";
+
+            // tgl_penagihan
+            $this->tgl_penagihan->ViewValue = $this->tgl_penagihan->CurrentValue;
+            $this->tgl_penagihan->ViewCustomAttributes = "";
 
             // tgl_order
             $this->tgl_order->LinkCustomAttributes = "";
@@ -1364,6 +1421,31 @@ class VPenagihanList extends VPenagihan
             $this->umur_faktur->LinkCustomAttributes = "";
             $this->umur_faktur->HrefValue = "";
             $this->umur_faktur->TooltipValue = "";
+
+            // idorder
+            $this->idorder->LinkCustomAttributes = "";
+            $this->idorder->HrefValue = "";
+            $this->idorder->TooltipValue = "";
+
+            // kode_faktur
+            $this->kode_faktur->LinkCustomAttributes = "";
+            $this->kode_faktur->HrefValue = "";
+            $this->kode_faktur->TooltipValue = "";
+
+            // jatuhtempo
+            $this->jatuhtempo->LinkCustomAttributes = "";
+            $this->jatuhtempo->HrefValue = "";
+            $this->jatuhtempo->TooltipValue = "";
+
+            // term_payment
+            $this->term_payment->LinkCustomAttributes = "";
+            $this->term_payment->HrefValue = "";
+            $this->term_payment->TooltipValue = "";
+
+            // tgl_penagihan
+            $this->tgl_penagihan->LinkCustomAttributes = "";
+            $this->tgl_penagihan->HrefValue = "";
+            $this->tgl_penagihan->TooltipValue = "";
         }
 
         // Call Row Rendered event

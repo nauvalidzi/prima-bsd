@@ -117,6 +117,21 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->umur_faktur->Visible) { // umur_faktur ?>
         <th data-name="umur_faktur" class="<?= $Page->umur_faktur->headerCellClass() ?>"><div id="elh_v_penagihan_umur_faktur" class="v_penagihan_umur_faktur"><?= $Page->renderSort($Page->umur_faktur) ?></div></th>
 <?php } ?>
+<?php if ($Page->idorder->Visible) { // idorder ?>
+        <th data-name="idorder" class="<?= $Page->idorder->headerCellClass() ?>"><div id="elh_v_penagihan_idorder" class="v_penagihan_idorder"><?= $Page->renderSort($Page->idorder) ?></div></th>
+<?php } ?>
+<?php if ($Page->kode_faktur->Visible) { // kode_faktur ?>
+        <th data-name="kode_faktur" class="<?= $Page->kode_faktur->headerCellClass() ?>"><div id="elh_v_penagihan_kode_faktur" class="v_penagihan_kode_faktur"><?= $Page->renderSort($Page->kode_faktur) ?></div></th>
+<?php } ?>
+<?php if ($Page->jatuhtempo->Visible) { // jatuhtempo ?>
+        <th data-name="jatuhtempo" class="<?= $Page->jatuhtempo->headerCellClass() ?>"><div id="elh_v_penagihan_jatuhtempo" class="v_penagihan_jatuhtempo"><?= $Page->renderSort($Page->jatuhtempo) ?></div></th>
+<?php } ?>
+<?php if ($Page->term_payment->Visible) { // term_payment ?>
+        <th data-name="term_payment" class="<?= $Page->term_payment->headerCellClass() ?>"><div id="elh_v_penagihan_term_payment" class="v_penagihan_term_payment"><?= $Page->renderSort($Page->term_payment) ?></div></th>
+<?php } ?>
+<?php if ($Page->tgl_penagihan->Visible) { // tgl_penagihan ?>
+        <th data-name="tgl_penagihan" class="<?= $Page->tgl_penagihan->headerCellClass() ?>"><div id="elh_v_penagihan_tgl_penagihan" class="v_penagihan_tgl_penagihan"><?= $Page->renderSort($Page->tgl_penagihan) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -253,6 +268,46 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_penagihan_umur_faktur">
 <span<?= $Page->umur_faktur->viewAttributes() ?>>
 <?= $Page->umur_faktur->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->idorder->Visible) { // idorder ?>
+        <td data-name="idorder" <?= $Page->idorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_penagihan_idorder">
+<span<?= $Page->idorder->viewAttributes() ?>>
+<?= $Page->idorder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kode_faktur->Visible) { // kode_faktur ?>
+        <td data-name="kode_faktur" <?= $Page->kode_faktur->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_penagihan_kode_faktur">
+<span<?= $Page->kode_faktur->viewAttributes() ?>>
+<?= $Page->kode_faktur->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->jatuhtempo->Visible) { // jatuhtempo ?>
+        <td data-name="jatuhtempo" <?= $Page->jatuhtempo->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_penagihan_jatuhtempo">
+<span<?= $Page->jatuhtempo->viewAttributes() ?>>
+<?= $Page->jatuhtempo->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->term_payment->Visible) { // term_payment ?>
+        <td data-name="term_payment" <?= $Page->term_payment->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_penagihan_term_payment">
+<span<?= $Page->term_payment->viewAttributes() ?>>
+<?= $Page->term_payment->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->tgl_penagihan->Visible) { // tgl_penagihan ?>
+        <td data-name="tgl_penagihan" <?= $Page->tgl_penagihan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_penagihan_tgl_penagihan">
+<span<?= $Page->tgl_penagihan->viewAttributes() ?>>
+<?= $Page->tgl_penagihan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

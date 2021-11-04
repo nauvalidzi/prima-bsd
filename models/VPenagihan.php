@@ -37,6 +37,11 @@ class VPenagihan extends DbTable
     public $kode_order;
     public $tgl_faktur;
     public $umur_faktur;
+    public $idorder;
+    public $kode_faktur;
+    public $jatuhtempo;
+    public $term_payment;
+    public $tgl_penagihan;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -139,6 +144,41 @@ class VPenagihan extends DbTable
         $this->umur_faktur->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->umur_faktur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->umur_faktur->Param, "CustomMsg");
         $this->Fields['umur_faktur'] = &$this->umur_faktur;
+
+        // idorder
+        $this->idorder = new DbField('v_penagihan', 'v_penagihan', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder->Nullable = false; // NOT NULL field
+        $this->idorder->Sortable = true; // Allow sort
+        $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
+        $this->Fields['idorder'] = &$this->idorder;
+
+        // kode_faktur
+        $this->kode_faktur = new DbField('v_penagihan', 'v_penagihan', 'x_kode_faktur', 'kode_faktur', '`kode_faktur`', '`kode_faktur`', 200, 50, -1, false, '`kode_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_faktur->Sortable = true; // Allow sort
+        $this->kode_faktur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_faktur->Param, "CustomMsg");
+        $this->Fields['kode_faktur'] = &$this->kode_faktur;
+
+        // jatuhtempo
+        $this->jatuhtempo = new DbField('v_penagihan', 'v_penagihan', 'x_jatuhtempo', 'jatuhtempo', '`jatuhtempo`', '`jatuhtempo`', 200, 10, -1, false, '`jatuhtempo`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jatuhtempo->Sortable = true; // Allow sort
+        $this->jatuhtempo->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jatuhtempo->Param, "CustomMsg");
+        $this->Fields['jatuhtempo'] = &$this->jatuhtempo;
+
+        // term_payment
+        $this->term_payment = new DbField('v_penagihan', 'v_penagihan', 'x_term_payment', 'term_payment', '`term_payment`', '`term_payment`', 3, 11, -1, false, '`term_payment`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->term_payment->Sortable = true; // Allow sort
+        $this->term_payment->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->term_payment->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->term_payment->Param, "CustomMsg");
+        $this->Fields['term_payment'] = &$this->term_payment;
+
+        // tgl_penagihan
+        $this->tgl_penagihan = new DbField('v_penagihan', 'v_penagihan', 'x_tgl_penagihan', 'tgl_penagihan', '`tgl_penagihan`', '`tgl_penagihan`', 200, 24, -1, false, '`tgl_penagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tgl_penagihan->Nullable = false; // NOT NULL field
+        $this->tgl_penagihan->Required = true; // Required field
+        $this->tgl_penagihan->Sortable = true; // Allow sort
+        $this->tgl_penagihan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_penagihan->Param, "CustomMsg");
+        $this->Fields['tgl_penagihan'] = &$this->tgl_penagihan;
     }
 
     // Field Visibility
@@ -555,6 +595,11 @@ class VPenagihan extends DbTable
         $this->kode_order->DbValue = $row['kode_order'];
         $this->tgl_faktur->DbValue = $row['tgl_faktur'];
         $this->umur_faktur->DbValue = $row['umur_faktur'];
+        $this->idorder->DbValue = $row['idorder'];
+        $this->kode_faktur->DbValue = $row['kode_faktur'];
+        $this->jatuhtempo->DbValue = $row['jatuhtempo'];
+        $this->term_payment->DbValue = $row['term_payment'];
+        $this->tgl_penagihan->DbValue = $row['tgl_penagihan'];
     }
 
     // Delete uploaded files
@@ -838,6 +883,11 @@ SORTHTML;
         $this->kode_order->setDbValue($row['kode_order']);
         $this->tgl_faktur->setDbValue($row['tgl_faktur']);
         $this->umur_faktur->setDbValue($row['umur_faktur']);
+        $this->idorder->setDbValue($row['idorder']);
+        $this->kode_faktur->setDbValue($row['kode_faktur']);
+        $this->jatuhtempo->setDbValue($row['jatuhtempo']);
+        $this->term_payment->setDbValue($row['term_payment']);
+        $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
     }
 
     // Render list row values
@@ -867,6 +917,16 @@ SORTHTML;
         // tgl_faktur
 
         // umur_faktur
+
+        // idorder
+
+        // kode_faktur
+
+        // jatuhtempo
+
+        // term_payment
+
+        // tgl_penagihan
 
         // tgl_order
         $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
@@ -907,6 +967,28 @@ SORTHTML;
         $this->umur_faktur->ViewValue = $this->umur_faktur->CurrentValue;
         $this->umur_faktur->ViewValue = FormatNumber($this->umur_faktur->ViewValue, 0, -2, -2, -2);
         $this->umur_faktur->ViewCustomAttributes = "";
+
+        // idorder
+        $this->idorder->ViewValue = $this->idorder->CurrentValue;
+        $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
+        $this->idorder->ViewCustomAttributes = "";
+
+        // kode_faktur
+        $this->kode_faktur->ViewValue = $this->kode_faktur->CurrentValue;
+        $this->kode_faktur->ViewCustomAttributes = "";
+
+        // jatuhtempo
+        $this->jatuhtempo->ViewValue = $this->jatuhtempo->CurrentValue;
+        $this->jatuhtempo->ViewCustomAttributes = "";
+
+        // term_payment
+        $this->term_payment->ViewValue = $this->term_payment->CurrentValue;
+        $this->term_payment->ViewValue = FormatNumber($this->term_payment->ViewValue, 0, -2, -2, -2);
+        $this->term_payment->ViewCustomAttributes = "";
+
+        // tgl_penagihan
+        $this->tgl_penagihan->ViewValue = $this->tgl_penagihan->CurrentValue;
+        $this->tgl_penagihan->ViewCustomAttributes = "";
 
         // tgl_order
         $this->tgl_order->LinkCustomAttributes = "";
@@ -952,6 +1034,31 @@ SORTHTML;
         $this->umur_faktur->LinkCustomAttributes = "";
         $this->umur_faktur->HrefValue = "";
         $this->umur_faktur->TooltipValue = "";
+
+        // idorder
+        $this->idorder->LinkCustomAttributes = "";
+        $this->idorder->HrefValue = "";
+        $this->idorder->TooltipValue = "";
+
+        // kode_faktur
+        $this->kode_faktur->LinkCustomAttributes = "";
+        $this->kode_faktur->HrefValue = "";
+        $this->kode_faktur->TooltipValue = "";
+
+        // jatuhtempo
+        $this->jatuhtempo->LinkCustomAttributes = "";
+        $this->jatuhtempo->HrefValue = "";
+        $this->jatuhtempo->TooltipValue = "";
+
+        // term_payment
+        $this->term_payment->LinkCustomAttributes = "";
+        $this->term_payment->HrefValue = "";
+        $this->term_payment->TooltipValue = "";
+
+        // tgl_penagihan
+        $this->tgl_penagihan->LinkCustomAttributes = "";
+        $this->tgl_penagihan->HrefValue = "";
+        $this->tgl_penagihan->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1046,6 +1153,45 @@ SORTHTML;
         $this->umur_faktur->EditValue = $this->umur_faktur->CurrentValue;
         $this->umur_faktur->PlaceHolder = RemoveHtml($this->umur_faktur->caption());
 
+        // idorder
+        $this->idorder->EditAttrs["class"] = "form-control";
+        $this->idorder->EditCustomAttributes = "";
+        $this->idorder->EditValue = $this->idorder->CurrentValue;
+        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
+
+        // kode_faktur
+        $this->kode_faktur->EditAttrs["class"] = "form-control";
+        $this->kode_faktur->EditCustomAttributes = "";
+        if (!$this->kode_faktur->Raw) {
+            $this->kode_faktur->CurrentValue = HtmlDecode($this->kode_faktur->CurrentValue);
+        }
+        $this->kode_faktur->EditValue = $this->kode_faktur->CurrentValue;
+        $this->kode_faktur->PlaceHolder = RemoveHtml($this->kode_faktur->caption());
+
+        // jatuhtempo
+        $this->jatuhtempo->EditAttrs["class"] = "form-control";
+        $this->jatuhtempo->EditCustomAttributes = "";
+        if (!$this->jatuhtempo->Raw) {
+            $this->jatuhtempo->CurrentValue = HtmlDecode($this->jatuhtempo->CurrentValue);
+        }
+        $this->jatuhtempo->EditValue = $this->jatuhtempo->CurrentValue;
+        $this->jatuhtempo->PlaceHolder = RemoveHtml($this->jatuhtempo->caption());
+
+        // term_payment
+        $this->term_payment->EditAttrs["class"] = "form-control";
+        $this->term_payment->EditCustomAttributes = "";
+        $this->term_payment->EditValue = $this->term_payment->CurrentValue;
+        $this->term_payment->PlaceHolder = RemoveHtml($this->term_payment->caption());
+
+        // tgl_penagihan
+        $this->tgl_penagihan->EditAttrs["class"] = "form-control";
+        $this->tgl_penagihan->EditCustomAttributes = "";
+        if (!$this->tgl_penagihan->Raw) {
+            $this->tgl_penagihan->CurrentValue = HtmlDecode($this->tgl_penagihan->CurrentValue);
+        }
+        $this->tgl_penagihan->EditValue = $this->tgl_penagihan->CurrentValue;
+        $this->tgl_penagihan->PlaceHolder = RemoveHtml($this->tgl_penagihan->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1083,6 +1229,11 @@ SORTHTML;
                     $doc->exportCaption($this->kode_order);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->umur_faktur);
+                    $doc->exportCaption($this->idorder);
+                    $doc->exportCaption($this->kode_faktur);
+                    $doc->exportCaption($this->jatuhtempo);
+                    $doc->exportCaption($this->term_payment);
+                    $doc->exportCaption($this->tgl_penagihan);
                 } else {
                     $doc->exportCaption($this->tgl_order);
                     $doc->exportCaption($this->nama_customer);
@@ -1093,6 +1244,11 @@ SORTHTML;
                     $doc->exportCaption($this->kode_order);
                     $doc->exportCaption($this->tgl_faktur);
                     $doc->exportCaption($this->umur_faktur);
+                    $doc->exportCaption($this->idorder);
+                    $doc->exportCaption($this->kode_faktur);
+                    $doc->exportCaption($this->jatuhtempo);
+                    $doc->exportCaption($this->term_payment);
+                    $doc->exportCaption($this->tgl_penagihan);
                 }
                 $doc->endExportRow();
             }
@@ -1131,6 +1287,11 @@ SORTHTML;
                         $doc->exportField($this->kode_order);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->umur_faktur);
+                        $doc->exportField($this->idorder);
+                        $doc->exportField($this->kode_faktur);
+                        $doc->exportField($this->jatuhtempo);
+                        $doc->exportField($this->term_payment);
+                        $doc->exportField($this->tgl_penagihan);
                     } else {
                         $doc->exportField($this->tgl_order);
                         $doc->exportField($this->nama_customer);
@@ -1141,6 +1302,11 @@ SORTHTML;
                         $doc->exportField($this->kode_order);
                         $doc->exportField($this->tgl_faktur);
                         $doc->exportField($this->umur_faktur);
+                        $doc->exportField($this->idorder);
+                        $doc->exportField($this->kode_faktur);
+                        $doc->exportField($this->jatuhtempo);
+                        $doc->exportField($this->term_payment);
+                        $doc->exportField($this->tgl_penagihan);
                     }
                     $doc->endExportRow($rowCnt);
                 }
