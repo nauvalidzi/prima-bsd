@@ -873,5 +873,6 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
         	$this->ListOptions->Items["delete"]->Body = "";
         }
         $this->ListOptions->Items["status"]->Body = status_delivery($this->id->CurrentValue, 'detail');
+        $this->sisa->ViewValue = $this->totalorder->CurrentValue - $this->jumlahkirim->CurrentValue;
     }
 }
