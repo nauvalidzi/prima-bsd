@@ -744,7 +744,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nMohon dapat diinformasikan kembali ke kami di Nomor ini apabila sudah ditransfer, dan mohon abaikan chat ini apabila sudah ditransfer.
                 \nTerimakasih atas kesetiaan dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        if ($totalumurfaktur => 0 && $totalumurfaktur <= 7) {
+        if ($totalumurfaktur >= 0 && $totalumurfaktur <= 7) {
             $message = "Yth {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menginformasikan Tagihan Faktur sbb:
                 \nNo Faktur : {$row['kode_faktur']}
                 \nNilai Faktur : Rp {$row['nilai_faktur']}
