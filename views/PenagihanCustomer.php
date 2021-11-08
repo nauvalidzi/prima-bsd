@@ -48,12 +48,12 @@ $PenagihanCustomer = &$Page;
 					`t`.`value` AS term_payment, 
 					SUM(i.totaltagihan) AS nilai_faktur, 
 					SUM(i.sisabayar) AS piutang, 
-					IFNULL(DATE_FORMAT(MAX(pn.tgl_antrian), '%Y-%m-%d %H:%i:%s'),'') AS tgl_penagihan
+					IFNULL(DATE_FORMAT(MAX(b.created_at), '%Y-%m-%d %H:%i:%s'),'') AS tgl_penagihan
 				FROM `order` o
 				JOIN order_detail od ON od.idorder = o.id
 				JOIN customer c ON c.id = o.idcustomer
 				LEFT JOIN invoice i ON i.idorder = o.id
-				LEFT JOIN penagihan pn ON o.kode = pn.kode_order
+				LEFT JOIN bot_history b ON i.kode = b.prop_code
 				LEFT JOIN termpayment t ON i.idtermpayment = t.id
 				WHERE i.sisabayar > 0 
 				GROUP BY o.id, c.id, i.id
