@@ -426,6 +426,7 @@ class BotHistoryList extends BotHistory
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -437,6 +438,9 @@ class BotHistoryList extends BotHistory
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -564,11 +568,14 @@ class BotHistoryList extends BotHistory
 
         // Set up list options
         $this->setupListOptions();
-        $this->tanggal->setVisibility();
+        $this->id->setVisibility();
+        $this->created_at->setVisibility();
         $this->prop_code->setVisibility();
-        $this->prop_name->Visible = false;
+        $this->prop_name->setVisibility();
+        $this->phone->setVisibility();
+        $this->messages->setVisibility();
         $this->status->setVisibility();
-        $this->created_by->setVisibility();
+        $this->canceled_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -645,8 +652,33 @@ class BotHistoryList extends BotHistory
                 $this->OtherOptions->hideAllOptions();
             }
 
+            // Get default search criteria
+            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+            // Get basic search values
+            $this->loadBasicSearchValues();
+
+            // Process filter list
+            if ($this->processFilterList()) {
+                $this->terminate();
+                return;
+            }
+
+            // Restore search parms from Session if not searching / reset / export
+            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+                $this->restoreSearchParms();
+            }
+
+            // Call Recordset SearchValidated event
+            $this->recordsetSearchValidated();
+
             // Set up sorting order
             $this->setupSortOrder();
+
+            // Get basic search criteria
+            if (!$this->hasInvalidFields()) {
+                $srchBasic = $this->basicSearchWhere();
+            }
         }
 
         // Restore display records
@@ -660,6 +692,31 @@ class BotHistoryList extends BotHistory
         // Load Sorting Order
         if ($this->Command != "json") {
             $this->loadSortOrder();
+        }
+
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms()) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere();
+            }
+        }
+
+        // Build search criteria
+        AddFilter($this->SearchWhere, $srchAdvanced);
+        AddFilter($this->SearchWhere, $srchBasic);
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json") {
+            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -801,6 +858,291 @@ class BotHistoryList extends BotHistory
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        global $UserProfile;
+
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
+        $filterList = Concat($filterList, $this->prop_code->AdvancedSearch->toJson(), ","); // Field prop_code
+        $filterList = Concat($filterList, $this->prop_name->AdvancedSearch->toJson(), ","); // Field prop_name
+        $filterList = Concat($filterList, $this->phone->AdvancedSearch->toJson(), ","); // Field phone
+        $filterList = Concat($filterList, $this->messages->AdvancedSearch->toJson(), ","); // Field messages
+        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
+        $filterList = Concat($filterList, $this->canceled_at->AdvancedSearch->toJson(), ","); // Field canceled_at
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        global $UserProfile;
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            $UserProfile->setSearchFilters(CurrentUserName(), "fbot_historylistsrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
+
+        // Field created_at
+        $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
+        $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
+        $this->created_at->AdvancedSearch->SearchCondition = @$filter["v_created_at"];
+        $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
+        $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
+        $this->created_at->AdvancedSearch->save();
+
+        // Field prop_code
+        $this->prop_code->AdvancedSearch->SearchValue = @$filter["x_prop_code"];
+        $this->prop_code->AdvancedSearch->SearchOperator = @$filter["z_prop_code"];
+        $this->prop_code->AdvancedSearch->SearchCondition = @$filter["v_prop_code"];
+        $this->prop_code->AdvancedSearch->SearchValue2 = @$filter["y_prop_code"];
+        $this->prop_code->AdvancedSearch->SearchOperator2 = @$filter["w_prop_code"];
+        $this->prop_code->AdvancedSearch->save();
+
+        // Field prop_name
+        $this->prop_name->AdvancedSearch->SearchValue = @$filter["x_prop_name"];
+        $this->prop_name->AdvancedSearch->SearchOperator = @$filter["z_prop_name"];
+        $this->prop_name->AdvancedSearch->SearchCondition = @$filter["v_prop_name"];
+        $this->prop_name->AdvancedSearch->SearchValue2 = @$filter["y_prop_name"];
+        $this->prop_name->AdvancedSearch->SearchOperator2 = @$filter["w_prop_name"];
+        $this->prop_name->AdvancedSearch->save();
+
+        // Field phone
+        $this->phone->AdvancedSearch->SearchValue = @$filter["x_phone"];
+        $this->phone->AdvancedSearch->SearchOperator = @$filter["z_phone"];
+        $this->phone->AdvancedSearch->SearchCondition = @$filter["v_phone"];
+        $this->phone->AdvancedSearch->SearchValue2 = @$filter["y_phone"];
+        $this->phone->AdvancedSearch->SearchOperator2 = @$filter["w_phone"];
+        $this->phone->AdvancedSearch->save();
+
+        // Field messages
+        $this->messages->AdvancedSearch->SearchValue = @$filter["x_messages"];
+        $this->messages->AdvancedSearch->SearchOperator = @$filter["z_messages"];
+        $this->messages->AdvancedSearch->SearchCondition = @$filter["v_messages"];
+        $this->messages->AdvancedSearch->SearchValue2 = @$filter["y_messages"];
+        $this->messages->AdvancedSearch->SearchOperator2 = @$filter["w_messages"];
+        $this->messages->AdvancedSearch->save();
+
+        // Field status
+        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
+        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
+        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
+        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
+        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
+        $this->status->AdvancedSearch->save();
+
+        // Field canceled_at
+        $this->canceled_at->AdvancedSearch->SearchValue = @$filter["x_canceled_at"];
+        $this->canceled_at->AdvancedSearch->SearchOperator = @$filter["z_canceled_at"];
+        $this->canceled_at->AdvancedSearch->SearchCondition = @$filter["v_canceled_at"];
+        $this->canceled_at->AdvancedSearch->SearchValue2 = @$filter["y_canceled_at"];
+        $this->canceled_at->AdvancedSearch->SearchOperator2 = @$filter["w_canceled_at"];
+        $this->canceled_at->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Return basic search SQL
+    protected function basicSearchSql($arKeywords, $type)
+    {
+        $where = "";
+        $this->buildBasicSearchSql($where, $this->prop_name, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->phone, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->messages, $arKeywords, $type);
+        return $where;
+    }
+
+    // Build basic search SQL
+    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
+    {
+        $defCond = ($type == "OR") ? "OR" : "AND";
+        $arSql = []; // Array for SQL parts
+        $arCond = []; // Array for search conditions
+        $cnt = count($arKeywords);
+        $j = 0; // Number of SQL parts
+        for ($i = 0; $i < $cnt; $i++) {
+            $keyword = $arKeywords[$i];
+            $keyword = trim($keyword);
+            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
+                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
+                $ar = explode("\\", $keyword);
+            } else {
+                $ar = [$keyword];
+            }
+            foreach ($ar as $keyword) {
+                if ($keyword != "") {
+                    $wrk = "";
+                    if ($keyword == "OR" && $type == "") {
+                        if ($j > 0) {
+                            $arCond[$j - 1] = "OR";
+                        }
+                    } elseif ($keyword == Config("NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NULL";
+                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NOT NULL";
+                    } elseif ($fld->IsVirtual && $fld->Visible) {
+                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
+                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    }
+                    if ($wrk != "") {
+                        $arSql[$j] = $wrk;
+                        $arCond[$j] = $defCond;
+                        $j += 1;
+                    }
+                }
+            }
+        }
+        $cnt = count($arSql);
+        $quoted = false;
+        $sql = "";
+        if ($cnt > 0) {
+            for ($i = 0; $i < $cnt - 1; $i++) {
+                if ($arCond[$i] == "OR") {
+                    if (!$quoted) {
+                        $sql .= "(";
+                    }
+                    $quoted = true;
+                }
+                $sql .= $arSql[$i];
+                if ($quoted && $arCond[$i] != "OR") {
+                    $sql .= ")";
+                    $quoted = false;
+                }
+                $sql .= " " . $arCond[$i] . " ";
+            }
+            $sql .= $arSql[$cnt - 1];
+            if ($quoted) {
+                $sql .= ")";
+            }
+        }
+        if ($sql != "") {
+            if ($where != "") {
+                $where .= " OR ";
+            }
+            $where .= "(" . $sql . ")";
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    protected function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            // Search keyword in any fields
+            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
+                foreach ($ar as $keyword) {
+                    if ($keyword != "") {
+                        if ($searchStr != "") {
+                            $searchStr .= " " . $searchType . " ";
+                        }
+                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
+                    }
+                }
+            } else {
+                $searchStr = $this->basicSearchSql($ar, $searchType);
+            }
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -808,10 +1150,14 @@ class BotHistoryList extends BotHistory
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->tanggal); // tanggal
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->created_at); // created_at
             $this->updateSort($this->prop_code); // prop_code
+            $this->updateSort($this->prop_name); // prop_name
+            $this->updateSort($this->phone); // phone
+            $this->updateSort($this->messages); // messages
             $this->updateSort($this->status); // status
-            $this->updateSort($this->created_by); // created_by
+            $this->updateSort($this->canceled_at); // canceled_at
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -842,15 +1188,23 @@ class BotHistoryList extends BotHistory
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
+            }
+
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->tanggal->setSort("");
+                $this->id->setSort("");
+                $this->created_at->setSort("");
                 $this->prop_code->setSort("");
                 $this->prop_name->setSort("");
+                $this->phone->setSort("");
+                $this->messages->setSort("");
                 $this->status->setSort("");
-                $this->created_by->setSort("");
+                $this->canceled_at->setSort("");
             }
 
             // Reset start position
@@ -948,6 +1302,7 @@ class BotHistoryList extends BotHistory
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -977,10 +1332,10 @@ class BotHistoryList extends BotHistory
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
         $item->Body = "<a class=\"ew-save-filter\" data-form=\"fbot_historylistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
         $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fbot_historylistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1115,6 +1470,16 @@ class BotHistoryList extends BotHistory
         global $Security, $Language;
     }
 
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1183,29 +1548,45 @@ class BotHistoryList extends BotHistory
         if (!$rs) {
             return;
         }
-        $this->tanggal->setDbValue($row['tanggal']);
+        $this->id->setDbValue($row['id']);
+        $this->created_at->setDbValue($row['created_at']);
         $this->prop_code->setDbValue($row['prop_code']);
         $this->prop_name->setDbValue($row['prop_name']);
+        $this->phone->setDbValue($row['phone']);
+        $this->messages->setDbValue($row['messages']);
         $this->status->setDbValue($row['status']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->canceled_at->setDbValue($row['canceled_at']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['tanggal'] = null;
+        $row['id'] = null;
+        $row['created_at'] = null;
         $row['prop_code'] = null;
         $row['prop_name'] = null;
+        $row['phone'] = null;
+        $row['messages'] = null;
         $row['status'] = null;
-        $row['created_by'] = null;
+        $row['canceled_at'] = null;
         return $row;
     }
 
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -1226,54 +1607,100 @@ class BotHistoryList extends BotHistory
 
         // Common render codes for all row types
 
-        // tanggal
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
+
+        // created_at
 
         // prop_code
 
         // prop_name
 
+        // phone
+
+        // messages
+
         // status
 
-        // created_by
+        // canceled_at
         if ($this->RowType == ROWTYPE_VIEW) {
-            // tanggal
-            $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
-            $this->tanggal->ViewCustomAttributes = "";
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
+            // created_at
+            $this->created_at->ViewValue = $this->created_at->CurrentValue;
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 117);
+            $this->created_at->ViewCustomAttributes = "";
 
             // prop_code
             $this->prop_code->ViewValue = $this->prop_code->CurrentValue;
             $this->prop_code->ViewCustomAttributes = "";
+
+            // prop_name
+            $this->prop_name->ViewValue = $this->prop_name->CurrentValue;
+            $this->prop_name->ViewCustomAttributes = "";
+
+            // phone
+            $this->phone->ViewValue = $this->phone->CurrentValue;
+            $this->phone->ViewCustomAttributes = "";
+
+            // messages
+            $this->messages->ViewValue = $this->messages->CurrentValue;
+            if ($this->messages->ViewValue != null) {
+                $this->messages->ViewValue = str_replace(["\r\n", "\n", "\r"], "<br>", $this->messages->ViewValue);
+            }
+            $this->messages->ViewCustomAttributes = "";
 
             // status
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewValue = FormatNumber($this->status->ViewValue, 0, -2, -2, -2);
             $this->status->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // canceled_at
+            $this->canceled_at->ViewValue = $this->canceled_at->CurrentValue;
+            $this->canceled_at->ViewValue = FormatDateTime($this->canceled_at->ViewValue, 111);
+            $this->canceled_at->ViewCustomAttributes = "";
 
-            // tanggal
-            $this->tanggal->LinkCustomAttributes = "";
-            $this->tanggal->HrefValue = "";
-            $this->tanggal->TooltipValue = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
+            // created_at
+            $this->created_at->LinkCustomAttributes = "";
+            $this->created_at->HrefValue = "";
+            $this->created_at->TooltipValue = "";
 
             // prop_code
             $this->prop_code->LinkCustomAttributes = "";
             $this->prop_code->HrefValue = "";
             $this->prop_code->TooltipValue = "";
 
+            // prop_name
+            $this->prop_name->LinkCustomAttributes = "";
+            $this->prop_name->HrefValue = "";
+            $this->prop_name->TooltipValue = "";
+
+            // phone
+            $this->phone->LinkCustomAttributes = "";
+            $this->phone->HrefValue = "";
+            $this->phone->TooltipValue = "";
+
+            // messages
+            $this->messages->LinkCustomAttributes = "";
+            $this->messages->HrefValue = "";
+            $this->messages->TooltipValue = "";
+
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
+            // canceled_at
+            $this->canceled_at->LinkCustomAttributes = "";
+            $this->canceled_at->HrefValue = "";
+            $this->canceled_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1289,6 +1716,17 @@ class BotHistoryList extends BotHistory
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
+
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fbot_historylistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1466,6 +1904,8 @@ class BotHistoryList extends BotHistory
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
+        $item = &$this->ListOptions->add("action");
+        $item->Header = "Action";
     }
 
     // ListOptions Rendering event
@@ -1481,6 +1921,15 @@ class BotHistoryList extends BotHistory
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
+        if ($this->status->CurrentValue < 0) {
+        	$this->ListOptions->Items["action"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-primary btn-sm action-reminder\" data-type=\"activate\">Activate Reminder</button>";
+        }
+        if ($this->status->CurrentValue == 0) {
+        	$this->ListOptions->Items["action"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-warning btn-sm action-reminder\" data-type=\"cancel\">Cancel Reminder</button>";
+        }
+        if ($this->status->CurrentValue > 0) {
+        	$this->ListOptions->Items["action"]->Body = "Delivered";
+        }
     }
 
     // Row Custom Action event

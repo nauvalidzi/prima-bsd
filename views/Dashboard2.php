@@ -6,6 +6,13 @@ namespace PHPMaker2021\distributor;
 $Dashboard2 = &$Page;
 ?>
 <?php
+
+namespace PHPMaker2021\distributor;
+
+// Page object
+$Dashboard2 = &$Page;
+?>
+<?php
 $curr_year = date('Y');
 $curr_month = date('m');
 $query_kpi = "SELECT p.id as idpegawai, p.nama AS namapegawai, 
@@ -45,7 +52,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
           <p>P.O. Unprocess</p>
         </div>
         <div class="icon">
-          <i class="fa fa-users"></i>
+          <i class="fa fa-cart-arrow-down"></i>
         </div>
         <a href="OrderList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
       </div>
@@ -57,7 +64,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
           <p>Pending Delivery Orders</p>
         </div>
         <div class="icon">
-          <i class="fa fa-cubes"></i>
+          <i class="fas fa-dolly"></i>
         </div>
         <a href="DeliveryorderList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
@@ -69,7 +76,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
           <p>Unpaid Invoices</p>
         </div>
         <div class="icon">
-          <i class="fa fa-dice"></i>
+          <i class="fa fa-file-invoice"></i>
         </div>
         <a href="InvoiceList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
@@ -95,7 +102,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         </tr>
         <tr>
             <th class="text-center" width="5%">No. </th>
-            <th class="text-center" width="40%%">Marketing</th>
+            <th class="text-center" width="40%">Marketing</th>
             <th class="text-center" width="20%">Target</th>
             <th class="text-center" width="20%">Penjualan</th>
             <th class="text-center" width="15%">&#37;</th>
@@ -116,5 +123,8 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
     <?php endif; ?>
     </tbody>
 </table>
+
+<?= GetDebugMessage() ?>
+
 
 <?= GetDebugMessage() ?>

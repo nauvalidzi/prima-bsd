@@ -762,7 +762,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        $insert = ExecuteUpdate("INSERT INTO penagihan (tgl_order, kode_order, nama_customer, nomor_handphone, nilai_po, tgl_faktur, nilai_faktur, piutang, umur_faktur, tgl_antrian, messages) VALUES ('{$row['tgl_order']}', '{$row['kode_order']}', '{$row['nama_customer']}', '{$row['nomor_handphone']}', '{$row['nilai_po']}', '{$row['tgl_faktur']}', '{$row['nilai_faktur']}', '{$row['piutang']}', '{$row['umur_faktur']}', '".date('Y-m-d H:i:s')."', '{$message}')");
+        $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', 0, '".date('Y-m-d H:i:s')."')");
         if (!$insert) $status = false;
     }
     WriteJson(['status' => $status]);
@@ -773,12 +773,12 @@ $API_ACTIONS['action-reminder'] = function(Request $request, Response &$response
     $process = true;
     if ($type == 'cancel') {
         $status = '-1';
-        $date_cancel = ", tgl_cancel = '".date('Y-m-d H:i:s')."'";
+        $canceled = ", canceled_at = '".date('Y-m-d H:i:s')."'";
     } else {
         $status = '0';
-        $date_cancel = null;
+        $canceled = null;
     }
-    $row = ExecuteUpdate("UPDATE penagihan SET status = '{$status}' {$date_cancel} WHERE id = {$id}");
+    $row = ExecuteUpdate("UPDATE bot_history SET status = '{$status}' {$canceled} WHERE id = {$id}");
     if (!$row) {
         $process = false;
     }

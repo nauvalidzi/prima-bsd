@@ -1370,7 +1370,7 @@ class AlamatCustomerAdd extends AlamatCustomer
         $rsnew = [];
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // alias
         $this->alias->setDbValueDef($rsnew, $this->alias->CurrentValue, "", false);
@@ -1382,7 +1382,7 @@ class AlamatCustomerAdd extends AlamatCustomer
         $this->telepon->setDbValueDef($rsnew, $this->telepon->CurrentValue, "", strval($this->telepon->CurrentValue) == "");
 
         // alamat
-        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, "", false);
+        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, false);
 
         // idprovinsi
         $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, "", false);

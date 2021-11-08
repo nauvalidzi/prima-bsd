@@ -86,6 +86,8 @@ class AlamatCustomer extends DbTable
         // idcustomer
         $this->idcustomer = new DbField('alamat_customer', 'alamat_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -127,8 +129,6 @@ class AlamatCustomer extends DbTable
 
         // alamat
         $this->alamat = new DbField('alamat_customer', 'alamat_customer', 'x_alamat', 'alamat', '`alamat`', '`alamat`', 201, 65535, -1, false, '`alamat`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->alamat->Nullable = false; // NOT NULL field
-        $this->alamat->Required = true; // Required field
         $this->alamat->Sortable = true; // Allow sort
         $this->alamat->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alamat->Param, "CustomMsg");
         $this->Fields['alamat'] = &$this->alamat;

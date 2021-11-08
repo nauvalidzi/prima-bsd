@@ -1053,11 +1053,11 @@ return function (App $app) {
     );
 
     // bot_history
-    $app->any('/BotHistoryList', BotHistoryController::class . ':list')->add(PermissionMiddleware::class)->setName('BotHistoryList-bot_history-list'); // list
+    $app->any('/BotHistoryList[/{id}]', BotHistoryController::class . ':list')->add(PermissionMiddleware::class)->setName('BotHistoryList-bot_history-list'); // list
     $app->group(
         '/bot_history',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', BotHistoryController::class . ':list')->add(PermissionMiddleware::class)->setName('bot_history/list-bot_history-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', BotHistoryController::class . ':list')->add(PermissionMiddleware::class)->setName('bot_history/list-bot_history-list-2'); // list
         }
     );
 

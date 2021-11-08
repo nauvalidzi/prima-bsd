@@ -2469,10 +2469,10 @@ class CustomerAdd extends Customer
         }
 
         // limit_kredit_order
-        $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, 0, false);
+        $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, null, false);
 
         // jatuh_tempo_invoice
-        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, strval($this->jatuh_tempo_invoice->CurrentValue) == "");
+        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, false);
 
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);

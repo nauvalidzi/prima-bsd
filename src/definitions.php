@@ -132,6 +132,7 @@ return [
     "laporan_order_customer" => \DI\create(LaporanOrderCustomer::class),
     "penagihan_customer" => \DI\create(PenagihanCustomer::class),
     "penagihan" => \DI\create(Penagihan::class),
+    "customer_copy1" => \DI\create(CustomerCopy1::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

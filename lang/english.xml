@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/11/5" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/11/8" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1105,11 +1105,11 @@
     <menu id="344">
       <phrase id="menutext" value="Stok" />
     </menu>
-    <menu id="695">
+    <menu id="602">
       <phrase id="menutext" value="Penagihan Customer" />
     </menu>
-    <menu id="602">
-      <phrase id="menutext" value="Filter Penagihan" />
+    <menu id="695">
+      <phrase id="menutext" value="Penagihan Customer" />
     </menu>
     <menu id="599">
       <phrase id="menutext" value="Penagihan" />
@@ -1120,8 +1120,8 @@
     <menu id="570">
       <phrase id="menutext" value="Pengaturan" />
     </menu>
-    <menu id="594">
-      <phrase id="menutext" value="Level Customer" />
+    <menu id="598">
+      <phrase id="menutext" value="Antrian Bot" />
     </menu>
     <menu id="591">
       <phrase id="menutext" value="KPI Marketing" />
@@ -1129,14 +1129,14 @@
     <menu id="31">
       <phrase id="menutext" value="Pegawai" />
     </menu>
-    <menu id="598">
-      <phrase id="menutext" value="Riwayat Bot" />
+    <menu id="600">
+      <phrase id="menutext" value="Term Payment" />
+    </menu>
+    <menu id="594">
+      <phrase id="menutext" value="Level Customer" />
     </menu>
     <menu id="595">
       <phrase id="menutext" value="Penomoran" />
-    </menu>
-    <menu id="600">
-      <phrase id="menutext" value="Term Payment" />
     </menu>
     <menu id="30">
       <phrase id="menutext" value="User Permissions" />
@@ -3520,20 +3520,29 @@
     </table>
     <table id="bot_history">
       <phrase id="tblcaption" value="Bot History" />
-      <field id="tanggal">
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="created_at">
         <phrase id="fldcaption" value="Tanggal" />
       </field>
       <field id="prop_code">
-        <phrase id="fldcaption" value="Property ID" />
+        <phrase id="fldcaption" value="Property Code" />
       </field>
       <field id="prop_name">
         <phrase id="fldcaption" value="Property Name" />
       </field>
+      <field id="phone">
+        <phrase id="fldcaption" value="Phone" />
+      </field>
+      <field id="messages">
+        <phrase id="fldcaption" value="Messages" />
+      </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />
       </field>
-      <field id="created_by">
-        <phrase id="fldcaption" value="Author" />
+      <field id="canceled_at">
+        <phrase id="fldcaption" value="Canceled at" />
       </field>
     </table>
     <table id="v_penagihan">

@@ -320,8 +320,6 @@ class Customer extends DbTable
 
         // limit_kredit_order
         $this->limit_kredit_order = new DbField('customer', 'customer', 'x_limit_kredit_order', 'limit_kredit_order', '`limit_kredit_order`', '`limit_kredit_order`', 3, 15, -1, false, '`limit_kredit_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->limit_kredit_order->Nullable = false; // NOT NULL field
-        $this->limit_kredit_order->Required = true; // Required field
         $this->limit_kredit_order->Sortable = true; // Allow sort
         $this->limit_kredit_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->limit_kredit_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->limit_kredit_order->Param, "CustomMsg");

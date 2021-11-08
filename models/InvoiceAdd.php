@@ -1679,7 +1679,7 @@ class InvoiceAdd extends Invoice
         $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // idtermpayment
-        $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, strval($this->idtermpayment->CurrentValue) == "");
+        $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, false);
 
         // idtipepayment
         $this->idtipepayment->setDbValueDef($rsnew, $this->idtipepayment->CurrentValue, null, false);

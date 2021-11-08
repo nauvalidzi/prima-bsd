@@ -1562,11 +1562,11 @@ SORTHTML;
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
         if ($this->status->CurrentValue == -1) {
-            $this->status->ViewValue = 'Cancelled';
+            $this->status->ViewValue = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-primary btn-sm action-reminder\" data-type=\"activate\">Activate Reminder</button>";;
         }
         if ($this->status->CurrentValue == 0) {
-            $this->status->ViewValue = 'Pending';
-            $this->tgl_cancel->ViewValue = '-';
+            $this->status->ViewValue = $this->ListOptions->Items["cancel"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-warning btn-sm action-reminder\" data-type=\"cancel\">Cancel Reminder</button>";;
+            $this->canceled_at->ViewValue = '-';
         }
         if ($this->status->CurrentValue == 1) {
             $this->status->ViewValue = 'Delivered';

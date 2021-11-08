@@ -71,9 +71,10 @@ class Penomoran extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('penomoran', 'penomoran', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('penomoran', 'penomoran', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
+        $this->id->Required = true; // Required field
         $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -106,6 +107,8 @@ class Penomoran extends DbTable
 
         // display
         $this->display = new DbField('penomoran', 'penomoran', 'x_display', 'display', '`display`', '`display`', 200, 255, -1, false, '`display`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->display->Nullable = false; // NOT NULL field
+        $this->display->Required = true; // Required field
         $this->display->Sortable = true; // Allow sort
         $this->display->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->display->Param, "CustomMsg");
         $this->Fields['display'] = &$this->display;
@@ -442,9 +445,6 @@ class Penomoran extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -960,7 +960,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // menu
         $this->_menu->EditAttrs["class"] = "form-control";

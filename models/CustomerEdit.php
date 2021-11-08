@@ -2363,7 +2363,7 @@ class CustomerEdit extends Customer
             }
 
             // limit_kredit_order
-            $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, 0, $this->limit_kredit_order->ReadOnly);
+            $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, null, $this->limit_kredit_order->ReadOnly);
 
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, $this->jatuh_tempo_invoice->ReadOnly);

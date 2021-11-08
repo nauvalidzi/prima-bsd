@@ -28,11 +28,14 @@ class BotHistory extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $tanggal;
+    public $id;
+    public $created_at;
     public $prop_code;
     public $prop_name;
+    public $phone;
+    public $messages;
     public $status;
-    public $created_by;
+    public $canceled_at;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -69,28 +72,49 @@ class BotHistory extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // tanggal
-        $this->tanggal = new DbField('bot_history', 'bot_history', 'x_tanggal', 'tanggal', '`tanggal`', CastDateFieldForLike("`tanggal`", 0, "DB"), 135, 19, 0, false, '`tanggal`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggal->Sortable = true; // Allow sort
-        $this->tanggal->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggal->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal->Param, "CustomMsg");
-        $this->Fields['tanggal'] = &$this->tanggal;
+        // id
+        $this->id = new DbField('bot_history', 'bot_history', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Sortable = true; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
+
+        // created_at
+        $this->created_at = new DbField('bot_history', 'bot_history', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 117, "DB"), 135, 19, 117, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at->Sortable = true; // Allow sort
+        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectShortDateDMY"));
+        $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
+        $this->Fields['created_at'] = &$this->created_at;
 
         // prop_code
-        $this->prop_code = new DbField('bot_history', 'bot_history', 'x_prop_code', 'prop_code', '`prop_code`', '`prop_code`', 200, 255, -1, false, '`prop_code`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->prop_code->Nullable = false; // NOT NULL field
-        $this->prop_code->Required = true; // Required field
+        $this->prop_code = new DbField('bot_history', 'bot_history', 'x_prop_code', 'prop_code', '`prop_code`', '`prop_code`', 200, 50, -1, false, '`prop_code`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->prop_code->Sortable = true; // Allow sort
         $this->prop_code->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->prop_code->Param, "CustomMsg");
         $this->Fields['prop_code'] = &$this->prop_code;
 
         // prop_name
-        $this->prop_name = new DbField('bot_history', 'bot_history', 'x_prop_name', 'prop_name', '`prop_name`', '`prop_name`', 201, 65535, -1, false, '`prop_name`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->prop_name->Nullable = false; // NOT NULL field
-        $this->prop_name->Required = true; // Required field
+        $this->prop_name = new DbField('bot_history', 'bot_history', 'x_prop_name', 'prop_name', '`prop_name`', '`prop_name`', 200, 255, -1, false, '`prop_name`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->prop_name->Sortable = true; // Allow sort
         $this->prop_name->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->prop_name->Param, "CustomMsg");
         $this->Fields['prop_name'] = &$this->prop_name;
+
+        // phone
+        $this->phone = new DbField('bot_history', 'bot_history', 'x_phone', 'phone', '`phone`', '`phone`', 200, 16, -1, false, '`phone`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->phone->Nullable = false; // NOT NULL field
+        $this->phone->Required = true; // Required field
+        $this->phone->Sortable = true; // Allow sort
+        $this->phone->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->phone->Param, "CustomMsg");
+        $this->Fields['phone'] = &$this->phone;
+
+        // messages
+        $this->messages = new DbField('bot_history', 'bot_history', 'x_messages', 'messages', '`messages`', '`messages`', 201, -1, -1, false, '`messages`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->messages->Nullable = false; // NOT NULL field
+        $this->messages->Required = true; // Required field
+        $this->messages->Sortable = true; // Allow sort
+        $this->messages->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->messages->Param, "CustomMsg");
+        $this->Fields['messages'] = &$this->messages;
 
         // status
         $this->status = new DbField('bot_history', 'bot_history', 'x_status', 'status', '`status`', '`status`', 16, 4, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -100,14 +124,12 @@ class BotHistory extends DbTable
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
 
-        // created_by
-        $this->created_by = new DbField('bot_history', 'bot_history', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->created_by->Nullable = false; // NOT NULL field
-        $this->created_by->Required = true; // Required field
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
+        // canceled_at
+        $this->canceled_at = new DbField('bot_history', 'bot_history', 'x_canceled_at', 'canceled_at', '`canceled_at`', CastDateFieldForLike("`canceled_at`", 111, "DB"), 135, 19, 111, false, '`canceled_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->canceled_at->Sortable = true; // Allow sort
+        $this->canceled_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
+        $this->canceled_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->canceled_at->Param, "CustomMsg");
+        $this->Fields['canceled_at'] = &$this->canceled_at;
     }
 
     // Field Visibility
@@ -434,6 +456,9 @@ class BotHistory extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -493,6 +518,9 @@ class BotHistory extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
+            if (array_key_exists('id', $rs)) {
+                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -515,11 +543,14 @@ class BotHistory extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->tanggal->DbValue = $row['tanggal'];
+        $this->id->DbValue = $row['id'];
+        $this->created_at->DbValue = $row['created_at'];
         $this->prop_code->DbValue = $row['prop_code'];
         $this->prop_name->DbValue = $row['prop_name'];
+        $this->phone->DbValue = $row['phone'];
+        $this->messages->DbValue = $row['messages'];
         $this->status->DbValue = $row['status'];
-        $this->created_by->DbValue = $row['created_by'];
+        $this->canceled_at->DbValue = $row['canceled_at'];
     }
 
     // Delete uploaded files
@@ -531,13 +562,19 @@ class BotHistory extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "";
+        return "`id` = @id@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
+        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -546,7 +583,12 @@ class BotHistory extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 0) {
+        if (count($keys) == 1) {
+            if ($current) {
+                $this->id->CurrentValue = $keys[0];
+            } else {
+                $this->id->OldValue = $keys[0];
+            }
         }
     }
 
@@ -554,6 +596,19 @@ class BotHistory extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
+        if (is_array($row)) {
+            $val = array_key_exists('id', $row) ? $row['id'] : null;
+        } else {
+            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
         return $keyFilter;
     }
 
@@ -681,6 +736,7 @@ class BotHistory extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
+        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -691,6 +747,11 @@ class BotHistory extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
+        if ($this->id->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->id->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -749,12 +810,23 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
+            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+                $arKeys[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
+                $arKeys[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
+                if (!is_numeric($key)) {
+                    continue;
+                }
                 $ar[] = $key;
             }
         }
@@ -769,6 +841,11 @@ SORTHTML;
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
+            }
+            if ($setCurrent) {
+                $this->id->CurrentValue = $key;
+            } else {
+                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -794,11 +871,14 @@ SORTHTML;
         } else {
             return;
         }
-        $this->tanggal->setDbValue($row['tanggal']);
+        $this->id->setDbValue($row['id']);
+        $this->created_at->setDbValue($row['created_at']);
         $this->prop_code->setDbValue($row['prop_code']);
         $this->prop_name->setDbValue($row['prop_name']);
+        $this->phone->setDbValue($row['phone']);
+        $this->messages->setDbValue($row['messages']);
         $this->status->setDbValue($row['status']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->canceled_at->setDbValue($row['canceled_at']);
     }
 
     // Render list row values
@@ -811,20 +891,31 @@ SORTHTML;
 
         // Common render codes
 
-        // tanggal
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
+
+        // created_at
 
         // prop_code
 
         // prop_name
 
+        // phone
+
+        // messages
+
         // status
 
-        // created_by
+        // canceled_at
 
-        // tanggal
-        $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-        $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
-        $this->tanggal->ViewCustomAttributes = "";
+        // id
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
+
+        // created_at
+        $this->created_at->ViewValue = $this->created_at->CurrentValue;
+        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 117);
+        $this->created_at->ViewCustomAttributes = "";
 
         // prop_code
         $this->prop_code->ViewValue = $this->prop_code->CurrentValue;
@@ -834,20 +925,36 @@ SORTHTML;
         $this->prop_name->ViewValue = $this->prop_name->CurrentValue;
         $this->prop_name->ViewCustomAttributes = "";
 
+        // phone
+        $this->phone->ViewValue = $this->phone->CurrentValue;
+        $this->phone->ViewCustomAttributes = "";
+
+        // messages
+        $this->messages->ViewValue = $this->messages->CurrentValue;
+        if ($this->messages->ViewValue != null) {
+            $this->messages->ViewValue = str_replace(["\r\n", "\n", "\r"], "<br>", $this->messages->ViewValue);
+        }
+        $this->messages->ViewCustomAttributes = "";
+
         // status
         $this->status->ViewValue = $this->status->CurrentValue;
         $this->status->ViewValue = FormatNumber($this->status->ViewValue, 0, -2, -2, -2);
         $this->status->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
+        // canceled_at
+        $this->canceled_at->ViewValue = $this->canceled_at->CurrentValue;
+        $this->canceled_at->ViewValue = FormatDateTime($this->canceled_at->ViewValue, 111);
+        $this->canceled_at->ViewCustomAttributes = "";
 
-        // tanggal
-        $this->tanggal->LinkCustomAttributes = "";
-        $this->tanggal->HrefValue = "";
-        $this->tanggal->TooltipValue = "";
+        // id
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
+
+        // created_at
+        $this->created_at->LinkCustomAttributes = "";
+        $this->created_at->HrefValue = "";
+        $this->created_at->TooltipValue = "";
 
         // prop_code
         $this->prop_code->LinkCustomAttributes = "";
@@ -859,15 +966,25 @@ SORTHTML;
         $this->prop_name->HrefValue = "";
         $this->prop_name->TooltipValue = "";
 
+        // phone
+        $this->phone->LinkCustomAttributes = "";
+        $this->phone->HrefValue = "";
+        $this->phone->TooltipValue = "";
+
+        // messages
+        $this->messages->LinkCustomAttributes = "";
+        $this->messages->HrefValue = "";
+        $this->messages->TooltipValue = "";
+
         // status
         $this->status->LinkCustomAttributes = "";
         $this->status->HrefValue = "";
         $this->status->TooltipValue = "";
 
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
+        // canceled_at
+        $this->canceled_at->LinkCustomAttributes = "";
+        $this->canceled_at->HrefValue = "";
+        $this->canceled_at->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -884,11 +1001,17 @@ SORTHTML;
         // Call Row Rendering event
         $this->rowRendering();
 
-        // tanggal
-        $this->tanggal->EditAttrs["class"] = "form-control";
-        $this->tanggal->EditCustomAttributes = "";
-        $this->tanggal->EditValue = FormatDateTime($this->tanggal->CurrentValue, 8);
-        $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
+        $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->ViewCustomAttributes = "";
+
+        // created_at
+        $this->created_at->EditAttrs["class"] = "form-control";
+        $this->created_at->EditCustomAttributes = "";
+        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 117);
+        $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
         // prop_code
         $this->prop_code->EditAttrs["class"] = "form-control";
@@ -905,17 +1028,32 @@ SORTHTML;
         $this->prop_name->EditValue = $this->prop_name->CurrentValue;
         $this->prop_name->PlaceHolder = RemoveHtml($this->prop_name->caption());
 
+        // phone
+        $this->phone->EditAttrs["class"] = "form-control";
+        $this->phone->EditCustomAttributes = "";
+        if (!$this->phone->Raw) {
+            $this->phone->CurrentValue = HtmlDecode($this->phone->CurrentValue);
+        }
+        $this->phone->EditValue = $this->phone->CurrentValue;
+        $this->phone->PlaceHolder = RemoveHtml($this->phone->caption());
+
+        // messages
+        $this->messages->EditAttrs["class"] = "form-control";
+        $this->messages->EditCustomAttributes = "";
+        $this->messages->EditValue = $this->messages->CurrentValue;
+        $this->messages->PlaceHolder = RemoveHtml($this->messages->caption());
+
         // status
         $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
         $this->status->EditValue = $this->status->CurrentValue;
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
-        $this->created_by->EditValue = $this->created_by->CurrentValue;
-        $this->created_by->PlaceHolder = RemoveHtml($this->created_by->caption());
+        // canceled_at
+        $this->canceled_at->EditAttrs["class"] = "form-control";
+        $this->canceled_at->EditCustomAttributes = "";
+        $this->canceled_at->EditValue = FormatDateTime($this->canceled_at->CurrentValue, 111);
+        $this->canceled_at->PlaceHolder = RemoveHtml($this->canceled_at->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -945,16 +1083,20 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->tanggal);
+                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->prop_code);
                     $doc->exportCaption($this->prop_name);
+                    $doc->exportCaption($this->phone);
+                    $doc->exportCaption($this->messages);
                     $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->created_by);
+                    $doc->exportCaption($this->canceled_at);
                 } else {
-                    $doc->exportCaption($this->tanggal);
+                    $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->prop_code);
+                    $doc->exportCaption($this->phone);
                     $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->created_by);
+                    $doc->exportCaption($this->canceled_at);
                 }
                 $doc->endExportRow();
             }
@@ -984,16 +1126,20 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->tanggal);
+                        $doc->exportField($this->id);
+                        $doc->exportField($this->created_at);
                         $doc->exportField($this->prop_code);
                         $doc->exportField($this->prop_name);
+                        $doc->exportField($this->phone);
+                        $doc->exportField($this->messages);
                         $doc->exportField($this->status);
-                        $doc->exportField($this->created_by);
+                        $doc->exportField($this->canceled_at);
                     } else {
-                        $doc->exportField($this->tanggal);
+                        $doc->exportField($this->created_at);
                         $doc->exportField($this->prop_code);
+                        $doc->exportField($this->phone);
                         $doc->exportField($this->status);
-                        $doc->exportField($this->created_by);
+                        $doc->exportField($this->canceled_at);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1159,6 +1305,16 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
+        if ($this->status->CurrentValue == -1) {
+            $this->status->ViewValue = 'Canceled';
+        }
+        if ($this->status->CurrentValue == 0) {
+            $this->status->ViewValue = 'Pending';
+            $this->canceled_at->ViewValue = '-';
+        }
+        if ($this->status->CurrentValue == 1) {
+            $this->status->ViewValue = 'Delivered';
+        }
     }
 
     // User ID Filtering event
