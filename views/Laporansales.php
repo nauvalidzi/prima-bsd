@@ -31,9 +31,13 @@ $Laporansales = &$Page;
 							GROUP BY o.idpegawai
 						) vlo ON p.id = vlo.idpegawai";
 		} else {
-			$query = "SELECT o.tanggal, o.kode, c.nama customer, SUM(od.total) total, p.nama pegawai
-						FROM `order` o, order_detail od, customer c, pegawai p
-						WHERE o.id = od.idorder AND c.id = o.idcustomer AND p.id = c.idpegawai AND o.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' AND p.id = ".$_POST['marketing']."
+			$query = "SELECT o.tanggal, o.kode as kodeorder, c.nama as nama_customer, SUM(od.total) as total_order, 
+							p.nama as pegawai, COUNT(od.idproduct) AS jumlah_barang, SUM(od.jumlah) + SUM(od.bonus) AS jumlah_order
+						FROM `order` o
+						JOIN order_detail od ON o.id = od.idorder 
+						JOIN customer c ON c.id = o.idcustomer
+						JOIN pegawai p ON p.id = c.idpegawai
+						WHERE o.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' AND p.id = {$_POST['marketing']}
 						GROUP BY od.idorder";
 			//$mr_selected = ExecuteRows("SELECT nama FROM pegawai WHERE id = $_POST['marketing']");
 			$marketing = ExecuteRow("SELECT kode, nama FROM pegawai WHERE id = {$_POST['marketing']}");
@@ -145,7 +149,7 @@ $Laporansales = &$Page;
 		<?php else: ?>
 			<thead>
 				<tr>
-					<th colspan="6" class="text-center">
+					<th colspan="7" class="text-center">
 						<h4 class="my-2">Laporan Sales</h4>
 						<p class="mt-3">Marketing: <?php echo $marketing['kode'] . ' - ' .$marketing['nama'] ?><br />Periode: <?php echo tgl_indo($dateFrom) . ' - '. tgl_indo($dateTo) ?></p>
 					</th>
@@ -155,34 +159,44 @@ $Laporansales = &$Page;
 					<th class="text-center">Tanggal</th>
 					<th class="text-center">Kode Order</th>
 					<th class="text-center">Customer</th>
-					<th class="text-center">Total</th>
+					<th class="text-center">Jumlah Order</th>
+					<th class="text-center">Jumlah Barang</th>
+					<th class="text-center">Total Order</th>
 				</tr>
 			</thead>
 			<tbody>
-				<?php $total = 0; ?>
+				<?php $ext = ['jumlah_order' => 0, 'jumlah_barang' => 0, 'total_order' => 0]; ?>
 				<?php if (!empty($result)): ?>
 					<?php $i = 0; ?>
-					<?php foreach ($result as $data): ?>
+					<?php foreach ($result as $row): ?>
 					<tr>
 						<td class="text-center"><?= ++$i ?></td>
-						<td><?= tgl_indo($data['tanggal']) ?></td>
-						<td><?= $data['kode'] ?></td>
-						<td><?= $data['customer'] ?></td>
-						<td>Rp <span class="float-right"><?php echo rupiah($data['total']) ?></span></td>
+						<td><?= tgl_indo($row['tanggal']) ?></td>
+						<td><?= $row['kodeorder'] ?></td>
+						<td><?= $row['nama_customer'] ?></td>
+						<td class="text-center"><?php echo rupiah($row['jumlah_order']) ?></td>
+						<td class="text-center"><?php echo rupiah($row['jumlah_barang']) ?></td>
+						<td>Rp <span class="float-right"><?php echo rupiah($row['total_order']) ?></span></td>
 					</tr>
-					<?php $total += $data['total']; ?>
+					<?php 
+						$ext['jumlah_order'] += $row['jumlah_order']; 
+						$ext['jumlah_barang'] += $row['jumlah_barang']; 
+						$ext['total_order'] += $row['total_order']; 
+					?>
 					<?php endforeach; ?>
 				<?php else: ?>
 					<tr>
-						<td colspan="6" align="center">Tidak ada data.</td>
+						<td colspan="7" align="center">Tidak ada data.</td>
 					</tr>
 				<?php endif; ?>
 			</tbody>
-			<?php if (!empty($result) && $total > 0):  ?>
+			<?php if (!empty($result)):  ?>
 			<tfoot>
 				<tr>
-					<td colspan="4" class="text-right"><strong>Grand Total :</strong></td>
-					<td><strong>Rp. <span class="float-right"><?php echo rupiah($total) ?></span></strong></td>
+					<th colspan="4" class="text-right">Grand Total :</th>
+					<th class="text-center"><?php echo rupiah($ext['jumlah_order'], 'without-decimal') ?></th>
+					<th class="text-center"><?php echo rupiah($ext['jumlah_barang'], 'without-decimal') ?></th>
+					<th>Rp. <span class="float-right"><?php echo rupiah($ext['total_order']) ?></span></th>
 				</tr>
 			</tfoot>
 			<?php endif; ?>
