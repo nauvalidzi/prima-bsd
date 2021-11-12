@@ -15,7 +15,7 @@ $LaporanPembayaran = &$Page;
 		
 		$query = "SELECT p.id, p.tanggal AS tgl_bayar, p.kode AS kode_bayar, 
 					i.kode AS kode_invoice, o.kode AS kode_order, c.nama AS nama_customer, 
-					p.totaltagihan, i.sisabayar as sisatagihan, p.jumlahbayar
+					p.totaltagihan, i.sisabayar as piutang, p.jumlahbayar
 				  FROM pembayaran p
 				  JOIN invoice i ON p.idinvoice = i.id
 				  JOIN customer c ON c.id = p.idcustomer
@@ -89,13 +89,13 @@ $LaporanPembayaran = &$Page;
 		        <th class="text-center col-flex">Kode Order</th>
 		        <th class="text-center col-description">Nama Pelanggan</th>
 		        <th class="text-center col-description">Total Tagihan</th>
-		        <th class="text-center col-description">Sisa Tagihan</th>
+		        <th class="text-center col-description">Piutang</th>
 		        <th class="text-center col-description">Jumlah Bayar</th>
 		    </tr>
 		  </thead>
 		  <tbody>
 		  	<?php if (!empty($result)): ?>
-			  	<?php $i = 1; $kode_invoice = ''; $ext = ['totaltagihan' => 0, 'sisatagihan' => 0, 'jumlahbayar' => 0]; ?>
+			  	<?php $i = 1; $kode_invoice = ''; $ext = ['totaltagihan' => 0, 'piutang' => 0, 'jumlahbayar' => 0]; ?>
 			    <?php foreach($result as $row): ?>
 			    <?php $merging = rowspan($result, 'kode_invoice', $row['kode_invoice']); ?>
 			    <tr>
@@ -107,8 +107,8 @@ $LaporanPembayaran = &$Page;
 			      <td<?php echo $merging > 1 ? " rowspan=\"{$merging}\" style=\"vertical-align : middle;\"" : null; ?> class="text-center"><?php echo $row['kode_order'] ?></td>
 			      <td<?php echo $merging > 1 ? " rowspan=\"{$merging}\" style=\"vertical-align : middle;\"" : null; ?>><?php echo $row['nama_customer'] ?></td>
 			      <td<?php echo $merging > 1 ? " rowspan=\"{$merging}\" style=\"vertical-align : middle;\"" : null; ?>>Rp. <span class="float-right"><?php echo number_format($row['totaltagihan'], 2, ",", ".") ?></span></td>
-			      <td<?php echo $merging > 1 ? " rowspan=\"{$merging}\" style=\"vertical-align : middle;\"" : null; ?>>Rp. <span class="float-right"><?php echo number_format($row['sisatagihan'], 2, ",", ".") ?></span></td>
-			      <?php $ext['totaltagihan'] += $row['totaltagihan']; $ext['sisatagihan'] += $row['sisatagihan']; ?>
+			      <td<?php echo $merging > 1 ? " rowspan=\"{$merging}\" style=\"vertical-align : middle;\"" : null; ?>>Rp. <span class="float-right"><?php echo number_format($row['piutang'], 2, ",", ".") ?></span></td>
+			      <?php $ext['totaltagihan'] += $row['totaltagihan']; $ext['piutang'] += $row['piutang']; ?>
 			      <?php endif; ?>
 			      <td>Rp. <span class="float-right"><?php echo number_format($row['jumlahbayar'], 2, ",", ".") ?></span></td>
 			    </tr>
@@ -128,7 +128,7 @@ $LaporanPembayaran = &$Page;
 		  	<tr>
 		  		<th colspan="6" class="text-right">Grand Total :</th>
 		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['totaltagihan'], 2, ",", ".") ?></span></th>
-		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['sisatagihan'], 2, ",", ".") ?></span></th>
+		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['piutang'], 2, ",", ".") ?></span></th>
 		  		<th>Rp. <span class="float-right"><?php echo number_format($ext['jumlahbayar'], 2, ",", ".") ?></span></th>
 		  	</tr>
 		  </tfoot>
