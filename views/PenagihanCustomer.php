@@ -33,7 +33,13 @@ $PenagihanCustomer = &$Page;
 				$umur = "HAVING umur_faktur < 31 AND umur_faktur > 29"; // H+30
 				break;
             default:
-            	$umur = null;
+            	$umur = "HAVING (umur_faktur < -1 AND umur_faktur > -3) OR
+						 (umur_faktur < 2 AND umur_faktur > 0) OR
+						 (umur_faktur < 8 AND umur_faktur > 5) OR
+						 (umur_faktur < 15 AND umur_faktur > 13) OR
+						 (umur_faktur < 22 AND umur_faktur > 20) OR
+						 (umur_faktur < 29 AND umur_faktur > 27) OR
+						 (umur_faktur < 31 AND umur_faktur > 29)";
             	break;
         }
 		
@@ -105,7 +111,7 @@ $PenagihanCustomer = &$Page;
 			<tr>
 				<th colspan="11" class="text-center">
 					<h4 class="my-2">Penagihan Customer</h4>
-					<p class="mt-3">Umur Faktur: <?php echo $_GET['umur'] ?></p>
+					<p class="mt-3">Umur Faktur: <?php echo strtoupper($_GET['umur']) ?></p>
 					<p>Tanggal Jatuh Tempo: <?php echo date('d/m/Y', strtotime($jatuhtempo)) ?> </p>
 				</th>
 			</tr>
