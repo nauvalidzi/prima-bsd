@@ -10,7 +10,7 @@ $PenagihanCustomer = &$Page;
 	if(isset($_GET['jatuhtempo'])) {
 		$jatuhtempo = date('Y-m-d', strtotime($_GET['jatuhtempo']));
 
-		switch (strtoupper($_GET['umur']) ?? '') {
+		switch ($_GET['umur'] ?? '') {
 			case 'H-2':
 				$umur = "HAVING umur_faktur < -1 AND umur_faktur > -3"; // H-2
 				break;
@@ -73,13 +73,13 @@ $PenagihanCustomer = &$Page;
 						<label class="d-block">Umur Faktur</label>
 						<select name="umur" class="form-control" style="width: 10em;">
 							<option value="all">-- All --</option>
-							<option value="h-2" <?php echo isset($_GET['umur']) == 'h-2' ? 'selected' : null ?>>H-2</option>
-							<option value="h+1" <?php echo isset($_GET['umur']) == 'h+1' ? 'selected' : null ?>>H+1</option>
-							<option value="h+72" <?php echo isset($_GET['umur']) == 'h+72' ? 'selected' : null ?>>H+7</option>
-							<option value="h+14" <?php echo isset($_GET['umur']) == 'h+14' ? 'selected' : null ?>>H+14</option>
-							<option value="h+21" <?php echo isset($_GET['umur']) == 'h+21' ? 'selected' : null ?>>H+21</option>
-							<option value="H+28" <?php echo isset($_GET['umur']) == 'H+28' ? 'selected' : null ?>>H+28</option>
-							<option value="h+30" <?php echo isset($_GET['umur']) == 'h+30' ? 'selected' : null ?>>H+30</option>
+							<option value="H-2" <?php echo isset($_GET['umur']) && $_GET['umur'] == 'H-2' ? 'selected' : null ?>>H-2</option>
+							<option value="H+1" <?php echo isset($_GET['umur']) && $_GET['umur'] == 'H+1' ? 'selected' : null ?>>H+1</option>
+							<option value="H+7" <?php echo isset($_GET['umur']) && $_GET['umur'] == 'H+7' ? 'selected' : null ?>>H+7</option>
+							<option value="H+14" <?php echo isset($_GET['umur']) && $_GET['umur'] == 'H+14' ? 'selected' : null ?>>H+14</option>
+							<option value="H+21" <?php echo isset($_GET['umur']) && $_GET['umur'] == 'H+21' ? 'selected' : null ?>>H+21</option>
+							<option value="H+28" <?php echo isset($_GET['umur']) && $_GET['umur'] == 'H+28' ? 'selected' : null ?>>H+28</option>
+							<option value="H+30" <?php echo isset($_GET['umur']) && $_GET['umur'] == 'H+30' ? 'selected' : null ?>>H+30</option>
 						</select>
 					</li>
 					<li class="d-inline-block">
@@ -104,8 +104,9 @@ $PenagihanCustomer = &$Page;
 		  <thead>
 			<tr>
 				<th colspan="11" class="text-center">
-					<h4 class="my-2">Penagihan Customer <?php echo $umur ?></h4>
-					<p class="mt-3">Tanggal Jatuh Tempo: <?php echo date('d/m/Y', strtotime($jatuhtempo)) ?> </p>
+					<h4 class="my-2">Penagihan Customer</h4>
+					<p class="mt-3">Umur Faktur: <?php echo $_GET['umur'] ?></p>
+					<p>Tanggal Jatuh Tempo: <?php echo date('d/m/Y', strtotime($jatuhtempo)) ?> </p>
 				</th>
 			</tr>
 		    <tr>
