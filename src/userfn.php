@@ -572,20 +572,26 @@ function getNextKode($tipe, $id) {
    		$format = "LD. %URUTAN";
    	} elseif ($tipe == "suratjalan") {
    		$table = "suratjalan";
-   		$column = "kode";
-   		$format = "%YY%MM-%URUTAN";
+   		$format = "SJ/%YY%MM-%URUTAN";
    	} elseif ($tipe == "pembayaran") {
    		$table = "pembayaran";
-   		$column = "kode";
-   		$format = "PB-%URUTAN/%MM%YY";
+   		$format = "PB/%YY%MM-%URUTAN";
    	}
 
    	// ExecuteRow("SELECT MAX({$column}) as kode FROM ");
-    $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `{$table}` WHERE created_at = (SELECT MAX(created_at) FROM `{$table}`)");
+    if (strpos($format, "%MM") !== false || strpos($format, "%YY") !== false) {
+        $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `{$table}` WHERE created_at = (SELECT MAX(created_at) FROM `{$table}`)");
+    } else {
+        $maxKode = ExecuteRow("SELECT MAX({$column}) as kode FROM `{$table}`");
+    }
+    // print_r($maxKode); die;
    	if (!$maxKode['kode']) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
    	}
+    
+    empty($maxKode['last_post']) ? $maxKode['last_post'] = date('Y-m-d') : $maxKode['last_post'];
+
     if (date('Y-m-d', strtotime($maxKode['last_post'])) != date('Y-m-d')) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
