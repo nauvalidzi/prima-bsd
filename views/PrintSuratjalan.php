@@ -12,6 +12,7 @@ $PrintSuratjalan = &$Page;
                         c.nama as namacustomer, 
                         ac.penerima,
                         ac.telepon,
+                        ac.alamat,
                         kel.nama AS kel, 
                         kec.nama AS kec, 
                         kab.nama AS kab, 

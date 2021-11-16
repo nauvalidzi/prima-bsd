@@ -1398,7 +1398,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        //$rsnew['kode'] = getNextKode('suratjalan', 0);
+        $rsnew['kode'] = getNextKode('suratjalan', 0);
         return true;
     }
 

@@ -576,20 +576,20 @@ function getNextKode($tipe, $id) {
    	} elseif ($tipe == "suratjalan") {
    		$table = "suratjalan";
    		$column = "kode";
-   		$format = "%MM%YY-%URUTAN";
+   		$format = "%YY%MM-%URUTAN";
    	} elseif ($tipe == "pembayaran") {
    		$table = "pembayaran";
    		$column = "kode";
    		$format = "PB-%URUTAN/%MM%YY";
    	}
-   	$maxKode = ExecuteRow("SELECT MAX({$column}) FROM {$table}");
-   	if (!$maxKode) {
+   	$maxKode = ExecuteRow("SELECT MAX({$column}) as kode FROM {$table}");
+   	if (!$maxKode['kode']) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
    	} else {
         $reformat = penomoran_date_replace($format);
         $string = explode("%URUTAN", $reformat);
-        $trim_prefix = str_replace($string[0], '', $maxKode);
+        $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
         $trim_suffix = str_replace($string[1], '', $trim_prefix);
         return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
    	}
