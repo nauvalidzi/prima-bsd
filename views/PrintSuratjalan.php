@@ -8,7 +8,22 @@ $PrintSuratjalan = &$Page;
 <?php
 	$idSj = $_GET['id'] ? $_GET['id'] : die;
 
-	$sj= ExecuteRow("SELECT sj.*, c.nama namacustomer, c.alamat, kel.nama kel, kec.nama kec, kab.nama kab, prov.name prov FROM suratjalan sj, customer c LEFT JOIN kelurahan kel ON c.idkel=kel.id LEFT JOIN kecamatan kec ON c.idkec=kec.id LEFT JOIN kabupaten kab ON c.idkab=kab.id LEFT JOIN provinsi prov ON c.idprov=prov.id WHERE sj.idcustomer=c.id and sj.id=".$idSj);
+	$sj= ExecuteRow("SELECT sj.kode, sj.tglsurat,
+                        c.nama as namacustomer, 
+                        ac.penerima,
+                        ac.telepon,
+                        kel.nama AS kel, 
+                        kec.nama AS kec, 
+                        kab.nama AS kab, 
+                        prov.`name` AS prov
+                    FROM suratjalan sj
+                    JOIN customer c ON sj.idcustomer=c.id 
+                    LEFT JOIN alamat_customer ac ON ac.idcustomer = c.id
+                    LEFT JOIN kelurahan kel ON ac.idkelurahan = kel.id
+                    LEFT JOIN kecamatan kec ON ac.idkecamatan = kec.id
+                    LEFT JOIN kabupaten kab ON ac.idkabupaten = kab.id
+                    LEFT JOIN provinsi prov ON ac.idprovinsi = prov.id
+                    WHERE sj.id = {$idSj}");
 
 	$query = ExecuteQuery("SELECT sjd.idinvoice, i.kode FROM suratjalan_detail sjd, invoice i WHERE sjd.idinvoice = i.id and idsuratjalan=".$idSj);
     $details = $query->fetchAll();
@@ -180,7 +195,8 @@ $PrintSuratjalan = &$Page;
                     No. SJ: <b><?= $sj['kode'] ?></b></td>
                 <td></td>
                 <td width="30%" class="bordered">
-                    Kepada Yth. <?= $sj['namacustomer'] ?><br>
+                    Kepada Yth. <?= $sj['namacustomer'] ?> (<?= $sj['penerima'] ?>)<br>
+                    <?= $sj['telepon']  ?><br>
                     <?php
                         if (!empty($sj['alamat'])) {
                             echo "{$sj['alamat']}<br>";
@@ -254,7 +270,7 @@ $PrintSuratjalan = &$Page;
 		</table>
         <hr style="border-bottom: 2px dashed; margin: 2em 0 1em">
         <div style="border: 1px solid; padding: 1em;">
-            <p><?= $sj['namacustomer'] ?><br>
+            <p><?= $sj['namacustomer'] ?> (<?= $sj['penerima'] ?>)<br><?= $sj['telepon'] ?></p>
             <p><?php
                 if (!empty($sj['alamat'])) {
                     echo "{$sj['alamat']}<br>";
