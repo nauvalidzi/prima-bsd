@@ -582,17 +582,27 @@ function getNextKode($tipe, $id) {
    		$column = "kode";
    		$format = "PB-%URUTAN/%MM%YY";
    	}
-   	$maxKode = ExecuteRow("SELECT MAX({$column}) as kode FROM {$table}");
+
+   	// ExecuteRow("SELECT MAX({$column}) as kode FROM ");
+
+    $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `{$table}` WHERE created_at = (SELECT MAX(created_at) FROM `{$table}`)");
+
+
    	if (!$maxKode['kode']) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
-   	} else {
-        $reformat = penomoran_date_replace($format);
-        $string = explode("%URUTAN", $reformat);
-        $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
-        $trim_suffix = str_replace($string[1], '', $trim_prefix);
-        return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
    	}
+
+    if (date('Y-m-d', strtotime($maxKode['last_post'])) != date('Y-m-d')) {
+        $reformat = penomoran_date_replace($format);
+        return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
+    }
+
+    $reformat = penomoran_date_replace($format);
+    $string = explode("%URUTAN", $reformat);
+    $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
+    $trim_suffix = str_replace($string[1], '', $trim_prefix);
+    return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
 }
 
 function penomoran_date_replace($format) {
