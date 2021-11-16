@@ -1164,7 +1164,7 @@ class InvoiceEdit extends Invoice
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             $this->kode->EditValue = $this->kode->CurrentValue;
             $this->kode->ViewCustomAttributes = "";
 

@@ -1935,7 +1935,7 @@ class InvoiceGrid extends Invoice
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -2084,7 +2084,7 @@ class InvoiceGrid extends Invoice
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             $this->kode->EditValue = $this->kode->CurrentValue;
             $this->kode->ViewCustomAttributes = "";
 

@@ -144,8 +144,8 @@ function Api_Action($app)
         $kode = getNextKodeOrder($args['titipmerk']);
         return $response->withJson($kode);
     });
-    $app->get('/nextKodeInvoice/{idorder}/{jumlahkirim}', function ($request, $response, $args) {
-        $kode = getNextKodeInvoice($args['idorder'], $args['jumlahkirim']);
+    $app->get('/nextKodeInvoice/{idorder}', function ($request, $response, $args) {
+        $kode = getNextKodeInvoice($args['idorder']);
         return $response->withJson($kode);
     });
     $app->get('/nextKode/{tipe}/{id}', function ($request, $response, $args) {
@@ -501,30 +501,27 @@ function getNextKodeNpd($idCustomer) {
     return $kode;
 }
 
-function getNextKodeInvoice($idorder, $jumlahkirim) {
-    $format = "%MM%YY-%URUTAN";
+function getNextKodeInvoice($idorder) {
+    $format = "INV/%YY%MM-%URUTAN"; // %MM BULAN FAKTUR IKUT BULAN PO
     $digit_length = 4;
     $exists = ExecuteRow("SELECT COUNT(*) AS total, max(kode) AS kode FROM invoice WHERE idorder = {$idorder}");
     if ($exists['total'] > 0) {
         $alphabets = [0, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
         return $exists['kode'] . $alphabets[$exists['total'] + 1];
     }
-    $maxKode = ExecuteRow("SELECT MAX(kode) FROM invoice");
-    if (!$maxKode) {
-        $reformat = penomoran_date_replace($format);
-        $kode = str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
+    $order = ExecuteRow("SELECT tanggal FROM `order` WHERE id = {$idorder}")['tanggal'];
+    $lastkodeinvoice = "INV/".date('ym', strtotime($order));
+    $maxKode = ExecuteRow("SELECT kode FROM invoice WHERE created_at = (SELECT MAX(created_at) FROM invoice WHERE kode LIKE '{$lastkodeinvoice}%')");
+    $format = str_replace('%MM', date('m', strtotime($order)), $format);
+    $reformat = penomoran_date_replace($format);
+    if (!$maxKode['kode']) {
+        return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
     } else {
-        $reformat = penomoran_date_replace($format);
         $string = explode("%URUTAN", $reformat);
-        $trim_prefix = str_replace($string[0], '', $maxKode);
+        $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
         $trim_suffix = str_replace($string[1], '', $trim_prefix);
-        $kode = $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
+        return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
     }
-    $totalorder = ExecuteRow("SELECT SUM(jumlah) + SUM(bonus) AS total FROM order_detail WHERE idorder = {$idorder}")['totalorder'];
-    if ($jumlahkirim < $totalorder) {
-        return $kode . 'A';
-    }
-    return $kode;
 }
 
 function getNextKodeOrder($titipmerk=0) {
@@ -584,20 +581,15 @@ function getNextKode($tipe, $id) {
    	}
 
    	// ExecuteRow("SELECT MAX({$column}) as kode FROM ");
-
     $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `{$table}` WHERE created_at = (SELECT MAX(created_at) FROM `{$table}`)");
-
-
    	if (!$maxKode['kode']) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
    	}
-
     if (date('Y-m-d', strtotime($maxKode['last_post'])) != date('Y-m-d')) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
     }
-
     $reformat = penomoran_date_replace($format);
     $string = explode("%URUTAN", $reformat);
     $trim_prefix = str_replace($string[0], '', $maxKode['kode']);

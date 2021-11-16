@@ -399,6 +399,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){function a(){var a=0;$("[data-table='invoice_detail'][data-field='x_totaltagihan']").each((function(){a+=parseInt($(this).val()||0)})),$("#x_totalnonpajak").val(a).change()}$.get("api/nextKodeInvoice/0/0",(function(a){$("#x_kode").val(a)})),$("[data-table='invoice_detail'][data-field='x_totaltagihan']").change((function(){a()})),$("#x_totalnonpajak, #x_pajak").change((function(){var a,t;a=parseInt($("#x_totalnonpajak").val()||0),t=a*parseFloat($("#x_pajak").val()||0)/100,$("#x_totaltagihan").val(a+t),$("#x_sisabayar").val(a+t)})),$("[data-table='invoice_detail'][data-field='x_idorder']").change((function(){a()}))}));
+    loadjs.ready("jquery",(function(){function a(){var a=0;$("[data-table='invoice_detail'][data-field='x_totaltagihan']").each((function(){a+=parseInt($(this).val()||0)})),$("#x_totalnonpajak").val(a).change()}$("#x_kode").val(),$("select[data-field=x_idorder]").change((function(){var a=$(this).val();$.get("api/nextKodeInvoice/"+a,(function(a){$("#x_kode").val(a)}))})),$("[data-table='invoice_detail'][data-field='x_totaltagihan']").change((function(){a()})),$("#x_totalnonpajak, #x_pajak").change((function(){var a,t;a=parseInt($("#x_totalnonpajak").val()||0),t=a*parseFloat($("#x_pajak").val()||0)/100,$("#x_totaltagihan").val(a+t),$("#x_sisabayar").val(a+t)})),$("[data-table='invoice_detail'][data-field='x_idorder']").change((function(){a()}))}));
 });
 </script>

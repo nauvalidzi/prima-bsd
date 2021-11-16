@@ -1521,7 +1521,7 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "";
+        $this->kode->EditCustomAttributes = "readonly";
         $this->kode->EditValue = $this->kode->CurrentValue;
         $this->kode->ViewCustomAttributes = "";
 
@@ -1895,12 +1895,7 @@ SORTHTML;
         // Enter your code here
         // To cancel, set return value to false
         $rsnew['sisabayar'] = $rsnew['totaltagihan'];
-        $jumlahkirim = 0; // DEFAULT 0
-        $detail = $GLOBALS["invoice_detail"]->GetGridFormValues(); // TOTAL KIRIM YANG DIINPUT
-       	foreach ($detail as $d) {
-           	$jumlahkirim += $d['jumlahkirim'] + $d['jumlahbonus'];
-        }
-        $rsnew['kode'] = getNextKodeInvoice($rsnew['idorder'], $jumlahkirim);
+        $rsnew['kode'] = getNextKodeInvoice($rsnew['idorder']);
         return true;
     }
 
