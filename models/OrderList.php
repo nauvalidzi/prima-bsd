@@ -570,6 +570,7 @@ class OrderList extends Order
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->kode->setVisibility();
+        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
@@ -895,6 +896,7 @@ class OrderList extends Order
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
+        $filterList = Concat($filterList, $this->titipmerk->AdvancedSearch->toJson(), ","); // Field titipmerk
         $filterList = Concat($filterList, $this->tanggal->AdvancedSearch->toJson(), ","); // Field tanggal
         $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
@@ -958,6 +960,14 @@ class OrderList extends Order
         $this->kode->AdvancedSearch->SearchValue2 = @$filter["y_kode"];
         $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
         $this->kode->AdvancedSearch->save();
+
+        // Field titipmerk
+        $this->titipmerk->AdvancedSearch->SearchValue = @$filter["x_titipmerk"];
+        $this->titipmerk->AdvancedSearch->SearchOperator = @$filter["z_titipmerk"];
+        $this->titipmerk->AdvancedSearch->SearchCondition = @$filter["v_titipmerk"];
+        $this->titipmerk->AdvancedSearch->SearchValue2 = @$filter["y_titipmerk"];
+        $this->titipmerk->AdvancedSearch->SearchOperator2 = @$filter["w_titipmerk"];
+        $this->titipmerk->AdvancedSearch->save();
 
         // Field tanggal
         $this->tanggal->AdvancedSearch->SearchValue = @$filter["x_tanggal"];
@@ -1251,6 +1261,7 @@ class OrderList extends Order
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->kode->setSort("");
+                $this->titipmerk->setSort("");
                 $this->tanggal->setSort("");
                 $this->idpegawai->setSort("");
                 $this->idcustomer->setSort("");
@@ -1834,6 +1845,7 @@ class OrderList extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
+        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
@@ -1851,6 +1863,7 @@ class OrderList extends Order
         $row = [];
         $row['id'] = null;
         $row['kode'] = null;
+        $row['titipmerk'] = null;
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
@@ -1899,6 +1912,9 @@ class OrderList extends Order
         // id
 
         // kode
+
+        // titipmerk
+        $this->titipmerk->CellCssStyle = "white-space: nowrap;";
 
         // tanggal
 
@@ -2172,6 +2188,8 @@ class OrderList extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_titipmerk":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":

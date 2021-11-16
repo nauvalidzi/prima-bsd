@@ -21,6 +21,7 @@ loadjs.ready("head", function () {
         ew.vars.tables.order = currentTable;
     forderadd.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
+        ["titipmerk", [fields.titipmerk.visible && fields.titipmerk.required ? ew.Validators.required(fields.titipmerk.caption) : null], fields.titipmerk.isInvalid],
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
@@ -92,6 +93,7 @@ loadjs.ready("head", function () {
     forderadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    forderadd.lists.titipmerk = <?= $Page->titipmerk->toClientList($Page) ?>;
     forderadd.lists.idpegawai = <?= $Page->idpegawai->toClientList($Page) ?>;
     forderadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     loadjs.done("forderadd");
@@ -128,6 +130,38 @@ $Page->showMessage();
 <input type="<?= $Page->kode->getInputTextType() ?>" data-table="order" data-field="x_kode" name="x_kode" id="x_kode" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" value="<?= $Page->kode->EditValue ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
 <?= $Page->kode->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->titipmerk->Visible) { // titipmerk ?>
+    <div id="r_titipmerk" class="form-group row">
+        <label id="elh_order_titipmerk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->titipmerk->caption() ?><?= $Page->titipmerk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->titipmerk->cellAttributes() ?>>
+<span id="el_order_titipmerk">
+<template id="tp_x_titipmerk">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="order" data-field="x_titipmerk" name="x_titipmerk" id="x_titipmerk"<?= $Page->titipmerk->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_titipmerk" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_titipmerk"
+    name="x_titipmerk"
+    value="<?= HtmlEncode($Page->titipmerk->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_titipmerk"
+    data-target="dsl_x_titipmerk"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->titipmerk->isInvalidClass() ?>"
+    data-table="order"
+    data-field="x_titipmerk"
+    data-value-separator="<?= $Page->titipmerk->displayValueSeparatorAttribute() ?>"
+    <?= $Page->titipmerk->editAttributes() ?>>
+<?= $Page->titipmerk->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->titipmerk->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -286,11 +320,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    // Write your table-specific startup script here, no need to add script tags.
-    //loadjs.ready('jquery', function() {
-    //	$.get('api/nextKode/order/0', function(result){
-    //		$('#x_kode').val(result);
-    //    });
-    //});
+    loadjs.ready("jquery",(function(){$.get("api/nextKodeOrder/0",(function(e){$("#x_kode").val(e)})),$("input[data-field=x_titipmerk]").change((function(){var e=$(this).val();$.get("api/nextKodeOrder/"+e,(function(e){$("#x_kode").val(e)}))}))}));
 });
 </script>

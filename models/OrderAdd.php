@@ -466,6 +466,7 @@ class OrderAdd extends Order
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->kode->setVisibility();
+        $this->titipmerk->setVisibility();
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
@@ -646,6 +647,7 @@ class OrderAdd extends Order
         $this->id->OldValue = $this->id->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
+        $this->titipmerk->CurrentValue = 0;
         $this->tanggal->CurrentValue = null;
         $this->tanggal->OldValue = $this->tanggal->CurrentValue;
         $this->idpegawai->CurrentValue = CurrentUserID();
@@ -675,6 +677,16 @@ class OrderAdd extends Order
                 $this->kode->Visible = false; // Disable update for API request
             } else {
                 $this->kode->setFormValue($val);
+            }
+        }
+
+        // Check field name 'titipmerk' first before field var 'x_titipmerk'
+        $val = $CurrentForm->hasValue("titipmerk") ? $CurrentForm->getValue("titipmerk") : $CurrentForm->getValue("x_titipmerk");
+        if (!$this->titipmerk->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->titipmerk->Visible = false; // Disable update for API request
+            } else {
+                $this->titipmerk->setFormValue($val);
             }
         }
 
@@ -729,6 +741,7 @@ class OrderAdd extends Order
     {
         global $CurrentForm;
         $this->kode->CurrentValue = $this->kode->FormValue;
+        $this->titipmerk->CurrentValue = $this->titipmerk->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
@@ -794,6 +807,7 @@ class OrderAdd extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
+        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
@@ -812,6 +826,7 @@ class OrderAdd extends Order
         $row = [];
         $row['id'] = $this->id->CurrentValue;
         $row['kode'] = $this->kode->CurrentValue;
+        $row['titipmerk'] = $this->titipmerk->CurrentValue;
         $row['tanggal'] = $this->tanggal->CurrentValue;
         $row['idpegawai'] = $this->idpegawai->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
@@ -855,6 +870,8 @@ class OrderAdd extends Order
 
         // kode
 
+        // titipmerk
+
         // tanggal
 
         // idpegawai
@@ -878,6 +895,14 @@ class OrderAdd extends Order
             // kode
             $this->kode->ViewValue = $this->kode->CurrentValue;
             $this->kode->ViewCustomAttributes = "";
+
+            // titipmerk
+            if (strval($this->titipmerk->CurrentValue) != "") {
+                $this->titipmerk->ViewValue = $this->titipmerk->optionCaption($this->titipmerk->CurrentValue);
+            } else {
+                $this->titipmerk->ViewValue = null;
+            }
+            $this->titipmerk->ViewCustomAttributes = "";
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
@@ -957,6 +982,11 @@ class OrderAdd extends Order
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";
 
+            // titipmerk
+            $this->titipmerk->LinkCustomAttributes = "";
+            $this->titipmerk->HrefValue = "";
+            $this->titipmerk->TooltipValue = "";
+
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
@@ -985,12 +1015,17 @@ class OrderAdd extends Order
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
             $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
             $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+
+            // titipmerk
+            $this->titipmerk->EditCustomAttributes = "";
+            $this->titipmerk->EditValue = $this->titipmerk->options(false);
+            $this->titipmerk->PlaceHolder = RemoveHtml($this->titipmerk->caption());
 
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
@@ -1097,6 +1132,10 @@ class OrderAdd extends Order
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
 
+            // titipmerk
+            $this->titipmerk->LinkCustomAttributes = "";
+            $this->titipmerk->HrefValue = "";
+
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
@@ -1140,6 +1179,11 @@ class OrderAdd extends Order
         if ($this->kode->Required) {
             if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
                 $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+            }
+        }
+        if ($this->titipmerk->Required) {
+            if ($this->titipmerk->FormValue == "") {
+                $this->titipmerk->addErrorMessage(str_replace("%s", $this->titipmerk->caption(), $this->titipmerk->RequiredErrorMessage));
             }
         }
         if ($this->tanggal->Required) {
@@ -1206,16 +1250,6 @@ class OrderAdd extends Order
                 return false;
             }
         }
-        if ($this->kode->CurrentValue != "") { // Check field with unique index
-            $filter = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                return false;
-            }
-        }
         $conn = $this->getConnection();
 
         // Begin transaction
@@ -1231,6 +1265,9 @@ class OrderAdd extends Order
 
         // kode
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
+
+        // titipmerk
+        $this->titipmerk->setDbValueDef($rsnew, $this->titipmerk->CurrentValue, 0, strval($this->titipmerk->CurrentValue) == "");
 
         // tanggal
         $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), false);
@@ -1527,6 +1564,8 @@ class OrderAdd extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_titipmerk":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
@@ -1596,6 +1635,7 @@ class OrderAdd extends Order
     public function pageRender()
     {
         //Log("Page Render");
+        $this->titipmerk->CurrentValue = 0;
     }
 
     // Page Data Rendering event

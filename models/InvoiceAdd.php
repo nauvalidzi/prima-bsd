@@ -1634,16 +1634,6 @@ class InvoiceAdd extends Invoice
                 }
             }
         }
-        if ($this->kode->CurrentValue != "") { // Check field with unique index
-            $filter = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                return false;
-            }
-        }
         $conn = $this->getConnection();
 
         // Begin transaction
@@ -1679,7 +1669,7 @@ class InvoiceAdd extends Invoice
         $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // idtermpayment
-        $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, false);
+        $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, strval($this->idtermpayment->CurrentValue) == "");
 
         // idtipepayment
         $this->idtipepayment->setDbValueDef($rsnew, $this->idtipepayment->CurrentValue, null, false);

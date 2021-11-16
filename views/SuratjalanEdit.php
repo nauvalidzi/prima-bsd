@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.suratjalan)
         ew.vars.tables.suratjalan = currentTable;
     fsuratjalanedit.addFields([
+        ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tglsurat", [fields.tglsurat.visible && fields.tglsurat.required ? ew.Validators.required(fields.tglsurat.caption) : null, ew.Validators.datetime(0)], fields.tglsurat.isInvalid],
         ["tglkirim", [fields.tglkirim.visible && fields.tglkirim.required ? ew.Validators.required(fields.tglkirim.caption) : null, ew.Validators.datetime(0)], fields.tglkirim.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
@@ -114,6 +115,18 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
+<?php if ($Page->kode->Visible) { // kode ?>
+    <div id="r_kode" class="form-group row">
+        <label id="elh_suratjalan_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kode->cellAttributes() ?>>
+<span id="el_suratjalan_kode">
+<span<?= $Page->kode->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->kode->getDisplayValue($Page->kode->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="suratjalan" data-field="x_kode" data-hidden="1" name="x_kode" id="x_kode" value="<?= HtmlEncode($Page->kode->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->tglsurat->Visible) { // tglsurat ?>
     <div id="r_tglsurat" class="form-group row">
         <label id="elh_suratjalan_tglsurat" for="x_tglsurat" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tglsurat->caption() ?><?= $Page->tglsurat->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

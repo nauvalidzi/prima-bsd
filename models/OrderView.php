@@ -520,6 +520,7 @@ class OrderView extends Order
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
         $this->kode->setVisibility();
+        $this->titipmerk->setVisibility();
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
@@ -817,6 +818,7 @@ class OrderView extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
+        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
@@ -834,6 +836,7 @@ class OrderView extends Order
         $row = [];
         $row['id'] = null;
         $row['kode'] = null;
+        $row['titipmerk'] = null;
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
@@ -866,6 +869,8 @@ class OrderView extends Order
         // id
 
         // kode
+
+        // titipmerk
 
         // tanggal
 
@@ -1129,6 +1134,8 @@ class OrderView extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_titipmerk":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":

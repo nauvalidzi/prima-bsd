@@ -1131,12 +1131,9 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "";
-        if (!$this->kode->Raw) {
-            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-        }
+        $this->kode->EditCustomAttributes = "readonly";
         $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+        $this->kode->ViewCustomAttributes = "";
 
         // tglsurat
         $this->tglsurat->EditAttrs["class"] = "form-control";

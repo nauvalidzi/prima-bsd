@@ -1099,7 +1099,7 @@ class PembayaranAdd extends Pembayaran
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -1392,16 +1392,6 @@ class PembayaranAdd extends Pembayaran
                 $userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
                 $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
                 $this->setFailureMessage($userIdMsg);
-                return false;
-            }
-        }
-        if ($this->kode->CurrentValue != "") { // Check field with unique index
-            $filter = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
                 return false;
             }
         }

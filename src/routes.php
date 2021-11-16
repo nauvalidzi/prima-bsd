@@ -410,25 +410,6 @@ return function (App $app) {
         }
     );
 
-    // npd_status
-    $app->any('/NpdStatusList[/{id}]', NpdStatusController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdStatusList-npd_status-list'); // list
-    $app->any('/NpdStatusAdd[/{id}]', NpdStatusController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdStatusAdd-npd_status-add'); // add
-    $app->any('/NpdStatusView[/{id}]', NpdStatusController::class . ':view')->add(PermissionMiddleware::class)->setName('NpdStatusView-npd_status-view'); // view
-    $app->any('/NpdStatusEdit[/{id}]', NpdStatusController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdStatusEdit-npd_status-edit'); // edit
-    $app->any('/NpdStatusDelete[/{id}]', NpdStatusController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdStatusDelete-npd_status-delete'); // delete
-    $app->any('/NpdStatusPreview', NpdStatusController::class . ':preview')->add(PermissionMiddleware::class)->setName('NpdStatusPreview-npd_status-preview'); // preview
-    $app->group(
-        '/npd_status',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdStatusController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_status/list-npd_status-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdStatusController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_status/add-npd_status-add-2'); // add
-            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', NpdStatusController::class . ':view')->add(PermissionMiddleware::class)->setName('npd_status/view-npd_status-view-2'); // view
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdStatusController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_status/edit-npd_status-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdStatusController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_status/delete-npd_status-delete-2'); // delete
-            $group->any('/' . Config("PREVIEW_ACTION") . '', NpdStatusController::class . ':preview')->add(PermissionMiddleware::class)->setName('npd_status/preview-npd_status-preview-2'); // preview
-        }
-    );
-
     // npd_sample
     $app->any('/NpdSampleList[/{id}]', NpdSampleController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdSampleList-npd_sample-list'); // list
     $app->any('/NpdSampleAdd[/{id}]', NpdSampleController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdSampleAdd-npd_sample-add'); // add
@@ -898,15 +879,6 @@ return function (App $app) {
     // laporansales
     $app->any('/Laporansales[/{params:.*}]', LaporansalesController::class)->add(PermissionMiddleware::class)->setName('Laporansales-laporansales-custom'); // custom
 
-    // v_npd_customer
-    $app->any('/VNpdCustomerList[/{id}]', VNpdCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('VNpdCustomerList-v_npd_customer-list'); // list
-    $app->group(
-        '/v_npd_customer',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', VNpdCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('v_npd_customer/list-v_npd_customer-list-2'); // list
-        }
-    );
-
     // brand_link
     $app->any('/BrandLinkList', BrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('BrandLinkList-brand_link-list'); // list
     $app->group(
@@ -1092,15 +1064,6 @@ return function (App $app) {
 
     // penagihan_customer
     $app->any('/PenagihanCustomer[/{params:.*}]', PenagihanCustomerController::class)->add(PermissionMiddleware::class)->setName('PenagihanCustomer-penagihan_customer-custom'); // custom
-
-    // penagihan
-    $app->any('/PenagihanList[/{id}]', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('PenagihanList-penagihan-list'); // list
-    $app->group(
-        '/penagihan',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('penagihan/list-penagihan-list-2'); // list
-        }
-    );
 
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');

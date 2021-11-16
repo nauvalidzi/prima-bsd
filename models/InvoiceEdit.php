@@ -468,7 +468,7 @@ class InvoiceEdit extends Invoice
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->kode->Visible = false;
+        $this->kode->setVisibility();
         $this->tglinvoice->setVisibility();
         $this->idcustomer->Visible = false;
         $this->idorder->Visible = false;
@@ -485,6 +485,7 @@ class InvoiceEdit extends Invoice
         $this->readonly->setVisibility();
         $this->sent->Visible = false;
         $this->hideFieldsForAddEdit();
+        $this->kode->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -684,6 +685,16 @@ class InvoiceEdit extends Invoice
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'kode' first before field var 'x_kode'
+        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
+        if (!$this->kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode->Visible = false; // Disable update for API request
+            } else {
+                $this->kode->setFormValue($val);
+            }
+        }
+
         // Check field name 'tglinvoice' first before field var 'x_tglinvoice'
         $val = $CurrentForm->hasValue("tglinvoice") ? $CurrentForm->getValue("tglinvoice") : $CurrentForm->getValue("x_tglinvoice");
         if (!$this->tglinvoice->IsDetailKey) {
@@ -777,6 +788,7 @@ class InvoiceEdit extends Invoice
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
+        $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tglinvoice->CurrentValue = $this->tglinvoice->FormValue;
         $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
         $this->totalnonpajak->CurrentValue = $this->totalnonpajak->FormValue;
@@ -1105,6 +1117,11 @@ class InvoiceEdit extends Invoice
             $this->readonly->ViewValue = $this->readonly->CurrentValue;
             $this->readonly->ViewCustomAttributes = "";
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // tglinvoice
             $this->tglinvoice->LinkCustomAttributes = "";
             $this->tglinvoice->HrefValue = "";
@@ -1145,6 +1162,12 @@ class InvoiceEdit extends Invoice
             $this->readonly->HrefValue = "";
             $this->readonly->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // kode
+            $this->kode->EditAttrs["class"] = "form-control";
+            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
+
             // tglinvoice
             $this->tglinvoice->EditAttrs["class"] = "form-control";
             $this->tglinvoice->EditCustomAttributes = "";
@@ -1234,6 +1257,11 @@ class InvoiceEdit extends Invoice
 
             // Edit refer script
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // tglinvoice
             $this->tglinvoice->LinkCustomAttributes = "";
             $this->tglinvoice->HrefValue = "";
@@ -1284,6 +1312,11 @@ class InvoiceEdit extends Invoice
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->kode->Required) {
+            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
+                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+            }
         }
         if ($this->tglinvoice->Required) {
             if (!$this->tglinvoice->IsDetailKey && EmptyValue($this->tglinvoice->FormValue)) {

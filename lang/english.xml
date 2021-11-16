@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/11/8" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/11/16" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -991,9 +991,6 @@
     <menu id="406">
       <phrase id="menutext" value="Permintaan Harga" />
     </menu>
-    <menu id="311">
-      <phrase id="menutext" value="Detail Status" />
-    </menu>
     <menu id="304">
       <phrase id="menutext" value="Perizinan Produk" />
     </menu>
@@ -1113,9 +1110,6 @@
     </menu>
     <menu id="599">
       <phrase id="menutext" value="Penagihan" />
-    </menu>
-    <menu id="696">
-      <phrase id="menutext" value="Antrian Penagihan" />
     </menu>
     <menu id="570">
       <phrase id="menutext" value="Pengaturan" />
@@ -1387,14 +1381,14 @@
         <phrase id="fldcaption" value="Kode Pos" />
       </field>
       <field id="alamat">
-        <phrase id="fldcaption" value="Detail Alamat" />
+        <phrase id="fldcaption" value="Alamat Lengkap" />
       </field>
       <field id="telpon">
         <phrase id="fldcaption" value="Telpon" />
       </field>
       <field id="hp">
         <phrase id="fldcaption" value="HP/WhatsApp" />
-        <phrase id="flderrmsg" value="Gunakan format 62812345xxx" />
+        <phrase id="flderrmsg" value="Harap menggunakan format 62812345xxx" />
         <phrase id="custommsg" value="Gunakan format 62812345xxx" />
       </field>
       <field id="_email">
@@ -1715,16 +1709,8 @@
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
-      <field id="statuskategori">
-        <phrase id="fldcaption" value="Kategori" />
-        <phrase id="fldtagvalue1" value="Baru" />
-        <phrase id="fldtagcaption1" value="Baru" />
-        <phrase id="fldtagvalue2" value="Substitusi" />
-        <phrase id="fldtagcaption2" value="Substitusi" />
-        <phrase id="fldtagvalue3" value="Modifikasi" />
-        <phrase id="fldtagcaption3" value="Modifikasi" />
-        <phrase id="fldtagvalue4" value="Lainnya" />
-        <phrase id="fldtagcaption4" value="Lainnya" />
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
       </field>
       <field id="idpegawai">
         <phrase id="fldcaption" value="Marketing" />
@@ -1735,35 +1721,17 @@
       <field id="kodeorder">
         <phrase id="fldcaption" value="Kode Order" />
       </field>
-      <field id="idbrand">
-        <phrase id="fldcaption" value="Brand" />
+      <field id="idproduct_acuan">
+        <phrase id="fldcaption" value="Produk Acuan" />
       </field>
       <field id="nama">
-        <phrase id="fldcaption" value="Nama Product" />
-      </field>
-      <field id="idkategoribarang">
-        <phrase id="fldcaption" value="Kategori Barang" />
+        <phrase id="fldcaption" value="Nama Produk" />
       </field>
       <field id="idjenisbarang">
         <phrase id="fldcaption" value="Jenis Barang" />
       </field>
-      <field id="idproduct_acuan">
-        <phrase id="fldcaption" value="Product Acuan" />
-      </field>
-      <field id="idkualitasbarang">
-        <phrase id="fldcaption" value="Kualitas Barang" />
-      </field>
-      <field id="kemasanbarang">
-        <phrase id="fldcaption" value="Kemasan Barang" />
-      </field>
-      <field id="label">
-        <phrase id="fldcaption" value="Label" />
-      </field>
-      <field id="bahan">
-        <phrase id="fldcaption" value="Bahan Campaign" />
-      </field>
-      <field id="ukuran">
-        <phrase id="fldcaption" value="Ukuran" />
+      <field id="idkategoribarang">
+        <phrase id="fldcaption" value="Kategori Barang" />
       </field>
       <field id="warna">
         <phrase id="fldcaption" value="Warna Sediaan" />
@@ -1771,20 +1739,20 @@
       <field id="parfum">
         <phrase id="fldcaption" value="Parfum" />
       </field>
-      <field id="harga">
-        <phrase id="fldcaption" value="Harga" />
-      </field>
       <field id="tambahan">
         <phrase id="fldcaption" value="Tambahan" />
+      </field>
+      <field id="kemasanbarang">
+        <phrase id="fldcaption" value="Kemasan Barang" />
+      </field>
+      <field id="label">
+        <phrase id="fldcaption" value="Label" />
       </field>
       <field id="orderperdana">
         <phrase id="fldcaption" value="Order Perdana" />
       </field>
       <field id="orderreguler">
         <phrase id="fldcaption" value="Order Reguler" />
-      </field>
-      <field id="status">
-        <phrase id="fldcaption" value="Status" />
       </field>
       <field id="selesai">
         <phrase id="fldcaption" value="Selesai" />
@@ -1793,60 +1761,36 @@
         <phrase id="fldtagvalue2" value="0" />
         <phrase id="fldtagcaption2" value="Tidak" />
       </field>
-      <field id="idproduct">
-        <phrase id="fldcaption" value="Product Jadi" />
-      </field>
-      <field id="created_at">
-        <phrase id="fldcaption" value="Created at" />
-      </field>
-      <field id="created_by">
-        <phrase id="fldcaption" value="Created by" />
-      </field>
       <field id="readonly">
-        <phrase id="fldcaption" value="Value" />
+        <phrase id="fldcaption" value="Lock NPD" />
         <phrase id="fldtagvalue1" value="1" />
         <phrase id="fldtagcaption1" value="Yes" />
         <phrase id="fldtagvalue2" value="0" />
         <phrase id="fldtagcaption2" value="No" />
       </field>
-    </table>
-    <table id="npd_status">
-      <phrase id="tblcaption" value="Detail Status" />
-      <field id="id">
-        <phrase id="fldcaption" value="ID" />
-      </field>
-      <field id="idnpd">
-        <phrase id="fldcaption" value="Kode NPD" />
-      </field>
-      <field id="idpegawai">
-        <phrase id="fldcaption" value="PIC" />
-      </field>
-      <field id="status">
-        <phrase id="fldcaption" value="Status" />
-      </field>
-      <field id="targetmulai">
-        <phrase id="fldcaption" value="Target Mulai" />
-      </field>
-      <field id="tglmulai">
-        <phrase id="fldcaption" value="Tgl. Mulai" />
-      </field>
-      <field id="targetselesai">
-        <phrase id="fldcaption" value="Target Selesai" />
-      </field>
-      <field id="tglselesai">
-        <phrase id="fldcaption" value="Tgl. Selesai" />
-      </field>
-      <field id="keterangan">
-        <phrase id="fldcaption" value="Keterangan" />
-      </field>
-      <field id="lampiran">
-        <phrase id="fldcaption" value="Lampiran" />
-      </field>
-      <field id="created_by">
-        <phrase id="fldcaption" value="Created by" />
-      </field>
       <field id="created_at">
         <phrase id="fldcaption" value="Created at" />
+      </field>
+      <field id="tanggal_order">
+        <phrase id="fldcaption" value="tanggal order" />
+      </field>
+      <field id="target_selesai">
+        <phrase id="fldcaption" value="target selesai" />
+      </field>
+      <field id="kategori">
+        <phrase id="fldcaption" value="kategori" />
+      </field>
+      <field id="fungsi_produk">
+        <phrase id="fldcaption" value="fungsi produk" />
+      </field>
+      <field id="kualitasbarang">
+        <phrase id="fldcaption" value="kualitasbarang" />
+      </field>
+      <field id="bahan_campaign">
+        <phrase id="fldcaption" value="bahan campaign" />
+      </field>
+      <field id="ukuran_sediaan">
+        <phrase id="fldcaption" value="ukuran sediaan" />
       </field>
     </table>
     <table id="npd_sample">
@@ -2542,6 +2486,13 @@
       <field id="kode">
         <phrase id="fldcaption" value="Kode PO" />
       </field>
+      <field id="titipmerk">
+        <phrase id="fldcaption" value="titipmerk" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
       <field id="tanggal">
         <phrase id="fldcaption" value="Tanggal Order" />
       </field>
@@ -3166,107 +3117,6 @@
     </table>
     <table id="v_npd_customer">
       <phrase id="tblcaption" value="v npd customer" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="statuskategori">
-        <phrase id="fldcaption" value="statuskategori" />
-      </field>
-      <field id="idpegawai">
-        <phrase id="fldcaption" value="idpegawai" />
-      </field>
-      <field id="idcustomer">
-        <phrase id="fldcaption" value="idcustomer" />
-      </field>
-      <field id="kodeorder">
-        <phrase id="fldcaption" value="kodeorder" />
-      </field>
-      <field id="idbrand">
-        <phrase id="fldcaption" value="idbrand" />
-      </field>
-      <field id="nama">
-        <phrase id="fldcaption" value="nama" />
-      </field>
-      <field id="idkategoribarang">
-        <phrase id="fldcaption" value="idkategoribarang" />
-      </field>
-      <field id="idjenisbarang">
-        <phrase id="fldcaption" value="idjenisbarang" />
-      </field>
-      <field id="idproduct_acuan">
-        <phrase id="fldcaption" value="idproduct acuan" />
-      </field>
-      <field id="idkualitasbarang">
-        <phrase id="fldcaption" value="idkualitasbarang" />
-      </field>
-      <field id="kemasanbarang">
-        <phrase id="fldcaption" value="kemasanbarang" />
-      </field>
-      <field id="label">
-        <phrase id="fldcaption" value="label" />
-      </field>
-      <field id="bahan">
-        <phrase id="fldcaption" value="bahan" />
-      </field>
-      <field id="ukuran">
-        <phrase id="fldcaption" value="ukuran" />
-      </field>
-      <field id="warna">
-        <phrase id="fldcaption" value="warna" />
-      </field>
-      <field id="parfum">
-        <phrase id="fldcaption" value="parfum" />
-      </field>
-      <field id="harga">
-        <phrase id="fldcaption" value="harga" />
-      </field>
-      <field id="tambahan">
-        <phrase id="fldcaption" value="tambahan" />
-      </field>
-      <field id="orderperdana">
-        <phrase id="fldcaption" value="orderperdana" />
-      </field>
-      <field id="orderreguler">
-        <phrase id="fldcaption" value="orderreguler" />
-      </field>
-      <field id="status">
-        <phrase id="fldcaption" value="status" />
-      </field>
-      <field id="idproduct">
-        <phrase id="fldcaption" value="idproduct" />
-      </field>
-      <field id="created_at">
-        <phrase id="fldcaption" value="created at" />
-      </field>
-      <field id="created_by">
-        <phrase id="fldcaption" value="created by" />
-      </field>
-      <field id="selesai">
-        <phrase id="fldcaption" value="selesai" />
-        <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Yes" />
-        <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="No" />
-      </field>
-      <field id="readonly">
-        <phrase id="fldcaption" value="readonly" />
-        <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Yes" />
-        <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="No" />
-      </field>
-      <field id="nama_pemesan">
-        <phrase id="fldcaption" value="nama pemesan" />
-      </field>
-      <field id="alamat_pemesan">
-        <phrase id="fldcaption" value="alamat pemesan" />
-      </field>
-      <field id="jabatan_pemesan">
-        <phrase id="fldcaption" value="jabatan pemesan" />
-      </field>
-      <field id="hp_pemesan">
-        <phrase id="fldcaption" value="hp pemesan" />
-      </field>
     </table>
     <table id="brand_link">
       <phrase id="tblcaption" value="brand link" />
@@ -3607,63 +3457,6 @@
     </table>
     <table id="penagihan_customer">
       <phrase id="tblcaption" value="Penagihan Customer" />
-    </table>
-    <table id="penagihan">
-      <phrase id="tblcaption" value="Antrian Penagihan" />
-      <field id="id">
-        <phrase id="fldcaption" value="ID" />
-      </field>
-      <field id="tgl_faktur">
-        <phrase id="fldcaption" value="Tgl Faktur" />
-      </field>
-      <field id="nilai_faktur">
-        <phrase id="fldcaption" value="Nilai Faktur" />
-      </field>
-      <field id="piutang">
-        <phrase id="fldcaption" value="Piutang" />
-      </field>
-      <field id="umur_faktur">
-        <phrase id="fldcaption" value="Umur Faktur" />
-      </field>
-      <field id="nomor_handphone">
-        <phrase id="fldcaption" value="nomor handphone" />
-      </field>
-      <field id="status">
-        <phrase id="fldcaption" value="Status" />
-        <phrase id="fldtagvalue1" value="-1" />
-        <phrase id="fldtagcaption1" value="Cancel" />
-        <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="Pending" />
-        <phrase id="fldtagvalue3" value="1" />
-        <phrase id="fldtagcaption3" value="Yes" />
-      </field>
-      <field id="messages">
-        <phrase id="fldcaption" value="Messages" />
-      </field>
-      <field id="nama_customer">
-        <phrase id="fldcaption" value="Nama Customer" />
-      </field>
-      <field id="tgl_antrian">
-        <phrase id="fldcaption" value="Tgl Antrian" />
-      </field>
-      <field id="tgl_penagihan">
-        <phrase id="fldcaption" value="Tgl Penagihan" />
-      </field>
-      <field id="tgl_return">
-        <phrase id="fldcaption" value="Tgl Return" />
-      </field>
-      <field id="tgl_cancel">
-        <phrase id="fldcaption" value="Tgl Cancel" />
-      </field>
-      <field id="tgl_order">
-        <phrase id="fldcaption" value="Tgl Order" />
-      </field>
-      <field id="kode_order">
-        <phrase id="fldcaption" value="kode order" />
-      </field>
-      <field id="nilai_po">
-        <phrase id="fldcaption" value="nilai po" />
-      </field>
     </table>
   </project>
 </ew-language>

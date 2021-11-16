@@ -259,7 +259,7 @@ class Customer extends DbTable
         $this->Fields['kodepos'] = &$this->kodepos;
 
         // alamat
-        $this->alamat = new DbField('customer', 'customer', 'x_alamat', 'alamat', '`alamat`', '`alamat`', 200, 255, -1, false, '`alamat`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->alamat = new DbField('customer', 'customer', 'x_alamat', 'alamat', '`alamat`', '`alamat`', 201, 65535, -1, false, '`alamat`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->alamat->Sortable = true; // Allow sort
         $this->alamat->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alamat->Param, "CustomMsg");
         $this->Fields['alamat'] = &$this->alamat;
@@ -320,6 +320,8 @@ class Customer extends DbTable
 
         // limit_kredit_order
         $this->limit_kredit_order = new DbField('customer', 'customer', 'x_limit_kredit_order', 'limit_kredit_order', '`limit_kredit_order`', '`limit_kredit_order`', 3, 15, -1, false, '`limit_kredit_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit_order->Nullable = false; // NOT NULL field
+        $this->limit_kredit_order->Required = true; // Required field
         $this->limit_kredit_order->Sortable = true; // Allow sort
         $this->limit_kredit_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->limit_kredit_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->limit_kredit_order->Param, "CustomMsg");
@@ -1854,12 +1856,9 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "";
-        if (!$this->kode->Raw) {
-            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-        }
+        $this->kode->EditCustomAttributes = "readonly";
         $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+        $this->kode->ViewCustomAttributes = "";
 
         // idtipecustomer
         $this->idtipecustomer->EditAttrs["class"] = "form-control";
@@ -1990,9 +1989,6 @@ SORTHTML;
         // alamat
         $this->alamat->EditAttrs["class"] = "form-control";
         $this->alamat->EditCustomAttributes = "";
-        if (!$this->alamat->Raw) {
-            $this->alamat->CurrentValue = HtmlDecode($this->alamat->CurrentValue);
-        }
         $this->alamat->EditValue = $this->alamat->CurrentValue;
         $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
 
@@ -2564,11 +2560,11 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
-        $user_level = CurrentUserLevel();
-    	if($user_level != -1){
-    		$this->idpegawai->CurrentValue = CurrentUserID();
-    		$this->idpegawai->ReadOnly = TRUE; 
-    	}
+        //$user_level = CurrentUserLevel();
+    	//if($user_level != -1){
+    	//	$this->idpegawai->CurrentValue = CurrentUserID();
+    	//	$this->idpegawai->ReadOnly = TRUE; 
+    	//}
     }
 
     // User ID Filtering event

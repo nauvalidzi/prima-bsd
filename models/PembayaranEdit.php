@@ -468,7 +468,7 @@ class PembayaranEdit extends Pembayaran
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->kode->Visible = false;
+        $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->idcustomer->Visible = false;
         $this->idinvoice->Visible = false;
@@ -480,6 +480,7 @@ class PembayaranEdit extends Pembayaran
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
+        $this->kode->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -678,6 +679,16 @@ class PembayaranEdit extends Pembayaran
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'kode' first before field var 'x_kode'
+        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
+        if (!$this->kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode->Visible = false; // Disable update for API request
+            } else {
+                $this->kode->setFormValue($val);
+            }
+        }
+
         // Check field name 'tanggal' first before field var 'x_tanggal'
         $val = $CurrentForm->hasValue("tanggal") ? $CurrentForm->getValue("tanggal") : $CurrentForm->getValue("x_tanggal");
         if (!$this->tanggal->IsDetailKey) {
@@ -742,6 +753,7 @@ class PembayaranEdit extends Pembayaran
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
+        $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
         $this->totaltagihan->CurrentValue = $this->totaltagihan->FormValue;
@@ -1010,6 +1022,11 @@ class PembayaranEdit extends Pembayaran
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
@@ -1041,6 +1058,12 @@ class PembayaranEdit extends Pembayaran
             $this->bukti->ExportHrefValue = $this->bukti->UploadPath . $this->bukti->Upload->DbValue;
             $this->bukti->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // kode
+            $this->kode->EditAttrs["class"] = "form-control";
+            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
+
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
             $this->tanggal->EditCustomAttributes = "";
@@ -1107,6 +1130,11 @@ class PembayaranEdit extends Pembayaran
 
             // Edit refer script
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
@@ -1150,6 +1178,11 @@ class PembayaranEdit extends Pembayaran
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->kode->Required) {
+            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
+                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+            }
         }
         if ($this->tanggal->Required) {
             if (!$this->tanggal->IsDetailKey && EmptyValue($this->tanggal->FormValue)) {

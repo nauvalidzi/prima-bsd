@@ -483,6 +483,7 @@ class PegawaiEdit extends Pegawai
         $this->level->setVisibility();
         $this->aktif->setVisibility();
         $this->hideFieldsForAddEdit();
+        $this->kode->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -1141,12 +1142,9 @@ class PegawaiEdit extends Pegawai
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // nama
             $this->nama->EditAttrs["class"] = "form-control";
@@ -1277,6 +1275,7 @@ class PegawaiEdit extends Pegawai
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";
@@ -1447,23 +1446,6 @@ class PegawaiEdit extends Pegawai
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
-        if ($this->kode->CurrentValue != "") { // Check field with unique index
-            $filterChk = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
-            $filterChk .= " AND NOT (" . $filter . ")";
-            $this->CurrentFilter = $filterChk;
-            $sqlChk = $this->getCurrentSql();
-            $rsChk = $conn->executeQuery($sqlChk);
-            if (!$rsChk) {
-                return false;
-            }
-            if ($rsChk->fetch()) {
-                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                $rsChk->closeCursor();
-                return false;
-            }
-        }
         if ($this->_email->CurrentValue != "") { // Check field with unique index
             $filterChk = "(`email` = '" . AdjustSql($this->_email->CurrentValue, $this->Dbid) . "')";
             $filterChk .= " AND NOT (" . $filter . ")";
@@ -1531,9 +1513,6 @@ class PegawaiEdit extends Pegawai
             // Save old values
             $this->loadDbValues($rsold);
             $rsnew = [];
-
-            // kode
-            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", $this->kode->ReadOnly);
 
             // nama
             $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);

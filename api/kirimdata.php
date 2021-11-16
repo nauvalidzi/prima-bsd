@@ -31,6 +31,32 @@ if ($data->mtd=="INSERTPENAGIHAN")
 
 }
 
+if ($data->mtd=="SELECTPENAGIHAN")
+{
+	$sql = "SELECT * FROM penagihan')";
+	$result = mysqli_query($con,$sql);
+	$data2=[];$x=0;$x1=0;
+	while ($row = mysqli_fetch_array($result))
+	{
+		$data2[$x] = ['message'=>$row['messages'],'hp'=>$row['nomor_handphone']];
+		$x=$x+1;	
+	}
+
+	$rowCount = mysqli_num_rows($result);
+	if($rowCount>0)
+	{
+		$response['sukses'] = "OK";
+		$response['dataku'] = $data2;
+		$json_response = json_encode($response);
+
+	} else {
+		$response['sukses'] = "FAIL";
+		// $response['sql'] = $sql;
+		$json_response = json_encode($response);
+	}
+	echo $json_response;
+
+}
 
 
 	function gen_uuid() {

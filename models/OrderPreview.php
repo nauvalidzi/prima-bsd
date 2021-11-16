@@ -392,6 +392,7 @@ class OrderPreview extends Order
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->kode->setVisibility();
+        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
@@ -489,6 +490,7 @@ class OrderPreview extends Order
             $this->CurrentOrderType = "";
             $this->id->setSort("");
             $this->kode->setSort("");
+            $this->titipmerk->setSort("");
             $this->tanggal->setSort("");
             $this->idpegawai->setSort("");
             $this->idcustomer->setSort("");
@@ -746,6 +748,8 @@ class OrderPreview extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_titipmerk":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":

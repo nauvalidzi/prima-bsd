@@ -6,7 +6,7 @@ namespace PHPMaker2021\distributor;
 $PrintSuratjalan = &$Page;
 ?>
 <?php
-	$idSj = $_GET['id'];
+	$idSj = $_GET['id'] ? $_GET['id'] : die;
 
 	$sj= ExecuteRow("SELECT sj.*, c.nama namacustomer, c.alamat, kel.nama kel, kec.nama kec, kab.nama kab, prov.name prov FROM suratjalan sj, customer c LEFT JOIN kelurahan kel ON c.idkel=kel.id LEFT JOIN kecamatan kec ON c.idkec=kec.id LEFT JOIN kabupaten kab ON c.idkab=kab.id LEFT JOIN provinsi prov ON c.idprov=prov.id WHERE sj.idcustomer=c.id and sj.id=".$idSj);
 
@@ -183,13 +183,13 @@ $PrintSuratjalan = &$Page;
                     Kepada Yth. <?= $sj['namacustomer'] ?><br>
                     <?php
                         if (!empty($sj['alamat'])) {
-                            echo $sj['alamat'];
+                            echo "{$sj['alamat']}<br>";
                         }
                         if (!empty($sj['kec'])) {
-                            echo ", ".ucwords(strtolower($sj['kec']));
+                            echo ucwords(strtolower($sj['kec'])) . ", ";
                         }
                         if (!empty($sj['kab'])) {
-                            echo ", ".ucwords(strtolower($sj['kab']));
+                            echo ucwords(strtolower($sj['kab'])) . ", ";
                         }
                         if (!empty($sj['prov'])) {
                             echo "<br>".ucwords(strtolower($sj['prov']));
@@ -252,9 +252,25 @@ $PrintSuratjalan = &$Page;
 				<td>_______________________</td>
 			</tr>
 		</table>
-        
+        <hr style="border-bottom: 2px dashed; margin: 2em 0 1em">
+        <div style="border: 1px solid; padding: 1em;">
+            <p><?= $sj['namacustomer'] ?><br>
+            <p><?php
+                if (!empty($sj['alamat'])) {
+                    echo "{$sj['alamat']}<br>";
+                }
+                if (!empty($sj['kec'])) {
+                    echo ucwords(strtolower($sj['kec'])) . ", ";
+                }
+                if (!empty($sj['kab'])) {
+                    echo ucwords(strtolower($sj['kab'])) . ", ";
+                }
+                if (!empty($sj['prov'])) {
+                    echo "<br>".ucwords(strtolower($sj['prov']));
+                }
+            ?></p>
+        </div>
     </body>
 </html>
-
 
 <?= GetDebugMessage() ?>

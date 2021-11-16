@@ -38,7 +38,7 @@ loadjs.ready("head", function () {
         ["kodepos", [], fields.kodepos.isInvalid],
         ["alamat", [], fields.alamat.isInvalid],
         ["telpon", [], fields.telpon.isInvalid],
-        ["hp", [ew.Validators.regex('^(62)8[1-9][0-9]{7,11}$')], fields.hp.isInvalid],
+        ["hp", [ew.Validators.regex("^(62)8[1-9][0-9]{7,11}$")], fields.hp.isInvalid],
         ["_email", [], fields._email.isInvalid],
         ["website", [], fields.website.isInvalid],
         ["foto", [], fields.foto.isInvalid],
@@ -447,7 +447,7 @@ loadjs.ready("head", function() {
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->alamat->cellAttributes() ?>>
             <span id="el_customer_alamat" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->alamat->getInputTextType() ?>" data-table="customer" data-field="x_alamat" name="x_alamat" id="x_alamat" size="60" maxlength="255" placeholder="<?= HtmlEncode($Page->alamat->getPlaceHolder()) ?>" value="<?= $Page->alamat->EditValue ?>"<?= $Page->alamat->editAttributes() ?>>
+<input type="<?= $Page->alamat->getInputTextType() ?>" data-table="customer" data-field="x_alamat" name="x_alamat" id="x_alamat" maxlength="255" placeholder="<?= HtmlEncode($Page->alamat->getPlaceHolder()) ?>" value="<?= $Page->alamat->EditValue ?>"<?= $Page->alamat->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->alamat->getErrorMessage(false) ?></div>
 </span>
         </div></div>

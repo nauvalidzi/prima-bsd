@@ -376,6 +376,7 @@ class OrderDelete extends Order
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->kode->setVisibility();
+        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
@@ -572,6 +573,7 @@ class OrderDelete extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
+        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
@@ -589,6 +591,7 @@ class OrderDelete extends Order
         $row = [];
         $row['id'] = null;
         $row['kode'] = null;
+        $row['titipmerk'] = null;
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
@@ -615,6 +618,9 @@ class OrderDelete extends Order
         // id
 
         // kode
+
+        // titipmerk
+        $this->titipmerk->CellCssStyle = "white-space: nowrap;";
 
         // tanggal
 
@@ -927,6 +933,8 @@ class OrderDelete extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_titipmerk":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":

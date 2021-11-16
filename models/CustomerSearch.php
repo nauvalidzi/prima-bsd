@@ -1259,7 +1259,7 @@ class CustomerSearch extends Customer
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             if (!$this->kode->Raw) {
                 $this->kode->AdvancedSearch->SearchValue = HtmlDecode($this->kode->AdvancedSearch->SearchValue);
             }
@@ -1492,9 +1492,6 @@ class CustomerSearch extends Customer
             // alamat
             $this->alamat->EditAttrs["class"] = "form-control";
             $this->alamat->EditCustomAttributes = "";
-            if (!$this->alamat->Raw) {
-                $this->alamat->AdvancedSearch->SearchValue = HtmlDecode($this->alamat->AdvancedSearch->SearchValue);
-            }
             $this->alamat->EditValue = HtmlEncode($this->alamat->AdvancedSearch->SearchValue);
             $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
 
@@ -1620,7 +1617,7 @@ class CustomerSearch extends Customer
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if (!CheckByRegEx($this->hp->AdvancedSearch->SearchValue, '^(62)8[1-9][0-9]{7,11}$')) {
+        if (!CheckByRegEx($this->hp->AdvancedSearch->SearchValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
         }
         if (!CheckInteger($this->limit_kredit_order->AdvancedSearch->SearchValue)) {

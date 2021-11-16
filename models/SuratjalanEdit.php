@@ -468,7 +468,7 @@ class SuratjalanEdit extends Suratjalan
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->kode->Visible = false;
+        $this->kode->setVisibility();
         $this->tglsurat->setVisibility();
         $this->tglkirim->setVisibility();
         $this->idcustomer->setVisibility();
@@ -477,6 +477,7 @@ class SuratjalanEdit extends Suratjalan
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
+        $this->kode->Required = false;
         $this->idcustomer->Required = false;
 
         // Do not use lookup cache
@@ -672,6 +673,16 @@ class SuratjalanEdit extends Suratjalan
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'kode' first before field var 'x_kode'
+        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
+        if (!$this->kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode->Visible = false; // Disable update for API request
+            } else {
+                $this->kode->setFormValue($val);
+            }
+        }
+
         // Check field name 'tglsurat' first before field var 'x_tglsurat'
         $val = $CurrentForm->hasValue("tglsurat") ? $CurrentForm->getValue("tglsurat") : $CurrentForm->getValue("x_tglsurat");
         if (!$this->tglsurat->IsDetailKey) {
@@ -736,6 +747,7 @@ class SuratjalanEdit extends Suratjalan
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
+        $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tglsurat->CurrentValue = $this->tglsurat->FormValue;
         $this->tglsurat->CurrentValue = UnFormatDateTime($this->tglsurat->CurrentValue, 0);
         $this->tglkirim->CurrentValue = $this->tglkirim->FormValue;
@@ -952,6 +964,11 @@ class SuratjalanEdit extends Suratjalan
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // tglsurat
             $this->tglsurat->LinkCustomAttributes = "";
             $this->tglsurat->HrefValue = "";
@@ -977,6 +994,12 @@ class SuratjalanEdit extends Suratjalan
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // kode
+            $this->kode->EditAttrs["class"] = "form-control";
+            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
+
             // tglsurat
             $this->tglsurat->EditAttrs["class"] = "form-control";
             $this->tglsurat->EditCustomAttributes = "";
@@ -1049,6 +1072,11 @@ class SuratjalanEdit extends Suratjalan
 
             // Edit refer script
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // tglsurat
             $this->tglsurat->LinkCustomAttributes = "";
             $this->tglsurat->HrefValue = "";
@@ -1088,6 +1116,11 @@ class SuratjalanEdit extends Suratjalan
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->kode->Required) {
+            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
+                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+            }
         }
         if ($this->tglsurat->Required) {
             if (!$this->tglsurat->IsDetailKey && EmptyValue($this->tglsurat->FormValue)) {

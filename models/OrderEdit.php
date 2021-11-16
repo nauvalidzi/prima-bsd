@@ -469,6 +469,7 @@ class OrderEdit extends Order
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->kode->setVisibility();
+        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
         $this->idpegawai->Visible = false;
         $this->idcustomer->Visible = false;
@@ -478,6 +479,7 @@ class OrderEdit extends Order
         $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
+        $this->kode->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -775,6 +777,7 @@ class OrderEdit extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
+        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
@@ -792,6 +795,7 @@ class OrderEdit extends Order
         $row = [];
         $row['id'] = null;
         $row['kode'] = null;
+        $row['titipmerk'] = null;
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
@@ -834,6 +838,8 @@ class OrderEdit extends Order
         // id
 
         // kode
+
+        // titipmerk
 
         // tanggal
 
@@ -950,12 +956,9 @@ class OrderEdit extends Order
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
@@ -983,6 +986,7 @@ class OrderEdit extends Order
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
@@ -1057,23 +1061,6 @@ class OrderEdit extends Order
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
-        if ($this->kode->CurrentValue != "") { // Check field with unique index
-            $filterChk = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
-            $filterChk .= " AND NOT (" . $filter . ")";
-            $this->CurrentFilter = $filterChk;
-            $sqlChk = $this->getCurrentSql();
-            $rsChk = $conn->executeQuery($sqlChk);
-            if (!$rsChk) {
-                return false;
-            }
-            if ($rsChk->fetch()) {
-                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                $rsChk->closeCursor();
-                return false;
-            }
-        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);
@@ -1090,9 +1077,6 @@ class OrderEdit extends Order
             // Save old values
             $this->loadDbValues($rsold);
             $rsnew = [];
-
-            // kode
-            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", $this->kode->ReadOnly);
 
             // tanggal
             $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), $this->tanggal->ReadOnly);
@@ -1378,6 +1362,8 @@ class OrderEdit extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_titipmerk":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":

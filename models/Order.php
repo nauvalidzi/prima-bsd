@@ -30,6 +30,7 @@ class Order extends DbTable
     // Fields
     public $id;
     public $kode;
+    public $titipmerk;
     public $tanggal;
     public $idpegawai;
     public $idcustomer;
@@ -90,6 +91,23 @@ class Order extends DbTable
         $this->kode->Sortable = true; // Allow sort
         $this->kode->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode->Param, "CustomMsg");
         $this->Fields['kode'] = &$this->kode;
+
+        // titipmerk
+        $this->titipmerk = new DbField('order', 'order', 'x_titipmerk', 'titipmerk', '`titipmerk`', '`titipmerk`', 16, 1, -1, false, '`titipmerk`', false, false, false, 'FORMATTED TEXT', 'RADIO');
+        $this->titipmerk->Nullable = false; // NOT NULL field
+        $this->titipmerk->Sortable = false; // Allow sort
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->titipmerk->Lookup = new Lookup('titipmerk', 'order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->titipmerk->Lookup = new Lookup('titipmerk', 'order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->titipmerk->OptionCount = 2;
+        $this->titipmerk->DefaultErrorMessage = $Language->phrase("IncorrectField");
+        $this->titipmerk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->titipmerk->Param, "CustomMsg");
+        $this->Fields['titipmerk'] = &$this->titipmerk;
 
         // tanggal
         $this->tanggal = new DbField('order', 'order', 'x_tanggal', 'tanggal', '`tanggal`', CastDateFieldForLike("`tanggal`", 0, "DB"), 135, 19, 0, false, '`tanggal`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -681,6 +699,7 @@ class Order extends DbTable
         }
         $this->id->DbValue = $row['id'];
         $this->kode->DbValue = $row['kode'];
+        $this->titipmerk->DbValue = $row['titipmerk'];
         $this->tanggal->DbValue = $row['tanggal'];
         $this->idpegawai->DbValue = $row['idpegawai'];
         $this->idcustomer->DbValue = $row['idcustomer'];
@@ -1029,6 +1048,7 @@ SORTHTML;
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
+        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
@@ -1054,6 +1074,9 @@ SORTHTML;
 
         // kode
 
+        // titipmerk
+        $this->titipmerk->CellCssStyle = "white-space: nowrap;";
+
         // tanggal
 
         // idpegawai
@@ -1078,6 +1101,14 @@ SORTHTML;
         // kode
         $this->kode->ViewValue = $this->kode->CurrentValue;
         $this->kode->ViewCustomAttributes = "";
+
+        // titipmerk
+        if (strval($this->titipmerk->CurrentValue) != "") {
+            $this->titipmerk->ViewValue = $this->titipmerk->optionCaption($this->titipmerk->CurrentValue);
+        } else {
+            $this->titipmerk->ViewValue = null;
+        }
+        $this->titipmerk->ViewCustomAttributes = "";
 
         // tanggal
         $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
@@ -1166,6 +1197,11 @@ SORTHTML;
         $this->kode->HrefValue = "";
         $this->kode->TooltipValue = "";
 
+        // titipmerk
+        $this->titipmerk->LinkCustomAttributes = "";
+        $this->titipmerk->HrefValue = "";
+        $this->titipmerk->TooltipValue = "";
+
         // tanggal
         $this->tanggal->LinkCustomAttributes = "";
         $this->tanggal->HrefValue = "";
@@ -1230,12 +1266,14 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "";
-        if (!$this->kode->Raw) {
-            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-        }
+        $this->kode->EditCustomAttributes = "readonly";
         $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+        $this->kode->ViewCustomAttributes = "";
+
+        // titipmerk
+        $this->titipmerk->EditCustomAttributes = "";
+        $this->titipmerk->EditValue = $this->titipmerk->options(false);
+        $this->titipmerk->PlaceHolder = RemoveHtml($this->titipmerk->caption());
 
         // tanggal
         $this->tanggal->EditAttrs["class"] = "form-control";
@@ -1621,7 +1659,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        //$rsnew['kode'] = getNextKode('order', 0);
+        $rsnew['kode'] = getNextKodeOrder($rsnew['titipmerk']);
         return true;
     }
 

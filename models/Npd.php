@@ -29,32 +29,31 @@ class Npd extends DbTable
 
     // Fields
     public $id;
-    public $statuskategori;
+    public $status;
     public $idpegawai;
     public $idcustomer;
     public $kodeorder;
-    public $idbrand;
-    public $nama;
-    public $idkategoribarang;
-    public $idjenisbarang;
     public $idproduct_acuan;
-    public $idkualitasbarang;
-    public $kemasanbarang;
-    public $label;
-    public $bahan;
-    public $ukuran;
+    public $nama;
+    public $idjenisbarang;
+    public $idkategoribarang;
     public $warna;
     public $parfum;
-    public $harga;
     public $tambahan;
+    public $kemasanbarang;
+    public $label;
     public $orderperdana;
     public $orderreguler;
-    public $status;
     public $selesai;
-    public $idproduct;
-    public $created_at;
-    public $created_by;
     public $readonly;
+    public $created_at;
+    public $tanggal_order;
+    public $target_selesai;
+    public $kategori;
+    public $fungsi_produk;
+    public $kualitasbarang;
+    public $bahan_campaign;
+    public $ukuran_sediaan;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -88,6 +87,7 @@ class Npd extends DbTable
         $this->ShowMultipleDetails = true; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
@@ -100,23 +100,13 @@ class Npd extends DbTable
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
-        // statuskategori
-        $this->statuskategori = new DbField('npd', 'npd', 'x_statuskategori', 'statuskategori', '`statuskategori`', '`statuskategori`', 200, 50, -1, false, '`statuskategori`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->statuskategori->Nullable = false; // NOT NULL field
-        $this->statuskategori->Sortable = true; // Allow sort
-        $this->statuskategori->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->statuskategori->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->statuskategori->Lookup = new Lookup('statuskategori', 'npd', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->statuskategori->Lookup = new Lookup('statuskategori', 'npd', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->statuskategori->OptionCount = 4;
-        $this->statuskategori->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->statuskategori->Param, "CustomMsg");
-        $this->Fields['statuskategori'] = &$this->statuskategori;
+        // status
+        $this->status = new DbField('npd', 'npd', 'x_status', 'status', '`status`', '`status`', 200, 100, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->status->Nullable = false; // NOT NULL field
+        $this->status->Required = true; // Required field
+        $this->status->Sortable = true; // Allow sort
+        $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
+        $this->Fields['status'] = &$this->status;
 
         // idpegawai
         $this->idpegawai = new DbField('npd', 'npd', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -144,10 +134,10 @@ class Npd extends DbTable
         $this->idcustomer->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], ["x_idbrand"], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], [], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], ["x_idbrand"], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], [], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -161,71 +151,6 @@ class Npd extends DbTable
         $this->kodeorder->Sortable = true; // Allow sort
         $this->kodeorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeorder->Param, "CustomMsg");
         $this->Fields['kodeorder'] = &$this->kodeorder;
-
-        // idbrand
-        $this->idbrand = new DbField('npd', 'npd', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 3, 11, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idbrand->Nullable = false; // NOT NULL field
-        $this->idbrand->Required = true; // Required field
-        $this->idbrand->Sortable = true; // Allow sort
-        $this->idbrand->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["title","","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
-                break;
-            default:
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["title","","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
-                break;
-        }
-        $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
-        $this->Fields['idbrand'] = &$this->idbrand;
-
-        // nama
-        $this->nama = new DbField('npd', 'npd', 'x_nama', 'nama', '`nama`', '`nama`', 200, 255, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nama->Nullable = false; // NOT NULL field
-        $this->nama->Required = true; // Required field
-        $this->nama->Sortable = true; // Allow sort
-        $this->nama->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama->Param, "CustomMsg");
-        $this->Fields['nama'] = &$this->nama;
-
-        // idkategoribarang
-        $this->idkategoribarang = new DbField('npd', 'npd', 'x_idkategoribarang', 'idkategoribarang', '`idkategoribarang`', '`idkategoribarang`', 3, 11, -1, false, '`idkategoribarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idkategoribarang->Nullable = false; // NOT NULL field
-        $this->idkategoribarang->Required = true; // Required field
-        $this->idkategoribarang->Sortable = true; // Allow sort
-        $this->idkategoribarang->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idkategoribarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoribarang', false, 'id', ["nama","","",""], [], ["x_idjenisbarang"], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoribarang', false, 'id', ["nama","","",""], [], ["x_idjenisbarang"], [], [], [], [], '', '');
-                break;
-        }
-        $this->idkategoribarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idkategoribarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkategoribarang->Param, "CustomMsg");
-        $this->Fields['idkategoribarang'] = &$this->idkategoribarang;
-
-        // idjenisbarang
-        $this->idjenisbarang = new DbField('npd', 'npd', 'x_idjenisbarang', 'idjenisbarang', '`idjenisbarang`', '`idjenisbarang`', 3, 11, -1, false, '`idjenisbarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idjenisbarang->Nullable = false; // NOT NULL field
-        $this->idjenisbarang->Required = true; // Required field
-        $this->idjenisbarang->Sortable = true; // Allow sort
-        $this->idjenisbarang->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idjenisbarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idjenisbarang->Lookup = new Lookup('idjenisbarang', 'jenisbarang', false, 'id', ["nama","","",""], ["x_idkategoribarang"], [], ["idkategoribarang"], ["x_idkategoribarang"], [], [], '', '');
-                break;
-            default:
-                $this->idjenisbarang->Lookup = new Lookup('idjenisbarang', 'jenisbarang', false, 'id', ["nama","","",""], ["x_idkategoribarang"], [], ["idkategoribarang"], ["x_idkategoribarang"], [], [], '', '');
-                break;
-        }
-        $this->idjenisbarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idjenisbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idjenisbarang->Param, "CustomMsg");
-        $this->Fields['idjenisbarang'] = &$this->idjenisbarang;
 
         // idproduct_acuan
         $this->idproduct_acuan = new DbField('npd', 'npd', 'x_idproduct_acuan', 'idproduct_acuan', '`idproduct_acuan`', '`idproduct_acuan`', 3, 11, -1, false, '`idproduct_acuan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -246,56 +171,51 @@ class Npd extends DbTable
         $this->idproduct_acuan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idproduct_acuan->Param, "CustomMsg");
         $this->Fields['idproduct_acuan'] = &$this->idproduct_acuan;
 
-        // idkualitasbarang
-        $this->idkualitasbarang = new DbField('npd', 'npd', 'x_idkualitasbarang', 'idkualitasbarang', '`idkualitasbarang`', '`idkualitasbarang`', 3, 11, -1, false, '`idkualitasbarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idkualitasbarang->Nullable = false; // NOT NULL field
-        $this->idkualitasbarang->Required = true; // Required field
-        $this->idkualitasbarang->Sortable = true; // Allow sort
-        $this->idkualitasbarang->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idkualitasbarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        // nama
+        $this->nama = new DbField('npd', 'npd', 'x_nama', 'nama', '`nama`', '`nama`', 200, 255, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama->Nullable = false; // NOT NULL field
+        $this->nama->Required = true; // Required field
+        $this->nama->Sortable = true; // Allow sort
+        $this->nama->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama->Param, "CustomMsg");
+        $this->Fields['nama'] = &$this->nama;
+
+        // idjenisbarang
+        $this->idjenisbarang = new DbField('npd', 'npd', 'x_idjenisbarang', 'idjenisbarang', '`idjenisbarang`', '`idjenisbarang`', 3, 11, -1, false, '`idjenisbarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idjenisbarang->Nullable = false; // NOT NULL field
+        $this->idjenisbarang->Required = true; // Required field
+        $this->idjenisbarang->Sortable = true; // Allow sort
+        $this->idjenisbarang->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idjenisbarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idkualitasbarang->Lookup = new Lookup('idkualitasbarang', 'kualitasbarang', false, 'id', ["nama","","",""], [], [], [], [], [], [], '', '');
+                $this->idjenisbarang->Lookup = new Lookup('idjenisbarang', 'jenisbarang', false, 'id', ["nama","","",""], ["x_idkategoribarang"], [], ["idkategoribarang"], ["x_idkategoribarang"], [], [], '', '');
                 break;
             default:
-                $this->idkualitasbarang->Lookup = new Lookup('idkualitasbarang', 'kualitasbarang', false, 'id', ["nama","","",""], [], [], [], [], [], [], '', '');
+                $this->idjenisbarang->Lookup = new Lookup('idjenisbarang', 'jenisbarang', false, 'id', ["nama","","",""], ["x_idkategoribarang"], [], ["idkategoribarang"], ["x_idkategoribarang"], [], [], '', '');
                 break;
         }
-        $this->idkualitasbarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idkualitasbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkualitasbarang->Param, "CustomMsg");
-        $this->Fields['idkualitasbarang'] = &$this->idkualitasbarang;
+        $this->idjenisbarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idjenisbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idjenisbarang->Param, "CustomMsg");
+        $this->Fields['idjenisbarang'] = &$this->idjenisbarang;
 
-        // kemasanbarang
-        $this->kemasanbarang = new DbField('npd', 'npd', 'x_kemasanbarang', 'kemasanbarang', '`kemasanbarang`', '`kemasanbarang`', 200, 100, -1, false, '`kemasanbarang`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->kemasanbarang->Nullable = false; // NOT NULL field
-        $this->kemasanbarang->Required = true; // Required field
-        $this->kemasanbarang->Sortable = true; // Allow sort
-        $this->kemasanbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kemasanbarang->Param, "CustomMsg");
-        $this->Fields['kemasanbarang'] = &$this->kemasanbarang;
-
-        // label
-        $this->label = new DbField('npd', 'npd', 'x_label', 'label', '`label`', '`label`', 200, 100, -1, false, '`label`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->label->Nullable = false; // NOT NULL field
-        $this->label->Required = true; // Required field
-        $this->label->Sortable = true; // Allow sort
-        $this->label->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->label->Param, "CustomMsg");
-        $this->Fields['label'] = &$this->label;
-
-        // bahan
-        $this->bahan = new DbField('npd', 'npd', 'x_bahan', 'bahan', '`bahan`', '`bahan`', 200, 100, -1, false, '`bahan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bahan->Nullable = false; // NOT NULL field
-        $this->bahan->Required = true; // Required field
-        $this->bahan->Sortable = true; // Allow sort
-        $this->bahan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bahan->Param, "CustomMsg");
-        $this->Fields['bahan'] = &$this->bahan;
-
-        // ukuran
-        $this->ukuran = new DbField('npd', 'npd', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 100, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->ukuran->Nullable = false; // NOT NULL field
-        $this->ukuran->Required = true; // Required field
-        $this->ukuran->Sortable = true; // Allow sort
-        $this->ukuran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuran->Param, "CustomMsg");
-        $this->Fields['ukuran'] = &$this->ukuran;
+        // idkategoribarang
+        $this->idkategoribarang = new DbField('npd', 'npd', 'x_idkategoribarang', 'idkategoribarang', '`idkategoribarang`', '`idkategoribarang`', 3, 11, -1, false, '`idkategoribarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkategoribarang->Nullable = false; // NOT NULL field
+        $this->idkategoribarang->Required = true; // Required field
+        $this->idkategoribarang->Sortable = true; // Allow sort
+        $this->idkategoribarang->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idkategoribarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoribarang', false, 'id', ["nama","","",""], [], ["x_idjenisbarang"], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoribarang', false, 'id', ["nama","","",""], [], ["x_idjenisbarang"], [], [], [], [], '', '');
+                break;
+        }
+        $this->idkategoribarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idkategoribarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkategoribarang->Param, "CustomMsg");
+        $this->Fields['idkategoribarang'] = &$this->idkategoribarang;
 
         // warna
         $this->warna = new DbField('npd', 'npd', 'x_warna', 'warna', '`warna`', '`warna`', 200, 100, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -313,20 +233,27 @@ class Npd extends DbTable
         $this->parfum->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->parfum->Param, "CustomMsg");
         $this->Fields['parfum'] = &$this->parfum;
 
-        // harga
-        $this->harga = new DbField('npd', 'npd', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->harga->Nullable = false; // NOT NULL field
-        $this->harga->Required = true; // Required field
-        $this->harga->Sortable = true; // Allow sort
-        $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");
-        $this->Fields['harga'] = &$this->harga;
-
         // tambahan
         $this->tambahan = new DbField('npd', 'npd', 'x_tambahan', 'tambahan', '`tambahan`', '`tambahan`', 200, 255, -1, false, '`tambahan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->tambahan->Sortable = true; // Allow sort
         $this->tambahan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tambahan->Param, "CustomMsg");
         $this->Fields['tambahan'] = &$this->tambahan;
+
+        // kemasanbarang
+        $this->kemasanbarang = new DbField('npd', 'npd', 'x_kemasanbarang', 'kemasanbarang', '`kemasanbarang`', '`kemasanbarang`', 200, 100, -1, false, '`kemasanbarang`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->kemasanbarang->Nullable = false; // NOT NULL field
+        $this->kemasanbarang->Required = true; // Required field
+        $this->kemasanbarang->Sortable = true; // Allow sort
+        $this->kemasanbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kemasanbarang->Param, "CustomMsg");
+        $this->Fields['kemasanbarang'] = &$this->kemasanbarang;
+
+        // label
+        $this->label = new DbField('npd', 'npd', 'x_label', 'label', '`label`', '`label`', 200, 100, -1, false, '`label`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->label->Nullable = false; // NOT NULL field
+        $this->label->Required = true; // Required field
+        $this->label->Sortable = true; // Allow sort
+        $this->label->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->label->Param, "CustomMsg");
+        $this->Fields['label'] = &$this->label;
 
         // orderperdana
         $this->orderperdana = new DbField('npd', 'npd', 'x_orderperdana', 'orderperdana', '`orderperdana`', '`orderperdana`', 3, 11, -1, false, '`orderperdana`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -341,14 +268,6 @@ class Npd extends DbTable
         $this->orderreguler->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->orderreguler->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->orderreguler->Param, "CustomMsg");
         $this->Fields['orderreguler'] = &$this->orderreguler;
-
-        // status
-        $this->status = new DbField('npd', 'npd', 'x_status', 'status', '`status`', '`status`', 200, 100, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->status->Nullable = false; // NOT NULL field
-        $this->status->Required = true; // Required field
-        $this->status->Sortable = true; // Allow sort
-        $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
-        $this->Fields['status'] = &$this->status;
 
         // selesai
         $this->selesai = new DbField('npd', 'npd', 'x_selesai', 'selesai', '`selesai`', '`selesai`', 16, 1, -1, false, '`selesai`', false, false, false, 'FORMATTED TEXT', 'RADIO');
@@ -367,33 +286,10 @@ class Npd extends DbTable
         $this->selesai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->selesai->Param, "CustomMsg");
         $this->Fields['selesai'] = &$this->selesai;
 
-        // idproduct
-        $this->idproduct = new DbField('npd', 'npd', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 200, 50, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idproduct->Sortable = true; // Allow sort
-        $this->idproduct->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idproduct->Param, "CustomMsg");
-        $this->Fields['idproduct'] = &$this->idproduct;
-
-        // created_at
-        $this->created_at = new DbField('npd', 'npd', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->created_at->Nullable = false; // NOT NULL field
-        $this->created_at->Required = true; // Required field
-        $this->created_at->Sortable = true; // Allow sort
-        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
-        $this->Fields['created_at'] = &$this->created_at;
-
-        // created_by
-        $this->created_by = new DbField('npd', 'npd', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
-
         // readonly
-        $this->readonly = new DbField('npd', 'npd', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
+        $this->readonly = new DbField('npd', 'npd', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'RADIO');
         $this->readonly->Nullable = false; // NOT NULL field
         $this->readonly->Sortable = true; // Allow sort
-        $this->readonly->DataType = DATATYPE_BOOLEAN;
         switch ($CurrentLanguage) {
             case "en":
                 $this->readonly->Lookup = new Lookup('readonly', 'npd', false, '', ["","","",""], [], [], [], [], [], [], '', '');
@@ -406,6 +302,68 @@ class Npd extends DbTable
         $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
         $this->Fields['readonly'] = &$this->readonly;
+
+        // created_at
+        $this->created_at = new DbField('npd', 'npd', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at->Nullable = false; // NOT NULL field
+        $this->created_at->Required = true; // Required field
+        $this->created_at->Sortable = true; // Allow sort
+        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
+        $this->Fields['created_at'] = &$this->created_at;
+
+        // tanggal_order
+        $this->tanggal_order = new DbField('npd', 'npd', 'x_tanggal_order', 'tanggal_order', '`tanggal_order`', CastDateFieldForLike("`tanggal_order`", 0, "DB"), 133, 10, 0, false, '`tanggal_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tanggal_order->Sortable = true; // Allow sort
+        $this->tanggal_order->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tanggal_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_order->Param, "CustomMsg");
+        $this->Fields['tanggal_order'] = &$this->tanggal_order;
+
+        // target_selesai
+        $this->target_selesai = new DbField('npd', 'npd', 'x_target_selesai', 'target_selesai', '`target_selesai`', CastDateFieldForLike("`target_selesai`", 0, "DB"), 133, 10, 0, false, '`target_selesai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->target_selesai->Sortable = true; // Allow sort
+        $this->target_selesai->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->target_selesai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->target_selesai->Param, "CustomMsg");
+        $this->Fields['target_selesai'] = &$this->target_selesai;
+
+        // kategori
+        $this->kategori = new DbField('npd', 'npd', 'x_kategori', 'kategori', '`kategori`', '`kategori`', 200, 50, -1, false, '`kategori`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kategori->Nullable = false; // NOT NULL field
+        $this->kategori->Sortable = true; // Allow sort
+        $this->kategori->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kategori->Param, "CustomMsg");
+        $this->Fields['kategori'] = &$this->kategori;
+
+        // fungsi_produk
+        $this->fungsi_produk = new DbField('npd', 'npd', 'x_fungsi_produk', 'fungsi_produk', '`fungsi_produk`', '`fungsi_produk`', 200, 255, -1, false, '`fungsi_produk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->fungsi_produk->Nullable = false; // NOT NULL field
+        $this->fungsi_produk->Required = true; // Required field
+        $this->fungsi_produk->Sortable = true; // Allow sort
+        $this->fungsi_produk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->fungsi_produk->Param, "CustomMsg");
+        $this->Fields['fungsi_produk'] = &$this->fungsi_produk;
+
+        // kualitasbarang
+        $this->kualitasbarang = new DbField('npd', 'npd', 'x_kualitasbarang', 'kualitasbarang', '`kualitasbarang`', '`kualitasbarang`', 200, 255, -1, false, '`kualitasbarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kualitasbarang->Nullable = false; // NOT NULL field
+        $this->kualitasbarang->Required = true; // Required field
+        $this->kualitasbarang->Sortable = true; // Allow sort
+        $this->kualitasbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kualitasbarang->Param, "CustomMsg");
+        $this->Fields['kualitasbarang'] = &$this->kualitasbarang;
+
+        // bahan_campaign
+        $this->bahan_campaign = new DbField('npd', 'npd', 'x_bahan_campaign', 'bahan_campaign', '`bahan_campaign`', '`bahan_campaign`', 200, 100, -1, false, '`bahan_campaign`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bahan_campaign->Nullable = false; // NOT NULL field
+        $this->bahan_campaign->Required = true; // Required field
+        $this->bahan_campaign->Sortable = true; // Allow sort
+        $this->bahan_campaign->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bahan_campaign->Param, "CustomMsg");
+        $this->Fields['bahan_campaign'] = &$this->bahan_campaign;
+
+        // ukuran_sediaan
+        $this->ukuran_sediaan = new DbField('npd', 'npd', 'x_ukuran_sediaan', 'ukuran_sediaan', '`ukuran_sediaan`', '`ukuran_sediaan`', 200, 255, -1, false, '`ukuran_sediaan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->ukuran_sediaan->Nullable = false; // NOT NULL field
+        $this->ukuran_sediaan->Required = true; // Required field
+        $this->ukuran_sediaan->Sortable = true; // Allow sort
+        $this->ukuran_sediaan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuran_sediaan->Param, "CustomMsg");
+        $this->Fields['ukuran_sediaan'] = &$this->ukuran_sediaan;
     }
 
     // Field Visibility
@@ -461,10 +419,6 @@ class Npd extends DbTable
     {
         // Detail url
         $detailUrl = "";
-        if ($this->getCurrentDetailTable() == "npd_status") {
-            $detailUrl = Container("npd_status")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
-        }
         if ($this->getCurrentDetailTable() == "npd_sample") {
             $detailUrl = Container("npd_sample")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
@@ -584,11 +538,6 @@ class Npd extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -819,33 +768,6 @@ class Npd extends DbTable
     // Update
     public function update(&$rs, $where = "", $rsold = null, $curfilter = true)
     {
-        // Cascade Update detail table 'npd_status'
-        $cascadeUpdate = false;
-        $rscascade = [];
-        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idnpd'
-            $cascadeUpdate = true;
-            $rscascade['idnpd'] = $rs['id'];
-        }
-        if ($cascadeUpdate) {
-            $rswrk = Container("npd_status")->loadRs("`idnpd` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($rswrk as $rsdtlold) {
-                $rskey = [];
-                $fldname = 'id';
-                $rskey[$fldname] = $rsdtlold[$fldname];
-                $rsdtlnew = array_merge($rsdtlold, $rscascade);
-                // Call Row_Updating event
-                $success = Container("npd_status")->rowUpdating($rsdtlold, $rsdtlnew);
-                if ($success) {
-                    $success = Container("npd_status")->update($rscascade, $rskey, $rsdtlold);
-                }
-                if (!$success) {
-                    return false;
-                }
-                // Call Row_Updated event
-                Container("npd_status")->rowUpdated($rsdtlold, $rsdtlnew);
-            }
-        }
-
         // Cascade Update detail table 'npd_sample'
         $cascadeUpdate = false;
         $rscascade = [];
@@ -990,30 +912,6 @@ class Npd extends DbTable
     {
         $success = true;
 
-        // Cascade delete detail table 'npd_status'
-        $dtlrows = Container("npd_status")->loadRs("`idnpd` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
-        // Call Row Deleting event
-        foreach ($dtlrows as $dtlrow) {
-            $success = Container("npd_status")->rowDeleting($dtlrow);
-            if (!$success) {
-                break;
-            }
-        }
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                $success = Container("npd_status")->delete($dtlrow); // Delete
-                if (!$success) {
-                    break;
-                }
-            }
-        }
-        // Call Row Deleted event
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                Container("npd_status")->rowDeleted($dtlrow);
-            }
-        }
-
         // Cascade delete detail table 'npd_sample'
         $dtlrows = Container("npd_sample")->loadRs("`idnpd` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
         // Call Row Deleting event
@@ -1122,32 +1020,31 @@ class Npd extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->statuskategori->DbValue = $row['statuskategori'];
+        $this->status->DbValue = $row['status'];
         $this->idpegawai->DbValue = $row['idpegawai'];
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->kodeorder->DbValue = $row['kodeorder'];
-        $this->idbrand->DbValue = $row['idbrand'];
-        $this->nama->DbValue = $row['nama'];
-        $this->idkategoribarang->DbValue = $row['idkategoribarang'];
-        $this->idjenisbarang->DbValue = $row['idjenisbarang'];
         $this->idproduct_acuan->DbValue = $row['idproduct_acuan'];
-        $this->idkualitasbarang->DbValue = $row['idkualitasbarang'];
-        $this->kemasanbarang->DbValue = $row['kemasanbarang'];
-        $this->label->DbValue = $row['label'];
-        $this->bahan->DbValue = $row['bahan'];
-        $this->ukuran->DbValue = $row['ukuran'];
+        $this->nama->DbValue = $row['nama'];
+        $this->idjenisbarang->DbValue = $row['idjenisbarang'];
+        $this->idkategoribarang->DbValue = $row['idkategoribarang'];
         $this->warna->DbValue = $row['warna'];
         $this->parfum->DbValue = $row['parfum'];
-        $this->harga->DbValue = $row['harga'];
         $this->tambahan->DbValue = $row['tambahan'];
+        $this->kemasanbarang->DbValue = $row['kemasanbarang'];
+        $this->label->DbValue = $row['label'];
         $this->orderperdana->DbValue = $row['orderperdana'];
         $this->orderreguler->DbValue = $row['orderreguler'];
-        $this->status->DbValue = $row['status'];
         $this->selesai->DbValue = $row['selesai'];
-        $this->idproduct->DbValue = $row['idproduct'];
-        $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
         $this->readonly->DbValue = $row['readonly'];
+        $this->created_at->DbValue = $row['created_at'];
+        $this->tanggal_order->DbValue = $row['tanggal_order'];
+        $this->target_selesai->DbValue = $row['target_selesai'];
+        $this->kategori->DbValue = $row['kategori'];
+        $this->fungsi_produk->DbValue = $row['fungsi_produk'];
+        $this->kualitasbarang->DbValue = $row['kualitasbarang'];
+        $this->bahan_campaign->DbValue = $row['bahan_campaign'];
+        $this->ukuran_sediaan->DbValue = $row['ukuran_sediaan'];
     }
 
     // Delete uploaded files
@@ -1477,32 +1374,31 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->statuskategori->setDbValue($row['statuskategori']);
+        $this->status->setDbValue($row['status']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kodeorder->setDbValue($row['kodeorder']);
-        $this->idbrand->setDbValue($row['idbrand']);
-        $this->nama->setDbValue($row['nama']);
-        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
-        $this->idjenisbarang->setDbValue($row['idjenisbarang']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
-        $this->idkualitasbarang->setDbValue($row['idkualitasbarang']);
-        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
-        $this->label->setDbValue($row['label']);
-        $this->bahan->setDbValue($row['bahan']);
-        $this->ukuran->setDbValue($row['ukuran']);
+        $this->nama->setDbValue($row['nama']);
+        $this->idjenisbarang->setDbValue($row['idjenisbarang']);
+        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
-        $this->harga->setDbValue($row['harga']);
         $this->tambahan->setDbValue($row['tambahan']);
+        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
+        $this->label->setDbValue($row['label']);
         $this->orderperdana->setDbValue($row['orderperdana']);
         $this->orderreguler->setDbValue($row['orderreguler']);
-        $this->status->setDbValue($row['status']);
         $this->selesai->setDbValue($row['selesai']);
-        $this->idproduct->setDbValue($row['idproduct']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->created_at->setDbValue($row['created_at']);
+        $this->tanggal_order->setDbValue($row['tanggal_order']);
+        $this->target_selesai->setDbValue($row['target_selesai']);
+        $this->kategori->setDbValue($row['kategori']);
+        $this->fungsi_produk->setDbValue($row['fungsi_produk']);
+        $this->kualitasbarang->setDbValue($row['kualitasbarang']);
+        $this->bahan_campaign->setDbValue($row['bahan_campaign']);
+        $this->ukuran_sediaan->setDbValue($row['ukuran_sediaan']);
     }
 
     // Render list row values
@@ -1517,7 +1413,7 @@ SORTHTML;
 
         // id
 
-        // statuskategori
+        // status
 
         // idpegawai
 
@@ -1525,61 +1421,55 @@ SORTHTML;
 
         // kodeorder
 
-        // idbrand
+        // idproduct_acuan
 
         // nama
 
-        // idkategoribarang
-
         // idjenisbarang
 
-        // idproduct_acuan
-
-        // idkualitasbarang
-
-        // kemasanbarang
-
-        // label
-
-        // bahan
-
-        // ukuran
+        // idkategoribarang
 
         // warna
 
         // parfum
 
-        // harga
-
         // tambahan
+
+        // kemasanbarang
+
+        // label
 
         // orderperdana
 
         // orderreguler
 
-        // status
-
         // selesai
 
-        // idproduct
+        // readonly
 
         // created_at
 
-        // created_by
+        // tanggal_order
 
-        // readonly
+        // target_selesai
+
+        // kategori
+
+        // fungsi_produk
+
+        // kualitasbarang
+
+        // bahan_campaign
+
+        // ukuran_sediaan
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // statuskategori
-        if (strval($this->statuskategori->CurrentValue) != "") {
-            $this->statuskategori->ViewValue = $this->statuskategori->optionCaption($this->statuskategori->CurrentValue);
-        } else {
-            $this->statuskategori->ViewValue = null;
-        }
-        $this->statuskategori->ViewCustomAttributes = "";
+        // status
+        $this->status->ViewValue = $this->status->CurrentValue;
+        $this->status->ViewCustomAttributes = "";
 
         // idpegawai
         $curVal = trim(strval($this->idpegawai->CurrentValue));
@@ -1628,73 +1518,6 @@ SORTHTML;
         $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
         $this->kodeorder->ViewCustomAttributes = "";
 
-        // idbrand
-        $curVal = trim(strval($this->idbrand->CurrentValue));
-        if ($curVal != "") {
-            $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-            if ($this->idbrand->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                    $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                } else {
-                    $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                }
-            }
-        } else {
-            $this->idbrand->ViewValue = null;
-        }
-        $this->idbrand->ViewCustomAttributes = "";
-
-        // nama
-        $this->nama->ViewValue = $this->nama->CurrentValue;
-        $this->nama->ViewCustomAttributes = "";
-
-        // idkategoribarang
-        $curVal = trim(strval($this->idkategoribarang->CurrentValue));
-        if ($curVal != "") {
-            $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
-            if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
-                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
-                } else {
-                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
-                }
-            }
-        } else {
-            $this->idkategoribarang->ViewValue = null;
-        }
-        $this->idkategoribarang->ViewCustomAttributes = "";
-
-        // idjenisbarang
-        $curVal = trim(strval($this->idjenisbarang->CurrentValue));
-        if ($curVal != "") {
-            $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
-            if ($this->idjenisbarang->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idjenisbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idjenisbarang->Lookup->renderViewRow($rswrk[0]);
-                    $this->idjenisbarang->ViewValue = $this->idjenisbarang->displayValue($arwrk);
-                } else {
-                    $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
-                }
-            }
-        } else {
-            $this->idjenisbarang->ViewValue = null;
-        }
-        $this->idjenisbarang->ViewCustomAttributes = "";
-
         // idproduct_acuan
         $curVal = trim(strval($this->idproduct_acuan->CurrentValue));
         if ($curVal != "") {
@@ -1720,42 +1543,51 @@ SORTHTML;
         }
         $this->idproduct_acuan->ViewCustomAttributes = "";
 
-        // idkualitasbarang
-        $curVal = trim(strval($this->idkualitasbarang->CurrentValue));
+        // nama
+        $this->nama->ViewValue = $this->nama->CurrentValue;
+        $this->nama->ViewCustomAttributes = "";
+
+        // idjenisbarang
+        $curVal = trim(strval($this->idjenisbarang->CurrentValue));
         if ($curVal != "") {
-            $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->lookupCacheOption($curVal);
-            if ($this->idkualitasbarang->ViewValue === null) { // Lookup from database
+            $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
+            if ($this->idjenisbarang->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idkualitasbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $sqlWrk = $this->idjenisbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idkualitasbarang->Lookup->renderViewRow($rswrk[0]);
-                    $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->displayValue($arwrk);
+                    $arwrk = $this->idjenisbarang->Lookup->renderViewRow($rswrk[0]);
+                    $this->idjenisbarang->ViewValue = $this->idjenisbarang->displayValue($arwrk);
                 } else {
-                    $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->CurrentValue;
+                    $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
                 }
             }
         } else {
-            $this->idkualitasbarang->ViewValue = null;
+            $this->idjenisbarang->ViewValue = null;
         }
-        $this->idkualitasbarang->ViewCustomAttributes = "";
+        $this->idjenisbarang->ViewCustomAttributes = "";
 
-        // kemasanbarang
-        $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
-        $this->kemasanbarang->ViewCustomAttributes = "";
-
-        // label
-        $this->label->ViewValue = $this->label->CurrentValue;
-        $this->label->ViewCustomAttributes = "";
-
-        // bahan
-        $this->bahan->ViewValue = $this->bahan->CurrentValue;
-        $this->bahan->ViewCustomAttributes = "";
-
-        // ukuran
-        $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-        $this->ukuran->ViewCustomAttributes = "";
+        // idkategoribarang
+        $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+        if ($curVal != "") {
+            $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
+            if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
+                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
+                } else {
+                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+                }
+            }
+        } else {
+            $this->idkategoribarang->ViewValue = null;
+        }
+        $this->idkategoribarang->ViewCustomAttributes = "";
 
         // warna
         $this->warna->ViewValue = $this->warna->CurrentValue;
@@ -1765,14 +1597,17 @@ SORTHTML;
         $this->parfum->ViewValue = $this->parfum->CurrentValue;
         $this->parfum->ViewCustomAttributes = "";
 
-        // harga
-        $this->harga->ViewValue = $this->harga->CurrentValue;
-        $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-        $this->harga->ViewCustomAttributes = "";
-
         // tambahan
         $this->tambahan->ViewValue = $this->tambahan->CurrentValue;
         $this->tambahan->ViewCustomAttributes = "";
+
+        // kemasanbarang
+        $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
+        $this->kemasanbarang->ViewCustomAttributes = "";
+
+        // label
+        $this->label->ViewValue = $this->label->CurrentValue;
+        $this->label->ViewCustomAttributes = "";
 
         // orderperdana
         $this->orderperdana->ViewValue = $this->orderperdana->CurrentValue;
@@ -1784,10 +1619,6 @@ SORTHTML;
         $this->orderreguler->ViewValue = FormatNumber($this->orderreguler->ViewValue, 0, -2, -2, -2);
         $this->orderreguler->ViewCustomAttributes = "";
 
-        // status
-        $this->status->ViewValue = $this->status->CurrentValue;
-        $this->status->ViewCustomAttributes = "";
-
         // selesai
         if (strval($this->selesai->CurrentValue) != "") {
             $this->selesai->ViewValue = $this->selesai->optionCaption($this->selesai->CurrentValue);
@@ -1796,37 +1627,58 @@ SORTHTML;
         }
         $this->selesai->ViewCustomAttributes = "";
 
-        // idproduct
-        $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
-        $this->idproduct->ViewCustomAttributes = "";
+        // readonly
+        if (strval($this->readonly->CurrentValue) != "") {
+            $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
+        } else {
+            $this->readonly->ViewValue = null;
+        }
+        $this->readonly->ViewCustomAttributes = "";
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
+        // tanggal_order
+        $this->tanggal_order->ViewValue = $this->tanggal_order->CurrentValue;
+        $this->tanggal_order->ViewValue = FormatDateTime($this->tanggal_order->ViewValue, 0);
+        $this->tanggal_order->ViewCustomAttributes = "";
 
-        // readonly
-        if (ConvertToBool($this->readonly->CurrentValue)) {
-            $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
-        } else {
-            $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
-        }
-        $this->readonly->ViewCustomAttributes = "";
+        // target_selesai
+        $this->target_selesai->ViewValue = $this->target_selesai->CurrentValue;
+        $this->target_selesai->ViewValue = FormatDateTime($this->target_selesai->ViewValue, 0);
+        $this->target_selesai->ViewCustomAttributes = "";
+
+        // kategori
+        $this->kategori->ViewValue = $this->kategori->CurrentValue;
+        $this->kategori->ViewCustomAttributes = "";
+
+        // fungsi_produk
+        $this->fungsi_produk->ViewValue = $this->fungsi_produk->CurrentValue;
+        $this->fungsi_produk->ViewCustomAttributes = "";
+
+        // kualitasbarang
+        $this->kualitasbarang->ViewValue = $this->kualitasbarang->CurrentValue;
+        $this->kualitasbarang->ViewCustomAttributes = "";
+
+        // bahan_campaign
+        $this->bahan_campaign->ViewValue = $this->bahan_campaign->CurrentValue;
+        $this->bahan_campaign->ViewCustomAttributes = "";
+
+        // ukuran_sediaan
+        $this->ukuran_sediaan->ViewValue = $this->ukuran_sediaan->CurrentValue;
+        $this->ukuran_sediaan->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
-        // statuskategori
-        $this->statuskategori->LinkCustomAttributes = "";
-        $this->statuskategori->HrefValue = "";
-        $this->statuskategori->TooltipValue = "";
+        // status
+        $this->status->LinkCustomAttributes = "";
+        $this->status->HrefValue = "";
+        $this->status->TooltipValue = "";
 
         // idpegawai
         $this->idpegawai->LinkCustomAttributes = "";
@@ -1843,55 +1695,25 @@ SORTHTML;
         $this->kodeorder->HrefValue = "";
         $this->kodeorder->TooltipValue = "";
 
-        // idbrand
-        $this->idbrand->LinkCustomAttributes = "";
-        $this->idbrand->HrefValue = "";
-        $this->idbrand->TooltipValue = "";
+        // idproduct_acuan
+        $this->idproduct_acuan->LinkCustomAttributes = "";
+        $this->idproduct_acuan->HrefValue = "";
+        $this->idproduct_acuan->TooltipValue = "";
 
         // nama
         $this->nama->LinkCustomAttributes = "";
         $this->nama->HrefValue = "";
         $this->nama->TooltipValue = "";
 
-        // idkategoribarang
-        $this->idkategoribarang->LinkCustomAttributes = "";
-        $this->idkategoribarang->HrefValue = "";
-        $this->idkategoribarang->TooltipValue = "";
-
         // idjenisbarang
         $this->idjenisbarang->LinkCustomAttributes = "";
         $this->idjenisbarang->HrefValue = "";
         $this->idjenisbarang->TooltipValue = "";
 
-        // idproduct_acuan
-        $this->idproduct_acuan->LinkCustomAttributes = "";
-        $this->idproduct_acuan->HrefValue = "";
-        $this->idproduct_acuan->TooltipValue = "";
-
-        // idkualitasbarang
-        $this->idkualitasbarang->LinkCustomAttributes = "";
-        $this->idkualitasbarang->HrefValue = "";
-        $this->idkualitasbarang->TooltipValue = "";
-
-        // kemasanbarang
-        $this->kemasanbarang->LinkCustomAttributes = "";
-        $this->kemasanbarang->HrefValue = "";
-        $this->kemasanbarang->TooltipValue = "";
-
-        // label
-        $this->label->LinkCustomAttributes = "";
-        $this->label->HrefValue = "";
-        $this->label->TooltipValue = "";
-
-        // bahan
-        $this->bahan->LinkCustomAttributes = "";
-        $this->bahan->HrefValue = "";
-        $this->bahan->TooltipValue = "";
-
-        // ukuran
-        $this->ukuran->LinkCustomAttributes = "";
-        $this->ukuran->HrefValue = "";
-        $this->ukuran->TooltipValue = "";
+        // idkategoribarang
+        $this->idkategoribarang->LinkCustomAttributes = "";
+        $this->idkategoribarang->HrefValue = "";
+        $this->idkategoribarang->TooltipValue = "";
 
         // warna
         $this->warna->LinkCustomAttributes = "";
@@ -1903,15 +1725,20 @@ SORTHTML;
         $this->parfum->HrefValue = "";
         $this->parfum->TooltipValue = "";
 
-        // harga
-        $this->harga->LinkCustomAttributes = "";
-        $this->harga->HrefValue = "";
-        $this->harga->TooltipValue = "";
-
         // tambahan
         $this->tambahan->LinkCustomAttributes = "";
         $this->tambahan->HrefValue = "";
         $this->tambahan->TooltipValue = "";
+
+        // kemasanbarang
+        $this->kemasanbarang->LinkCustomAttributes = "";
+        $this->kemasanbarang->HrefValue = "";
+        $this->kemasanbarang->TooltipValue = "";
+
+        // label
+        $this->label->LinkCustomAttributes = "";
+        $this->label->HrefValue = "";
+        $this->label->TooltipValue = "";
 
         // orderperdana
         $this->orderperdana->LinkCustomAttributes = "";
@@ -1923,35 +1750,55 @@ SORTHTML;
         $this->orderreguler->HrefValue = "";
         $this->orderreguler->TooltipValue = "";
 
-        // status
-        $this->status->LinkCustomAttributes = "";
-        $this->status->HrefValue = "";
-        $this->status->TooltipValue = "";
-
         // selesai
         $this->selesai->LinkCustomAttributes = "";
         $this->selesai->HrefValue = "";
         $this->selesai->TooltipValue = "";
 
-        // idproduct
-        $this->idproduct->LinkCustomAttributes = "";
-        $this->idproduct->HrefValue = "";
-        $this->idproduct->TooltipValue = "";
+        // readonly
+        $this->readonly->LinkCustomAttributes = "";
+        $this->readonly->HrefValue = "";
+        $this->readonly->TooltipValue = "";
 
         // created_at
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
 
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
+        // tanggal_order
+        $this->tanggal_order->LinkCustomAttributes = "";
+        $this->tanggal_order->HrefValue = "";
+        $this->tanggal_order->TooltipValue = "";
 
-        // readonly
-        $this->readonly->LinkCustomAttributes = "";
-        $this->readonly->HrefValue = "";
-        $this->readonly->TooltipValue = "";
+        // target_selesai
+        $this->target_selesai->LinkCustomAttributes = "";
+        $this->target_selesai->HrefValue = "";
+        $this->target_selesai->TooltipValue = "";
+
+        // kategori
+        $this->kategori->LinkCustomAttributes = "";
+        $this->kategori->HrefValue = "";
+        $this->kategori->TooltipValue = "";
+
+        // fungsi_produk
+        $this->fungsi_produk->LinkCustomAttributes = "";
+        $this->fungsi_produk->HrefValue = "";
+        $this->fungsi_produk->TooltipValue = "";
+
+        // kualitasbarang
+        $this->kualitasbarang->LinkCustomAttributes = "";
+        $this->kualitasbarang->HrefValue = "";
+        $this->kualitasbarang->TooltipValue = "";
+
+        // bahan_campaign
+        $this->bahan_campaign->LinkCustomAttributes = "";
+        $this->bahan_campaign->HrefValue = "";
+        $this->bahan_campaign->TooltipValue = "";
+
+        // ukuran_sediaan
+        $this->ukuran_sediaan->LinkCustomAttributes = "";
+        $this->ukuran_sediaan->HrefValue = "";
+        $this->ukuran_sediaan->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1974,36 +1821,72 @@ SORTHTML;
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // statuskategori
-        $this->statuskategori->EditAttrs["class"] = "form-control";
-        $this->statuskategori->EditCustomAttributes = "";
-        $this->statuskategori->EditValue = $this->statuskategori->options(true);
-        $this->statuskategori->PlaceHolder = RemoveHtml($this->statuskategori->caption());
+        // status
+        $this->status->EditAttrs["class"] = "form-control";
+        $this->status->EditCustomAttributes = "";
+        if (!$this->status->Raw) {
+            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+        }
+        $this->status->EditValue = $this->status->CurrentValue;
+        $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
         $this->idpegawai->EditCustomAttributes = "";
-        $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
+        $curVal = trim(strval($this->idpegawai->CurrentValue));
+        if ($curVal != "") {
+            $this->idpegawai->EditValue = $this->idpegawai->lookupCacheOption($curVal);
+            if ($this->idpegawai->EditValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
+                    $this->idpegawai->EditValue = $this->idpegawai->displayValue($arwrk);
+                } else {
+                    $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
+                }
+            }
+        } else {
+            $this->idpegawai->EditValue = null;
+        }
+        $this->idpegawai->ViewCustomAttributes = "";
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        $curVal = trim(strval($this->idcustomer->CurrentValue));
+        if ($curVal != "") {
+            $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);
+            if ($this->idcustomer->EditValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                    $this->idcustomer->EditValue = $this->idcustomer->displayValue($arwrk);
+                } else {
+                    $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
+                }
+            }
+        } else {
+            $this->idcustomer->EditValue = null;
+        }
+        $this->idcustomer->ViewCustomAttributes = "";
 
         // kodeorder
         $this->kodeorder->EditAttrs["class"] = "form-control";
-        $this->kodeorder->EditCustomAttributes = "readonly";
-        if (!$this->kodeorder->Raw) {
-            $this->kodeorder->CurrentValue = HtmlDecode($this->kodeorder->CurrentValue);
-        }
+        $this->kodeorder->EditCustomAttributes = "";
         $this->kodeorder->EditValue = $this->kodeorder->CurrentValue;
-        $this->kodeorder->PlaceHolder = RemoveHtml($this->kodeorder->caption());
+        $this->kodeorder->ViewCustomAttributes = "";
 
-        // idbrand
-        $this->idbrand->EditAttrs["class"] = "form-control";
-        $this->idbrand->EditCustomAttributes = "";
-        $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+        // idproduct_acuan
+        $this->idproduct_acuan->EditAttrs["class"] = "form-control";
+        $this->idproduct_acuan->EditCustomAttributes = "";
+        $this->idproduct_acuan->PlaceHolder = RemoveHtml($this->idproduct_acuan->caption());
 
         // nama
         $this->nama->EditAttrs["class"] = "form-control";
@@ -2014,55 +1897,15 @@ SORTHTML;
         $this->nama->EditValue = $this->nama->CurrentValue;
         $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
-        // idkategoribarang
-        $this->idkategoribarang->EditAttrs["class"] = "form-control";
-        $this->idkategoribarang->EditCustomAttributes = "";
-        $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
-
         // idjenisbarang
         $this->idjenisbarang->EditAttrs["class"] = "form-control";
         $this->idjenisbarang->EditCustomAttributes = "";
         $this->idjenisbarang->PlaceHolder = RemoveHtml($this->idjenisbarang->caption());
 
-        // idproduct_acuan
-        $this->idproduct_acuan->EditAttrs["class"] = "form-control";
-        $this->idproduct_acuan->EditCustomAttributes = "";
-        $this->idproduct_acuan->PlaceHolder = RemoveHtml($this->idproduct_acuan->caption());
-
-        // idkualitasbarang
-        $this->idkualitasbarang->EditAttrs["class"] = "form-control";
-        $this->idkualitasbarang->EditCustomAttributes = "";
-        $this->idkualitasbarang->PlaceHolder = RemoveHtml($this->idkualitasbarang->caption());
-
-        // kemasanbarang
-        $this->kemasanbarang->EditAttrs["class"] = "form-control";
-        $this->kemasanbarang->EditCustomAttributes = "";
-        $this->kemasanbarang->EditValue = $this->kemasanbarang->CurrentValue;
-        $this->kemasanbarang->PlaceHolder = RemoveHtml($this->kemasanbarang->caption());
-
-        // label
-        $this->label->EditAttrs["class"] = "form-control";
-        $this->label->EditCustomAttributes = "";
-        $this->label->EditValue = $this->label->CurrentValue;
-        $this->label->PlaceHolder = RemoveHtml($this->label->caption());
-
-        // bahan
-        $this->bahan->EditAttrs["class"] = "form-control";
-        $this->bahan->EditCustomAttributes = "";
-        if (!$this->bahan->Raw) {
-            $this->bahan->CurrentValue = HtmlDecode($this->bahan->CurrentValue);
-        }
-        $this->bahan->EditValue = $this->bahan->CurrentValue;
-        $this->bahan->PlaceHolder = RemoveHtml($this->bahan->caption());
-
-        // ukuran
-        $this->ukuran->EditAttrs["class"] = "form-control";
-        $this->ukuran->EditCustomAttributes = "";
-        if (!$this->ukuran->Raw) {
-            $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-        }
-        $this->ukuran->EditValue = $this->ukuran->CurrentValue;
-        $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
+        // idkategoribarang
+        $this->idkategoribarang->EditAttrs["class"] = "form-control";
+        $this->idkategoribarang->EditCustomAttributes = "";
+        $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
 
         // warna
         $this->warna->EditAttrs["class"] = "form-control";
@@ -2082,17 +1925,23 @@ SORTHTML;
         $this->parfum->EditValue = $this->parfum->CurrentValue;
         $this->parfum->PlaceHolder = RemoveHtml($this->parfum->caption());
 
-        // harga
-        $this->harga->EditAttrs["class"] = "form-control";
-        $this->harga->EditCustomAttributes = "";
-        $this->harga->EditValue = $this->harga->CurrentValue;
-        $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
-
         // tambahan
         $this->tambahan->EditAttrs["class"] = "form-control";
         $this->tambahan->EditCustomAttributes = "";
         $this->tambahan->EditValue = $this->tambahan->CurrentValue;
         $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
+
+        // kemasanbarang
+        $this->kemasanbarang->EditAttrs["class"] = "form-control";
+        $this->kemasanbarang->EditCustomAttributes = "";
+        $this->kemasanbarang->EditValue = $this->kemasanbarang->CurrentValue;
+        $this->kemasanbarang->PlaceHolder = RemoveHtml($this->kemasanbarang->caption());
+
+        // label
+        $this->label->EditAttrs["class"] = "form-control";
+        $this->label->EditCustomAttributes = "";
+        $this->label->EditValue = $this->label->CurrentValue;
+        $this->label->PlaceHolder = RemoveHtml($this->label->caption());
 
         // orderperdana
         $this->orderperdana->EditAttrs["class"] = "form-control";
@@ -2106,28 +1955,15 @@ SORTHTML;
         $this->orderreguler->EditValue = $this->orderreguler->CurrentValue;
         $this->orderreguler->PlaceHolder = RemoveHtml($this->orderreguler->caption());
 
-        // status
-        $this->status->EditAttrs["class"] = "form-control";
-        $this->status->EditCustomAttributes = "";
-        if (!$this->status->Raw) {
-            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-        }
-        $this->status->EditValue = $this->status->CurrentValue;
-        $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
         // selesai
         $this->selesai->EditCustomAttributes = "";
         $this->selesai->EditValue = $this->selesai->options(false);
         $this->selesai->PlaceHolder = RemoveHtml($this->selesai->caption());
 
-        // idproduct
-        $this->idproduct->EditAttrs["class"] = "form-control";
-        $this->idproduct->EditCustomAttributes = "";
-        if (!$this->idproduct->Raw) {
-            $this->idproduct->CurrentValue = HtmlDecode($this->idproduct->CurrentValue);
-        }
-        $this->idproduct->EditValue = $this->idproduct->CurrentValue;
-        $this->idproduct->PlaceHolder = RemoveHtml($this->idproduct->caption());
+        // readonly
+        $this->readonly->EditCustomAttributes = "";
+        $this->readonly->EditValue = $this->readonly->options(false);
+        $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
 
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
@@ -2135,14 +1971,62 @@ SORTHTML;
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
+        // tanggal_order
+        $this->tanggal_order->EditAttrs["class"] = "form-control";
+        $this->tanggal_order->EditCustomAttributes = "";
+        $this->tanggal_order->EditValue = FormatDateTime($this->tanggal_order->CurrentValue, 8);
+        $this->tanggal_order->PlaceHolder = RemoveHtml($this->tanggal_order->caption());
 
-        // readonly
-        $this->readonly->EditCustomAttributes = "";
-        $this->readonly->EditValue = $this->readonly->options(false);
-        $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
+        // target_selesai
+        $this->target_selesai->EditAttrs["class"] = "form-control";
+        $this->target_selesai->EditCustomAttributes = "";
+        $this->target_selesai->EditValue = FormatDateTime($this->target_selesai->CurrentValue, 8);
+        $this->target_selesai->PlaceHolder = RemoveHtml($this->target_selesai->caption());
+
+        // kategori
+        $this->kategori->EditAttrs["class"] = "form-control";
+        $this->kategori->EditCustomAttributes = "";
+        if (!$this->kategori->Raw) {
+            $this->kategori->CurrentValue = HtmlDecode($this->kategori->CurrentValue);
+        }
+        $this->kategori->EditValue = $this->kategori->CurrentValue;
+        $this->kategori->PlaceHolder = RemoveHtml($this->kategori->caption());
+
+        // fungsi_produk
+        $this->fungsi_produk->EditAttrs["class"] = "form-control";
+        $this->fungsi_produk->EditCustomAttributes = "";
+        if (!$this->fungsi_produk->Raw) {
+            $this->fungsi_produk->CurrentValue = HtmlDecode($this->fungsi_produk->CurrentValue);
+        }
+        $this->fungsi_produk->EditValue = $this->fungsi_produk->CurrentValue;
+        $this->fungsi_produk->PlaceHolder = RemoveHtml($this->fungsi_produk->caption());
+
+        // kualitasbarang
+        $this->kualitasbarang->EditAttrs["class"] = "form-control";
+        $this->kualitasbarang->EditCustomAttributes = "";
+        if (!$this->kualitasbarang->Raw) {
+            $this->kualitasbarang->CurrentValue = HtmlDecode($this->kualitasbarang->CurrentValue);
+        }
+        $this->kualitasbarang->EditValue = $this->kualitasbarang->CurrentValue;
+        $this->kualitasbarang->PlaceHolder = RemoveHtml($this->kualitasbarang->caption());
+
+        // bahan_campaign
+        $this->bahan_campaign->EditAttrs["class"] = "form-control";
+        $this->bahan_campaign->EditCustomAttributes = "";
+        if (!$this->bahan_campaign->Raw) {
+            $this->bahan_campaign->CurrentValue = HtmlDecode($this->bahan_campaign->CurrentValue);
+        }
+        $this->bahan_campaign->EditValue = $this->bahan_campaign->CurrentValue;
+        $this->bahan_campaign->PlaceHolder = RemoveHtml($this->bahan_campaign->caption());
+
+        // ukuran_sediaan
+        $this->ukuran_sediaan->EditAttrs["class"] = "form-control";
+        $this->ukuran_sediaan->EditCustomAttributes = "";
+        if (!$this->ukuran_sediaan->Raw) {
+            $this->ukuran_sediaan->CurrentValue = HtmlDecode($this->ukuran_sediaan->CurrentValue);
+        }
+        $this->ukuran_sediaan->EditValue = $this->ukuran_sediaan->CurrentValue;
+        $this->ukuran_sediaan->PlaceHolder = RemoveHtml($this->ukuran_sediaan->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2172,56 +2056,56 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->statuskategori);
+                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kodeorder);
-                    $doc->exportCaption($this->idbrand);
-                    $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->idkategoribarang);
-                    $doc->exportCaption($this->idjenisbarang);
                     $doc->exportCaption($this->idproduct_acuan);
-                    $doc->exportCaption($this->idkualitasbarang);
-                    $doc->exportCaption($this->kemasanbarang);
-                    $doc->exportCaption($this->label);
-                    $doc->exportCaption($this->bahan);
-                    $doc->exportCaption($this->ukuran);
+                    $doc->exportCaption($this->nama);
+                    $doc->exportCaption($this->idjenisbarang);
+                    $doc->exportCaption($this->idkategoribarang);
                     $doc->exportCaption($this->warna);
                     $doc->exportCaption($this->parfum);
-                    $doc->exportCaption($this->harga);
                     $doc->exportCaption($this->tambahan);
+                    $doc->exportCaption($this->kemasanbarang);
+                    $doc->exportCaption($this->label);
                     $doc->exportCaption($this->orderperdana);
                     $doc->exportCaption($this->orderreguler);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->selesai);
+                    $doc->exportCaption($this->tanggal_order);
+                    $doc->exportCaption($this->target_selesai);
+                    $doc->exportCaption($this->kategori);
+                    $doc->exportCaption($this->fungsi_produk);
+                    $doc->exportCaption($this->kualitasbarang);
+                    $doc->exportCaption($this->bahan_campaign);
+                    $doc->exportCaption($this->ukuran_sediaan);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->statuskategori);
+                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kodeorder);
-                    $doc->exportCaption($this->idbrand);
-                    $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->idkategoribarang);
-                    $doc->exportCaption($this->idjenisbarang);
                     $doc->exportCaption($this->idproduct_acuan);
-                    $doc->exportCaption($this->idkualitasbarang);
-                    $doc->exportCaption($this->kemasanbarang);
-                    $doc->exportCaption($this->label);
-                    $doc->exportCaption($this->bahan);
-                    $doc->exportCaption($this->ukuran);
+                    $doc->exportCaption($this->nama);
+                    $doc->exportCaption($this->idjenisbarang);
+                    $doc->exportCaption($this->idkategoribarang);
                     $doc->exportCaption($this->warna);
                     $doc->exportCaption($this->parfum);
-                    $doc->exportCaption($this->harga);
                     $doc->exportCaption($this->tambahan);
+                    $doc->exportCaption($this->kemasanbarang);
+                    $doc->exportCaption($this->label);
                     $doc->exportCaption($this->orderperdana);
                     $doc->exportCaption($this->orderreguler);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->selesai);
-                    $doc->exportCaption($this->idproduct);
-                    $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
                     $doc->exportCaption($this->readonly);
+                    $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->tanggal_order);
+                    $doc->exportCaption($this->target_selesai);
+                    $doc->exportCaption($this->kategori);
+                    $doc->exportCaption($this->fungsi_produk);
+                    $doc->exportCaption($this->kualitasbarang);
+                    $doc->exportCaption($this->bahan_campaign);
+                    $doc->exportCaption($this->ukuran_sediaan);
                 }
                 $doc->endExportRow();
             }
@@ -2251,56 +2135,56 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->statuskategori);
+                        $doc->exportField($this->status);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kodeorder);
-                        $doc->exportField($this->idbrand);
-                        $doc->exportField($this->nama);
-                        $doc->exportField($this->idkategoribarang);
-                        $doc->exportField($this->idjenisbarang);
                         $doc->exportField($this->idproduct_acuan);
-                        $doc->exportField($this->idkualitasbarang);
-                        $doc->exportField($this->kemasanbarang);
-                        $doc->exportField($this->label);
-                        $doc->exportField($this->bahan);
-                        $doc->exportField($this->ukuran);
+                        $doc->exportField($this->nama);
+                        $doc->exportField($this->idjenisbarang);
+                        $doc->exportField($this->idkategoribarang);
                         $doc->exportField($this->warna);
                         $doc->exportField($this->parfum);
-                        $doc->exportField($this->harga);
                         $doc->exportField($this->tambahan);
+                        $doc->exportField($this->kemasanbarang);
+                        $doc->exportField($this->label);
                         $doc->exportField($this->orderperdana);
                         $doc->exportField($this->orderreguler);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->selesai);
+                        $doc->exportField($this->tanggal_order);
+                        $doc->exportField($this->target_selesai);
+                        $doc->exportField($this->kategori);
+                        $doc->exportField($this->fungsi_produk);
+                        $doc->exportField($this->kualitasbarang);
+                        $doc->exportField($this->bahan_campaign);
+                        $doc->exportField($this->ukuran_sediaan);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->statuskategori);
+                        $doc->exportField($this->status);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kodeorder);
-                        $doc->exportField($this->idbrand);
-                        $doc->exportField($this->nama);
-                        $doc->exportField($this->idkategoribarang);
-                        $doc->exportField($this->idjenisbarang);
                         $doc->exportField($this->idproduct_acuan);
-                        $doc->exportField($this->idkualitasbarang);
-                        $doc->exportField($this->kemasanbarang);
-                        $doc->exportField($this->label);
-                        $doc->exportField($this->bahan);
-                        $doc->exportField($this->ukuran);
+                        $doc->exportField($this->nama);
+                        $doc->exportField($this->idjenisbarang);
+                        $doc->exportField($this->idkategoribarang);
                         $doc->exportField($this->warna);
                         $doc->exportField($this->parfum);
-                        $doc->exportField($this->harga);
                         $doc->exportField($this->tambahan);
+                        $doc->exportField($this->kemasanbarang);
+                        $doc->exportField($this->label);
                         $doc->exportField($this->orderperdana);
                         $doc->exportField($this->orderreguler);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->selesai);
-                        $doc->exportField($this->idproduct);
-                        $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
                         $doc->exportField($this->readonly);
+                        $doc->exportField($this->created_at);
+                        $doc->exportField($this->tanggal_order);
+                        $doc->exportField($this->target_selesai);
+                        $doc->exportField($this->kategori);
+                        $doc->exportField($this->fungsi_produk);
+                        $doc->exportField($this->kualitasbarang);
+                        $doc->exportField($this->bahan_campaign);
+                        $doc->exportField($this->ukuran_sediaan);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -2315,53 +2199,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `npd`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
     }
 
     // Get file data
@@ -2415,8 +2252,8 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        $idcustomer = $rsnew['idcustomer'];
-        $rsnew['kodeorder'] = getNextKodeNpd($idcustomer);
+        //$idcustomer = $rsnew['idcustomer'];
+        //$rsnew['kodeorder'] = getNextKodeNpd($idcustomer);
         return true;
     }
 

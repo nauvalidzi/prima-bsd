@@ -140,6 +140,14 @@ function Api_Action($app)
 //    	$total = ExecuteRow("SELECT s.idorder_detail, s.jumlah jumlahkirim, p.harga, (s.jumlah*p.harga) total FROM stock s, product p WHERE s.idproduct = p.id AND s.idorder_detail=".$idOrderDetail);
 //    	return $response->withJson($total);
 //    });
+	$app->get('/nextKodeOrder/{titipmerk}', function ($request, $response, $args) {
+        $kode = getNextKodeOrder($args['titipmerk']);
+        return $response->withJson($kode);
+    });
+    $app->get('/nextKodeInvoice/{idorder}/{jumlahkirim}', function ($request, $response, $args) {
+        $kode = getNextKodeInvoice($args['idorder'], $args['jumlahkirim']);
+        return $response->withJson($kode);
+    });
     $app->get('/nextKode/{tipe}/{id}', function ($request, $response, $args) {
     	$tipe = $args['tipe'];
     	$id = $args['id'];
@@ -493,60 +501,167 @@ function getNextKodeNpd($idCustomer) {
     return $kode;
 }
 
+function getNextKodeInvoice($idorder, $jumlahkirim) {
+    $format = "%MM%YY-%URUTAN";
+    $digit_length = 4;
+    $exists = ExecuteRow("SELECT COUNT(*) AS total, max(kode) AS kode FROM invoice WHERE idorder = {$idorder}");
+    if ($exists['total'] > 0) {
+        $alphabets = [0, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+        return $exists['kode'] . $alphabets[$exists['total'] + 1];
+    }
+    $maxKode = ExecuteRow("SELECT MAX(kode) FROM invoice");
+    if (!$maxKode) {
+        $reformat = penomoran_date_replace($format);
+        $kode = str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
+    } else {
+        $reformat = penomoran_date_replace($format);
+        $string = explode("%URUTAN", $reformat);
+        $trim_prefix = str_replace($string[0], '', $maxKode);
+        $trim_suffix = str_replace($string[1], '', $trim_prefix);
+        $kode = $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
+    }
+    $totalorder = ExecuteRow("SELECT SUM(jumlah) + SUM(bonus) AS total FROM order_detail WHERE idorder = {$idorder}")['totalorder'];
+    if ($jumlahkirim < $totalorder) {
+        return $kode . 'A';
+    }
+    return $kode;
+}
+
+function getNextKodeOrder($titipmerk=0) {
+    date_default_timezone_set('Asia/Jakarta');
+    $digit_length = 3;
+    if ($titipmerk > 0) {
+        $format = "SP%URUTANTM-%DD%MM%YY/BSD";
+        $titipmerk = " AND kode LIKE '%TM%'";
+    } else {
+        $format = "SP%URUTAN-%DD%MM%YY/BSD";
+        // $titipmerk = " AND kode is null";
+        $titipmerk = " AND kode NOT LIKE '%TM%'";
+    }
+    $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `order` WHERE created_at = (SELECT MAX(created_at) FROM `order` WHERE 1=1 {$titipmerk})");
+    if (!$maxKode) {
+        $format = date('H:i:s') > date('H:i:s', strtotime("14:00:00")) ? str_replace('%DD', date('d', strtotime('+1 day')), $format) : $format;
+        $reformat = penomoran_date_replace($format);
+        return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
+    };
+    if (date('Y-m-d H:i:s', strtotime($maxKode['last_post'])) < date('Y-m-d H:i:s', strtotime("14:00:00")) && 
+        date('Y-m-d H:i:s') > date('Y-m-d H:i:s', strtotime("14:00:00"))) {
+        // JIKA TANGGAL/JAM DATA DARI DB KURANG DARI JAM 14:00 DAN
+        // JAM SAAT INI LEBIH DARI JAM 14:00 MAKA BUAT URUTAN BARU DENGAN TANGGAL KEESOKAN HARINYA
+        $format = str_replace('%DD', date('d', strtotime('+1 day')), $format);
+        $reformat = penomoran_date_replace($format);
+        return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
+    }
+    $curr_kode = date('d', strtotime('+1 day', strtotime($maxKode['last_post'])));
+    $format = str_replace('%DD', $curr_kode, $format);
+    $reformat = penomoran_date_replace($format);
+    $string = explode("%URUTAN", $reformat);
+    $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
+    $trim_suffix = str_replace($string[1], '', $trim_prefix);
+    return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
+}
+
 function getNextKode($tipe, $id) {
     if ($tipe == null) { return; }
-    $kode = $column = $table = "";
+    $format = $column = $table = "";
+    $digit_length = 3; // default three digits
    	if ($tipe == "pegawai") {
    		$table = "pegawai";
    		$column = "kode";
-   		$kode = "PEG-";
+   		$format = "PEG-%URUTAN";
    	} elseif ($tipe == "customer") {
    		$table = "customer";
    		$column = "kode";
-   		$kode = "LD. ";
-   	} elseif ($tipe == "order") {
-   		$table = "`order`";
-   		$column = "kode";
-   		$kode = "PO-";
-   	} elseif ($tipe == "deliveryorder") {
-   		$table = "deliveryorder";
-   		$column = "kode";
-   		$kode = "FD-";
-   	} elseif ($tipe == "invoice") {
-   		$table = "invoice";
-   		$column = "kode";
-   		$kode = "BSD-";
+   		$format = "LD. %URUTAN";
    	} elseif ($tipe == "suratjalan") {
    		$table = "suratjalan";
    		$column = "kode";
-   		$kode = "SJ-";
+   		$format = "%MM%YY-%URUTAN";
    	} elseif ($tipe == "pembayaran") {
    		$table = "pembayaran";
    		$column = "kode";
-   		$kode = "PB-";
+   		$format = "PB-%URUTAN/%MM%YY";
    	}
-   	$maxKode = ExecuteScalar("SELECT MAX(".$column.") FROM ".$table);
-   	if ($maxKode == null) {
-   		$kode = $kode."0001";
+   	$maxKode = ExecuteRow("SELECT MAX({$column}) FROM {$table}");
+   	if (!$maxKode) {
+        $reformat = penomoran_date_replace($format);
+        return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
    	} else {
-   		$pecah = explode("-", $maxKode);
-   		if ($tipe == "customer") {
-   			$pecah = explode(" ", $maxKode);
-   		}
-   		$nominal = intval(end($pecah))+1;
-   		if($nominal <= 9) {
-   			$kode = $kode."000".$nominal;
-   		} else if ($nominal > 9 && $nominal <= 99) {
-   			$kode = $kode."00".$nominal;
-   		} else if ($nominal > 99 && $nominal <= 999) {
-   			$kode = $kode."0".$nominal;
-   		} else {
-   			$kode = $kode.$nominal;
-   		}
+        $reformat = penomoran_date_replace($format);
+        $string = explode("%URUTAN", $reformat);
+        $trim_prefix = str_replace($string[0], '', $maxKode);
+        $trim_suffix = str_replace($string[1], '', $trim_prefix);
+        return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
    	}
-   	return $kode;
 }
 
+function penomoran_date_replace($format) {
+    if (strpos($format, "%YY") !== false) {
+        $format = str_replace("%YY", date('y'), $format);
+    }
+    if (strpos($format, "%MM") !== false) {
+        $format = str_replace("%MM", date('m'), $format);
+    }
+    if (strpos($format, "%DD") !== false) {
+        $format = str_replace("%DD", date('d'), $format);
+    }
+    return $format;
+}
+
+// function getNextKode($tipe, $id) {
+//     $kode = $column = $table = "";
+//     if ($tipe == "pegawai") {
+//         $table = "pegawai";
+//         $column = "kode";
+//         $kode = "PEG-";
+//     } elseif ($tipe == "customer") {
+//         $table = "customer";
+//         $column = "kode";
+//         $kode = "LD. ";
+//     } elseif ($tipe == "order") {
+//         $table = "`order`";
+//         $column = "kode";
+//         $kode = "SP-";
+//     } elseif ($tipe == "deliveryorder") {
+//         $table = "deliveryorder";
+//         $column = "kode";
+//         $kode = "FD-";
+//     } elseif ($tipe == "invoice") {
+//         $table = "invoice";
+//         $column = "kode";
+//         $kode = "BSD-";
+//     } elseif ($tipe == "suratjalan") {
+//         $table = "suratjalan";
+//         $column = "kode";
+//         $kode = "SJ-";
+//     } elseif ($tipe == "pembayaran") {
+//         $table = "pembayaran";
+//         $column = "kode";
+//         $kode = "PB-";
+//     }
+
+//     $maxKode = ExecuteScalar("SELECT MAX(".$column.") FROM ".$table);
+//     if ($maxKode == null) {
+//         $kode = $kode."0001";
+//     } else {
+//         $pecah = explode("-", $maxKode);
+//         if ($tipe == "customer") {
+//             $pecah = explode(" ", $maxKode);
+//         }
+//         $nominal = intval(end($pecah))+1;
+//         if($nominal <= 9) {
+//             $kode = $kode."000".$nominal;
+//         } else if ($nominal > 9 && $nominal <= 99) {
+//             $kode = $kode."00".$nominal;
+//         } else if ($nominal > 99 && $nominal <= 999) {
+//             $kode = $kode."0".$nominal;
+//         } else {
+//             $kode = $kode.$nominal;
+//         }
+//     }
+
+//     return $kode;
+// }
 function check_count_brand($idcustomer) {
 	$count = ExecuteScalar("SELECT COUNT(*) FROM brand_link WHERE idcustomer = {$idcustomer} AND idcustomer_brand = {$idcustomer}");
 	if ($count < 1) {
@@ -657,24 +772,6 @@ function check_kpi_existing($idpegawai, $bulan) {
         return false;
     } 
     return true;
-}
-
-function penomoran($format)	{
-	if (strpos($format, "%YEAR") !== false) {
-		$format = str_replace("%YEAR", date('Y'), $format);
-	}
-	if (strpos($format, "%MONTH") !== false) {
-		$format = str_replace("%MONTH", date('m'), $format);
-	}
-	if (strpos($format, "%DATE") !== false) {
-		$format = str_replace("%DATE", date('d'), $format);
-	}
-	if (strpos($format, "%URUTAN") !== false) {
-		$nomor = 1;
-		if (empty($nomor)) $nomor = 0;
-		$format = str_replace("%URUTAN", str_pad(ltrim($nomor, '0')+1, 5, '0', STR_PAD_LEFT), $format);
-	}
-	return $format;
 }
 
 function curl_post($url, $data, $url_auth=""){

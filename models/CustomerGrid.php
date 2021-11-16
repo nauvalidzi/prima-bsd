@@ -2207,7 +2207,7 @@ class CustomerGrid extends Customer
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -2343,12 +2343,9 @@ class CustomerGrid extends Customer
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // idtipecustomer
             $this->idtipecustomer->EditAttrs["class"] = "form-control";
@@ -2456,6 +2453,7 @@ class CustomerGrid extends Customer
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // idtipecustomer
             $this->idtipecustomer->LinkCustomAttributes = "";
@@ -2526,7 +2524,7 @@ class CustomerGrid extends Customer
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
         }
-        if (!CheckByRegEx($this->hp->FormValue, '^(62)8[1-9][0-9]{7,11}$')) {
+        if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
         }
 
@@ -2671,9 +2669,6 @@ class CustomerGrid extends Customer
             // Save old values
             $this->loadDbValues($rsold);
             $rsnew = [];
-
-            // kode
-            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", $this->kode->ReadOnly);
 
             // idtipecustomer
             $this->idtipecustomer->setDbValueDef($rsnew, $this->idtipecustomer->CurrentValue, 0, $this->idtipecustomer->ReadOnly);

@@ -507,6 +507,7 @@ class OrderGrid extends Order
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->kode->setVisibility();
+        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
@@ -1364,6 +1365,8 @@ class OrderGrid extends Order
         $this->id->OldValue = $this->id->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
+        $this->titipmerk->CurrentValue = 0;
+        $this->titipmerk->OldValue = $this->titipmerk->CurrentValue;
         $this->tanggal->CurrentValue = null;
         $this->tanggal->OldValue = $this->tanggal->CurrentValue;
         $this->idpegawai->CurrentValue = CurrentUserID();
@@ -1534,6 +1537,7 @@ class OrderGrid extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
+        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
@@ -1553,6 +1557,7 @@ class OrderGrid extends Order
         $row = [];
         $row['id'] = $this->id->CurrentValue;
         $row['kode'] = $this->kode->CurrentValue;
+        $row['titipmerk'] = $this->titipmerk->CurrentValue;
         $row['tanggal'] = $this->tanggal->CurrentValue;
         $row['idpegawai'] = $this->idpegawai->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
@@ -1599,6 +1604,9 @@ class OrderGrid extends Order
         // id
 
         // kode
+
+        // titipmerk
+        $this->titipmerk->CellCssStyle = "white-space: nowrap;";
 
         // tanggal
 
@@ -1720,7 +1728,7 @@ class OrderGrid extends Order
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -1827,12 +1835,9 @@ class OrderGrid extends Order
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
@@ -1919,6 +1924,7 @@ class OrderGrid extends Order
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
@@ -2071,23 +2077,6 @@ class OrderGrid extends Order
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
-        if ($this->kode->CurrentValue != "") { // Check field with unique index
-            $filterChk = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
-            $filterChk .= " AND NOT (" . $filter . ")";
-            $this->CurrentFilter = $filterChk;
-            $sqlChk = $this->getCurrentSql();
-            $rsChk = $conn->executeQuery($sqlChk);
-            if (!$rsChk) {
-                return false;
-            }
-            if ($rsChk->fetch()) {
-                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                $rsChk->closeCursor();
-                return false;
-            }
-        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);
@@ -2099,9 +2088,6 @@ class OrderGrid extends Order
             // Save old values
             $this->loadDbValues($rsold);
             $rsnew = [];
-
-            // kode
-            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", $this->kode->ReadOnly);
 
             // tanggal
             $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), $this->tanggal->ReadOnly);
@@ -2179,16 +2165,6 @@ class OrderGrid extends Order
         // Set up foreign key field value from Session
         if ($this->getCurrentMasterTable() == "customer") {
             $this->idcustomer->CurrentValue = $this->idcustomer->getSessionValue();
-        }
-        if ($this->kode->CurrentValue != "") { // Check field with unique index
-            $filter = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                return false;
-            }
         }
         $conn = $this->getConnection();
 
@@ -2293,6 +2269,8 @@ class OrderGrid extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_titipmerk":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":

@@ -1620,9 +1620,6 @@ SORTHTML;
         if ($currentMasterTable == "serahterima") {
             $filterWrk = Container("serahterima")->addUserIDFilter($filterWrk);
         }
-        if ($currentMasterTable == "npd") {
-            $filterWrk = Container("npd")->addUserIDFilter($filterWrk);
-        }
         return $filterWrk;
     }
 
@@ -1634,13 +1631,6 @@ SORTHTML;
             $mastertable = Container("serahterima");
             if (!$mastertable->userIdAllow()) {
                 $subqueryWrk = $mastertable->getUserIDSubquery($this->idserahterima, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        if ($currentMasterTable == "npd") {
-            $mastertable = Container("npd");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->idnpd, $mastertable->id);
                 AddFilter($filterWrk, $subqueryWrk);
             }
         }

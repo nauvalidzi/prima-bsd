@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.invoice)
         ew.vars.tables.invoice = currentTable;
     finvoiceedit.addFields([
+        ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tglinvoice", [fields.tglinvoice.visible && fields.tglinvoice.required ? ew.Validators.required(fields.tglinvoice.caption) : null, ew.Validators.datetime(0)], fields.tglinvoice.isInvalid],
         ["totalnonpajak", [fields.totalnonpajak.visible && fields.totalnonpajak.required ? ew.Validators.required(fields.totalnonpajak.caption) : null, ew.Validators.integer], fields.totalnonpajak.isInvalid],
         ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null, ew.Validators.float], fields.pajak.isInvalid],
@@ -130,6 +131,18 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-edit-div"><!-- page* -->
+<?php if ($Page->kode->Visible) { // kode ?>
+    <div id="r_kode" class="form-group row">
+        <label id="elh_invoice_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kode->cellAttributes() ?>>
+<span id="el_invoice_kode">
+<span<?= $Page->kode->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->kode->getDisplayValue($Page->kode->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_kode" data-hidden="1" name="x_kode" id="x_kode" value="<?= HtmlEncode($Page->kode->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->tglinvoice->Visible) { // tglinvoice ?>
     <div id="r_tglinvoice" class="form-group row">
         <label id="elh_invoice_tglinvoice" for="x_tglinvoice" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tglinvoice->caption() ?><?= $Page->tglinvoice->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

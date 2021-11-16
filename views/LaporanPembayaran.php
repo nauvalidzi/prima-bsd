@@ -90,7 +90,7 @@ $LaporanPembayaran = &$Page;
 		        <th class="text-center col-description">Nama Pelanggan</th>
 		        <th class="text-center col-description">Total Tagihan</th>
 		        <th class="text-center col-description">Piutang</th>
-		        <th class="text-center col-description">Jumlah Bayar</th>
+		        <th class="text-center col-description">Total Bayar</th>
 		    </tr>
 		  </thead>
 		  <tbody>

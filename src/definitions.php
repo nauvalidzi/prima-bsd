@@ -74,7 +74,6 @@ return [
     "rekening" => \DI\create(Rekening::class),
     "tipepayment" => \DI\create(Tipepayment::class),
     "npd" => \DI\create(Npd::class),
-    "npd_status" => \DI\create(NpdStatus::class),
     "npd_sample" => \DI\create(NpdSample::class),
     "npd_review" => \DI\create(NpdReview::class),
     "npd_confirm" => \DI\create(NpdConfirm::class),
@@ -132,7 +131,7 @@ return [
     "laporan_order_customer" => \DI\create(LaporanOrderCustomer::class),
     "penagihan_customer" => \DI\create(PenagihanCustomer::class),
     "penagihan" => \DI\create(Penagihan::class),
-    "customer_copy1" => \DI\create(CustomerCopy1::class),
+    "npd_status" => \DI\create(NpdStatus::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

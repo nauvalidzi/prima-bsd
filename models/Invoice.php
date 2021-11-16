@@ -1522,11 +1522,8 @@ SORTHTML;
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
         $this->kode->EditCustomAttributes = "";
-        if (!$this->kode->Raw) {
-            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-        }
         $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+        $this->kode->ViewCustomAttributes = "";
 
         // tglinvoice
         $this->tglinvoice->EditAttrs["class"] = "form-control";
@@ -1898,7 +1895,12 @@ SORTHTML;
         // Enter your code here
         // To cancel, set return value to false
         $rsnew['sisabayar'] = $rsnew['totaltagihan'];
-        //$rsnew['kode'] = getNextKode('invoice', 0);
+        $jumlahkirim = 0; // DEFAULT 0
+        $detail = $GLOBALS["invoice_detail"]->GetGridFormValues(); // TOTAL KIRIM YANG DIINPUT
+       	foreach ($detail as $d) {
+           	$jumlahkirim += $d['jumlahkirim'] + $d['jumlahbonus'];
+        }
+        $rsnew['kode'] = getNextKodeInvoice($rsnew['idorder'], $jumlahkirim);
         return true;
     }
 

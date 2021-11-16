@@ -128,10 +128,10 @@ $Page->showMessage();
         <label id="elh_pegawai_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kode->cellAttributes() ?>>
 <span id="el_pegawai_kode">
-<input type="<?= $Page->kode->getInputTextType() ?>" data-table="pegawai" data-field="x_kode" name="x_kode" id="x_kode" size="30" maxlength="20" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" value="<?= $Page->kode->EditValue ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
-<?= $Page->kode->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
+<span<?= $Page->kode->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->kode->getDisplayValue($Page->kode->EditValue))) ?>"></span>
 </span>
+<input type="hidden" data-table="pegawai" data-field="x_kode" data-hidden="1" name="x_kode" id="x_kode" value="<?= HtmlEncode($Page->kode->CurrentValue) ?>">
 </div></div>
     </div>
 <?php } ?>

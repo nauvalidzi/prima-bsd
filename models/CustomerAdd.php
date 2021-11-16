@@ -1627,7 +1627,7 @@ class CustomerAdd extends Customer
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
+            $this->kode->EditCustomAttributes = "readonly";
             if (!$this->kode->Raw) {
                 $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
@@ -1889,9 +1889,6 @@ class CustomerAdd extends Customer
             // alamat
             $this->alamat->EditAttrs["class"] = "form-control";
             $this->alamat->EditCustomAttributes = "";
-            if (!$this->alamat->Raw) {
-                $this->alamat->CurrentValue = HtmlDecode($this->alamat->CurrentValue);
-            }
             $this->alamat->EditValue = HtmlEncode($this->alamat->CurrentValue);
             $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
 
@@ -2233,7 +2230,7 @@ class CustomerAdd extends Customer
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
         }
-        if (!CheckByRegEx($this->hp->FormValue, '^(62)8[1-9][0-9]{7,11}$')) {
+        if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
         }
         if ($this->_email->Required) {
@@ -2469,10 +2466,10 @@ class CustomerAdd extends Customer
         }
 
         // limit_kredit_order
-        $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, null, false);
+        $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, 0, false);
 
         // jatuh_tempo_invoice
-        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, false);
+        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, strval($this->jatuh_tempo_invoice->CurrentValue) == "");
 
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);

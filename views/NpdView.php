@@ -45,13 +45,13 @@ $Page->showMessage();
 <input type="hidden" name="t" value="npd">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->statuskategori->Visible) { // statuskategori ?>
-    <tr id="r_statuskategori">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_statuskategori"><?= $Page->statuskategori->caption() ?></span></td>
-        <td data-name="statuskategori" <?= $Page->statuskategori->cellAttributes() ?>>
-<span id="el_npd_statuskategori">
-<span<?= $Page->statuskategori->viewAttributes() ?>>
-<?= $Page->statuskategori->getViewValue() ?></span>
+<?php if ($Page->status->Visible) { // status ?>
+    <tr id="r_status">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status"><?= $Page->status->caption() ?></span></td>
+        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
+<span id="el_npd_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -89,13 +89,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-    <tr id="r_idbrand">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idbrand"><?= $Page->idbrand->caption() ?></span></td>
-        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el_npd_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
+<?php if ($Page->idproduct_acuan->Visible) { // idproduct_acuan ?>
+    <tr id="r_idproduct_acuan">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idproduct_acuan"><?= $Page->idproduct_acuan->caption() ?></span></td>
+        <td data-name="idproduct_acuan" <?= $Page->idproduct_acuan->cellAttributes() ?>>
+<span id="el_npd_idproduct_acuan">
+<span<?= $Page->idproduct_acuan->viewAttributes() ?>>
+<?= $Page->idproduct_acuan->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -111,17 +111,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-    <tr id="r_idkategoribarang">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idkategoribarang"><?= $Page->idkategoribarang->caption() ?></span></td>
-        <td data-name="idkategoribarang" <?= $Page->idkategoribarang->cellAttributes() ?>>
-<span id="el_npd_idkategoribarang">
-<span<?= $Page->idkategoribarang->viewAttributes() ?>>
-<?= $Page->idkategoribarang->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idjenisbarang->Visible) { // idjenisbarang ?>
     <tr id="r_idjenisbarang">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idjenisbarang"><?= $Page->idjenisbarang->caption() ?></span></td>
@@ -133,68 +122,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->idproduct_acuan->Visible) { // idproduct_acuan ?>
-    <tr id="r_idproduct_acuan">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idproduct_acuan"><?= $Page->idproduct_acuan->caption() ?></span></td>
-        <td data-name="idproduct_acuan" <?= $Page->idproduct_acuan->cellAttributes() ?>>
-<span id="el_npd_idproduct_acuan">
-<span<?= $Page->idproduct_acuan->viewAttributes() ?>>
-<?= $Page->idproduct_acuan->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->idkualitasbarang->Visible) { // idkualitasbarang ?>
-    <tr id="r_idkualitasbarang">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idkualitasbarang"><?= $Page->idkualitasbarang->caption() ?></span></td>
-        <td data-name="idkualitasbarang" <?= $Page->idkualitasbarang->cellAttributes() ?>>
-<span id="el_npd_idkualitasbarang">
-<span<?= $Page->idkualitasbarang->viewAttributes() ?>>
-<?= $Page->idkualitasbarang->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
-    <tr id="r_kemasanbarang">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_kemasanbarang"><?= $Page->kemasanbarang->caption() ?></span></td>
-        <td data-name="kemasanbarang" <?= $Page->kemasanbarang->cellAttributes() ?>>
-<span id="el_npd_kemasanbarang">
-<span<?= $Page->kemasanbarang->viewAttributes() ?>>
-<?= $Page->kemasanbarang->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->label->Visible) { // label ?>
-    <tr id="r_label">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_label"><?= $Page->label->caption() ?></span></td>
-        <td data-name="label" <?= $Page->label->cellAttributes() ?>>
-<span id="el_npd_label">
-<span<?= $Page->label->viewAttributes() ?>>
-<?= $Page->label->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->bahan->Visible) { // bahan ?>
-    <tr id="r_bahan">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_bahan"><?= $Page->bahan->caption() ?></span></td>
-        <td data-name="bahan" <?= $Page->bahan->cellAttributes() ?>>
-<span id="el_npd_bahan">
-<span<?= $Page->bahan->viewAttributes() ?>>
-<?= $Page->bahan->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <tr id="r_ukuran">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_ukuran"><?= $Page->ukuran->caption() ?></span></td>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el_npd_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
+<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
+    <tr id="r_idkategoribarang">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idkategoribarang"><?= $Page->idkategoribarang->caption() ?></span></td>
+        <td data-name="idkategoribarang" <?= $Page->idkategoribarang->cellAttributes() ?>>
+<span id="el_npd_idkategoribarang">
+<span<?= $Page->idkategoribarang->viewAttributes() ?>>
+<?= $Page->idkategoribarang->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -221,17 +155,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->harga->Visible) { // harga ?>
-    <tr id="r_harga">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_harga"><?= $Page->harga->caption() ?></span></td>
-        <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
-<span id="el_npd_harga">
-<span<?= $Page->harga->viewAttributes() ?>>
-<?= $Page->harga->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->tambahan->Visible) { // tambahan ?>
     <tr id="r_tambahan">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_tambahan"><?= $Page->tambahan->caption() ?></span></td>
@@ -239,6 +162,28 @@ $Page->showMessage();
 <span id="el_npd_tambahan">
 <span<?= $Page->tambahan->viewAttributes() ?>>
 <?= $Page->tambahan->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
+    <tr id="r_kemasanbarang">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_kemasanbarang"><?= $Page->kemasanbarang->caption() ?></span></td>
+        <td data-name="kemasanbarang" <?= $Page->kemasanbarang->cellAttributes() ?>>
+<span id="el_npd_kemasanbarang">
+<span<?= $Page->kemasanbarang->viewAttributes() ?>>
+<?= $Page->kemasanbarang->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->label->Visible) { // label ?>
+    <tr id="r_label">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_label"><?= $Page->label->caption() ?></span></td>
+        <td data-name="label" <?= $Page->label->cellAttributes() ?>>
+<span id="el_npd_label">
+<span<?= $Page->label->viewAttributes() ?>>
+<?= $Page->label->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -265,17 +210,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->status->Visible) { // status ?>
-    <tr id="r_status">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status"><?= $Page->status->caption() ?></span></td>
-        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
-<span id="el_npd_status">
-<span<?= $Page->status->viewAttributes() ?>>
-<?= $Page->status->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->selesai->Visible) { // selesai ?>
     <tr id="r_selesai">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_selesai"><?= $Page->selesai->caption() ?></span></td>
@@ -283,6 +217,83 @@ $Page->showMessage();
 <span id="el_npd_selesai">
 <span<?= $Page->selesai->viewAttributes() ?>>
 <?= $Page->selesai->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->tanggal_order->Visible) { // tanggal_order ?>
+    <tr id="r_tanggal_order">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_tanggal_order"><?= $Page->tanggal_order->caption() ?></span></td>
+        <td data-name="tanggal_order" <?= $Page->tanggal_order->cellAttributes() ?>>
+<span id="el_npd_tanggal_order">
+<span<?= $Page->tanggal_order->viewAttributes() ?>>
+<?= $Page->tanggal_order->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->target_selesai->Visible) { // target_selesai ?>
+    <tr id="r_target_selesai">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_target_selesai"><?= $Page->target_selesai->caption() ?></span></td>
+        <td data-name="target_selesai" <?= $Page->target_selesai->cellAttributes() ?>>
+<span id="el_npd_target_selesai">
+<span<?= $Page->target_selesai->viewAttributes() ?>>
+<?= $Page->target_selesai->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->kategori->Visible) { // kategori ?>
+    <tr id="r_kategori">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_kategori"><?= $Page->kategori->caption() ?></span></td>
+        <td data-name="kategori" <?= $Page->kategori->cellAttributes() ?>>
+<span id="el_npd_kategori">
+<span<?= $Page->kategori->viewAttributes() ?>>
+<?= $Page->kategori->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->fungsi_produk->Visible) { // fungsi_produk ?>
+    <tr id="r_fungsi_produk">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_fungsi_produk"><?= $Page->fungsi_produk->caption() ?></span></td>
+        <td data-name="fungsi_produk" <?= $Page->fungsi_produk->cellAttributes() ?>>
+<span id="el_npd_fungsi_produk">
+<span<?= $Page->fungsi_produk->viewAttributes() ?>>
+<?= $Page->fungsi_produk->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->kualitasbarang->Visible) { // kualitasbarang ?>
+    <tr id="r_kualitasbarang">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_kualitasbarang"><?= $Page->kualitasbarang->caption() ?></span></td>
+        <td data-name="kualitasbarang" <?= $Page->kualitasbarang->cellAttributes() ?>>
+<span id="el_npd_kualitasbarang">
+<span<?= $Page->kualitasbarang->viewAttributes() ?>>
+<?= $Page->kualitasbarang->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->bahan_campaign->Visible) { // bahan_campaign ?>
+    <tr id="r_bahan_campaign">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_bahan_campaign"><?= $Page->bahan_campaign->caption() ?></span></td>
+        <td data-name="bahan_campaign" <?= $Page->bahan_campaign->cellAttributes() ?>>
+<span id="el_npd_bahan_campaign">
+<span<?= $Page->bahan_campaign->viewAttributes() ?>>
+<?= $Page->bahan_campaign->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->ukuran_sediaan->Visible) { // ukuran_sediaan ?>
+    <tr id="r_ukuran_sediaan">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_ukuran_sediaan"><?= $Page->ukuran_sediaan->caption() ?></span></td>
+        <td data-name="ukuran_sediaan" <?= $Page->ukuran_sediaan->cellAttributes() ?>>
+<span id="el_npd_ukuran_sediaan">
+<span<?= $Page->ukuran_sediaan->viewAttributes() ?>>
+<?= $Page->ukuran_sediaan->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -296,16 +307,6 @@ $Page->showMessage();
 <div class="ew-detail-pages"><!-- detail-pages -->
 <div class="ew-nav-tabs" id="Page_details"><!-- tabs -->
     <ul class="<?= $Page->DetailPages->navStyle() ?>"><!-- .nav -->
-<?php
-    if (in_array("npd_status", explode(",", $Page->getCurrentDetailTable())) && $npd_status->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_status") {
-            $firstActiveDetailTable = "npd_status";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("npd_status") ?>" href="#tab_npd_status" data-toggle="tab"><?= $Language->tablePhrase("npd_status", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("npd_status")->Count, $Language->phrase("DetailCount")) ?></a></li>
-<?php
-    }
-?>
 <?php
     if (in_array("npd_sample", explode(",", $Page->getCurrentDetailTable())) && $npd_sample->DetailView) {
         if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_sample") {
@@ -348,16 +349,6 @@ $Page->showMessage();
 ?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
-<?php
-    if (in_array("npd_status", explode(",", $Page->getCurrentDetailTable())) && $npd_status->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_status") {
-            $firstActiveDetailTable = "npd_status";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_status") ?>" id="tab_npd_status"><!-- page* -->
-<?php include_once "NpdStatusGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
 <?php
     if (in_array("npd_sample", explode(",", $Page->getCurrentDetailTable())) && $npd_sample->DetailView) {
         if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_sample") {

@@ -469,7 +469,7 @@ class CustomerEdit extends Customer
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->kode->Visible = false;
+        $this->kode->setVisibility();
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
         $this->nama->setVisibility();
@@ -498,6 +498,7 @@ class CustomerEdit extends Customer
         $this->updated_at->Visible = false;
         $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
+        $this->kode->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -713,6 +714,16 @@ class CustomerEdit extends Customer
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'kode' first before field var 'x_kode'
+        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
+        if (!$this->kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode->Visible = false; // Disable update for API request
+            } else {
+                $this->kode->setFormValue($val);
+            }
+        }
+
         // Check field name 'idtipecustomer' first before field var 'x_idtipecustomer'
         $val = $CurrentForm->hasValue("idtipecustomer") ? $CurrentForm->getValue("idtipecustomer") : $CurrentForm->getValue("x_idtipecustomer");
         if (!$this->idtipecustomer->IsDetailKey) {
@@ -926,6 +937,7 @@ class CustomerEdit extends Customer
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
+        $this->kode->CurrentValue = $this->kode->FormValue;
         $this->idtipecustomer->CurrentValue = $this->idtipecustomer->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
@@ -1411,6 +1423,11 @@ class CustomerEdit extends Customer
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // idtipecustomer
             $this->idtipecustomer->LinkCustomAttributes = "";
             $this->idtipecustomer->HrefValue = "";
@@ -1566,6 +1583,12 @@ class CustomerEdit extends Customer
             $this->aktif->HrefValue = "";
             $this->aktif->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // kode
+            $this->kode->EditAttrs["class"] = "form-control";
+            $this->kode->EditCustomAttributes = "readonly";
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
+
             // idtipecustomer
             $this->idtipecustomer->EditAttrs["class"] = "form-control";
             $this->idtipecustomer->EditCustomAttributes = "";
@@ -1821,9 +1844,6 @@ class CustomerEdit extends Customer
             // alamat
             $this->alamat->EditAttrs["class"] = "form-control";
             $this->alamat->EditCustomAttributes = "";
-            if (!$this->alamat->Raw) {
-                $this->alamat->CurrentValue = HtmlDecode($this->alamat->CurrentValue);
-            }
             $this->alamat->EditValue = HtmlEncode($this->alamat->CurrentValue);
             $this->alamat->PlaceHolder = RemoveHtml($this->alamat->caption());
 
@@ -1922,6 +1942,11 @@ class CustomerEdit extends Customer
             $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
 
             // Edit refer script
+
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // idtipecustomer
             $this->idtipecustomer->LinkCustomAttributes = "";
@@ -2067,6 +2092,11 @@ class CustomerEdit extends Customer
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if ($this->kode->Required) {
+            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
+                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+            }
+        }
         if ($this->idtipecustomer->Required) {
             if (!$this->idtipecustomer->IsDetailKey && EmptyValue($this->idtipecustomer->FormValue)) {
                 $this->idtipecustomer->addErrorMessage(str_replace("%s", $this->idtipecustomer->caption(), $this->idtipecustomer->RequiredErrorMessage));
@@ -2147,7 +2177,7 @@ class CustomerEdit extends Customer
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
         }
-        if (!CheckByRegEx($this->hp->FormValue, '^(62)8[1-9][0-9]{7,11}$')) {
+        if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
         }
         if ($this->_email->Required) {
@@ -2230,6 +2260,23 @@ class CustomerEdit extends Customer
         $oldKeyFilter = $this->getRecordFilter();
         $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
+        if ($this->kode->CurrentValue != "") { // Check field with unique index
+            $filterChk = "(`kode` = '" . AdjustSql($this->kode->CurrentValue, $this->Dbid) . "')";
+            $filterChk .= " AND NOT (" . $filter . ")";
+            $this->CurrentFilter = $filterChk;
+            $sqlChk = $this->getCurrentSql();
+            $rsChk = $conn->executeQuery($sqlChk);
+            if (!$rsChk) {
+                return false;
+            }
+            if ($rsChk->fetch()) {
+                $idxErrMsg = str_replace("%f", $this->kode->caption(), $Language->phrase("DupIndex"));
+                $idxErrMsg = str_replace("%v", $this->kode->CurrentValue, $idxErrMsg);
+                $this->setFailureMessage($idxErrMsg);
+                $rsChk->closeCursor();
+                return false;
+            }
+        }
         if ($this->telpon->CurrentValue != "") { // Check field with unique index
             $filterChk = "(`telpon` = '" . AdjustSql($this->telpon->CurrentValue, $this->Dbid) . "')";
             $filterChk .= " AND NOT (" . $filter . ")";
@@ -2363,7 +2410,7 @@ class CustomerEdit extends Customer
             }
 
             // limit_kredit_order
-            $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, null, $this->limit_kredit_order->ReadOnly);
+            $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, 0, $this->limit_kredit_order->ReadOnly);
 
             // jatuh_tempo_invoice
             $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, $this->jatuh_tempo_invoice->ReadOnly);
