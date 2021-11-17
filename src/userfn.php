@@ -549,8 +549,7 @@ function getNextKodeOrder($titipmerk=0) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
     }
-    $curr_kode = date('d', strtotime('+1 day', strtotime($maxKode['last_post'])));
-    $format = str_replace('%DD', $curr_kode, $format);
+    $format = str_replace('%DD', date('d'), $format);
     $reformat = penomoran_date_replace($format);
     $string = explode("%URUTAN", $reformat);
     $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
@@ -589,9 +588,7 @@ function getNextKode($tipe, $id) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
    	}
-    
     empty($maxKode['last_post']) ? $maxKode['last_post'] = date('Y-m-d') : $maxKode['last_post'];
-
     if (date('Y-m-d', strtotime($maxKode['last_post'])) != date('Y-m-d')) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
