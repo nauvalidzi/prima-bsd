@@ -506,8 +506,9 @@ function getNextKodeInvoice($idorder) {
     $digit_length = 4;
     $exists = ExecuteRow("SELECT COUNT(*) AS total, max(kode) AS kode FROM invoice WHERE idorder = {$idorder}");
     if ($exists['total'] > 0) {
-        $alphabets = [0, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-        return $exists['kode'] . $alphabets[$exists['total'] + 1];
+        $alphabets = [0, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+        $kode = $exists['total'] >= 2 ? substr($exists['kode'], 0, -1) : $exists['kode'];
+        return $kode . $alphabets[$exists['total'] + 1];
     }
     $order = ExecuteRow("SELECT tanggal FROM `order` WHERE id = {$idorder}")['tanggal'];
     $lastkodeinvoice = "INV/".date('ym', strtotime($order));
@@ -527,33 +528,53 @@ function getNextKodeInvoice($idorder) {
 function getNextKodeOrder($titipmerk=0) {
     date_default_timezone_set('Asia/Jakarta');
     $digit_length = 3;
+    $cutoff = "14:00:00";
     if ($titipmerk > 0) {
         $format = "SP%URUTANTM-%DD%MM%YY/BSD";
         $titipmerk = " AND kode LIKE '%TM%'";
     } else {
         $format = "SP%URUTAN-%DD%MM%YY/BSD";
-        // $titipmerk = " AND kode is null";
         $titipmerk = " AND kode NOT LIKE '%TM%'";
     }
-    $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `order` WHERE created_at = (SELECT MAX(created_at) FROM `order` WHERE 1=1 {$titipmerk})");
-    if (!$maxKode) {
-        $format = date('H:i:s') > date('H:i:s', strtotime("14:00:00")) ? str_replace('%DD', date('d', strtotime('+1 day')), $format) : $format;
-        $reformat = penomoran_date_replace($format);
+    if (date('H:i:s') > date('H:i:s', strtotime($cutoff))) {
+        $lastkode = date('dmy', strtotime("+1 day"));
+        $format = str_replace('%DD', date('d', strtotime('+1 day')), $format);
+    } else {
+        $lastkode = date('dmy');
+    }
+    $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `order` WHERE created_at = (SELECT MAX(created_at) FROM `order` WHERE 
+        kode LIKE '%{$lastkode}/BSD' {$titipmerk})");
+
+    // KOND.1 DATA KOSONG
+    // KOND.2 DATA TERAKHIR 2 HARI YG LALU, JAM SAAT INI 12:00 BUAT KODE DENGAN URUTAN BARU DI TANGGAL SAAT INI
+    // KOND.3 DATA TERAKHIR 2 HARI YG LALU, JAM SAAT INI JAM 15:00 BUAT KODE DENGAN URUTAN BARU DI TANGGAL  BESOK (CUTOFF 14:00)
+
+    // KOND.4 DATA TERAKHIR KEMARIN JAM 9:00, JAM SAAT INI 12:00 KODE DILANJUT
+    // KOND.5 DATA TERAKHIR KEMARIN JAM 12:00, JAM SAAT INI 15:00 BUAT KODE URUTAN BARU DENGAN TANGGAL BESOK (CUTOFF 14:00)
+
+    // KOND.6 DATA TERAKHIR HARI INI JAM 9:00, JAM SAAT INI 12:00 KODE DILANJUT
+    // KOND.7 DATA TERAKHIR HARI INI JAM 9:00, JAM SAAT INI 15:00 BUAT KODE URUTAN BARU DENGAN TANGGAL BESOK (CUTOFF 14:00)
+    $reformat = penomoran_date_replace($format);
+    if (!$maxKode['kode']) {
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
     };
-    if (date('Y-m-d H:i:s', strtotime($maxKode['last_post'])) < date('Y-m-d H:i:s', strtotime("14:00:00")) && 
-        date('Y-m-d H:i:s') > date('Y-m-d H:i:s', strtotime("14:00:00"))) {
-        // JIKA TANGGAL/JAM DATA DARI DB KURANG DARI JAM 14:00 DAN
-        // JAM SAAT INI LEBIH DARI JAM 14:00 MAKA BUAT URUTAN BARU DENGAN TANGGAL KEESOKAN HARINYA
-        $format = str_replace('%DD', date('d', strtotime('+1 day')), $format);
-        $reformat = penomoran_date_replace($format);
-        return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
-    }
-    $format = str_replace('%DD', date('d'), $format);
-    $reformat = penomoran_date_replace($format);
+    // $start = date_create(date('Y-m-d H:i:s', strtotime($maxKode['last_post'])));
+    // $end = date_create(date('Y-m-d H:i:s', strtotime($cutoff)));
+    // print_r($end->getTimestamp() - $start->getTimestamp()); die;
+    // if (($end->getTimestamp() - $start->getTimestamp()) < 1) {
+    // // if (date('Y-m-d H:i:s', strtotime($maxKode['last_post'])) <= date('Y-m-d H:i:s', strtotime($cutoff))) {
+    //     // print_r('asdf'); die;
+    //     // JIKA TANGGAL/JAM DATA DARI DB KURANG DARI JAM 14:00 DAN
+    //     // JAM SAAT INI LEBIH DARI JAM 14:00 MAKA BUAT URUTAN BARU DENGAN TANGGAL KEESOKAN HARINYA
+    //     // $format = str_replace('%DD', date('d', strtotime('+1 day')), $format);
+    //     $format = date('H:i:s') > date('H:i:s', strtotime($cutoff)) ? str_replace('%DD', date('d', strtotime('+1 day')), $format) : $format;
+    //     $reformat = penomoran_date_replace($format);
+    //     return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
+    // }
     $string = explode("%URUTAN", $reformat);
     $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
     $trim_suffix = str_replace($string[1], '', $trim_prefix);
+    // print_r($trim_suffix); die;
     return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
 }
 
