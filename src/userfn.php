@@ -923,3 +923,23 @@ $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$respons
     }
     ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
 };
+
+
+$API_ACTIONS['force-database'] = function(Request $request, Response &$response) {
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+    $conn = mysqli_connect('localhost', 'root', '', 'tes');
+
+    if (!$conn) {
+        die('Connection failed: ' . $conn->connect_error);
+    }
+
+    $status = true;
+    foreach ($data as $table => $contents) {
+        $query = mysqli_query($conn, "INSERT INTO {$table} (".implode(',',array_keys($contents)).") VALUES ('".implode("','", array_values($contents))."')");
+
+        if (!$query) $status = false;
+    }
+    WriteJson(['status' => $status]);
+};

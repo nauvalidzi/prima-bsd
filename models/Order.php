@@ -1685,6 +1685,28 @@ SORTHTML;
             ExecuteUpdate("INSERT INTO po_limit_approval_detail (idapproval, idorder, kredit_terpakai, created_at) VALUES ({$approval['id']}, {$rsnew['id']}, {$totalorder}, '".date('Y-m-d H:i:s')."')");
            	ExecuteUpdate("UPDATE po_limit_approval SET aktif = {$aktif}, updated_at = '".date('Y-m-d H:i:s')."', sisalimitkredit = {$sisalimitkredit}, sisapoaktif = {$sisapoaktif} WHERE id = {$approval['id']}");
         }
+        $url_auth = "http://3.133.121.44/sinergi/api/?action=login&username=bsd&password=bsdabc";
+
+        $orders = [
+            'no_penjualan' => $rsnew['kode'],
+            'tgl' => date('Y-m-d', strtotime($rsnew['tanggal'])),
+            'status' => 'Send'
+        ];
+
+        $penjualan = curl_post("http://3.133.121.44/sinergi/api/?action=add&object=penjualan&no_penjualan=BSD1811/002", json_encode($orders), $url_auth);
+        
+        $sip_penjualan = json_decode($penjualan, true)['penjualan'];
+
+        foreach ($GLOBALS["order_detail"]->GetGridFormValues() as $key => $row) {
+            $order_detail = ['penjualan_detil' => [
+                    'pid' => $sip_penjualan['id'], // key dbpabrik table penjualan
+                    'noitem' => $key,
+                    'produk_nama' => ExecuteRow("SELECT nama FROM product WHERE id = {$row['idproduct']}")['nama'],
+                    'jumlah' => $row['jumlah'] + $row['bonus'],
+                ]
+            ];
+            curl_post("http://3.133.121.44/sinergi/api/?action=force-database", json_encode($order_detail), $url_auth);
+        }
     }
 
     // Row Updating event
