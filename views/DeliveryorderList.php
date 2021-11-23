@@ -297,7 +297,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Delivery Order");
+    $(".ew-detail-add-group").html("Add Delivery Order"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-delivery-order" title="Synchronize Delivery Order">Sync Delivery Order</button></div>'),$(".sync-delivery-order").click((function(){$.get("api/sync-do-sip",(function(e){!1!==e.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

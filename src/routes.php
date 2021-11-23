@@ -1036,6 +1036,23 @@ return function (App $app) {
     // penagihan_customer
     $app->any('/PenagihanCustomer[/{params:.*}]', PenagihanCustomerController::class)->add(PermissionMiddleware::class)->setName('PenagihanCustomer-penagihan_customer-custom'); // custom
 
+    // penagihan
+    $app->any('/PenagihanList[/{id}]', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('PenagihanList-penagihan-list'); // list
+    $app->any('/PenagihanAdd[/{id}]', PenagihanController::class . ':add')->add(PermissionMiddleware::class)->setName('PenagihanAdd-penagihan-add'); // add
+    $app->any('/PenagihanView[/{id}]', PenagihanController::class . ':view')->add(PermissionMiddleware::class)->setName('PenagihanView-penagihan-view'); // view
+    $app->any('/PenagihanEdit[/{id}]', PenagihanController::class . ':edit')->add(PermissionMiddleware::class)->setName('PenagihanEdit-penagihan-edit'); // edit
+    $app->any('/PenagihanDelete[/{id}]', PenagihanController::class . ':delete')->add(PermissionMiddleware::class)->setName('PenagihanDelete-penagihan-delete'); // delete
+    $app->group(
+        '/penagihan',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenagihanController::class . ':list')->add(PermissionMiddleware::class)->setName('penagihan/list-penagihan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', PenagihanController::class . ':add')->add(PermissionMiddleware::class)->setName('penagihan/add-penagihan-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', PenagihanController::class . ':view')->add(PermissionMiddleware::class)->setName('penagihan/view-penagihan-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', PenagihanController::class . ':edit')->add(PermissionMiddleware::class)->setName('penagihan/edit-penagihan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', PenagihanController::class . ':delete')->add(PermissionMiddleware::class)->setName('penagihan/delete-penagihan-delete-2'); // delete
+        }
+    );
+
     // brand_customer
     $app->any('/BrandCustomerList', BrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('BrandCustomerList-brand_customer-list'); // list
     $app->any('/BrandCustomerAdd', BrandCustomerController::class . ':add')->add(PermissionMiddleware::class)->setName('BrandCustomerAdd-brand_customer-add'); // add

@@ -925,6 +925,9 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2021 PT. Prima Visi Globalindo" />
+    <menu id="699">
+      <phrase id="menutext" value="penagihan" />
+    </menu>
     <menu id="698">
       <phrase id="menutext" value="v brand customer" />
     </menu>
@@ -3504,6 +3507,61 @@
     </table>
     <table id="penagihan_customer">
       <phrase id="tblcaption" value="Penagihan Customer" />
+    </table>
+    <table id="penagihan">
+      <phrase id="tblcaption" value="penagihan" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="messages">
+        <phrase id="fldcaption" value="messages" />
+      </field>
+      <field id="tgl_order">
+        <phrase id="fldcaption" value="tgl order" />
+      </field>
+      <field id="kode_order">
+        <phrase id="fldcaption" value="kode order" />
+      </field>
+      <field id="nama_customer">
+        <phrase id="fldcaption" value="nama customer" />
+      </field>
+      <field id="nomor_handphone">
+        <phrase id="fldcaption" value="nomor handphone" />
+      </field>
+      <field id="nilai_po">
+        <phrase id="fldcaption" value="nilai po" />
+      </field>
+      <field id="tgl_faktur">
+        <phrase id="fldcaption" value="tgl faktur" />
+      </field>
+      <field id="nilai_faktur">
+        <phrase id="fldcaption" value="nilai faktur" />
+      </field>
+      <field id="piutang">
+        <phrase id="fldcaption" value="piutang" />
+      </field>
+      <field id="umur_faktur">
+        <phrase id="fldcaption" value="umur faktur" />
+      </field>
+      <field id="tgl_antrian">
+        <phrase id="fldcaption" value="tgl antrian" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="status" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="tgl_penagihan">
+        <phrase id="fldcaption" value="tgl penagihan" />
+      </field>
+      <field id="tgl_return">
+        <phrase id="fldcaption" value="tgl return" />
+      </field>
+      <field id="tgl_cancel">
+        <phrase id="fldcaption" value="tgl cancel" />
+      </field>
     </table>
     <table id="brand_customer">
       <phrase id="tblcaption" value="Customer Brand" />

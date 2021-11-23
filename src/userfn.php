@@ -921,3 +921,6 @@ $API_ACTIONS['force-database'] = function(Request $request, Response &$response)
     }
     WriteJson(['status' => $status]);
 };
+$API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
+    WriteJson(['status' => true]);
+};
