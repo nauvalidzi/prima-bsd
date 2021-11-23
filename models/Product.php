@@ -463,7 +463,7 @@ class Product extends DbTable
     public function getSqlWhere() // Where
     {
         $where = ($this->SqlWhere != "") ? $this->SqlWhere : "";
-        $this->DefaultFilter = "`idbrand` = '1' OR `created_by` = '".CurrentUserID()."'";
+        $this->DefaultFilter = "";
         AddFilter($where, $this->DefaultFilter);
         return $where;
     }
