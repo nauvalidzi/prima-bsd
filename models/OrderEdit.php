@@ -469,17 +469,22 @@ class OrderEdit extends Order
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->kode->setVisibility();
-        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
-        $this->idpegawai->Visible = false;
-        $this->idcustomer->Visible = false;
+        $this->idpegawai->setVisibility();
+        $this->idcustomer->setVisibility();
+        $this->idbrand->setVisibility();
         $this->dokumen->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
         $this->kode->Required = false;
+        $this->tanggal->Required = false;
+        $this->idpegawai->Required = false;
+        $this->idcustomer->Required = false;
+        $this->idbrand->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -495,6 +500,7 @@ class OrderEdit extends Order
         // Set up lookup cache
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->idbrand);
 
         // Check modal
         if ($this->IsModal) {
@@ -698,7 +704,47 @@ class OrderEdit extends Order
             } else {
                 $this->tanggal->setFormValue($val);
             }
-            $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
+            $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 7);
+        }
+
+        // Check field name 'idpegawai' first before field var 'x_idpegawai'
+        $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
+        if (!$this->idpegawai->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idpegawai->Visible = false; // Disable update for API request
+            } else {
+                $this->idpegawai->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idcustomer' first before field var 'x_idcustomer'
+        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
+        if (!$this->idcustomer->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idcustomer->Visible = false; // Disable update for API request
+            } else {
+                $this->idcustomer->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idbrand' first before field var 'x_idbrand'
+        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
+        if (!$this->idbrand->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idbrand->Visible = false; // Disable update for API request
+            } else {
+                $this->idbrand->setFormValue($val);
+            }
+        }
+
+        // Check field name 'keterangan' first before field var 'x_keterangan'
+        $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
+        if (!$this->keterangan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->keterangan->Visible = false; // Disable update for API request
+            } else {
+                $this->keterangan->setFormValue($val);
+            }
         }
 
         // Check field name 'id' first before field var 'x_id'
@@ -716,7 +762,11 @@ class OrderEdit extends Order
         $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
-        $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
+        $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 7);
+        $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
+        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
+        $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
 
     /**
@@ -777,12 +827,13 @@ class OrderEdit extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
-        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
         $this->aktif->setDbValue($row['aktif']);
@@ -795,11 +846,12 @@ class OrderEdit extends Order
         $row = [];
         $row['id'] = null;
         $row['kode'] = null;
-        $row['titipmerk'] = null;
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
+        $row['idbrand'] = null;
         $row['dokumen'] = null;
+        $row['keterangan'] = null;
         $row['created_at'] = null;
         $row['created_by'] = null;
         $row['aktif'] = null;
@@ -839,15 +891,17 @@ class OrderEdit extends Order
 
         // kode
 
-        // titipmerk
-
         // tanggal
 
         // idpegawai
 
         // idcustomer
 
+        // idbrand
+
         // dokumen
+
+        // keterangan
 
         // created_at
 
@@ -867,7 +921,7 @@ class OrderEdit extends Order
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 7);
             $this->tanggal->ViewCustomAttributes = "";
 
             // idpegawai
@@ -897,7 +951,11 @@ class OrderEdit extends Order
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -912,6 +970,27 @@ class OrderEdit extends Order
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
+            // idbrand
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idbrand`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->ViewValue = null;
+            }
+            $this->idbrand->ViewCustomAttributes = "";
+
             // dokumen
             if (!EmptyValue($this->dokumen->Upload->DbValue)) {
                 $this->dokumen->ViewValue = $this->dokumen->Upload->DbValue;
@@ -919,6 +998,10 @@ class OrderEdit extends Order
                 $this->dokumen->ViewValue = "";
             }
             $this->dokumen->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -948,11 +1031,31 @@ class OrderEdit extends Order
             $this->tanggal->HrefValue = "";
             $this->tanggal->TooltipValue = "";
 
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
+            $this->idpegawai->TooltipValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+
             // dokumen
             $this->dokumen->LinkCustomAttributes = "";
             $this->dokumen->HrefValue = "";
             $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
             $this->dokumen->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -962,9 +1065,83 @@ class OrderEdit extends Order
 
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
-            $this->tanggal->EditCustomAttributes = "";
-            $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 8));
-            $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
+            $this->tanggal->EditCustomAttributes = "readonly";
+            $this->tanggal->EditValue = $this->tanggal->CurrentValue;
+            $this->tanggal->EditValue = FormatDateTime($this->tanggal->EditValue, 7);
+            $this->tanggal->ViewCustomAttributes = "";
+
+            // idpegawai
+            $this->idpegawai->EditAttrs["class"] = "form-control";
+            $this->idpegawai->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idpegawai->CurrentValue));
+            if ($curVal != "") {
+                $this->idpegawai->EditValue = $this->idpegawai->lookupCacheOption($curVal);
+                if ($this->idpegawai->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
+                        $this->idpegawai->EditValue = $this->idpegawai->displayValue($arwrk);
+                    } else {
+                        $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idpegawai->EditValue = null;
+            }
+            $this->idpegawai->ViewCustomAttributes = "";
+
+            // idcustomer
+            $this->idcustomer->EditAttrs["class"] = "form-control";
+            $this->idcustomer->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $lookupFilter = function() {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->EditValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idcustomer->EditValue = null;
+            }
+            $this->idcustomer->ViewCustomAttributes = "";
+
+            // idbrand
+            $this->idbrand->EditAttrs["class"] = "form-control";
+            $this->idbrand->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->EditValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->EditValue === null) { // Lookup from database
+                    $filterWrk = "`idbrand`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->EditValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->EditValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->EditValue = null;
+            }
+            $this->idbrand->ViewCustomAttributes = "";
 
             // dokumen
             $this->dokumen->EditAttrs["class"] = "form-control";
@@ -981,6 +1158,12 @@ class OrderEdit extends Order
                 RenderUploadField($this->dokumen);
             }
 
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
+
             // Edit refer script
 
             // kode
@@ -991,11 +1174,31 @@ class OrderEdit extends Order
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
+            $this->tanggal->TooltipValue = "";
+
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
+            $this->idpegawai->TooltipValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
 
             // dokumen
             $this->dokumen->LinkCustomAttributes = "";
             $this->dokumen->HrefValue = "";
             $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1026,12 +1229,29 @@ class OrderEdit extends Order
                 $this->tanggal->addErrorMessage(str_replace("%s", $this->tanggal->caption(), $this->tanggal->RequiredErrorMessage));
             }
         }
-        if (!CheckDate($this->tanggal->FormValue)) {
-            $this->tanggal->addErrorMessage($this->tanggal->getErrorMessage(false));
+        if ($this->idpegawai->Required) {
+            if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
+                $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
+            }
+        }
+        if ($this->idcustomer->Required) {
+            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
+                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
+        }
+        if ($this->idbrand->Required) {
+            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
+                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
+            }
         }
         if ($this->dokumen->Required) {
             if ($this->dokumen->Upload->FileName == "" && !$this->dokumen->Upload->KeepFile) {
                 $this->dokumen->addErrorMessage(str_replace("%s", $this->dokumen->caption(), $this->dokumen->RequiredErrorMessage));
+            }
+        }
+        if ($this->keterangan->Required) {
+            if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
+                $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
             }
         }
 
@@ -1078,9 +1298,6 @@ class OrderEdit extends Order
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // tanggal
-            $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), $this->tanggal->ReadOnly);
-
             // dokumen
             if ($this->dokumen->Visible && !$this->dokumen->ReadOnly && !$this->dokumen->Upload->KeepFile) {
                 $this->dokumen->Upload->DbValue = $rsold['dokumen']; // Get original value
@@ -1089,6 +1306,28 @@ class OrderEdit extends Order
                 } else {
                     $rsnew['dokumen'] = $this->dokumen->Upload->FileName;
                 }
+            }
+
+            // keterangan
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
+
+            // Check referential integrity for master table 'customer'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_customer();
+            $keyValue = $rsnew['idcustomer'] ?? $rsold['idcustomer'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("customer")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "customer", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
             }
             if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
                 $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
@@ -1362,11 +1601,15 @@ class OrderEdit extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_titipmerk":
-                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_idbrand":
                     break;
                 case "x_aktif":
                     break;

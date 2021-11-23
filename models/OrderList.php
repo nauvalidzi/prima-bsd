@@ -570,11 +570,12 @@ class OrderList extends Order
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->kode->setVisibility();
-        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->dokumen->Visible = false;
+        $this->idbrand->setVisibility();
+        $this->dokumen->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -611,6 +612,7 @@ class OrderList extends Order
         // Set up lookup cache
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->idbrand);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -896,11 +898,12 @@ class OrderList extends Order
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
-        $filterList = Concat($filterList, $this->titipmerk->AdvancedSearch->toJson(), ","); // Field titipmerk
         $filterList = Concat($filterList, $this->tanggal->AdvancedSearch->toJson(), ","); // Field tanggal
         $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
+        $filterList = Concat($filterList, $this->idbrand->AdvancedSearch->toJson(), ","); // Field idbrand
         $filterList = Concat($filterList, $this->dokumen->AdvancedSearch->toJson(), ","); // Field dokumen
+        $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
@@ -961,14 +964,6 @@ class OrderList extends Order
         $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
         $this->kode->AdvancedSearch->save();
 
-        // Field titipmerk
-        $this->titipmerk->AdvancedSearch->SearchValue = @$filter["x_titipmerk"];
-        $this->titipmerk->AdvancedSearch->SearchOperator = @$filter["z_titipmerk"];
-        $this->titipmerk->AdvancedSearch->SearchCondition = @$filter["v_titipmerk"];
-        $this->titipmerk->AdvancedSearch->SearchValue2 = @$filter["y_titipmerk"];
-        $this->titipmerk->AdvancedSearch->SearchOperator2 = @$filter["w_titipmerk"];
-        $this->titipmerk->AdvancedSearch->save();
-
         // Field tanggal
         $this->tanggal->AdvancedSearch->SearchValue = @$filter["x_tanggal"];
         $this->tanggal->AdvancedSearch->SearchOperator = @$filter["z_tanggal"];
@@ -993,6 +988,14 @@ class OrderList extends Order
         $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
         $this->idcustomer->AdvancedSearch->save();
 
+        // Field idbrand
+        $this->idbrand->AdvancedSearch->SearchValue = @$filter["x_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchOperator = @$filter["z_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchCondition = @$filter["v_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchValue2 = @$filter["y_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchOperator2 = @$filter["w_idbrand"];
+        $this->idbrand->AdvancedSearch->save();
+
         // Field dokumen
         $this->dokumen->AdvancedSearch->SearchValue = @$filter["x_dokumen"];
         $this->dokumen->AdvancedSearch->SearchOperator = @$filter["z_dokumen"];
@@ -1000,6 +1003,14 @@ class OrderList extends Order
         $this->dokumen->AdvancedSearch->SearchValue2 = @$filter["y_dokumen"];
         $this->dokumen->AdvancedSearch->SearchOperator2 = @$filter["w_dokumen"];
         $this->dokumen->AdvancedSearch->save();
+
+        // Field keterangan
+        $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
+        $this->keterangan->AdvancedSearch->save();
 
         // Field created_at
         $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
@@ -1042,6 +1053,7 @@ class OrderList extends Order
         $where = "";
         $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->dokumen, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->keterangan, $arKeywords, $type);
         return $where;
     }
 
@@ -1208,6 +1220,9 @@ class OrderList extends Order
             $this->updateSort($this->tanggal); // tanggal
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->dokumen); // dokumen
+            $this->updateSort($this->keterangan); // keterangan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1261,11 +1276,12 @@ class OrderList extends Order
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->kode->setSort("");
-                $this->titipmerk->setSort("");
                 $this->tanggal->setSort("");
                 $this->idpegawai->setSort("");
                 $this->idcustomer->setSort("");
+                $this->idbrand->setSort("");
                 $this->dokumen->setSort("");
+                $this->keterangan->setSort("");
                 $this->created_at->setSort("");
                 $this->created_by->setSort("");
                 $this->aktif->setSort("");
@@ -1845,12 +1861,13 @@ class OrderList extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
-        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
         $this->aktif->setDbValue($row['aktif']);
@@ -1863,11 +1880,12 @@ class OrderList extends Order
         $row = [];
         $row['id'] = null;
         $row['kode'] = null;
-        $row['titipmerk'] = null;
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
+        $row['idbrand'] = null;
         $row['dokumen'] = null;
+        $row['keterangan'] = null;
         $row['created_at'] = null;
         $row['created_by'] = null;
         $row['aktif'] = null;
@@ -1913,16 +1931,17 @@ class OrderList extends Order
 
         // kode
 
-        // titipmerk
-        $this->titipmerk->CellCssStyle = "white-space: nowrap;";
-
         // tanggal
 
         // idpegawai
 
         // idcustomer
 
+        // idbrand
+
         // dokumen
+
+        // keterangan
 
         // created_at
 
@@ -1943,7 +1962,7 @@ class OrderList extends Order
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 7);
             $this->tanggal->ViewCustomAttributes = "";
 
             // idpegawai
@@ -1973,7 +1992,11 @@ class OrderList extends Order
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -1988,6 +2011,27 @@ class OrderList extends Order
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
+            // idbrand
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idbrand`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->ViewValue = null;
+            }
+            $this->idbrand->ViewCustomAttributes = "";
+
             // dokumen
             if (!EmptyValue($this->dokumen->Upload->DbValue)) {
                 $this->dokumen->ViewValue = $this->dokumen->Upload->DbValue;
@@ -1995,6 +2039,10 @@ class OrderList extends Order
                 $this->dokumen->ViewValue = "";
             }
             $this->dokumen->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -2033,6 +2081,22 @@ class OrderList extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+
+            // dokumen
+            $this->dokumen->LinkCustomAttributes = "";
+            $this->dokumen->HrefValue = "";
+            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
+            $this->dokumen->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2188,11 +2252,15 @@ class OrderList extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_titipmerk":
-                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_idbrand":
                     break;
                 case "x_aktif":
                     break;

@@ -481,7 +481,7 @@ class ProductSearch extends Product
         $this->ijinbpom->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->setVisibility();
-        $this->created_by->setVisibility();
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -588,7 +588,7 @@ class ProductSearch extends Product
         $this->buildSearchUrl($srchUrl, $this->ijinbpom); // ijinbpom
         $this->buildSearchUrl($srchUrl, $this->aktif); // aktif
         $this->buildSearchUrl($srchUrl, $this->created_at); // created_at
-        $this->buildSearchUrl($srchUrl, $this->created_by); // created_by
+        $this->buildSearchUrl($srchUrl, $this->updated_at); // updated_at
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -735,7 +735,7 @@ class ProductSearch extends Product
         if ($this->created_at->AdvancedSearch->post()) {
             $hasValue = true;
         }
-        if ($this->created_by->AdvancedSearch->post()) {
+        if ($this->updated_at->AdvancedSearch->post()) {
             $hasValue = true;
         }
         return $hasValue;
@@ -799,7 +799,7 @@ class ProductSearch extends Product
 
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -992,10 +992,10 @@ class ProductSearch extends Product
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1108,10 +1108,10 @@ class ProductSearch extends Product
             $this->created_at->HrefValue = "";
             $this->created_at->TooltipValue = "";
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // id
             $this->id->EditAttrs["class"] = "form-control";
@@ -1356,9 +1356,6 @@ class ProductSearch extends Product
             // tambahan
             $this->tambahan->EditAttrs["class"] = "form-control";
             $this->tambahan->EditCustomAttributes = "";
-            if (!$this->tambahan->Raw) {
-                $this->tambahan->AdvancedSearch->SearchValue = HtmlDecode($this->tambahan->AdvancedSearch->SearchValue);
-            }
             $this->tambahan->EditValue = HtmlEncode($this->tambahan->AdvancedSearch->SearchValue);
             $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
 
@@ -1378,11 +1375,11 @@ class ProductSearch extends Product
             $this->created_at->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->created_at->AdvancedSearch->SearchValue, 0), 8));
             $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->EditValue = HtmlEncode($this->created_by->AdvancedSearch->SearchValue);
-            $this->created_by->PlaceHolder = RemoveHtml($this->created_by->caption());
+            // updated_at
+            $this->updated_at->EditAttrs["class"] = "form-control";
+            $this->updated_at->EditCustomAttributes = "";
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->updated_at->AdvancedSearch->SearchValue, 0), 8));
+            $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1409,6 +1406,9 @@ class ProductSearch extends Product
         }
         if (!CheckDate($this->created_at->AdvancedSearch->SearchValue)) {
             $this->created_at->addErrorMessage($this->created_at->getErrorMessage(false));
+        }
+        if (!CheckDate($this->updated_at->AdvancedSearch->SearchValue)) {
+            $this->updated_at->addErrorMessage($this->updated_at->getErrorMessage(false));
         }
 
         // Return validate result
@@ -1448,7 +1448,7 @@ class ProductSearch extends Product
         $this->ijinbpom->AdvancedSearch->load();
         $this->aktif->AdvancedSearch->load();
         $this->created_at->AdvancedSearch->load();
-        $this->created_by->AdvancedSearch->load();
+        $this->updated_at->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb

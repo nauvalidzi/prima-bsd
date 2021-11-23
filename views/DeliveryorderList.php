@@ -297,7 +297,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Create Delivery Order");
+    $(".ew-detail-add-group").html("Add Delivery Order");
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

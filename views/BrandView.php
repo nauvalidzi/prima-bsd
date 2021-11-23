@@ -45,13 +45,13 @@ $Page->showMessage();
 <input type="hidden" name="t" value="brand">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-    <tr id="r_idcustomer">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_idcustomer"><?= $Page->idcustomer->caption() ?></span></td>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el_brand_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
+<?php if ($Page->kode->Visible) { // kode ?>
+    <tr id="r_kode">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_kode"><?= $Page->kode->caption() ?></span></td>
+        <td data-name="kode" <?= $Page->kode->cellAttributes() ?>>
+<span id="el_brand_kode">
+<span<?= $Page->kode->viewAttributes() ?>>
+<?= $Page->kode->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -63,17 +63,6 @@ $Page->showMessage();
 <span id="el_brand_title">
 <span<?= $Page->title->viewAttributes() ?>>
 <?= $Page->title->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-    <tr id="r_kode">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_kode"><?= $Page->kode->caption() ?></span></td>
-        <td data-name="kode" <?= $Page->kode->cellAttributes() ?>>
-<span id="el_brand_kode">
-<span<?= $Page->kode->viewAttributes() ?>>
-<?= $Page->kode->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -135,14 +124,87 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+    <tr id="r_kode_sip">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_kode_sip"><?= $Page->kode_sip->caption() ?></span></td>
+        <td data-name="kode_sip" <?= $Page->kode_sip->cellAttributes() ?>>
+<span id="el_brand_kode_sip">
+<span<?= $Page->kode_sip->viewAttributes() ?>>
+<?= $Page->kode_sip->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+    <tr id="r_aktif">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_aktif"><?= $Page->aktif->caption() ?></span></td>
+        <td data-name="aktif" <?= $Page->aktif->cellAttributes() ?>>
+<span id="el_brand_aktif">
+<span<?= $Page->aktif->viewAttributes() ?>>
+<?= $Page->aktif->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+    <tr id="r_updated_at">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_brand_updated_at"><?= $Page->updated_at->caption() ?></span></td>
+        <td data-name="updated_at" <?= $Page->updated_at->cellAttributes() ?>>
+<span id="el_brand_updated_at">
+<span<?= $Page->updated_at->viewAttributes() ?>>
+<?= $Page->updated_at->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<?php
+    $Page->DetailPages->ValidKeys = explode(",", $Page->getCurrentDetailTable());
+    $firstActiveDetailTable = $Page->DetailPages->activePageIndex();
+?>
+<div class="ew-detail-pages"><!-- detail-pages -->
+<div class="accordion ew-accordion" id="Page_details"><!-- accordion -->
 <?php
     if (in_array("product", explode(",", $Page->getCurrentDetailTable())) && $product->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "product") {
+            $firstActiveDetailTable = "product";
+        }
 ?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("product", "TblCaption") ?></h4>
-<?php } ?>
+    <div class="card ew-accordion-card <?= $Page->DetailPages->pageStyle("product") ?>">
+        <div class="card-header">
+            <h4 class="card-title">
+                <a data-toggle="collapse" role="button" class="collapsed" aria-expanded="<?= JsonEncode($Page->DetailPages->isActive("product")) ?>" data-parent="#Page_details" href="#tab_product"><?= $Language->tablePhrase("product", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("product")->Count, $Language->phrase("DetailCount")) ?></a>
+            </h4>
+        </div>
+        <div class="collapse <?= $Page->DetailPages->pageStyle("product") ?>" id="tab_product"><!-- page* -->
+            <div class="card-body"><!-- .card-body -->
 <?php include_once "ProductGrid.php" ?>
+            </div><!-- /.card-body -->
+        </div><!-- /page* -->
+    </div>
+<?php } ?>
+<?php
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
+        }
+?>
+    <div class="card ew-accordion-card <?= $Page->DetailPages->pageStyle("brand_customer") ?>">
+        <div class="card-header">
+            <h4 class="card-title">
+                <a data-toggle="collapse" role="button" class="collapsed" aria-expanded="<?= JsonEncode($Page->DetailPages->isActive("brand_customer")) ?>" data-parent="#Page_details" href="#tab_brand_customer"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")) ?></a>
+            </h4>
+        </div>
+        <div class="collapse <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
+            <div class="card-body"><!-- .card-body -->
+<?php include_once "BrandCustomerGrid.php" ?>
+            </div><!-- /.card-body -->
+        </div><!-- /page* -->
+    </div>
+<?php } ?>
+</div><!-- /accordion -->
+</div><!-- /detail-pages -->
 <?php } ?>
 </form>
 <?php

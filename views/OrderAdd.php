@@ -21,11 +21,12 @@ loadjs.ready("head", function () {
         ew.vars.tables.order = currentTable;
     forderadd.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
-        ["titipmerk", [fields.titipmerk.visible && fields.titipmerk.required ? ew.Validators.required(fields.titipmerk.caption) : null], fields.titipmerk.isInvalid],
-        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
+        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(7)], fields.tanggal.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
+        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
         ["dokumen", [fields.dokumen.visible && fields.dokumen.required ? ew.Validators.fileRequired(fields.dokumen.caption) : null], fields.dokumen.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
     ]);
 
@@ -93,15 +94,16 @@ loadjs.ready("head", function () {
     forderadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    forderadd.lists.titipmerk = <?= $Page->titipmerk->toClientList($Page) ?>;
     forderadd.lists.idpegawai = <?= $Page->idpegawai->toClientList($Page) ?>;
     forderadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
+    forderadd.lists.idbrand = <?= $Page->idbrand->toClientList($Page) ?>;
     loadjs.done("forderadd");
 });
 </script>
 <script>
 loadjs.ready("head", function () {
-    // Write your table-specific client script here, no need to add script tags.
+    // Client script
+    var now=new Date,day=("0"+now.getDate()).slice(-2),month=("0"+(now.getMonth()+1)).slice(-2),today=day+"-"+month+"-"+now.getFullYear();$("input#x_tanggal").val(today);
 });
 </script>
 <?php $Page->showPageHeader(); ?>
@@ -134,53 +136,14 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->titipmerk->Visible) { // titipmerk ?>
-    <div id="r_titipmerk" class="form-group row">
-        <label id="elh_order_titipmerk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->titipmerk->caption() ?><?= $Page->titipmerk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->titipmerk->cellAttributes() ?>>
-<span id="el_order_titipmerk">
-<template id="tp_x_titipmerk">
-    <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="order" data-field="x_titipmerk" name="x_titipmerk" id="x_titipmerk"<?= $Page->titipmerk->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_titipmerk" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_titipmerk"
-    name="x_titipmerk"
-    value="<?= HtmlEncode($Page->titipmerk->CurrentValue) ?>"
-    data-type="select-one"
-    data-template="tp_x_titipmerk"
-    data-target="dsl_x_titipmerk"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->titipmerk->isInvalidClass() ?>"
-    data-table="order"
-    data-field="x_titipmerk"
-    data-value-separator="<?= $Page->titipmerk->displayValueSeparatorAttribute() ?>"
-    <?= $Page->titipmerk->editAttributes() ?>>
-<?= $Page->titipmerk->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->titipmerk->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->tanggal->Visible) { // tanggal ?>
     <div id="r_tanggal" class="form-group row">
         <label id="elh_order_tanggal" for="x_tanggal" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal->caption() ?><?= $Page->tanggal->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tanggal->cellAttributes() ?>>
 <span id="el_order_tanggal">
-<input type="<?= $Page->tanggal->getInputTextType() ?>" data-table="order" data-field="x_tanggal" name="x_tanggal" id="x_tanggal" placeholder="<?= HtmlEncode($Page->tanggal->getPlaceHolder()) ?>" value="<?= $Page->tanggal->EditValue ?>"<?= $Page->tanggal->editAttributes() ?> aria-describedby="x_tanggal_help">
+<input type="<?= $Page->tanggal->getInputTextType() ?>" data-table="order" data-field="x_tanggal" data-format="7" name="x_tanggal" id="x_tanggal" placeholder="<?= HtmlEncode($Page->tanggal->getPlaceHolder()) ?>" value="<?= $Page->tanggal->EditValue ?>"<?= $Page->tanggal->editAttributes() ?> aria-describedby="x_tanggal_help">
 <?= $Page->tanggal->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->tanggal->getErrorMessage() ?></div>
-<?php if (!$Page->tanggal->ReadOnly && !$Page->tanggal->Disabled && !isset($Page->tanggal->EditAttrs["readonly"]) && !isset($Page->tanggal->EditAttrs["disabled"])) { ?>
-<script>
-loadjs.ready(["forderadd", "datetimepicker"], function() {
-    ew.createDateTimePicker("forderadd", "x_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-});
-</script>
-<?php } ?>
 </span>
 </div></div>
     </div>
@@ -261,6 +224,40 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+    <div id="r_idbrand" class="form-group row">
+        <label id="elh_order_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el_order_idbrand">
+<?php $Page->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_idbrand"
+        name="x_idbrand"
+        class="form-control ew-select<?= $Page->idbrand->isInvalidClass() ?>"
+        data-select2-id="order_x_idbrand"
+        data-table="order"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Page->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idbrand->getPlaceHolder()) ?>"
+        <?= $Page->idbrand->editAttributes() ?>>
+        <?= $Page->idbrand->selectOptionListHtml("x_idbrand") ?>
+    </select>
+    <?= $Page->idbrand->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idbrand->getErrorMessage() ?></div>
+<?= $Page->idbrand->Lookup->getParamTag($Page, "p_x_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='order_x_idbrand']"),
+        options = { name: "x_idbrand", selectId: "order_x_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.order.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->dokumen->Visible) { // dokumen ?>
     <div id="r_dokumen" class="form-group row">
         <label id="elh_order_dokumen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->dokumen->caption() ?><?= $Page->dokumen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -282,6 +279,18 @@ loadjs.ready("head", function() {
 <input type="hidden" name="fm_x_dokumen" id= "fm_x_dokumen" value="<?= $Page->dokumen->UploadMaxFileSize ?>">
 </div>
 <table id="ft_x_dokumen" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <div id="r_keterangan" class="form-group row">
+        <label id="elh_order_keterangan" for="x_keterangan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->keterangan->caption() ?><?= $Page->keterangan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el_order_keterangan">
+<textarea data-table="order" data-field="x_keterangan" name="x_keterangan" id="x_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->keterangan->getPlaceHolder()) ?>"<?= $Page->keterangan->editAttributes() ?> aria-describedby="x_keterangan_help"><?= $Page->keterangan->EditValue ?></textarea>
+<?= $Page->keterangan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->keterangan->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -320,6 +329,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("api/nextKodeOrder/0",(function(e){$("#x_kode").val(e)})),$("input[data-field=x_titipmerk]").change((function(){var e=$(this).val();$.get("api/nextKodeOrder/"+e,(function(e){$("#x_kode").val(e)}))}))}));
+    loadjs.ready("jquery",(function(){$.get("api/nextKodeOrder/0",(function(e){$("#x_kode").val(e)})),$("select[name=x_idbrand]").change((function(){const e=$(this).val()<1?1:$(this).val();$.get("api/nextKodeOrder/"+e,(function(e){$("#x_kode").val(e)}))}))}));
 });
 </script>

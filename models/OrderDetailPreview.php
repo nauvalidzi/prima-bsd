@@ -392,13 +392,13 @@ class OrderDetailPreview extends OrderDetail
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idorder->Visible = false;
-        $this->idbrand->setVisibility();
         $this->idproduct->setVisibility();
         $this->jumlah->setVisibility();
         $this->bonus->setVisibility();
         $this->sisa->setVisibility();
         $this->harga->setVisibility();
         $this->total->setVisibility();
+        $this->keterangan->setVisibility();
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -420,7 +420,6 @@ class OrderDetailPreview extends OrderDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idbrand);
         $this->setupLookupOptions($this->idproduct);
 
         // Load filter
@@ -492,13 +491,13 @@ class OrderDetailPreview extends OrderDetail
             $this->CurrentOrderType = "";
             $this->id->setSort("");
             $this->idorder->setSort("");
-            $this->idbrand->setSort("");
             $this->idproduct->setSort("");
             $this->jumlah->setSort("");
             $this->bonus->setSort("");
             $this->sisa->setSort("");
             $this->harga->setSort("");
             $this->total->setSort("");
+            $this->keterangan->setSort("");
             $this->aktif->setSort("");
             $this->created_at->setSort("");
             $this->created_by->setSort("");
@@ -514,13 +513,13 @@ class OrderDetailPreview extends OrderDetail
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->idproduct); // idproduct
             $this->updateSort($this->jumlah); // jumlah
             $this->updateSort($this->bonus); // bonus
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->harga); // harga
             $this->updateSort($this->total); // total
+            $this->updateSort($this->keterangan); // keterangan
         }
     }
 
@@ -755,8 +754,6 @@ class OrderDetailPreview extends OrderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idbrand":
-                    break;
                 case "x_idproduct":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";

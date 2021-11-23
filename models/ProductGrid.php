@@ -528,7 +528,7 @@ class ProductGrid extends Product
         $this->ijinbpom->Visible = false;
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -614,13 +614,6 @@ class ProductGrid extends Product
         // Restore master/detail filter
         $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
         $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "brand") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "brand"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
 
@@ -982,6 +975,9 @@ class ProductGrid extends Product
         if ($CurrentForm->hasValue("x_ukuran") && $CurrentForm->hasValue("o_ukuran") && $this->ukuran->CurrentValue != $this->ukuran->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_updated_at") && $CurrentForm->hasValue("o_updated_at") && $this->updated_at->CurrentValue != $this->updated_at->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1069,6 +1065,7 @@ class ProductGrid extends Product
         $this->kemasanbarang->clearErrorMessage();
         $this->harga->clearErrorMessage();
         $this->ukuran->clearErrorMessage();
+        $this->updated_at->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1169,6 +1166,14 @@ class ProductGrid extends Product
         $item->Visible = $Security->canDelete();
         $item->OnLeft = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1225,6 +1230,10 @@ class ProductGrid extends Product
                 }
             }
         }
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         if ($this->CurrentMode == "view") {
             // "view"
             $opt = $this->ListOptions["view"];
@@ -1372,8 +1381,8 @@ class ProductGrid extends Product
         $this->aktif->OldValue = $this->aktif->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
-        $this->created_by->OldValue = $this->created_by->CurrentValue;
+        $this->updated_at->CurrentValue = CurrentDate();
+        $this->updated_at->OldValue = $this->updated_at->CurrentValue;
     }
 
     // Load form values
@@ -1461,6 +1470,20 @@ class ProductGrid extends Product
             $this->ukuran->setOldValue($CurrentForm->getValue("o_ukuran"));
         }
 
+        // Check field name 'updated_at' first before field var 'x_updated_at'
+        $val = $CurrentForm->hasValue("updated_at") ? $CurrentForm->getValue("updated_at") : $CurrentForm->getValue("x_updated_at");
+        if (!$this->updated_at->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->updated_at->Visible = false; // Disable update for API request
+            } else {
+                $this->updated_at->setFormValue($val);
+            }
+            $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
+        }
+        if ($CurrentForm->hasValue("o_updated_at")) {
+            $this->updated_at->setOldValue($CurrentForm->getValue("o_updated_at"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1481,6 +1504,8 @@ class ProductGrid extends Product
         $this->kemasanbarang->CurrentValue = $this->kemasanbarang->FormValue;
         $this->harga->CurrentValue = $this->harga->FormValue;
         $this->ukuran->CurrentValue = $this->ukuran->FormValue;
+        $this->updated_at->CurrentValue = $this->updated_at->FormValue;
+        $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
     }
 
     // Load recordset
@@ -1576,7 +1601,7 @@ class ProductGrid extends Product
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -1607,7 +1632,7 @@ class ProductGrid extends Product
         $row['ijinbpom'] = $this->ijinbpom->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
+        $row['updated_at'] = $this->updated_at->CurrentValue;
         return $row;
     }
 
@@ -1692,7 +1717,7 @@ class ProductGrid extends Product
 
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1877,10 +1902,10 @@ class ProductGrid extends Product
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -1911,6 +1936,11 @@ class ProductGrid extends Product
             $this->ukuran->LinkCustomAttributes = "";
             $this->ukuran->HrefValue = "";
             $this->ukuran->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -2003,6 +2033,12 @@ class ProductGrid extends Product
             $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
             $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
 
+            // updated_at
+            $this->updated_at->EditAttrs["class"] = "form-control";
+            $this->updated_at->EditCustomAttributes = "";
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 8));
+            $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
+
             // Add refer script
 
             // idbrand
@@ -2028,6 +2064,10 @@ class ProductGrid extends Product
             // ukuran
             $this->ukuran->LinkCustomAttributes = "";
             $this->ukuran->HrefValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -2120,6 +2160,12 @@ class ProductGrid extends Product
             $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
             $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
 
+            // updated_at
+            $this->updated_at->EditAttrs["class"] = "form-control";
+            $this->updated_at->EditCustomAttributes = "";
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 8));
+            $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
+
             // Edit refer script
 
             // idbrand
@@ -2145,6 +2191,10 @@ class ProductGrid extends Product
             // ukuran
             $this->ukuran->LinkCustomAttributes = "";
             $this->ukuran->HrefValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2197,6 +2247,14 @@ class ProductGrid extends Product
             if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
                 $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
             }
+        }
+        if ($this->updated_at->Required) {
+            if (!$this->updated_at->IsDetailKey && EmptyValue($this->updated_at->FormValue)) {
+                $this->updated_at->addErrorMessage(str_replace("%s", $this->updated_at->caption(), $this->updated_at->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->updated_at->FormValue)) {
+            $this->updated_at->addErrorMessage($this->updated_at->getErrorMessage(false));
         }
 
         // Return validate result
@@ -2328,6 +2386,28 @@ class ProductGrid extends Product
             // ukuran
             $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
 
+            // updated_at
+            $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), $this->updated_at->ReadOnly);
+
+            // Check referential integrity for master table 'brand'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_brand();
+            $keyValue = $rsnew['idbrand'] ?? $rsold['idbrand'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2377,35 +2457,27 @@ class ProductGrid extends Product
     {
         global $Language, $Security;
 
-        // Check if valid key values for master user
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $masterFilter = $this->sqlMasterFilter_brand();
-            if (strval($this->idbrand->CurrentValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
-            } else {
-                $masterFilter = "";
-            }
-            if ($masterFilter != "") {
-                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
-                $masterRecordExists = $rsmaster !== false;
-                $validMasterKey = true;
-                if ($masterRecordExists) {
-                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
-                } elseif ($this->getCurrentMasterTable() == "brand") {
-                    $validMasterKey = false;
-                }
-                if (!$validMasterKey) {
-                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
-                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
-                    $this->setFailureMessage($masterUserIdMsg);
-                    return false;
-                }
-            }
-        }
-
         // Set up foreign key field value from Session
         if ($this->getCurrentMasterTable() == "brand") {
             $this->idbrand->CurrentValue = $this->idbrand->getSessionValue();
+        }
+
+        // Check referential integrity for master table 'product'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_brand();
+        if (strval($this->idbrand->CurrentValue) != "") {
+            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
         }
         $conn = $this->getConnection();
 
@@ -2432,6 +2504,9 @@ class ProductGrid extends Product
 
         // ukuran
         $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, false);
+
+        // updated_at
+        $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

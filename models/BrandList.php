@@ -569,16 +569,17 @@ class BrandList extends Brand
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idcustomer->setVisibility();
-        $this->title->setVisibility();
         $this->kode->setVisibility();
+        $this->title->setVisibility();
         $this->logo->Visible = false;
-        $this->titipmerk->Visible = false;
+        $this->titipmerk->setVisibility();
         $this->ijinhaki->setVisibility();
         $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
+        $this->kode_sip->setVisibility();
+        $this->aktif->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -588,9 +589,6 @@ class BrandList extends Brand
         if (method_exists($this, "pageLoad")) {
             $this->pageLoad();
         }
-
-        // Set up master detail parameters
-        $this->setupMasterParms();
 
         // Setup other options
         $this->setupOtherOptions();
@@ -609,7 +607,6 @@ class BrandList extends Brand
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -731,28 +728,8 @@ class BrandList extends Brand
         if (!$Security->canList()) {
             $filter = "(0=1)"; // Filter all records
         }
-
-        // Restore master/detail filter
-        $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "customer") {
-            $masterTbl = Container("customer");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("CustomerList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
 
         // Set up filter
         if ($this->Command == "json") {
@@ -894,16 +871,17 @@ class BrandList extends Brand
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
-        $filterList = Concat($filterList, $this->title->AdvancedSearch->toJson(), ","); // Field title
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
+        $filterList = Concat($filterList, $this->title->AdvancedSearch->toJson(), ","); // Field title
         $filterList = Concat($filterList, $this->logo->AdvancedSearch->toJson(), ","); // Field logo
         $filterList = Concat($filterList, $this->titipmerk->AdvancedSearch->toJson(), ","); // Field titipmerk
         $filterList = Concat($filterList, $this->ijinhaki->AdvancedSearch->toJson(), ","); // Field ijinhaki
         $filterList = Concat($filterList, $this->ijinbpom->AdvancedSearch->toJson(), ","); // Field ijinbpom
         $filterList = Concat($filterList, $this->aktaperusahaan->AdvancedSearch->toJson(), ","); // Field aktaperusahaan
+        $filterList = Concat($filterList, $this->kode_sip->AdvancedSearch->toJson(), ","); // Field kode_sip
+        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
+        $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -952,13 +930,13 @@ class BrandList extends Brand
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
 
-        // Field idcustomer
-        $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchCondition = @$filter["v_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
-        $this->idcustomer->AdvancedSearch->save();
+        // Field kode
+        $this->kode->AdvancedSearch->SearchValue = @$filter["x_kode"];
+        $this->kode->AdvancedSearch->SearchOperator = @$filter["z_kode"];
+        $this->kode->AdvancedSearch->SearchCondition = @$filter["v_kode"];
+        $this->kode->AdvancedSearch->SearchValue2 = @$filter["y_kode"];
+        $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
+        $this->kode->AdvancedSearch->save();
 
         // Field title
         $this->title->AdvancedSearch->SearchValue = @$filter["x_title"];
@@ -967,14 +945,6 @@ class BrandList extends Brand
         $this->title->AdvancedSearch->SearchValue2 = @$filter["y_title"];
         $this->title->AdvancedSearch->SearchOperator2 = @$filter["w_title"];
         $this->title->AdvancedSearch->save();
-
-        // Field kode
-        $this->kode->AdvancedSearch->SearchValue = @$filter["x_kode"];
-        $this->kode->AdvancedSearch->SearchOperator = @$filter["z_kode"];
-        $this->kode->AdvancedSearch->SearchCondition = @$filter["v_kode"];
-        $this->kode->AdvancedSearch->SearchValue2 = @$filter["y_kode"];
-        $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
-        $this->kode->AdvancedSearch->save();
 
         // Field logo
         $this->logo->AdvancedSearch->SearchValue = @$filter["x_logo"];
@@ -1016,6 +986,22 @@ class BrandList extends Brand
         $this->aktaperusahaan->AdvancedSearch->SearchOperator2 = @$filter["w_aktaperusahaan"];
         $this->aktaperusahaan->AdvancedSearch->save();
 
+        // Field kode_sip
+        $this->kode_sip->AdvancedSearch->SearchValue = @$filter["x_kode_sip"];
+        $this->kode_sip->AdvancedSearch->SearchOperator = @$filter["z_kode_sip"];
+        $this->kode_sip->AdvancedSearch->SearchCondition = @$filter["v_kode_sip"];
+        $this->kode_sip->AdvancedSearch->SearchValue2 = @$filter["y_kode_sip"];
+        $this->kode_sip->AdvancedSearch->SearchOperator2 = @$filter["w_kode_sip"];
+        $this->kode_sip->AdvancedSearch->save();
+
+        // Field aktif
+        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
+        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
+        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
+        $this->aktif->AdvancedSearch->save();
+
         // Field created_at
         $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
@@ -1024,13 +1010,13 @@ class BrandList extends Brand
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
 
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
+        // Field updated_at
+        $this->updated_at->AdvancedSearch->SearchValue = @$filter["x_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchOperator = @$filter["z_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchCondition = @$filter["v_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchValue2 = @$filter["y_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchOperator2 = @$filter["w_updated_at"];
+        $this->updated_at->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1039,10 +1025,11 @@ class BrandList extends Brand
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->title, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->title, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->logo, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->aktaperusahaan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kode_sip, $arKeywords, $type);
         return $where;
     }
 
@@ -1205,11 +1192,14 @@ class BrandList extends Brand
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->title); // title
             $this->updateSort($this->kode); // kode
+            $this->updateSort($this->title); // title
+            $this->updateSort($this->titipmerk); // titipmerk
             $this->updateSort($this->ijinhaki); // ijinhaki
             $this->updateSort($this->ijinbpom); // ijinbpom
+            $this->updateSort($this->kode_sip); // kode_sip
+            $this->updateSort($this->aktif); // aktif
+            $this->updateSort($this->updated_at); // updated_at
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1219,18 +1209,14 @@ class BrandList extends Brand
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`idcustomer` ASC,`title` ASC";
+            $this->DefaultSort = "`id` ASC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
-                if ($this->idcustomer->getSort() != "") {
-                    $useDefaultSort = false;
-                }
-                if ($this->title->getSort() != "") {
+                if ($this->id->getSort() != "") {
                     $useDefaultSort = false;
                 }
                 if ($useDefaultSort) {
-                    $this->idcustomer->setSort("ASC");
-                    $this->title->setSort("ASC");
+                    $this->id->setSort("ASC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -1253,29 +1239,22 @@ class BrandList extends Brand
                 $this->resetSearchParms();
             }
 
-            // Reset master/detail keys
-            if ($this->Command == "resetall") {
-                $this->setCurrentMasterTable(""); // Clear master table
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-                        $this->idcustomer->setSessionValue("");
-            }
-
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->idcustomer->setSort("");
-                $this->title->setSort("");
                 $this->kode->setSort("");
+                $this->title->setSort("");
                 $this->logo->setSort("");
                 $this->titipmerk->setSort("");
                 $this->ijinhaki->setSort("");
                 $this->ijinbpom->setSort("");
                 $this->aktaperusahaan->setSort("");
+                $this->kode_sip->setSort("");
+                $this->aktif->setSort("");
                 $this->created_at->setSort("");
-                $this->created_by->setSort("");
+                $this->updated_at->setSort("");
             }
 
             // Reset start position
@@ -1320,6 +1299,13 @@ class BrandList extends Brand
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
+        // "detail_brand_customer"
+        $item = &$this->ListOptions->add("detail_brand_customer");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer') && !$this->ShowMultipleDetails;
+        $item->OnLeft = false;
+        $item->ShowInButtonGroup = false;
+
         // Multiple details
         if ($this->ShowMultipleDetails) {
             $item = &$this->ListOptions->add("details");
@@ -1332,6 +1318,7 @@ class BrandList extends Brand
         // Set up detail pages
         $pages = new SubPages();
         $pages->add("product");
+        $pages->add("brand_customer");
         $this->DetailPages = $pages;
 
         // List actions
@@ -1347,6 +1334,14 @@ class BrandList extends Brand
         $item->Visible = false;
         $item->OnLeft = false;
         $item->Header = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"custom-control-input\" onclick=\"ew.selectAllKey(this);\"><label class=\"custom-control-label\" for=\"key\"></label></div>";
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
@@ -1375,12 +1370,16 @@ class BrandList extends Brand
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
+            if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1389,7 +1388,7 @@ class BrandList extends Brand
             // "edit"
             $opt = $this->ListOptions["edit"];
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
+            if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1397,7 +1396,7 @@ class BrandList extends Brand
 
             // "delete"
             $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
+            if ($Security->canDelete()) {
             $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1440,12 +1439,13 @@ class BrandList extends Brand
 
         // "detail_product"
         $opt = $this->ListOptions["detail_product"];
-        if ($Security->allowList(CurrentProjectID() . 'product') && $this->showOptionLink()) {
+        if ($Security->allowList(CurrentProjectID() . 'product')) {
             $body = $Language->phrase("DetailLink") . $Language->TablePhrase("product", "TblCaption");
+            $body .= "&nbsp;" . str_replace("%c", Container("product")->Count, $Language->phrase("DetailCount"));
             $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("ProductList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
             $links = "";
             $detailPage = Container("ProductGrid");
-            if ($detailPage->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'brand')) {
+            if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=product");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
@@ -1454,7 +1454,7 @@ class BrandList extends Brand
                 }
                 $detailViewTblVar .= "product";
             }
-            if ($detailPage->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'brand')) {
+            if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
                 $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=product");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
@@ -1462,6 +1462,43 @@ class BrandList extends Brand
                     $detailEditTblVar .= ",";
                 }
                 $detailEditTblVar .= "product";
+            }
+            if ($links != "") {
+                $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
+                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
+            }
+            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
+            $opt->Body = $body;
+            if ($this->ShowMultipleDetails) {
+                $opt->Visible = false;
+            }
+        }
+
+        // "detail_brand_customer"
+        $opt = $this->ListOptions["detail_brand_customer"];
+        if ($Security->allowList(CurrentProjectID() . 'brand_customer')) {
+            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+            $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
+            $links = "";
+            $detailPage = Container("BrandCustomerGrid");
+            if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
+                $caption = $Language->phrase("MasterDetailViewLink");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
+                if ($detailViewTblVar != "") {
+                    $detailViewTblVar .= ",";
+                }
+                $detailViewTblVar .= "brand_customer";
+            }
+            if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
+                $caption = $Language->phrase("MasterDetailEditLink");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
+                if ($detailEditTblVar != "") {
+                    $detailEditTblVar .= ",";
+                }
+                $detailEditTblVar .= "brand_customer";
             }
             if ($links != "") {
                 $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -1529,6 +1566,18 @@ class BrandList extends Brand
                         $detailTableLink .= ",";
                     }
                     $detailTableLink .= "product";
+                }
+                $item = &$option->add("detailadd_brand_customer");
+                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $detailPage = Container("BrandCustomerGrid");
+                $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
+                $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
+                $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'brand') && $Security->canAdd());
+                if ($item->Visible) {
+                    if ($detailTableLink != "") {
+                        $detailTableLink .= ",";
+                    }
+                    $detailTableLink .= "brand_customer";
                 }
 
         // Add multiple details
@@ -1713,20 +1762,54 @@ class BrandList extends Brand
             $btngrp = "<div data-table=\"product\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'brand')) {
                 $label = $Language->TablePhrase("product", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("product")->Count, $Language->phrase("DetailCount")));
                 $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"product\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
                 $detaillnk = JsEncodeAttribute("ProductList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("product", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
             $detailPageObj = Container("ProductGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'brand')) {
+            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=product");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'brand')) {
+            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
                 $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=product");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            $btngrp .= "</div>";
+            if ($link != "") {
+                $btngrps .= $btngrp;
+                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
+            }
+        }
+        $sqlwrk = "`idbrand`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
+
+        // Column "detail_brand_customer"
+        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
+            $link = "";
+            $option = $this->ListOptions["detail_brand_customer"];
+            $url = "BrandCustomerPreview?t=brand&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
+            if ($Security->allowList(CurrentProjectID() . 'brand')) {
+                $label = $Language->TablePhrase("brand_customer", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $links .= $link;
+                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+            }
+            $detailPageObj = Container("BrandCustomerGrid");
+            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
+                $caption = $Language->phrase("MasterDetailViewLink");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
+                $caption = $Language->phrase("MasterDetailEditLink");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -1850,9 +1933,8 @@ class BrandList extends Brand
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->title->setDbValue($row['title']);
         $this->kode->setDbValue($row['kode']);
+        $this->title->setDbValue($row['title']);
         $this->logo->Upload->DbValue = $row['logo'];
         $this->logo->setDbValue($this->logo->Upload->DbValue);
         $this->titipmerk->setDbValue($row['titipmerk']);
@@ -1860,8 +1942,22 @@ class BrandList extends Brand
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
         $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
+        $this->kode_sip->setDbValue($row['kode_sip']);
+        $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
+        $detailTbl = Container("product");
+        $detailFilter = $detailTbl->sqlDetailFilter_brand();
+        $detailFilter = str_replace("@idbrand@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
+        $detailTbl->setCurrentMasterTable("brand");
+        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
+        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
+        $detailTbl = Container("brand_customer");
+        $detailFilter = $detailTbl->sqlDetailFilter_brand();
+        $detailFilter = str_replace("@idbrand@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
+        $detailTbl->setCurrentMasterTable("brand");
+        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
+        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
     }
 
     // Return a row with default values
@@ -1869,16 +1965,17 @@ class BrandList extends Brand
     {
         $row = [];
         $row['id'] = null;
-        $row['idcustomer'] = null;
-        $row['title'] = null;
         $row['kode'] = null;
+        $row['title'] = null;
         $row['logo'] = null;
         $row['titipmerk'] = null;
         $row['ijinhaki'] = null;
         $row['ijinbpom'] = null;
         $row['aktaperusahaan'] = null;
+        $row['kode_sip'] = null;
+        $row['aktif'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -1918,12 +2015,10 @@ class BrandList extends Brand
 
         // id
 
-        // idcustomer
+        // kode
 
         // title
         $this->title->CellCssStyle = "min-width: 30px;";
-
-        // kode
 
         // logo
 
@@ -1935,44 +2030,26 @@ class BrandList extends Brand
 
         // aktaperusahaan
 
+        // kode_sip
+
+        // aktif
+
         // created_at
         $this->created_at->CellCssStyle = "white-space: nowrap;";
 
-        // created_by
-        $this->created_by->CellCssStyle = "white-space: nowrap;";
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
+            // kode
+            $this->kode->ViewValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // title
             $this->title->ViewValue = $this->title->CurrentValue;
             $this->title->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
 
             // logo
             if (!EmptyValue($this->logo->Upload->DbValue)) {
@@ -2016,30 +2093,42 @@ class BrandList extends Brand
             }
             $this->aktaperusahaan->ViewCustomAttributes = "";
 
+            // kode_sip
+            $this->kode_sip->ViewValue = $this->kode_sip->CurrentValue;
+            $this->kode_sip->ViewCustomAttributes = "";
+
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // title
             $this->title->LinkCustomAttributes = "";
             $this->title->HrefValue = "";
             $this->title->TooltipValue = "";
 
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
+            // titipmerk
+            $this->titipmerk->LinkCustomAttributes = "";
+            $this->titipmerk->HrefValue = "";
+            $this->titipmerk->TooltipValue = "";
 
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
@@ -2050,6 +2139,21 @@ class BrandList extends Brand
             $this->ijinbpom->LinkCustomAttributes = "";
             $this->ijinbpom->HrefValue = "";
             $this->ijinbpom->TooltipValue = "";
+
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
+            $this->kode_sip->TooltipValue = "";
+
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+            $this->aktif->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2097,91 +2201,6 @@ class BrandList extends Brand
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Get("fk_id", Get("idcustomer"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idcustomer->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Post("fk_id", Post("idcustomer"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idcustomer->setFormValue($masterTbl->id->FormValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Update URL
-            $this->AddUrl = $this->addMasterUrl($this->AddUrl);
-            $this->InlineAddUrl = $this->addMasterUrl($this->InlineAddUrl);
-            $this->GridAddUrl = $this->addMasterUrl($this->GridAddUrl);
-            $this->GridEditUrl = $this->addMasterUrl($this->GridEditUrl);
-
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "customer") {
-                if ($this->idcustomer->CurrentValue == "") {
-                    $this->idcustomer->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -2205,13 +2224,13 @@ class BrandList extends Brand
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
                 case "x_titipmerk":
                     break;
                 case "x_ijinhaki":
                     break;
                 case "x_ijinbpom":
+                    break;
+                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";
@@ -2345,6 +2364,7 @@ class BrandList extends Brand
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
+        $this->ListOptions->Items["details"]->Visible = false;
     }
 
     // ListOptions Rendering event

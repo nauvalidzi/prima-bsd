@@ -89,6 +89,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+    <tr id="r_idbrand">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_idbrand"><?= $Page->idbrand->caption() ?></span></td>
+        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el_order_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->dokumen->Visible) { // dokumen ?>
     <tr id="r_dokumen">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_dokumen"><?= $Page->dokumen->caption() ?></span></td>
@@ -97,6 +108,17 @@ $Page->showMessage();
 <span<?= $Page->dokumen->viewAttributes() ?>>
 <?= GetFileViewTag($Page->dokumen, $Page->dokumen->getViewValue(), false) ?>
 </span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <tr id="r_keterangan">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_keterangan"><?= $Page->keterangan->caption() ?></span></td>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el_order_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
     </tr>

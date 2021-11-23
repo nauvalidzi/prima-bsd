@@ -392,11 +392,12 @@ class OrderPreview extends Order
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->kode->setVisibility();
-        $this->titipmerk->Visible = false;
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->dokumen->Visible = false;
+        $this->idbrand->setVisibility();
+        $this->dokumen->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -420,6 +421,7 @@ class OrderPreview extends Order
         // Set up lookup cache
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->idbrand);
 
         // Load filter
         $filter = Get("f", "");
@@ -490,11 +492,12 @@ class OrderPreview extends Order
             $this->CurrentOrderType = "";
             $this->id->setSort("");
             $this->kode->setSort("");
-            $this->titipmerk->setSort("");
             $this->tanggal->setSort("");
             $this->idpegawai->setSort("");
             $this->idcustomer->setSort("");
+            $this->idbrand->setSort("");
             $this->dokumen->setSort("");
+            $this->keterangan->setSort("");
             $this->created_at->setSort("");
             $this->created_by->setSort("");
             $this->aktif->setSort("");
@@ -514,6 +517,9 @@ class OrderPreview extends Order
             $this->updateSort($this->tanggal); // tanggal
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->dokumen); // dokumen
+            $this->updateSort($this->keterangan); // keterangan
         }
     }
 
@@ -748,11 +754,15 @@ class OrderPreview extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_titipmerk":
-                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_idbrand":
                     break;
                 case "x_aktif":
                     break;

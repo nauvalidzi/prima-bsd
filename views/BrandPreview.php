@@ -31,6 +31,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->kode->Visible) { // kode ?>
+    <?php if ($Page->SortUrl($Page->kode) == "") { ?>
+        <th class="<?= $Page->kode->headerCellClass() ?>"><?= $Page->kode->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->kode->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->kode->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->kode->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->kode->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->kode->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->kode->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
     <?php if ($Page->SortUrl($Page->title) == "") { ?>
         <th class="<?= $Page->title->headerCellClass() ?>"><?= $Page->title->caption() ?></th>
@@ -40,12 +49,12 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-    <?php if ($Page->SortUrl($Page->kode) == "") { ?>
-        <th class="<?= $Page->kode->headerCellClass() ?>"><?= $Page->kode->caption() ?></th>
+<?php if ($Page->titipmerk->Visible) { // titipmerk ?>
+    <?php if ($Page->SortUrl($Page->titipmerk) == "") { ?>
+        <th class="<?= $Page->titipmerk->headerCellClass() ?>"><?= $Page->titipmerk->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->kode->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->kode->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->kode->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->kode->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->kode->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->kode->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->titipmerk->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->titipmerk->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->titipmerk->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->titipmerk->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->titipmerk->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->titipmerk->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -64,6 +73,24 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->ijinbpom->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ijinbpom->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ijinbpom->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ijinbpom->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ijinbpom->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ijinbpom->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+    <?php if ($Page->SortUrl($Page->aktif) == "") { ?>
+        <th class="<?= $Page->aktif->headerCellClass() ?>"><?= $Page->aktif->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->aktif->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->aktif->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->aktif->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->aktif->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->aktif->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->aktif->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+    <?php if ($Page->SortUrl($Page->kode_sip) == "") { ?>
+        <th class="<?= $Page->kode_sip->headerCellClass() ?>"><?= $Page->kode_sip->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->kode_sip->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->kode_sip->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->kode_sip->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->kode_sip->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->kode_sip->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->kode_sip->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -104,6 +131,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->idcustomer->getViewValue() ?></span>
 </td>
 <?php } ?>
+<?php if ($Page->kode->Visible) { // kode ?>
+        <!-- kode -->
+        <td<?= $Page->kode->cellAttributes() ?>>
+<span<?= $Page->kode->viewAttributes() ?>>
+<?= $Page->kode->getViewValue() ?></span>
+</td>
+<?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
         <!-- title -->
         <td<?= $Page->title->cellAttributes() ?>>
@@ -111,11 +145,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->title->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-        <!-- kode -->
-        <td<?= $Page->kode->cellAttributes() ?>>
-<span<?= $Page->kode->viewAttributes() ?>>
-<?= $Page->kode->getViewValue() ?></span>
+<?php if ($Page->titipmerk->Visible) { // titipmerk ?>
+        <!-- titipmerk -->
+        <td<?= $Page->titipmerk->cellAttributes() ?>>
+<span<?= $Page->titipmerk->viewAttributes() ?>>
+<?= $Page->titipmerk->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->ijinhaki->Visible) { // ijinhaki ?>
@@ -130,6 +164,20 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->ijinbpom->cellAttributes() ?>>
 <span<?= $Page->ijinbpom->viewAttributes() ?>>
 <?= $Page->ijinbpom->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+        <!-- aktif -->
+        <td<?= $Page->aktif->cellAttributes() ?>>
+<span<?= $Page->aktif->viewAttributes() ?>>
+<?= $Page->aktif->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+        <!-- kode_sip -->
+        <td<?= $Page->kode_sip->cellAttributes() ?>>
+<span<?= $Page->kode_sip->viewAttributes() ?>>
+<?= $Page->kode_sip->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

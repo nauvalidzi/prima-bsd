@@ -25,7 +25,7 @@ loadjs.ready("head", function () {
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
         ["totalnonpajak", [fields.totalnonpajak.visible && fields.totalnonpajak.required ? ew.Validators.required(fields.totalnonpajak.caption) : null, ew.Validators.integer], fields.totalnonpajak.isInvalid],
-        ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null, ew.Validators.float], fields.pajak.isInvalid],
+        ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null], fields.pajak.isInvalid],
         ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
         ["idtermpayment", [fields.idtermpayment.visible && fields.idtermpayment.required ? ew.Validators.required(fields.idtermpayment.caption) : null], fields.idtermpayment.isInvalid],
         ["idtipepayment", [fields.idtipepayment.visible && fields.idtipepayment.required ? ew.Validators.required(fields.idtipepayment.caption) : null], fields.idtipepayment.isInvalid],
@@ -109,7 +109,8 @@ loadjs.ready("head", function () {
 </script>
 <script>
 loadjs.ready("head", function () {
-    // Write your table-specific client script here, no need to add script tags.
+    // Client script
+    var now=new Date,day=("0"+now.getDate()).slice(-2),month=("0"+(now.getMonth()+1)).slice(-2),today=day+"-"+month+"-"+now.getFullYear();$("input#x_tglinvoice").val(today);
 });
 </script>
 <?php $Page->showPageHeader(); ?>
@@ -262,7 +263,7 @@ loadjs.ready("head", function() {
         <label id="elh_invoice_pajak" for="x_pajak" class="<?= $Page->LeftColumnClass ?>"><?= $Page->pajak->caption() ?><?= $Page->pajak->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->pajak->cellAttributes() ?>>
 <span id="el_invoice_pajak">
-<input type="<?= $Page->pajak->getInputTextType() ?>" data-table="invoice" data-field="x_pajak" name="x_pajak" id="x_pajak" size="30" placeholder="<?= HtmlEncode($Page->pajak->getPlaceHolder()) ?>" value="<?= $Page->pajak->EditValue ?>"<?= $Page->pajak->editAttributes() ?> aria-describedby="x_pajak_help">
+<textarea data-table="invoice" data-field="x_pajak" name="x_pajak" id="x_pajak" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->pajak->getPlaceHolder()) ?>"<?= $Page->pajak->editAttributes() ?> aria-describedby="x_pajak_help"><?= $Page->pajak->EditValue ?></textarea>
 <?= $Page->pajak->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->pajak->getErrorMessage() ?></div>
 </span>

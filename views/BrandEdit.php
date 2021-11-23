@@ -20,14 +20,15 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.brand)
         ew.vars.tables.brand = currentTable;
     fbrandedit.addFields([
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
-        ["title", [fields.title.visible && fields.title.required ? ew.Validators.required(fields.title.caption) : null], fields.title.isInvalid],
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
+        ["title", [fields.title.visible && fields.title.required ? ew.Validators.required(fields.title.caption) : null], fields.title.isInvalid],
         ["logo", [fields.logo.visible && fields.logo.required ? ew.Validators.fileRequired(fields.logo.caption) : null], fields.logo.isInvalid],
         ["titipmerk", [fields.titipmerk.visible && fields.titipmerk.required ? ew.Validators.required(fields.titipmerk.caption) : null], fields.titipmerk.isInvalid],
         ["ijinhaki", [fields.ijinhaki.visible && fields.ijinhaki.required ? ew.Validators.required(fields.ijinhaki.caption) : null], fields.ijinhaki.isInvalid],
         ["ijinbpom", [fields.ijinbpom.visible && fields.ijinbpom.required ? ew.Validators.required(fields.ijinbpom.caption) : null], fields.ijinbpom.isInvalid],
-        ["aktaperusahaan", [fields.aktaperusahaan.visible && fields.aktaperusahaan.required ? ew.Validators.fileRequired(fields.aktaperusahaan.caption) : null], fields.aktaperusahaan.isInvalid]
+        ["aktaperusahaan", [fields.aktaperusahaan.visible && fields.aktaperusahaan.required ? ew.Validators.fileRequired(fields.aktaperusahaan.caption) : null], fields.aktaperusahaan.isInvalid],
+        ["kode_sip", [fields.kode_sip.visible && fields.kode_sip.required ? ew.Validators.required(fields.kode_sip.caption) : null], fields.kode_sip.isInvalid],
+        ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
     ]);
 
     // Set invalid fields
@@ -94,10 +95,10 @@ loadjs.ready("head", function () {
     fbrandedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fbrandedit.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     fbrandedit.lists.titipmerk = <?= $Page->titipmerk->toClientList($Page) ?>;
     fbrandedit.lists.ijinhaki = <?= $Page->ijinhaki->toClientList($Page) ?>;
     fbrandedit.lists.ijinbpom = <?= $Page->ijinbpom->toClientList($Page) ?>;
+    fbrandedit.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
     loadjs.done("fbrandedit");
 });
 </script>
@@ -119,49 +120,16 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="update">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<?php if ($Page->getCurrentMasterTable() == "customer") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="customer">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
-<?php } ?>
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-    <div id="r_idcustomer" class="form-group row">
-        <label id="elh_brand_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
-<?php if ($Page->idcustomer->getSessionValue() != "") { ?>
-<span id="el_brand_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->idcustomer->getDisplayValue($Page->idcustomer->ViewValue))) ?>"></span>
+<?php if ($Page->kode->Visible) { // kode ?>
+    <div id="r_kode" class="form-group row">
+        <label id="elh_brand_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kode->cellAttributes() ?>>
+<span id="el_brand_kode">
+<input type="<?= $Page->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x_kode" id="x_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" value="<?= $Page->kode->EditValue ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
+<?= $Page->kode->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
 </span>
-<input type="hidden" id="x_idcustomer" name="x_idcustomer" value="<?= HtmlEncode($Page->idcustomer->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el_brand_idcustomer">
-    <select
-        id="x_idcustomer"
-        name="x_idcustomer"
-        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
-        data-select2-id="brand_x_idcustomer"
-        data-table="brand"
-        data-field="x_idcustomer"
-        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
-        <?= $Page->idcustomer->editAttributes() ?>>
-        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
-    </select>
-    <?= $Page->idcustomer->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
-<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='brand_x_idcustomer']"),
-        options = { name: "x_idcustomer", selectId: "brand_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.brand.fields.idcustomer.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } ?>
 </div></div>
     </div>
 <?php } ?>
@@ -173,18 +141,6 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->title->getInputTextType() ?>" data-table="brand" data-field="x_title" name="x_title" id="x_title" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->title->getPlaceHolder()) ?>" value="<?= $Page->title->EditValue ?>"<?= $Page->title->editAttributes() ?> aria-describedby="x_title_help">
 <?= $Page->title->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->title->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-    <div id="r_kode" class="form-group row">
-        <label id="elh_brand_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kode->cellAttributes() ?>>
-<span id="el_brand_kode">
-<input type="<?= $Page->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x_kode" id="x_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" value="<?= $Page->kode->EditValue ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
-<?= $Page->kode->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -335,15 +291,99 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+    <div id="r_kode_sip" class="form-group row">
+        <label id="elh_brand_kode_sip" for="x_kode_sip" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode_sip->caption() ?><?= $Page->kode_sip->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kode_sip->cellAttributes() ?>>
+<span id="el_brand_kode_sip">
+<input type="<?= $Page->kode_sip->getInputTextType() ?>" data-table="brand" data-field="x_kode_sip" name="x_kode_sip" id="x_kode_sip" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kode_sip->getPlaceHolder()) ?>" value="<?= $Page->kode_sip->EditValue ?>"<?= $Page->kode_sip->editAttributes() ?> aria-describedby="x_kode_sip_help">
+<?= $Page->kode_sip->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kode_sip->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+    <div id="r_aktif" class="form-group row">
+        <label id="elh_brand_aktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aktif->caption() ?><?= $Page->aktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aktif->cellAttributes() ?>>
+<span id="el_brand_aktif">
+<template id="tp_x_aktif">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_aktif" name="x_aktif" id="x_aktif"<?= $Page->aktif->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_aktif" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_aktif"
+    name="x_aktif"
+    value="<?= HtmlEncode($Page->aktif->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_aktif"
+    data-target="dsl_x_aktif"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->aktif->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_aktif"
+    data-value-separator="<?= $Page->aktif->displayValueSeparatorAttribute() ?>"
+    <?= $Page->aktif->editAttributes() ?>>
+<?= $Page->aktif->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->aktif->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
     <input type="hidden" data-table="brand" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<?php
+    $Page->DetailPages->ValidKeys = explode(",", $Page->getCurrentDetailTable());
+    $firstActiveDetailTable = $Page->DetailPages->activePageIndex();
+?>
+<div class="ew-detail-pages"><!-- detail-pages -->
+<div class="accordion ew-accordion" id="Page_details"><!-- accordion -->
 <?php
     if (in_array("product", explode(",", $Page->getCurrentDetailTable())) && $product->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "product") {
+            $firstActiveDetailTable = "product";
+        }
 ?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("product", "TblCaption") ?></h4>
-<?php } ?>
+    <div class="card ew-accordion-card <?= $Page->DetailPages->pageStyle("product") ?>">
+        <div class="card-header">
+            <h4 class="card-title">
+                <a data-toggle="collapse" role="button" class="collapsed" aria-expanded="<?= JsonEncode($Page->DetailPages->isActive("product")) ?>" data-parent="#Page_details" href="#tab_product"><?= $Language->tablePhrase("product", "TblCaption") ?></a>
+            </h4>
+        </div>
+        <div class="collapse <?= $Page->DetailPages->pageStyle("product") ?>" id="tab_product"><!-- page* -->
+            <div class="card-body"><!-- .card-body -->
 <?php include_once "ProductGrid.php" ?>
+            </div><!-- /.card-body -->
+        </div><!-- /page* -->
+    </div>
+<?php } ?>
+<?php
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
+        }
+?>
+    <div class="card ew-accordion-card <?= $Page->DetailPages->pageStyle("brand_customer") ?>">
+        <div class="card-header">
+            <h4 class="card-title">
+                <a data-toggle="collapse" role="button" class="collapsed" aria-expanded="<?= JsonEncode($Page->DetailPages->isActive("brand_customer")) ?>" data-parent="#Page_details" href="#tab_brand_customer"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?></a>
+            </h4>
+        </div>
+        <div class="collapse <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
+            <div class="card-body"><!-- .card-body -->
+<?php include_once "BrandCustomerGrid.php" ?>
+            </div><!-- /.card-body -->
+        </div><!-- /page* -->
+    </div>
+<?php } ?>
+</div><!-- /accordion -->
+</div><!-- /detail-pages -->
 <?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->

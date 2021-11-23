@@ -76,6 +76,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+    <?php if ($Page->SortUrl($Page->updated_at) == "") { ?>
+        <th class="<?= $Page->updated_at->headerCellClass() ?>"><?= $Page->updated_at->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->updated_at->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->updated_at->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->updated_at->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->updated_at->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->updated_at->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->updated_at->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -146,6 +155,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->ukuran->cellAttributes() ?>>
 <span<?= $Page->ukuran->viewAttributes() ?>>
 <?= $Page->ukuran->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <!-- updated_at -->
+        <td<?= $Page->updated_at->cellAttributes() ?>>
+<span<?= $Page->updated_at->viewAttributes() ?>>
+<?= $Page->updated_at->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

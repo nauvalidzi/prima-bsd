@@ -596,7 +596,6 @@ class JatuhTempoSummary extends JatuhTempo
         $data["idpegawai"] = $record['idpegawai'];
         $data["namapegawai"] = $record['namapegawai'];
         $data["idcustomer"] = $record['idcustomer'];
-        $data["namacustomer"] = $record['namacustomer'];
         $data["idinvoice"] = $record['idinvoice'];
         $data["sisabayar"] = $record['sisabayar'];
         $data["jatuhtempo"] = $record['jatuhtempo'];

@@ -487,7 +487,7 @@ class ProductAdd extends Product
         $this->ijinbpom->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->setVisibility();
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -692,7 +692,7 @@ class ProductAdd extends Product
         $this->aktif->CurrentValue = 0;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
+        $this->updated_at->CurrentValue = CurrentDate();
     }
 
     // Load form values
@@ -871,16 +871,6 @@ class ProductAdd extends Product
             }
         }
 
-        // Check field name 'created_by' first before field var 'x_created_by'
-        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
-        if (!$this->created_by->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->created_by->Visible = false; // Disable update for API request
-            } else {
-                $this->created_by->setFormValue($val);
-            }
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         $this->getUploadFiles(); // Get upload files
@@ -907,7 +897,6 @@ class ProductAdd extends Product
         $this->tambahan->CurrentValue = $this->tambahan->FormValue;
         $this->ijinbpom->CurrentValue = $this->ijinbpom->FormValue;
         $this->aktif->CurrentValue = $this->aktif->FormValue;
-        $this->created_by->CurrentValue = $this->created_by->FormValue;
     }
 
     /**
@@ -981,7 +970,7 @@ class ProductAdd extends Product
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -1012,7 +1001,7 @@ class ProductAdd extends Product
         $row['ijinbpom'] = $this->ijinbpom->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
+        $row['updated_at'] = $this->updated_at->CurrentValue;
         return $row;
     }
 
@@ -1090,7 +1079,7 @@ class ProductAdd extends Product
 
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1275,10 +1264,10 @@ class ProductAdd extends Product
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -1370,11 +1359,6 @@ class ProductAdd extends Product
             $this->aktif->LinkCustomAttributes = "";
             $this->aktif->HrefValue = "";
             $this->aktif->TooltipValue = "";
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -1624,9 +1608,6 @@ class ProductAdd extends Product
             // tambahan
             $this->tambahan->EditAttrs["class"] = "form-control";
             $this->tambahan->EditCustomAttributes = "";
-            if (!$this->tambahan->Raw) {
-                $this->tambahan->CurrentValue = HtmlDecode($this->tambahan->CurrentValue);
-            }
             $this->tambahan->EditValue = HtmlEncode($this->tambahan->CurrentValue);
             $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
 
@@ -1639,11 +1620,6 @@ class ProductAdd extends Product
             $this->aktif->EditCustomAttributes = "";
             $this->aktif->EditValue = $this->aktif->options(false);
             $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
-
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
 
             // Add refer script
 
@@ -1719,10 +1695,6 @@ class ProductAdd extends Product
             // aktif
             $this->aktif->LinkCustomAttributes = "";
             $this->aktif->HrefValue = "";
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1836,11 +1808,6 @@ class ProductAdd extends Product
                 $this->aktif->addErrorMessage(str_replace("%s", $this->aktif->caption(), $this->aktif->RequiredErrorMessage));
             }
         }
-        if ($this->created_by->Required) {
-            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
-                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
-            }
-        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -1859,30 +1826,22 @@ class ProductAdd extends Product
     {
         global $Language, $Security;
 
-        // Check if valid key values for master user
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $masterFilter = $this->sqlMasterFilter_brand();
-            if (strval($this->idbrand->CurrentValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
-            } else {
-                $masterFilter = "";
-            }
-            if ($masterFilter != "") {
-                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
-                $masterRecordExists = $rsmaster !== false;
-                $validMasterKey = true;
-                if ($masterRecordExists) {
-                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
-                } elseif ($this->getCurrentMasterTable() == "brand") {
-                    $validMasterKey = false;
-                }
-                if (!$validMasterKey) {
-                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
-                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
-                    $this->setFailureMessage($masterUserIdMsg);
-                    return false;
-                }
-            }
+        // Check referential integrity for master table 'product'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_brand();
+        if (strval($this->idbrand->CurrentValue) != "") {
+            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
         }
         $conn = $this->getConnection();
 
@@ -1952,9 +1911,6 @@ class ProductAdd extends Product
 
         // aktif
         $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, 0, strval($this->aktif->CurrentValue) == "");
-
-        // created_by
-        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
         if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
             $oldFiles = EmptyValue($this->foto->Upload->DbValue) ? [] : [$this->foto->htmlDecode($this->foto->Upload->DbValue)];
             if (!EmptyValue($this->foto->Upload->FileName)) {

@@ -23,10 +23,13 @@ loadjs.ready("head", function () {
         ew.vars.tables.brand = currentTable;
     fbrandgrid.addFields([
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
-        ["title", [fields.title.visible && fields.title.required ? ew.Validators.required(fields.title.caption) : null], fields.title.isInvalid],
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
+        ["title", [fields.title.visible && fields.title.required ? ew.Validators.required(fields.title.caption) : null], fields.title.isInvalid],
+        ["titipmerk", [fields.titipmerk.visible && fields.titipmerk.required ? ew.Validators.required(fields.titipmerk.caption) : null], fields.titipmerk.isInvalid],
         ["ijinhaki", [fields.ijinhaki.visible && fields.ijinhaki.required ? ew.Validators.required(fields.ijinhaki.caption) : null], fields.ijinhaki.isInvalid],
-        ["ijinbpom", [fields.ijinbpom.visible && fields.ijinbpom.required ? ew.Validators.required(fields.ijinbpom.caption) : null], fields.ijinbpom.isInvalid]
+        ["ijinbpom", [fields.ijinbpom.visible && fields.ijinbpom.required ? ew.Validators.required(fields.ijinbpom.caption) : null], fields.ijinbpom.isInvalid],
+        ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid],
+        ["kode_sip", [fields.kode_sip.visible && fields.kode_sip.required ? ew.Validators.required(fields.kode_sip.caption) : null], fields.kode_sip.isInvalid]
     ]);
 
     // Set invalid fields
@@ -82,13 +85,19 @@ loadjs.ready("head", function () {
         var fobj = this.getForm();
         if (ew.valueChanged(fobj, rowIndex, "idcustomer", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "kode", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "title", false))
             return false;
-        if (ew.valueChanged(fobj, rowIndex, "kode", false))
+        if (ew.valueChanged(fobj, rowIndex, "titipmerk", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "ijinhaki", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "ijinbpom", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "aktif", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "kode_sip", false))
             return false;
         return true;
     }
@@ -104,8 +113,10 @@ loadjs.ready("head", function () {
 
     // Dynamic selection lists
     fbrandgrid.lists.idcustomer = <?= $Grid->idcustomer->toClientList($Grid) ?>;
+    fbrandgrid.lists.titipmerk = <?= $Grid->titipmerk->toClientList($Grid) ?>;
     fbrandgrid.lists.ijinhaki = <?= $Grid->ijinhaki->toClientList($Grid) ?>;
     fbrandgrid.lists.ijinbpom = <?= $Grid->ijinbpom->toClientList($Grid) ?>;
+    fbrandgrid.lists.aktif = <?= $Grid->aktif->toClientList($Grid) ?>;
     loadjs.done("fbrandgrid");
 });
 </script>
@@ -133,17 +144,26 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Grid->idcustomer->headerCellClass() ?>"><div id="elh_brand_idcustomer" class="brand_idcustomer"><?= $Grid->renderSort($Grid->idcustomer) ?></div></th>
 <?php } ?>
+<?php if ($Grid->kode->Visible) { // kode ?>
+        <th data-name="kode" class="<?= $Grid->kode->headerCellClass() ?>"><div id="elh_brand_kode" class="brand_kode"><?= $Grid->renderSort($Grid->kode) ?></div></th>
+<?php } ?>
 <?php if ($Grid->title->Visible) { // title ?>
         <th data-name="title" class="<?= $Grid->title->headerCellClass() ?>" style="min-width: 30px;"><div id="elh_brand_title" class="brand_title"><?= $Grid->renderSort($Grid->title) ?></div></th>
 <?php } ?>
-<?php if ($Grid->kode->Visible) { // kode ?>
-        <th data-name="kode" class="<?= $Grid->kode->headerCellClass() ?>"><div id="elh_brand_kode" class="brand_kode"><?= $Grid->renderSort($Grid->kode) ?></div></th>
+<?php if ($Grid->titipmerk->Visible) { // titipmerk ?>
+        <th data-name="titipmerk" class="<?= $Grid->titipmerk->headerCellClass() ?>"><div id="elh_brand_titipmerk" class="brand_titipmerk"><?= $Grid->renderSort($Grid->titipmerk) ?></div></th>
 <?php } ?>
 <?php if ($Grid->ijinhaki->Visible) { // ijinhaki ?>
         <th data-name="ijinhaki" class="<?= $Grid->ijinhaki->headerCellClass() ?>"><div id="elh_brand_ijinhaki" class="brand_ijinhaki"><?= $Grid->renderSort($Grid->ijinhaki) ?></div></th>
 <?php } ?>
 <?php if ($Grid->ijinbpom->Visible) { // ijinbpom ?>
         <th data-name="ijinbpom" class="<?= $Grid->ijinbpom->headerCellClass() ?>"><div id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Grid->renderSort($Grid->ijinbpom) ?></div></th>
+<?php } ?>
+<?php if ($Grid->aktif->Visible) { // aktif ?>
+        <th data-name="aktif" class="<?= $Grid->aktif->headerCellClass() ?>"><div id="elh_brand_aktif" class="brand_aktif"><?= $Grid->renderSort($Grid->aktif) ?></div></th>
+<?php } ?>
+<?php if ($Grid->kode_sip->Visible) { // kode_sip ?>
+        <th data-name="kode_sip" class="<?= $Grid->kode_sip->headerCellClass() ?>"><div id="elh_brand_kode_sip" class="brand_kode_sip"><?= $Grid->renderSort($Grid->kode_sip) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -261,13 +281,6 @@ $Grid->ListOptions->render("body", "left", $Grid->RowCount);
     <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
         <td data-name="idcustomer" <?= $Grid->idcustomer->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_brand_idcustomer" class="form-group">
-<span<?= $Grid->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_brand_idcustomer" class="form-group">
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -293,17 +306,9 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <input type="hidden" data-table="brand" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_brand_idcustomer" class="form-group">
-<span<?= $Grid->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_brand_idcustomer" class="form-group">
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -329,7 +334,6 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_brand_idcustomer">
@@ -339,6 +343,33 @@ loadjs.ready("head", function() {
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="brand" data-field="x_idcustomer" data-hidden="1" name="fbrandgrid$x<?= $Grid->RowIndex ?>_idcustomer" id="fbrandgrid$x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->FormValue) ?>">
 <input type="hidden" data-table="brand" data-field="x_idcustomer" data-hidden="1" name="fbrandgrid$o<?= $Grid->RowIndex ?>_idcustomer" id="fbrandgrid$o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->kode->Visible) { // kode ?>
+        <td data-name="kode" <?= $Grid->kode->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_kode" class="form-group">
+<input type="<?= $Grid->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->kode->getPlaceHolder()) ?>" value="<?= $Grid->kode->EditValue ?>"<?= $Grid->kode->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode" id="o<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_kode" class="form-group">
+<input type="<?= $Grid->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->kode->getPlaceHolder()) ?>" value="<?= $Grid->kode->EditValue ?>"<?= $Grid->kode->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_kode">
+<span<?= $Grid->kode->viewAttributes() ?>>
+<?= $Grid->kode->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="fbrandgrid$x<?= $Grid->RowIndex ?>_kode" id="fbrandgrid$x<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->FormValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="fbrandgrid$o<?= $Grid->RowIndex ?>_kode" id="fbrandgrid$o<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -370,29 +401,69 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->kode->Visible) { // kode ?>
-        <td data-name="kode" <?= $Grid->kode->cellAttributes() ?>>
+    <?php if ($Grid->titipmerk->Visible) { // titipmerk ?>
+        <td data-name="titipmerk" <?= $Grid->titipmerk->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_brand_kode" class="form-group">
-<input type="<?= $Grid->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->kode->getPlaceHolder()) ?>" value="<?= $Grid->kode->EditValue ?>"<?= $Grid->kode->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->kode->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_brand_titipmerk" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_titipmerk">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_titipmerk" name="x<?= $Grid->RowIndex ?>_titipmerk" id="x<?= $Grid->RowIndex ?>_titipmerk"<?= $Grid->titipmerk->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_titipmerk" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_titipmerk"
+    name="x<?= $Grid->RowIndex ?>_titipmerk"
+    value="<?= HtmlEncode($Grid->titipmerk->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_titipmerk"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_titipmerk"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->titipmerk->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_titipmerk"
+    data-value-separator="<?= $Grid->titipmerk->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->titipmerk->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->titipmerk->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode" id="o<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->OldValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_titipmerk" data-hidden="1" name="o<?= $Grid->RowIndex ?>_titipmerk" id="o<?= $Grid->RowIndex ?>_titipmerk" value="<?= HtmlEncode($Grid->titipmerk->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_brand_kode" class="form-group">
-<input type="<?= $Grid->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->kode->getPlaceHolder()) ?>" value="<?= $Grid->kode->EditValue ?>"<?= $Grid->kode->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->kode->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_brand_titipmerk" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_titipmerk">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_titipmerk" name="x<?= $Grid->RowIndex ?>_titipmerk" id="x<?= $Grid->RowIndex ?>_titipmerk"<?= $Grid->titipmerk->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_titipmerk" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_titipmerk"
+    name="x<?= $Grid->RowIndex ?>_titipmerk"
+    value="<?= HtmlEncode($Grid->titipmerk->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_titipmerk"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_titipmerk"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->titipmerk->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_titipmerk"
+    data-value-separator="<?= $Grid->titipmerk->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->titipmerk->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->titipmerk->getErrorMessage() ?></div>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_brand_kode">
-<span<?= $Grid->kode->viewAttributes() ?>>
-<?= $Grid->kode->getViewValue() ?></span>
+<span id="el<?= $Grid->RowCount ?>_brand_titipmerk">
+<span<?= $Grid->titipmerk->viewAttributes() ?>>
+<?= $Grid->titipmerk->getViewValue() ?></span>
 </span>
 <?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="fbrandgrid$x<?= $Grid->RowIndex ?>_kode" id="fbrandgrid$x<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->FormValue) ?>">
-<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="fbrandgrid$o<?= $Grid->RowIndex ?>_kode" id="fbrandgrid$o<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->OldValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_titipmerk" data-hidden="1" name="fbrandgrid$x<?= $Grid->RowIndex ?>_titipmerk" id="fbrandgrid$x<?= $Grid->RowIndex ?>_titipmerk" value="<?= HtmlEncode($Grid->titipmerk->FormValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_titipmerk" data-hidden="1" name="fbrandgrid$o<?= $Grid->RowIndex ?>_titipmerk" id="fbrandgrid$o<?= $Grid->RowIndex ?>_titipmerk" value="<?= HtmlEncode($Grid->titipmerk->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -531,6 +602,100 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->aktif->Visible) { // aktif ?>
+        <td data-name="aktif" <?= $Grid->aktif->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_aktif" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_aktif">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_aktif" name="x<?= $Grid->RowIndex ?>_aktif" id="x<?= $Grid->RowIndex ?>_aktif"<?= $Grid->aktif->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_aktif" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_aktif"
+    name="x<?= $Grid->RowIndex ?>_aktif"
+    value="<?= HtmlEncode($Grid->aktif->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_aktif"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_aktif"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->aktif->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_aktif"
+    data-value-separator="<?= $Grid->aktif->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->aktif->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->aktif->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="brand" data-field="x_aktif" data-hidden="1" name="o<?= $Grid->RowIndex ?>_aktif" id="o<?= $Grid->RowIndex ?>_aktif" value="<?= HtmlEncode($Grid->aktif->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_aktif" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_aktif">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_aktif" name="x<?= $Grid->RowIndex ?>_aktif" id="x<?= $Grid->RowIndex ?>_aktif"<?= $Grid->aktif->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_aktif" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_aktif"
+    name="x<?= $Grid->RowIndex ?>_aktif"
+    value="<?= HtmlEncode($Grid->aktif->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_aktif"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_aktif"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->aktif->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_aktif"
+    data-value-separator="<?= $Grid->aktif->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->aktif->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->aktif->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_aktif">
+<span<?= $Grid->aktif->viewAttributes() ?>>
+<?= $Grid->aktif->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="brand" data-field="x_aktif" data-hidden="1" name="fbrandgrid$x<?= $Grid->RowIndex ?>_aktif" id="fbrandgrid$x<?= $Grid->RowIndex ?>_aktif" value="<?= HtmlEncode($Grid->aktif->FormValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_aktif" data-hidden="1" name="fbrandgrid$o<?= $Grid->RowIndex ?>_aktif" id="fbrandgrid$o<?= $Grid->RowIndex ?>_aktif" value="<?= HtmlEncode($Grid->aktif->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->kode_sip->Visible) { // kode_sip ?>
+        <td data-name="kode_sip" <?= $Grid->kode_sip->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_kode_sip" class="form-group">
+<input type="<?= $Grid->kode_sip->getInputTextType() ?>" data-table="brand" data-field="x_kode_sip" name="x<?= $Grid->RowIndex ?>_kode_sip" id="x<?= $Grid->RowIndex ?>_kode_sip" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->kode_sip->getPlaceHolder()) ?>" value="<?= $Grid->kode_sip->EditValue ?>"<?= $Grid->kode_sip->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode_sip->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="brand" data-field="x_kode_sip" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode_sip" id="o<?= $Grid->RowIndex ?>_kode_sip" value="<?= HtmlEncode($Grid->kode_sip->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_kode_sip" class="form-group">
+<input type="<?= $Grid->kode_sip->getInputTextType() ?>" data-table="brand" data-field="x_kode_sip" name="x<?= $Grid->RowIndex ?>_kode_sip" id="x<?= $Grid->RowIndex ?>_kode_sip" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->kode_sip->getPlaceHolder()) ?>" value="<?= $Grid->kode_sip->EditValue ?>"<?= $Grid->kode_sip->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode_sip->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_brand_kode_sip">
+<span<?= $Grid->kode_sip->viewAttributes() ?>>
+<?= $Grid->kode_sip->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="brand" data-field="x_kode_sip" data-hidden="1" name="fbrandgrid$x<?= $Grid->RowIndex ?>_kode_sip" id="fbrandgrid$x<?= $Grid->RowIndex ?>_kode_sip" value="<?= HtmlEncode($Grid->kode_sip->FormValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_kode_sip" data-hidden="1" name="fbrandgrid$o<?= $Grid->RowIndex ?>_kode_sip" id="fbrandgrid$o<?= $Grid->RowIndex ?>_kode_sip" value="<?= HtmlEncode($Grid->kode_sip->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -578,13 +743,6 @@ $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
     <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
         <td data-name="idcustomer">
 <?php if (!$Grid->isConfirm()) { ?>
-<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
-<span id="el$rowindex$_brand_idcustomer" class="form-group brand_idcustomer">
-<span<?= $Grid->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el$rowindex$_brand_idcustomer" class="form-group brand_idcustomer">
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -610,7 +768,6 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 <?php } else { ?>
 <span id="el$rowindex$_brand_idcustomer" class="form-group brand_idcustomer">
 <span<?= $Grid->idcustomer->viewAttributes() ?>>
@@ -619,6 +776,23 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="brand" data-field="x_idcustomer" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idcustomer" id="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="brand" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->kode->Visible) { // kode ?>
+        <td data-name="kode">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_brand_kode" class="form-group brand_kode">
+<input type="<?= $Grid->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->kode->getPlaceHolder()) ?>" value="<?= $Grid->kode->EditValue ?>"<?= $Grid->kode->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_brand_kode" class="form-group brand_kode">
+<span<?= $Grid->kode->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->kode->getDisplayValue($Grid->kode->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode" id="o<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->title->Visible) { // title ?>
@@ -638,21 +812,41 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="brand" data-field="x_title" data-hidden="1" name="o<?= $Grid->RowIndex ?>_title" id="o<?= $Grid->RowIndex ?>_title" value="<?= HtmlEncode($Grid->title->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->kode->Visible) { // kode ?>
-        <td data-name="kode">
+    <?php if ($Grid->titipmerk->Visible) { // titipmerk ?>
+        <td data-name="titipmerk">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_brand_kode" class="form-group brand_kode">
-<input type="<?= $Grid->kode->getInputTextType() ?>" data-table="brand" data-field="x_kode" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->kode->getPlaceHolder()) ?>" value="<?= $Grid->kode->EditValue ?>"<?= $Grid->kode->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->kode->getErrorMessage() ?></div>
+<span id="el$rowindex$_brand_titipmerk" class="form-group brand_titipmerk">
+<template id="tp_x<?= $Grid->RowIndex ?>_titipmerk">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_titipmerk" name="x<?= $Grid->RowIndex ?>_titipmerk" id="x<?= $Grid->RowIndex ?>_titipmerk"<?= $Grid->titipmerk->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_titipmerk" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_titipmerk"
+    name="x<?= $Grid->RowIndex ?>_titipmerk"
+    value="<?= HtmlEncode($Grid->titipmerk->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_titipmerk"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_titipmerk"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->titipmerk->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_titipmerk"
+    data-value-separator="<?= $Grid->titipmerk->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->titipmerk->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->titipmerk->getErrorMessage() ?></div>
 </span>
 <?php } else { ?>
-<span id="el$rowindex$_brand_kode" class="form-group brand_kode">
-<span<?= $Grid->kode->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->kode->getDisplayValue($Grid->kode->ViewValue))) ?>"></span>
+<span id="el$rowindex$_brand_titipmerk" class="form-group brand_titipmerk">
+<span<?= $Grid->titipmerk->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->titipmerk->getDisplayValue($Grid->titipmerk->ViewValue))) ?>"></span>
 </span>
-<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="x<?= $Grid->RowIndex ?>_kode" id="x<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->FormValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_titipmerk" data-hidden="1" name="x<?= $Grid->RowIndex ?>_titipmerk" id="x<?= $Grid->RowIndex ?>_titipmerk" value="<?= HtmlEncode($Grid->titipmerk->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="brand" data-field="x_kode" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode" id="o<?= $Grid->RowIndex ?>_kode" value="<?= HtmlEncode($Grid->kode->OldValue) ?>">
+<input type="hidden" data-table="brand" data-field="x_titipmerk" data-hidden="1" name="o<?= $Grid->RowIndex ?>_titipmerk" id="o<?= $Grid->RowIndex ?>_titipmerk" value="<?= HtmlEncode($Grid->titipmerk->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->ijinhaki->Visible) { // ijinhaki ?>
@@ -727,6 +921,60 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="brand" data-field="x_ijinbpom" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ijinbpom" id="x<?= $Grid->RowIndex ?>_ijinbpom" value="<?= HtmlEncode($Grid->ijinbpom->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="brand" data-field="x_ijinbpom" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ijinbpom" id="o<?= $Grid->RowIndex ?>_ijinbpom" value="<?= HtmlEncode($Grid->ijinbpom->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->aktif->Visible) { // aktif ?>
+        <td data-name="aktif">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_brand_aktif" class="form-group brand_aktif">
+<template id="tp_x<?= $Grid->RowIndex ?>_aktif">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="brand" data-field="x_aktif" name="x<?= $Grid->RowIndex ?>_aktif" id="x<?= $Grid->RowIndex ?>_aktif"<?= $Grid->aktif->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_aktif" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_aktif"
+    name="x<?= $Grid->RowIndex ?>_aktif"
+    value="<?= HtmlEncode($Grid->aktif->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_aktif"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_aktif"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->aktif->isInvalidClass() ?>"
+    data-table="brand"
+    data-field="x_aktif"
+    data-value-separator="<?= $Grid->aktif->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->aktif->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->aktif->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_brand_aktif" class="form-group brand_aktif">
+<span<?= $Grid->aktif->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->aktif->getDisplayValue($Grid->aktif->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="brand" data-field="x_aktif" data-hidden="1" name="x<?= $Grid->RowIndex ?>_aktif" id="x<?= $Grid->RowIndex ?>_aktif" value="<?= HtmlEncode($Grid->aktif->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="brand" data-field="x_aktif" data-hidden="1" name="o<?= $Grid->RowIndex ?>_aktif" id="o<?= $Grid->RowIndex ?>_aktif" value="<?= HtmlEncode($Grid->aktif->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->kode_sip->Visible) { // kode_sip ?>
+        <td data-name="kode_sip">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_brand_kode_sip" class="form-group brand_kode_sip">
+<input type="<?= $Grid->kode_sip->getInputTextType() ?>" data-table="brand" data-field="x_kode_sip" name="x<?= $Grid->RowIndex ?>_kode_sip" id="x<?= $Grid->RowIndex ?>_kode_sip" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->kode_sip->getPlaceHolder()) ?>" value="<?= $Grid->kode_sip->EditValue ?>"<?= $Grid->kode_sip->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kode_sip->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_brand_kode_sip" class="form-group brand_kode_sip">
+<span<?= $Grid->kode_sip->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->kode_sip->getDisplayValue($Grid->kode_sip->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="brand" data-field="x_kode_sip" data-hidden="1" name="x<?= $Grid->RowIndex ?>_kode_sip" id="x<?= $Grid->RowIndex ?>_kode_sip" value="<?= HtmlEncode($Grid->kode_sip->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="brand" data-field="x_kode_sip" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kode_sip" id="o<?= $Grid->RowIndex ?>_kode_sip" value="<?= HtmlEncode($Grid->kode_sip->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

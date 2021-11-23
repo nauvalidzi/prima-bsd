@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="order_detail">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-    <tr id="r_idbrand">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_detail_idbrand"><?= $Page->idbrand->caption() ?></span></td>
-        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el_order_detail_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
     <tr id="r_idproduct">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_detail_idproduct"><?= $Page->idproduct->caption() ?></span></td>
@@ -118,6 +107,17 @@ $Page->showMessage();
 <span id="el_order_detail_total">
 <span<?= $Page->total->viewAttributes() ?>>
 <?= $Page->total->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <tr id="r_keterangan">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_detail_keterangan"><?= $Page->keterangan->caption() ?></span></td>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el_order_detail_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
     </tr>

@@ -100,7 +100,8 @@ loadjs.ready("head", function () {
 </script>
 <script>
 loadjs.ready("head", function () {
-    // Write your table-specific client script here, no need to add script tags.
+    // Client script
+    var now=new Date,day=("0"+now.getDate()).slice(-2),month=("0"+(now.getMonth()+1)).slice(-2),today=day+"-"+month+"-"+now.getFullYear();$("input#x_tglsurat").val(today),$("input#x_tglkirim").val(today);
 });
 </script>
 <?php $Page->showPageHeader(); ?>

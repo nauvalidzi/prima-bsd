@@ -160,11 +160,17 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_customer_nama" class="customer_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <th data-name="kodenpd" class="<?= $Page->kodenpd->headerCellClass() ?>"><div id="elh_customer_kodenpd" class="customer_kodenpd"><?= $Page->renderSort($Page->kodenpd) ?></div></th>
+<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
+        <th data-name="jenis_usaha" class="<?= $Page->jenis_usaha->headerCellClass() ?>"><div id="elh_customer_jenis_usaha" class="customer_jenis_usaha"><?= $Page->renderSort($Page->jenis_usaha) ?></div></th>
 <?php } ?>
 <?php if ($Page->hp->Visible) { // hp ?>
         <th data-name="hp" class="<?= $Page->hp->headerCellClass() ?>"><div id="elh_customer_hp" class="customer_hp"><?= $Page->renderSort($Page->hp) ?></div></th>
+<?php } ?>
+<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
+        <th data-name="kodenpd" class="<?= $Page->kodenpd->headerCellClass() ?>"><div id="elh_customer_kodenpd" class="customer_kodenpd"><?= $Page->renderSort($Page->kodenpd) ?></div></th>
+<?php } ?>
+<?php if ($Page->klinik->Visible) { // klinik ?>
+        <th data-name="klinik" class="<?= $Page->klinik->headerCellClass() ?>"><div id="elh_customer_klinik" class="customer_klinik"><?= $Page->renderSort($Page->klinik) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -265,11 +271,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <td data-name="kodenpd" <?= $Page->kodenpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_customer_kodenpd">
-<span<?= $Page->kodenpd->viewAttributes() ?>>
-<?= $Page->kodenpd->getViewValue() ?></span>
+    <?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
+        <td data-name="jenis_usaha" <?= $Page->jenis_usaha->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_customer_jenis_usaha">
+<span<?= $Page->jenis_usaha->viewAttributes() ?>>
+<?= $Page->jenis_usaha->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -278,6 +284,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_customer_hp">
 <span<?= $Page->hp->viewAttributes() ?>>
 <?= $Page->hp->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kodenpd->Visible) { // kodenpd ?>
+        <td data-name="kodenpd" <?= $Page->kodenpd->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_customer_kodenpd">
+<span<?= $Page->kodenpd->viewAttributes() ?>>
+<?= $Page->kodenpd->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->klinik->Visible) { // klinik ?>
+        <td data-name="klinik" <?= $Page->klinik->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_customer_klinik">
+<span<?= $Page->klinik->viewAttributes() ?>>
+<?= $Page->klinik->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -341,7 +363,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer");
 });
 </script>
 <?php } ?>

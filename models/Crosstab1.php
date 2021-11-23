@@ -95,7 +95,7 @@ class Crosstab1 extends CrosstabTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // namacustomer
-        $this->namacustomer = new ReportField('Crosstab1', 'Crosstab1', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 123, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namacustomer = new ReportField('Crosstab1', 'Crosstab1', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 201, 308, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->namacustomer->Sortable = true; // Allow sort
         $this->namacustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namacustomer->Param, "CustomMsg");
         $this->namacustomer->SourceTableVar = 'd_jatuhtempo';

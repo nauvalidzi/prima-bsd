@@ -102,9 +102,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_order_detail_idbrand" class="order_detail_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <th data-name="idproduct" class="<?= $Page->idproduct->headerCellClass() ?>"><div id="elh_order_detail_idproduct" class="order_detail_idproduct"><?= $Page->renderSort($Page->idproduct) ?></div></th>
 <?php } ?>
@@ -122,6 +119,9 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->total->Visible) { // total ?>
         <th data-name="total" class="<?= $Page->total->headerCellClass() ?>"><div id="elh_order_detail_total" class="order_detail_total"><?= $Page->renderSort($Page->total) ?></div></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_order_detail_keterangan" class="order_detail_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -190,14 +190,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <td data-name="idproduct" <?= $Page->idproduct->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_order_detail_idproduct">
@@ -243,6 +235,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_order_detail_total">
 <span<?= $Page->total->viewAttributes() ?>>
 <?= $Page->total->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_detail_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

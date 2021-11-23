@@ -58,12 +58,12 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-    <?php if ($Page->SortUrl($Page->kodenpd) == "") { ?>
-        <th class="<?= $Page->kodenpd->headerCellClass() ?>"><?= $Page->kodenpd->caption() ?></th>
+<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
+    <?php if ($Page->SortUrl($Page->jenis_usaha) == "") { ?>
+        <th class="<?= $Page->jenis_usaha->headerCellClass() ?>"><?= $Page->jenis_usaha->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->kodenpd->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->kodenpd->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->kodenpd->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->kodenpd->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->kodenpd->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->kodenpd->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->jenis_usaha->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->jenis_usaha->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->jenis_usaha->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->jenis_usaha->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->jenis_usaha->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->jenis_usaha->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -73,6 +73,24 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->hp->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->hp->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->hp->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->hp->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->hp->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->hp->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
+    <?php if ($Page->SortUrl($Page->kodenpd) == "") { ?>
+        <th class="<?= $Page->kodenpd->headerCellClass() ?>"><?= $Page->kodenpd->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->kodenpd->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->kodenpd->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->kodenpd->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->kodenpd->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->kodenpd->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->kodenpd->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->klinik->Visible) { // klinik ?>
+    <?php if ($Page->SortUrl($Page->klinik) == "") { ?>
+        <th class="<?= $Page->klinik->headerCellClass() ?>"><?= $Page->klinik->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->klinik->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->klinik->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->klinik->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->klinik->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->klinik->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->klinik->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -134,11 +152,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->nama->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <!-- kodenpd -->
-        <td<?= $Page->kodenpd->cellAttributes() ?>>
-<span<?= $Page->kodenpd->viewAttributes() ?>>
-<?= $Page->kodenpd->getViewValue() ?></span>
+<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
+        <!-- jenis_usaha -->
+        <td<?= $Page->jenis_usaha->cellAttributes() ?>>
+<span<?= $Page->jenis_usaha->viewAttributes() ?>>
+<?= $Page->jenis_usaha->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->hp->Visible) { // hp ?>
@@ -146,6 +164,20 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->hp->cellAttributes() ?>>
 <span<?= $Page->hp->viewAttributes() ?>>
 <?= $Page->hp->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
+        <!-- kodenpd -->
+        <td<?= $Page->kodenpd->cellAttributes() ?>>
+<span<?= $Page->kodenpd->viewAttributes() ?>>
+<?= $Page->kodenpd->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->klinik->Visible) { // klinik ?>
+        <!-- klinik -->
+        <td<?= $Page->klinik->cellAttributes() ?>>
+<span<?= $Page->klinik->viewAttributes() ?>>
+<?= $Page->klinik->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

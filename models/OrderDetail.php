@@ -30,13 +30,13 @@ class OrderDetail extends DbTable
     // Fields
     public $id;
     public $idorder;
-    public $idbrand;
     public $idproduct;
     public $jumlah;
     public $bonus;
     public $sisa;
     public $harga;
     public $total;
+    public $keterangan;
     public $aktif;
     public $created_at;
     public $created_by;
@@ -95,25 +95,6 @@ class OrderDetail extends DbTable
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
         $this->Fields['idorder'] = &$this->idorder;
 
-        // idbrand
-        $this->idbrand = new DbField('order_detail', 'order_detail', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 3, 11, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idbrand->Nullable = false; // NOT NULL field
-        $this->idbrand->Required = true; // Required field
-        $this->idbrand->Sortable = true; // Allow sort
-        $this->idbrand->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idbrand->Lookup = new Lookup('idbrand', 'v_brand_link', false, 'id', ["title","","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
-                break;
-            default:
-                $this->idbrand->Lookup = new Lookup('idbrand', 'v_brand_link', false, 'id', ["title","","",""], ["order x_idcustomer"], ["order_detail x_idproduct"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
-                break;
-        }
-        $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
-        $this->Fields['idbrand'] = &$this->idbrand;
-
         // idproduct
         $this->idproduct = new DbField('order_detail', 'order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 3, 11, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idproduct->Nullable = false; // NOT NULL field
@@ -123,10 +104,10 @@ class OrderDetail extends DbTable
         $this->idproduct->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["kode","nama","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
+                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["kode","nama","",""], ["order x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
                 break;
             default:
-                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["kode","nama","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
+                $this->idproduct->Lookup = new Lookup('idproduct', 'product', false, 'id', ["kode","nama","",""], ["order x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["harga"], ["x_harga"], '', '');
                 break;
         }
         $this->idproduct->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -177,6 +158,12 @@ class OrderDetail extends DbTable
         $this->total->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->total->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->total->Param, "CustomMsg");
         $this->Fields['total'] = &$this->total;
+
+        // keterangan
+        $this->keterangan = new DbField('order_detail', 'order_detail', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keterangan->Sortable = true; // Allow sort
+        $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
+        $this->Fields['keterangan'] = &$this->keterangan;
 
         // aktif
         $this->aktif = new DbField('order_detail', 'order_detail', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'RADIO');
@@ -690,13 +677,13 @@ class OrderDetail extends DbTable
         }
         $this->id->DbValue = $row['id'];
         $this->idorder->DbValue = $row['idorder'];
-        $this->idbrand->DbValue = $row['idbrand'];
         $this->idproduct->DbValue = $row['idproduct'];
         $this->jumlah->DbValue = $row['jumlah'];
         $this->bonus->DbValue = $row['bonus'];
         $this->sisa->DbValue = $row['sisa'];
         $this->harga->DbValue = $row['harga'];
         $this->total->DbValue = $row['total'];
+        $this->keterangan->DbValue = $row['keterangan'];
         $this->aktif->DbValue = $row['aktif'];
         $this->created_at->DbValue = $row['created_at'];
         $this->created_by->DbValue = $row['created_by'];
@@ -1027,13 +1014,13 @@ SORTHTML;
         }
         $this->id->setDbValue($row['id']);
         $this->idorder->setDbValue($row['idorder']);
-        $this->idbrand->setDbValue($row['idbrand']);
         $this->idproduct->setDbValue($row['idproduct']);
         $this->jumlah->setDbValue($row['jumlah']);
         $this->bonus->setDbValue($row['bonus']);
         $this->sisa->setDbValue($row['sisa']);
         $this->harga->setDbValue($row['harga']);
         $this->total->setDbValue($row['total']);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
@@ -1054,8 +1041,6 @@ SORTHTML;
 
         // idorder
 
-        // idbrand
-
         // idproduct
 
         // jumlah
@@ -1067,6 +1052,8 @@ SORTHTML;
         // harga
 
         // total
+
+        // keterangan
 
         // aktif
 
@@ -1085,27 +1072,6 @@ SORTHTML;
         $this->idorder->ViewValue = $this->idorder->CurrentValue;
         $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
         $this->idorder->ViewCustomAttributes = "";
-
-        // idbrand
-        $curVal = trim(strval($this->idbrand->CurrentValue));
-        if ($curVal != "") {
-            $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-            if ($this->idbrand->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                    $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                } else {
-                    $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                }
-            }
-        } else {
-            $this->idbrand->ViewValue = null;
-        }
-        $this->idbrand->ViewCustomAttributes = "";
 
         // idproduct
         $curVal = trim(strval($this->idproduct->CurrentValue));
@@ -1157,6 +1123,10 @@ SORTHTML;
         $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
         $this->total->ViewCustomAttributes = "";
 
+        // keterangan
+        $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+        $this->keterangan->ViewCustomAttributes = "";
+
         // aktif
         if (strval($this->aktif->CurrentValue) != "") {
             $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
@@ -1189,11 +1159,6 @@ SORTHTML;
         $this->idorder->HrefValue = "";
         $this->idorder->TooltipValue = "";
 
-        // idbrand
-        $this->idbrand->LinkCustomAttributes = "";
-        $this->idbrand->HrefValue = "";
-        $this->idbrand->TooltipValue = "";
-
         // idproduct
         $this->idproduct->LinkCustomAttributes = "";
         $this->idproduct->HrefValue = "";
@@ -1223,6 +1188,11 @@ SORTHTML;
         $this->total->LinkCustomAttributes = "";
         $this->total->HrefValue = "";
         $this->total->TooltipValue = "";
+
+        // keterangan
+        $this->keterangan->LinkCustomAttributes = "";
+        $this->keterangan->HrefValue = "";
+        $this->keterangan->TooltipValue = "";
 
         // aktif
         $this->aktif->LinkCustomAttributes = "";
@@ -1278,11 +1248,6 @@ SORTHTML;
             $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
         }
 
-        // idbrand
-        $this->idbrand->EditAttrs["class"] = "form-control";
-        $this->idbrand->EditCustomAttributes = "";
-        $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-
         // idproduct
         $this->idproduct->EditAttrs["class"] = "form-control";
         $this->idproduct->EditCustomAttributes = "";
@@ -1317,6 +1282,12 @@ SORTHTML;
         $this->total->EditCustomAttributes = "readonly";
         $this->total->EditValue = $this->total->CurrentValue;
         $this->total->PlaceHolder = RemoveHtml($this->total->caption());
+
+        // keterangan
+        $this->keterangan->EditAttrs["class"] = "form-control";
+        $this->keterangan->EditCustomAttributes = "";
+        $this->keterangan->EditValue = $this->keterangan->CurrentValue;
+        $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
         // aktif
         $this->aktif->EditCustomAttributes = "";
@@ -1365,23 +1336,23 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->idproduct);
                     $doc->exportCaption($this->jumlah);
                     $doc->exportCaption($this->bonus);
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->harga);
                     $doc->exportCaption($this->total);
+                    $doc->exportCaption($this->keterangan);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idorder);
-                    $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->idproduct);
                     $doc->exportCaption($this->jumlah);
                     $doc->exportCaption($this->bonus);
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->harga);
                     $doc->exportCaption($this->total);
+                    $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->created_by);
@@ -1414,23 +1385,23 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idbrand);
                         $doc->exportField($this->idproduct);
                         $doc->exportField($this->jumlah);
                         $doc->exportField($this->bonus);
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->harga);
                         $doc->exportField($this->total);
+                        $doc->exportField($this->keterangan);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idorder);
-                        $doc->exportField($this->idbrand);
                         $doc->exportField($this->idproduct);
                         $doc->exportField($this->jumlah);
                         $doc->exportField($this->bonus);
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->harga);
                         $doc->exportField($this->total);
+                        $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->created_by);

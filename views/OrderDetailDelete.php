@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <th class="<?= $Page->idbrand->headerCellClass() ?>"><span id="elh_order_detail_idbrand" class="order_detail_idbrand"><?= $Page->idbrand->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <th class="<?= $Page->idproduct->headerCellClass() ?>"><span id="elh_order_detail_idproduct" class="order_detail_idproduct"><?= $Page->idproduct->caption() ?></span></th>
 <?php } ?>
@@ -64,6 +61,9 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->total->Visible) { // total ?>
         <th class="<?= $Page->total->headerCellClass() ?>"><span id="elh_order_detail_total" class="order_detail_total"><?= $Page->total->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><span id="elh_order_detail_keterangan" class="order_detail_keterangan"><?= $Page->keterangan->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -86,14 +86,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <td <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_order_detail_idbrand" class="order_detail_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <td <?= $Page->idproduct->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_order_detail_idproduct" class="order_detail_idproduct">
@@ -139,6 +131,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_order_detail_total" class="order_detail_total">
 <span<?= $Page->total->viewAttributes() ?>>
 <?= $Page->total->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_detail_keterangan" class="order_detail_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

@@ -318,7 +318,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Create Surat Jalan");
+    $(".ew-detail-add-group").html("Add Surat Jalan");
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

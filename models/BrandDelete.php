@@ -375,16 +375,17 @@ class BrandDelete extends Brand
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->idcustomer->setVisibility();
-        $this->title->setVisibility();
         $this->kode->setVisibility();
+        $this->title->setVisibility();
         $this->logo->Visible = false;
-        $this->titipmerk->Visible = false;
+        $this->titipmerk->setVisibility();
         $this->ijinhaki->setVisibility();
         $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
+        $this->kode_sip->setVisibility();
+        $this->aktif->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -399,10 +400,6 @@ class BrandDelete extends Brand
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-
-        // Set up master/detail parameters
-        $this->setupMasterParms();
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -417,25 +414,6 @@ class BrandDelete extends Brand
 
         // Set up filter (WHERE Clause)
         $this->CurrentFilter = $filter;
-
-        // Check if valid User ID
-        $conn = $this->getConnection();
-        $sql = $this->getSql($this->CurrentFilter);
-        $rows = $conn->fetchAll($sql);
-        $res = true;
-        foreach ($rows as $row) {
-            $this->loadRowValues($row);
-            if (!$this->showOptionLink("delete")) {
-                $userIdMsg = $Language->phrase("NoDeletePermission");
-                $this->setFailureMessage($userIdMsg);
-                $res = false;
-                break;
-            }
-        }
-        if (!$res) {
-            $this->terminate("BrandList"); // Return to list
-            return;
-        }
 
         // Get action
         if (IsApi()) {
@@ -571,9 +549,8 @@ class BrandDelete extends Brand
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->title->setDbValue($row['title']);
         $this->kode->setDbValue($row['kode']);
+        $this->title->setDbValue($row['title']);
         $this->logo->Upload->DbValue = $row['logo'];
         $this->logo->setDbValue($this->logo->Upload->DbValue);
         $this->titipmerk->setDbValue($row['titipmerk']);
@@ -581,8 +558,10 @@ class BrandDelete extends Brand
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
         $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
+        $this->kode_sip->setDbValue($row['kode_sip']);
+        $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -590,16 +569,17 @@ class BrandDelete extends Brand
     {
         $row = [];
         $row['id'] = null;
-        $row['idcustomer'] = null;
-        $row['title'] = null;
         $row['kode'] = null;
+        $row['title'] = null;
         $row['logo'] = null;
         $row['titipmerk'] = null;
         $row['ijinhaki'] = null;
         $row['ijinbpom'] = null;
         $row['aktaperusahaan'] = null;
+        $row['kode_sip'] = null;
+        $row['aktif'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -617,12 +597,10 @@ class BrandDelete extends Brand
 
         // id
 
-        // idcustomer
+        // kode
 
         // title
         $this->title->CellCssStyle = "min-width: 30px;";
-
-        // kode
 
         // logo
 
@@ -634,44 +612,26 @@ class BrandDelete extends Brand
 
         // aktaperusahaan
 
+        // kode_sip
+
+        // aktif
+
         // created_at
         $this->created_at->CellCssStyle = "white-space: nowrap;";
 
-        // created_by
-        $this->created_by->CellCssStyle = "white-space: nowrap;";
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
+            // kode
+            $this->kode->ViewValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // title
             $this->title->ViewValue = $this->title->CurrentValue;
             $this->title->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
 
             // logo
             if (!EmptyValue($this->logo->Upload->DbValue)) {
@@ -715,30 +675,42 @@ class BrandDelete extends Brand
             }
             $this->aktaperusahaan->ViewCustomAttributes = "";
 
+            // kode_sip
+            $this->kode_sip->ViewValue = $this->kode_sip->CurrentValue;
+            $this->kode_sip->ViewCustomAttributes = "";
+
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // title
             $this->title->LinkCustomAttributes = "";
             $this->title->HrefValue = "";
             $this->title->TooltipValue = "";
 
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
+            // titipmerk
+            $this->titipmerk->LinkCustomAttributes = "";
+            $this->titipmerk->HrefValue = "";
+            $this->titipmerk->TooltipValue = "";
 
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
@@ -749,6 +721,21 @@ class BrandDelete extends Brand
             $this->ijinbpom->LinkCustomAttributes = "";
             $this->ijinbpom->HrefValue = "";
             $this->ijinbpom->TooltipValue = "";
+
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
+            $this->kode_sip->TooltipValue = "";
+
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+            $this->aktif->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -840,85 +827,6 @@ class BrandDelete extends Brand
         return $deleteRows;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Get("fk_id", Get("idcustomer"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idcustomer->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Post("fk_id", Post("idcustomer"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idcustomer->setFormValue($masterTbl->id->FormValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "customer") {
-                if ($this->idcustomer->CurrentValue == "") {
-                    $this->idcustomer->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -943,13 +851,13 @@ class BrandDelete extends Brand
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
                 case "x_titipmerk":
                     break;
                 case "x_ijinhaki":
                     break;
                 case "x_ijinbpom":
+                    break;
+                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";

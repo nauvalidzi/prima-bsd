@@ -1489,7 +1489,7 @@ class IjinbpomAdd extends Ijinbpom
         }
 
         // status
-        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", false);
+        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);

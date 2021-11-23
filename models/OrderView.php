@@ -520,11 +520,12 @@ class OrderView extends Order
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
         $this->kode->setVisibility();
-        $this->titipmerk->setVisibility();
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
+        $this->idbrand->setVisibility();
         $this->dokumen->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->setVisibility();
         $this->created_by->setVisibility();
         $this->aktif->setVisibility();
@@ -545,6 +546,7 @@ class OrderView extends Order
         // Set up lookup cache
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->idbrand);
 
         // Check modal
         if ($this->IsModal) {
@@ -818,12 +820,13 @@ class OrderView extends Order
         }
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
-        $this->titipmerk->setDbValue($row['titipmerk']);
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
         $this->aktif->setDbValue($row['aktif']);
@@ -836,11 +839,12 @@ class OrderView extends Order
         $row = [];
         $row['id'] = null;
         $row['kode'] = null;
-        $row['titipmerk'] = null;
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
+        $row['idbrand'] = null;
         $row['dokumen'] = null;
+        $row['keterangan'] = null;
         $row['created_at'] = null;
         $row['created_by'] = null;
         $row['aktif'] = null;
@@ -870,15 +874,17 @@ class OrderView extends Order
 
         // kode
 
-        // titipmerk
-
         // tanggal
 
         // idpegawai
 
         // idcustomer
 
+        // idbrand
+
         // dokumen
+
+        // keterangan
 
         // created_at
 
@@ -898,7 +904,7 @@ class OrderView extends Order
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 7);
             $this->tanggal->ViewCustomAttributes = "";
 
             // idpegawai
@@ -928,7 +934,11 @@ class OrderView extends Order
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -943,6 +953,27 @@ class OrderView extends Order
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
+            // idbrand
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idbrand`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->ViewValue = null;
+            }
+            $this->idbrand->ViewCustomAttributes = "";
+
             // dokumen
             if (!EmptyValue($this->dokumen->Upload->DbValue)) {
                 $this->dokumen->ViewValue = $this->dokumen->Upload->DbValue;
@@ -950,6 +981,10 @@ class OrderView extends Order
                 $this->dokumen->ViewValue = "";
             }
             $this->dokumen->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -989,11 +1024,21 @@ class OrderView extends Order
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+
             // dokumen
             $this->dokumen->LinkCustomAttributes = "";
             $this->dokumen->HrefValue = "";
             $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
             $this->dokumen->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1134,11 +1179,15 @@ class OrderView extends Order
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_titipmerk":
-                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_idbrand":
                     break;
                 case "x_aktif":
                     break;

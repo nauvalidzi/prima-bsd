@@ -22,13 +22,13 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.order_detail)
         ew.vars.tables.order_detail = currentTable;
     forder_detailgrid.addFields([
-        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
         ["idproduct", [fields.idproduct.visible && fields.idproduct.required ? ew.Validators.required(fields.idproduct.caption) : null], fields.idproduct.isInvalid],
         ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
         ["bonus", [fields.bonus.visible && fields.bonus.required ? ew.Validators.required(fields.bonus.caption) : null, ew.Validators.integer], fields.bonus.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
         ["harga", [fields.harga.visible && fields.harga.required ? ew.Validators.required(fields.harga.caption) : null, ew.Validators.integer], fields.harga.isInvalid],
-        ["total", [fields.total.visible && fields.total.required ? ew.Validators.required(fields.total.caption) : null, ew.Validators.integer], fields.total.isInvalid]
+        ["total", [fields.total.visible && fields.total.required ? ew.Validators.required(fields.total.caption) : null, ew.Validators.integer], fields.total.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -82,8 +82,6 @@ loadjs.ready("head", function () {
     // Check empty row
     forder_detailgrid.emptyRow = function (rowIndex) {
         var fobj = this.getForm();
-        if (ew.valueChanged(fobj, rowIndex, "idbrand", false))
-            return false;
         if (ew.valueChanged(fobj, rowIndex, "idproduct", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "jumlah", false))
@@ -95,6 +93,8 @@ loadjs.ready("head", function () {
         if (ew.valueChanged(fobj, rowIndex, "harga", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "total", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "keterangan", false))
             return false;
         return true;
     }
@@ -109,7 +109,6 @@ loadjs.ready("head", function () {
     forder_detailgrid.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    forder_detailgrid.lists.idbrand = <?= $Grid->idbrand->toClientList($Grid) ?>;
     forder_detailgrid.lists.idproduct = <?= $Grid->idproduct->toClientList($Grid) ?>;
     loadjs.done("forder_detailgrid");
 });
@@ -135,9 +134,6 @@ $Grid->renderListOptions();
 // Render list options (header, left)
 $Grid->ListOptions->render("header", "left");
 ?>
-<?php if ($Grid->idbrand->Visible) { // idbrand ?>
-        <th data-name="idbrand" class="<?= $Grid->idbrand->headerCellClass() ?>"><div id="elh_order_detail_idbrand" class="order_detail_idbrand"><?= $Grid->renderSort($Grid->idbrand) ?></div></th>
-<?php } ?>
 <?php if ($Grid->idproduct->Visible) { // idproduct ?>
         <th data-name="idproduct" class="<?= $Grid->idproduct->headerCellClass() ?>"><div id="elh_order_detail_idproduct" class="order_detail_idproduct"><?= $Grid->renderSort($Grid->idproduct) ?></div></th>
 <?php } ?>
@@ -155,6 +151,9 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->total->Visible) { // total ?>
         <th data-name="total" class="<?= $Grid->total->headerCellClass() ?>"><div id="elh_order_detail_total" class="order_detail_total"><?= $Grid->renderSort($Grid->total) ?></div></th>
+<?php } ?>
+<?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Grid->keterangan->headerCellClass() ?>"><div id="elh_order_detail_keterangan" class="order_detail_keterangan"><?= $Grid->renderSort($Grid->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -269,77 +268,6 @@ while ($Grid->RecordCount < $Grid->StopRecord) {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 ?>
-    <?php if ($Grid->idbrand->Visible) { // idbrand ?>
-        <td data-name="idbrand" <?= $Grid->idbrand->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_order_detail_idbrand" class="form-group">
-<?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idbrand"
-        name="x<?= $Grid->RowIndex ?>_idbrand"
-        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
-        data-select2-id="order_detail_x<?= $Grid->RowIndex ?>_idbrand"
-        data-table="order_detail"
-        data-field="x_idbrand"
-        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
-        <?= $Grid->idbrand->editAttributes() ?>>
-        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
-<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='order_detail_x<?= $Grid->RowIndex ?>_idbrand']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "order_detail_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.order_detail.fields.idbrand.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<input type="hidden" data-table="order_detail" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_order_detail_idbrand" class="form-group">
-<?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idbrand"
-        name="x<?= $Grid->RowIndex ?>_idbrand"
-        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
-        data-select2-id="order_detail_x<?= $Grid->RowIndex ?>_idbrand"
-        data-table="order_detail"
-        data-field="x_idbrand"
-        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
-        <?= $Grid->idbrand->editAttributes() ?>>
-        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
-<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='order_detail_x<?= $Grid->RowIndex ?>_idbrand']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "order_detail_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.order_detail.fields.idbrand.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_order_detail_idbrand">
-<span<?= $Grid->idbrand->viewAttributes() ?>>
-<?= $Grid->idbrand->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="order_detail" data-field="x_idbrand" data-hidden="1" name="forder_detailgrid$x<?= $Grid->RowIndex ?>_idbrand" id="forder_detailgrid$x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->FormValue) ?>">
-<input type="hidden" data-table="order_detail" data-field="x_idbrand" data-hidden="1" name="forder_detailgrid$o<?= $Grid->RowIndex ?>_idbrand" id="forder_detailgrid$o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
     <?php if ($Grid->idproduct->Visible) { // idproduct ?>
         <td data-name="idproduct" <?= $Grid->idproduct->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -546,6 +474,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Grid->keterangan->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_keterangan" class="form-group">
+<textarea data-table="order_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="order_detail" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_keterangan" class="form-group">
+<textarea data-table="order_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="order_detail" data-field="x_keterangan" data-hidden="1" name="forder_detailgrid$x<?= $Grid->RowIndex ?>_keterangan" id="forder_detailgrid$x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<input type="hidden" data-table="order_detail" data-field="x_keterangan" data-hidden="1" name="forder_detailgrid$o<?= $Grid->RowIndex ?>_keterangan" id="forder_detailgrid$o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -590,45 +545,6 @@ loadjs.ready(["forder_detailgrid","load"], function () {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 ?>
-    <?php if ($Grid->idbrand->Visible) { // idbrand ?>
-        <td data-name="idbrand">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_order_detail_idbrand" class="form-group order_detail_idbrand">
-<?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idbrand"
-        name="x<?= $Grid->RowIndex ?>_idbrand"
-        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
-        data-select2-id="order_detail_x<?= $Grid->RowIndex ?>_idbrand"
-        data-table="order_detail"
-        data-field="x_idbrand"
-        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
-        <?= $Grid->idbrand->editAttributes() ?>>
-        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
-<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='order_detail_x<?= $Grid->RowIndex ?>_idbrand']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "order_detail_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.order_detail.fields.idbrand.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_order_detail_idbrand" class="form-group order_detail_idbrand">
-<span<?= $Grid->idbrand->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="order_detail" data-field="x_idbrand" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idbrand" id="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="order_detail" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
-</td>
-    <?php } ?>
     <?php if ($Grid->idproduct->Visible) { // idproduct ?>
         <td data-name="idproduct">
 <?php if (!$Grid->isConfirm()) { ?>
@@ -751,6 +667,23 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="order_detail" data-field="x_total" data-hidden="1" name="x<?= $Grid->RowIndex ?>_total" id="x<?= $Grid->RowIndex ?>_total" value="<?= HtmlEncode($Grid->total->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="order_detail" data-field="x_total" data-hidden="1" name="o<?= $Grid->RowIndex ?>_total" id="o<?= $Grid->RowIndex ?>_total" value="<?= HtmlEncode($Grid->total->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_order_detail_keterangan" class="form-group order_detail_keterangan">
+<textarea data-table="order_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_order_detail_keterangan" class="form-group order_detail_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="order_detail" data-field="x_keterangan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="order_detail" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

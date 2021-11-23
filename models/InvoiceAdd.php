@@ -949,11 +949,6 @@ class InvoiceAdd extends Invoice
 
         // Initialize URLs
 
-        // Convert decimal values if posted back
-        if ($this->pajak->FormValue == $this->pajak->CurrentValue && is_numeric(ConvertToFloatString($this->pajak->CurrentValue))) {
-            $this->pajak->CurrentValue = ConvertToFloatString($this->pajak->CurrentValue);
-        }
-
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -1325,9 +1320,6 @@ class InvoiceAdd extends Invoice
             $this->pajak->EditCustomAttributes = "";
             $this->pajak->EditValue = HtmlEncode($this->pajak->CurrentValue);
             $this->pajak->PlaceHolder = RemoveHtml($this->pajak->caption());
-            if (strval($this->pajak->EditValue) != "" && is_numeric($this->pajak->EditValue)) {
-                $this->pajak->EditValue = FormatNumber($this->pajak->EditValue, -2, -2, -2, -2);
-            }
 
             // totaltagihan
             $this->totaltagihan->EditAttrs["class"] = "form-control";
@@ -1513,9 +1505,6 @@ class InvoiceAdd extends Invoice
             if (!$this->pajak->IsDetailKey && EmptyValue($this->pajak->FormValue)) {
                 $this->pajak->addErrorMessage(str_replace("%s", $this->pajak->caption(), $this->pajak->RequiredErrorMessage));
             }
-        }
-        if (!CheckNumber($this->pajak->FormValue)) {
-            $this->pajak->addErrorMessage($this->pajak->getErrorMessage(false));
         }
         if ($this->totaltagihan->Required) {
             if (!$this->totaltagihan->IsDetailKey && EmptyValue($this->totaltagihan->FormValue)) {

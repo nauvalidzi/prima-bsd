@@ -317,7 +317,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $(".ew-detail-add-group").html("Add Pegawai");
 });
 </script>
 <?php } ?>

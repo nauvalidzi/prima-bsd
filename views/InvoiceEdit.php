@@ -23,7 +23,7 @@ loadjs.ready("head", function () {
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tglinvoice", [fields.tglinvoice.visible && fields.tglinvoice.required ? ew.Validators.required(fields.tglinvoice.caption) : null, ew.Validators.datetime(0)], fields.tglinvoice.isInvalid],
         ["totalnonpajak", [fields.totalnonpajak.visible && fields.totalnonpajak.required ? ew.Validators.required(fields.totalnonpajak.caption) : null, ew.Validators.integer], fields.totalnonpajak.isInvalid],
-        ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null, ew.Validators.float], fields.pajak.isInvalid],
+        ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null], fields.pajak.isInvalid],
         ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
         ["idtermpayment", [fields.idtermpayment.visible && fields.idtermpayment.required ? ew.Validators.required(fields.idtermpayment.caption) : null], fields.idtermpayment.isInvalid],
         ["idtipepayment", [fields.idtipepayment.visible && fields.idtipepayment.required ? ew.Validators.required(fields.idtipepayment.caption) : null], fields.idtipepayment.isInvalid],
@@ -179,7 +179,7 @@ loadjs.ready(["finvoiceedit", "datetimepicker"], function() {
         <label id="elh_invoice_pajak" for="x_pajak" class="<?= $Page->LeftColumnClass ?>"><?= $Page->pajak->caption() ?><?= $Page->pajak->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->pajak->cellAttributes() ?>>
 <span id="el_invoice_pajak">
-<input type="<?= $Page->pajak->getInputTextType() ?>" data-table="invoice" data-field="x_pajak" name="x_pajak" id="x_pajak" size="30" placeholder="<?= HtmlEncode($Page->pajak->getPlaceHolder()) ?>" value="<?= $Page->pajak->EditValue ?>"<?= $Page->pajak->editAttributes() ?> aria-describedby="x_pajak_help">
+<textarea data-table="invoice" data-field="x_pajak" name="x_pajak" id="x_pajak" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->pajak->getPlaceHolder()) ?>"<?= $Page->pajak->editAttributes() ?> aria-describedby="x_pajak_help"><?= $Page->pajak->EditValue ?></textarea>
 <?= $Page->pajak->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->pajak->getErrorMessage() ?></div>
 </span>

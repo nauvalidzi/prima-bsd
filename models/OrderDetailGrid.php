@@ -507,13 +507,13 @@ class OrderDetailGrid extends OrderDetail
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idorder->Visible = false;
-        $this->idbrand->setVisibility();
         $this->idproduct->setVisibility();
         $this->jumlah->setVisibility();
         $this->bonus->setVisibility();
         $this->sisa->setVisibility();
         $this->harga->setVisibility();
         $this->total->setVisibility();
+        $this->keterangan->setVisibility();
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -535,7 +535,6 @@ class OrderDetailGrid extends OrderDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idbrand);
         $this->setupLookupOptions($this->idproduct);
 
         // Search filters
@@ -949,9 +948,6 @@ class OrderDetailGrid extends OrderDetail
     public function emptyRow()
     {
         global $CurrentForm;
-        if ($CurrentForm->hasValue("x_idbrand") && $CurrentForm->hasValue("o_idbrand") && $this->idbrand->CurrentValue != $this->idbrand->OldValue) {
-            return false;
-        }
         if ($CurrentForm->hasValue("x_idproduct") && $CurrentForm->hasValue("o_idproduct") && $this->idproduct->CurrentValue != $this->idproduct->OldValue) {
             return false;
         }
@@ -968,6 +964,9 @@ class OrderDetailGrid extends OrderDetail
             return false;
         }
         if ($CurrentForm->hasValue("x_total") && $CurrentForm->hasValue("o_total") && $this->total->CurrentValue != $this->total->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_keterangan") && $CurrentForm->hasValue("o_keterangan") && $this->keterangan->CurrentValue != $this->keterangan->OldValue) {
             return false;
         }
         return true;
@@ -1051,13 +1050,13 @@ class OrderDetailGrid extends OrderDetail
     // Reset form status
     public function resetFormError()
     {
-        $this->idbrand->clearErrorMessage();
         $this->idproduct->clearErrorMessage();
         $this->jumlah->clearErrorMessage();
         $this->bonus->clearErrorMessage();
         $this->sisa->clearErrorMessage();
         $this->harga->clearErrorMessage();
         $this->total->clearErrorMessage();
+        $this->keterangan->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1314,8 +1313,6 @@ class OrderDetailGrid extends OrderDetail
         $this->id->OldValue = $this->id->CurrentValue;
         $this->idorder->CurrentValue = null;
         $this->idorder->OldValue = $this->idorder->CurrentValue;
-        $this->idbrand->CurrentValue = null;
-        $this->idbrand->OldValue = $this->idbrand->CurrentValue;
         $this->idproduct->CurrentValue = null;
         $this->idproduct->OldValue = $this->idproduct->CurrentValue;
         $this->jumlah->CurrentValue = null;
@@ -1328,6 +1325,8 @@ class OrderDetailGrid extends OrderDetail
         $this->harga->OldValue = $this->harga->CurrentValue;
         $this->total->CurrentValue = null;
         $this->total->OldValue = $this->total->CurrentValue;
+        $this->keterangan->CurrentValue = null;
+        $this->keterangan->OldValue = $this->keterangan->CurrentValue;
         $this->aktif->CurrentValue = 1;
         $this->aktif->OldValue = $this->aktif->CurrentValue;
         $this->created_at->CurrentValue = null;
@@ -1344,19 +1343,6 @@ class OrderDetailGrid extends OrderDetail
         // Load from form
         global $CurrentForm;
         $CurrentForm->FormName = $this->FormName;
-
-        // Check field name 'idbrand' first before field var 'x_idbrand'
-        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
-        if (!$this->idbrand->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idbrand->Visible = false; // Disable update for API request
-            } else {
-                $this->idbrand->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_idbrand")) {
-            $this->idbrand->setOldValue($CurrentForm->getValue("o_idbrand"));
-        }
 
         // Check field name 'idproduct' first before field var 'x_idproduct'
         $val = $CurrentForm->hasValue("idproduct") ? $CurrentForm->getValue("idproduct") : $CurrentForm->getValue("x_idproduct");
@@ -1436,6 +1422,19 @@ class OrderDetailGrid extends OrderDetail
             $this->total->setOldValue($CurrentForm->getValue("o_total"));
         }
 
+        // Check field name 'keterangan' first before field var 'x_keterangan'
+        $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
+        if (!$this->keterangan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->keterangan->Visible = false; // Disable update for API request
+            } else {
+                $this->keterangan->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_keterangan")) {
+            $this->keterangan->setOldValue($CurrentForm->getValue("o_keterangan"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1450,13 +1449,13 @@ class OrderDetailGrid extends OrderDetail
         if (!$this->isGridAdd() && !$this->isAdd()) {
             $this->id->CurrentValue = $this->id->FormValue;
         }
-        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->idproduct->CurrentValue = $this->idproduct->FormValue;
         $this->jumlah->CurrentValue = $this->jumlah->FormValue;
         $this->bonus->CurrentValue = $this->bonus->FormValue;
         $this->sisa->CurrentValue = $this->sisa->FormValue;
         $this->harga->CurrentValue = $this->harga->FormValue;
         $this->total->CurrentValue = $this->total->FormValue;
+        $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
 
     // Load recordset
@@ -1529,13 +1528,13 @@ class OrderDetailGrid extends OrderDetail
         }
         $this->id->setDbValue($row['id']);
         $this->idorder->setDbValue($row['idorder']);
-        $this->idbrand->setDbValue($row['idbrand']);
         $this->idproduct->setDbValue($row['idproduct']);
         $this->jumlah->setDbValue($row['jumlah']);
         $this->bonus->setDbValue($row['bonus']);
         $this->sisa->setDbValue($row['sisa']);
         $this->harga->setDbValue($row['harga']);
         $this->total->setDbValue($row['total']);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
@@ -1549,13 +1548,13 @@ class OrderDetailGrid extends OrderDetail
         $row = [];
         $row['id'] = $this->id->CurrentValue;
         $row['idorder'] = $this->idorder->CurrentValue;
-        $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['idproduct'] = $this->idproduct->CurrentValue;
         $row['jumlah'] = $this->jumlah->CurrentValue;
         $row['bonus'] = $this->bonus->CurrentValue;
         $row['sisa'] = $this->sisa->CurrentValue;
         $row['harga'] = $this->harga->CurrentValue;
         $row['total'] = $this->total->CurrentValue;
+        $row['keterangan'] = $this->keterangan->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['created_by'] = $this->created_by->CurrentValue;
@@ -1599,8 +1598,6 @@ class OrderDetailGrid extends OrderDetail
 
         // idorder
 
-        // idbrand
-
         // idproduct
 
         // jumlah
@@ -1612,6 +1609,8 @@ class OrderDetailGrid extends OrderDetail
         // harga
 
         // total
+
+        // keterangan
 
         // aktif
 
@@ -1630,27 +1629,6 @@ class OrderDetailGrid extends OrderDetail
             $this->idorder->ViewValue = $this->idorder->CurrentValue;
             $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
-
-            // idbrand
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                    } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idbrand->ViewValue = null;
-            }
-            $this->idbrand->ViewCustomAttributes = "";
 
             // idproduct
             $curVal = trim(strval($this->idproduct->CurrentValue));
@@ -1702,6 +1680,10 @@ class OrderDetailGrid extends OrderDetail
             $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
             $this->total->ViewCustomAttributes = "";
 
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
+
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {
                 $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
@@ -1719,11 +1701,6 @@ class OrderDetailGrid extends OrderDetail
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
 
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
@@ -1754,32 +1731,12 @@ class OrderDetailGrid extends OrderDetail
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
             $this->total->TooltipValue = "";
-        } elseif ($this->RowType == ROWTYPE_ADD) {
-            // idbrand
-            $this->idbrand->EditAttrs["class"] = "form-control";
-            $this->idbrand->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-            } else {
-                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idbrand->ViewValue !== null) { // Load from cache
-                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idbrand->EditValue = $arwrk;
-            }
-            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_ADD) {
             // idproduct
             $this->idproduct->EditAttrs["class"] = "form-control";
             $this->idproduct->EditCustomAttributes = "";
@@ -1838,13 +1795,15 @@ class OrderDetailGrid extends OrderDetail
             $this->total->EditCustomAttributes = "readonly";
             $this->total->EditValue = HtmlEncode($this->total->CurrentValue);
             $this->total->PlaceHolder = RemoveHtml($this->total->caption());
+
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
             // Add refer script
 
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
             $this->idproduct->HrefValue = "";
@@ -1868,32 +1827,11 @@ class OrderDetailGrid extends OrderDetail
             // total
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
-        } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // idbrand
-            $this->idbrand->EditAttrs["class"] = "form-control";
-            $this->idbrand->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-            } else {
-                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idbrand->ViewValue !== null) { // Load from cache
-                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idbrand->EditValue = $arwrk;
-            }
-            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+        } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idproduct
             $this->idproduct->EditAttrs["class"] = "form-control";
             $this->idproduct->EditCustomAttributes = "";
@@ -1953,11 +1891,13 @@ class OrderDetailGrid extends OrderDetail
             $this->total->EditValue = HtmlEncode($this->total->CurrentValue);
             $this->total->PlaceHolder = RemoveHtml($this->total->caption());
 
-            // Edit refer script
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
+            // Edit refer script
 
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
@@ -1982,6 +1922,10 @@ class OrderDetailGrid extends OrderDetail
             // total
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2001,11 +1945,6 @@ class OrderDetailGrid extends OrderDetail
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->idbrand->Required) {
-            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
-                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
-            }
         }
         if ($this->idproduct->Required) {
             if (!$this->idproduct->IsDetailKey && EmptyValue($this->idproduct->FormValue)) {
@@ -2051,6 +1990,11 @@ class OrderDetailGrid extends OrderDetail
         }
         if (!CheckInteger($this->total->FormValue)) {
             $this->total->addErrorMessage($this->total->getErrorMessage(false));
+        }
+        if ($this->keterangan->Required) {
+            if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
+                $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -2161,9 +2105,6 @@ class OrderDetailGrid extends OrderDetail
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // idbrand
-            $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
-
             // idproduct
             $this->idproduct->setDbValueDef($rsnew, $this->idproduct->CurrentValue, 0, $this->idproduct->ReadOnly);
 
@@ -2181,6 +2122,28 @@ class OrderDetailGrid extends OrderDetail
 
             // total
             $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, $this->total->ReadOnly);
+
+            // keterangan
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
+
+            // Check referential integrity for master table 'order'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_order();
+            $keyValue = $rsnew['idorder'] ?? $rsold['idorder'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("order")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "order", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -2273,6 +2236,24 @@ class OrderDetailGrid extends OrderDetail
         if ($this->getCurrentMasterTable() == "order") {
             $this->idorder->CurrentValue = $this->idorder->getSessionValue();
         }
+
+        // Check referential integrity for master table 'order_detail'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_order();
+        if ($this->idorder->getSessionValue() != "") {
+        $masterFilter = str_replace("@id@", AdjustSql($this->idorder->getSessionValue(), "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("order")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "order", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
+        }
         $conn = $this->getConnection();
 
         // Load db values from rsold
@@ -2280,9 +2261,6 @@ class OrderDetailGrid extends OrderDetail
         if ($rsold) {
         }
         $rsnew = [];
-
-        // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
 
         // idproduct
         $this->idproduct->setDbValueDef($rsnew, $this->idproduct->CurrentValue, 0, false);
@@ -2301,6 +2279,9 @@ class OrderDetailGrid extends OrderDetail
 
         // total
         $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, false);
+
+        // keterangan
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // idorder
         if ($this->idorder->getSessionValue() != "") {
@@ -2390,8 +2371,6 @@ class OrderDetailGrid extends OrderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idbrand":
-                    break;
                 case "x_idproduct":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";

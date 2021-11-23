@@ -104,7 +104,7 @@ class VBonuscustomerDetail extends DbTable
         $this->Fields['idinvoice'] = &$this->idinvoice;
 
         // nama_customer
-        $this->nama_customer = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 100, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_customer = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 255, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nama_customer->Nullable = false; // NOT NULL field
         $this->nama_customer->Required = true; // Required field
         $this->nama_customer->Sortable = true; // Allow sort

@@ -89,24 +89,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-    <tr id="r_kodenpd">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_kodenpd"><?= $Page->kodenpd->caption() ?></span></td>
-        <td data-name="kodenpd" <?= $Page->kodenpd->cellAttributes() ?>>
-<span id="el_customer_kodenpd">
-<span<?= $Page->kodenpd->viewAttributes() ?>>
-<?= $Page->kodenpd->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->usaha->Visible) { // usaha ?>
-    <tr id="r_usaha">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_usaha"><?= $Page->usaha->caption() ?></span></td>
-        <td data-name="usaha" <?= $Page->usaha->cellAttributes() ?>>
-<span id="el_customer_usaha">
-<span<?= $Page->usaha->viewAttributes() ?>>
-<?= $Page->usaha->getViewValue() ?></span>
+<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
+    <tr id="r_jenis_usaha">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_jenis_usaha"><?= $Page->jenis_usaha->caption() ?></span></td>
+        <td data-name="jenis_usaha" <?= $Page->jenis_usaha->cellAttributes() ?>>
+<span id="el_customer_jenis_usaha">
+<span<?= $Page->jenis_usaha->viewAttributes() ?>>
+<?= $Page->jenis_usaha->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -118,30 +107,6 @@ $Page->showMessage();
 <span id="el_customer_jabatan">
 <span<?= $Page->jabatan->viewAttributes() ?>>
 <?= $Page->jabatan->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->ktp->Visible) { // ktp ?>
-    <tr id="r_ktp">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_ktp"><?= $Page->ktp->caption() ?></span></td>
-        <td data-name="ktp" <?= $Page->ktp->cellAttributes() ?>>
-<span id="el_customer_ktp">
-<span<?= $Page->ktp->viewAttributes() ?>>
-<?= GetFileViewTag($Page->ktp, $Page->ktp->getViewValue(), false) ?>
-</span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->npwp->Visible) { // npwp ?>
-    <tr id="r_npwp">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_npwp"><?= $Page->npwp->caption() ?></span></td>
-        <td data-name="npwp" <?= $Page->npwp->cellAttributes() ?>>
-<span id="el_customer_npwp">
-<span<?= $Page->npwp->viewAttributes() ?>>
-<?= GetFileViewTag($Page->npwp, $Page->npwp->getViewValue(), false) ?>
-</span>
 </span>
 </td>
     </tr>
@@ -268,13 +233,34 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->level_customer_id->Visible) { // level_customer_id ?>
-    <tr id="r_level_customer_id">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_level_customer_id"><?= $Page->level_customer_id->caption() ?></span></td>
-        <td data-name="level_customer_id" <?= $Page->level_customer_id->cellAttributes() ?>>
-<span id="el_customer_level_customer_id">
-<span<?= $Page->level_customer_id->viewAttributes() ?>>
-<?= $Page->level_customer_id->getViewValue() ?></span>
+<?php if ($Page->ktp->Visible) { // ktp ?>
+    <tr id="r_ktp">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_ktp"><?= $Page->ktp->caption() ?></span></td>
+        <td data-name="ktp" <?= $Page->ktp->cellAttributes() ?>>
+<span id="el_customer_ktp">
+<span<?= $Page->ktp->viewAttributes() ?>>
+<?php if (!EmptyString($Page->ktp->getViewValue()) && $Page->ktp->linkAttributes() != "") { ?>
+<a<?= $Page->ktp->linkAttributes() ?>><?= $Page->ktp->getViewValue() ?></a>
+<?php } else { ?>
+<?= $Page->ktp->getViewValue() ?>
+<?php } ?>
+</span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->npwp->Visible) { // npwp ?>
+    <tr id="r_npwp">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_npwp"><?= $Page->npwp->caption() ?></span></td>
+        <td data-name="npwp" <?= $Page->npwp->cellAttributes() ?>>
+<span id="el_customer_npwp">
+<span<?= $Page->npwp->viewAttributes() ?>>
+<?php if (!EmptyString($Page->npwp->getViewValue()) && $Page->npwp->linkAttributes() != "") { ?>
+<a<?= $Page->npwp->linkAttributes() ?>><?= $Page->npwp->getViewValue() ?></a>
+<?php } else { ?>
+<?= $Page->npwp->getViewValue() ?>
+<?php } ?>
+</span>
 </span>
 </td>
     </tr>
@@ -297,6 +283,28 @@ $Page->showMessage();
 <span id="el_customer_jatuh_tempo_invoice">
 <span<?= $Page->jatuh_tempo_invoice->viewAttributes() ?>>
 <?= $Page->jatuh_tempo_invoice->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
+    <tr id="r_kodenpd">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_kodenpd"><?= $Page->kodenpd->caption() ?></span></td>
+        <td data-name="kodenpd" <?= $Page->kodenpd->cellAttributes() ?>>
+<span id="el_customer_kodenpd">
+<span<?= $Page->kodenpd->viewAttributes() ?>>
+<?= $Page->kodenpd->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->klinik->Visible) { // klinik ?>
+    <tr id="r_klinik">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_customer_klinik"><?= $Page->klinik->caption() ?></span></td>
+        <td data-name="klinik" <?= $Page->klinik->cellAttributes() ?>>
+<span id="el_customer_klinik">
+<span<?= $Page->klinik->viewAttributes() ?>>
+<?= $Page->klinik->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -343,12 +351,12 @@ $Page->showMessage();
     }
 ?>
 <?php
-    if (in_array("brand", explode(",", $Page->getCurrentDetailTable())) && $brand->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand") {
-            $firstActiveDetailTable = "brand";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand") ?>" href="#tab_brand" data-toggle="tab"><?= $Language->tablePhrase("brand", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("brand")->Count, $Language->phrase("DetailCount")) ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")) ?></a></li>
 <?php
     }
 ?>
@@ -363,12 +371,12 @@ $Page->showMessage();
     }
 ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")) ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")) ?></a></li>
 <?php
     }
 ?>
@@ -385,13 +393,13 @@ $Page->showMessage();
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("brand", explode(",", $Page->getCurrentDetailTable())) && $brand->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand") {
-            $firstActiveDetailTable = "brand";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand") ?>" id="tab_brand"><!-- page* -->
-<?php include_once "BrandGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
+<?php include_once "InvoiceGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
 <?php
@@ -405,13 +413,13 @@ $Page->showMessage();
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
-<?php include_once "InvoiceGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
+<?php include_once "BrandCustomerGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

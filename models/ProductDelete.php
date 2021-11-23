@@ -397,7 +397,7 @@ class ProductDelete extends Product
         $this->ijinbpom->Visible = false;
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -593,7 +593,7 @@ class ProductDelete extends Product
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -623,7 +623,7 @@ class ProductDelete extends Product
         $row['ijinbpom'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -688,7 +688,7 @@ class ProductDelete extends Product
 
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -873,10 +873,10 @@ class ProductDelete extends Product
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -907,6 +907,11 @@ class ProductDelete extends Product
             $this->ukuran->LinkCustomAttributes = "";
             $this->ukuran->HrefValue = "";
             $this->ukuran->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         }
 
         // Call Row Rendered event

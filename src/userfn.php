@@ -525,16 +525,16 @@ function getNextKodeInvoice($idorder) {
     }
 }
 
-function getNextKodeOrder($titipmerk=0) {
+function getNextKodeOrder($idbrand=1) {
     date_default_timezone_set('Asia/Jakarta');
     $digit_length = 3;
     $cutoff = "14:00:00";
-    if ($titipmerk > 0) {
+    if ($idbrand > 1) {
         $format = "SP%URUTANTM-%DD%MM%YY/BSD";
-        $titipmerk = " AND kode LIKE '%TM%'";
+        $status = " AND kode LIKE '%TM%'";
     } else {
         $format = "SP%URUTAN-%DD%MM%YY/BSD";
-        $titipmerk = " AND kode NOT LIKE '%TM%'";
+        $status = " AND kode NOT LIKE '%TM%'";
     }
     if (date('H:i:s') > date('H:i:s', strtotime($cutoff))) {
         $lastkode = date('dmy', strtotime("+1 day"));
@@ -543,7 +543,7 @@ function getNextKodeOrder($titipmerk=0) {
         $lastkode = date('dmy');
     }
     $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `order` WHERE created_at = (SELECT MAX(created_at) FROM `order` WHERE 
-        kode LIKE '%{$lastkode}/BSD' {$titipmerk})");
+        kode LIKE '%{$lastkode}/BSD' {$status})");
 
     // KOND.1 DATA KOSONG
     // KOND.2 DATA TERAKHIR 2 HARI YG LALU, JAM SAAT INI 12:00 BUAT KODE DENGAN URUTAN BARU DI TANGGAL SAAT INI
@@ -558,30 +558,16 @@ function getNextKodeOrder($titipmerk=0) {
     if (!$maxKode['kode']) {
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
     };
-    // $start = date_create(date('Y-m-d H:i:s', strtotime($maxKode['last_post'])));
-    // $end = date_create(date('Y-m-d H:i:s', strtotime($cutoff)));
-    // print_r($end->getTimestamp() - $start->getTimestamp()); die;
-    // if (($end->getTimestamp() - $start->getTimestamp()) < 1) {
-    // // if (date('Y-m-d H:i:s', strtotime($maxKode['last_post'])) <= date('Y-m-d H:i:s', strtotime($cutoff))) {
-    //     // print_r('asdf'); die;
-    //     // JIKA TANGGAL/JAM DATA DARI DB KURANG DARI JAM 14:00 DAN
-    //     // JAM SAAT INI LEBIH DARI JAM 14:00 MAKA BUAT URUTAN BARU DENGAN TANGGAL KEESOKAN HARINYA
-    //     // $format = str_replace('%DD', date('d', strtotime('+1 day')), $format);
-    //     $format = date('H:i:s') > date('H:i:s', strtotime($cutoff)) ? str_replace('%DD', date('d', strtotime('+1 day')), $format) : $format;
-    //     $reformat = penomoran_date_replace($format);
-    //     return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
-    // }
     $string = explode("%URUTAN", $reformat);
     $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
     $trim_suffix = str_replace($string[1], '', $trim_prefix);
-    // print_r($trim_suffix); die;
     return $string[0].str_pad(intval($trim_suffix)+1, $digit_length, 0, STR_PAD_LEFT).$string[1];
 }
 
 function getNextKode($tipe, $id) {
     if ($tipe == null) { return; }
     $format = $column = $table = "";
-    $digit_length = 3; // default three digits
+    $digit_length = 4; // default three digits
    	if ($tipe == "pegawai") {
    		$table = "pegawai";
    		$column = "kode";
@@ -597,24 +583,22 @@ function getNextKode($tipe, $id) {
    		$table = "pembayaran";
    		$format = "PB/%YY%MM-%URUTAN";
    	}
-
-   	// ExecuteRow("SELECT MAX({$column}) as kode FROM ");
     if (strpos($format, "%MM") !== false || strpos($format, "%YY") !== false) {
         $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `{$table}` WHERE created_at = (SELECT MAX(created_at) FROM `{$table}`)");
     } else {
         $maxKode = ExecuteRow("SELECT MAX({$column}) as kode FROM `{$table}`");
     }
-    // print_r($maxKode); die;
    	if (!$maxKode['kode']) {
         $reformat = penomoran_date_replace($format);
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
    	}
     empty($maxKode['last_post']) ? $maxKode['last_post'] = date('Y-m-d') : $maxKode['last_post'];
-    if (date('Y-m-d', strtotime($maxKode['last_post'])) != date('Y-m-d')) {
-        $reformat = penomoran_date_replace($format);
+    $start = date_create(date('Y-m-d H:i:s', strtotime($maxKode['last_post'])));
+    $end = date_create(date('Y-m-d H:i:s'));
+    $reformat = penomoran_date_replace($format);
+    if (($end->getTimestamp() - $start->getTimestamp()) < 1) {
         return str_replace('%URUTAN', str_pad(1, $digit_length, 0, STR_PAD_LEFT), $reformat);
     }
-    $reformat = penomoran_date_replace($format);
     $string = explode("%URUTAN", $reformat);
     $trim_prefix = str_replace($string[0], '', $maxKode['kode']);
     $trim_suffix = str_replace($string[1], '', $trim_prefix);
@@ -923,22 +907,16 @@ $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$respons
     }
     ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
 };
-
-
 $API_ACTIONS['force-database'] = function(Request $request, Response &$response) {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
-
     $conn = mysqli_connect('localhost', 'root', '', 'tes');
-
     if (!$conn) {
         die('Connection failed: ' . $conn->connect_error);
     }
-
     $status = true;
     foreach ($data as $table => $contents) {
         $query = mysqli_query($conn, "INSERT INTO {$table} (".implode(',',array_keys($contents)).") VALUES ('".implode("','", array_values($contents))."')");
-
         if (!$query) $status = false;
     }
     WriteJson(['status' => $status]);

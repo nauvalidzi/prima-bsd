@@ -37,10 +37,4 @@ class BrandController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "BrandDelete");
     }
-
-    // preview
-    public function preview(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "BrandPreview", false);
-    }
 }

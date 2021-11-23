@@ -206,7 +206,6 @@ return function (App $app) {
     $app->any('/BrandView[/{id}]', BrandController::class . ':view')->add(PermissionMiddleware::class)->setName('BrandView-brand-view'); // view
     $app->any('/BrandEdit[/{id}]', BrandController::class . ':edit')->add(PermissionMiddleware::class)->setName('BrandEdit-brand-edit'); // edit
     $app->any('/BrandDelete[/{id}]', BrandController::class . ':delete')->add(PermissionMiddleware::class)->setName('BrandDelete-brand-delete'); // delete
-    $app->any('/BrandPreview', BrandController::class . ':preview')->add(PermissionMiddleware::class)->setName('BrandPreview-brand-preview'); // preview
     $app->group(
         '/brand',
         function (RouteCollectorProxy $group) {
@@ -215,7 +214,6 @@ return function (App $app) {
             $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', BrandController::class . ':view')->add(PermissionMiddleware::class)->setName('brand/view-brand-view-2'); // view
             $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', BrandController::class . ':edit')->add(PermissionMiddleware::class)->setName('brand/edit-brand-edit-2'); // edit
             $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', BrandController::class . ':delete')->add(PermissionMiddleware::class)->setName('brand/delete-brand-delete-2'); // delete
-            $group->any('/' . Config("PREVIEW_ACTION") . '', BrandController::class . ':preview')->add(PermissionMiddleware::class)->setName('brand/preview-brand-preview-2'); // preview
         }
     );
 
@@ -879,24 +877,6 @@ return function (App $app) {
     // laporansales
     $app->any('/Laporansales[/{params:.*}]', LaporansalesController::class)->add(PermissionMiddleware::class)->setName('Laporansales-laporansales-custom'); // custom
 
-    // brand_link
-    $app->any('/BrandLinkList', BrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('BrandLinkList-brand_link-list'); // list
-    $app->group(
-        '/brand_link',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', BrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('brand_link/list-brand_link-list-2'); // list
-        }
-    );
-
-    // v_brand_link
-    $app->any('/VBrandLinkList[/{id}]', VBrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('VBrandLinkList-v_brand_link-list'); // list
-    $app->group(
-        '/v_brand_link',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', VBrandLinkController::class . ':list')->add(PermissionMiddleware::class)->setName('v_brand_link/list-v_brand_link-list-2'); // list
-        }
-    );
-
     // v_order_customer
     $app->any('/VOrderCustomerList[/{idorder}/{idcustomer}]', VOrderCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('VOrderCustomerList-v_order_customer-list'); // list
     $app->group(
@@ -995,15 +975,6 @@ return function (App $app) {
         }
     );
 
-    // penomoran
-    $app->any('/PenomoranList[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('PenomoranList-penomoran-list'); // list
-    $app->group(
-        '/penomoran',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', PenomoranController::class . ':list')->add(PermissionMiddleware::class)->setName('penomoran/list-penomoran-list-2'); // list
-        }
-    );
-
     // d_jatuhtempo
     $app->any('/DJatuhtempoList[/{idpegawai}/{idcustomer}/{idinvoice}]', DJatuhtempoController::class . ':list')->add(PermissionMiddleware::class)->setName('DJatuhtempoList-d_jatuhtempo-list'); // list
     $app->group(
@@ -1064,6 +1035,28 @@ return function (App $app) {
 
     // penagihan_customer
     $app->any('/PenagihanCustomer[/{params:.*}]', PenagihanCustomerController::class)->add(PermissionMiddleware::class)->setName('PenagihanCustomer-penagihan_customer-custom'); // custom
+
+    // brand_customer
+    $app->any('/BrandCustomerList', BrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('BrandCustomerList-brand_customer-list'); // list
+    $app->any('/BrandCustomerAdd', BrandCustomerController::class . ':add')->add(PermissionMiddleware::class)->setName('BrandCustomerAdd-brand_customer-add'); // add
+    $app->any('/BrandCustomerPreview', BrandCustomerController::class . ':preview')->add(PermissionMiddleware::class)->setName('BrandCustomerPreview-brand_customer-preview'); // preview
+    $app->group(
+        '/brand_customer',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '', BrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('brand_customer/list-brand_customer-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '', BrandCustomerController::class . ':add')->add(PermissionMiddleware::class)->setName('brand_customer/add-brand_customer-add-2'); // add
+            $group->any('/' . Config("PREVIEW_ACTION") . '', BrandCustomerController::class . ':preview')->add(PermissionMiddleware::class)->setName('brand_customer/preview-brand_customer-preview-2'); // preview
+        }
+    );
+
+    // v_brand_customer
+    $app->any('/VBrandCustomerList[/{idbrand}/{idcustomer}]', VBrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('VBrandCustomerList-v_brand_customer-list'); // list
+    $app->group(
+        '/v_brand_customer',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{idbrand}/{idcustomer}]', VBrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('v_brand_customer/list-v_brand_customer-list-2'); // list
+        }
+    );
 
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');

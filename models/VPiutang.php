@@ -129,7 +129,7 @@ class VPiutang extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // kodecustomer
-        $this->kodecustomer = new DbField('v_piutang', 'v_piutang', 'x_kodecustomer', 'kodecustomer', '`kodecustomer`', '`kodecustomer`', 200, 20, -1, false, '`kodecustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodecustomer = new DbField('v_piutang', 'v_piutang', 'x_kodecustomer', 'kodecustomer', '`kodecustomer`', '`kodecustomer`', 200, 50, -1, false, '`kodecustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kodecustomer->Nullable = false; // NOT NULL field
         $this->kodecustomer->Required = true; // Required field
         $this->kodecustomer->Sortable = false; // Allow sort
@@ -137,7 +137,7 @@ class VPiutang extends DbTable
         $this->Fields['kodecustomer'] = &$this->kodecustomer;
 
         // namacustomer
-        $this->namacustomer = new DbField('v_piutang', 'v_piutang', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 100, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namacustomer = new DbField('v_piutang', 'v_piutang', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 255, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->namacustomer->Nullable = false; // NOT NULL field
         $this->namacustomer->Required = true; // Required field
         $this->namacustomer->Sortable = false; // Allow sort
@@ -145,7 +145,7 @@ class VPiutang extends DbTable
         $this->Fields['namacustomer'] = &$this->namacustomer;
 
         // customer
-        $this->customer = new DbField('v_piutang', 'v_piutang', 'x_customer', 'customer', '`customer`', '`customer`', 200, 122, -1, false, '`customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->customer = new DbField('v_piutang', 'v_piutang', 'x_customer', 'customer', '`customer`', '`customer`', 201, 307, -1, false, '`customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->customer->Sortable = true; // Allow sort
         $this->customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->customer->Param, "CustomMsg");
         $this->Fields['customer'] = &$this->customer;

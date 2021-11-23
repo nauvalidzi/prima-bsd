@@ -447,6 +447,7 @@ class BrandAdd extends Brand
     public $Priv = 0;
     public $OldRecordset;
     public $CopyRecord;
+    public $DetailPages; // Detail pages object
 
     /**
      * Page run
@@ -465,20 +466,24 @@ class BrandAdd extends Brand
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->idcustomer->setVisibility();
-        $this->title->setVisibility();
         $this->kode->setVisibility();
+        $this->title->setVisibility();
         $this->logo->setVisibility();
         $this->titipmerk->setVisibility();
         $this->ijinhaki->setVisibility();
         $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->setVisibility();
+        $this->kode_sip->setVisibility();
+        $this->aktif->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->setVisibility();
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
+
+        // Set up detail page object
+        $this->setupDetailPages();
 
         // Global Page Loading event (in userfn*.php)
         Page_Loading();
@@ -489,7 +494,6 @@ class BrandAdd extends Brand
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
 
         // Check modal
         if ($this->IsModal) {
@@ -523,10 +527,6 @@ class BrandAdd extends Brand
 
         // Load old record / default values
         $loaded = $this->loadOldRecord();
-
-        // Set up master/detail parameters
-        // NOTE: must be after loadOldRecord to prevent master key values overwritten
-        $this->setupMasterParms();
 
         // Load form values
         if ($postBack) {
@@ -647,12 +647,10 @@ class BrandAdd extends Brand
     {
         $this->id->CurrentValue = null;
         $this->id->OldValue = $this->id->CurrentValue;
-        $this->idcustomer->CurrentValue = null;
-        $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-        $this->title->CurrentValue = null;
-        $this->title->OldValue = $this->title->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
+        $this->title->CurrentValue = null;
+        $this->title->OldValue = $this->title->CurrentValue;
         $this->logo->Upload->DbValue = null;
         $this->logo->OldValue = $this->logo->Upload->DbValue;
         $this->logo->CurrentValue = null; // Clear file related field
@@ -662,9 +660,12 @@ class BrandAdd extends Brand
         $this->aktaperusahaan->Upload->DbValue = null;
         $this->aktaperusahaan->OldValue = $this->aktaperusahaan->Upload->DbValue;
         $this->aktaperusahaan->CurrentValue = null; // Clear file related field
+        $this->kode_sip->CurrentValue = null;
+        $this->kode_sip->OldValue = $this->kode_sip->CurrentValue;
+        $this->aktif->CurrentValue = 1;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
+        $this->updated_at->CurrentValue = CurrentDate();
     }
 
     // Load form values
@@ -673,13 +674,13 @@ class BrandAdd extends Brand
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
+        // Check field name 'kode' first before field var 'x_kode'
+        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
+        if (!$this->kode->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
+                $this->kode->Visible = false; // Disable update for API request
             } else {
-                $this->idcustomer->setFormValue($val);
+                $this->kode->setFormValue($val);
             }
         }
 
@@ -690,16 +691,6 @@ class BrandAdd extends Brand
                 $this->title->Visible = false; // Disable update for API request
             } else {
                 $this->title->setFormValue($val);
-            }
-        }
-
-        // Check field name 'kode' first before field var 'x_kode'
-        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
-        if (!$this->kode->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->kode->Visible = false; // Disable update for API request
-            } else {
-                $this->kode->setFormValue($val);
             }
         }
 
@@ -733,13 +724,13 @@ class BrandAdd extends Brand
             }
         }
 
-        // Check field name 'created_by' first before field var 'x_created_by'
-        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
-        if (!$this->created_by->IsDetailKey) {
+        // Check field name 'kode_sip' first before field var 'x_kode_sip'
+        $val = $CurrentForm->hasValue("kode_sip") ? $CurrentForm->getValue("kode_sip") : $CurrentForm->getValue("x_kode_sip");
+        if (!$this->kode_sip->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->created_by->Visible = false; // Disable update for API request
+                $this->kode_sip->Visible = false; // Disable update for API request
             } else {
-                $this->created_by->setFormValue($val);
+                $this->kode_sip->setFormValue($val);
             }
         }
 
@@ -752,13 +743,12 @@ class BrandAdd extends Brand
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->title->CurrentValue = $this->title->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
+        $this->title->CurrentValue = $this->title->FormValue;
         $this->titipmerk->CurrentValue = $this->titipmerk->FormValue;
         $this->ijinhaki->CurrentValue = $this->ijinhaki->FormValue;
         $this->ijinbpom->CurrentValue = $this->ijinbpom->FormValue;
-        $this->created_by->CurrentValue = $this->created_by->FormValue;
+        $this->kode_sip->CurrentValue = $this->kode_sip->FormValue;
     }
 
     /**
@@ -783,15 +773,6 @@ class BrandAdd extends Brand
         if ($row) {
             $res = true;
             $this->loadRowValues($row); // Load row values
-        }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("add");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
         }
         return $res;
     }
@@ -818,9 +799,8 @@ class BrandAdd extends Brand
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->title->setDbValue($row['title']);
         $this->kode->setDbValue($row['kode']);
+        $this->title->setDbValue($row['title']);
         $this->logo->Upload->DbValue = $row['logo'];
         $this->logo->setDbValue($this->logo->Upload->DbValue);
         $this->titipmerk->setDbValue($row['titipmerk']);
@@ -828,8 +808,10 @@ class BrandAdd extends Brand
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
         $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
+        $this->kode_sip->setDbValue($row['kode_sip']);
+        $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -838,16 +820,17 @@ class BrandAdd extends Brand
         $this->loadDefaultValues();
         $row = [];
         $row['id'] = $this->id->CurrentValue;
-        $row['idcustomer'] = $this->idcustomer->CurrentValue;
-        $row['title'] = $this->title->CurrentValue;
         $row['kode'] = $this->kode->CurrentValue;
+        $row['title'] = $this->title->CurrentValue;
         $row['logo'] = $this->logo->Upload->DbValue;
         $row['titipmerk'] = $this->titipmerk->CurrentValue;
         $row['ijinhaki'] = $this->ijinhaki->CurrentValue;
         $row['ijinbpom'] = $this->ijinbpom->CurrentValue;
         $row['aktaperusahaan'] = $this->aktaperusahaan->Upload->DbValue;
+        $row['kode_sip'] = $this->kode_sip->CurrentValue;
+        $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
+        $row['updated_at'] = $this->updated_at->CurrentValue;
         return $row;
     }
 
@@ -881,11 +864,9 @@ class BrandAdd extends Brand
 
         // id
 
-        // idcustomer
+        // kode
 
         // title
-
-        // kode
 
         // logo
 
@@ -897,42 +878,25 @@ class BrandAdd extends Brand
 
         // aktaperusahaan
 
+        // kode_sip
+
+        // aktif
+
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
+            // kode
+            $this->kode->ViewValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // title
             $this->title->ViewValue = $this->title->CurrentValue;
             $this->title->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
 
             // logo
             if (!EmptyValue($this->logo->Upload->DbValue)) {
@@ -976,30 +940,37 @@ class BrandAdd extends Brand
             }
             $this->aktaperusahaan->ViewCustomAttributes = "";
 
+            // kode_sip
+            $this->kode_sip->ViewValue = $this->kode_sip->CurrentValue;
+            $this->kode_sip->ViewCustomAttributes = "";
+
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // title
-            $this->title->LinkCustomAttributes = "";
-            $this->title->HrefValue = "";
-            $this->title->TooltipValue = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";
+
+            // title
+            $this->title->LinkCustomAttributes = "";
+            $this->title->HrefValue = "";
+            $this->title->TooltipValue = "";
 
             // logo
             $this->logo->LinkCustomAttributes = "";
@@ -1058,58 +1029,19 @@ class BrandAdd extends Brand
                 $this->aktaperusahaan->LinkAttrs->appendClass("ew-lightbox");
             }
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
+            $this->kode_sip->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
-            } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+            // kode
+            $this->kode->EditAttrs["class"] = "form-control";
+            $this->kode->EditCustomAttributes = "";
+            if (!$this->kode->Raw) {
+                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
             }
+            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
+            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
             // title
             $this->title->EditAttrs["class"] = "form-control";
@@ -1119,15 +1051,6 @@ class BrandAdd extends Brand
             }
             $this->title->EditValue = HtmlEncode($this->title->CurrentValue);
             $this->title->PlaceHolder = RemoveHtml($this->title->caption());
-
-            // kode
-            $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
             // logo
             $this->logo->EditAttrs["class"] = "form-control";
@@ -1176,24 +1099,24 @@ class BrandAdd extends Brand
                 RenderUploadField($this->aktaperusahaan);
             }
 
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
+            // kode_sip
+            $this->kode_sip->EditAttrs["class"] = "form-control";
+            $this->kode_sip->EditCustomAttributes = "";
+            if (!$this->kode_sip->Raw) {
+                $this->kode_sip->CurrentValue = HtmlDecode($this->kode_sip->CurrentValue);
+            }
+            $this->kode_sip->EditValue = HtmlEncode($this->kode_sip->CurrentValue);
+            $this->kode_sip->PlaceHolder = RemoveHtml($this->kode_sip->caption());
 
             // Add refer script
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-
-            // title
-            $this->title->LinkCustomAttributes = "";
-            $this->title->HrefValue = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
+
+            // title
+            $this->title->LinkCustomAttributes = "";
+            $this->title->HrefValue = "";
 
             // logo
             $this->logo->LinkCustomAttributes = "";
@@ -1233,9 +1156,9 @@ class BrandAdd extends Brand
             }
             $this->aktaperusahaan->ExportHrefValue = $this->aktaperusahaan->UploadPath . $this->aktaperusahaan->Upload->DbValue;
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1256,19 +1179,14 @@ class BrandAdd extends Brand
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+        if ($this->kode->Required) {
+            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
+                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
             }
         }
         if ($this->title->Required) {
             if (!$this->title->IsDetailKey && EmptyValue($this->title->FormValue)) {
                 $this->title->addErrorMessage(str_replace("%s", $this->title->caption(), $this->title->RequiredErrorMessage));
-            }
-        }
-        if ($this->kode->Required) {
-            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
-                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
             }
         }
         if ($this->logo->Required) {
@@ -1296,9 +1214,9 @@ class BrandAdd extends Brand
                 $this->aktaperusahaan->addErrorMessage(str_replace("%s", $this->aktaperusahaan->caption(), $this->aktaperusahaan->RequiredErrorMessage));
             }
         }
-        if ($this->created_by->Required) {
-            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
-                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
+        if ($this->kode_sip->Required) {
+            if (!$this->kode_sip->IsDetailKey && EmptyValue($this->kode_sip->FormValue)) {
+                $this->kode_sip->addErrorMessage(str_replace("%s", $this->kode_sip->caption(), $this->kode_sip->RequiredErrorMessage));
             }
         }
 
@@ -1306,6 +1224,10 @@ class BrandAdd extends Brand
         $detailTblVar = explode(",", $this->getCurrentDetailTable());
         $detailPage = Container("ProductGrid");
         if (in_array("product", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage->validateGridForm();
+        }
+        $detailPage = Container("BrandCustomerGrid");
+        if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
 
@@ -1325,18 +1247,6 @@ class BrandAdd extends Brand
     protected function addRow($rsold = null)
     {
         global $Language, $Security;
-
-        // Check if valid User ID
-        $validUser = false;
-        if ($Security->currentUserID() != "" && !EmptyValue($this->created_by->CurrentValue) && !$Security->isAdmin()) { // Non system admin
-            $validUser = $Security->isValidUserID($this->created_by->CurrentValue);
-            if (!$validUser) {
-                $userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
-                $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
-                $this->setFailureMessage($userIdMsg);
-                return false;
-            }
-        }
         $conn = $this->getConnection();
 
         // Begin transaction
@@ -1350,14 +1260,11 @@ class BrandAdd extends Brand
         }
         $rsnew = [];
 
-        // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, false);
+        // kode
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // title
         $this->title->setDbValueDef($rsnew, $this->title->CurrentValue, "", false);
-
-        // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // logo
         if ($this->logo->Visible && !$this->logo->Upload->KeepFile) {
@@ -1388,8 +1295,8 @@ class BrandAdd extends Brand
             }
         }
 
-        // created_by
-        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
+        // kode_sip
+        $this->kode_sip->setDbValueDef($rsnew, $this->kode_sip->CurrentValue, null, false);
         if ($this->logo->Visible && !$this->logo->Upload->KeepFile) {
             $oldFiles = EmptyValue($this->logo->Upload->DbValue) ? [] : [$this->logo->htmlDecode($this->logo->Upload->DbValue)];
             if (!EmptyValue($this->logo->Upload->FileName)) {
@@ -1571,6 +1478,16 @@ class BrandAdd extends Brand
                 $detailPage->idbrand->setSessionValue(""); // Clear master key if insert failed
                 }
             }
+            $detailPage = Container("BrandCustomerGrid");
+            if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
+                $detailPage->idbrand->setSessionValue($this->id->CurrentValue); // Set master key
+                $Security->loadCurrentUserLevel($this->ProjectID . "brand_customer"); // Load user level of detail table
+                $addRow = $detailPage->gridInsert();
+                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+                if (!$addRow) {
+                $detailPage->idbrand->setSessionValue(""); // Clear master key if insert failed
+                }
+            }
         }
 
         // Commit/Rollback transaction
@@ -1603,85 +1520,6 @@ class BrandAdd extends Brand
         return $addRow;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Get("fk_id", Get("idcustomer"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idcustomer->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Post("fk_id", Post("idcustomer"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idcustomer->setFormValue($masterTbl->id->FormValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "customer") {
-                if ($this->idcustomer->CurrentValue == "") {
-                    $this->idcustomer->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up detail parms based on QueryString
     protected function setupDetailParms()
     {
@@ -1712,6 +1550,25 @@ class BrandAdd extends Brand
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
                 }
             }
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
+                if ($detailPageObj->DetailAdd) {
+                    if ($this->CopyRecord) {
+                        $detailPageObj->CurrentMode = "copy";
+                    } else {
+                        $detailPageObj->CurrentMode = "add";
+                    }
+                    $detailPageObj->CurrentAction = "gridadd";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idbrand->IsDetailKey = true;
+                    $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
+                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
+                }
+            }
         }
     }
 
@@ -1724,6 +1581,15 @@ class BrandAdd extends Brand
         $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("BrandList"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
+    }
+
+    // Set up detail pages
+    protected function setupDetailPages()
+    {
+        $pages = new SubPages();
+        $pages->add('product');
+        $pages->add('brand_customer');
+        $this->DetailPages = $pages;
     }
 
     // Setup lookup options
@@ -1739,13 +1605,13 @@ class BrandAdd extends Brand
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
                 case "x_titipmerk":
                     break;
                 case "x_ijinhaki":
                     break;
                 case "x_ijinbpom":
+                    break;
+                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";

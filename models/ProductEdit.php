@@ -490,7 +490,7 @@ class ProductEdit extends Product
         $this->ijinbpom->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -956,7 +956,7 @@ class ProductEdit extends Product
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -986,7 +986,7 @@ class ProductEdit extends Product
         $row['ijinbpom'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -1064,7 +1064,7 @@ class ProductEdit extends Product
 
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1249,10 +1249,10 @@ class ProductEdit extends Product
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -1593,9 +1593,6 @@ class ProductEdit extends Product
             // tambahan
             $this->tambahan->EditAttrs["class"] = "form-control";
             $this->tambahan->EditCustomAttributes = "";
-            if (!$this->tambahan->Raw) {
-                $this->tambahan->CurrentValue = HtmlDecode($this->tambahan->CurrentValue);
-            }
             $this->tambahan->EditValue = HtmlEncode($this->tambahan->CurrentValue);
             $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
 
@@ -1891,6 +1888,25 @@ class ProductEdit extends Product
 
             // aktif
             $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, 0, $this->aktif->ReadOnly);
+
+            // Check referential integrity for master table 'brand'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_brand();
+            $keyValue = $rsnew['idbrand'] ?? $rsold['idbrand'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
             if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
                 $oldFiles = EmptyValue($this->foto->Upload->DbValue) ? [] : [$this->foto->htmlDecode($this->foto->Upload->DbValue)];
                 if (!EmptyValue($this->foto->Upload->FileName)) {

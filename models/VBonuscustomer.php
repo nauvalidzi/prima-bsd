@@ -128,7 +128,7 @@ class VBonuscustomer extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // kode_customer
-        $this->kode_customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_kode_customer', 'kode_customer', '`kode_customer`', '`kode_customer`', 200, 20, -1, false, '`kode_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_kode_customer', 'kode_customer', '`kode_customer`', '`kode_customer`', 200, 50, -1, false, '`kode_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kode_customer->Nullable = false; // NOT NULL field
         $this->kode_customer->Required = true; // Required field
         $this->kode_customer->Sortable = false; // Allow sort
@@ -136,7 +136,7 @@ class VBonuscustomer extends DbTable
         $this->Fields['kode_customer'] = &$this->kode_customer;
 
         // nama_customer
-        $this->nama_customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 100, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 255, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nama_customer->Nullable = false; // NOT NULL field
         $this->nama_customer->Required = true; // Required field
         $this->nama_customer->Sortable = false; // Allow sort
@@ -144,7 +144,7 @@ class VBonuscustomer extends DbTable
         $this->Fields['nama_customer'] = &$this->nama_customer;
 
         // customer
-        $this->customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_customer', 'customer', '`customer`', '`customer`', 200, 122, -1, false, '`customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->customer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_customer', 'customer', '`customer`', '`customer`', 201, 307, -1, false, '`customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->customer->Sortable = true; // Allow sort
         $this->customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->customer->Param, "CustomMsg");
         $this->Fields['customer'] = &$this->customer;

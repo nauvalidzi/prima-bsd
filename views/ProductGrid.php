@@ -27,7 +27,8 @@ loadjs.ready("head", function () {
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["kemasanbarang", [fields.kemasanbarang.visible && fields.kemasanbarang.required ? ew.Validators.required(fields.kemasanbarang.caption) : null], fields.kemasanbarang.isInvalid],
         ["harga", [fields.harga.visible && fields.harga.required ? ew.Validators.required(fields.harga.caption) : null, ew.Validators.integer], fields.harga.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid]
+        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
+        ["updated_at", [fields.updated_at.visible && fields.updated_at.required ? ew.Validators.required(fields.updated_at.caption) : null, ew.Validators.datetime(0)], fields.updated_at.isInvalid]
     ]);
 
     // Set invalid fields
@@ -93,6 +94,8 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "ukuran", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "updated_at", false))
+            return false;
         return true;
     }
 
@@ -148,6 +151,9 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->ukuran->Visible) { // ukuran ?>
         <th data-name="ukuran" class="<?= $Grid->ukuran->headerCellClass() ?>"><div id="elh_product_ukuran" class="product_ukuran"><?= $Grid->renderSort($Grid->ukuran) ?></div></th>
+<?php } ?>
+<?php if ($Grid->updated_at->Visible) { // updated_at ?>
+        <th data-name="updated_at" class="<?= $Grid->updated_at->headerCellClass() ?>"><div id="elh_product_updated_at" class="product_updated_at"><?= $Grid->renderSort($Grid->updated_at) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -482,6 +488,47 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->updated_at->Visible) { // updated_at ?>
+        <td data-name="updated_at" <?= $Grid->updated_at->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_product_updated_at" class="form-group">
+<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->updated_at->getErrorMessage() ?></div>
+<?php if (!$Grid->updated_at->ReadOnly && !$Grid->updated_at->Disabled && !isset($Grid->updated_at->EditAttrs["readonly"]) && !isset($Grid->updated_at->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fproductgrid", "datetimepicker"], function() {
+    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="product" data-field="x_updated_at" data-hidden="1" name="o<?= $Grid->RowIndex ?>_updated_at" id="o<?= $Grid->RowIndex ?>_updated_at" value="<?= HtmlEncode($Grid->updated_at->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_product_updated_at" class="form-group">
+<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->updated_at->getErrorMessage() ?></div>
+<?php if (!$Grid->updated_at->ReadOnly && !$Grid->updated_at->Disabled && !isset($Grid->updated_at->EditAttrs["readonly"]) && !isset($Grid->updated_at->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fproductgrid", "datetimepicker"], function() {
+    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_product_updated_at">
+<span<?= $Grid->updated_at->viewAttributes() ?>>
+<?= $Grid->updated_at->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="product" data-field="x_updated_at" data-hidden="1" name="fproductgrid$x<?= $Grid->RowIndex ?>_updated_at" id="fproductgrid$x<?= $Grid->RowIndex ?>_updated_at" value="<?= HtmlEncode($Grid->updated_at->FormValue) ?>">
+<input type="hidden" data-table="product" data-field="x_updated_at" data-hidden="1" name="fproductgrid$o<?= $Grid->RowIndex ?>_updated_at" id="fproductgrid$o<?= $Grid->RowIndex ?>_updated_at" value="<?= HtmlEncode($Grid->updated_at->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -657,6 +704,30 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
 </td>
     <?php } ?>
+    <?php if ($Grid->updated_at->Visible) { // updated_at ?>
+        <td data-name="updated_at">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_product_updated_at" class="form-group product_updated_at">
+<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->updated_at->getErrorMessage() ?></div>
+<?php if (!$Grid->updated_at->ReadOnly && !$Grid->updated_at->Disabled && !isset($Grid->updated_at->EditAttrs["readonly"]) && !isset($Grid->updated_at->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fproductgrid", "datetimepicker"], function() {
+    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_product_updated_at" class="form-group product_updated_at">
+<span<?= $Grid->updated_at->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->updated_at->getDisplayValue($Grid->updated_at->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="product" data-field="x_updated_at" data-hidden="1" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" value="<?= HtmlEncode($Grid->updated_at->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="product" data-field="x_updated_at" data-hidden="1" name="o<?= $Grid->RowIndex ?>_updated_at" id="o<?= $Grid->RowIndex ?>_updated_at" value="<?= HtmlEncode($Grid->updated_at->OldValue) ?>">
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowIndex);
@@ -715,7 +786,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $(".ew-detail-add-group").html("Add Produk");
 });
 </script>
 <?php } ?>

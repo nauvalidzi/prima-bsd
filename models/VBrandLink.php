@@ -77,7 +77,7 @@ class VBrandLink extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // title
-        $this->title = new DbField('v_brand_link', 'v_brand_link', 'x_title', 'title', '`title`', '`title`', 200, 100, -1, false, '`title`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->title = new DbField('v_brand_link', 'v_brand_link', 'x_title', 'title', '`title`', '`title`', 200, 255, -1, false, '`title`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->title->Nullable = false; // NOT NULL field
         $this->title->Required = true; // Required field
         $this->title->Sortable = true; // Allow sort

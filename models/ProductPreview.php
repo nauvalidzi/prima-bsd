@@ -413,7 +413,7 @@ class ProductPreview extends Product
         $this->ijinbpom->Visible = false;
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -528,7 +528,7 @@ class ProductPreview extends Product
             $this->ijinbpom->setSort("");
             $this->aktif->setSort("");
             $this->created_at->setSort("");
-            $this->created_by->setSort("");
+            $this->updated_at->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -546,6 +546,7 @@ class ProductPreview extends Product
             $this->updateSort($this->kemasanbarang); // kemasanbarang
             $this->updateSort($this->harga); // harga
             $this->updateSort($this->ukuran); // ukuran
+            $this->updateSort($this->updated_at); // updated_at
         }
     }
 

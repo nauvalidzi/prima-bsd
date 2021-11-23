@@ -244,6 +244,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+    <tr id="r_updated_at">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_product_updated_at"><?= $Page->updated_at->caption() ?></span></td>
+        <td data-name="updated_at" <?= $Page->updated_at->cellAttributes() ?>>
+<span id="el_product_updated_at">
+<span<?= $Page->updated_at->viewAttributes() ?>>
+<?= $Page->updated_at->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 </form>
 <?php

@@ -62,6 +62,9 @@ $Page->showMessage();
 <?php if ($Page->ukuran->Visible) { // ukuran ?>
         <th class="<?= $Page->ukuran->headerCellClass() ?>"><span id="elh_product_ukuran" class="product_ukuran"><?= $Page->ukuran->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <th class="<?= $Page->updated_at->headerCellClass() ?>"><span id="elh_product_updated_at" class="product_updated_at"><?= $Page->updated_at->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -128,6 +131,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_product_ukuran" class="product_ukuran">
 <span<?= $Page->ukuran->viewAttributes() ?>>
 <?= $Page->ukuran->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <td <?= $Page->updated_at->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_product_updated_at" class="product_updated_at">
+<span<?= $Page->updated_at->viewAttributes() ?>>
+<?= $Page->updated_at->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

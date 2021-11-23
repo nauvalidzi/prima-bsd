@@ -510,11 +510,8 @@ class CustomerGrid extends Customer
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
         $this->nama->setVisibility();
-        $this->kodenpd->setVisibility();
-        $this->usaha->Visible = false;
+        $this->jenis_usaha->setVisibility();
         $this->jabatan->Visible = false;
-        $this->ktp->Visible = false;
-        $this->npwp->Visible = false;
         $this->idprov->Visible = false;
         $this->idkab->Visible = false;
         $this->idkec->Visible = false;
@@ -526,14 +523,16 @@ class CustomerGrid extends Customer
         $this->_email->Visible = false;
         $this->website->Visible = false;
         $this->foto->Visible = false;
-        $this->level_customer_id->Visible = false;
+        $this->ktp->Visible = false;
+        $this->npwp->Visible = false;
         $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
+        $this->kodenpd->setVisibility();
+        $this->klinik->setVisibility();
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -557,7 +556,6 @@ class CustomerGrid extends Customer
         $this->setupLookupOptions($this->idkab);
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
-        $this->setupLookupOptions($this->level_customer_id);
         $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
         // Search filters
@@ -983,10 +981,16 @@ class CustomerGrid extends Customer
         if ($CurrentForm->hasValue("x_nama") && $CurrentForm->hasValue("o_nama") && $this->nama->CurrentValue != $this->nama->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_kodenpd") && $CurrentForm->hasValue("o_kodenpd") && $this->kodenpd->CurrentValue != $this->kodenpd->OldValue) {
+        if ($CurrentForm->hasValue("x_jenis_usaha") && $CurrentForm->hasValue("o_jenis_usaha") && $this->jenis_usaha->CurrentValue != $this->jenis_usaha->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_hp") && $CurrentForm->hasValue("o_hp") && $this->hp->CurrentValue != $this->hp->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_kodenpd") && $CurrentForm->hasValue("o_kodenpd") && $this->kodenpd->CurrentValue != $this->kodenpd->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_klinik") && $CurrentForm->hasValue("o_klinik") && $this->klinik->CurrentValue != $this->klinik->OldValue) {
             return false;
         }
         return true;
@@ -1074,8 +1078,10 @@ class CustomerGrid extends Customer
         $this->idtipecustomer->clearErrorMessage();
         $this->idpegawai->clearErrorMessage();
         $this->nama->clearErrorMessage();
-        $this->kodenpd->clearErrorMessage();
+        $this->jenis_usaha->clearErrorMessage();
         $this->hp->clearErrorMessage();
+        $this->kodenpd->clearErrorMessage();
+        $this->klinik->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1370,29 +1376,29 @@ class CustomerGrid extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_brand"
-        if ($this->DetailPages && $this->DetailPages["brand"] && $this->DetailPages["brand"]->Visible) {
+        // Column "detail_invoice"
+        if ($this->DetailPages && $this->DetailPages["invoice"] && $this->DetailPages["invoice"]->Visible) {
             $link = "";
-            $option = $this->ListOptions["detail_brand"];
-            $url = "BrandPreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"brand\" data-url=\"" . $url . "\">";
+            $option = $this->ListOptions["detail_invoice"];
+            $url = "InvoicePreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"invoice\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("brand", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $label = $Language->TablePhrase("invoice", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"invoice\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
-                $detaillnk = JsEncodeAttribute("BrandList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+                $detaillnk = JsEncodeAttribute("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("invoice", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
-            $detailPageObj = Container("BrandGrid");
+            $detailPageObj = Container("InvoiceGrid");
             if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -1436,29 +1442,29 @@ class CustomerGrid extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_invoice"
-        if ($this->DetailPages && $this->DetailPages["invoice"] && $this->DetailPages["invoice"]->Visible) {
+        // Column "detail_brand_customer"
+        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
             $link = "";
-            $option = $this->ListOptions["detail_invoice"];
-            $url = "InvoicePreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"invoice\" data-url=\"" . $url . "\">";
+            $option = $this->ListOptions["detail_brand_customer"];
+            $url = "BrandCustomerPreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("invoice", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"invoice\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $label = $Language->TablePhrase("brand_customer", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
-                $detaillnk = JsEncodeAttribute("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("invoice", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
-            $detailPageObj = Container("InvoiceGrid");
+            $detailPageObj = Container("BrandCustomerGrid");
             if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -1522,18 +1528,10 @@ class CustomerGrid extends Customer
         $this->idpegawai->OldValue = $this->idpegawai->CurrentValue;
         $this->nama->CurrentValue = null;
         $this->nama->OldValue = $this->nama->CurrentValue;
-        $this->kodenpd->CurrentValue = null;
-        $this->kodenpd->OldValue = $this->kodenpd->CurrentValue;
-        $this->usaha->CurrentValue = null;
-        $this->usaha->OldValue = $this->usaha->CurrentValue;
+        $this->jenis_usaha->CurrentValue = null;
+        $this->jenis_usaha->OldValue = $this->jenis_usaha->CurrentValue;
         $this->jabatan->CurrentValue = null;
         $this->jabatan->OldValue = $this->jabatan->CurrentValue;
-        $this->ktp->Upload->DbValue = null;
-        $this->ktp->OldValue = $this->ktp->Upload->DbValue;
-        $this->ktp->Upload->Index = $this->RowIndex;
-        $this->npwp->Upload->DbValue = null;
-        $this->npwp->OldValue = $this->npwp->Upload->DbValue;
-        $this->npwp->Upload->Index = $this->RowIndex;
         $this->idprov->CurrentValue = null;
         $this->idprov->OldValue = $this->idprov->CurrentValue;
         $this->idkab->CurrentValue = null;
@@ -1557,22 +1555,26 @@ class CustomerGrid extends Customer
         $this->foto->Upload->DbValue = null;
         $this->foto->OldValue = $this->foto->Upload->DbValue;
         $this->foto->Upload->Index = $this->RowIndex;
-        $this->level_customer_id->CurrentValue = null;
-        $this->level_customer_id->OldValue = $this->level_customer_id->CurrentValue;
+        $this->ktp->CurrentValue = null;
+        $this->ktp->OldValue = $this->ktp->CurrentValue;
+        $this->npwp->CurrentValue = null;
+        $this->npwp->OldValue = $this->npwp->CurrentValue;
         $this->limit_kredit_order->CurrentValue = null;
         $this->limit_kredit_order->OldValue = $this->limit_kredit_order->CurrentValue;
         $this->jatuh_tempo_invoice->CurrentValue = null;
         $this->jatuh_tempo_invoice->OldValue = $this->jatuh_tempo_invoice->CurrentValue;
+        $this->kodenpd->CurrentValue = null;
+        $this->kodenpd->OldValue = $this->kodenpd->CurrentValue;
+        $this->klinik->CurrentValue = null;
+        $this->klinik->OldValue = $this->klinik->CurrentValue;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
-        $this->aktif->CurrentValue = 1;
+        $this->aktif->CurrentValue = null;
         $this->aktif->OldValue = $this->aktif->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->updated_at->CurrentValue = CurrentDate();
         $this->updated_at->OldValue = $this->updated_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
-        $this->created_by->OldValue = $this->created_by->CurrentValue;
     }
 
     // Load form values
@@ -1634,17 +1636,17 @@ class CustomerGrid extends Customer
             $this->nama->setOldValue($CurrentForm->getValue("o_nama"));
         }
 
-        // Check field name 'kodenpd' first before field var 'x_kodenpd'
-        $val = $CurrentForm->hasValue("kodenpd") ? $CurrentForm->getValue("kodenpd") : $CurrentForm->getValue("x_kodenpd");
-        if (!$this->kodenpd->IsDetailKey) {
+        // Check field name 'jenis_usaha' first before field var 'x_jenis_usaha'
+        $val = $CurrentForm->hasValue("jenis_usaha") ? $CurrentForm->getValue("jenis_usaha") : $CurrentForm->getValue("x_jenis_usaha");
+        if (!$this->jenis_usaha->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->kodenpd->Visible = false; // Disable update for API request
+                $this->jenis_usaha->Visible = false; // Disable update for API request
             } else {
-                $this->kodenpd->setFormValue($val);
+                $this->jenis_usaha->setFormValue($val);
             }
         }
-        if ($CurrentForm->hasValue("o_kodenpd")) {
-            $this->kodenpd->setOldValue($CurrentForm->getValue("o_kodenpd"));
+        if ($CurrentForm->hasValue("o_jenis_usaha")) {
+            $this->jenis_usaha->setOldValue($CurrentForm->getValue("o_jenis_usaha"));
         }
 
         // Check field name 'hp' first before field var 'x_hp'
@@ -1658,6 +1660,32 @@ class CustomerGrid extends Customer
         }
         if ($CurrentForm->hasValue("o_hp")) {
             $this->hp->setOldValue($CurrentForm->getValue("o_hp"));
+        }
+
+        // Check field name 'kodenpd' first before field var 'x_kodenpd'
+        $val = $CurrentForm->hasValue("kodenpd") ? $CurrentForm->getValue("kodenpd") : $CurrentForm->getValue("x_kodenpd");
+        if (!$this->kodenpd->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kodenpd->Visible = false; // Disable update for API request
+            } else {
+                $this->kodenpd->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_kodenpd")) {
+            $this->kodenpd->setOldValue($CurrentForm->getValue("o_kodenpd"));
+        }
+
+        // Check field name 'klinik' first before field var 'x_klinik'
+        $val = $CurrentForm->hasValue("klinik") ? $CurrentForm->getValue("klinik") : $CurrentForm->getValue("x_klinik");
+        if (!$this->klinik->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->klinik->Visible = false; // Disable update for API request
+            } else {
+                $this->klinik->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_klinik")) {
+            $this->klinik->setOldValue($CurrentForm->getValue("o_klinik"));
         }
 
         // Check field name 'id' first before field var 'x_id'
@@ -1678,8 +1706,10 @@ class CustomerGrid extends Customer
         $this->idtipecustomer->CurrentValue = $this->idtipecustomer->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
-        $this->kodenpd->CurrentValue = $this->kodenpd->FormValue;
+        $this->jenis_usaha->CurrentValue = $this->jenis_usaha->FormValue;
         $this->hp->CurrentValue = $this->hp->FormValue;
+        $this->kodenpd->CurrentValue = $this->kodenpd->FormValue;
+        $this->klinik->CurrentValue = $this->klinik->FormValue;
     }
 
     // Load recordset
@@ -1755,19 +1785,8 @@ class CustomerGrid extends Customer
         $this->idtipecustomer->setDbValue($row['idtipecustomer']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->nama->setDbValue($row['nama']);
-        $this->kodenpd->setDbValue($row['kodenpd']);
-        $this->usaha->setDbValue($row['usaha']);
+        $this->jenis_usaha->setDbValue($row['jenis_usaha']);
         $this->jabatan->setDbValue($row['jabatan']);
-        $this->ktp->Upload->DbValue = $row['ktp'];
-        if (is_resource($this->ktp->Upload->DbValue) && get_resource_type($this->ktp->Upload->DbValue) == "stream") { // Byte array
-            $this->ktp->Upload->DbValue = stream_get_contents($this->ktp->Upload->DbValue);
-        }
-        $this->ktp->Upload->Index = $this->RowIndex;
-        $this->npwp->Upload->DbValue = $row['npwp'];
-        if (is_resource($this->npwp->Upload->DbValue) && get_resource_type($this->npwp->Upload->DbValue) == "stream") { // Byte array
-            $this->npwp->Upload->DbValue = stream_get_contents($this->npwp->Upload->DbValue);
-        }
-        $this->npwp->Upload->Index = $this->RowIndex;
         $this->idprov->setDbValue($row['idprov']);
         $this->idkab->setDbValue($row['idkab']);
         $this->idkec->setDbValue($row['idkec']);
@@ -1781,14 +1800,16 @@ class CustomerGrid extends Customer
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
         $this->foto->Upload->Index = $this->RowIndex;
-        $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->ktp->setDbValue($row['ktp']);
+        $this->npwp->setDbValue($row['npwp']);
         $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
+        $this->kodenpd->setDbValue($row['kodenpd']);
+        $this->klinik->setDbValue($row['klinik']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
-        $this->created_by->setDbValue($row['created_by']);
     }
 
     // Return a row with default values
@@ -1801,11 +1822,8 @@ class CustomerGrid extends Customer
         $row['idtipecustomer'] = $this->idtipecustomer->CurrentValue;
         $row['idpegawai'] = $this->idpegawai->CurrentValue;
         $row['nama'] = $this->nama->CurrentValue;
-        $row['kodenpd'] = $this->kodenpd->CurrentValue;
-        $row['usaha'] = $this->usaha->CurrentValue;
+        $row['jenis_usaha'] = $this->jenis_usaha->CurrentValue;
         $row['jabatan'] = $this->jabatan->CurrentValue;
-        $row['ktp'] = $this->ktp->Upload->DbValue;
-        $row['npwp'] = $this->npwp->Upload->DbValue;
         $row['idprov'] = $this->idprov->CurrentValue;
         $row['idkab'] = $this->idkab->CurrentValue;
         $row['idkec'] = $this->idkec->CurrentValue;
@@ -1817,14 +1835,16 @@ class CustomerGrid extends Customer
         $row['email'] = $this->_email->CurrentValue;
         $row['website'] = $this->website->CurrentValue;
         $row['foto'] = $this->foto->Upload->DbValue;
-        $row['level_customer_id'] = $this->level_customer_id->CurrentValue;
+        $row['ktp'] = $this->ktp->CurrentValue;
+        $row['npwp'] = $this->npwp->CurrentValue;
         $row['limit_kredit_order'] = $this->limit_kredit_order->CurrentValue;
         $row['jatuh_tempo_invoice'] = $this->jatuh_tempo_invoice->CurrentValue;
+        $row['kodenpd'] = $this->kodenpd->CurrentValue;
+        $row['klinik'] = $this->klinik->CurrentValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['updated_at'] = $this->updated_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
         return $row;
     }
 
@@ -1870,15 +1890,9 @@ class CustomerGrid extends Customer
 
         // nama
 
-        // kodenpd
-
-        // usaha
+        // jenis_usaha
 
         // jabatan
-
-        // ktp
-
-        // npwp
 
         // idprov
 
@@ -1902,12 +1916,17 @@ class CustomerGrid extends Customer
 
         // foto
 
-        // level_customer_id
-        $this->level_customer_id->CellCssStyle = "white-space: nowrap;";
+        // ktp
+
+        // npwp
 
         // limit_kredit_order
 
         // jatuh_tempo_invoice
+
+        // kodenpd
+
+        // klinik
 
         // keterangan
 
@@ -1916,8 +1935,6 @@ class CustomerGrid extends Customer
         // created_at
 
         // updated_at
-
-        // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1973,39 +1990,16 @@ class CustomerGrid extends Customer
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
-            // kodenpd
-            $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
-            $this->kodenpd->ViewCustomAttributes = "";
-
-            // usaha
-            $this->usaha->ViewValue = $this->usaha->CurrentValue;
-            $this->usaha->ViewCustomAttributes = "";
+            // jenis_usaha
+            $this->jenis_usaha->ViewValue = $this->jenis_usaha->CurrentValue;
+            $this->jenis_usaha->ViewCustomAttributes = "";
 
             // jabatan
             $this->jabatan->ViewValue = $this->jabatan->CurrentValue;
             $this->jabatan->ViewCustomAttributes = "";
 
-            // ktp
-            if (!EmptyValue($this->ktp->Upload->DbValue)) {
-                $this->ktp->ViewValue = $this->id->CurrentValue;
-                $this->ktp->IsBlobImage = IsImageFile(ContentExtension($this->ktp->Upload->DbValue));
-                $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-            } else {
-                $this->ktp->ViewValue = "";
-            }
-            $this->ktp->ViewCustomAttributes = "";
-
-            // npwp
-            if (!EmptyValue($this->npwp->Upload->DbValue)) {
-                $this->npwp->ViewValue = $this->id->CurrentValue;
-                $this->npwp->IsBlobImage = IsImageFile(ContentExtension($this->npwp->Upload->DbValue));
-                $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-            } else {
-                $this->npwp->ViewValue = "";
-            }
-            $this->npwp->ViewCustomAttributes = "";
-
             // idprov
+            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -2027,6 +2021,7 @@ class CustomerGrid extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
+            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -2048,6 +2043,7 @@ class CustomerGrid extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
+            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -2069,6 +2065,7 @@ class CustomerGrid extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
+            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -2122,6 +2119,14 @@ class CustomerGrid extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
+            // ktp
+            $this->ktp->ViewValue = $this->ktp->CurrentValue;
+            $this->ktp->ViewCustomAttributes = "";
+
+            // npwp
+            $this->npwp->ViewValue = $this->npwp->CurrentValue;
+            $this->npwp->ViewCustomAttributes = "";
+
             // limit_kredit_order
             $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
             $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
@@ -2148,6 +2153,14 @@ class CustomerGrid extends Customer
             }
             $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
+            // kodenpd
+            $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
+            $this->kodenpd->ViewCustomAttributes = "";
+
+            // klinik
+            $this->klinik->ViewValue = $this->klinik->CurrentValue;
+            $this->klinik->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -2170,11 +2183,6 @@ class CustomerGrid extends Customer
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -2195,15 +2203,25 @@ class CustomerGrid extends Customer
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
 
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
-            $this->kodenpd->TooltipValue = "";
+            // jenis_usaha
+            $this->jenis_usaha->LinkCustomAttributes = "";
+            $this->jenis_usaha->HrefValue = "";
+            $this->jenis_usaha->TooltipValue = "";
 
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
+
+            // kodenpd
+            $this->kodenpd->LinkCustomAttributes = "";
+            $this->kodenpd->HrefValue = "";
+            $this->kodenpd->TooltipValue = "";
+
+            // klinik
+            $this->klinik->LinkCustomAttributes = "";
+            $this->klinik->HrefValue = "";
+            $this->klinik->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -2297,14 +2315,14 @@ class CustomerGrid extends Customer
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
-            // kodenpd
-            $this->kodenpd->EditAttrs["class"] = "form-control";
-            $this->kodenpd->EditCustomAttributes = "";
-            if (!$this->kodenpd->Raw) {
-                $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
+            // jenis_usaha
+            $this->jenis_usaha->EditAttrs["class"] = "form-control";
+            $this->jenis_usaha->EditCustomAttributes = "";
+            if (!$this->jenis_usaha->Raw) {
+                $this->jenis_usaha->CurrentValue = HtmlDecode($this->jenis_usaha->CurrentValue);
             }
-            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->CurrentValue);
-            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
+            $this->jenis_usaha->EditValue = HtmlEncode($this->jenis_usaha->CurrentValue);
+            $this->jenis_usaha->PlaceHolder = RemoveHtml($this->jenis_usaha->caption());
 
             // hp
             $this->hp->EditAttrs["class"] = "form-control";
@@ -2314,6 +2332,24 @@ class CustomerGrid extends Customer
             }
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
+
+            // kodenpd
+            $this->kodenpd->EditAttrs["class"] = "form-control";
+            $this->kodenpd->EditCustomAttributes = "";
+            if (!$this->kodenpd->Raw) {
+                $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
+            }
+            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->CurrentValue);
+            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
+
+            // klinik
+            $this->klinik->EditAttrs["class"] = "form-control";
+            $this->klinik->EditCustomAttributes = "";
+            if (!$this->klinik->Raw) {
+                $this->klinik->CurrentValue = HtmlDecode($this->klinik->CurrentValue);
+            }
+            $this->klinik->EditValue = HtmlEncode($this->klinik->CurrentValue);
+            $this->klinik->PlaceHolder = RemoveHtml($this->klinik->caption());
 
             // Add refer script
 
@@ -2333,13 +2369,21 @@ class CustomerGrid extends Customer
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
 
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
+            // jenis_usaha
+            $this->jenis_usaha->LinkCustomAttributes = "";
+            $this->jenis_usaha->HrefValue = "";
 
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
+
+            // kodenpd
+            $this->kodenpd->LinkCustomAttributes = "";
+            $this->kodenpd->HrefValue = "";
+
+            // klinik
+            $this->klinik->LinkCustomAttributes = "";
+            $this->klinik->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -2430,14 +2474,14 @@ class CustomerGrid extends Customer
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
-            // kodenpd
-            $this->kodenpd->EditAttrs["class"] = "form-control";
-            $this->kodenpd->EditCustomAttributes = "";
-            if (!$this->kodenpd->Raw) {
-                $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
+            // jenis_usaha
+            $this->jenis_usaha->EditAttrs["class"] = "form-control";
+            $this->jenis_usaha->EditCustomAttributes = "";
+            if (!$this->jenis_usaha->Raw) {
+                $this->jenis_usaha->CurrentValue = HtmlDecode($this->jenis_usaha->CurrentValue);
             }
-            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->CurrentValue);
-            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
+            $this->jenis_usaha->EditValue = HtmlEncode($this->jenis_usaha->CurrentValue);
+            $this->jenis_usaha->PlaceHolder = RemoveHtml($this->jenis_usaha->caption());
 
             // hp
             $this->hp->EditAttrs["class"] = "form-control";
@@ -2447,6 +2491,24 @@ class CustomerGrid extends Customer
             }
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
+
+            // kodenpd
+            $this->kodenpd->EditAttrs["class"] = "form-control";
+            $this->kodenpd->EditCustomAttributes = "";
+            if (!$this->kodenpd->Raw) {
+                $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
+            }
+            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->CurrentValue);
+            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
+
+            // klinik
+            $this->klinik->EditAttrs["class"] = "form-control";
+            $this->klinik->EditCustomAttributes = "";
+            if (!$this->klinik->Raw) {
+                $this->klinik->CurrentValue = HtmlDecode($this->klinik->CurrentValue);
+            }
+            $this->klinik->EditValue = HtmlEncode($this->klinik->CurrentValue);
+            $this->klinik->PlaceHolder = RemoveHtml($this->klinik->caption());
 
             // Edit refer script
 
@@ -2467,13 +2529,21 @@ class CustomerGrid extends Customer
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
 
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
+            // jenis_usaha
+            $this->jenis_usaha->LinkCustomAttributes = "";
+            $this->jenis_usaha->HrefValue = "";
 
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
+
+            // kodenpd
+            $this->kodenpd->LinkCustomAttributes = "";
+            $this->kodenpd->HrefValue = "";
+
+            // klinik
+            $this->klinik->LinkCustomAttributes = "";
+            $this->klinik->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2514,9 +2584,9 @@ class CustomerGrid extends Customer
                 $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
             }
         }
-        if ($this->kodenpd->Required) {
-            if (!$this->kodenpd->IsDetailKey && EmptyValue($this->kodenpd->FormValue)) {
-                $this->kodenpd->addErrorMessage(str_replace("%s", $this->kodenpd->caption(), $this->kodenpd->RequiredErrorMessage));
+        if ($this->jenis_usaha->Required) {
+            if (!$this->jenis_usaha->IsDetailKey && EmptyValue($this->jenis_usaha->FormValue)) {
+                $this->jenis_usaha->addErrorMessage(str_replace("%s", $this->jenis_usaha->caption(), $this->jenis_usaha->RequiredErrorMessage));
             }
         }
         if ($this->hp->Required) {
@@ -2526,6 +2596,16 @@ class CustomerGrid extends Customer
         }
         if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
+        }
+        if ($this->kodenpd->Required) {
+            if (!$this->kodenpd->IsDetailKey && EmptyValue($this->kodenpd->FormValue)) {
+                $this->kodenpd->addErrorMessage(str_replace("%s", $this->kodenpd->caption(), $this->kodenpd->RequiredErrorMessage));
+            }
+        }
+        if ($this->klinik->Required) {
+            if (!$this->klinik->IsDetailKey && EmptyValue($this->klinik->FormValue)) {
+                $this->klinik->addErrorMessage(str_replace("%s", $this->klinik->caption(), $this->klinik->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -2682,11 +2762,17 @@ class CustomerGrid extends Customer
             // nama
             $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);
 
-            // kodenpd
-            $this->kodenpd->setDbValueDef($rsnew, $this->kodenpd->CurrentValue, null, $this->kodenpd->ReadOnly);
+            // jenis_usaha
+            $this->jenis_usaha->setDbValueDef($rsnew, $this->jenis_usaha->CurrentValue, null, $this->jenis_usaha->ReadOnly);
 
             // hp
             $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", $this->hp->ReadOnly);
+
+            // kodenpd
+            $this->kodenpd->setDbValueDef($rsnew, $this->kodenpd->CurrentValue, null, $this->kodenpd->ReadOnly);
+
+            // klinik
+            $this->klinik->setDbValueDef($rsnew, $this->klinik->CurrentValue, null, $this->klinik->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -2807,11 +2893,17 @@ class CustomerGrid extends Customer
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
 
-        // kodenpd
-        $this->kodenpd->setDbValueDef($rsnew, $this->kodenpd->CurrentValue, null, false);
+        // jenis_usaha
+        $this->jenis_usaha->setDbValueDef($rsnew, $this->jenis_usaha->CurrentValue, null, false);
 
         // hp
         $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", false);
+
+        // kodenpd
+        $this->kodenpd->setDbValueDef($rsnew, $this->kodenpd->CurrentValue, null, false);
+
+        // klinik
+        $this->klinik->setDbValueDef($rsnew, $this->klinik->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -2892,8 +2984,6 @@ class CustomerGrid extends Customer
                 case "x_idkec":
                     break;
                 case "x_idkel":
-                    break;
-                case "x_level_customer_id":
                     break;
                 case "x_jatuh_tempo_invoice":
                     break;

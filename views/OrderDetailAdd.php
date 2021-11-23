@@ -20,13 +20,13 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.order_detail)
         ew.vars.tables.order_detail = currentTable;
     forder_detailadd.addFields([
-        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
         ["idproduct", [fields.idproduct.visible && fields.idproduct.required ? ew.Validators.required(fields.idproduct.caption) : null], fields.idproduct.isInvalid],
         ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
         ["bonus", [fields.bonus.visible && fields.bonus.required ? ew.Validators.required(fields.bonus.caption) : null, ew.Validators.integer], fields.bonus.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
         ["harga", [fields.harga.visible && fields.harga.required ? ew.Validators.required(fields.harga.caption) : null, ew.Validators.integer], fields.harga.isInvalid],
         ["total", [fields.total.visible && fields.total.required ? ew.Validators.required(fields.total.caption) : null, ew.Validators.integer], fields.total.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
     ]);
 
@@ -94,7 +94,6 @@ loadjs.ready("head", function () {
     forder_detailadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    forder_detailadd.lists.idbrand = <?= $Page->idbrand->toClientList($Page) ?>;
     forder_detailadd.lists.idproduct = <?= $Page->idproduct->toClientList($Page) ?>;
     loadjs.done("forder_detailadd");
 });
@@ -122,40 +121,6 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idorder->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-    <div id="r_idbrand" class="form-group row">
-        <label id="elh_order_detail_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el_order_detail_idbrand">
-<?php $Page->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idbrand"
-        name="x_idbrand"
-        class="form-control ew-select<?= $Page->idbrand->isInvalidClass() ?>"
-        data-select2-id="order_detail_x_idbrand"
-        data-table="order_detail"
-        data-field="x_idbrand"
-        data-value-separator="<?= $Page->idbrand->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idbrand->getPlaceHolder()) ?>"
-        <?= $Page->idbrand->editAttributes() ?>>
-        <?= $Page->idbrand->selectOptionListHtml("x_idbrand") ?>
-    </select>
-    <?= $Page->idbrand->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idbrand->getErrorMessage() ?></div>
-<?= $Page->idbrand->Lookup->getParamTag($Page, "p_x_idbrand") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='order_detail_x_idbrand']"),
-        options = { name: "x_idbrand", selectId: "order_detail_x_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.order_detail.fields.idbrand.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
     <div id="r_idproduct" class="form-group row">
         <label id="elh_order_detail_idproduct" for="x_idproduct" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idproduct->caption() ?><?= $Page->idproduct->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -246,6 +211,18 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->total->getInputTextType() ?>" data-table="order_detail" data-field="x_total" name="x_total" id="x_total" size="30" placeholder="<?= HtmlEncode($Page->total->getPlaceHolder()) ?>" value="<?= $Page->total->EditValue ?>"<?= $Page->total->editAttributes() ?> aria-describedby="x_total_help">
 <?= $Page->total->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->total->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <div id="r_keterangan" class="form-group row">
+        <label id="elh_order_detail_keterangan" for="x_keterangan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->keterangan->caption() ?><?= $Page->keterangan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el_order_detail_keterangan">
+<textarea data-table="order_detail" data-field="x_keterangan" name="x_keterangan" id="x_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->keterangan->getPlaceHolder()) ?>"<?= $Page->keterangan->editAttributes() ?> aria-describedby="x_keterangan_help"><?= $Page->keterangan->EditValue ?></textarea>
+<?= $Page->keterangan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->keterangan->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

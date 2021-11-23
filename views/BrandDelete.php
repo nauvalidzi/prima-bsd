@@ -44,20 +44,29 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th class="<?= $Page->idcustomer->headerCellClass() ?>"><span id="elh_brand_idcustomer" class="brand_idcustomer"><?= $Page->idcustomer->caption() ?></span></th>
+<?php if ($Page->kode->Visible) { // kode ?>
+        <th class="<?= $Page->kode->headerCellClass() ?>"><span id="elh_brand_kode" class="brand_kode"><?= $Page->kode->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
         <th class="<?= $Page->title->headerCellClass() ?>"><span id="elh_brand_title" class="brand_title"><?= $Page->title->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-        <th class="<?= $Page->kode->headerCellClass() ?>"><span id="elh_brand_kode" class="brand_kode"><?= $Page->kode->caption() ?></span></th>
+<?php if ($Page->titipmerk->Visible) { // titipmerk ?>
+        <th class="<?= $Page->titipmerk->headerCellClass() ?>"><span id="elh_brand_titipmerk" class="brand_titipmerk"><?= $Page->titipmerk->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->ijinhaki->Visible) { // ijinhaki ?>
         <th class="<?= $Page->ijinhaki->headerCellClass() ?>"><span id="elh_brand_ijinhaki" class="brand_ijinhaki"><?= $Page->ijinhaki->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
         <th class="<?= $Page->ijinbpom->headerCellClass() ?>"><span id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Page->ijinbpom->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+        <th class="<?= $Page->kode_sip->headerCellClass() ?>"><span id="elh_brand_kode_sip" class="brand_kode_sip"><?= $Page->kode_sip->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+        <th class="<?= $Page->aktif->headerCellClass() ?>"><span id="elh_brand_aktif" class="brand_aktif"><?= $Page->aktif->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <th class="<?= $Page->updated_at->headerCellClass() ?>"><span id="elh_brand_updated_at" class="brand_updated_at"><?= $Page->updated_at->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -80,11 +89,11 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_idcustomer" class="brand_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
+<?php if ($Page->kode->Visible) { // kode ?>
+        <td <?= $Page->kode->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_kode" class="brand_kode">
+<span<?= $Page->kode->viewAttributes() ?>>
+<?= $Page->kode->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -96,11 +105,11 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-        <td <?= $Page->kode->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_kode" class="brand_kode">
-<span<?= $Page->kode->viewAttributes() ?>>
-<?= $Page->kode->getViewValue() ?></span>
+<?php if ($Page->titipmerk->Visible) { // titipmerk ?>
+        <td <?= $Page->titipmerk->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_titipmerk" class="brand_titipmerk">
+<span<?= $Page->titipmerk->viewAttributes() ?>>
+<?= $Page->titipmerk->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -117,6 +126,30 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_brand_ijinbpom" class="brand_ijinbpom">
 <span<?= $Page->ijinbpom->viewAttributes() ?>>
 <?= $Page->ijinbpom->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+        <td <?= $Page->kode_sip->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_kode_sip" class="brand_kode_sip">
+<span<?= $Page->kode_sip->viewAttributes() ?>>
+<?= $Page->kode_sip->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+        <td <?= $Page->aktif->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_aktif" class="brand_aktif">
+<span<?= $Page->aktif->viewAttributes() ?>>
+<?= $Page->aktif->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <td <?= $Page->updated_at->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_updated_at" class="brand_updated_at">
+<span<?= $Page->updated_at->viewAttributes() ?>>
+<?= $Page->updated_at->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

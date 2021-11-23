@@ -570,13 +570,13 @@ class OrderDetailList extends OrderDetail
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idorder->Visible = false;
-        $this->idbrand->setVisibility();
         $this->idproduct->setVisibility();
         $this->jumlah->setVisibility();
         $this->bonus->setVisibility();
         $this->sisa->setVisibility();
         $this->harga->setVisibility();
         $this->total->setVisibility();
+        $this->keterangan->setVisibility();
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -611,7 +611,6 @@ class OrderDetailList extends OrderDetail
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idbrand);
         $this->setupLookupOptions($this->idproduct);
 
         // Search filters
@@ -852,13 +851,13 @@ class OrderDetailList extends OrderDetail
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->idproduct); // idproduct
             $this->updateSort($this->jumlah); // jumlah
             $this->updateSort($this->bonus); // bonus
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->harga); // harga
             $this->updateSort($this->total); // total
+            $this->updateSort($this->keterangan); // keterangan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -903,13 +902,13 @@ class OrderDetailList extends OrderDetail
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->idorder->setSort("");
-                $this->idbrand->setSort("");
                 $this->idproduct->setSort("");
                 $this->jumlah->setSort("");
                 $this->bonus->setSort("");
                 $this->sisa->setSort("");
                 $this->harga->setSort("");
                 $this->total->setSort("");
+                $this->keterangan->setSort("");
                 $this->aktif->setSort("");
                 $this->created_at->setSort("");
                 $this->created_by->setSort("");
@@ -1299,13 +1298,13 @@ class OrderDetailList extends OrderDetail
         }
         $this->id->setDbValue($row['id']);
         $this->idorder->setDbValue($row['idorder']);
-        $this->idbrand->setDbValue($row['idbrand']);
         $this->idproduct->setDbValue($row['idproduct']);
         $this->jumlah->setDbValue($row['jumlah']);
         $this->bonus->setDbValue($row['bonus']);
         $this->sisa->setDbValue($row['sisa']);
         $this->harga->setDbValue($row['harga']);
         $this->total->setDbValue($row['total']);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
@@ -1318,13 +1317,13 @@ class OrderDetailList extends OrderDetail
         $row = [];
         $row['id'] = null;
         $row['idorder'] = null;
-        $row['idbrand'] = null;
         $row['idproduct'] = null;
         $row['jumlah'] = null;
         $row['bonus'] = null;
         $row['sisa'] = null;
         $row['harga'] = null;
         $row['total'] = null;
+        $row['keterangan'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
         $row['created_by'] = null;
@@ -1370,8 +1369,6 @@ class OrderDetailList extends OrderDetail
 
         // idorder
 
-        // idbrand
-
         // idproduct
 
         // jumlah
@@ -1383,6 +1380,8 @@ class OrderDetailList extends OrderDetail
         // harga
 
         // total
+
+        // keterangan
 
         // aktif
 
@@ -1401,27 +1400,6 @@ class OrderDetailList extends OrderDetail
             $this->idorder->ViewValue = $this->idorder->CurrentValue;
             $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
-
-            // idbrand
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                    } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idbrand->ViewValue = null;
-            }
-            $this->idbrand->ViewCustomAttributes = "";
 
             // idproduct
             $curVal = trim(strval($this->idproduct->CurrentValue));
@@ -1473,6 +1451,10 @@ class OrderDetailList extends OrderDetail
             $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
             $this->total->ViewCustomAttributes = "";
 
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
+
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {
                 $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
@@ -1490,11 +1472,6 @@ class OrderDetailList extends OrderDetail
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
 
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
@@ -1525,6 +1502,11 @@ class OrderDetailList extends OrderDetail
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
             $this->total->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1669,8 +1651,6 @@ class OrderDetailList extends OrderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idbrand":
-                    break;
                 case "x_idproduct":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";

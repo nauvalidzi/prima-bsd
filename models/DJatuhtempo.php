@@ -98,7 +98,7 @@ class DJatuhtempo extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // namacustomer
-        $this->namacustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 123, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namacustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 201, 308, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->namacustomer->Sortable = true; // Allow sort
         $this->namacustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namacustomer->Param, "CustomMsg");
         $this->Fields['namacustomer'] = &$this->namacustomer;

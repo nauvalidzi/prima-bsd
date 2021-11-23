@@ -44,7 +44,7 @@ loadjs.ready("head", function () {
         ["ijinbpom", [], fields.ijinbpom.isInvalid],
         ["aktif", [], fields.aktif.isInvalid],
         ["created_at", [ew.Validators.datetime(0)], fields.created_at.isInvalid],
-        ["created_by", [], fields.created_by.isInvalid]
+        ["updated_at", [ew.Validators.datetime(0)], fields.updated_at.isInvalid]
     ]);
 
     // Set invalid fields
@@ -515,7 +515,7 @@ loadjs.ready("head", function() {
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tambahan->cellAttributes() ?>>
             <span id="el_product_tambahan" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->tambahan->getInputTextType() ?>" data-table="product" data-field="x_tambahan" name="x_tambahan" id="x_tambahan" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->tambahan->getPlaceHolder()) ?>" value="<?= $Page->tambahan->EditValue ?>"<?= $Page->tambahan->editAttributes() ?>>
+<input type="<?= $Page->tambahan->getInputTextType() ?>" data-table="product" data-field="x_tambahan" name="x_tambahan" id="x_tambahan" maxlength="100" placeholder="<?= HtmlEncode($Page->tambahan->getPlaceHolder()) ?>" value="<?= $Page->tambahan->EditValue ?>"<?= $Page->tambahan->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->tambahan->getErrorMessage(false) ?></div>
 </span>
         </div></div>
@@ -616,18 +616,25 @@ loadjs.ready(["fproductsearch", "datetimepicker"], function() {
         </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->created_by->Visible) { // created_by ?>
-    <div id="r_created_by" class="form-group row">
-        <label class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_created_by"><?= $Page->created_by->caption() ?></span>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+    <div id="r_updated_at" class="form-group row">
+        <label for="x_updated_at" class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_updated_at"><?= $Page->updated_at->caption() ?></span>
         <span class="ew-search-operator">
 <?= $Language->phrase("=") ?>
-<input type="hidden" name="z_created_by" id="z_created_by" value="=">
+<input type="hidden" name="z_updated_at" id="z_updated_at" value="=">
 </span>
         </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->created_by->cellAttributes() ?>>
-            <span id="el_product_created_by" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->created_by->getInputTextType() ?>" data-table="product" data-field="x_created_by" name="x_created_by" id="x_created_by" size="30" placeholder="<?= HtmlEncode($Page->created_by->getPlaceHolder()) ?>" value="<?= $Page->created_by->EditValue ?>"<?= $Page->created_by->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->created_by->getErrorMessage(false) ?></div>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->updated_at->cellAttributes() ?>>
+            <span id="el_product_updated_at" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x_updated_at" id="x_updated_at" placeholder="<?= HtmlEncode($Page->updated_at->getPlaceHolder()) ?>" value="<?= $Page->updated_at->EditValue ?>"<?= $Page->updated_at->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->updated_at->getErrorMessage(false) ?></div>
+<?php if (!$Page->updated_at->ReadOnly && !$Page->updated_at->Disabled && !isset($Page->updated_at->EditAttrs["readonly"]) && !isset($Page->updated_at->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fproductsearch", "datetimepicker"], function() {
+    ew.createDateTimePicker("fproductsearch", "x_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
 </span>
         </div></div>
     </div>

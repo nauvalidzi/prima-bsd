@@ -24,15 +24,12 @@ loadjs.ready("head", function () {
         ["idtipecustomer", [fields.idtipecustomer.visible && fields.idtipecustomer.required ? ew.Validators.required(fields.idtipecustomer.caption) : null], fields.idtipecustomer.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
-        ["kodenpd", [fields.kodenpd.visible && fields.kodenpd.required ? ew.Validators.required(fields.kodenpd.caption) : null], fields.kodenpd.isInvalid],
-        ["usaha", [fields.usaha.visible && fields.usaha.required ? ew.Validators.required(fields.usaha.caption) : null], fields.usaha.isInvalid],
+        ["jenis_usaha", [fields.jenis_usaha.visible && fields.jenis_usaha.required ? ew.Validators.required(fields.jenis_usaha.caption) : null], fields.jenis_usaha.isInvalid],
         ["jabatan", [fields.jabatan.visible && fields.jabatan.required ? ew.Validators.required(fields.jabatan.caption) : null], fields.jabatan.isInvalid],
-        ["ktp", [fields.ktp.visible && fields.ktp.required ? ew.Validators.fileRequired(fields.ktp.caption) : null], fields.ktp.isInvalid],
-        ["npwp", [fields.npwp.visible && fields.npwp.required ? ew.Validators.fileRequired(fields.npwp.caption) : null], fields.npwp.isInvalid],
-        ["idprov", [fields.idprov.visible && fields.idprov.required ? ew.Validators.required(fields.idprov.caption) : null], fields.idprov.isInvalid],
-        ["idkab", [fields.idkab.visible && fields.idkab.required ? ew.Validators.required(fields.idkab.caption) : null], fields.idkab.isInvalid],
-        ["idkec", [fields.idkec.visible && fields.idkec.required ? ew.Validators.required(fields.idkec.caption) : null], fields.idkec.isInvalid],
-        ["idkel", [fields.idkel.visible && fields.idkel.required ? ew.Validators.required(fields.idkel.caption) : null], fields.idkel.isInvalid],
+        ["idprov", [fields.idprov.visible && fields.idprov.required ? ew.Validators.required(fields.idprov.caption) : null, ew.Validators.integer], fields.idprov.isInvalid],
+        ["idkab", [fields.idkab.visible && fields.idkab.required ? ew.Validators.required(fields.idkab.caption) : null, ew.Validators.integer], fields.idkab.isInvalid],
+        ["idkec", [fields.idkec.visible && fields.idkec.required ? ew.Validators.required(fields.idkec.caption) : null, ew.Validators.integer], fields.idkec.isInvalid],
+        ["idkel", [fields.idkel.visible && fields.idkel.required ? ew.Validators.required(fields.idkel.caption) : null, ew.Validators.integer], fields.idkel.isInvalid],
         ["kodepos", [fields.kodepos.visible && fields.kodepos.required ? ew.Validators.required(fields.kodepos.caption) : null], fields.kodepos.isInvalid],
         ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
         ["telpon", [fields.telpon.visible && fields.telpon.required ? ew.Validators.required(fields.telpon.caption) : null], fields.telpon.isInvalid],
@@ -40,8 +37,12 @@ loadjs.ready("head", function () {
         ["_email", [fields._email.visible && fields._email.required ? ew.Validators.required(fields._email.caption) : null, ew.Validators.email], fields._email.isInvalid],
         ["website", [fields.website.visible && fields.website.required ? ew.Validators.required(fields.website.caption) : null], fields.website.isInvalid],
         ["foto", [fields.foto.visible && fields.foto.required ? ew.Validators.fileRequired(fields.foto.caption) : null], fields.foto.isInvalid],
+        ["ktp", [fields.ktp.visible && fields.ktp.required ? ew.Validators.required(fields.ktp.caption) : null], fields.ktp.isInvalid],
+        ["npwp", [fields.npwp.visible && fields.npwp.required ? ew.Validators.required(fields.npwp.caption) : null], fields.npwp.isInvalid],
         ["limit_kredit_order", [fields.limit_kredit_order.visible && fields.limit_kredit_order.required ? ew.Validators.required(fields.limit_kredit_order.caption) : null, ew.Validators.integer], fields.limit_kredit_order.isInvalid],
         ["jatuh_tempo_invoice", [fields.jatuh_tempo_invoice.visible && fields.jatuh_tempo_invoice.required ? ew.Validators.required(fields.jatuh_tempo_invoice.caption) : null], fields.jatuh_tempo_invoice.isInvalid],
+        ["kodenpd", [fields.kodenpd.visible && fields.kodenpd.required ? ew.Validators.required(fields.kodenpd.caption) : null], fields.kodenpd.isInvalid],
+        ["klinik", [fields.klinik.visible && fields.klinik.required ? ew.Validators.required(fields.klinik.caption) : null], fields.klinik.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
     ]);
@@ -242,26 +243,14 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-    <div id="r_kodenpd" class="form-group row">
-        <label id="elh_customer_kodenpd" for="x_kodenpd" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kodenpd->caption() ?><?= $Page->kodenpd->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kodenpd->cellAttributes() ?>>
-<span id="el_customer_kodenpd">
-<input type="<?= $Page->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x_kodenpd" id="x_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Page->kodenpd->getPlaceHolder()) ?>" value="<?= $Page->kodenpd->EditValue ?>"<?= $Page->kodenpd->editAttributes() ?> aria-describedby="x_kodenpd_help">
-<?= $Page->kodenpd->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->kodenpd->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->usaha->Visible) { // usaha ?>
-    <div id="r_usaha" class="form-group row">
-        <label id="elh_customer_usaha" for="x_usaha" class="<?= $Page->LeftColumnClass ?>"><?= $Page->usaha->caption() ?><?= $Page->usaha->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->usaha->cellAttributes() ?>>
-<span id="el_customer_usaha">
-<input type="<?= $Page->usaha->getInputTextType() ?>" data-table="customer" data-field="x_usaha" name="x_usaha" id="x_usaha" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->usaha->getPlaceHolder()) ?>" value="<?= $Page->usaha->EditValue ?>"<?= $Page->usaha->editAttributes() ?> aria-describedby="x_usaha_help">
-<?= $Page->usaha->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->usaha->getErrorMessage() ?></div>
+<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
+    <div id="r_jenis_usaha" class="form-group row">
+        <label id="elh_customer_jenis_usaha" for="x_jenis_usaha" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jenis_usaha->caption() ?><?= $Page->jenis_usaha->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jenis_usaha->cellAttributes() ?>>
+<span id="el_customer_jenis_usaha">
+<input type="<?= $Page->jenis_usaha->getInputTextType() ?>" data-table="customer" data-field="x_jenis_usaha" name="x_jenis_usaha" id="x_jenis_usaha" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->jenis_usaha->getPlaceHolder()) ?>" value="<?= $Page->jenis_usaha->EditValue ?>"<?= $Page->jenis_usaha->editAttributes() ?> aria-describedby="x_jenis_usaha_help">
+<?= $Page->jenis_usaha->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->jenis_usaha->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -278,187 +267,106 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->ktp->Visible) { // ktp ?>
-    <div id="r_ktp" class="form-group row">
-        <label id="elh_customer_ktp" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ktp->caption() ?><?= $Page->ktp->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ktp->cellAttributes() ?>>
-<span id="el_customer_ktp">
-<div id="fd_x_ktp">
-<div class="input-group">
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" title="<?= $Page->ktp->title() ?>" data-table="customer" data-field="x_ktp" name="x_ktp" id="x_ktp" lang="<?= CurrentLanguageID() ?>"<?= $Page->ktp->editAttributes() ?><?= ($Page->ktp->ReadOnly || $Page->ktp->Disabled) ? " disabled" : "" ?> aria-describedby="x_ktp_help">
-        <label class="custom-file-label ew-file-label" for="x_ktp"><?= $Language->phrase("ChooseFile") ?></label>
-    </div>
-</div>
-<?= $Page->ktp->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->ktp->getErrorMessage() ?></div>
-<input type="hidden" name="fn_x_ktp" id= "fn_x_ktp" value="<?= $Page->ktp->Upload->FileName ?>">
-<input type="hidden" name="fa_x_ktp" id= "fa_x_ktp" value="<?= (Post("fa_x_ktp") == "0") ? "0" : "1" ?>">
-<input type="hidden" name="fs_x_ktp" id= "fs_x_ktp" value="0">
-<input type="hidden" name="fx_x_ktp" id= "fx_x_ktp" value="<?= $Page->ktp->UploadAllowedFileExt ?>">
-<input type="hidden" name="fm_x_ktp" id= "fm_x_ktp" value="<?= $Page->ktp->UploadMaxFileSize ?>">
-</div>
-<table id="ft_x_ktp" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->npwp->Visible) { // npwp ?>
-    <div id="r_npwp" class="form-group row">
-        <label id="elh_customer_npwp" class="<?= $Page->LeftColumnClass ?>"><?= $Page->npwp->caption() ?><?= $Page->npwp->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->npwp->cellAttributes() ?>>
-<span id="el_customer_npwp">
-<div id="fd_x_npwp">
-<div class="input-group">
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" title="<?= $Page->npwp->title() ?>" data-table="customer" data-field="x_npwp" name="x_npwp" id="x_npwp" lang="<?= CurrentLanguageID() ?>"<?= $Page->npwp->editAttributes() ?><?= ($Page->npwp->ReadOnly || $Page->npwp->Disabled) ? " disabled" : "" ?> aria-describedby="x_npwp_help">
-        <label class="custom-file-label ew-file-label" for="x_npwp"><?= $Language->phrase("ChooseFile") ?></label>
-    </div>
-</div>
-<?= $Page->npwp->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->npwp->getErrorMessage() ?></div>
-<input type="hidden" name="fn_x_npwp" id= "fn_x_npwp" value="<?= $Page->npwp->Upload->FileName ?>">
-<input type="hidden" name="fa_x_npwp" id= "fa_x_npwp" value="<?= (Post("fa_x_npwp") == "0") ? "0" : "1" ?>">
-<input type="hidden" name="fs_x_npwp" id= "fs_x_npwp" value="0">
-<input type="hidden" name="fx_x_npwp" id= "fx_x_npwp" value="<?= $Page->npwp->UploadAllowedFileExt ?>">
-<input type="hidden" name="fm_x_npwp" id= "fm_x_npwp" value="<?= $Page->npwp->UploadMaxFileSize ?>">
-</div>
-<table id="ft_x_npwp" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->idprov->Visible) { // idprov ?>
     <div id="r_idprov" class="form-group row">
-        <label id="elh_customer_idprov" for="x_idprov" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idprov->caption() ?><?= $Page->idprov->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idprov" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idprov->caption() ?><?= $Page->idprov->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idprov->cellAttributes() ?>>
 <span id="el_customer_idprov">
-<?php $Page->idprov->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idprov"
-        name="x_idprov"
-        class="form-control ew-select<?= $Page->idprov->isInvalidClass() ?>"
-        data-select2-id="customer_x_idprov"
-        data-table="customer"
-        data-field="x_idprov"
-        data-value-separator="<?= $Page->idprov->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>"
-        <?= $Page->idprov->editAttributes() ?>>
-        <?= $Page->idprov->selectOptionListHtml("x_idprov") ?>
-    </select>
-    <?= $Page->idprov->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idprov->getErrorMessage() ?></div>
-<?= $Page->idprov->Lookup->getParamTag($Page, "p_x_idprov") ?>
+<?php
+$onchange = $Page->idprov->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idprov->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idprov" class="ew-auto-suggest">
+    <input type="<?= $Page->idprov->getInputTextType() ?>" class="form-control" name="sv_x_idprov" id="sv_x_idprov" value="<?= RemoveHtml($Page->idprov->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>"<?= $Page->idprov->editAttributes() ?> aria-describedby="x_idprov_help">
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idprov" data-input="sv_x_idprov" data-value-separator="<?= $Page->idprov->displayValueSeparatorAttribute() ?>" name="x_idprov" id="x_idprov" value="<?= HtmlEncode($Page->idprov->CurrentValue) ?>"<?= $onchange ?>>
+<?= $Page->idprov->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idprov->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idprov']"),
-        options = { name: "x_idprov", selectId: "customer_x_idprov", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idprov.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomeredit"], function() {
+    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idprov","forceSelect":false}, ew.vars.tables.customer.fields.idprov.autoSuggestOptions));
 });
 </script>
+<?= $Page->idprov->Lookup->getParamTag($Page, "p_x_idprov") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkab->Visible) { // idkab ?>
     <div id="r_idkab" class="form-group row">
-        <label id="elh_customer_idkab" for="x_idkab" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkab->caption() ?><?= $Page->idkab->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idkab" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkab->caption() ?><?= $Page->idkab->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkab->cellAttributes() ?>>
 <span id="el_customer_idkab">
-<?php $Page->idkab->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idkab"
-        name="x_idkab"
-        class="form-control ew-select<?= $Page->idkab->isInvalidClass() ?>"
-        data-select2-id="customer_x_idkab"
-        data-table="customer"
-        data-field="x_idkab"
-        data-value-separator="<?= $Page->idkab->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>"
-        <?= $Page->idkab->editAttributes() ?>>
-        <?= $Page->idkab->selectOptionListHtml("x_idkab") ?>
-    </select>
-    <?= $Page->idkab->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idkab->getErrorMessage() ?></div>
-<?= $Page->idkab->Lookup->getParamTag($Page, "p_x_idkab") ?>
+<?php
+$onchange = $Page->idkab->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idkab->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idkab" class="ew-auto-suggest">
+    <input type="<?= $Page->idkab->getInputTextType() ?>" class="form-control" name="sv_x_idkab" id="sv_x_idkab" value="<?= RemoveHtml($Page->idkab->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>"<?= $Page->idkab->editAttributes() ?> aria-describedby="x_idkab_help">
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkab" data-input="sv_x_idkab" data-value-separator="<?= $Page->idkab->displayValueSeparatorAttribute() ?>" name="x_idkab" id="x_idkab" value="<?= HtmlEncode($Page->idkab->CurrentValue) ?>"<?= $onchange ?>>
+<?= $Page->idkab->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idkab->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idkab']"),
-        options = { name: "x_idkab", selectId: "customer_x_idkab", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idkab.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomeredit"], function() {
+    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idkab","forceSelect":false}, ew.vars.tables.customer.fields.idkab.autoSuggestOptions));
 });
 </script>
+<?= $Page->idkab->Lookup->getParamTag($Page, "p_x_idkab") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkec->Visible) { // idkec ?>
     <div id="r_idkec" class="form-group row">
-        <label id="elh_customer_idkec" for="x_idkec" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkec->caption() ?><?= $Page->idkec->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idkec" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkec->caption() ?><?= $Page->idkec->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkec->cellAttributes() ?>>
 <span id="el_customer_idkec">
-<?php $Page->idkec->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idkec"
-        name="x_idkec"
-        class="form-control ew-select<?= $Page->idkec->isInvalidClass() ?>"
-        data-select2-id="customer_x_idkec"
-        data-table="customer"
-        data-field="x_idkec"
-        data-value-separator="<?= $Page->idkec->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>"
-        <?= $Page->idkec->editAttributes() ?>>
-        <?= $Page->idkec->selectOptionListHtml("x_idkec") ?>
-    </select>
-    <?= $Page->idkec->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idkec->getErrorMessage() ?></div>
-<?= $Page->idkec->Lookup->getParamTag($Page, "p_x_idkec") ?>
+<?php
+$onchange = $Page->idkec->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idkec->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idkec" class="ew-auto-suggest">
+    <input type="<?= $Page->idkec->getInputTextType() ?>" class="form-control" name="sv_x_idkec" id="sv_x_idkec" value="<?= RemoveHtml($Page->idkec->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>"<?= $Page->idkec->editAttributes() ?> aria-describedby="x_idkec_help">
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkec" data-input="sv_x_idkec" data-value-separator="<?= $Page->idkec->displayValueSeparatorAttribute() ?>" name="x_idkec" id="x_idkec" value="<?= HtmlEncode($Page->idkec->CurrentValue) ?>"<?= $onchange ?>>
+<?= $Page->idkec->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idkec->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idkec']"),
-        options = { name: "x_idkec", selectId: "customer_x_idkec", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idkec.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomeredit"], function() {
+    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idkec","forceSelect":false}, ew.vars.tables.customer.fields.idkec.autoSuggestOptions));
 });
 </script>
+<?= $Page->idkec->Lookup->getParamTag($Page, "p_x_idkec") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkel->Visible) { // idkel ?>
     <div id="r_idkel" class="form-group row">
-        <label id="elh_customer_idkel" for="x_idkel" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkel->caption() ?><?= $Page->idkel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idkel" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkel->caption() ?><?= $Page->idkel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkel->cellAttributes() ?>>
 <span id="el_customer_idkel">
-    <select
-        id="x_idkel"
-        name="x_idkel"
-        class="form-control ew-select<?= $Page->idkel->isInvalidClass() ?>"
-        data-select2-id="customer_x_idkel"
-        data-table="customer"
-        data-field="x_idkel"
-        data-value-separator="<?= $Page->idkel->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>"
-        <?= $Page->idkel->editAttributes() ?>>
-        <?= $Page->idkel->selectOptionListHtml("x_idkel") ?>
-    </select>
-    <?= $Page->idkel->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idkel->getErrorMessage() ?></div>
-<?= $Page->idkel->Lookup->getParamTag($Page, "p_x_idkel") ?>
+<?php
+$onchange = $Page->idkel->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idkel->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idkel" class="ew-auto-suggest">
+    <input type="<?= $Page->idkel->getInputTextType() ?>" class="form-control" name="sv_x_idkel" id="sv_x_idkel" value="<?= RemoveHtml($Page->idkel->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>"<?= $Page->idkel->editAttributes() ?> aria-describedby="x_idkel_help">
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkel" data-input="sv_x_idkel" data-value-separator="<?= $Page->idkel->displayValueSeparatorAttribute() ?>" name="x_idkel" id="x_idkel" value="<?= HtmlEncode($Page->idkel->CurrentValue) ?>"<?= $onchange ?>>
+<?= $Page->idkel->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idkel->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idkel']"),
-        options = { name: "x_idkel", selectId: "customer_x_idkel", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idkel.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomeredit"], function() {
+    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idkel","forceSelect":false}, ew.vars.tables.customer.fields.idkel.autoSuggestOptions));
 });
 </script>
+<?= $Page->idkel->Lookup->getParamTag($Page, "p_x_idkel") ?>
 </span>
 </div></div>
     </div>
@@ -561,6 +469,30 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->ktp->Visible) { // ktp ?>
+    <div id="r_ktp" class="form-group row">
+        <label id="elh_customer_ktp" for="x_ktp" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ktp->caption() ?><?= $Page->ktp->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ktp->cellAttributes() ?>>
+<span id="el_customer_ktp">
+<input type="<?= $Page->ktp->getInputTextType() ?>" data-table="customer" data-field="x_ktp" name="x_ktp" id="x_ktp" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ktp->getPlaceHolder()) ?>" value="<?= $Page->ktp->EditValue ?>"<?= $Page->ktp->editAttributes() ?> aria-describedby="x_ktp_help">
+<?= $Page->ktp->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ktp->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->npwp->Visible) { // npwp ?>
+    <div id="r_npwp" class="form-group row">
+        <label id="elh_customer_npwp" for="x_npwp" class="<?= $Page->LeftColumnClass ?>"><?= $Page->npwp->caption() ?><?= $Page->npwp->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->npwp->cellAttributes() ?>>
+<span id="el_customer_npwp">
+<input type="<?= $Page->npwp->getInputTextType() ?>" data-table="customer" data-field="x_npwp" name="x_npwp" id="x_npwp" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->npwp->getPlaceHolder()) ?>" value="<?= $Page->npwp->EditValue ?>"<?= $Page->npwp->editAttributes() ?> aria-describedby="x_npwp_help">
+<?= $Page->npwp->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->npwp->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->limit_kredit_order->Visible) { // limit_kredit_order ?>
     <div id="r_limit_kredit_order" class="form-group row">
         <label id="elh_customer_limit_kredit_order" for="x_limit_kredit_order" class="<?= $Page->LeftColumnClass ?>"><?= $Page->limit_kredit_order->caption() ?><?= $Page->limit_kredit_order->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -602,6 +534,30 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
+    <div id="r_kodenpd" class="form-group row">
+        <label id="elh_customer_kodenpd" for="x_kodenpd" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kodenpd->caption() ?><?= $Page->kodenpd->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kodenpd->cellAttributes() ?>>
+<span id="el_customer_kodenpd">
+<input type="<?= $Page->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x_kodenpd" id="x_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Page->kodenpd->getPlaceHolder()) ?>" value="<?= $Page->kodenpd->EditValue ?>"<?= $Page->kodenpd->editAttributes() ?> aria-describedby="x_kodenpd_help">
+<?= $Page->kodenpd->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kodenpd->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->klinik->Visible) { // klinik ?>
+    <div id="r_klinik" class="form-group row">
+        <label id="elh_customer_klinik" for="x_klinik" class="<?= $Page->LeftColumnClass ?>"><?= $Page->klinik->caption() ?><?= $Page->klinik->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->klinik->cellAttributes() ?>>
+<span id="el_customer_klinik">
+<input type="<?= $Page->klinik->getInputTextType() ?>" data-table="customer" data-field="x_klinik" name="x_klinik" id="x_klinik" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->klinik->getPlaceHolder()) ?>" value="<?= $Page->klinik->EditValue ?>"<?= $Page->klinik->editAttributes() ?> aria-describedby="x_klinik_help">
+<?= $Page->klinik->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->klinik->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -671,12 +627,12 @@ loadjs.ready("head", function() {
     }
 ?>
 <?php
-    if (in_array("brand", explode(",", $Page->getCurrentDetailTable())) && $brand->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand") {
-            $firstActiveDetailTable = "brand";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand") ?>" href="#tab_brand" data-toggle="tab"><?= $Language->tablePhrase("brand", "TblCaption") ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?></a></li>
 <?php
     }
 ?>
@@ -691,12 +647,12 @@ loadjs.ready("head", function() {
     }
 ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?></a></li>
 <?php
     }
 ?>
@@ -713,13 +669,13 @@ loadjs.ready("head", function() {
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("brand", explode(",", $Page->getCurrentDetailTable())) && $brand->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand") {
-            $firstActiveDetailTable = "brand";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand") ?>" id="tab_brand"><!-- page* -->
-<?php include_once "BrandGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
+<?php include_once "InvoiceGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
 <?php
@@ -733,13 +689,13 @@ loadjs.ready("head", function() {
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
-<?php include_once "InvoiceGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
+<?php include_once "BrandCustomerGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

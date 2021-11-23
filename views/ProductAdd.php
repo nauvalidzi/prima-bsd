@@ -37,8 +37,7 @@ loadjs.ready("head", function () {
         ["foto", [fields.foto.visible && fields.foto.required ? ew.Validators.fileRequired(fields.foto.caption) : null], fields.foto.isInvalid],
         ["tambahan", [fields.tambahan.visible && fields.tambahan.required ? ew.Validators.required(fields.tambahan.caption) : null], fields.tambahan.isInvalid],
         ["ijinbpom", [fields.ijinbpom.visible && fields.ijinbpom.required ? ew.Validators.required(fields.ijinbpom.caption) : null], fields.ijinbpom.isInvalid],
-        ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
+        ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
     ]);
 
     // Set invalid fields
@@ -450,7 +449,7 @@ loadjs.ready("head", function() {
         <label id="elh_product_tambahan" for="x_tambahan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tambahan->caption() ?><?= $Page->tambahan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tambahan->cellAttributes() ?>>
 <span id="el_product_tambahan">
-<input type="<?= $Page->tambahan->getInputTextType() ?>" data-table="product" data-field="x_tambahan" name="x_tambahan" id="x_tambahan" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->tambahan->getPlaceHolder()) ?>" value="<?= $Page->tambahan->EditValue ?>"<?= $Page->tambahan->editAttributes() ?> aria-describedby="x_tambahan_help">
+<textarea data-table="product" data-field="x_tambahan" name="x_tambahan" id="x_tambahan" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->tambahan->getPlaceHolder()) ?>"<?= $Page->tambahan->editAttributes() ?> aria-describedby="x_tambahan_help"><?= $Page->tambahan->EditValue ?></textarea>
 <?= $Page->tambahan->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->tambahan->getErrorMessage() ?></div>
 </span>
@@ -521,9 +520,6 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_product_created_by">
-    <input type="hidden" data-table="product" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
-    </span>
 </div><!-- /page* -->
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->

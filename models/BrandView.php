@@ -504,6 +504,7 @@ class BrandView extends Brand
     public $RecordRange = 10;
     public $RecKey = [];
     public $IsModal = false;
+    public $DetailPages; // Detail pages object
 
     /**
      * Page run
@@ -519,20 +520,24 @@ class BrandView extends Brand
         $this->IsModal = Param("modal") == "1";
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->title->setVisibility();
         $this->kode->setVisibility();
+        $this->title->setVisibility();
         $this->logo->setVisibility();
         $this->titipmerk->setVisibility();
         $this->ijinhaki->setVisibility();
         $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->setVisibility();
+        $this->kode_sip->setVisibility();
+        $this->aktif->setVisibility();
         $this->created_at->setVisibility();
-        $this->created_by->setVisibility();
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
+
+        // Set up detail page object
+        $this->setupDetailPages();
 
         // Global Page Loading event (in userfn*.php)
         Page_Loading();
@@ -543,7 +548,6 @@ class BrandView extends Brand
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
 
         // Check modal
         if ($this->IsModal) {
@@ -554,9 +558,6 @@ class BrandView extends Brand
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
-
-        // Set up master/detail parameters
-        $this->setupMasterParms();
         if ($this->isPageRequest()) { // Validate request
             if (($keyValue = Get("id") ?? Route("id")) !== null) {
                 $this->id->setQueryStringValue($keyValue);
@@ -671,7 +672,7 @@ class BrandView extends Brand
         } else {
             $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
         }
-        $item->Visible = ($this->EditUrl != "" && $Security->canEdit() && $this->showOptionLink("edit"));
+        $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
         // Delete
         $item = &$option->add("delete");
@@ -680,7 +681,7 @@ class BrandView extends Brand
         } else {
             $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
         }
-        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete() && $this->showOptionLink("delete"));
+        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
         $option = $options["detail"];
         $detailTableLink = "";
         $detailViewTblVar = "";
@@ -690,6 +691,7 @@ class BrandView extends Brand
         // "detail_product"
         $item = &$option->add("detail_product");
         $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("product", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("product")->Count, $Language->phrase("DetailCount"));
         $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("ProductList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
         $links = "";
         $detailPageObj = Container("ProductGrid");
@@ -719,6 +721,44 @@ class BrandView extends Brand
                 $detailTableLink .= ",";
             }
             $detailTableLink .= "product";
+        }
+        if ($this->ShowMultipleDetails) {
+            $item->Visible = false;
+        }
+
+        // "detail_brand_customer"
+        $item = &$option->add("detail_brand_customer");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        $links = "";
+        $detailPageObj = Container("BrandCustomerGrid");
+        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            if ($detailViewTblVar != "") {
+                $detailViewTblVar .= ",";
+            }
+            $detailViewTblVar .= "brand_customer";
+        }
+        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            if ($detailEditTblVar != "") {
+                $detailEditTblVar .= ",";
+            }
+            $detailEditTblVar .= "brand_customer";
+        }
+        if ($links != "") {
+            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
+            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
+        }
+        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
+        $item->Body = $body;
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer');
+        if ($item->Visible) {
+            if ($detailTableLink != "") {
+                $detailTableLink .= ",";
+            }
+            $detailTableLink .= "brand_customer";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -816,9 +856,8 @@ class BrandView extends Brand
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->title->setDbValue($row['title']);
         $this->kode->setDbValue($row['kode']);
+        $this->title->setDbValue($row['title']);
         $this->logo->Upload->DbValue = $row['logo'];
         $this->logo->setDbValue($this->logo->Upload->DbValue);
         $this->titipmerk->setDbValue($row['titipmerk']);
@@ -826,8 +865,22 @@ class BrandView extends Brand
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
         $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
+        $this->kode_sip->setDbValue($row['kode_sip']);
+        $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
+        $detailTbl = Container("product");
+        $detailFilter = $detailTbl->sqlDetailFilter_brand();
+        $detailFilter = str_replace("@idbrand@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
+        $detailTbl->setCurrentMasterTable("brand");
+        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
+        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
+        $detailTbl = Container("brand_customer");
+        $detailFilter = $detailTbl->sqlDetailFilter_brand();
+        $detailFilter = str_replace("@idbrand@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
+        $detailTbl->setCurrentMasterTable("brand");
+        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
+        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
     }
 
     // Return a row with default values
@@ -835,16 +888,17 @@ class BrandView extends Brand
     {
         $row = [];
         $row['id'] = null;
-        $row['idcustomer'] = null;
-        $row['title'] = null;
         $row['kode'] = null;
+        $row['title'] = null;
         $row['logo'] = null;
         $row['titipmerk'] = null;
         $row['ijinhaki'] = null;
         $row['ijinbpom'] = null;
         $row['aktaperusahaan'] = null;
+        $row['kode_sip'] = null;
+        $row['aktif'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -868,11 +922,9 @@ class BrandView extends Brand
 
         // id
 
-        // idcustomer
+        // kode
 
         // title
-
-        // kode
 
         // logo
 
@@ -884,42 +936,25 @@ class BrandView extends Brand
 
         // aktaperusahaan
 
+        // kode_sip
+
+        // aktif
+
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
+            // kode
+            $this->kode->ViewValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // title
             $this->title->ViewValue = $this->title->CurrentValue;
             $this->title->ViewCustomAttributes = "";
-
-            // kode
-            $this->kode->ViewValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
 
             // logo
             if (!EmptyValue($this->logo->Upload->DbValue)) {
@@ -963,30 +998,37 @@ class BrandView extends Brand
             }
             $this->aktaperusahaan->ViewCustomAttributes = "";
 
+            // kode_sip
+            $this->kode_sip->ViewValue = $this->kode_sip->CurrentValue;
+            $this->kode_sip->ViewCustomAttributes = "";
+
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // title
-            $this->title->LinkCustomAttributes = "";
-            $this->title->HrefValue = "";
-            $this->title->TooltipValue = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
             $this->kode->TooltipValue = "";
+
+            // title
+            $this->title->LinkCustomAttributes = "";
+            $this->title->HrefValue = "";
+            $this->title->TooltipValue = "";
 
             // logo
             $this->logo->LinkCustomAttributes = "";
@@ -1044,92 +1086,27 @@ class BrandView extends Brand
                 $this->aktaperusahaan->LinkAttrs["data-rel"] = "brand_x_aktaperusahaan";
                 $this->aktaperusahaan->LinkAttrs->appendClass("ew-lightbox");
             }
+
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
+            $this->kode_sip->TooltipValue = "";
+
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+            $this->aktif->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Get("fk_id", Get("idcustomer"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idcustomer->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "customer") {
-                $validMaster = true;
-                $masterTbl = Container("customer");
-                if (($parm = Post("fk_id", Post("idcustomer"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idcustomer->setFormValue($masterTbl->id->FormValue);
-                    $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-            $this->setSessionWhere($this->getDetailFilter());
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "customer") {
-                if ($this->idcustomer->CurrentValue == "") {
-                    $this->idcustomer->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
     }
 
     // Set up detail parms based on QueryString
@@ -1157,6 +1134,20 @@ class BrandView extends Brand
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
                 }
             }
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
+                if ($detailPageObj->DetailView) {
+                    $detailPageObj->CurrentMode = "view";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idbrand->IsDetailKey = true;
+                    $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
+                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
+                }
+            }
         }
     }
 
@@ -1169,6 +1160,15 @@ class BrandView extends Brand
         $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("BrandList"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
+    }
+
+    // Set up detail pages
+    protected function setupDetailPages()
+    {
+        $pages = new SubPages();
+        $pages->add('product');
+        $pages->add('brand_customer');
+        $this->DetailPages = $pages;
     }
 
     // Setup lookup options
@@ -1184,13 +1184,13 @@ class BrandView extends Brand
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
                 case "x_titipmerk":
                     break;
                 case "x_ijinhaki":
                     break;
                 case "x_ijinbpom":
+                    break;
+                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";

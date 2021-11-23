@@ -524,11 +524,8 @@ class CustomerView extends Customer
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
         $this->nama->setVisibility();
-        $this->kodenpd->setVisibility();
-        $this->usaha->setVisibility();
+        $this->jenis_usaha->setVisibility();
         $this->jabatan->setVisibility();
-        $this->ktp->setVisibility();
-        $this->npwp->setVisibility();
         $this->idprov->setVisibility();
         $this->idkab->setVisibility();
         $this->idkec->setVisibility();
@@ -540,14 +537,16 @@ class CustomerView extends Customer
         $this->_email->setVisibility();
         $this->website->setVisibility();
         $this->foto->setVisibility();
-        $this->level_customer_id->setVisibility();
+        $this->ktp->setVisibility();
+        $this->npwp->setVisibility();
         $this->limit_kredit_order->setVisibility();
         $this->jatuh_tempo_invoice->setVisibility();
+        $this->kodenpd->setVisibility();
+        $this->klinik->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->setVisibility();
         $this->updated_at->setVisibility();
-        $this->created_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -571,7 +570,6 @@ class CustomerView extends Customer
         $this->setupLookupOptions($this->idkab);
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
-        $this->setupLookupOptions($this->level_customer_id);
         $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
         // Check modal
@@ -754,26 +752,26 @@ class CustomerView extends Customer
             $item->Visible = false;
         }
 
-        // "detail_brand"
-        $item = &$option->add("detail_brand");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("brand")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        // "detail_invoice"
+        $item = &$option->add("detail_invoice");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("invoice", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
         $links = "";
-        $detailPageObj = Container("BrandGrid");
+        $detailPageObj = Container("InvoiceGrid");
         if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
             if ($detailViewTblVar != "") {
                 $detailViewTblVar .= ",";
             }
-            $detailViewTblVar .= "brand";
+            $detailViewTblVar .= "invoice";
         }
         if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
             if ($detailEditTblVar != "") {
                 $detailEditTblVar .= ",";
             }
-            $detailEditTblVar .= "brand";
+            $detailEditTblVar .= "invoice";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -781,12 +779,12 @@ class CustomerView extends Customer
         }
         $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
         $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand');
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'invoice');
         if ($item->Visible) {
             if ($detailTableLink != "") {
                 $detailTableLink .= ",";
             }
-            $detailTableLink .= "brand";
+            $detailTableLink .= "invoice";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -830,26 +828,26 @@ class CustomerView extends Customer
             $item->Visible = false;
         }
 
-        // "detail_invoice"
-        $item = &$option->add("detail_invoice");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("invoice", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        // "detail_brand_customer"
+        $item = &$option->add("detail_brand_customer");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
         $links = "";
-        $detailPageObj = Container("InvoiceGrid");
+        $detailPageObj = Container("BrandCustomerGrid");
         if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
             if ($detailViewTblVar != "") {
                 $detailViewTblVar .= ",";
             }
-            $detailViewTblVar .= "invoice";
+            $detailViewTblVar .= "brand_customer";
         }
         if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
             if ($detailEditTblVar != "") {
                 $detailEditTblVar .= ",";
             }
-            $detailEditTblVar .= "invoice";
+            $detailEditTblVar .= "brand_customer";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -857,12 +855,12 @@ class CustomerView extends Customer
         }
         $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
         $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'invoice');
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer');
         if ($item->Visible) {
             if ($detailTableLink != "") {
                 $detailTableLink .= ",";
             }
-            $detailTableLink .= "invoice";
+            $detailTableLink .= "brand_customer";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -964,17 +962,8 @@ class CustomerView extends Customer
         $this->idtipecustomer->setDbValue($row['idtipecustomer']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->nama->setDbValue($row['nama']);
-        $this->kodenpd->setDbValue($row['kodenpd']);
-        $this->usaha->setDbValue($row['usaha']);
+        $this->jenis_usaha->setDbValue($row['jenis_usaha']);
         $this->jabatan->setDbValue($row['jabatan']);
-        $this->ktp->Upload->DbValue = $row['ktp'];
-        if (is_resource($this->ktp->Upload->DbValue) && get_resource_type($this->ktp->Upload->DbValue) == "stream") { // Byte array
-            $this->ktp->Upload->DbValue = stream_get_contents($this->ktp->Upload->DbValue);
-        }
-        $this->npwp->Upload->DbValue = $row['npwp'];
-        if (is_resource($this->npwp->Upload->DbValue) && get_resource_type($this->npwp->Upload->DbValue) == "stream") { // Byte array
-            $this->npwp->Upload->DbValue = stream_get_contents($this->npwp->Upload->DbValue);
-        }
         $this->idprov->setDbValue($row['idprov']);
         $this->idkab->setDbValue($row['idkab']);
         $this->idkec->setDbValue($row['idkec']);
@@ -987,21 +976,23 @@ class CustomerView extends Customer
         $this->website->setDbValue($row['website']);
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
-        $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->ktp->setDbValue($row['ktp']);
+        $this->npwp->setDbValue($row['npwp']);
         $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
+        $this->kodenpd->setDbValue($row['kodenpd']);
+        $this->klinik->setDbValue($row['klinik']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $detailTbl = Container("alamat_customer");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("brand");
+        $detailTbl = Container("invoice");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -1013,7 +1004,7 @@ class CustomerView extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("invoice");
+        $detailTbl = Container("brand_customer");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -1030,11 +1021,8 @@ class CustomerView extends Customer
         $row['idtipecustomer'] = null;
         $row['idpegawai'] = null;
         $row['nama'] = null;
-        $row['kodenpd'] = null;
-        $row['usaha'] = null;
+        $row['jenis_usaha'] = null;
         $row['jabatan'] = null;
-        $row['ktp'] = null;
-        $row['npwp'] = null;
         $row['idprov'] = null;
         $row['idkab'] = null;
         $row['idkec'] = null;
@@ -1046,14 +1034,16 @@ class CustomerView extends Customer
         $row['email'] = null;
         $row['website'] = null;
         $row['foto'] = null;
-        $row['level_customer_id'] = null;
+        $row['ktp'] = null;
+        $row['npwp'] = null;
         $row['limit_kredit_order'] = null;
         $row['jatuh_tempo_invoice'] = null;
+        $row['kodenpd'] = null;
+        $row['klinik'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
-        $row['created_by'] = null;
         return $row;
     }
 
@@ -1085,15 +1075,9 @@ class CustomerView extends Customer
 
         // nama
 
-        // kodenpd
-
-        // usaha
+        // jenis_usaha
 
         // jabatan
-
-        // ktp
-
-        // npwp
 
         // idprov
 
@@ -1117,11 +1101,17 @@ class CustomerView extends Customer
 
         // foto
 
-        // level_customer_id
+        // ktp
+
+        // npwp
 
         // limit_kredit_order
 
         // jatuh_tempo_invoice
+
+        // kodenpd
+
+        // klinik
 
         // keterangan
 
@@ -1130,8 +1120,6 @@ class CustomerView extends Customer
         // created_at
 
         // updated_at
-
-        // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1187,39 +1175,16 @@ class CustomerView extends Customer
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
-            // kodenpd
-            $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
-            $this->kodenpd->ViewCustomAttributes = "";
-
-            // usaha
-            $this->usaha->ViewValue = $this->usaha->CurrentValue;
-            $this->usaha->ViewCustomAttributes = "";
+            // jenis_usaha
+            $this->jenis_usaha->ViewValue = $this->jenis_usaha->CurrentValue;
+            $this->jenis_usaha->ViewCustomAttributes = "";
 
             // jabatan
             $this->jabatan->ViewValue = $this->jabatan->CurrentValue;
             $this->jabatan->ViewCustomAttributes = "";
 
-            // ktp
-            if (!EmptyValue($this->ktp->Upload->DbValue)) {
-                $this->ktp->ViewValue = $this->id->CurrentValue;
-                $this->ktp->IsBlobImage = IsImageFile(ContentExtension($this->ktp->Upload->DbValue));
-                $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-            } else {
-                $this->ktp->ViewValue = "";
-            }
-            $this->ktp->ViewCustomAttributes = "";
-
-            // npwp
-            if (!EmptyValue($this->npwp->Upload->DbValue)) {
-                $this->npwp->ViewValue = $this->id->CurrentValue;
-                $this->npwp->IsBlobImage = IsImageFile(ContentExtension($this->npwp->Upload->DbValue));
-                $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-            } else {
-                $this->npwp->ViewValue = "";
-            }
-            $this->npwp->ViewCustomAttributes = "";
-
             // idprov
+            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -1241,6 +1206,7 @@ class CustomerView extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
+            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -1262,6 +1228,7 @@ class CustomerView extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
+            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -1283,6 +1250,7 @@ class CustomerView extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
+            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -1336,26 +1304,13 @@ class CustomerView extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
-            // level_customer_id
-            $curVal = trim(strval($this->level_customer_id->CurrentValue));
-            if ($curVal != "") {
-                $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-                if ($this->level_customer_id->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
-                    } else {
-                        $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
-                    }
-                }
-            } else {
-                $this->level_customer_id->ViewValue = null;
-            }
-            $this->level_customer_id->ViewCustomAttributes = "";
+            // ktp
+            $this->ktp->ViewValue = $this->ktp->CurrentValue;
+            $this->ktp->ViewCustomAttributes = "";
+
+            // npwp
+            $this->npwp->ViewValue = $this->npwp->CurrentValue;
+            $this->npwp->ViewCustomAttributes = "";
 
             // limit_kredit_order
             $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
@@ -1383,6 +1338,14 @@ class CustomerView extends Customer
             }
             $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
+            // kodenpd
+            $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
+            $this->kodenpd->ViewCustomAttributes = "";
+
+            // klinik
+            $this->klinik->ViewValue = $this->klinik->CurrentValue;
+            $this->klinik->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -1405,11 +1368,6 @@ class CustomerView extends Customer
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1430,54 +1388,15 @@ class CustomerView extends Customer
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
 
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
-            $this->kodenpd->TooltipValue = "";
-
-            // usaha
-            $this->usaha->LinkCustomAttributes = "";
-            $this->usaha->HrefValue = "";
-            $this->usaha->TooltipValue = "";
+            // jenis_usaha
+            $this->jenis_usaha->LinkCustomAttributes = "";
+            $this->jenis_usaha->HrefValue = "";
+            $this->jenis_usaha->TooltipValue = "";
 
             // jabatan
             $this->jabatan->LinkCustomAttributes = "";
             $this->jabatan->HrefValue = "";
             $this->jabatan->TooltipValue = "";
-
-            // ktp
-            $this->ktp->LinkCustomAttributes = "";
-            if (!empty($this->ktp->Upload->DbValue)) {
-                $this->ktp->HrefValue = GetFileUploadUrl($this->ktp, $this->id->CurrentValue);
-                $this->ktp->LinkAttrs["target"] = "";
-                if ($this->ktp->IsBlobImage && empty($this->ktp->LinkAttrs["target"])) {
-                    $this->ktp->LinkAttrs["target"] = "_blank";
-                }
-                if ($this->isExport()) {
-                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-                }
-            } else {
-                $this->ktp->HrefValue = "";
-            }
-            $this->ktp->ExportHrefValue = GetFileUploadUrl($this->ktp, $this->id->CurrentValue);
-            $this->ktp->TooltipValue = "";
-
-            // npwp
-            $this->npwp->LinkCustomAttributes = "";
-            if (!empty($this->npwp->Upload->DbValue)) {
-                $this->npwp->HrefValue = GetFileUploadUrl($this->npwp, $this->id->CurrentValue);
-                $this->npwp->LinkAttrs["target"] = "";
-                if ($this->npwp->IsBlobImage && empty($this->npwp->LinkAttrs["target"])) {
-                    $this->npwp->LinkAttrs["target"] = "_blank";
-                }
-                if ($this->isExport()) {
-                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-                }
-            } else {
-                $this->npwp->HrefValue = "";
-            }
-            $this->npwp->ExportHrefValue = GetFileUploadUrl($this->npwp, $this->id->CurrentValue);
-            $this->npwp->TooltipValue = "";
 
             // idprov
             $this->idprov->LinkCustomAttributes = "";
@@ -1550,10 +1469,31 @@ class CustomerView extends Customer
                 $this->foto->LinkAttrs->appendClass("ew-lightbox");
             }
 
-            // level_customer_id
-            $this->level_customer_id->LinkCustomAttributes = "";
-            $this->level_customer_id->HrefValue = "";
-            $this->level_customer_id->TooltipValue = "";
+            // ktp
+            $this->ktp->LinkCustomAttributes = "";
+            if (!EmptyValue($this->ktp->CurrentValue)) {
+                $this->ktp->HrefValue = (!empty($this->ktp->ViewValue) && !is_array($this->ktp->ViewValue) ? RemoveHtml($this->ktp->ViewValue) : $this->ktp->CurrentValue); // Add prefix/suffix
+                $this->ktp->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
+                }
+            } else {
+                $this->ktp->HrefValue = "";
+            }
+            $this->ktp->TooltipValue = "";
+
+            // npwp
+            $this->npwp->LinkCustomAttributes = "";
+            if (!EmptyValue($this->npwp->CurrentValue)) {
+                $this->npwp->HrefValue = (!empty($this->npwp->ViewValue) && !is_array($this->npwp->ViewValue) ? RemoveHtml($this->npwp->ViewValue) : $this->npwp->CurrentValue); // Add prefix/suffix
+                $this->npwp->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
+                }
+            } else {
+                $this->npwp->HrefValue = "";
+            }
+            $this->npwp->TooltipValue = "";
 
             // limit_kredit_order
             $this->limit_kredit_order->LinkCustomAttributes = "";
@@ -1564,6 +1504,16 @@ class CustomerView extends Customer
             $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
             $this->jatuh_tempo_invoice->HrefValue = "";
             $this->jatuh_tempo_invoice->TooltipValue = "";
+
+            // kodenpd
+            $this->kodenpd->LinkCustomAttributes = "";
+            $this->kodenpd->HrefValue = "";
+            $this->kodenpd->TooltipValue = "";
+
+            // klinik
+            $this->klinik->LinkCustomAttributes = "";
+            $this->klinik->HrefValue = "";
+            $this->klinik->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1677,8 +1627,8 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
                 }
             }
-            if (in_array("brand", $detailTblVar)) {
-                $detailPageObj = Container("BrandGrid");
+            if (in_array("invoice", $detailTblVar)) {
+                $detailPageObj = Container("InvoiceGrid");
                 if ($detailPageObj->DetailView) {
                     $detailPageObj->CurrentMode = "view";
 
@@ -1688,6 +1638,7 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
+                    $detailPageObj->id->setSessionValue(""); // Clear session key
                 }
             }
             if (in_array("order", $detailTblVar)) {
@@ -1703,8 +1654,8 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
                 }
             }
-            if (in_array("invoice", $detailTblVar)) {
-                $detailPageObj = Container("InvoiceGrid");
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
                 if ($detailPageObj->DetailView) {
                     $detailPageObj->CurrentMode = "view";
 
@@ -1714,7 +1665,7 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                    $detailPageObj->id->setSessionValue(""); // Clear session key
+                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -1737,9 +1688,9 @@ class CustomerView extends Customer
         $pages = new SubPages();
         $pages->Style = "tabs";
         $pages->add('alamat_customer');
-        $pages->add('brand');
-        $pages->add('order');
         $pages->add('invoice');
+        $pages->add('order');
+        $pages->add('brand_customer');
         $this->DetailPages = $pages;
     }
 
@@ -1767,8 +1718,6 @@ class CustomerView extends Customer
                 case "x_idkec":
                     break;
                 case "x_idkel":
-                    break;
-                case "x_level_customer_id":
                     break;
                 case "x_jatuh_tempo_invoice":
                     break;

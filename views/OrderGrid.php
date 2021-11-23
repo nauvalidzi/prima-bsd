@@ -23,9 +23,12 @@ loadjs.ready("head", function () {
         ew.vars.tables.order = currentTable;
     fordergrid.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
-        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
+        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null], fields.tanggal.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid]
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
+        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
+        ["dokumen", [fields.dokumen.visible && fields.dokumen.required ? ew.Validators.fileRequired(fields.dokumen.caption) : null], fields.dokumen.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -87,6 +90,12 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idcustomer", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "idbrand", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "dokumen", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "keterangan", false))
+            return false;
         return true;
     }
 
@@ -102,6 +111,7 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     fordergrid.lists.idpegawai = <?= $Grid->idpegawai->toClientList($Grid) ?>;
     fordergrid.lists.idcustomer = <?= $Grid->idcustomer->toClientList($Grid) ?>;
+    fordergrid.lists.idbrand = <?= $Grid->idbrand->toClientList($Grid) ?>;
     loadjs.done("fordergrid");
 });
 </script>
@@ -137,6 +147,15 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Grid->idcustomer->headerCellClass() ?>"><div id="elh_order_idcustomer" class="order_idcustomer"><?= $Grid->renderSort($Grid->idcustomer) ?></div></th>
+<?php } ?>
+<?php if ($Grid->idbrand->Visible) { // idbrand ?>
+        <th data-name="idbrand" class="<?= $Grid->idbrand->headerCellClass() ?>"><div id="elh_order_idbrand" class="order_idbrand"><?= $Grid->renderSort($Grid->idbrand) ?></div></th>
+<?php } ?>
+<?php if ($Grid->dokumen->Visible) { // dokumen ?>
+        <th data-name="dokumen" class="<?= $Grid->dokumen->headerCellClass() ?>"><div id="elh_order_dokumen" class="order_dokumen"><?= $Grid->renderSort($Grid->dokumen) ?></div></th>
+<?php } ?>
+<?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Grid->keterangan->headerCellClass() ?>"><div id="elh_order_keterangan" class="order_keterangan"><?= $Grid->renderSort($Grid->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -283,30 +302,17 @@ $Grid->ListOptions->render("body", "left", $Grid->RowCount);
         <td data-name="tanggal" <?= $Grid->tanggal->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_order_tanggal" class="form-group">
-<input type="<?= $Grid->tanggal->getInputTextType() ?>" data-table="order" data-field="x_tanggal" name="x<?= $Grid->RowIndex ?>_tanggal" id="x<?= $Grid->RowIndex ?>_tanggal" placeholder="<?= HtmlEncode($Grid->tanggal->getPlaceHolder()) ?>" value="<?= $Grid->tanggal->EditValue ?>"<?= $Grid->tanggal->editAttributes() ?>>
+<input type="<?= $Grid->tanggal->getInputTextType() ?>" data-table="order" data-field="x_tanggal" data-format="7" name="x<?= $Grid->RowIndex ?>_tanggal" id="x<?= $Grid->RowIndex ?>_tanggal" placeholder="<?= HtmlEncode($Grid->tanggal->getPlaceHolder()) ?>" value="<?= $Grid->tanggal->EditValue ?>"<?= $Grid->tanggal->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Grid->tanggal->getErrorMessage() ?></div>
-<?php if (!$Grid->tanggal->ReadOnly && !$Grid->tanggal->Disabled && !isset($Grid->tanggal->EditAttrs["readonly"]) && !isset($Grid->tanggal->EditAttrs["disabled"])) { ?>
-<script>
-loadjs.ready(["fordergrid", "datetimepicker"], function() {
-    ew.createDateTimePicker("fordergrid", "x<?= $Grid->RowIndex ?>_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-});
-</script>
-<?php } ?>
 </span>
 <input type="hidden" data-table="order" data-field="x_tanggal" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tanggal" id="o<?= $Grid->RowIndex ?>_tanggal" value="<?= HtmlEncode($Grid->tanggal->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_order_tanggal" class="form-group">
-<input type="<?= $Grid->tanggal->getInputTextType() ?>" data-table="order" data-field="x_tanggal" name="x<?= $Grid->RowIndex ?>_tanggal" id="x<?= $Grid->RowIndex ?>_tanggal" placeholder="<?= HtmlEncode($Grid->tanggal->getPlaceHolder()) ?>" value="<?= $Grid->tanggal->EditValue ?>"<?= $Grid->tanggal->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->tanggal->getErrorMessage() ?></div>
-<?php if (!$Grid->tanggal->ReadOnly && !$Grid->tanggal->Disabled && !isset($Grid->tanggal->EditAttrs["readonly"]) && !isset($Grid->tanggal->EditAttrs["disabled"])) { ?>
-<script>
-loadjs.ready(["fordergrid", "datetimepicker"], function() {
-    ew.createDateTimePicker("fordergrid", "x<?= $Grid->RowIndex ?>_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-});
-</script>
-<?php } ?>
+<span<?= $Grid->tanggal->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->tanggal->getDisplayValue($Grid->tanggal->EditValue))) ?>"></span>
 </span>
+<input type="hidden" data-table="order" data-field="x_tanggal" data-hidden="1" name="x<?= $Grid->RowIndex ?>_tanggal" id="x<?= $Grid->RowIndex ?>_tanggal" value="<?= HtmlEncode($Grid->tanggal->CurrentValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_order_tanggal">
@@ -353,31 +359,10 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_order_idpegawai" class="form-group">
-<?php $Grid->idpegawai->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idpegawai"
-        name="x<?= $Grid->RowIndex ?>_idpegawai"
-        class="form-control ew-select<?= $Grid->idpegawai->isInvalidClass() ?>"
-        data-select2-id="order_x<?= $Grid->RowIndex ?>_idpegawai"
-        data-table="order"
-        data-field="x_idpegawai"
-        data-value-separator="<?= $Grid->idpegawai->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idpegawai->getPlaceHolder()) ?>"
-        <?= $Grid->idpegawai->editAttributes() ?>>
-        <?= $Grid->idpegawai->selectOptionListHtml("x{$Grid->RowIndex}_idpegawai") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idpegawai->getErrorMessage() ?></div>
-<?= $Grid->idpegawai->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idpegawai") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='order_x<?= $Grid->RowIndex ?>_idpegawai']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idpegawai", selectId: "order_x<?= $Grid->RowIndex ?>_idpegawai", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.order.fields.idpegawai.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<span<?= $Grid->idpegawai->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idpegawai->getDisplayValue($Grid->idpegawai->EditValue))) ?>"></span>
 </span>
+<input type="hidden" data-table="order" data-field="x_idpegawai" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idpegawai" id="x<?= $Grid->RowIndex ?>_idpegawai" value="<?= HtmlEncode($Grid->idpegawai->CurrentValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_order_idpegawai">
@@ -431,40 +416,11 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="order" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
 <span id="el<?= $Grid->RowCount ?>_order_idcustomer" class="form-group">
 <span<?= $Grid->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->EditValue))) ?>"></span>
 </span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el<?= $Grid->RowCount ?>_order_idcustomer" class="form-group">
-<?php $Grid->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idcustomer"
-        name="x<?= $Grid->RowIndex ?>_idcustomer"
-        class="form-control ew-select<?= $Grid->idcustomer->isInvalidClass() ?>"
-        data-select2-id="order_x<?= $Grid->RowIndex ?>_idcustomer"
-        data-table="order"
-        data-field="x_idcustomer"
-        data-value-separator="<?= $Grid->idcustomer->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idcustomer->getPlaceHolder()) ?>"
-        <?= $Grid->idcustomer->editAttributes() ?>>
-        <?= $Grid->idcustomer->selectOptionListHtml("x{$Grid->RowIndex}_idcustomer") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idcustomer->getErrorMessage() ?></div>
-<?= $Grid->idcustomer->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idcustomer") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='order_x<?= $Grid->RowIndex ?>_idcustomer']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idcustomer", selectId: "order_x<?= $Grid->RowIndex ?>_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.order.fields.idcustomer.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } ?>
+<input type="hidden" data-table="order" data-field="x_idcustomer" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idcustomer" id="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_order_idcustomer">
@@ -474,6 +430,131 @@ loadjs.ready("head", function() {
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="order" data-field="x_idcustomer" data-hidden="1" name="fordergrid$x<?= $Grid->RowIndex ?>_idcustomer" id="fordergrid$x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->FormValue) ?>">
 <input type="hidden" data-table="order" data-field="x_idcustomer" data-hidden="1" name="fordergrid$o<?= $Grid->RowIndex ?>_idcustomer" id="fordergrid$o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->idbrand->Visible) { // idbrand ?>
+        <td data-name="idbrand" <?= $Grid->idbrand->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_order_idbrand" class="form-group">
+<?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idbrand"
+        name="x<?= $Grid->RowIndex ?>_idbrand"
+        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
+        data-select2-id="order_x<?= $Grid->RowIndex ?>_idbrand"
+        data-table="order"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
+        <?= $Grid->idbrand->editAttributes() ?>>
+        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
+<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='order_x<?= $Grid->RowIndex ?>_idbrand']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "order_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.order.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_idbrand" class="form-group">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idbrand" id="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_idbrand">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<?= $Grid->idbrand->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="fordergrid$x<?= $Grid->RowIndex ?>_idbrand" id="fordergrid$x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->FormValue) ?>">
+<input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="fordergrid$o<?= $Grid->RowIndex ?>_idbrand" id="fordergrid$o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->dokumen->Visible) { // dokumen ?>
+        <td data-name="dokumen" <?= $Grid->dokumen->cellAttributes() ?>>
+<?php if ($Grid->RowAction == "insert") { // Add record ?>
+<span id="el$rowindex$_order_dokumen" class="form-group order_dokumen">
+<div id="fd_x<?= $Grid->RowIndex ?>_dokumen">
+<div class="input-group">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" title="<?= $Grid->dokumen->title() ?>" data-table="order" data-field="x_dokumen" name="x<?= $Grid->RowIndex ?>_dokumen" id="x<?= $Grid->RowIndex ?>_dokumen" lang="<?= CurrentLanguageID() ?>"<?= $Grid->dokumen->editAttributes() ?><?= ($Grid->dokumen->ReadOnly || $Grid->dokumen->Disabled) ? " disabled" : "" ?>>
+        <label class="custom-file-label ew-file-label" for="x<?= $Grid->RowIndex ?>_dokumen"><?= $Language->phrase("ChooseFile") ?></label>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->dokumen->getErrorMessage() ?></div>
+<input type="hidden" name="fn_x<?= $Grid->RowIndex ?>_dokumen" id= "fn_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->Upload->FileName ?>">
+<input type="hidden" name="fa_x<?= $Grid->RowIndex ?>_dokumen" id= "fa_x<?= $Grid->RowIndex ?>_dokumen" value="0">
+<input type="hidden" name="fs_x<?= $Grid->RowIndex ?>_dokumen" id= "fs_x<?= $Grid->RowIndex ?>_dokumen" value="255">
+<input type="hidden" name="fx_x<?= $Grid->RowIndex ?>_dokumen" id= "fx_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x<?= $Grid->RowIndex ?>_dokumen" id= "fm_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadMaxFileSize ?>">
+</div>
+<table id="ft_x<?= $Grid->RowIndex ?>_dokumen" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+<input type="hidden" data-table="order" data-field="x_dokumen" data-hidden="1" name="o<?= $Grid->RowIndex ?>_dokumen" id="o<?= $Grid->RowIndex ?>_dokumen" value="<?= HtmlEncode($Grid->dokumen->OldValue) ?>">
+<?php } elseif ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_dokumen">
+<span<?= $Grid->dokumen->viewAttributes() ?>>
+<?= GetFileViewTag($Grid->dokumen, $Grid->dokumen->getViewValue(), false) ?>
+</span>
+</span>
+<?php } else  { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_dokumen" class="form-group order_dokumen">
+<div id="fd_x<?= $Grid->RowIndex ?>_dokumen">
+<div class="input-group">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" title="<?= $Grid->dokumen->title() ?>" data-table="order" data-field="x_dokumen" name="x<?= $Grid->RowIndex ?>_dokumen" id="x<?= $Grid->RowIndex ?>_dokumen" lang="<?= CurrentLanguageID() ?>"<?= $Grid->dokumen->editAttributes() ?><?= ($Grid->dokumen->ReadOnly || $Grid->dokumen->Disabled) ? " disabled" : "" ?>>
+        <label class="custom-file-label ew-file-label" for="x<?= $Grid->RowIndex ?>_dokumen"><?= $Language->phrase("ChooseFile") ?></label>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->dokumen->getErrorMessage() ?></div>
+<input type="hidden" name="fn_x<?= $Grid->RowIndex ?>_dokumen" id= "fn_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->Upload->FileName ?>">
+<input type="hidden" name="fa_x<?= $Grid->RowIndex ?>_dokumen" id= "fa_x<?= $Grid->RowIndex ?>_dokumen" value="<?= (Post("fa_x<?= $Grid->RowIndex ?>_dokumen") == "0") ? "0" : "1" ?>">
+<input type="hidden" name="fs_x<?= $Grid->RowIndex ?>_dokumen" id= "fs_x<?= $Grid->RowIndex ?>_dokumen" value="255">
+<input type="hidden" name="fx_x<?= $Grid->RowIndex ?>_dokumen" id= "fx_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x<?= $Grid->RowIndex ?>_dokumen" id= "fm_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadMaxFileSize ?>">
+</div>
+<table id="ft_x<?= $Grid->RowIndex ?>_dokumen" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Grid->keterangan->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_order_keterangan" class="form-group">
+<textarea data-table="order" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="order" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_keterangan" class="form-group">
+<textarea data-table="order" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="order" data-field="x_keterangan" data-hidden="1" name="fordergrid$x<?= $Grid->RowIndex ?>_keterangan" id="fordergrid$x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<input type="hidden" data-table="order" data-field="x_keterangan" data-hidden="1" name="fordergrid$o<?= $Grid->RowIndex ?>_keterangan" id="fordergrid$o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -543,15 +624,8 @@ $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
         <td data-name="tanggal">
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_order_tanggal" class="form-group order_tanggal">
-<input type="<?= $Grid->tanggal->getInputTextType() ?>" data-table="order" data-field="x_tanggal" name="x<?= $Grid->RowIndex ?>_tanggal" id="x<?= $Grid->RowIndex ?>_tanggal" placeholder="<?= HtmlEncode($Grid->tanggal->getPlaceHolder()) ?>" value="<?= $Grid->tanggal->EditValue ?>"<?= $Grid->tanggal->editAttributes() ?>>
+<input type="<?= $Grid->tanggal->getInputTextType() ?>" data-table="order" data-field="x_tanggal" data-format="7" name="x<?= $Grid->RowIndex ?>_tanggal" id="x<?= $Grid->RowIndex ?>_tanggal" placeholder="<?= HtmlEncode($Grid->tanggal->getPlaceHolder()) ?>" value="<?= $Grid->tanggal->EditValue ?>"<?= $Grid->tanggal->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Grid->tanggal->getErrorMessage() ?></div>
-<?php if (!$Grid->tanggal->ReadOnly && !$Grid->tanggal->Disabled && !isset($Grid->tanggal->EditAttrs["readonly"]) && !isset($Grid->tanggal->EditAttrs["disabled"])) { ?>
-<script>
-loadjs.ready(["fordergrid", "datetimepicker"], function() {
-    ew.createDateTimePicker("fordergrid", "x<?= $Grid->RowIndex ?>_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-});
-</script>
-<?php } ?>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_order_tanggal" class="form-group order_tanggal">
@@ -649,6 +723,84 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="order" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
 </td>
     <?php } ?>
+    <?php if ($Grid->idbrand->Visible) { // idbrand ?>
+        <td data-name="idbrand">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_order_idbrand" class="form-group order_idbrand">
+<?php $Grid->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idbrand"
+        name="x<?= $Grid->RowIndex ?>_idbrand"
+        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
+        data-select2-id="order_x<?= $Grid->RowIndex ?>_idbrand"
+        data-table="order"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
+        <?= $Grid->idbrand->editAttributes() ?>>
+        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
+<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='order_x<?= $Grid->RowIndex ?>_idbrand']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "order_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.order.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_order_idbrand" class="form-group order_idbrand">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idbrand" id="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->dokumen->Visible) { // dokumen ?>
+        <td data-name="dokumen">
+<span id="el$rowindex$_order_dokumen" class="form-group order_dokumen">
+<div id="fd_x<?= $Grid->RowIndex ?>_dokumen">
+<div class="input-group">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" title="<?= $Grid->dokumen->title() ?>" data-table="order" data-field="x_dokumen" name="x<?= $Grid->RowIndex ?>_dokumen" id="x<?= $Grid->RowIndex ?>_dokumen" lang="<?= CurrentLanguageID() ?>"<?= $Grid->dokumen->editAttributes() ?><?= ($Grid->dokumen->ReadOnly || $Grid->dokumen->Disabled) ? " disabled" : "" ?>>
+        <label class="custom-file-label ew-file-label" for="x<?= $Grid->RowIndex ?>_dokumen"><?= $Language->phrase("ChooseFile") ?></label>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->dokumen->getErrorMessage() ?></div>
+<input type="hidden" name="fn_x<?= $Grid->RowIndex ?>_dokumen" id= "fn_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->Upload->FileName ?>">
+<input type="hidden" name="fa_x<?= $Grid->RowIndex ?>_dokumen" id= "fa_x<?= $Grid->RowIndex ?>_dokumen" value="0">
+<input type="hidden" name="fs_x<?= $Grid->RowIndex ?>_dokumen" id= "fs_x<?= $Grid->RowIndex ?>_dokumen" value="255">
+<input type="hidden" name="fx_x<?= $Grid->RowIndex ?>_dokumen" id= "fx_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x<?= $Grid->RowIndex ?>_dokumen" id= "fm_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadMaxFileSize ?>">
+</div>
+<table id="ft_x<?= $Grid->RowIndex ?>_dokumen" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+<input type="hidden" data-table="order" data-field="x_dokumen" data-hidden="1" name="o<?= $Grid->RowIndex ?>_dokumen" id="o<?= $Grid->RowIndex ?>_dokumen" value="<?= HtmlEncode($Grid->dokumen->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_order_keterangan" class="form-group order_keterangan">
+<textarea data-table="order" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_order_keterangan" class="form-group order_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="order" data-field="x_keterangan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="order" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowIndex);
@@ -708,7 +860,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Create Purchase Order");
+    $(".ew-detail-add-group").html("Add Purchase Order");
 });
 </script>
 <?php if (!$Grid->isExport()) { ?>

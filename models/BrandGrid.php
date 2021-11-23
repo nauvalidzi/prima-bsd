@@ -507,15 +507,16 @@ class BrandGrid extends Brand
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idcustomer->setVisibility();
-        $this->title->setVisibility();
         $this->kode->setVisibility();
+        $this->title->setVisibility();
         $this->logo->Visible = false;
-        $this->titipmerk->Visible = false;
+        $this->titipmerk->setVisibility();
         $this->ijinhaki->setVisibility();
         $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
+        $this->aktif->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->kode_sip->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -600,13 +601,13 @@ class BrandGrid extends Brand
         AddFilter($filter, $this->SearchWhere);
 
         // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "customer") {
-            $masterTbl = Container("customer");
+        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "v_brand_customer") {
+            $masterTbl = Container("v_brand_customer");
             $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
             $this->MasterRecordExists = $rsmaster !== false;
             if (!$this->MasterRecordExists) {
                 $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("CustomerList"); // Return to master page
+                $this->terminate("VBrandCustomerList"); // Return to master page
                 return;
             } else {
                 $masterTbl->loadListRowValues($rsmaster);
@@ -942,16 +943,25 @@ class BrandGrid extends Brand
         if ($CurrentForm->hasValue("x_idcustomer") && $CurrentForm->hasValue("o_idcustomer") && $this->idcustomer->CurrentValue != $this->idcustomer->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_kode") && $CurrentForm->hasValue("o_kode") && $this->kode->CurrentValue != $this->kode->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_title") && $CurrentForm->hasValue("o_title") && $this->title->CurrentValue != $this->title->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_kode") && $CurrentForm->hasValue("o_kode") && $this->kode->CurrentValue != $this->kode->OldValue) {
+        if ($CurrentForm->hasValue("x_titipmerk") && $CurrentForm->hasValue("o_titipmerk") && $this->titipmerk->CurrentValue != $this->titipmerk->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_ijinhaki") && $CurrentForm->hasValue("o_ijinhaki") && $this->ijinhaki->CurrentValue != $this->ijinhaki->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_ijinbpom") && $CurrentForm->hasValue("o_ijinbpom") && $this->ijinbpom->CurrentValue != $this->ijinbpom->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_aktif") && $CurrentForm->hasValue("o_aktif") && $this->aktif->CurrentValue != $this->aktif->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_kode_sip") && $CurrentForm->hasValue("o_kode_sip") && $this->kode_sip->CurrentValue != $this->kode_sip->OldValue) {
             return false;
         }
         return true;
@@ -1036,10 +1046,13 @@ class BrandGrid extends Brand
     public function resetFormError()
     {
         $this->idcustomer->clearErrorMessage();
-        $this->title->clearErrorMessage();
         $this->kode->clearErrorMessage();
+        $this->title->clearErrorMessage();
+        $this->titipmerk->clearErrorMessage();
         $this->ijinhaki->clearErrorMessage();
         $this->ijinbpom->clearErrorMessage();
+        $this->aktif->clearErrorMessage();
+        $this->kode_sip->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1092,7 +1105,7 @@ class BrandGrid extends Brand
                 $this->setCurrentMasterTable(""); // Clear master table
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
-                        $this->idcustomer->setSessionValue("");
+                        $this->id->setSessionValue("");
             }
 
             // Reset (clear) sorting order
@@ -1204,7 +1217,7 @@ class BrandGrid extends Brand
             // "view"
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
+            if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1213,7 +1226,7 @@ class BrandGrid extends Brand
             // "edit"
             $opt = $this->ListOptions["edit"];
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
+            if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1221,7 +1234,7 @@ class BrandGrid extends Brand
 
             // "delete"
             $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
+            if ($Security->canDelete()) {
             $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1307,12 +1320,12 @@ class BrandGrid extends Brand
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("product", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
             $detailPageObj = Container("ProductGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'brand')) {
+            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=product");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'brand')) {
+            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
                 $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=product");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
@@ -1372,10 +1385,10 @@ class BrandGrid extends Brand
         $this->id->OldValue = $this->id->CurrentValue;
         $this->idcustomer->CurrentValue = null;
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-        $this->title->CurrentValue = null;
-        $this->title->OldValue = $this->title->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
+        $this->title->CurrentValue = null;
+        $this->title->OldValue = $this->title->CurrentValue;
         $this->logo->Upload->DbValue = null;
         $this->logo->OldValue = $this->logo->Upload->DbValue;
         $this->logo->Upload->Index = $this->RowIndex;
@@ -1388,10 +1401,12 @@ class BrandGrid extends Brand
         $this->aktaperusahaan->Upload->DbValue = null;
         $this->aktaperusahaan->OldValue = $this->aktaperusahaan->Upload->DbValue;
         $this->aktaperusahaan->Upload->Index = $this->RowIndex;
+        $this->aktif->CurrentValue = 1;
+        $this->aktif->OldValue = $this->aktif->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
-        $this->created_by->OldValue = $this->created_by->CurrentValue;
+        $this->kode_sip->CurrentValue = null;
+        $this->kode_sip->OldValue = $this->kode_sip->CurrentValue;
     }
 
     // Load form values
@@ -1414,6 +1429,19 @@ class BrandGrid extends Brand
             $this->idcustomer->setOldValue($CurrentForm->getValue("o_idcustomer"));
         }
 
+        // Check field name 'kode' first before field var 'x_kode'
+        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
+        if (!$this->kode->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode->Visible = false; // Disable update for API request
+            } else {
+                $this->kode->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_kode")) {
+            $this->kode->setOldValue($CurrentForm->getValue("o_kode"));
+        }
+
         // Check field name 'title' first before field var 'x_title'
         $val = $CurrentForm->hasValue("title") ? $CurrentForm->getValue("title") : $CurrentForm->getValue("x_title");
         if (!$this->title->IsDetailKey) {
@@ -1427,17 +1455,17 @@ class BrandGrid extends Brand
             $this->title->setOldValue($CurrentForm->getValue("o_title"));
         }
 
-        // Check field name 'kode' first before field var 'x_kode'
-        $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
-        if (!$this->kode->IsDetailKey) {
+        // Check field name 'titipmerk' first before field var 'x_titipmerk'
+        $val = $CurrentForm->hasValue("titipmerk") ? $CurrentForm->getValue("titipmerk") : $CurrentForm->getValue("x_titipmerk");
+        if (!$this->titipmerk->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->kode->Visible = false; // Disable update for API request
+                $this->titipmerk->Visible = false; // Disable update for API request
             } else {
-                $this->kode->setFormValue($val);
+                $this->titipmerk->setFormValue($val);
             }
         }
-        if ($CurrentForm->hasValue("o_kode")) {
-            $this->kode->setOldValue($CurrentForm->getValue("o_kode"));
+        if ($CurrentForm->hasValue("o_titipmerk")) {
+            $this->titipmerk->setOldValue($CurrentForm->getValue("o_titipmerk"));
         }
 
         // Check field name 'ijinhaki' first before field var 'x_ijinhaki'
@@ -1466,6 +1494,32 @@ class BrandGrid extends Brand
             $this->ijinbpom->setOldValue($CurrentForm->getValue("o_ijinbpom"));
         }
 
+        // Check field name 'aktif' first before field var 'x_aktif'
+        $val = $CurrentForm->hasValue("aktif") ? $CurrentForm->getValue("aktif") : $CurrentForm->getValue("x_aktif");
+        if (!$this->aktif->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->aktif->Visible = false; // Disable update for API request
+            } else {
+                $this->aktif->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_aktif")) {
+            $this->aktif->setOldValue($CurrentForm->getValue("o_aktif"));
+        }
+
+        // Check field name 'kode_sip' first before field var 'x_kode_sip'
+        $val = $CurrentForm->hasValue("kode_sip") ? $CurrentForm->getValue("kode_sip") : $CurrentForm->getValue("x_kode_sip");
+        if (!$this->kode_sip->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kode_sip->Visible = false; // Disable update for API request
+            } else {
+                $this->kode_sip->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_kode_sip")) {
+            $this->kode_sip->setOldValue($CurrentForm->getValue("o_kode_sip"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1481,10 +1535,13 @@ class BrandGrid extends Brand
             $this->id->CurrentValue = $this->id->FormValue;
         }
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->title->CurrentValue = $this->title->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
+        $this->title->CurrentValue = $this->title->FormValue;
+        $this->titipmerk->CurrentValue = $this->titipmerk->FormValue;
         $this->ijinhaki->CurrentValue = $this->ijinhaki->FormValue;
         $this->ijinbpom->CurrentValue = $this->ijinbpom->FormValue;
+        $this->aktif->CurrentValue = $this->aktif->FormValue;
+        $this->kode_sip->CurrentValue = $this->kode_sip->FormValue;
     }
 
     // Load recordset
@@ -1557,8 +1614,8 @@ class BrandGrid extends Brand
         }
         $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->title->setDbValue($row['title']);
         $this->kode->setDbValue($row['kode']);
+        $this->title->setDbValue($row['title']);
         $this->logo->Upload->DbValue = $row['logo'];
         $this->logo->setDbValue($this->logo->Upload->DbValue);
         $this->logo->Upload->Index = $this->RowIndex;
@@ -1568,8 +1625,9 @@ class BrandGrid extends Brand
         $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
         $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
         $this->aktaperusahaan->Upload->Index = $this->RowIndex;
+        $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->kode_sip->setDbValue($row['kode_sip']);
     }
 
     // Return a row with default values
@@ -1579,15 +1637,16 @@ class BrandGrid extends Brand
         $row = [];
         $row['id'] = $this->id->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
-        $row['title'] = $this->title->CurrentValue;
         $row['kode'] = $this->kode->CurrentValue;
+        $row['title'] = $this->title->CurrentValue;
         $row['logo'] = $this->logo->Upload->DbValue;
         $row['titipmerk'] = $this->titipmerk->CurrentValue;
         $row['ijinhaki'] = $this->ijinhaki->CurrentValue;
         $row['ijinbpom'] = $this->ijinbpom->CurrentValue;
         $row['aktaperusahaan'] = $this->aktaperusahaan->Upload->DbValue;
+        $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
+        $row['kode_sip'] = $this->kode_sip->CurrentValue;
         return $row;
     }
 
@@ -1627,10 +1686,10 @@ class BrandGrid extends Brand
 
         // idcustomer
 
+        // kode
+
         // title
         $this->title->CellCssStyle = "min-width: 30px;";
-
-        // kode
 
         // logo
 
@@ -1642,11 +1701,12 @@ class BrandGrid extends Brand
 
         // aktaperusahaan
 
+        // aktif
+
         // created_at
         $this->created_at->CellCssStyle = "white-space: nowrap;";
 
-        // created_by
-        $this->created_by->CellCssStyle = "white-space: nowrap;";
+        // kode_sip
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1673,13 +1733,13 @@ class BrandGrid extends Brand
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // title
-            $this->title->ViewValue = $this->title->CurrentValue;
-            $this->title->ViewCustomAttributes = "";
-
             // kode
             $this->kode->ViewValue = $this->kode->CurrentValue;
             $this->kode->ViewCustomAttributes = "";
+
+            // title
+            $this->title->ViewValue = $this->title->CurrentValue;
+            $this->title->ViewCustomAttributes = "";
 
             // logo
             if (!EmptyValue($this->logo->Upload->DbValue)) {
@@ -1723,30 +1783,42 @@ class BrandGrid extends Brand
             }
             $this->aktaperusahaan->ViewCustomAttributes = "";
 
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // kode_sip
+            $this->kode_sip->ViewValue = $this->kode_sip->CurrentValue;
+            $this->kode_sip->ViewCustomAttributes = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
+
             // title
             $this->title->LinkCustomAttributes = "";
             $this->title->HrefValue = "";
             $this->title->TooltipValue = "";
 
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
+            // titipmerk
+            $this->titipmerk->LinkCustomAttributes = "";
+            $this->titipmerk->HrefValue = "";
+            $this->titipmerk->TooltipValue = "";
 
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
@@ -1757,64 +1829,41 @@ class BrandGrid extends Brand
             $this->ijinbpom->LinkCustomAttributes = "";
             $this->ijinbpom->HrefValue = "";
             $this->ijinbpom->TooltipValue = "";
+
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+            $this->aktif->TooltipValue = "";
+
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
+            $this->kode_sip->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
                 } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
             }
-
-            // title
-            $this->title->EditAttrs["class"] = "form-control";
-            $this->title->EditCustomAttributes = "";
-            if (!$this->title->Raw) {
-                $this->title->CurrentValue = HtmlDecode($this->title->CurrentValue);
-            }
-            $this->title->EditValue = HtmlEncode($this->title->CurrentValue);
-            $this->title->PlaceHolder = RemoveHtml($this->title->caption());
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -1825,6 +1874,20 @@ class BrandGrid extends Brand
             $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
             $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
+            // title
+            $this->title->EditAttrs["class"] = "form-control";
+            $this->title->EditCustomAttributes = "";
+            if (!$this->title->Raw) {
+                $this->title->CurrentValue = HtmlDecode($this->title->CurrentValue);
+            }
+            $this->title->EditValue = HtmlEncode($this->title->CurrentValue);
+            $this->title->PlaceHolder = RemoveHtml($this->title->caption());
+
+            // titipmerk
+            $this->titipmerk->EditCustomAttributes = "";
+            $this->titipmerk->EditValue = $this->titipmerk->options(false);
+            $this->titipmerk->PlaceHolder = RemoveHtml($this->titipmerk->caption());
+
             // ijinhaki
             $this->ijinhaki->EditCustomAttributes = "";
             $this->ijinhaki->EditValue = $this->ijinhaki->options(false);
@@ -1834,6 +1897,20 @@ class BrandGrid extends Brand
             $this->ijinbpom->EditCustomAttributes = "";
             $this->ijinbpom->EditValue = $this->ijinbpom->options(false);
             $this->ijinbpom->PlaceHolder = RemoveHtml($this->ijinbpom->caption());
+
+            // aktif
+            $this->aktif->EditCustomAttributes = "";
+            $this->aktif->EditValue = $this->aktif->options(false);
+            $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
+
+            // kode_sip
+            $this->kode_sip->EditAttrs["class"] = "form-control";
+            $this->kode_sip->EditCustomAttributes = "";
+            if (!$this->kode_sip->Raw) {
+                $this->kode_sip->CurrentValue = HtmlDecode($this->kode_sip->CurrentValue);
+            }
+            $this->kode_sip->EditValue = HtmlEncode($this->kode_sip->CurrentValue);
+            $this->kode_sip->PlaceHolder = RemoveHtml($this->kode_sip->caption());
 
             // Add refer script
 
@@ -1841,13 +1918,17 @@ class BrandGrid extends Brand
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+
             // title
             $this->title->LinkCustomAttributes = "";
             $this->title->HrefValue = "";
 
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
+            // titipmerk
+            $this->titipmerk->LinkCustomAttributes = "";
+            $this->titipmerk->HrefValue = "";
 
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
@@ -1856,55 +1937,48 @@ class BrandGrid extends Brand
             // ijinbpom
             $this->ijinbpom->LinkCustomAttributes = "";
             $this->ijinbpom->HrefValue = "";
+
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
             }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
+            }
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+
+            // kode
+            $this->kode->EditAttrs["class"] = "form-control";
+            $this->kode->EditCustomAttributes = "";
+            if (!$this->kode->Raw) {
+                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
+            }
+            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
+            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
             // title
             $this->title->EditAttrs["class"] = "form-control";
@@ -1915,14 +1989,10 @@ class BrandGrid extends Brand
             $this->title->EditValue = HtmlEncode($this->title->CurrentValue);
             $this->title->PlaceHolder = RemoveHtml($this->title->caption());
 
-            // kode
-            $this->kode->EditAttrs["class"] = "form-control";
-            $this->kode->EditCustomAttributes = "";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+            // titipmerk
+            $this->titipmerk->EditCustomAttributes = "";
+            $this->titipmerk->EditValue = $this->titipmerk->options(false);
+            $this->titipmerk->PlaceHolder = RemoveHtml($this->titipmerk->caption());
 
             // ijinhaki
             $this->ijinhaki->EditCustomAttributes = "";
@@ -1934,19 +2004,37 @@ class BrandGrid extends Brand
             $this->ijinbpom->EditValue = $this->ijinbpom->options(false);
             $this->ijinbpom->PlaceHolder = RemoveHtml($this->ijinbpom->caption());
 
+            // aktif
+            $this->aktif->EditCustomAttributes = "";
+            $this->aktif->EditValue = $this->aktif->options(false);
+            $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
+
+            // kode_sip
+            $this->kode_sip->EditAttrs["class"] = "form-control";
+            $this->kode_sip->EditCustomAttributes = "";
+            if (!$this->kode_sip->Raw) {
+                $this->kode_sip->CurrentValue = HtmlDecode($this->kode_sip->CurrentValue);
+            }
+            $this->kode_sip->EditValue = HtmlEncode($this->kode_sip->CurrentValue);
+            $this->kode_sip->PlaceHolder = RemoveHtml($this->kode_sip->caption());
+
             // Edit refer script
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
 
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+
             // title
             $this->title->LinkCustomAttributes = "";
             $this->title->HrefValue = "";
 
-            // kode
-            $this->kode->LinkCustomAttributes = "";
-            $this->kode->HrefValue = "";
+            // titipmerk
+            $this->titipmerk->LinkCustomAttributes = "";
+            $this->titipmerk->HrefValue = "";
 
             // ijinhaki
             $this->ijinhaki->LinkCustomAttributes = "";
@@ -1955,6 +2043,14 @@ class BrandGrid extends Brand
             // ijinbpom
             $this->ijinbpom->LinkCustomAttributes = "";
             $this->ijinbpom->HrefValue = "";
+
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+
+            // kode_sip
+            $this->kode_sip->LinkCustomAttributes = "";
+            $this->kode_sip->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1980,14 +2076,19 @@ class BrandGrid extends Brand
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
             }
         }
+        if ($this->kode->Required) {
+            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
+                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+            }
+        }
         if ($this->title->Required) {
             if (!$this->title->IsDetailKey && EmptyValue($this->title->FormValue)) {
                 $this->title->addErrorMessage(str_replace("%s", $this->title->caption(), $this->title->RequiredErrorMessage));
             }
         }
-        if ($this->kode->Required) {
-            if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
-                $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
+        if ($this->titipmerk->Required) {
+            if ($this->titipmerk->FormValue == "") {
+                $this->titipmerk->addErrorMessage(str_replace("%s", $this->titipmerk->caption(), $this->titipmerk->RequiredErrorMessage));
             }
         }
         if ($this->ijinhaki->Required) {
@@ -1998,6 +2099,16 @@ class BrandGrid extends Brand
         if ($this->ijinbpom->Required) {
             if ($this->ijinbpom->FormValue == "") {
                 $this->ijinbpom->addErrorMessage(str_replace("%s", $this->ijinbpom->caption(), $this->ijinbpom->RequiredErrorMessage));
+            }
+        }
+        if ($this->aktif->Required) {
+            if ($this->aktif->FormValue == "") {
+                $this->aktif->addErrorMessage(str_replace("%s", $this->aktif->caption(), $this->aktif->RequiredErrorMessage));
+            }
+        }
+        if ($this->kode_sip->Required) {
+            if (!$this->kode_sip->IsDetailKey && EmptyValue($this->kode_sip->FormValue)) {
+                $this->kode_sip->addErrorMessage(str_replace("%s", $this->kode_sip->caption(), $this->kode_sip->RequiredErrorMessage));
             }
         }
 
@@ -2110,22 +2221,47 @@ class BrandGrid extends Brand
             $rsnew = [];
 
             // idcustomer
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->ReadOnly = true;
-            }
             $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, $this->idcustomer->ReadOnly);
+
+            // kode
+            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, $this->kode->ReadOnly);
 
             // title
             $this->title->setDbValueDef($rsnew, $this->title->CurrentValue, "", $this->title->ReadOnly);
 
-            // kode
-            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, $this->kode->ReadOnly);
+            // titipmerk
+            $this->titipmerk->setDbValueDef($rsnew, $this->titipmerk->CurrentValue, 0, $this->titipmerk->ReadOnly);
 
             // ijinhaki
             $this->ijinhaki->setDbValueDef($rsnew, $this->ijinhaki->CurrentValue, 0, $this->ijinhaki->ReadOnly);
 
             // ijinbpom
             $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, null, $this->ijinbpom->ReadOnly);
+
+            // aktif
+            $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, null, $this->aktif->ReadOnly);
+
+            // kode_sip
+            $this->kode_sip->setDbValueDef($rsnew, $this->kode_sip->CurrentValue, null, $this->kode_sip->ReadOnly);
+
+            // Check referential integrity for master table 'v_brand_customer'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_v_brand_customer();
+            $keyValue = $rsnew['id'] ?? $rsold['id'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@idbrand@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("v_brand_customer")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "v_brand_customer", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -2176,21 +2312,27 @@ class BrandGrid extends Brand
     {
         global $Language, $Security;
 
-        // Check if valid User ID
-        $validUser = false;
-        if ($Security->currentUserID() != "" && !EmptyValue($this->created_by->CurrentValue) && !$Security->isAdmin()) { // Non system admin
-            $validUser = $Security->isValidUserID($this->created_by->CurrentValue);
-            if (!$validUser) {
-                $userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
-                $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
-                $this->setFailureMessage($userIdMsg);
-                return false;
-            }
+        // Set up foreign key field value from Session
+        if ($this->getCurrentMasterTable() == "v_brand_customer") {
+            $this->id->CurrentValue = $this->id->getSessionValue();
         }
 
-        // Set up foreign key field value from Session
-        if ($this->getCurrentMasterTable() == "customer") {
-            $this->idcustomer->CurrentValue = $this->idcustomer->getSessionValue();
+        // Check referential integrity for master table 'brand'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_v_brand_customer();
+        if ($this->id->getSessionValue() != "") {
+        $masterFilter = str_replace("@idbrand@", AdjustSql($this->id->getSessionValue(), "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("v_brand_customer")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "v_brand_customer", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
         }
         $conn = $this->getConnection();
 
@@ -2203,11 +2345,14 @@ class BrandGrid extends Brand
         // idcustomer
         $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, false);
 
+        // kode
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
+
         // title
         $this->title->setDbValueDef($rsnew, $this->title->CurrentValue, "", false);
 
-        // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
+        // titipmerk
+        $this->titipmerk->setDbValueDef($rsnew, $this->titipmerk->CurrentValue, 0, strval($this->titipmerk->CurrentValue) == "");
 
         // ijinhaki
         $this->ijinhaki->setDbValueDef($rsnew, $this->ijinhaki->CurrentValue, 0, strval($this->ijinhaki->CurrentValue) == "");
@@ -2215,9 +2360,15 @@ class BrandGrid extends Brand
         // ijinbpom
         $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, null, false);
 
-        // created_by
-        if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
-            $rsnew['created_by'] = CurrentUserID();
+        // aktif
+        $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, null, strval($this->aktif->CurrentValue) == "");
+
+        // kode_sip
+        $this->kode_sip->setDbValueDef($rsnew, $this->kode_sip->CurrentValue, null, false);
+
+        // id
+        if ($this->id->getSessionValue() != "") {
+            $rsnew['id'] = $this->id->getSessionValue();
         }
 
         // Call Row Inserting event
@@ -2259,24 +2410,14 @@ class BrandGrid extends Brand
         return $addRow;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up master/detail based on QueryString
     protected function setupMasterParms()
     {
         // Hide foreign keys
         $masterTblVar = $this->getCurrentMasterTable();
-        if ($masterTblVar == "customer") {
-            $masterTbl = Container("customer");
-            $this->idcustomer->Visible = false;
+        if ($masterTblVar == "v_brand_customer") {
+            $masterTbl = Container("v_brand_customer");
+            $this->id->Visible = false;
             if ($masterTbl->EventCancelled) {
                 $this->EventCancelled = true;
             }
@@ -2305,6 +2446,8 @@ class BrandGrid extends Brand
                 case "x_ijinhaki":
                     break;
                 case "x_ijinbpom":
+                    break;
+                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";

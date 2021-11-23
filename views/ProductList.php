@@ -166,6 +166,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->ukuran->Visible) { // ukuran ?>
         <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_product_ukuran" class="product_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
 <?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <th data-name="updated_at" class="<?= $Page->updated_at->headerCellClass() ?>"><div id="elh_product_updated_at" class="product_updated_at"><?= $Page->renderSort($Page->updated_at) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -281,6 +284,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <td data-name="updated_at" <?= $Page->updated_at->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_product_updated_at">
+<span<?= $Page->updated_at->viewAttributes() ?>>
+<?= $Page->updated_at->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Page->ListOptions->render("body", "right", $Page->RowCount);
@@ -341,7 +352,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $(".ew-detail-add-group").html("Add Produk");
 });
 </script>
 <?php } ?>

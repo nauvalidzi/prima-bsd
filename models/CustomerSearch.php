@@ -463,11 +463,8 @@ class CustomerSearch extends Customer
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
         $this->nama->setVisibility();
-        $this->kodenpd->setVisibility();
-        $this->usaha->setVisibility();
+        $this->jenis_usaha->setVisibility();
         $this->jabatan->setVisibility();
-        $this->ktp->setVisibility();
-        $this->npwp->setVisibility();
         $this->idprov->setVisibility();
         $this->idkab->setVisibility();
         $this->idkec->setVisibility();
@@ -479,14 +476,16 @@ class CustomerSearch extends Customer
         $this->_email->setVisibility();
         $this->website->setVisibility();
         $this->foto->setVisibility();
-        $this->level_customer_id->Visible = false;
+        $this->ktp->setVisibility();
+        $this->npwp->setVisibility();
         $this->limit_kredit_order->setVisibility();
         $this->jatuh_tempo_invoice->setVisibility();
+        $this->kodenpd->setVisibility();
+        $this->klinik->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->setVisibility();
         $this->updated_at->setVisibility();
-        $this->created_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -507,7 +506,6 @@ class CustomerSearch extends Customer
         $this->setupLookupOptions($this->idkab);
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
-        $this->setupLookupOptions($this->level_customer_id);
         $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
         // Set up Breadcrumb
@@ -577,8 +575,7 @@ class CustomerSearch extends Customer
         $this->buildSearchUrl($srchUrl, $this->idtipecustomer); // idtipecustomer
         $this->buildSearchUrl($srchUrl, $this->idpegawai); // idpegawai
         $this->buildSearchUrl($srchUrl, $this->nama); // nama
-        $this->buildSearchUrl($srchUrl, $this->kodenpd); // kodenpd
-        $this->buildSearchUrl($srchUrl, $this->usaha); // usaha
+        $this->buildSearchUrl($srchUrl, $this->jenis_usaha); // jenis_usaha
         $this->buildSearchUrl($srchUrl, $this->jabatan); // jabatan
         $this->buildSearchUrl($srchUrl, $this->idprov); // idprov
         $this->buildSearchUrl($srchUrl, $this->idkab); // idkab
@@ -591,13 +588,16 @@ class CustomerSearch extends Customer
         $this->buildSearchUrl($srchUrl, $this->_email); // email
         $this->buildSearchUrl($srchUrl, $this->website); // website
         $this->buildSearchUrl($srchUrl, $this->foto); // foto
+        $this->buildSearchUrl($srchUrl, $this->ktp); // ktp
+        $this->buildSearchUrl($srchUrl, $this->npwp); // npwp
         $this->buildSearchUrl($srchUrl, $this->limit_kredit_order); // limit_kredit_order
         $this->buildSearchUrl($srchUrl, $this->jatuh_tempo_invoice); // jatuh_tempo_invoice
+        $this->buildSearchUrl($srchUrl, $this->kodenpd); // kodenpd
+        $this->buildSearchUrl($srchUrl, $this->klinik); // klinik
         $this->buildSearchUrl($srchUrl, $this->keterangan); // keterangan
         $this->buildSearchUrl($srchUrl, $this->aktif); // aktif
         $this->buildSearchUrl($srchUrl, $this->created_at); // created_at
         $this->buildSearchUrl($srchUrl, $this->updated_at); // updated_at
-        $this->buildSearchUrl($srchUrl, $this->created_by); // created_by
         if ($srchUrl != "") {
             $srchUrl .= "&";
         }
@@ -690,10 +690,7 @@ class CustomerSearch extends Customer
         if ($this->nama->AdvancedSearch->post()) {
             $hasValue = true;
         }
-        if ($this->kodenpd->AdvancedSearch->post()) {
-            $hasValue = true;
-        }
-        if ($this->usaha->AdvancedSearch->post()) {
+        if ($this->jenis_usaha->AdvancedSearch->post()) {
             $hasValue = true;
         }
         if ($this->jabatan->AdvancedSearch->post()) {
@@ -732,10 +729,22 @@ class CustomerSearch extends Customer
         if ($this->foto->AdvancedSearch->post()) {
             $hasValue = true;
         }
+        if ($this->ktp->AdvancedSearch->post()) {
+            $hasValue = true;
+        }
+        if ($this->npwp->AdvancedSearch->post()) {
+            $hasValue = true;
+        }
         if ($this->limit_kredit_order->AdvancedSearch->post()) {
             $hasValue = true;
         }
         if ($this->jatuh_tempo_invoice->AdvancedSearch->post()) {
+            $hasValue = true;
+        }
+        if ($this->kodenpd->AdvancedSearch->post()) {
+            $hasValue = true;
+        }
+        if ($this->klinik->AdvancedSearch->post()) {
             $hasValue = true;
         }
         if ($this->keterangan->AdvancedSearch->post()) {
@@ -748,9 +757,6 @@ class CustomerSearch extends Customer
             $hasValue = true;
         }
         if ($this->updated_at->AdvancedSearch->post()) {
-            $hasValue = true;
-        }
-        if ($this->created_by->AdvancedSearch->post()) {
             $hasValue = true;
         }
         return $hasValue;
@@ -778,15 +784,9 @@ class CustomerSearch extends Customer
 
         // nama
 
-        // kodenpd
-
-        // usaha
+        // jenis_usaha
 
         // jabatan
-
-        // ktp
-
-        // npwp
 
         // idprov
 
@@ -810,11 +810,17 @@ class CustomerSearch extends Customer
 
         // foto
 
-        // level_customer_id
+        // ktp
+
+        // npwp
 
         // limit_kredit_order
 
         // jatuh_tempo_invoice
+
+        // kodenpd
+
+        // klinik
 
         // keterangan
 
@@ -823,8 +829,6 @@ class CustomerSearch extends Customer
         // created_at
 
         // updated_at
-
-        // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -880,39 +884,16 @@ class CustomerSearch extends Customer
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
-            // kodenpd
-            $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
-            $this->kodenpd->ViewCustomAttributes = "";
-
-            // usaha
-            $this->usaha->ViewValue = $this->usaha->CurrentValue;
-            $this->usaha->ViewCustomAttributes = "";
+            // jenis_usaha
+            $this->jenis_usaha->ViewValue = $this->jenis_usaha->CurrentValue;
+            $this->jenis_usaha->ViewCustomAttributes = "";
 
             // jabatan
             $this->jabatan->ViewValue = $this->jabatan->CurrentValue;
             $this->jabatan->ViewCustomAttributes = "";
 
-            // ktp
-            if (!EmptyValue($this->ktp->Upload->DbValue)) {
-                $this->ktp->ViewValue = $this->id->CurrentValue;
-                $this->ktp->IsBlobImage = IsImageFile(ContentExtension($this->ktp->Upload->DbValue));
-                $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-            } else {
-                $this->ktp->ViewValue = "";
-            }
-            $this->ktp->ViewCustomAttributes = "";
-
-            // npwp
-            if (!EmptyValue($this->npwp->Upload->DbValue)) {
-                $this->npwp->ViewValue = $this->id->CurrentValue;
-                $this->npwp->IsBlobImage = IsImageFile(ContentExtension($this->npwp->Upload->DbValue));
-                $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-            } else {
-                $this->npwp->ViewValue = "";
-            }
-            $this->npwp->ViewCustomAttributes = "";
-
             // idprov
+            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -934,6 +915,7 @@ class CustomerSearch extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
+            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -955,6 +937,7 @@ class CustomerSearch extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
+            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -976,6 +959,7 @@ class CustomerSearch extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
+            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -1029,6 +1013,14 @@ class CustomerSearch extends Customer
             }
             $this->foto->ViewCustomAttributes = "";
 
+            // ktp
+            $this->ktp->ViewValue = $this->ktp->CurrentValue;
+            $this->ktp->ViewCustomAttributes = "";
+
+            // npwp
+            $this->npwp->ViewValue = $this->npwp->CurrentValue;
+            $this->npwp->ViewCustomAttributes = "";
+
             // limit_kredit_order
             $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
             $this->limit_kredit_order->ViewValue = FormatCurrency($this->limit_kredit_order->ViewValue, 2, -2, -2, -2);
@@ -1055,6 +1047,14 @@ class CustomerSearch extends Customer
             }
             $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
+            // kodenpd
+            $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
+            $this->kodenpd->ViewCustomAttributes = "";
+
+            // klinik
+            $this->klinik->ViewValue = $this->klinik->CurrentValue;
+            $this->klinik->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -1077,11 +1077,6 @@ class CustomerSearch extends Customer
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1102,54 +1097,15 @@ class CustomerSearch extends Customer
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
 
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
-            $this->kodenpd->TooltipValue = "";
-
-            // usaha
-            $this->usaha->LinkCustomAttributes = "";
-            $this->usaha->HrefValue = "";
-            $this->usaha->TooltipValue = "";
+            // jenis_usaha
+            $this->jenis_usaha->LinkCustomAttributes = "";
+            $this->jenis_usaha->HrefValue = "";
+            $this->jenis_usaha->TooltipValue = "";
 
             // jabatan
             $this->jabatan->LinkCustomAttributes = "";
             $this->jabatan->HrefValue = "";
             $this->jabatan->TooltipValue = "";
-
-            // ktp
-            $this->ktp->LinkCustomAttributes = "";
-            if (!empty($this->ktp->Upload->DbValue)) {
-                $this->ktp->HrefValue = GetFileUploadUrl($this->ktp, $this->id->CurrentValue);
-                $this->ktp->LinkAttrs["target"] = "";
-                if ($this->ktp->IsBlobImage && empty($this->ktp->LinkAttrs["target"])) {
-                    $this->ktp->LinkAttrs["target"] = "_blank";
-                }
-                if ($this->isExport()) {
-                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-                }
-            } else {
-                $this->ktp->HrefValue = "";
-            }
-            $this->ktp->ExportHrefValue = GetFileUploadUrl($this->ktp, $this->id->CurrentValue);
-            $this->ktp->TooltipValue = "";
-
-            // npwp
-            $this->npwp->LinkCustomAttributes = "";
-            if (!empty($this->npwp->Upload->DbValue)) {
-                $this->npwp->HrefValue = GetFileUploadUrl($this->npwp, $this->id->CurrentValue);
-                $this->npwp->LinkAttrs["target"] = "";
-                if ($this->npwp->IsBlobImage && empty($this->npwp->LinkAttrs["target"])) {
-                    $this->npwp->LinkAttrs["target"] = "_blank";
-                }
-                if ($this->isExport()) {
-                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-                }
-            } else {
-                $this->npwp->HrefValue = "";
-            }
-            $this->npwp->ExportHrefValue = GetFileUploadUrl($this->npwp, $this->id->CurrentValue);
-            $this->npwp->TooltipValue = "";
 
             // idprov
             $this->idprov->LinkCustomAttributes = "";
@@ -1222,6 +1178,32 @@ class CustomerSearch extends Customer
                 $this->foto->LinkAttrs->appendClass("ew-lightbox");
             }
 
+            // ktp
+            $this->ktp->LinkCustomAttributes = "";
+            if (!EmptyValue($this->ktp->CurrentValue)) {
+                $this->ktp->HrefValue = (!empty($this->ktp->ViewValue) && !is_array($this->ktp->ViewValue) ? RemoveHtml($this->ktp->ViewValue) : $this->ktp->CurrentValue); // Add prefix/suffix
+                $this->ktp->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
+                }
+            } else {
+                $this->ktp->HrefValue = "";
+            }
+            $this->ktp->TooltipValue = "";
+
+            // npwp
+            $this->npwp->LinkCustomAttributes = "";
+            if (!EmptyValue($this->npwp->CurrentValue)) {
+                $this->npwp->HrefValue = (!empty($this->npwp->ViewValue) && !is_array($this->npwp->ViewValue) ? RemoveHtml($this->npwp->ViewValue) : $this->npwp->CurrentValue); // Add prefix/suffix
+                $this->npwp->LinkAttrs["target"] = ""; // Add target
+                if ($this->isExport()) {
+                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
+                }
+            } else {
+                $this->npwp->HrefValue = "";
+            }
+            $this->npwp->TooltipValue = "";
+
             // limit_kredit_order
             $this->limit_kredit_order->LinkCustomAttributes = "";
             $this->limit_kredit_order->HrefValue = "";
@@ -1231,6 +1213,16 @@ class CustomerSearch extends Customer
             $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
             $this->jatuh_tempo_invoice->HrefValue = "";
             $this->jatuh_tempo_invoice->TooltipValue = "";
+
+            // kodenpd
+            $this->kodenpd->LinkCustomAttributes = "";
+            $this->kodenpd->HrefValue = "";
+            $this->kodenpd->TooltipValue = "";
+
+            // klinik
+            $this->klinik->LinkCustomAttributes = "";
+            $this->klinik->HrefValue = "";
+            $this->klinik->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1251,11 +1243,6 @@ class CustomerSearch extends Customer
             $this->updated_at->LinkCustomAttributes = "";
             $this->updated_at->HrefValue = "";
             $this->updated_at->TooltipValue = "";
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_SEARCH) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -1325,23 +1312,14 @@ class CustomerSearch extends Customer
             $this->nama->EditValue = HtmlEncode($this->nama->AdvancedSearch->SearchValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
-            // kodenpd
-            $this->kodenpd->EditAttrs["class"] = "form-control";
-            $this->kodenpd->EditCustomAttributes = "";
-            if (!$this->kodenpd->Raw) {
-                $this->kodenpd->AdvancedSearch->SearchValue = HtmlDecode($this->kodenpd->AdvancedSearch->SearchValue);
+            // jenis_usaha
+            $this->jenis_usaha->EditAttrs["class"] = "form-control";
+            $this->jenis_usaha->EditCustomAttributes = "";
+            if (!$this->jenis_usaha->Raw) {
+                $this->jenis_usaha->AdvancedSearch->SearchValue = HtmlDecode($this->jenis_usaha->AdvancedSearch->SearchValue);
             }
-            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->AdvancedSearch->SearchValue);
-            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
-
-            // usaha
-            $this->usaha->EditAttrs["class"] = "form-control";
-            $this->usaha->EditCustomAttributes = "";
-            if (!$this->usaha->Raw) {
-                $this->usaha->AdvancedSearch->SearchValue = HtmlDecode($this->usaha->AdvancedSearch->SearchValue);
-            }
-            $this->usaha->EditValue = HtmlEncode($this->usaha->AdvancedSearch->SearchValue);
-            $this->usaha->PlaceHolder = RemoveHtml($this->usaha->caption());
+            $this->jenis_usaha->EditValue = HtmlEncode($this->jenis_usaha->AdvancedSearch->SearchValue);
+            $this->jenis_usaha->PlaceHolder = RemoveHtml($this->jenis_usaha->caption());
 
             // jabatan
             $this->jabatan->EditAttrs["class"] = "form-control";
@@ -1352,131 +1330,99 @@ class CustomerSearch extends Customer
             $this->jabatan->EditValue = HtmlEncode($this->jabatan->AdvancedSearch->SearchValue);
             $this->jabatan->PlaceHolder = RemoveHtml($this->jabatan->caption());
 
-            // ktp
-            $this->ktp->EditAttrs["class"] = "form-control";
-            $this->ktp->EditCustomAttributes = "";
-            if (!EmptyValue($this->ktp->Upload->DbValue)) {
-                $this->ktp->EditValue = $this->id->CurrentValue;
-                $this->ktp->IsBlobImage = IsImageFile(ContentExtension($this->ktp->Upload->DbValue));
-                $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-            } else {
-                $this->ktp->EditValue = "";
-            }
-            if (!EmptyValue($this->ktp->CurrentValue)) {
-                $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-            }
-
-            // npwp
-            $this->npwp->EditAttrs["class"] = "form-control";
-            $this->npwp->EditCustomAttributes = "";
-            if (!EmptyValue($this->npwp->Upload->DbValue)) {
-                $this->npwp->EditValue = $this->id->CurrentValue;
-                $this->npwp->IsBlobImage = IsImageFile(ContentExtension($this->npwp->Upload->DbValue));
-                $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-            } else {
-                $this->npwp->EditValue = "";
-            }
-            if (!EmptyValue($this->npwp->CurrentValue)) {
-                $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-            }
-
             // idprov
             $this->idprov->EditAttrs["class"] = "form-control";
             $this->idprov->EditCustomAttributes = "";
+            $this->idprov->EditValue = HtmlEncode($this->idprov->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idprov->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idprov->AdvancedSearch->ViewValue = $this->idprov->lookupCacheOption($curVal);
-            } else {
-                $this->idprov->AdvancedSearch->ViewValue = $this->idprov->Lookup !== null && is_array($this->idprov->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idprov->AdvancedSearch->ViewValue !== null) { // Load from cache
-                $this->idprov->EditValue = array_values($this->idprov->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idprov->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                $this->idprov->EditValue = $this->idprov->lookupCacheOption($curVal);
+                if ($this->idprov->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->idprov->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idprov->Lookup->renderViewRow($rswrk[0]);
+                        $this->idprov->EditValue = $this->idprov->displayValue($arwrk);
+                    } else {
+                        $this->idprov->EditValue = HtmlEncode($this->idprov->AdvancedSearch->SearchValue);
+                    }
                 }
-                $sqlWrk = $this->idprov->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idprov->EditValue = $arwrk;
+            } else {
+                $this->idprov->EditValue = null;
             }
             $this->idprov->PlaceHolder = RemoveHtml($this->idprov->caption());
 
             // idkab
             $this->idkab->EditAttrs["class"] = "form-control";
             $this->idkab->EditCustomAttributes = "";
+            $this->idkab->EditValue = HtmlEncode($this->idkab->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idkab->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idkab->AdvancedSearch->ViewValue = $this->idkab->lookupCacheOption($curVal);
-            } else {
-                $this->idkab->AdvancedSearch->ViewValue = $this->idkab->Lookup !== null && is_array($this->idkab->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idkab->AdvancedSearch->ViewValue !== null) { // Load from cache
-                $this->idkab->EditValue = array_values($this->idkab->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkab->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                $this->idkab->EditValue = $this->idkab->lookupCacheOption($curVal);
+                if ($this->idkab->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->idkab->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idkab->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkab->EditValue = $this->idkab->displayValue($arwrk);
+                    } else {
+                        $this->idkab->EditValue = HtmlEncode($this->idkab->AdvancedSearch->SearchValue);
+                    }
                 }
-                $sqlWrk = $this->idkab->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idkab->EditValue = $arwrk;
+            } else {
+                $this->idkab->EditValue = null;
             }
             $this->idkab->PlaceHolder = RemoveHtml($this->idkab->caption());
 
             // idkec
             $this->idkec->EditAttrs["class"] = "form-control";
             $this->idkec->EditCustomAttributes = "";
+            $this->idkec->EditValue = HtmlEncode($this->idkec->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idkec->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idkec->AdvancedSearch->ViewValue = $this->idkec->lookupCacheOption($curVal);
-            } else {
-                $this->idkec->AdvancedSearch->ViewValue = $this->idkec->Lookup !== null && is_array($this->idkec->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idkec->AdvancedSearch->ViewValue !== null) { // Load from cache
-                $this->idkec->EditValue = array_values($this->idkec->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkec->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                $this->idkec->EditValue = $this->idkec->lookupCacheOption($curVal);
+                if ($this->idkec->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->idkec->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idkec->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkec->EditValue = $this->idkec->displayValue($arwrk);
+                    } else {
+                        $this->idkec->EditValue = HtmlEncode($this->idkec->AdvancedSearch->SearchValue);
+                    }
                 }
-                $sqlWrk = $this->idkec->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idkec->EditValue = $arwrk;
+            } else {
+                $this->idkec->EditValue = null;
             }
             $this->idkec->PlaceHolder = RemoveHtml($this->idkec->caption());
 
             // idkel
             $this->idkel->EditAttrs["class"] = "form-control";
             $this->idkel->EditCustomAttributes = "";
+            $this->idkel->EditValue = HtmlEncode($this->idkel->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idkel->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idkel->AdvancedSearch->ViewValue = $this->idkel->lookupCacheOption($curVal);
-            } else {
-                $this->idkel->AdvancedSearch->ViewValue = $this->idkel->Lookup !== null && is_array($this->idkel->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idkel->AdvancedSearch->ViewValue !== null) { // Load from cache
-                $this->idkel->EditValue = array_values($this->idkel->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkel->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                $this->idkel->EditValue = $this->idkel->lookupCacheOption($curVal);
+                if ($this->idkel->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->idkel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idkel->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkel->EditValue = $this->idkel->displayValue($arwrk);
+                    } else {
+                        $this->idkel->EditValue = HtmlEncode($this->idkel->AdvancedSearch->SearchValue);
+                    }
                 }
-                $sqlWrk = $this->idkel->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idkel->EditValue = $arwrk;
+            } else {
+                $this->idkel->EditValue = null;
             }
             $this->idkel->PlaceHolder = RemoveHtml($this->idkel->caption());
 
@@ -1540,6 +1486,24 @@ class CustomerSearch extends Customer
             $this->foto->EditValue = HtmlEncode($this->foto->AdvancedSearch->SearchValue);
             $this->foto->PlaceHolder = RemoveHtml($this->foto->caption());
 
+            // ktp
+            $this->ktp->EditAttrs["class"] = "form-control";
+            $this->ktp->EditCustomAttributes = "";
+            if (!$this->ktp->Raw) {
+                $this->ktp->AdvancedSearch->SearchValue = HtmlDecode($this->ktp->AdvancedSearch->SearchValue);
+            }
+            $this->ktp->EditValue = HtmlEncode($this->ktp->AdvancedSearch->SearchValue);
+            $this->ktp->PlaceHolder = RemoveHtml($this->ktp->caption());
+
+            // npwp
+            $this->npwp->EditAttrs["class"] = "form-control";
+            $this->npwp->EditCustomAttributes = "";
+            if (!$this->npwp->Raw) {
+                $this->npwp->AdvancedSearch->SearchValue = HtmlDecode($this->npwp->AdvancedSearch->SearchValue);
+            }
+            $this->npwp->EditValue = HtmlEncode($this->npwp->AdvancedSearch->SearchValue);
+            $this->npwp->PlaceHolder = RemoveHtml($this->npwp->caption());
+
             // limit_kredit_order
             $this->limit_kredit_order->EditAttrs["class"] = "form-control";
             $this->limit_kredit_order->EditCustomAttributes = "";
@@ -1571,6 +1535,24 @@ class CustomerSearch extends Customer
             }
             $this->jatuh_tempo_invoice->PlaceHolder = RemoveHtml($this->jatuh_tempo_invoice->caption());
 
+            // kodenpd
+            $this->kodenpd->EditAttrs["class"] = "form-control";
+            $this->kodenpd->EditCustomAttributes = "";
+            if (!$this->kodenpd->Raw) {
+                $this->kodenpd->AdvancedSearch->SearchValue = HtmlDecode($this->kodenpd->AdvancedSearch->SearchValue);
+            }
+            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->AdvancedSearch->SearchValue);
+            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
+
+            // klinik
+            $this->klinik->EditAttrs["class"] = "form-control";
+            $this->klinik->EditCustomAttributes = "";
+            if (!$this->klinik->Raw) {
+                $this->klinik->AdvancedSearch->SearchValue = HtmlDecode($this->klinik->AdvancedSearch->SearchValue);
+            }
+            $this->klinik->EditValue = HtmlEncode($this->klinik->AdvancedSearch->SearchValue);
+            $this->klinik->PlaceHolder = RemoveHtml($this->klinik->caption());
+
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
             $this->keterangan->EditCustomAttributes = "";
@@ -1593,12 +1575,6 @@ class CustomerSearch extends Customer
             $this->updated_at->EditCustomAttributes = "";
             $this->updated_at->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->updated_at->AdvancedSearch->SearchValue, 0), 8));
             $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
-
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->EditValue = HtmlEncode($this->created_by->AdvancedSearch->SearchValue);
-            $this->created_by->PlaceHolder = RemoveHtml($this->created_by->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1616,6 +1592,18 @@ class CustomerSearch extends Customer
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if (!CheckInteger($this->idprov->AdvancedSearch->SearchValue)) {
+            $this->idprov->addErrorMessage($this->idprov->getErrorMessage(false));
+        }
+        if (!CheckInteger($this->idkab->AdvancedSearch->SearchValue)) {
+            $this->idkab->addErrorMessage($this->idkab->getErrorMessage(false));
+        }
+        if (!CheckInteger($this->idkec->AdvancedSearch->SearchValue)) {
+            $this->idkec->addErrorMessage($this->idkec->getErrorMessage(false));
+        }
+        if (!CheckInteger($this->idkel->AdvancedSearch->SearchValue)) {
+            $this->idkel->addErrorMessage($this->idkel->getErrorMessage(false));
         }
         if (!CheckByRegEx($this->hp->AdvancedSearch->SearchValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
@@ -1643,8 +1631,7 @@ class CustomerSearch extends Customer
         $this->idtipecustomer->AdvancedSearch->load();
         $this->idpegawai->AdvancedSearch->load();
         $this->nama->AdvancedSearch->load();
-        $this->kodenpd->AdvancedSearch->load();
-        $this->usaha->AdvancedSearch->load();
+        $this->jenis_usaha->AdvancedSearch->load();
         $this->jabatan->AdvancedSearch->load();
         $this->idprov->AdvancedSearch->load();
         $this->idkab->AdvancedSearch->load();
@@ -1657,13 +1644,16 @@ class CustomerSearch extends Customer
         $this->_email->AdvancedSearch->load();
         $this->website->AdvancedSearch->load();
         $this->foto->AdvancedSearch->load();
+        $this->ktp->AdvancedSearch->load();
+        $this->npwp->AdvancedSearch->load();
         $this->limit_kredit_order->AdvancedSearch->load();
         $this->jatuh_tempo_invoice->AdvancedSearch->load();
+        $this->kodenpd->AdvancedSearch->load();
+        $this->klinik->AdvancedSearch->load();
         $this->keterangan->AdvancedSearch->load();
         $this->aktif->AdvancedSearch->load();
         $this->created_at->AdvancedSearch->load();
         $this->updated_at->AdvancedSearch->load();
-        $this->created_by->AdvancedSearch->load();
     }
 
     // Set up Breadcrumb
@@ -1701,8 +1691,6 @@ class CustomerSearch extends Customer
                 case "x_idkec":
                     break;
                 case "x_idkel":
-                    break;
-                case "x_level_customer_id":
                     break;
                 case "x_jatuh_tempo_invoice":
                     break;

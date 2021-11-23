@@ -56,6 +56,15 @@ $Page->showMessage();
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th class="<?= $Page->idcustomer->headerCellClass() ?>"><span id="elh_order_idcustomer" class="order_idcustomer"><?= $Page->idcustomer->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <th class="<?= $Page->idbrand->headerCellClass() ?>"><span id="elh_order_idbrand" class="order_idbrand"><?= $Page->idbrand->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->dokumen->Visible) { // dokumen ?>
+        <th class="<?= $Page->dokumen->headerCellClass() ?>"><span id="elh_order_dokumen" class="order_dokumen"><?= $Page->dokumen->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><span id="elh_order_keterangan" class="order_keterangan"><?= $Page->keterangan->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -106,6 +115,31 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_order_idcustomer" class="order_idcustomer">
 <span<?= $Page->idcustomer->viewAttributes() ?>>
 <?= $Page->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <td <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_idbrand" class="order_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->dokumen->Visible) { // dokumen ?>
+        <td <?= $Page->dokumen->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_dokumen" class="order_dokumen">
+<span<?= $Page->dokumen->viewAttributes() ?>>
+<?= GetFileViewTag($Page->dokumen, $Page->dokumen->getViewValue(), false) ?>
+</span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_keterangan" class="order_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

@@ -160,6 +160,15 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_order_idcustomer" class="order_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
 <?php } ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_order_idbrand" class="order_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
+<?php } ?>
+<?php if ($Page->dokumen->Visible) { // dokumen ?>
+        <th data-name="dokumen" class="<?= $Page->dokumen->headerCellClass() ?>"><div id="elh_order_dokumen" class="order_dokumen"><?= $Page->renderSort($Page->dokumen) ?></div></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_order_keterangan" class="order_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -259,6 +268,31 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->dokumen->Visible) { // dokumen ?>
+        <td data-name="dokumen" <?= $Page->dokumen->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_dokumen">
+<span<?= $Page->dokumen->viewAttributes() ?>>
+<?= GetFileViewTag($Page->dokumen, $Page->dokumen->getViewValue(), false) ?>
+</span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Page->ListOptions->render("body", "right", $Page->RowCount);
@@ -320,7 +354,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Create Purchase Order");
+    $(".ew-detail-add-group").html("Add Purchase Order");
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

@@ -22,15 +22,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-    <?php if ($Page->SortUrl($Page->idbrand) == "") { ?>
-        <th class="<?= $Page->idbrand->headerCellClass() ?>"><?= $Page->idbrand->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->idbrand->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idbrand->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idbrand->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idbrand->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idbrand->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idbrand->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
     <?php if ($Page->SortUrl($Page->idproduct) == "") { ?>
         <th class="<?= $Page->idproduct->headerCellClass() ?>"><?= $Page->idproduct->caption() ?></th>
@@ -85,6 +76,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <?php if ($Page->SortUrl($Page->keterangan) == "") { ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><?= $Page->keterangan->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->keterangan->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->keterangan->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->keterangan->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->keterangan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->keterangan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -115,13 +115,6 @@ while ($Page->Recordset && !$Page->Recordset->EOF) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <!-- idbrand -->
-        <td<?= $Page->idbrand->cellAttributes() ?>>
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
-</td>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <!-- idproduct -->
         <td<?= $Page->idproduct->cellAttributes() ?>>
@@ -162,6 +155,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->total->cellAttributes() ?>>
 <span<?= $Page->total->viewAttributes() ?>>
 <?= $Page->total->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <!-- keterangan -->
+        <td<?= $Page->keterangan->cellAttributes() ?>>
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

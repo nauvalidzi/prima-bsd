@@ -108,8 +108,6 @@ return [
     "v_bonuscustomer_detail" => \DI\create(VBonuscustomerDetail::class),
     "laporansales" => \DI\create(Laporansales::class),
     "v_npd_customer" => \DI\create(VNpdCustomer::class),
-    "brand_link" => \DI\create(BrandLink::class),
-    "v_brand_link" => \DI\create(VBrandLink::class),
     "v_order_customer" => \DI\create(VOrderCustomer::class),
     "laporan_delivery_order" => \DI\create(LaporanDeliveryOrder::class),
     "laporan_invoice" => \DI\create(LaporanInvoice::class),
@@ -122,7 +120,6 @@ return [
     "laporan_kpi_marketing" => \DI\create(LaporanKpiMarketing::class),
     "laporan_kpi_marketing_detail" => \DI\create(LaporanKpiMarketingDetail::class),
     "level_customer" => \DI\create(LevelCustomer::class),
-    "penomoran" => \DI\create(Penomoran::class),
     "d_jatuhtempo" => \DI\create(DJatuhtempo::class),
     "v_piutang_detail" => \DI\create(VPiutangDetail::class),
     "bot_history" => \DI\create(BotHistory::class),
@@ -132,6 +129,8 @@ return [
     "penagihan_customer" => \DI\create(PenagihanCustomer::class),
     "penagihan" => \DI\create(Penagihan::class),
     "npd_status" => \DI\create(NpdStatus::class),
+    "brand_customer" => \DI\create(BrandCustomer::class),
+    "v_brand_customer" => \DI\create(VBrandCustomer::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

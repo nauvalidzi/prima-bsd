@@ -77,7 +77,7 @@ class VDoStock extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // kodecustomer
-        $this->kodecustomer = new DbField('v_do_stock', 'v_do_stock', 'x_kodecustomer', 'kodecustomer', '`kodecustomer`', '`kodecustomer`', 200, 20, -1, false, '`kodecustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodecustomer = new DbField('v_do_stock', 'v_do_stock', 'x_kodecustomer', 'kodecustomer', '`kodecustomer`', '`kodecustomer`', 200, 50, -1, false, '`kodecustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kodecustomer->Nullable = false; // NOT NULL field
         $this->kodecustomer->Required = true; // Required field
         $this->kodecustomer->Sortable = true; // Allow sort
@@ -85,7 +85,7 @@ class VDoStock extends DbTable
         $this->Fields['kodecustomer'] = &$this->kodecustomer;
 
         // namacustomer
-        $this->namacustomer = new DbField('v_do_stock', 'v_do_stock', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 100, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namacustomer = new DbField('v_do_stock', 'v_do_stock', 'x_namacustomer', 'namacustomer', '`namacustomer`', '`namacustomer`', 200, 255, -1, false, '`namacustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->namacustomer->Nullable = false; // NOT NULL field
         $this->namacustomer->Required = true; // Required field
         $this->namacustomer->Sortable = true; // Allow sort

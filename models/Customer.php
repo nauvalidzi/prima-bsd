@@ -33,11 +33,8 @@ class Customer extends DbTable
     public $idtipecustomer;
     public $idpegawai;
     public $nama;
-    public $kodenpd;
-    public $usaha;
+    public $jenis_usaha;
     public $jabatan;
-    public $ktp;
-    public $npwp;
     public $idprov;
     public $idkab;
     public $idkec;
@@ -49,14 +46,16 @@ class Customer extends DbTable
     public $_email;
     public $website;
     public $foto;
-    public $level_customer_id;
+    public $ktp;
+    public $npwp;
     public $limit_kredit_order;
     public $jatuh_tempo_invoice;
+    public $kodenpd;
+    public $klinik;
     public $keterangan;
     public $aktif;
     public $created_at;
     public $updated_at;
-    public $created_by;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -104,7 +103,7 @@ class Customer extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // kode
-        $this->kode = new DbField('customer', 'customer', 'x_kode', 'kode', '`kode`', '`kode`', 200, 20, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode = new DbField('customer', 'customer', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kode->Nullable = false; // NOT NULL field
         $this->kode->Required = true; // Required field
         $this->kode->Sortable = true; // Allow sort
@@ -151,48 +150,28 @@ class Customer extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // nama
-        $this->nama = new DbField('customer', 'customer', 'x_nama', 'nama', '`nama`', '`nama`', 200, 100, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama = new DbField('customer', 'customer', 'x_nama', 'nama', '`nama`', '`nama`', 200, 255, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nama->Nullable = false; // NOT NULL field
         $this->nama->Required = true; // Required field
         $this->nama->Sortable = true; // Allow sort
         $this->nama->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama->Param, "CustomMsg");
         $this->Fields['nama'] = &$this->nama;
 
-        // kodenpd
-        $this->kodenpd = new DbField('customer', 'customer', 'x_kodenpd', 'kodenpd', '`kodenpd`', '`kodenpd`', 200, 20, -1, false, '`kodenpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kodenpd->Sortable = true; // Allow sort
-        $this->kodenpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodenpd->Param, "CustomMsg");
-        $this->Fields['kodenpd'] = &$this->kodenpd;
-
-        // usaha
-        $this->usaha = new DbField('customer', 'customer', 'x_usaha', 'usaha', '`usaha`', '`usaha`', 200, 100, -1, false, '`usaha`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->usaha->Sortable = true; // Allow sort
-        $this->usaha->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->usaha->Param, "CustomMsg");
-        $this->Fields['usaha'] = &$this->usaha;
+        // jenis_usaha
+        $this->jenis_usaha = new DbField('customer', 'customer', 'x_jenis_usaha', 'jenis_usaha', '`jenis_usaha`', '`jenis_usaha`', 200, 255, -1, false, '`jenis_usaha`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jenis_usaha->Sortable = true; // Allow sort
+        $this->jenis_usaha->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jenis_usaha->Param, "CustomMsg");
+        $this->Fields['jenis_usaha'] = &$this->jenis_usaha;
 
         // jabatan
-        $this->jabatan = new DbField('customer', 'customer', 'x_jabatan', 'jabatan', '`jabatan`', '`jabatan`', 200, 50, -1, false, '`jabatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jabatan = new DbField('customer', 'customer', 'x_jabatan', 'jabatan', '`jabatan`', '`jabatan`', 200, 255, -1, false, '`jabatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->jabatan->Sortable = true; // Allow sort
         $this->jabatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jabatan->Param, "CustomMsg");
         $this->Fields['jabatan'] = &$this->jabatan;
 
-        // ktp
-        $this->ktp = new DbField('customer', 'customer', 'x_ktp', 'ktp', '`ktp`', '`ktp`', 205, 0, -1, true, '`ktp`', false, false, false, 'FORMATTED TEXT', 'FILE');
-        $this->ktp->Sortable = true; // Allow sort
-        $this->ktp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ktp->Param, "CustomMsg");
-        $this->Fields['ktp'] = &$this->ktp;
-
-        // npwp
-        $this->npwp = new DbField('customer', 'customer', 'x_npwp', 'npwp', '`npwp`', '`npwp`', 205, 0, -1, true, '`npwp`', false, false, false, 'FORMATTED TEXT', 'FILE');
-        $this->npwp->Sortable = true; // Allow sort
-        $this->npwp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->npwp->Param, "CustomMsg");
-        $this->Fields['npwp'] = &$this->npwp;
-
         // idprov
-        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 200, 50, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 3, 11, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idprov->Sortable = true; // Allow sort
-        $this->idprov->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idprov->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idprov->Lookup = new Lookup('idprov', 'provinsi', false, 'id', ["name","","",""], [], ["x_idkab"], [], [], [], [], '', '');
@@ -201,14 +180,13 @@ class Customer extends DbTable
                 $this->idprov->Lookup = new Lookup('idprov', 'provinsi', false, 'id', ["name","","",""], [], ["x_idkab"], [], [], [], [], '', '');
                 break;
         }
+        $this->idprov->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idprov->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idprov->Param, "CustomMsg");
         $this->Fields['idprov'] = &$this->idprov;
 
         // idkab
-        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 200, 50, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 3, 11, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idkab->Sortable = true; // Allow sort
-        $this->idkab->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idkab->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkab->Lookup = new Lookup('idkab', 'kabupaten', false, 'id', ["nama","","",""], ["x_idprov"], ["x_idkec"], ["idprovinsi"], ["x_idprovinsi"], [], [], '', '');
@@ -217,14 +195,13 @@ class Customer extends DbTable
                 $this->idkab->Lookup = new Lookup('idkab', 'kabupaten', false, 'id', ["nama","","",""], ["x_idprov"], ["x_idkec"], ["idprovinsi"], ["x_idprovinsi"], [], [], '', '');
                 break;
         }
+        $this->idkab->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkab->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkab->Param, "CustomMsg");
         $this->Fields['idkab'] = &$this->idkab;
 
         // idkec
-        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 200, 50, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 3, 11, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idkec->Sortable = true; // Allow sort
-        $this->idkec->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idkec->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkec->Lookup = new Lookup('idkec', 'kecamatan', false, 'id', ["nama","","",""], ["x_idkab"], ["x_idkel"], ["idkabupaten"], ["x_idkabupaten"], [], [], '', '');
@@ -233,14 +210,13 @@ class Customer extends DbTable
                 $this->idkec->Lookup = new Lookup('idkec', 'kecamatan', false, 'id', ["nama","","",""], ["x_idkab"], ["x_idkel"], ["idkabupaten"], ["x_idkabupaten"], [], [], '', '');
                 break;
         }
+        $this->idkec->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkec->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkec->Param, "CustomMsg");
         $this->Fields['idkec'] = &$this->idkec;
 
         // idkel
-        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 200, 50, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 3, 11, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idkel->Sortable = true; // Allow sort
-        $this->idkel->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idkel->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkel->Lookup = new Lookup('idkel', 'kelurahan', false, 'id', ["nama","","",""], ["x_idkec"], [], ["idkecamatan"], ["x_idkecamatan"], [], [], '', '');
@@ -249,11 +225,12 @@ class Customer extends DbTable
                 $this->idkel->Lookup = new Lookup('idkel', 'kelurahan', false, 'id', ["nama","","",""], ["x_idkec"], [], ["idkecamatan"], ["x_idkecamatan"], [], [], '', '');
                 break;
         }
+        $this->idkel->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkel->Param, "CustomMsg");
         $this->Fields['idkel'] = &$this->idkel;
 
         // kodepos
-        $this->kodepos = new DbField('customer', 'customer', 'x_kodepos', 'kodepos', '`kodepos`', '`kodepos`', 200, 50, -1, false, '`kodepos`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodepos = new DbField('customer', 'customer', 'x_kodepos', 'kodepos', '`kodepos`', '`kodepos`', 200, 6, -1, false, '`kodepos`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kodepos->Sortable = true; // Allow sort
         $this->kodepos->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodepos->Param, "CustomMsg");
         $this->Fields['kodepos'] = &$this->kodepos;
@@ -280,14 +257,14 @@ class Customer extends DbTable
         $this->Fields['hp'] = &$this->hp;
 
         // email
-        $this->_email = new DbField('customer', 'customer', 'x__email', 'email', '`email`', '`email`', 200, 100, -1, false, '`email`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->_email = new DbField('customer', 'customer', 'x__email', 'email', '`email`', '`email`', 200, 255, -1, false, '`email`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->_email->Sortable = true; // Allow sort
         $this->_email->DefaultErrorMessage = $Language->phrase("IncorrectEmail");
         $this->_email->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->_email->Param, "CustomMsg");
         $this->Fields['email'] = &$this->_email;
 
         // website
-        $this->website = new DbField('customer', 'customer', 'x_website', 'website', '`website`', '`website`', 200, 100, -1, false, '`website`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->website = new DbField('customer', 'customer', 'x_website', 'website', '`website`', '`website`', 200, 255, -1, false, '`website`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->website->Sortable = true; // Allow sort
         $this->website->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->website->Param, "CustomMsg");
         $this->Fields['website'] = &$this->website;
@@ -301,22 +278,17 @@ class Customer extends DbTable
         $this->foto->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->foto->Param, "CustomMsg");
         $this->Fields['foto'] = &$this->foto;
 
-        // level_customer_id
-        $this->level_customer_id = new DbField('customer', 'customer', 'x_level_customer_id', 'level_customer_id', '`level_customer_id`', '`level_customer_id`', 3, 11, -1, false, '`level_customer_id`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->level_customer_id->Sortable = false; // Allow sort
-        $this->level_customer_id->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->level_customer_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->level_customer_id->Lookup = new Lookup('level_customer_id', 'level_customer', false, 'id', ["level","limit_kredit","diskon",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->level_customer_id->Lookup = new Lookup('level_customer_id', 'level_customer', false, 'id', ["level","limit_kredit","diskon",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->level_customer_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->level_customer_id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->level_customer_id->Param, "CustomMsg");
-        $this->Fields['level_customer_id'] = &$this->level_customer_id;
+        // ktp
+        $this->ktp = new DbField('customer', 'customer', 'x_ktp', 'ktp', '`ktp`', '`ktp`', 200, 255, -1, false, '`ktp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->ktp->Sortable = true; // Allow sort
+        $this->ktp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ktp->Param, "CustomMsg");
+        $this->Fields['ktp'] = &$this->ktp;
+
+        // npwp
+        $this->npwp = new DbField('customer', 'customer', 'x_npwp', 'npwp', '`npwp`', '`npwp`', 200, 255, -1, false, '`npwp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->npwp->Sortable = true; // Allow sort
+        $this->npwp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->npwp->Param, "CustomMsg");
+        $this->Fields['npwp'] = &$this->npwp;
 
         // limit_kredit_order
         $this->limit_kredit_order = new DbField('customer', 'customer', 'x_limit_kredit_order', 'limit_kredit_order', '`limit_kredit_order`', '`limit_kredit_order`', 3, 15, -1, false, '`limit_kredit_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -344,8 +316,20 @@ class Customer extends DbTable
         $this->jatuh_tempo_invoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jatuh_tempo_invoice->Param, "CustomMsg");
         $this->Fields['jatuh_tempo_invoice'] = &$this->jatuh_tempo_invoice;
 
+        // kodenpd
+        $this->kodenpd = new DbField('customer', 'customer', 'x_kodenpd', 'kodenpd', '`kodenpd`', '`kodenpd`', 200, 50, -1, false, '`kodenpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodenpd->Sortable = true; // Allow sort
+        $this->kodenpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodenpd->Param, "CustomMsg");
+        $this->Fields['kodenpd'] = &$this->kodenpd;
+
+        // klinik
+        $this->klinik = new DbField('customer', 'customer', 'x_klinik', 'klinik', '`klinik`', '`klinik`', 200, 255, -1, false, '`klinik`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->klinik->Sortable = true; // Allow sort
+        $this->klinik->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->klinik->Param, "CustomMsg");
+        $this->Fields['klinik'] = &$this->klinik;
+
         // keterangan
-        $this->keterangan = new DbField('customer', 'customer', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, 255, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keterangan = new DbField('customer', 'customer', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;
@@ -380,13 +364,6 @@ class Customer extends DbTable
         $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
-
-        // created_by
-        $this->created_by = new DbField('customer', 'customer', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
     }
 
     // Field Visibility
@@ -498,16 +475,16 @@ class Customer extends DbTable
             $detailUrl = Container("alamat_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "brand") {
-            $detailUrl = Container("brand")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+        if ($this->getCurrentDetailTable() == "invoice") {
+            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($this->getCurrentDetailTable() == "order") {
             $detailUrl = Container("order")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "invoice") {
-            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+        if ($this->getCurrentDetailTable() == "brand_customer") {
+            $detailUrl = Container("brand_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -850,6 +827,58 @@ class Customer extends DbTable
     // Update
     public function update(&$rs, $where = "", $rsold = null, $curfilter = true)
     {
+        // Cascade Update detail table 'order'
+        $cascadeUpdate = false;
+        $rscascade = [];
+        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idcustomer'
+            $cascadeUpdate = true;
+            $rscascade['idcustomer'] = $rs['id'];
+        }
+        if ($cascadeUpdate) {
+            $rswrk = Container("order")->loadRs("`idcustomer` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($rswrk as $rsdtlold) {
+                $rskey = [];
+                $fldname = 'id';
+                $rskey[$fldname] = $rsdtlold[$fldname];
+                $rsdtlnew = array_merge($rsdtlold, $rscascade);
+                // Call Row_Updating event
+                $success = Container("order")->rowUpdating($rsdtlold, $rsdtlnew);
+                if ($success) {
+                    $success = Container("order")->update($rscascade, $rskey, $rsdtlold);
+                }
+                if (!$success) {
+                    return false;
+                }
+                // Call Row_Updated event
+                Container("order")->rowUpdated($rsdtlold, $rsdtlnew);
+            }
+        }
+
+        // Cascade Update detail table 'brand_customer'
+        $cascadeUpdate = false;
+        $rscascade = [];
+        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idcustomer'
+            $cascadeUpdate = true;
+            $rscascade['idcustomer'] = $rs['id'];
+        }
+        if ($cascadeUpdate) {
+            $rswrk = Container("brand_customer")->loadRs("`idcustomer` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($rswrk as $rsdtlold) {
+                $rskey = [];
+                $rsdtlnew = array_merge($rsdtlold, $rscascade);
+                // Call Row_Updating event
+                $success = Container("brand_customer")->rowUpdating($rsdtlold, $rsdtlnew);
+                if ($success) {
+                    $success = Container("brand_customer")->update($rscascade, $rskey, $rsdtlold);
+                }
+                if (!$success) {
+                    return false;
+                }
+                // Call Row_Updated event
+                Container("brand_customer")->rowUpdated($rsdtlold, $rsdtlnew);
+            }
+        }
+
         // If no field is updated, execute may return 0. Treat as success
         $success = $this->updateSql($rs, $where, $curfilter)->execute();
         $success = ($success > 0) ? $success : true;
@@ -885,6 +914,54 @@ class Customer extends DbTable
     public function delete(&$rs, $where = "", $curfilter = false)
     {
         $success = true;
+
+        // Cascade delete detail table 'order'
+        $dtlrows = Container("order")->loadRs("`idcustomer` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
+        // Call Row Deleting event
+        foreach ($dtlrows as $dtlrow) {
+            $success = Container("order")->rowDeleting($dtlrow);
+            if (!$success) {
+                break;
+            }
+        }
+        if ($success) {
+            foreach ($dtlrows as $dtlrow) {
+                $success = Container("order")->delete($dtlrow); // Delete
+                if (!$success) {
+                    break;
+                }
+            }
+        }
+        // Call Row Deleted event
+        if ($success) {
+            foreach ($dtlrows as $dtlrow) {
+                Container("order")->rowDeleted($dtlrow);
+            }
+        }
+
+        // Cascade delete detail table 'brand_customer'
+        $dtlrows = Container("brand_customer")->loadRs("`idcustomer` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
+        // Call Row Deleting event
+        foreach ($dtlrows as $dtlrow) {
+            $success = Container("brand_customer")->rowDeleting($dtlrow);
+            if (!$success) {
+                break;
+            }
+        }
+        if ($success) {
+            foreach ($dtlrows as $dtlrow) {
+                $success = Container("brand_customer")->delete($dtlrow); // Delete
+                if (!$success) {
+                    break;
+                }
+            }
+        }
+        // Call Row Deleted event
+        if ($success) {
+            foreach ($dtlrows as $dtlrow) {
+                Container("brand_customer")->rowDeleted($dtlrow);
+            }
+        }
         if ($success) {
             $success = $this->deleteSql($rs, $where, $curfilter)->execute();
         }
@@ -902,11 +979,8 @@ class Customer extends DbTable
         $this->idtipecustomer->DbValue = $row['idtipecustomer'];
         $this->idpegawai->DbValue = $row['idpegawai'];
         $this->nama->DbValue = $row['nama'];
-        $this->kodenpd->DbValue = $row['kodenpd'];
-        $this->usaha->DbValue = $row['usaha'];
+        $this->jenis_usaha->DbValue = $row['jenis_usaha'];
         $this->jabatan->DbValue = $row['jabatan'];
-        $this->ktp->Upload->DbValue = $row['ktp'];
-        $this->npwp->Upload->DbValue = $row['npwp'];
         $this->idprov->DbValue = $row['idprov'];
         $this->idkab->DbValue = $row['idkab'];
         $this->idkec->DbValue = $row['idkec'];
@@ -918,14 +992,16 @@ class Customer extends DbTable
         $this->_email->DbValue = $row['email'];
         $this->website->DbValue = $row['website'];
         $this->foto->Upload->DbValue = $row['foto'];
-        $this->level_customer_id->DbValue = $row['level_customer_id'];
+        $this->ktp->DbValue = $row['ktp'];
+        $this->npwp->DbValue = $row['npwp'];
         $this->limit_kredit_order->DbValue = $row['limit_kredit_order'];
         $this->jatuh_tempo_invoice->DbValue = $row['jatuh_tempo_invoice'];
+        $this->kodenpd->DbValue = $row['kodenpd'];
+        $this->klinik->DbValue = $row['klinik'];
         $this->keterangan->DbValue = $row['keterangan'];
         $this->aktif->DbValue = $row['aktif'];
         $this->created_at->DbValue = $row['created_at'];
         $this->updated_at->DbValue = $row['updated_at'];
-        $this->created_by->DbValue = $row['created_by'];
     }
 
     // Delete uploaded files
@@ -1269,17 +1345,8 @@ SORTHTML;
         $this->idtipecustomer->setDbValue($row['idtipecustomer']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->nama->setDbValue($row['nama']);
-        $this->kodenpd->setDbValue($row['kodenpd']);
-        $this->usaha->setDbValue($row['usaha']);
+        $this->jenis_usaha->setDbValue($row['jenis_usaha']);
         $this->jabatan->setDbValue($row['jabatan']);
-        $this->ktp->Upload->DbValue = $row['ktp'];
-        if (is_resource($this->ktp->Upload->DbValue) && get_resource_type($this->ktp->Upload->DbValue) == "stream") { // Byte array
-            $this->ktp->Upload->DbValue = stream_get_contents($this->ktp->Upload->DbValue);
-        }
-        $this->npwp->Upload->DbValue = $row['npwp'];
-        if (is_resource($this->npwp->Upload->DbValue) && get_resource_type($this->npwp->Upload->DbValue) == "stream") { // Byte array
-            $this->npwp->Upload->DbValue = stream_get_contents($this->npwp->Upload->DbValue);
-        }
         $this->idprov->setDbValue($row['idprov']);
         $this->idkab->setDbValue($row['idkab']);
         $this->idkec->setDbValue($row['idkec']);
@@ -1292,14 +1359,16 @@ SORTHTML;
         $this->website->setDbValue($row['website']);
         $this->foto->Upload->DbValue = $row['foto'];
         $this->foto->setDbValue($this->foto->Upload->DbValue);
-        $this->level_customer_id->setDbValue($row['level_customer_id']);
+        $this->ktp->setDbValue($row['ktp']);
+        $this->npwp->setDbValue($row['npwp']);
         $this->limit_kredit_order->setDbValue($row['limit_kredit_order']);
         $this->jatuh_tempo_invoice->setDbValue($row['jatuh_tempo_invoice']);
+        $this->kodenpd->setDbValue($row['kodenpd']);
+        $this->klinik->setDbValue($row['klinik']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
-        $this->created_by->setDbValue($row['created_by']);
     }
 
     // Render list row values
@@ -1322,15 +1391,9 @@ SORTHTML;
 
         // nama
 
-        // kodenpd
-
-        // usaha
+        // jenis_usaha
 
         // jabatan
-
-        // ktp
-
-        // npwp
 
         // idprov
 
@@ -1354,12 +1417,17 @@ SORTHTML;
 
         // foto
 
-        // level_customer_id
-        $this->level_customer_id->CellCssStyle = "white-space: nowrap;";
+        // ktp
+
+        // npwp
 
         // limit_kredit_order
 
         // jatuh_tempo_invoice
+
+        // kodenpd
+
+        // klinik
 
         // keterangan
 
@@ -1368,8 +1436,6 @@ SORTHTML;
         // created_at
 
         // updated_at
-
-        // created_by
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1425,39 +1491,16 @@ SORTHTML;
         $this->nama->ViewValue = $this->nama->CurrentValue;
         $this->nama->ViewCustomAttributes = "";
 
-        // kodenpd
-        $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
-        $this->kodenpd->ViewCustomAttributes = "";
-
-        // usaha
-        $this->usaha->ViewValue = $this->usaha->CurrentValue;
-        $this->usaha->ViewCustomAttributes = "";
+        // jenis_usaha
+        $this->jenis_usaha->ViewValue = $this->jenis_usaha->CurrentValue;
+        $this->jenis_usaha->ViewCustomAttributes = "";
 
         // jabatan
         $this->jabatan->ViewValue = $this->jabatan->CurrentValue;
         $this->jabatan->ViewCustomAttributes = "";
 
-        // ktp
-        if (!EmptyValue($this->ktp->Upload->DbValue)) {
-            $this->ktp->ViewValue = $this->id->CurrentValue;
-            $this->ktp->IsBlobImage = IsImageFile(ContentExtension($this->ktp->Upload->DbValue));
-            $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-        } else {
-            $this->ktp->ViewValue = "";
-        }
-        $this->ktp->ViewCustomAttributes = "";
-
-        // npwp
-        if (!EmptyValue($this->npwp->Upload->DbValue)) {
-            $this->npwp->ViewValue = $this->id->CurrentValue;
-            $this->npwp->IsBlobImage = IsImageFile(ContentExtension($this->npwp->Upload->DbValue));
-            $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-        } else {
-            $this->npwp->ViewValue = "";
-        }
-        $this->npwp->ViewCustomAttributes = "";
-
         // idprov
+        $this->idprov->ViewValue = $this->idprov->CurrentValue;
         $curVal = trim(strval($this->idprov->CurrentValue));
         if ($curVal != "") {
             $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -1479,6 +1522,7 @@ SORTHTML;
         $this->idprov->ViewCustomAttributes = "";
 
         // idkab
+        $this->idkab->ViewValue = $this->idkab->CurrentValue;
         $curVal = trim(strval($this->idkab->CurrentValue));
         if ($curVal != "") {
             $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -1500,6 +1544,7 @@ SORTHTML;
         $this->idkab->ViewCustomAttributes = "";
 
         // idkec
+        $this->idkec->ViewValue = $this->idkec->CurrentValue;
         $curVal = trim(strval($this->idkec->CurrentValue));
         if ($curVal != "") {
             $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -1521,6 +1566,7 @@ SORTHTML;
         $this->idkec->ViewCustomAttributes = "";
 
         // idkel
+        $this->idkel->ViewValue = $this->idkel->CurrentValue;
         $curVal = trim(strval($this->idkel->CurrentValue));
         if ($curVal != "") {
             $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -1574,26 +1620,13 @@ SORTHTML;
         }
         $this->foto->ViewCustomAttributes = "";
 
-        // level_customer_id
-        $curVal = trim(strval($this->level_customer_id->CurrentValue));
-        if ($curVal != "") {
-            $this->level_customer_id->ViewValue = $this->level_customer_id->lookupCacheOption($curVal);
-            if ($this->level_customer_id->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->level_customer_id->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->level_customer_id->Lookup->renderViewRow($rswrk[0]);
-                    $this->level_customer_id->ViewValue = $this->level_customer_id->displayValue($arwrk);
-                } else {
-                    $this->level_customer_id->ViewValue = $this->level_customer_id->CurrentValue;
-                }
-            }
-        } else {
-            $this->level_customer_id->ViewValue = null;
-        }
-        $this->level_customer_id->ViewCustomAttributes = "";
+        // ktp
+        $this->ktp->ViewValue = $this->ktp->CurrentValue;
+        $this->ktp->ViewCustomAttributes = "";
+
+        // npwp
+        $this->npwp->ViewValue = $this->npwp->CurrentValue;
+        $this->npwp->ViewCustomAttributes = "";
 
         // limit_kredit_order
         $this->limit_kredit_order->ViewValue = $this->limit_kredit_order->CurrentValue;
@@ -1621,6 +1654,14 @@ SORTHTML;
         }
         $this->jatuh_tempo_invoice->ViewCustomAttributes = "";
 
+        // kodenpd
+        $this->kodenpd->ViewValue = $this->kodenpd->CurrentValue;
+        $this->kodenpd->ViewCustomAttributes = "";
+
+        // klinik
+        $this->klinik->ViewValue = $this->klinik->CurrentValue;
+        $this->klinik->ViewCustomAttributes = "";
+
         // keterangan
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
         $this->keterangan->ViewCustomAttributes = "";
@@ -1642,11 +1683,6 @@ SORTHTML;
         $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
         $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
         $this->updated_at->ViewCustomAttributes = "";
-
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1673,54 +1709,15 @@ SORTHTML;
         $this->nama->HrefValue = "";
         $this->nama->TooltipValue = "";
 
-        // kodenpd
-        $this->kodenpd->LinkCustomAttributes = "";
-        $this->kodenpd->HrefValue = "";
-        $this->kodenpd->TooltipValue = "";
-
-        // usaha
-        $this->usaha->LinkCustomAttributes = "";
-        $this->usaha->HrefValue = "";
-        $this->usaha->TooltipValue = "";
+        // jenis_usaha
+        $this->jenis_usaha->LinkCustomAttributes = "";
+        $this->jenis_usaha->HrefValue = "";
+        $this->jenis_usaha->TooltipValue = "";
 
         // jabatan
         $this->jabatan->LinkCustomAttributes = "";
         $this->jabatan->HrefValue = "";
         $this->jabatan->TooltipValue = "";
-
-        // ktp
-        $this->ktp->LinkCustomAttributes = "";
-        if (!empty($this->ktp->Upload->DbValue)) {
-            $this->ktp->HrefValue = GetFileUploadUrl($this->ktp, $this->id->CurrentValue);
-            $this->ktp->LinkAttrs["target"] = "";
-            if ($this->ktp->IsBlobImage && empty($this->ktp->LinkAttrs["target"])) {
-                $this->ktp->LinkAttrs["target"] = "_blank";
-            }
-            if ($this->isExport()) {
-                $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-            }
-        } else {
-            $this->ktp->HrefValue = "";
-        }
-        $this->ktp->ExportHrefValue = GetFileUploadUrl($this->ktp, $this->id->CurrentValue);
-        $this->ktp->TooltipValue = "";
-
-        // npwp
-        $this->npwp->LinkCustomAttributes = "";
-        if (!empty($this->npwp->Upload->DbValue)) {
-            $this->npwp->HrefValue = GetFileUploadUrl($this->npwp, $this->id->CurrentValue);
-            $this->npwp->LinkAttrs["target"] = "";
-            if ($this->npwp->IsBlobImage && empty($this->npwp->LinkAttrs["target"])) {
-                $this->npwp->LinkAttrs["target"] = "_blank";
-            }
-            if ($this->isExport()) {
-                $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-            }
-        } else {
-            $this->npwp->HrefValue = "";
-        }
-        $this->npwp->ExportHrefValue = GetFileUploadUrl($this->npwp, $this->id->CurrentValue);
-        $this->npwp->TooltipValue = "";
 
         // idprov
         $this->idprov->LinkCustomAttributes = "";
@@ -1793,10 +1790,31 @@ SORTHTML;
             $this->foto->LinkAttrs->appendClass("ew-lightbox");
         }
 
-        // level_customer_id
-        $this->level_customer_id->LinkCustomAttributes = "";
-        $this->level_customer_id->HrefValue = "";
-        $this->level_customer_id->TooltipValue = "";
+        // ktp
+        $this->ktp->LinkCustomAttributes = "";
+        if (!EmptyValue($this->ktp->CurrentValue)) {
+            $this->ktp->HrefValue = (!empty($this->ktp->ViewValue) && !is_array($this->ktp->ViewValue) ? RemoveHtml($this->ktp->ViewValue) : $this->ktp->CurrentValue); // Add prefix/suffix
+            $this->ktp->LinkAttrs["target"] = ""; // Add target
+            if ($this->isExport()) {
+                $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
+            }
+        } else {
+            $this->ktp->HrefValue = "";
+        }
+        $this->ktp->TooltipValue = "";
+
+        // npwp
+        $this->npwp->LinkCustomAttributes = "";
+        if (!EmptyValue($this->npwp->CurrentValue)) {
+            $this->npwp->HrefValue = (!empty($this->npwp->ViewValue) && !is_array($this->npwp->ViewValue) ? RemoveHtml($this->npwp->ViewValue) : $this->npwp->CurrentValue); // Add prefix/suffix
+            $this->npwp->LinkAttrs["target"] = ""; // Add target
+            if ($this->isExport()) {
+                $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
+            }
+        } else {
+            $this->npwp->HrefValue = "";
+        }
+        $this->npwp->TooltipValue = "";
 
         // limit_kredit_order
         $this->limit_kredit_order->LinkCustomAttributes = "";
@@ -1807,6 +1825,16 @@ SORTHTML;
         $this->jatuh_tempo_invoice->LinkCustomAttributes = "";
         $this->jatuh_tempo_invoice->HrefValue = "";
         $this->jatuh_tempo_invoice->TooltipValue = "";
+
+        // kodenpd
+        $this->kodenpd->LinkCustomAttributes = "";
+        $this->kodenpd->HrefValue = "";
+        $this->kodenpd->TooltipValue = "";
+
+        // klinik
+        $this->klinik->LinkCustomAttributes = "";
+        $this->klinik->HrefValue = "";
+        $this->klinik->TooltipValue = "";
 
         // keterangan
         $this->keterangan->LinkCustomAttributes = "";
@@ -1827,11 +1855,6 @@ SORTHTML;
         $this->updated_at->LinkCustomAttributes = "";
         $this->updated_at->HrefValue = "";
         $this->updated_at->TooltipValue = "";
-
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1902,23 +1925,14 @@ SORTHTML;
         $this->nama->EditValue = $this->nama->CurrentValue;
         $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
-        // kodenpd
-        $this->kodenpd->EditAttrs["class"] = "form-control";
-        $this->kodenpd->EditCustomAttributes = "";
-        if (!$this->kodenpd->Raw) {
-            $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
+        // jenis_usaha
+        $this->jenis_usaha->EditAttrs["class"] = "form-control";
+        $this->jenis_usaha->EditCustomAttributes = "";
+        if (!$this->jenis_usaha->Raw) {
+            $this->jenis_usaha->CurrentValue = HtmlDecode($this->jenis_usaha->CurrentValue);
         }
-        $this->kodenpd->EditValue = $this->kodenpd->CurrentValue;
-        $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
-
-        // usaha
-        $this->usaha->EditAttrs["class"] = "form-control";
-        $this->usaha->EditCustomAttributes = "";
-        if (!$this->usaha->Raw) {
-            $this->usaha->CurrentValue = HtmlDecode($this->usaha->CurrentValue);
-        }
-        $this->usaha->EditValue = $this->usaha->CurrentValue;
-        $this->usaha->PlaceHolder = RemoveHtml($this->usaha->caption());
+        $this->jenis_usaha->EditValue = $this->jenis_usaha->CurrentValue;
+        $this->jenis_usaha->PlaceHolder = RemoveHtml($this->jenis_usaha->caption());
 
         // jabatan
         $this->jabatan->EditAttrs["class"] = "form-control";
@@ -1929,52 +1943,28 @@ SORTHTML;
         $this->jabatan->EditValue = $this->jabatan->CurrentValue;
         $this->jabatan->PlaceHolder = RemoveHtml($this->jabatan->caption());
 
-        // ktp
-        $this->ktp->EditAttrs["class"] = "form-control";
-        $this->ktp->EditCustomAttributes = "";
-        if (!EmptyValue($this->ktp->Upload->DbValue)) {
-            $this->ktp->EditValue = $this->id->CurrentValue;
-            $this->ktp->IsBlobImage = IsImageFile(ContentExtension($this->ktp->Upload->DbValue));
-            $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-        } else {
-            $this->ktp->EditValue = "";
-        }
-        if (!EmptyValue($this->ktp->CurrentValue)) {
-            $this->ktp->Upload->FileName = $this->ktp->CurrentValue;
-        }
-
-        // npwp
-        $this->npwp->EditAttrs["class"] = "form-control";
-        $this->npwp->EditCustomAttributes = "";
-        if (!EmptyValue($this->npwp->Upload->DbValue)) {
-            $this->npwp->EditValue = $this->id->CurrentValue;
-            $this->npwp->IsBlobImage = IsImageFile(ContentExtension($this->npwp->Upload->DbValue));
-            $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-        } else {
-            $this->npwp->EditValue = "";
-        }
-        if (!EmptyValue($this->npwp->CurrentValue)) {
-            $this->npwp->Upload->FileName = $this->npwp->CurrentValue;
-        }
-
         // idprov
         $this->idprov->EditAttrs["class"] = "form-control";
         $this->idprov->EditCustomAttributes = "";
+        $this->idprov->EditValue = $this->idprov->CurrentValue;
         $this->idprov->PlaceHolder = RemoveHtml($this->idprov->caption());
 
         // idkab
         $this->idkab->EditAttrs["class"] = "form-control";
         $this->idkab->EditCustomAttributes = "";
+        $this->idkab->EditValue = $this->idkab->CurrentValue;
         $this->idkab->PlaceHolder = RemoveHtml($this->idkab->caption());
 
         // idkec
         $this->idkec->EditAttrs["class"] = "form-control";
         $this->idkec->EditCustomAttributes = "";
+        $this->idkec->EditValue = $this->idkec->CurrentValue;
         $this->idkec->PlaceHolder = RemoveHtml($this->idkec->caption());
 
         // idkel
         $this->idkel->EditAttrs["class"] = "form-control";
         $this->idkel->EditCustomAttributes = "";
+        $this->idkel->EditValue = $this->idkel->CurrentValue;
         $this->idkel->PlaceHolder = RemoveHtml($this->idkel->caption());
 
         // kodepos
@@ -2041,10 +2031,23 @@ SORTHTML;
             $this->foto->Upload->FileName = $this->foto->CurrentValue;
         }
 
-        // level_customer_id
-        $this->level_customer_id->EditAttrs["class"] = "form-control";
-        $this->level_customer_id->EditCustomAttributes = "";
-        $this->level_customer_id->PlaceHolder = RemoveHtml($this->level_customer_id->caption());
+        // ktp
+        $this->ktp->EditAttrs["class"] = "form-control";
+        $this->ktp->EditCustomAttributes = "";
+        if (!$this->ktp->Raw) {
+            $this->ktp->CurrentValue = HtmlDecode($this->ktp->CurrentValue);
+        }
+        $this->ktp->EditValue = $this->ktp->CurrentValue;
+        $this->ktp->PlaceHolder = RemoveHtml($this->ktp->caption());
+
+        // npwp
+        $this->npwp->EditAttrs["class"] = "form-control";
+        $this->npwp->EditCustomAttributes = "";
+        if (!$this->npwp->Raw) {
+            $this->npwp->CurrentValue = HtmlDecode($this->npwp->CurrentValue);
+        }
+        $this->npwp->EditValue = $this->npwp->CurrentValue;
+        $this->npwp->PlaceHolder = RemoveHtml($this->npwp->caption());
 
         // limit_kredit_order
         $this->limit_kredit_order->EditAttrs["class"] = "form-control";
@@ -2056,6 +2059,24 @@ SORTHTML;
         $this->jatuh_tempo_invoice->EditAttrs["class"] = "form-control";
         $this->jatuh_tempo_invoice->EditCustomAttributes = "";
         $this->jatuh_tempo_invoice->PlaceHolder = RemoveHtml($this->jatuh_tempo_invoice->caption());
+
+        // kodenpd
+        $this->kodenpd->EditAttrs["class"] = "form-control";
+        $this->kodenpd->EditCustomAttributes = "";
+        if (!$this->kodenpd->Raw) {
+            $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
+        }
+        $this->kodenpd->EditValue = $this->kodenpd->CurrentValue;
+        $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
+
+        // klinik
+        $this->klinik->EditAttrs["class"] = "form-control";
+        $this->klinik->EditCustomAttributes = "";
+        if (!$this->klinik->Raw) {
+            $this->klinik->CurrentValue = HtmlDecode($this->klinik->CurrentValue);
+        }
+        $this->klinik->EditValue = $this->klinik->CurrentValue;
+        $this->klinik->PlaceHolder = RemoveHtml($this->klinik->caption());
 
         // keterangan
         $this->keterangan->EditAttrs["class"] = "form-control";
@@ -2077,10 +2098,6 @@ SORTHTML;
         $this->updated_at->EditAttrs["class"] = "form-control";
         $this->updated_at->EditCustomAttributes = "";
         $this->updated_at->CurrentValue = FormatDateTime($this->updated_at->CurrentValue, 8);
-
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2114,11 +2131,8 @@ SORTHTML;
                     $doc->exportCaption($this->idtipecustomer);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->kodenpd);
-                    $doc->exportCaption($this->usaha);
+                    $doc->exportCaption($this->jenis_usaha);
                     $doc->exportCaption($this->jabatan);
-                    $doc->exportCaption($this->ktp);
-                    $doc->exportCaption($this->npwp);
                     $doc->exportCaption($this->idprov);
                     $doc->exportCaption($this->idkab);
                     $doc->exportCaption($this->idkec);
@@ -2130,9 +2144,12 @@ SORTHTML;
                     $doc->exportCaption($this->_email);
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
-                    $doc->exportCaption($this->level_customer_id);
+                    $doc->exportCaption($this->ktp);
+                    $doc->exportCaption($this->npwp);
                     $doc->exportCaption($this->limit_kredit_order);
                     $doc->exportCaption($this->jatuh_tempo_invoice);
+                    $doc->exportCaption($this->kodenpd);
+                    $doc->exportCaption($this->klinik);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                 } else {
@@ -2141,11 +2158,8 @@ SORTHTML;
                     $doc->exportCaption($this->idtipecustomer);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->nama);
-                    $doc->exportCaption($this->kodenpd);
-                    $doc->exportCaption($this->usaha);
+                    $doc->exportCaption($this->jenis_usaha);
                     $doc->exportCaption($this->jabatan);
-                    $doc->exportCaption($this->ktp);
-                    $doc->exportCaption($this->npwp);
                     $doc->exportCaption($this->idprov);
                     $doc->exportCaption($this->idkab);
                     $doc->exportCaption($this->idkec);
@@ -2157,13 +2171,16 @@ SORTHTML;
                     $doc->exportCaption($this->_email);
                     $doc->exportCaption($this->website);
                     $doc->exportCaption($this->foto);
+                    $doc->exportCaption($this->ktp);
+                    $doc->exportCaption($this->npwp);
                     $doc->exportCaption($this->limit_kredit_order);
                     $doc->exportCaption($this->jatuh_tempo_invoice);
+                    $doc->exportCaption($this->kodenpd);
+                    $doc->exportCaption($this->klinik);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
-                    $doc->exportCaption($this->created_by);
                 }
                 $doc->endExportRow();
             }
@@ -2197,11 +2214,8 @@ SORTHTML;
                         $doc->exportField($this->idtipecustomer);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->nama);
-                        $doc->exportField($this->kodenpd);
-                        $doc->exportField($this->usaha);
+                        $doc->exportField($this->jenis_usaha);
                         $doc->exportField($this->jabatan);
-                        $doc->exportField($this->ktp);
-                        $doc->exportField($this->npwp);
                         $doc->exportField($this->idprov);
                         $doc->exportField($this->idkab);
                         $doc->exportField($this->idkec);
@@ -2213,9 +2227,12 @@ SORTHTML;
                         $doc->exportField($this->_email);
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
-                        $doc->exportField($this->level_customer_id);
+                        $doc->exportField($this->ktp);
+                        $doc->exportField($this->npwp);
                         $doc->exportField($this->limit_kredit_order);
                         $doc->exportField($this->jatuh_tempo_invoice);
+                        $doc->exportField($this->kodenpd);
+                        $doc->exportField($this->klinik);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                     } else {
@@ -2224,11 +2241,8 @@ SORTHTML;
                         $doc->exportField($this->idtipecustomer);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->nama);
-                        $doc->exportField($this->kodenpd);
-                        $doc->exportField($this->usaha);
+                        $doc->exportField($this->jenis_usaha);
                         $doc->exportField($this->jabatan);
-                        $doc->exportField($this->ktp);
-                        $doc->exportField($this->npwp);
                         $doc->exportField($this->idprov);
                         $doc->exportField($this->idkab);
                         $doc->exportField($this->idkec);
@@ -2240,13 +2254,16 @@ SORTHTML;
                         $doc->exportField($this->_email);
                         $doc->exportField($this->website);
                         $doc->exportField($this->foto);
+                        $doc->exportField($this->ktp);
+                        $doc->exportField($this->npwp);
                         $doc->exportField($this->limit_kredit_order);
                         $doc->exportField($this->jatuh_tempo_invoice);
+                        $doc->exportField($this->kodenpd);
+                        $doc->exportField($this->klinik);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
-                        $doc->exportField($this->created_by);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -2297,13 +2314,7 @@ SORTHTML;
         $fldName = "";
         $fileNameFld = "";
         $fileTypeFld = "";
-        if ($fldparm == 'ktp') {
-            $fldName = "ktp";
-            $fileNameFld = "ktp";
-        } elseif ($fldparm == 'npwp') {
-            $fldName = "npwp";
-            $fileNameFld = "npwp";
-        } elseif ($fldparm == 'foto') {
+        if ($fldparm == 'foto') {
             $fldName = "foto";
             $fileNameFld = "foto";
         } else {
@@ -2459,6 +2470,8 @@ SORTHTML;
         // To cancel, set return value to false
         $rsnew['kode'] = getNextKode('customer', 0);
         $rsnew['created_at'] = date('Y-m-d H:i:s');
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
+        $rsnew['aktif'] = 1;
         return true;
     }
 
@@ -2466,8 +2479,7 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $new_idcustomer = $rsnew['id'];
-        Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$new_idcustomer}, -1)");
+        Execute("INSERT INTO brand_customer (idbrand, idcustomer) VALUES (1, {$rsnew['id']})");
     }
 
     // Row Updating event

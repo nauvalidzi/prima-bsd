@@ -392,15 +392,16 @@ class BrandPreview extends Brand
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idcustomer->setVisibility();
-        $this->title->setVisibility();
         $this->kode->setVisibility();
+        $this->title->setVisibility();
         $this->logo->Visible = false;
-        $this->titipmerk->Visible = false;
+        $this->titipmerk->setVisibility();
         $this->ijinhaki->setVisibility();
         $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
+        $this->aktif->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->kode_sip->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -489,15 +490,16 @@ class BrandPreview extends Brand
             $this->CurrentOrderType = "";
             $this->id->setSort("");
             $this->idcustomer->setSort("");
-            $this->title->setSort("");
             $this->kode->setSort("");
+            $this->title->setSort("");
             $this->logo->setSort("");
             $this->titipmerk->setSort("");
             $this->ijinhaki->setSort("");
             $this->ijinbpom->setSort("");
             $this->aktaperusahaan->setSort("");
+            $this->aktif->setSort("");
             $this->created_at->setSort("");
-            $this->created_by->setSort("");
+            $this->kode_sip->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -510,10 +512,13 @@ class BrandPreview extends Brand
         // Check for sort field
         if ($this->CurrentOrder !== "") {
             $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->title); // title
             $this->updateSort($this->kode); // kode
+            $this->updateSort($this->title); // title
+            $this->updateSort($this->titipmerk); // titipmerk
             $this->updateSort($this->ijinhaki); // ijinhaki
             $this->updateSort($this->ijinbpom); // ijinbpom
+            $this->updateSort($this->aktif); // aktif
+            $this->updateSort($this->kode_sip); // kode_sip
         }
     }
 
@@ -689,8 +694,8 @@ class BrandPreview extends Brand
     {
         $masterTblVar = Get("t", "");
         $url = "";
-        if ($masterTblVar == "customer") {
-            $url = "" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->idcustomer->QueryStringValue) . "";
+        if ($masterTblVar == "v_brand_customer") {
+            $url = "" . Config("TABLE_SHOW_MASTER") . "=v_brand_customer&" . GetForeignKeyUrl("fk_idbrand", $this->id->QueryStringValue) . "";
         }
         return $url;
     }
@@ -699,14 +704,14 @@ class BrandPreview extends Brand
     protected function setupForeignKeysFromFilter($f)
     {
         $masterTblVar = Get("t", "");
-        if ($masterTblVar == "customer") {
-            $find = "`idcustomer`=";
+        if ($masterTblVar == "v_brand_customer") {
+            $find = "`id`=";
             $x = strpos($f, $find);
             if ($x !== false) {
                 $x += strlen($find);
                 $val = substr($f, $x);
                 $val = $this->unquoteValue($val, "DB");
-                 $this->idcustomer->setQueryStringValue($val);
+                 $this->id->setQueryStringValue($val);
             }
         }
     }
@@ -755,6 +760,8 @@ class BrandPreview extends Brand
                 case "x_ijinhaki":
                     break;
                 case "x_ijinbpom":
+                    break;
+                case "x_aktif":
                     break;
                 default:
                     $lookupFilter = "";

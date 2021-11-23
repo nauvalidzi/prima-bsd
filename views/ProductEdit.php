@@ -449,7 +449,7 @@ loadjs.ready("head", function() {
         <label id="elh_product_tambahan" for="x_tambahan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tambahan->caption() ?><?= $Page->tambahan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tambahan->cellAttributes() ?>>
 <span id="el_product_tambahan">
-<input type="<?= $Page->tambahan->getInputTextType() ?>" data-table="product" data-field="x_tambahan" name="x_tambahan" id="x_tambahan" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->tambahan->getPlaceHolder()) ?>" value="<?= $Page->tambahan->EditValue ?>"<?= $Page->tambahan->editAttributes() ?> aria-describedby="x_tambahan_help">
+<textarea data-table="product" data-field="x_tambahan" name="x_tambahan" id="x_tambahan" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->tambahan->getPlaceHolder()) ?>"<?= $Page->tambahan->editAttributes() ?> aria-describedby="x_tambahan_help"><?= $Page->tambahan->EditValue ?></textarea>
 <?= $Page->tambahan->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->tambahan->getErrorMessage() ?></div>
 </span>

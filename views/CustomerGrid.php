@@ -26,8 +26,10 @@ loadjs.ready("head", function () {
         ["idtipecustomer", [fields.idtipecustomer.visible && fields.idtipecustomer.required ? ew.Validators.required(fields.idtipecustomer.caption) : null], fields.idtipecustomer.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
+        ["jenis_usaha", [fields.jenis_usaha.visible && fields.jenis_usaha.required ? ew.Validators.required(fields.jenis_usaha.caption) : null], fields.jenis_usaha.isInvalid],
+        ["hp", [fields.hp.visible && fields.hp.required ? ew.Validators.required(fields.hp.caption) : null, ew.Validators.regex("^(62)8[1-9][0-9]{7,11}$")], fields.hp.isInvalid],
         ["kodenpd", [fields.kodenpd.visible && fields.kodenpd.required ? ew.Validators.required(fields.kodenpd.caption) : null], fields.kodenpd.isInvalid],
-        ["hp", [fields.hp.visible && fields.hp.required ? ew.Validators.required(fields.hp.caption) : null, ew.Validators.regex("^(62)8[1-9][0-9]{7,11}$")], fields.hp.isInvalid]
+        ["klinik", [fields.klinik.visible && fields.klinik.required ? ew.Validators.required(fields.klinik.caption) : null], fields.klinik.isInvalid]
     ]);
 
     // Set invalid fields
@@ -89,9 +91,13 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "nama", false))
             return false;
-        if (ew.valueChanged(fobj, rowIndex, "kodenpd", false))
+        if (ew.valueChanged(fobj, rowIndex, "jenis_usaha", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "hp", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "kodenpd", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "klinik", false))
             return false;
         return true;
     }
@@ -144,11 +150,17 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Grid->nama->headerCellClass() ?>"><div id="elh_customer_nama" class="customer_nama"><?= $Grid->renderSort($Grid->nama) ?></div></th>
 <?php } ?>
-<?php if ($Grid->kodenpd->Visible) { // kodenpd ?>
-        <th data-name="kodenpd" class="<?= $Grid->kodenpd->headerCellClass() ?>"><div id="elh_customer_kodenpd" class="customer_kodenpd"><?= $Grid->renderSort($Grid->kodenpd) ?></div></th>
+<?php if ($Grid->jenis_usaha->Visible) { // jenis_usaha ?>
+        <th data-name="jenis_usaha" class="<?= $Grid->jenis_usaha->headerCellClass() ?>"><div id="elh_customer_jenis_usaha" class="customer_jenis_usaha"><?= $Grid->renderSort($Grid->jenis_usaha) ?></div></th>
 <?php } ?>
 <?php if ($Grid->hp->Visible) { // hp ?>
         <th data-name="hp" class="<?= $Grid->hp->headerCellClass() ?>"><div id="elh_customer_hp" class="customer_hp"><?= $Grid->renderSort($Grid->hp) ?></div></th>
+<?php } ?>
+<?php if ($Grid->kodenpd->Visible) { // kodenpd ?>
+        <th data-name="kodenpd" class="<?= $Grid->kodenpd->headerCellClass() ?>"><div id="elh_customer_kodenpd" class="customer_kodenpd"><?= $Grid->renderSort($Grid->kodenpd) ?></div></th>
+<?php } ?>
+<?php if ($Grid->klinik->Visible) { // klinik ?>
+        <th data-name="klinik" class="<?= $Grid->klinik->headerCellClass() ?>"><div id="elh_customer_klinik" class="customer_klinik"><?= $Grid->renderSort($Grid->klinik) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -472,29 +484,29 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->kodenpd->Visible) { // kodenpd ?>
-        <td data-name="kodenpd" <?= $Grid->kodenpd->cellAttributes() ?>>
+    <?php if ($Grid->jenis_usaha->Visible) { // jenis_usaha ?>
+        <td data-name="jenis_usaha" <?= $Grid->jenis_usaha->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_customer_kodenpd" class="form-group">
-<input type="<?= $Grid->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Grid->kodenpd->getPlaceHolder()) ?>" value="<?= $Grid->kodenpd->EditValue ?>"<?= $Grid->kodenpd->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->kodenpd->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_customer_jenis_usaha" class="form-group">
+<input type="<?= $Grid->jenis_usaha->getInputTextType() ?>" data-table="customer" data-field="x_jenis_usaha" name="x<?= $Grid->RowIndex ?>_jenis_usaha" id="x<?= $Grid->RowIndex ?>_jenis_usaha" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->jenis_usaha->getPlaceHolder()) ?>" value="<?= $Grid->jenis_usaha->EditValue ?>"<?= $Grid->jenis_usaha->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->jenis_usaha->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kodenpd" id="o<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->OldValue) ?>">
+<input type="hidden" data-table="customer" data-field="x_jenis_usaha" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jenis_usaha" id="o<?= $Grid->RowIndex ?>_jenis_usaha" value="<?= HtmlEncode($Grid->jenis_usaha->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_customer_kodenpd" class="form-group">
-<input type="<?= $Grid->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Grid->kodenpd->getPlaceHolder()) ?>" value="<?= $Grid->kodenpd->EditValue ?>"<?= $Grid->kodenpd->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->kodenpd->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_customer_jenis_usaha" class="form-group">
+<input type="<?= $Grid->jenis_usaha->getInputTextType() ?>" data-table="customer" data-field="x_jenis_usaha" name="x<?= $Grid->RowIndex ?>_jenis_usaha" id="x<?= $Grid->RowIndex ?>_jenis_usaha" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->jenis_usaha->getPlaceHolder()) ?>" value="<?= $Grid->jenis_usaha->EditValue ?>"<?= $Grid->jenis_usaha->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->jenis_usaha->getErrorMessage() ?></div>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_customer_kodenpd">
-<span<?= $Grid->kodenpd->viewAttributes() ?>>
-<?= $Grid->kodenpd->getViewValue() ?></span>
+<span id="el<?= $Grid->RowCount ?>_customer_jenis_usaha">
+<span<?= $Grid->jenis_usaha->viewAttributes() ?>>
+<?= $Grid->jenis_usaha->getViewValue() ?></span>
 </span>
 <?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="fcustomergrid$x<?= $Grid->RowIndex ?>_kodenpd" id="fcustomergrid$x<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->FormValue) ?>">
-<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="fcustomergrid$o<?= $Grid->RowIndex ?>_kodenpd" id="fcustomergrid$o<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->OldValue) ?>">
+<input type="hidden" data-table="customer" data-field="x_jenis_usaha" data-hidden="1" name="fcustomergrid$x<?= $Grid->RowIndex ?>_jenis_usaha" id="fcustomergrid$x<?= $Grid->RowIndex ?>_jenis_usaha" value="<?= HtmlEncode($Grid->jenis_usaha->FormValue) ?>">
+<input type="hidden" data-table="customer" data-field="x_jenis_usaha" data-hidden="1" name="fcustomergrid$o<?= $Grid->RowIndex ?>_jenis_usaha" id="fcustomergrid$o<?= $Grid->RowIndex ?>_jenis_usaha" value="<?= HtmlEncode($Grid->jenis_usaha->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -522,6 +534,60 @@ loadjs.ready("head", function() {
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="customer" data-field="x_hp" data-hidden="1" name="fcustomergrid$x<?= $Grid->RowIndex ?>_hp" id="fcustomergrid$x<?= $Grid->RowIndex ?>_hp" value="<?= HtmlEncode($Grid->hp->FormValue) ?>">
 <input type="hidden" data-table="customer" data-field="x_hp" data-hidden="1" name="fcustomergrid$o<?= $Grid->RowIndex ?>_hp" id="fcustomergrid$o<?= $Grid->RowIndex ?>_hp" value="<?= HtmlEncode($Grid->hp->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->kodenpd->Visible) { // kodenpd ?>
+        <td data-name="kodenpd" <?= $Grid->kodenpd->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_customer_kodenpd" class="form-group">
+<input type="<?= $Grid->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Grid->kodenpd->getPlaceHolder()) ?>" value="<?= $Grid->kodenpd->EditValue ?>"<?= $Grid->kodenpd->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kodenpd->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kodenpd" id="o<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_customer_kodenpd" class="form-group">
+<input type="<?= $Grid->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Grid->kodenpd->getPlaceHolder()) ?>" value="<?= $Grid->kodenpd->EditValue ?>"<?= $Grid->kodenpd->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kodenpd->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_customer_kodenpd">
+<span<?= $Grid->kodenpd->viewAttributes() ?>>
+<?= $Grid->kodenpd->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="fcustomergrid$x<?= $Grid->RowIndex ?>_kodenpd" id="fcustomergrid$x<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->FormValue) ?>">
+<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="fcustomergrid$o<?= $Grid->RowIndex ?>_kodenpd" id="fcustomergrid$o<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->klinik->Visible) { // klinik ?>
+        <td data-name="klinik" <?= $Grid->klinik->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_customer_klinik" class="form-group">
+<input type="<?= $Grid->klinik->getInputTextType() ?>" data-table="customer" data-field="x_klinik" name="x<?= $Grid->RowIndex ?>_klinik" id="x<?= $Grid->RowIndex ?>_klinik" size="30" maxlength="255" placeholder="<?= HtmlEncode($Grid->klinik->getPlaceHolder()) ?>" value="<?= $Grid->klinik->EditValue ?>"<?= $Grid->klinik->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->klinik->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="customer" data-field="x_klinik" data-hidden="1" name="o<?= $Grid->RowIndex ?>_klinik" id="o<?= $Grid->RowIndex ?>_klinik" value="<?= HtmlEncode($Grid->klinik->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_customer_klinik" class="form-group">
+<input type="<?= $Grid->klinik->getInputTextType() ?>" data-table="customer" data-field="x_klinik" name="x<?= $Grid->RowIndex ?>_klinik" id="x<?= $Grid->RowIndex ?>_klinik" size="30" maxlength="255" placeholder="<?= HtmlEncode($Grid->klinik->getPlaceHolder()) ?>" value="<?= $Grid->klinik->EditValue ?>"<?= $Grid->klinik->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->klinik->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_customer_klinik">
+<span<?= $Grid->klinik->viewAttributes() ?>>
+<?= $Grid->klinik->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="customer" data-field="x_klinik" data-hidden="1" name="fcustomergrid$x<?= $Grid->RowIndex ?>_klinik" id="fcustomergrid$x<?= $Grid->RowIndex ?>_klinik" value="<?= HtmlEncode($Grid->klinik->FormValue) ?>">
+<input type="hidden" data-table="customer" data-field="x_klinik" data-hidden="1" name="fcustomergrid$o<?= $Grid->RowIndex ?>_klinik" id="fcustomergrid$o<?= $Grid->RowIndex ?>_klinik" value="<?= HtmlEncode($Grid->klinik->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -688,21 +754,21 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="customer" data-field="x_nama" data-hidden="1" name="o<?= $Grid->RowIndex ?>_nama" id="o<?= $Grid->RowIndex ?>_nama" value="<?= HtmlEncode($Grid->nama->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->kodenpd->Visible) { // kodenpd ?>
-        <td data-name="kodenpd">
+    <?php if ($Grid->jenis_usaha->Visible) { // jenis_usaha ?>
+        <td data-name="jenis_usaha">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_customer_kodenpd" class="form-group customer_kodenpd">
-<input type="<?= $Grid->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Grid->kodenpd->getPlaceHolder()) ?>" value="<?= $Grid->kodenpd->EditValue ?>"<?= $Grid->kodenpd->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->kodenpd->getErrorMessage() ?></div>
+<span id="el$rowindex$_customer_jenis_usaha" class="form-group customer_jenis_usaha">
+<input type="<?= $Grid->jenis_usaha->getInputTextType() ?>" data-table="customer" data-field="x_jenis_usaha" name="x<?= $Grid->RowIndex ?>_jenis_usaha" id="x<?= $Grid->RowIndex ?>_jenis_usaha" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->jenis_usaha->getPlaceHolder()) ?>" value="<?= $Grid->jenis_usaha->EditValue ?>"<?= $Grid->jenis_usaha->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->jenis_usaha->getErrorMessage() ?></div>
 </span>
 <?php } else { ?>
-<span id="el$rowindex$_customer_kodenpd" class="form-group customer_kodenpd">
-<span<?= $Grid->kodenpd->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->kodenpd->getDisplayValue($Grid->kodenpd->ViewValue))) ?>"></span>
+<span id="el$rowindex$_customer_jenis_usaha" class="form-group customer_jenis_usaha">
+<span<?= $Grid->jenis_usaha->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->jenis_usaha->getDisplayValue($Grid->jenis_usaha->ViewValue))) ?>"></span>
 </span>
-<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->FormValue) ?>">
+<input type="hidden" data-table="customer" data-field="x_jenis_usaha" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jenis_usaha" id="x<?= $Grid->RowIndex ?>_jenis_usaha" value="<?= HtmlEncode($Grid->jenis_usaha->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kodenpd" id="o<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->OldValue) ?>">
+<input type="hidden" data-table="customer" data-field="x_jenis_usaha" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jenis_usaha" id="o<?= $Grid->RowIndex ?>_jenis_usaha" value="<?= HtmlEncode($Grid->jenis_usaha->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->hp->Visible) { // hp ?>
@@ -720,6 +786,40 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="customer" data-field="x_hp" data-hidden="1" name="x<?= $Grid->RowIndex ?>_hp" id="x<?= $Grid->RowIndex ?>_hp" value="<?= HtmlEncode($Grid->hp->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="customer" data-field="x_hp" data-hidden="1" name="o<?= $Grid->RowIndex ?>_hp" id="o<?= $Grid->RowIndex ?>_hp" value="<?= HtmlEncode($Grid->hp->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->kodenpd->Visible) { // kodenpd ?>
+        <td data-name="kodenpd">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_customer_kodenpd" class="form-group customer_kodenpd">
+<input type="<?= $Grid->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Grid->kodenpd->getPlaceHolder()) ?>" value="<?= $Grid->kodenpd->EditValue ?>"<?= $Grid->kodenpd->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->kodenpd->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_customer_kodenpd" class="form-group customer_kodenpd">
+<span<?= $Grid->kodenpd->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->kodenpd->getDisplayValue($Grid->kodenpd->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="x<?= $Grid->RowIndex ?>_kodenpd" id="x<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="customer" data-field="x_kodenpd" data-hidden="1" name="o<?= $Grid->RowIndex ?>_kodenpd" id="o<?= $Grid->RowIndex ?>_kodenpd" value="<?= HtmlEncode($Grid->kodenpd->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->klinik->Visible) { // klinik ?>
+        <td data-name="klinik">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_customer_klinik" class="form-group customer_klinik">
+<input type="<?= $Grid->klinik->getInputTextType() ?>" data-table="customer" data-field="x_klinik" name="x<?= $Grid->RowIndex ?>_klinik" id="x<?= $Grid->RowIndex ?>_klinik" size="30" maxlength="255" placeholder="<?= HtmlEncode($Grid->klinik->getPlaceHolder()) ?>" value="<?= $Grid->klinik->EditValue ?>"<?= $Grid->klinik->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->klinik->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_customer_klinik" class="form-group customer_klinik">
+<span<?= $Grid->klinik->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->klinik->getDisplayValue($Grid->klinik->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="customer" data-field="x_klinik" data-hidden="1" name="x<?= $Grid->RowIndex ?>_klinik" id="x<?= $Grid->RowIndex ?>_klinik" value="<?= HtmlEncode($Grid->klinik->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="customer" data-field="x_klinik" data-hidden="1" name="o<?= $Grid->RowIndex ?>_klinik" id="o<?= $Grid->RowIndex ?>_klinik" value="<?= HtmlEncode($Grid->klinik->OldValue) ?>">
 </td>
     <?php } ?>
 <?php
@@ -780,7 +880,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer");
 });
 </script>
 <?php } ?>

@@ -395,11 +395,8 @@ class CustomerPreview extends Customer
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
         $this->nama->setVisibility();
-        $this->kodenpd->setVisibility();
-        $this->usaha->Visible = false;
+        $this->jenis_usaha->setVisibility();
         $this->jabatan->Visible = false;
-        $this->ktp->Visible = false;
-        $this->npwp->Visible = false;
         $this->idprov->Visible = false;
         $this->idkab->Visible = false;
         $this->idkec->Visible = false;
@@ -411,14 +408,16 @@ class CustomerPreview extends Customer
         $this->_email->Visible = false;
         $this->website->Visible = false;
         $this->foto->Visible = false;
-        $this->level_customer_id->Visible = false;
+        $this->ktp->Visible = false;
+        $this->npwp->Visible = false;
         $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
+        $this->kodenpd->setVisibility();
+        $this->klinik->setVisibility();
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -442,7 +441,6 @@ class CustomerPreview extends Customer
         $this->setupLookupOptions($this->idkab);
         $this->setupLookupOptions($this->idkec);
         $this->setupLookupOptions($this->idkel);
-        $this->setupLookupOptions($this->level_customer_id);
         $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
         // Load filter
@@ -517,8 +515,7 @@ class CustomerPreview extends Customer
             $this->idtipecustomer->setSort("");
             $this->idpegawai->setSort("");
             $this->nama->setSort("");
-            $this->kodenpd->setSort("");
-            $this->usaha->setSort("");
+            $this->jenis_usaha->setSort("");
             $this->jabatan->setSort("");
             $this->idprov->setSort("");
             $this->idkab->setSort("");
@@ -531,14 +528,16 @@ class CustomerPreview extends Customer
             $this->_email->setSort("");
             $this->website->setSort("");
             $this->foto->setSort("");
-            $this->level_customer_id->setSort("");
+            $this->ktp->setSort("");
+            $this->npwp->setSort("");
             $this->limit_kredit_order->setSort("");
             $this->jatuh_tempo_invoice->setSort("");
+            $this->kodenpd->setSort("");
+            $this->klinik->setSort("");
             $this->keterangan->setSort("");
             $this->aktif->setSort("");
             $this->created_at->setSort("");
             $this->updated_at->setSort("");
-            $this->created_by->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -554,8 +553,10 @@ class CustomerPreview extends Customer
             $this->updateSort($this->idtipecustomer); // idtipecustomer
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->nama); // nama
-            $this->updateSort($this->kodenpd); // kodenpd
+            $this->updateSort($this->jenis_usaha); // jenis_usaha
             $this->updateSort($this->hp); // hp
+            $this->updateSort($this->kodenpd); // kodenpd
+            $this->updateSort($this->klinik); // klinik
         }
     }
 
@@ -801,8 +802,6 @@ class CustomerPreview extends Customer
                 case "x_idkec":
                     break;
                 case "x_idkel":
-                    break;
-                case "x_level_customer_id":
                     break;
                 case "x_jatuh_tempo_invoice":
                     break;

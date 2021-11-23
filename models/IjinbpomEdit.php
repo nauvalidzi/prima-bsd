@@ -1297,7 +1297,7 @@ class IjinbpomEdit extends Ijinbpom
             }
 
             // status
-            $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", $this->status->ReadOnly);
+            $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
             if ($this->kontrakkerjasama->Visible && !$this->kontrakkerjasama->Upload->KeepFile) {
                 $oldFiles = EmptyValue($this->kontrakkerjasama->Upload->DbValue) ? [] : [$this->kontrakkerjasama->htmlDecode($this->kontrakkerjasama->Upload->DbValue)];
                 if (!EmptyValue($this->kontrakkerjasama->Upload->FileName)) {

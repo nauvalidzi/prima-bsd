@@ -591,7 +591,7 @@ class ProductList extends Product
         $this->ijinbpom->Visible = false;
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -775,13 +775,6 @@ class ProductList extends Product
         // Restore master/detail filter
         $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
         $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "brand") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "brand"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
 
@@ -962,7 +955,7 @@ class ProductList extends Product
         $filterList = Concat($filterList, $this->ijinbpom->AdvancedSearch->toJson(), ","); // Field ijinbpom
         $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
+        $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1179,13 +1172,13 @@ class ProductList extends Product
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
 
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
+        // Field updated_at
+        $this->updated_at->AdvancedSearch->SearchValue = @$filter["x_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchOperator = @$filter["z_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchCondition = @$filter["v_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchValue2 = @$filter["y_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchOperator2 = @$filter["w_updated_at"];
+        $this->updated_at->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1220,7 +1213,7 @@ class ProductList extends Product
         $this->buildSearchSql($where, $this->ijinbpom, $default, false); // ijinbpom
         $this->buildSearchSql($where, $this->aktif, $default, false); // aktif
         $this->buildSearchSql($where, $this->created_at, $default, false); // created_at
-        $this->buildSearchSql($where, $this->created_by, $default, false); // created_by
+        $this->buildSearchSql($where, $this->updated_at, $default, false); // updated_at
 
         // Set up search parm
         if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1249,7 +1242,7 @@ class ProductList extends Product
             $this->ijinbpom->AdvancedSearch->save(); // ijinbpom
             $this->aktif->AdvancedSearch->save(); // aktif
             $this->created_at->AdvancedSearch->save(); // created_at
-            $this->created_by->AdvancedSearch->save(); // created_by
+            $this->updated_at->AdvancedSearch->save(); // updated_at
         }
         return $where;
     }
@@ -1515,7 +1508,7 @@ class ProductList extends Product
         if ($this->created_at->AdvancedSearch->issetSession()) {
             return true;
         }
-        if ($this->created_by->AdvancedSearch->issetSession()) {
+        if ($this->updated_at->AdvancedSearch->issetSession()) {
             return true;
         }
         return false;
@@ -1572,7 +1565,7 @@ class ProductList extends Product
                 $this->ijinbpom->AdvancedSearch->unsetSession();
                 $this->aktif->AdvancedSearch->unsetSession();
                 $this->created_at->AdvancedSearch->unsetSession();
-                $this->created_by->AdvancedSearch->unsetSession();
+                $this->updated_at->AdvancedSearch->unsetSession();
     }
 
     // Restore all search parameters
@@ -1606,7 +1599,7 @@ class ProductList extends Product
                 $this->ijinbpom->AdvancedSearch->load();
                 $this->aktif->AdvancedSearch->load();
                 $this->created_at->AdvancedSearch->load();
-                $this->created_by->AdvancedSearch->load();
+                $this->updated_at->AdvancedSearch->load();
     }
 
     // Set up sort parameters
@@ -1622,6 +1615,7 @@ class ProductList extends Product
             $this->updateSort($this->kemasanbarang); // kemasanbarang
             $this->updateSort($this->harga); // harga
             $this->updateSort($this->ukuran); // ukuran
+            $this->updateSort($this->updated_at); // updated_at
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1696,7 +1690,7 @@ class ProductList extends Product
                 $this->ijinbpom->setSort("");
                 $this->aktif->setSort("");
                 $this->created_at->setSort("");
-                $this->created_by->setSort("");
+                $this->updated_at->setSort("");
             }
 
             // Reset start position
@@ -1750,6 +1744,14 @@ class ProductList extends Product
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1775,6 +1777,10 @@ class ProductList extends Product
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -2204,10 +2210,10 @@ class ProductList extends Product
             }
         }
 
-        // created_by
-        if (!$this->isAddOrEdit() && $this->created_by->AdvancedSearch->get()) {
+        // updated_at
+        if (!$this->isAddOrEdit() && $this->updated_at->AdvancedSearch->get()) {
             $hasValue = true;
-            if (($this->created_by->AdvancedSearch->SearchValue != "" || $this->created_by->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
+            if (($this->updated_at->AdvancedSearch->SearchValue != "" || $this->updated_at->AdvancedSearch->SearchValue2 != "") && $this->Command == "") {
                 $this->Command = "search";
             }
         }
@@ -2306,7 +2312,7 @@ class ProductList extends Product
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -2336,7 +2342,7 @@ class ProductList extends Product
         $row['ijinbpom'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -2423,7 +2429,7 @@ class ProductList extends Product
 
         // created_at
 
-        // created_by
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -2608,10 +2614,10 @@ class ProductList extends Product
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -2642,6 +2648,11 @@ class ProductList extends Product
             $this->ukuran->LinkCustomAttributes = "";
             $this->ukuran->HrefValue = "";
             $this->ukuran->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2695,7 +2706,7 @@ class ProductList extends Product
         $this->ijinbpom->AdvancedSearch->load();
         $this->aktif->AdvancedSearch->load();
         $this->created_at->AdvancedSearch->load();
-        $this->created_by->AdvancedSearch->load();
+        $this->updated_at->AdvancedSearch->load();
     }
 
     // Set up search options

@@ -77,15 +77,6 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
-<?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "customer") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/CustomerMaster.php";
-    }
-}
-?>
-<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
@@ -129,10 +120,6 @@ $Page->showMessage();
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
 <input type="hidden" name="t" value="brand">
-<?php if ($Page->getCurrentMasterTable() == "customer" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="customer">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
-<?php } ?>
 <div id="gmp_brand" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
 <table id="tbl_brandlist" class="table ew-table"><!-- .ew-table -->
@@ -148,20 +135,29 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_brand_idcustomer" class="brand_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
+<?php if ($Page->kode->Visible) { // kode ?>
+        <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_brand_kode" class="brand_kode"><?= $Page->renderSort($Page->kode) ?></div></th>
 <?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
         <th data-name="title" class="<?= $Page->title->headerCellClass() ?>" style="min-width: 30px;"><div id="elh_brand_title" class="brand_title"><?= $Page->renderSort($Page->title) ?></div></th>
 <?php } ?>
-<?php if ($Page->kode->Visible) { // kode ?>
-        <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_brand_kode" class="brand_kode"><?= $Page->renderSort($Page->kode) ?></div></th>
+<?php if ($Page->titipmerk->Visible) { // titipmerk ?>
+        <th data-name="titipmerk" class="<?= $Page->titipmerk->headerCellClass() ?>"><div id="elh_brand_titipmerk" class="brand_titipmerk"><?= $Page->renderSort($Page->titipmerk) ?></div></th>
 <?php } ?>
 <?php if ($Page->ijinhaki->Visible) { // ijinhaki ?>
         <th data-name="ijinhaki" class="<?= $Page->ijinhaki->headerCellClass() ?>"><div id="elh_brand_ijinhaki" class="brand_ijinhaki"><?= $Page->renderSort($Page->ijinhaki) ?></div></th>
 <?php } ?>
 <?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
         <th data-name="ijinbpom" class="<?= $Page->ijinbpom->headerCellClass() ?>"><div id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Page->renderSort($Page->ijinbpom) ?></div></th>
+<?php } ?>
+<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+        <th data-name="kode_sip" class="<?= $Page->kode_sip->headerCellClass() ?>"><div id="elh_brand_kode_sip" class="brand_kode_sip"><?= $Page->renderSort($Page->kode_sip) ?></div></th>
+<?php } ?>
+<?php if ($Page->aktif->Visible) { // aktif ?>
+        <th data-name="aktif" class="<?= $Page->aktif->headerCellClass() ?>"><div id="elh_brand_aktif" class="brand_aktif"><?= $Page->renderSort($Page->aktif) ?></div></th>
+<?php } ?>
+<?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <th data-name="updated_at" class="<?= $Page->updated_at->headerCellClass() ?>"><div id="elh_brand_updated_at" class="brand_updated_at"><?= $Page->renderSort($Page->updated_at) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -230,11 +226,11 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
+    <?php if ($Page->kode->Visible) { // kode ?>
+        <td data-name="kode" <?= $Page->kode->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_kode">
+<span<?= $Page->kode->viewAttributes() ?>>
+<?= $Page->kode->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -246,11 +242,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->kode->Visible) { // kode ?>
-        <td data-name="kode" <?= $Page->kode->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_kode">
-<span<?= $Page->kode->viewAttributes() ?>>
-<?= $Page->kode->getViewValue() ?></span>
+    <?php if ($Page->titipmerk->Visible) { // titipmerk ?>
+        <td data-name="titipmerk" <?= $Page->titipmerk->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_titipmerk">
+<span<?= $Page->titipmerk->viewAttributes() ?>>
+<?= $Page->titipmerk->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -267,6 +263,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_brand_ijinbpom">
 <span<?= $Page->ijinbpom->viewAttributes() ?>>
 <?= $Page->ijinbpom->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kode_sip->Visible) { // kode_sip ?>
+        <td data-name="kode_sip" <?= $Page->kode_sip->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_kode_sip">
+<span<?= $Page->kode_sip->viewAttributes() ?>>
+<?= $Page->kode_sip->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->aktif->Visible) { // aktif ?>
+        <td data-name="aktif" <?= $Page->aktif->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_aktif">
+<span<?= $Page->aktif->viewAttributes() ?>>
+<?= $Page->aktif->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->updated_at->Visible) { // updated_at ?>
+        <td data-name="updated_at" <?= $Page->updated_at->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_brand_updated_at">
+<span<?= $Page->updated_at->viewAttributes() ?>>
+<?= $Page->updated_at->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -330,7 +350,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $(".ew-detail-add-group").html("Add Brand");
 });
 </script>
 <?php } ?>

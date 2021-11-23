@@ -26,15 +26,12 @@ loadjs.ready("head", function () {
         ["idtipecustomer", [], fields.idtipecustomer.isInvalid],
         ["idpegawai", [], fields.idpegawai.isInvalid],
         ["nama", [], fields.nama.isInvalid],
-        ["kodenpd", [], fields.kodenpd.isInvalid],
-        ["usaha", [], fields.usaha.isInvalid],
+        ["jenis_usaha", [], fields.jenis_usaha.isInvalid],
         ["jabatan", [], fields.jabatan.isInvalid],
-        ["ktp", [], fields.ktp.isInvalid],
-        ["npwp", [], fields.npwp.isInvalid],
-        ["idprov", [], fields.idprov.isInvalid],
-        ["idkab", [], fields.idkab.isInvalid],
-        ["idkec", [], fields.idkec.isInvalid],
-        ["idkel", [], fields.idkel.isInvalid],
+        ["idprov", [ew.Validators.integer], fields.idprov.isInvalid],
+        ["idkab", [ew.Validators.integer], fields.idkab.isInvalid],
+        ["idkec", [ew.Validators.integer], fields.idkec.isInvalid],
+        ["idkel", [ew.Validators.integer], fields.idkel.isInvalid],
         ["kodepos", [], fields.kodepos.isInvalid],
         ["alamat", [], fields.alamat.isInvalid],
         ["telpon", [], fields.telpon.isInvalid],
@@ -42,13 +39,16 @@ loadjs.ready("head", function () {
         ["_email", [], fields._email.isInvalid],
         ["website", [], fields.website.isInvalid],
         ["foto", [], fields.foto.isInvalid],
+        ["ktp", [], fields.ktp.isInvalid],
+        ["npwp", [], fields.npwp.isInvalid],
         ["limit_kredit_order", [ew.Validators.integer], fields.limit_kredit_order.isInvalid],
         ["jatuh_tempo_invoice", [], fields.jatuh_tempo_invoice.isInvalid],
+        ["kodenpd", [], fields.kodenpd.isInvalid],
+        ["klinik", [], fields.klinik.isInvalid],
         ["keterangan", [], fields.keterangan.isInvalid],
         ["aktif", [], fields.aktif.isInvalid],
         ["created_at", [], fields.created_at.isInvalid],
-        ["updated_at", [], fields.updated_at.isInvalid],
-        ["created_by", [], fields.created_by.isInvalid]
+        ["updated_at", [], fields.updated_at.isInvalid]
     ]);
 
     // Set invalid fields
@@ -222,34 +222,18 @@ loadjs.ready("head", function() {
         </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-    <div id="r_kodenpd" class="form-group row">
-        <label for="x_kodenpd" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_kodenpd"><?= $Page->kodenpd->caption() ?></span>
+<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
+    <div id="r_jenis_usaha" class="form-group row">
+        <label for="x_jenis_usaha" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_jenis_usaha"><?= $Page->jenis_usaha->caption() ?></span>
         <span class="ew-search-operator">
 <?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_kodenpd" id="z_kodenpd" value="LIKE">
+<input type="hidden" name="z_jenis_usaha" id="z_jenis_usaha" value="LIKE">
 </span>
         </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kodenpd->cellAttributes() ?>>
-            <span id="el_customer_kodenpd" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x_kodenpd" id="x_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Page->kodenpd->getPlaceHolder()) ?>" value="<?= $Page->kodenpd->EditValue ?>"<?= $Page->kodenpd->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->kodenpd->getErrorMessage(false) ?></div>
-</span>
-        </div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->usaha->Visible) { // usaha ?>
-    <div id="r_usaha" class="form-group row">
-        <label for="x_usaha" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_usaha"><?= $Page->usaha->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_usaha" id="z_usaha" value="LIKE">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->usaha->cellAttributes() ?>>
-            <span id="el_customer_usaha" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->usaha->getInputTextType() ?>" data-table="customer" data-field="x_usaha" name="x_usaha" id="x_usaha" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->usaha->getPlaceHolder()) ?>" value="<?= $Page->usaha->EditValue ?>"<?= $Page->usaha->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->usaha->getErrorMessage(false) ?></div>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jenis_usaha->cellAttributes() ?>>
+            <span id="el_customer_jenis_usaha" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->jenis_usaha->getInputTextType() ?>" data-table="customer" data-field="x_jenis_usaha" name="x_jenis_usaha" id="x_jenis_usaha" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->jenis_usaha->getPlaceHolder()) ?>" value="<?= $Page->jenis_usaha->EditValue ?>"<?= $Page->jenis_usaha->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->jenis_usaha->getErrorMessage(false) ?></div>
 </span>
         </div></div>
     </div>
@@ -272,151 +256,120 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->idprov->Visible) { // idprov ?>
     <div id="r_idprov" class="form-group row">
-        <label for="x_idprov" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idprov"><?= $Page->idprov->caption() ?></span>
+        <label class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idprov"><?= $Page->idprov->caption() ?></span>
         <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_idprov" id="z_idprov" value="LIKE">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_idprov" id="z_idprov" value="=">
 </span>
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idprov->cellAttributes() ?>>
             <span id="el_customer_idprov" class="ew-search-field ew-search-field-single">
-<?php $Page->idprov->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idprov"
-        name="x_idprov"
-        class="form-control ew-select<?= $Page->idprov->isInvalidClass() ?>"
-        data-select2-id="customer_x_idprov"
-        data-table="customer"
-        data-field="x_idprov"
-        data-value-separator="<?= $Page->idprov->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>"
-        <?= $Page->idprov->editAttributes() ?>>
-        <?= $Page->idprov->selectOptionListHtml("x_idprov") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Page->idprov->getErrorMessage(false) ?></div>
-<?= $Page->idprov->Lookup->getParamTag($Page, "p_x_idprov") ?>
+<?php
+$onchange = $Page->idprov->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idprov->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idprov" class="ew-auto-suggest">
+    <input type="<?= $Page->idprov->getInputTextType() ?>" class="form-control" name="sv_x_idprov" id="sv_x_idprov" value="<?= RemoveHtml($Page->idprov->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>"<?= $Page->idprov->editAttributes() ?>>
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idprov" data-input="sv_x_idprov" data-value-separator="<?= $Page->idprov->displayValueSeparatorAttribute() ?>" name="x_idprov" id="x_idprov" value="<?= HtmlEncode($Page->idprov->AdvancedSearch->SearchValue) ?>"<?= $onchange ?>>
+<div class="invalid-feedback"><?= $Page->idprov->getErrorMessage(false) ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idprov']"),
-        options = { name: "x_idprov", selectId: "customer_x_idprov", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idprov.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomersearch"], function() {
+    fcustomersearch.createAutoSuggest(Object.assign({"id":"x_idprov","forceSelect":false}, ew.vars.tables.customer.fields.idprov.autoSuggestOptions));
 });
 </script>
+<?= $Page->idprov->Lookup->getParamTag($Page, "p_x_idprov") ?>
 </span>
         </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkab->Visible) { // idkab ?>
     <div id="r_idkab" class="form-group row">
-        <label for="x_idkab" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idkab"><?= $Page->idkab->caption() ?></span>
+        <label class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idkab"><?= $Page->idkab->caption() ?></span>
         <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_idkab" id="z_idkab" value="LIKE">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_idkab" id="z_idkab" value="=">
 </span>
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkab->cellAttributes() ?>>
             <span id="el_customer_idkab" class="ew-search-field ew-search-field-single">
-<?php $Page->idkab->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idkab"
-        name="x_idkab"
-        class="form-control ew-select<?= $Page->idkab->isInvalidClass() ?>"
-        data-select2-id="customer_x_idkab"
-        data-table="customer"
-        data-field="x_idkab"
-        data-value-separator="<?= $Page->idkab->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>"
-        <?= $Page->idkab->editAttributes() ?>>
-        <?= $Page->idkab->selectOptionListHtml("x_idkab") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Page->idkab->getErrorMessage(false) ?></div>
-<?= $Page->idkab->Lookup->getParamTag($Page, "p_x_idkab") ?>
+<?php
+$onchange = $Page->idkab->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idkab->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idkab" class="ew-auto-suggest">
+    <input type="<?= $Page->idkab->getInputTextType() ?>" class="form-control" name="sv_x_idkab" id="sv_x_idkab" value="<?= RemoveHtml($Page->idkab->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>"<?= $Page->idkab->editAttributes() ?>>
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkab" data-input="sv_x_idkab" data-value-separator="<?= $Page->idkab->displayValueSeparatorAttribute() ?>" name="x_idkab" id="x_idkab" value="<?= HtmlEncode($Page->idkab->AdvancedSearch->SearchValue) ?>"<?= $onchange ?>>
+<div class="invalid-feedback"><?= $Page->idkab->getErrorMessage(false) ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idkab']"),
-        options = { name: "x_idkab", selectId: "customer_x_idkab", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idkab.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomersearch"], function() {
+    fcustomersearch.createAutoSuggest(Object.assign({"id":"x_idkab","forceSelect":false}, ew.vars.tables.customer.fields.idkab.autoSuggestOptions));
 });
 </script>
+<?= $Page->idkab->Lookup->getParamTag($Page, "p_x_idkab") ?>
 </span>
         </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkec->Visible) { // idkec ?>
     <div id="r_idkec" class="form-group row">
-        <label for="x_idkec" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idkec"><?= $Page->idkec->caption() ?></span>
+        <label class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idkec"><?= $Page->idkec->caption() ?></span>
         <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_idkec" id="z_idkec" value="LIKE">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_idkec" id="z_idkec" value="=">
 </span>
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkec->cellAttributes() ?>>
             <span id="el_customer_idkec" class="ew-search-field ew-search-field-single">
-<?php $Page->idkec->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idkec"
-        name="x_idkec"
-        class="form-control ew-select<?= $Page->idkec->isInvalidClass() ?>"
-        data-select2-id="customer_x_idkec"
-        data-table="customer"
-        data-field="x_idkec"
-        data-value-separator="<?= $Page->idkec->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>"
-        <?= $Page->idkec->editAttributes() ?>>
-        <?= $Page->idkec->selectOptionListHtml("x_idkec") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Page->idkec->getErrorMessage(false) ?></div>
-<?= $Page->idkec->Lookup->getParamTag($Page, "p_x_idkec") ?>
+<?php
+$onchange = $Page->idkec->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idkec->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idkec" class="ew-auto-suggest">
+    <input type="<?= $Page->idkec->getInputTextType() ?>" class="form-control" name="sv_x_idkec" id="sv_x_idkec" value="<?= RemoveHtml($Page->idkec->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>"<?= $Page->idkec->editAttributes() ?>>
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkec" data-input="sv_x_idkec" data-value-separator="<?= $Page->idkec->displayValueSeparatorAttribute() ?>" name="x_idkec" id="x_idkec" value="<?= HtmlEncode($Page->idkec->AdvancedSearch->SearchValue) ?>"<?= $onchange ?>>
+<div class="invalid-feedback"><?= $Page->idkec->getErrorMessage(false) ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idkec']"),
-        options = { name: "x_idkec", selectId: "customer_x_idkec", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idkec.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomersearch"], function() {
+    fcustomersearch.createAutoSuggest(Object.assign({"id":"x_idkec","forceSelect":false}, ew.vars.tables.customer.fields.idkec.autoSuggestOptions));
 });
 </script>
+<?= $Page->idkec->Lookup->getParamTag($Page, "p_x_idkec") ?>
 </span>
         </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkel->Visible) { // idkel ?>
     <div id="r_idkel" class="form-group row">
-        <label for="x_idkel" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idkel"><?= $Page->idkel->caption() ?></span>
+        <label class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_idkel"><?= $Page->idkel->caption() ?></span>
         <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_idkel" id="z_idkel" value="LIKE">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_idkel" id="z_idkel" value="=">
 </span>
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkel->cellAttributes() ?>>
             <span id="el_customer_idkel" class="ew-search-field ew-search-field-single">
-    <select
-        id="x_idkel"
-        name="x_idkel"
-        class="form-control ew-select<?= $Page->idkel->isInvalidClass() ?>"
-        data-select2-id="customer_x_idkel"
-        data-table="customer"
-        data-field="x_idkel"
-        data-value-separator="<?= $Page->idkel->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>"
-        <?= $Page->idkel->editAttributes() ?>>
-        <?= $Page->idkel->selectOptionListHtml("x_idkel") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Page->idkel->getErrorMessage(false) ?></div>
-<?= $Page->idkel->Lookup->getParamTag($Page, "p_x_idkel") ?>
+<?php
+$onchange = $Page->idkel->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Page->idkel->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_idkel" class="ew-auto-suggest">
+    <input type="<?= $Page->idkel->getInputTextType() ?>" class="form-control" name="sv_x_idkel" id="sv_x_idkel" value="<?= RemoveHtml($Page->idkel->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>"<?= $Page->idkel->editAttributes() ?>>
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkel" data-input="sv_x_idkel" data-value-separator="<?= $Page->idkel->displayValueSeparatorAttribute() ?>" name="x_idkel" id="x_idkel" value="<?= HtmlEncode($Page->idkel->AdvancedSearch->SearchValue) ?>"<?= $onchange ?>>
+<div class="invalid-feedback"><?= $Page->idkel->getErrorMessage(false) ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='customer_x_idkel']"),
-        options = { name: "x_idkel", selectId: "customer_x_idkel", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.customer.fields.idkel.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["fcustomersearch"], function() {
+    fcustomersearch.createAutoSuggest(Object.assign({"id":"x_idkel","forceSelect":false}, ew.vars.tables.customer.fields.idkel.autoSuggestOptions));
 });
 </script>
+<?= $Page->idkel->Lookup->getParamTag($Page, "p_x_idkel") ?>
 </span>
         </div></div>
     </div>
@@ -533,6 +486,38 @@ loadjs.ready("head", function() {
         </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->ktp->Visible) { // ktp ?>
+    <div id="r_ktp" class="form-group row">
+        <label for="x_ktp" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_ktp"><?= $Page->ktp->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_ktp" id="z_ktp" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ktp->cellAttributes() ?>>
+            <span id="el_customer_ktp" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->ktp->getInputTextType() ?>" data-table="customer" data-field="x_ktp" name="x_ktp" id="x_ktp" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ktp->getPlaceHolder()) ?>" value="<?= $Page->ktp->EditValue ?>"<?= $Page->ktp->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->ktp->getErrorMessage(false) ?></div>
+</span>
+        </div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->npwp->Visible) { // npwp ?>
+    <div id="r_npwp" class="form-group row">
+        <label for="x_npwp" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_npwp"><?= $Page->npwp->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_npwp" id="z_npwp" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->npwp->cellAttributes() ?>>
+            <span id="el_customer_npwp" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->npwp->getInputTextType() ?>" data-table="customer" data-field="x_npwp" name="x_npwp" id="x_npwp" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->npwp->getPlaceHolder()) ?>" value="<?= $Page->npwp->EditValue ?>"<?= $Page->npwp->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->npwp->getErrorMessage(false) ?></div>
+</span>
+        </div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->limit_kredit_order->Visible) { // limit_kredit_order ?>
     <div id="r_limit_kredit_order" class="form-group row">
         <label for="x_limit_kredit_order" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_limit_kredit_order"><?= $Page->limit_kredit_order->caption() ?></span>
@@ -582,6 +567,38 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
+</span>
+        </div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
+    <div id="r_kodenpd" class="form-group row">
+        <label for="x_kodenpd" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_kodenpd"><?= $Page->kodenpd->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_kodenpd" id="z_kodenpd" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kodenpd->cellAttributes() ?>>
+            <span id="el_customer_kodenpd" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->kodenpd->getInputTextType() ?>" data-table="customer" data-field="x_kodenpd" name="x_kodenpd" id="x_kodenpd" size="30" maxlength="20" placeholder="<?= HtmlEncode($Page->kodenpd->getPlaceHolder()) ?>" value="<?= $Page->kodenpd->EditValue ?>"<?= $Page->kodenpd->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->kodenpd->getErrorMessage(false) ?></div>
+</span>
+        </div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->klinik->Visible) { // klinik ?>
+    <div id="r_klinik" class="form-group row">
+        <label for="x_klinik" class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_klinik"><?= $Page->klinik->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_klinik" id="z_klinik" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->klinik->cellAttributes() ?>>
+            <span id="el_customer_klinik" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->klinik->getInputTextType() ?>" data-table="customer" data-field="x_klinik" name="x_klinik" id="x_klinik" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->klinik->getPlaceHolder()) ?>" value="<?= $Page->klinik->EditValue ?>"<?= $Page->klinik->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->klinik->getErrorMessage(false) ?></div>
 </span>
         </div></div>
     </div>
@@ -680,22 +697,6 @@ loadjs.ready(["fcustomersearch", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
-</span>
-        </div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->created_by->Visible) { // created_by ?>
-    <div id="r_created_by" class="form-group row">
-        <label class="<?= $Page->LeftColumnClass ?>"><span id="elh_customer_created_by"><?= $Page->created_by->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("=") ?>
-<input type="hidden" name="z_created_by" id="z_created_by" value="=">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->created_by->cellAttributes() ?>>
-            <span id="el_customer_created_by" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->created_by->getInputTextType() ?>" data-table="customer" data-field="x_created_by" name="x_created_by" id="x_created_by" size="30" placeholder="<?= HtmlEncode($Page->created_by->getPlaceHolder()) ?>" value="<?= $Page->created_by->EditValue ?>"<?= $Page->created_by->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->created_by->getErrorMessage(false) ?></div>
 </span>
         </div></div>
     </div>

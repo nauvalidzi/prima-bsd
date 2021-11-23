@@ -51,7 +51,7 @@ class Product extends DbTable
     public $ijinbpom;
     public $aktif;
     public $created_at;
-    public $created_by;
+    public $updated_at;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -81,7 +81,7 @@ class Product extends DbTable
         $this->ExportWordColumnWidth = null; // Cell width (PHPWord only)
         $this->DetailAdd = false; // Allow detail add
         $this->DetailEdit = false; // Allow detail edit
-        $this->DetailView = false; // Allow detail view
+        $this->DetailView = true; // Allow detail view
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
@@ -118,7 +118,7 @@ class Product extends DbTable
         $this->Fields['idbrand'] = &$this->idbrand;
 
         // kode
-        $this->kode = new DbField('product', 'product', 'x_kode', 'kode', '`kode`', '`kode`', 200, 255, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode = new DbField('product', 'product', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kode->Nullable = false; // NOT NULL field
         $this->kode->Required = true; // Required field
         $this->kode->Sortable = true; // Allow sort
@@ -219,7 +219,7 @@ class Product extends DbTable
         $this->Fields['idkemasanbarang'] = &$this->idkemasanbarang;
 
         // kemasanbarang
-        $this->kemasanbarang = new DbField('product', 'product', 'x_kemasanbarang', 'kemasanbarang', '`kemasanbarang`', '`kemasanbarang`', 200, 100, -1, false, '`kemasanbarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kemasanbarang = new DbField('product', 'product', 'x_kemasanbarang', 'kemasanbarang', '`kemasanbarang`', '`kemasanbarang`', 200, 50, -1, false, '`kemasanbarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kemasanbarang->Sortable = true; // Allow sort
         $this->kemasanbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kemasanbarang->Param, "CustomMsg");
         $this->Fields['kemasanbarang'] = &$this->kemasanbarang;
@@ -252,25 +252,25 @@ class Product extends DbTable
         $this->Fields['satuan'] = &$this->satuan;
 
         // bahan
-        $this->bahan = new DbField('product', 'product', 'x_bahan', 'bahan', '`bahan`', '`bahan`', 200, 100, -1, false, '`bahan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bahan = new DbField('product', 'product', 'x_bahan', 'bahan', '`bahan`', '`bahan`', 201, 65535, -1, false, '`bahan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bahan->Sortable = true; // Allow sort
         $this->bahan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bahan->Param, "CustomMsg");
         $this->Fields['bahan'] = &$this->bahan;
 
         // warna
-        $this->warna = new DbField('product', 'product', 'x_warna', 'warna', '`warna`', '`warna`', 200, 100, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->warna = new DbField('product', 'product', 'x_warna', 'warna', '`warna`', '`warna`', 200, 50, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->warna->Sortable = true; // Allow sort
         $this->warna->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->warna->Param, "CustomMsg");
         $this->Fields['warna'] = &$this->warna;
 
         // parfum
-        $this->parfum = new DbField('product', 'product', 'x_parfum', 'parfum', '`parfum`', '`parfum`', 200, 100, -1, false, '`parfum`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->parfum = new DbField('product', 'product', 'x_parfum', 'parfum', '`parfum`', '`parfum`', 200, 50, -1, false, '`parfum`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->parfum->Sortable = true; // Allow sort
         $this->parfum->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->parfum->Param, "CustomMsg");
         $this->Fields['parfum'] = &$this->parfum;
 
         // label
-        $this->label = new DbField('product', 'product', 'x_label', 'label', '`label`', '`label`', 200, 100, -1, false, '`label`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->label = new DbField('product', 'product', 'x_label', 'label', '`label`', '`label`', 200, 50, -1, false, '`label`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->label->Sortable = true; // Allow sort
         $this->label->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->label->Param, "CustomMsg");
         $this->Fields['label'] = &$this->label;
@@ -282,7 +282,7 @@ class Product extends DbTable
         $this->Fields['foto'] = &$this->foto;
 
         // tambahan
-        $this->tambahan = new DbField('product', 'product', 'x_tambahan', 'tambahan', '`tambahan`', '`tambahan`', 200, 100, -1, false, '`tambahan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tambahan = new DbField('product', 'product', 'x_tambahan', 'tambahan', '`tambahan`', '`tambahan`', 201, 65535, -1, false, '`tambahan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->tambahan->Sortable = true; // Allow sort
         $this->tambahan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tambahan->Param, "CustomMsg");
         $this->Fields['tambahan'] = &$this->tambahan;
@@ -330,12 +330,14 @@ class Product extends DbTable
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
 
-        // created_by
-        $this->created_by = new DbField('product', 'product', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
+        // updated_at
+        $this->updated_at = new DbField('product', 'product', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at->Nullable = false; // NOT NULL field
+        $this->updated_at->Required = true; // Required field
+        $this->updated_at->Sortable = true; // Allow sort
+        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
+        $this->Fields['updated_at'] = &$this->updated_at;
     }
 
     // Field Visibility
@@ -524,13 +526,6 @@ class Product extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            if ($this->getCurrentMasterTable() == "brand" || $this->getCurrentMasterTable() == "") {
-                $filter = $this->addDetailUserIDFilter($filter, "brand"); // Add detail User ID filter
-            }
-        }
         return $filter;
     }
 
@@ -831,7 +826,7 @@ class Product extends DbTable
         $this->ijinbpom->DbValue = $row['ijinbpom'];
         $this->aktif->DbValue = $row['aktif'];
         $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
+        $this->updated_at->DbValue = $row['updated_at'];
     }
 
     // Delete uploaded files
@@ -1186,7 +1181,7 @@ SORTHTML;
         $this->ijinbpom->setDbValue($row['ijinbpom']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Render list row values
@@ -1248,7 +1243,7 @@ SORTHTML;
 
         // created_at
 
-        // created_by
+        // updated_at
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1462,10 +1457,10 @@ SORTHTML;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
+        // updated_at
+        $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1583,10 +1578,10 @@ SORTHTML;
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
 
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
+        // updated_at
+        $this->updated_at->LinkCustomAttributes = "";
+        $this->updated_at->HrefValue = "";
+        $this->updated_at->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1773,9 +1768,6 @@ SORTHTML;
         // tambahan
         $this->tambahan->EditAttrs["class"] = "form-control";
         $this->tambahan->EditCustomAttributes = "";
-        if (!$this->tambahan->Raw) {
-            $this->tambahan->CurrentValue = HtmlDecode($this->tambahan->CurrentValue);
-        }
         $this->tambahan->EditValue = $this->tambahan->CurrentValue;
         $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
 
@@ -1795,9 +1787,11 @@ SORTHTML;
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
+        // updated_at
+        $this->updated_at->EditAttrs["class"] = "form-control";
+        $this->updated_at->EditCustomAttributes = "";
+        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
+        $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1845,6 +1839,7 @@ SORTHTML;
                     $doc->exportCaption($this->tambahan);
                     $doc->exportCaption($this->ijinbpom);
                     $doc->exportCaption($this->aktif);
+                    $doc->exportCaption($this->updated_at);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idbrand);
@@ -1866,7 +1861,7 @@ SORTHTML;
                     $doc->exportCaption($this->ijinbpom);
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
+                    $doc->exportCaption($this->updated_at);
                 }
                 $doc->endExportRow();
             }
@@ -1914,6 +1909,7 @@ SORTHTML;
                         $doc->exportField($this->tambahan);
                         $doc->exportField($this->ijinbpom);
                         $doc->exportField($this->aktif);
+                        $doc->exportField($this->updated_at);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idbrand);
@@ -1935,7 +1931,7 @@ SORTHTML;
                         $doc->exportField($this->ijinbpom);
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
+                        $doc->exportField($this->updated_at);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1950,30 +1946,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add master User ID filter
-    public function addMasterUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "brand") {
-            $filterWrk = Container("brand")->addUserIDFilter($filterWrk);
-        }
-        return $filterWrk;
-    }
-
-    // Add detail User ID filter
-    public function addDetailUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "brand") {
-            $mastertable = Container("brand");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->idbrand, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        return $filterWrk;
     }
 
     // Get file data
@@ -2140,6 +2112,8 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['created_at'] = date('Y-m-d H:i:s');
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
 
@@ -2154,6 +2128,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
 
