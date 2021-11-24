@@ -1768,6 +1768,16 @@ class OrderAdd extends Order
     // Form Custom Validate event
     public function formCustomValidate(&$customError)
     {
+    	// INTEGRASI CEK KONSUMEN/MERK DI S.I.P
+        $url_integrasi = "http://3.133.121.44/sinergi/api/";
+        $brand = ExecuteRow("SELECT kode, kode_sip, title FROM brand WHERE id = {$this->idbrand->FormValue}");
+        $query = curl_get($url_integrasi . "?action=getKodeKonsumen&kode={$brand['kode_sip']}");
+        $konsumen = json_decode($query, true)['success'];
+        if (!$konsumen) {
+            $customError = "{$brand['kode']}, {$brand['title']} belum tersedia di S.I.P!<br>Silakan hubungi pihak Admin S.I.P untuk memproses Order berikut.";
+            return false;
+        }
+        // END INTEGRASI S.I.P
         $idcustomer = $this->idcustomer->FormValue;
         $cust = ExecuteRow("SELECT limit_kredit_order FROM customer WHERE id = {$idcustomer}");
         $limit_kredit = $cust['limit_kredit_order'] < 1 ? 5000000 : $cust['limit_kredit_order']; // SET VARIBLE DEFAULT LIMIT KREDIT
@@ -1776,8 +1786,18 @@ class OrderAdd extends Order
         // CEK TOTAL PESANAN        
         $totalorder = 0; // DEFAULT 0
         $detail = $GLOBALS["order_detail"]->GetGridFormValues(); // TOTAL ORDER YANG DIINPUT
+
+        //$cek_orderdetail = []; // ARRAY UNTUK CEK PRODUK DI SIP
         foreach ($detail as $d) {
             $totalorder += $d['total'];
+
+            // CEK DATA DI SIP PER-PRODUK
+            // $produk = ExecuteRow("SELECT kode FROM product WHERE id = {$d['idproduct']}")['kode'];
+            // $query = curl_get($url_integrasi . "?action=getKodeBarang&kode=a{$produk}");
+            // $barang = json_decode($query, true)['success'];
+
+            // $cek_orderdetail[$key]['value'] = $barang !== false ? 1 : 0; // JIKA TIDAK DITEMUKAN PRODUK DI S.I.P MAKA VALUE PRODUK JADI 0
+            // $cek_orderdetail[$key]['kode'] = $produk;
         }
 
         // CEK TOTAL EXISTING TAGIHAN

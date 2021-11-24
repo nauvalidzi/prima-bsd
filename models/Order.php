@@ -1828,7 +1828,7 @@ SORTHTML;
 
         // INTEGRASI SIP (PABRIK)
         $url_integrasi = "http://3.133.121.44/sinergi/api/";
-        $brand = ExecuteRow("SELECT kode_sip FROM brand WHERE id = {$rsnew['idbrand']}")['kode'];
+        $brand = ExecuteRow("SELECT kode_sip FROM brand WHERE id = {$rsnew['idbrand']}")['kode_sip'];
         $query = curl_get($url_integrasi . "?action=getKodeKonsumen&kode={$brand}");
         $konsumen = json_decode($query, true)['data'];
         $url_auth = $url_integrasi . "?action=login&username=bsd&password=bsdabc";
