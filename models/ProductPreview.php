@@ -399,11 +399,11 @@ class ProductPreview extends Product
         $this->idkualitasbarang->Visible = false;
         $this->idproduct_acuan->Visible = false;
         $this->idkemasanbarang->Visible = false;
-        $this->kemasanbarang->setVisibility();
-        $this->harga->setVisibility();
         $this->ukuran->setVisibility();
         $this->netto->Visible = false;
+        $this->kemasanbarang->setVisibility();
         $this->satuan->Visible = false;
+        $this->harga->setVisibility();
         $this->bahan->Visible = false;
         $this->warna->Visible = false;
         $this->parfum->Visible = false;
@@ -514,11 +514,11 @@ class ProductPreview extends Product
             $this->idkualitasbarang->setSort("");
             $this->idproduct_acuan->setSort("");
             $this->idkemasanbarang->setSort("");
-            $this->kemasanbarang->setSort("");
-            $this->harga->setSort("");
             $this->ukuran->setSort("");
             $this->netto->setSort("");
+            $this->kemasanbarang->setSort("");
             $this->satuan->setSort("");
+            $this->harga->setSort("");
             $this->bahan->setSort("");
             $this->warna->setSort("");
             $this->parfum->setSort("");
@@ -543,9 +543,9 @@ class ProductPreview extends Product
             $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
+            $this->updateSort($this->ukuran); // ukuran
             $this->updateSort($this->kemasanbarang); // kemasanbarang
             $this->updateSort($this->harga); // harga
-            $this->updateSort($this->ukuran); // ukuran
             $this->updateSort($this->updated_at); // updated_at
         }
     }

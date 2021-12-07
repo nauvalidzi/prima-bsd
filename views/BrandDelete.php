@@ -59,14 +59,8 @@ $Page->showMessage();
 <?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
         <th class="<?= $Page->ijinbpom->headerCellClass() ?>"><span id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Page->ijinbpom->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
-        <th class="<?= $Page->kode_sip->headerCellClass() ?>"><span id="elh_brand_kode_sip" class="brand_kode_sip"><?= $Page->kode_sip->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->aktif->Visible) { // aktif ?>
         <th class="<?= $Page->aktif->headerCellClass() ?>"><span id="elh_brand_aktif" class="brand_aktif"><?= $Page->aktif->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->updated_at->Visible) { // updated_at ?>
-        <th class="<?= $Page->updated_at->headerCellClass() ?>"><span id="elh_brand_updated_at" class="brand_updated_at"><?= $Page->updated_at->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -129,27 +123,11 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
-        <td <?= $Page->kode_sip->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_kode_sip" class="brand_kode_sip">
-<span<?= $Page->kode_sip->viewAttributes() ?>>
-<?= $Page->kode_sip->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->aktif->Visible) { // aktif ?>
         <td <?= $Page->aktif->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_brand_aktif" class="brand_aktif">
 <span<?= $Page->aktif->viewAttributes() ?>>
 <?= $Page->aktif->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->updated_at->Visible) { // updated_at ?>
-        <td <?= $Page->updated_at->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_updated_at" class="brand_updated_at">
-<span<?= $Page->updated_at->viewAttributes() ?>>
-<?= $Page->updated_at->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

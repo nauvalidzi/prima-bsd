@@ -131,7 +131,7 @@ class NpdConfirm extends DbTable
         $this->Fields['foto'] = &$this->foto;
 
         // namapemesan
-        $this->namapemesan = new DbField('npd_confirm', 'npd_confirm', 'x_namapemesan', 'namapemesan', '`namapemesan`', '`namapemesan`', 200, 100, -1, false, '`namapemesan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namapemesan = new DbField('npd_confirm', 'npd_confirm', 'x_namapemesan', 'namapemesan', '`namapemesan`', '`namapemesan`', 200, 255, -1, false, '`namapemesan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->namapemesan->Nullable = false; // NOT NULL field
         $this->namapemesan->Required = true; // Required field
         $this->namapemesan->Sortable = true; // Allow sort
@@ -147,7 +147,7 @@ class NpdConfirm extends DbTable
         $this->Fields['alamatpemesan'] = &$this->alamatpemesan;
 
         // personincharge
-        $this->personincharge = new DbField('npd_confirm', 'npd_confirm', 'x_personincharge', 'personincharge', '`personincharge`', '`personincharge`', 200, 100, -1, false, '`personincharge`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->personincharge = new DbField('npd_confirm', 'npd_confirm', 'x_personincharge', 'personincharge', '`personincharge`', '`personincharge`', 200, 255, -1, false, '`personincharge`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->personincharge->Nullable = false; // NOT NULL field
         $this->personincharge->Required = true; // Required field
         $this->personincharge->Sortable = true; // Allow sort
@@ -155,7 +155,7 @@ class NpdConfirm extends DbTable
         $this->Fields['personincharge'] = &$this->personincharge;
 
         // jabatan
-        $this->jabatan = new DbField('npd_confirm', 'npd_confirm', 'x_jabatan', 'jabatan', '`jabatan`', '`jabatan`', 200, 50, -1, false, '`jabatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jabatan = new DbField('npd_confirm', 'npd_confirm', 'x_jabatan', 'jabatan', '`jabatan`', '`jabatan`', 200, 255, -1, false, '`jabatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->jabatan->Nullable = false; // NOT NULL field
         $this->jabatan->Required = true; // Required field
         $this->jabatan->Sortable = true; // Allow sort
@@ -163,7 +163,7 @@ class NpdConfirm extends DbTable
         $this->Fields['jabatan'] = &$this->jabatan;
 
         // notelp
-        $this->notelp = new DbField('npd_confirm', 'npd_confirm', 'x_notelp', 'notelp', '`notelp`', '`notelp`', 200, 50, -1, false, '`notelp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->notelp = new DbField('npd_confirm', 'npd_confirm', 'x_notelp', 'notelp', '`notelp`', '`notelp`', 200, 16, -1, false, '`notelp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->notelp->Nullable = false; // NOT NULL field
         $this->notelp->Required = true; // Required field
         $this->notelp->Sortable = true; // Allow sort

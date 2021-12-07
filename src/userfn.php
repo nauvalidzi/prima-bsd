@@ -582,6 +582,9 @@ function getNextKode($tipe, $id) {
    	} elseif ($tipe == "pembayaran") {
    		$table = "pembayaran";
    		$format = "PB/%YY%MM-%URUTAN";
+   	} elseif ($tipe == "stock_order") {
+   		$table = "stock_order";
+   		$format = "ST/ORD/%YY%MM-%URUTAN";
    	}
     if (strpos($format, "%MM") !== false || strpos($format, "%YY") !== false) {
         $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `{$table}` WHERE created_at = (SELECT MAX(created_at) FROM `{$table}`)");
@@ -672,14 +675,6 @@ function penomoran_date_replace($format) {
 
 //     return $kode;
 // }
-function check_count_brand($idcustomer) {
-	$count = ExecuteScalar("SELECT COUNT(*) FROM brand_link WHERE idcustomer = {$idcustomer} AND idcustomer_brand = {$idcustomer}");
-	if ($count < 1) {
-		return true;
-	}
-	return false;
-}
-
 function tgl_indo($tanggal, $format='date'){
 	$bulan = array (
 		1 => 'Januari',

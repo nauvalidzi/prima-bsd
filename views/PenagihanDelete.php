@@ -89,6 +89,24 @@ $Page->showMessage();
 <?php if ($Page->tgl_cancel->Visible) { // tgl_cancel ?>
         <th class="<?= $Page->tgl_cancel->headerCellClass() ?>"><span id="elh_penagihan_tgl_cancel" class="penagihan_tgl_cancel"><?= $Page->tgl_cancel->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->statusts->Visible) { // statusts ?>
+        <th class="<?= $Page->statusts->headerCellClass() ?>"><span id="elh_penagihan_statusts" class="penagihan_statusts"><?= $Page->statusts->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->statusbayar->Visible) { // statusbayar ?>
+        <th class="<?= $Page->statusbayar->headerCellClass() ?>"><span id="elh_penagihan_statusbayar" class="penagihan_statusbayar"><?= $Page->statusbayar->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->nomorfaktur->Visible) { // nomorfaktur ?>
+        <th class="<?= $Page->nomorfaktur->headerCellClass() ?>"><span id="elh_penagihan_nomorfaktur" class="penagihan_nomorfaktur"><?= $Page->nomorfaktur->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->pembayaran->Visible) { // pembayaran ?>
+        <th class="<?= $Page->pembayaran->headerCellClass() ?>"><span id="elh_penagihan_pembayaran" class="penagihan_pembayaran"><?= $Page->pembayaran->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><span id="elh_penagihan_keterangan" class="penagihan_keterangan"><?= $Page->keterangan->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->saldo->Visible) { // saldo ?>
+        <th class="<?= $Page->saldo->headerCellClass() ?>"><span id="elh_penagihan_saldo" class="penagihan_saldo"><?= $Page->saldo->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -230,6 +248,54 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_penagihan_tgl_cancel" class="penagihan_tgl_cancel">
 <span<?= $Page->tgl_cancel->viewAttributes() ?>>
 <?= $Page->tgl_cancel->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->statusts->Visible) { // statusts ?>
+        <td <?= $Page->statusts->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_statusts" class="penagihan_statusts">
+<span<?= $Page->statusts->viewAttributes() ?>>
+<?= $Page->statusts->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->statusbayar->Visible) { // statusbayar ?>
+        <td <?= $Page->statusbayar->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_statusbayar" class="penagihan_statusbayar">
+<span<?= $Page->statusbayar->viewAttributes() ?>>
+<?= $Page->statusbayar->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->nomorfaktur->Visible) { // nomorfaktur ?>
+        <td <?= $Page->nomorfaktur->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_nomorfaktur" class="penagihan_nomorfaktur">
+<span<?= $Page->nomorfaktur->viewAttributes() ?>>
+<?= $Page->nomorfaktur->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->pembayaran->Visible) { // pembayaran ?>
+        <td <?= $Page->pembayaran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_pembayaran" class="penagihan_pembayaran">
+<span<?= $Page->pembayaran->viewAttributes() ?>>
+<?= $Page->pembayaran->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_keterangan" class="penagihan_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->saldo->Visible) { // saldo ?>
+        <td <?= $Page->saldo->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_saldo" class="penagihan_saldo">
+<span<?= $Page->saldo->viewAttributes() ?>>
+<?= $Page->saldo->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

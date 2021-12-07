@@ -752,26 +752,26 @@ class CustomerView extends Customer
             $item->Visible = false;
         }
 
-        // "detail_invoice"
-        $item = &$option->add("detail_invoice");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("invoice", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        // "detail_brand_customer"
+        $item = &$option->add("detail_brand_customer");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
         $links = "";
-        $detailPageObj = Container("InvoiceGrid");
+        $detailPageObj = Container("BrandCustomerGrid");
         if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
             if ($detailViewTblVar != "") {
                 $detailViewTblVar .= ",";
             }
-            $detailViewTblVar .= "invoice";
+            $detailViewTblVar .= "brand_customer";
         }
         if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
             if ($detailEditTblVar != "") {
                 $detailEditTblVar .= ",";
             }
-            $detailEditTblVar .= "invoice";
+            $detailEditTblVar .= "brand_customer";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -779,12 +779,12 @@ class CustomerView extends Customer
         }
         $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
         $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'invoice');
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer');
         if ($item->Visible) {
             if ($detailTableLink != "") {
                 $detailTableLink .= ",";
             }
-            $detailTableLink .= "invoice";
+            $detailTableLink .= "brand_customer";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -828,26 +828,26 @@ class CustomerView extends Customer
             $item->Visible = false;
         }
 
-        // "detail_brand_customer"
-        $item = &$option->add("detail_brand_customer");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        // "detail_invoice"
+        $item = &$option->add("detail_invoice");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("invoice", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
         $links = "";
-        $detailPageObj = Container("BrandCustomerGrid");
+        $detailPageObj = Container("InvoiceGrid");
         if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
             if ($detailViewTblVar != "") {
                 $detailViewTblVar .= ",";
             }
-            $detailViewTblVar .= "brand_customer";
+            $detailViewTblVar .= "invoice";
         }
         if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
             if ($detailEditTblVar != "") {
                 $detailEditTblVar .= ",";
             }
-            $detailEditTblVar .= "brand_customer";
+            $detailEditTblVar .= "invoice";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -855,12 +855,12 @@ class CustomerView extends Customer
         }
         $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
         $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer');
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'invoice');
         if ($item->Visible) {
             if ($detailTableLink != "") {
                 $detailTableLink .= ",";
             }
-            $detailTableLink .= "brand_customer";
+            $detailTableLink .= "invoice";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -992,7 +992,7 @@ class CustomerView extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("invoice");
+        $detailTbl = Container("brand_customer");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -1004,7 +1004,7 @@ class CustomerView extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("brand_customer");
+        $detailTbl = Container("invoice");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -1184,7 +1184,6 @@ class CustomerView extends Customer
             $this->jabatan->ViewCustomAttributes = "";
 
             // idprov
-            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -1206,7 +1205,6 @@ class CustomerView extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
-            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -1228,7 +1226,6 @@ class CustomerView extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
-            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -1250,7 +1247,6 @@ class CustomerView extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
-            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -1627,8 +1623,8 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
                 }
             }
-            if (in_array("invoice", $detailTblVar)) {
-                $detailPageObj = Container("InvoiceGrid");
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
                 if ($detailPageObj->DetailView) {
                     $detailPageObj->CurrentMode = "view";
 
@@ -1638,7 +1634,7 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                    $detailPageObj->id->setSessionValue(""); // Clear session key
+                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
                 }
             }
             if (in_array("order", $detailTblVar)) {
@@ -1654,8 +1650,8 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
                 }
             }
-            if (in_array("brand_customer", $detailTblVar)) {
-                $detailPageObj = Container("BrandCustomerGrid");
+            if (in_array("invoice", $detailTblVar)) {
+                $detailPageObj = Container("InvoiceGrid");
                 if ($detailPageObj->DetailView) {
                     $detailPageObj->CurrentMode = "view";
 
@@ -1665,7 +1661,7 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
+                    $detailPageObj->id->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -1688,9 +1684,9 @@ class CustomerView extends Customer
         $pages = new SubPages();
         $pages->Style = "tabs";
         $pages->add('alamat_customer');
-        $pages->add('invoice');
-        $pages->add('order');
         $pages->add('brand_customer');
+        $pages->add('order');
+        $pages->add('invoice');
         $this->DetailPages = $pages;
     }
 

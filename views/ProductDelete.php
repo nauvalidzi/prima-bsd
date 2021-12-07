@@ -53,14 +53,14 @@ $Page->showMessage();
 <?php if ($Page->nama->Visible) { // nama ?>
         <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_product_nama" class="product_nama"><?= $Page->nama->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><span id="elh_product_ukuran" class="product_ukuran"><?= $Page->ukuran->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
         <th class="<?= $Page->kemasanbarang->headerCellClass() ?>"><span id="elh_product_kemasanbarang" class="product_kemasanbarang"><?= $Page->kemasanbarang->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->harga->Visible) { // harga ?>
         <th class="<?= $Page->harga->headerCellClass() ?>"><span id="elh_product_harga" class="product_harga"><?= $Page->harga->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><span id="elh_product_ukuran" class="product_ukuran"><?= $Page->ukuran->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->updated_at->Visible) { // updated_at ?>
         <th class="<?= $Page->updated_at->headerCellClass() ?>"><span id="elh_product_updated_at" class="product_updated_at"><?= $Page->updated_at->caption() ?></span></th>
@@ -110,6 +110,14 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <td <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_product_ukuran" class="product_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
         <td <?= $Page->kemasanbarang->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_product_kemasanbarang" class="product_kemasanbarang">
@@ -123,14 +131,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_product_harga" class="product_harga">
 <span<?= $Page->harga->viewAttributes() ?>>
 <?= $Page->harga->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <td <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_product_ukuran" class="product_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

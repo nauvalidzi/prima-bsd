@@ -62,9 +62,6 @@ $Page->showMessage();
 <?php if ($Page->hp->Visible) { // hp ?>
         <th class="<?= $Page->hp->headerCellClass() ?>"><span id="elh_customer_hp" class="customer_hp"><?= $Page->hp->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <th class="<?= $Page->kodenpd->headerCellClass() ?>"><span id="elh_customer_kodenpd" class="customer_kodenpd"><?= $Page->kodenpd->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->klinik->Visible) { // klinik ?>
         <th class="<?= $Page->klinik->headerCellClass() ?>"><span id="elh_customer_klinik" class="customer_klinik"><?= $Page->klinik->caption() ?></span></th>
 <?php } ?>
@@ -134,14 +131,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_customer_hp" class="customer_hp">
 <span<?= $Page->hp->viewAttributes() ?>>
 <?= $Page->hp->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <td <?= $Page->kodenpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_customer_kodenpd" class="customer_kodenpd">
-<span<?= $Page->kodenpd->viewAttributes() ?>>
-<?= $Page->kodenpd->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

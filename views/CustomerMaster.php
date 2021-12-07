@@ -75,17 +75,6 @@ $customer = Container("customer");
 </td>
         </tr>
 <?php } ?>
-<?php if ($customer->kodenpd->Visible) { // kodenpd ?>
-        <tr id="r_kodenpd">
-            <td class="<?= $customer->TableLeftColumnClass ?>"><?= $customer->kodenpd->caption() ?></td>
-            <td <?= $customer->kodenpd->cellAttributes() ?>>
-<span id="el_customer_kodenpd">
-<span<?= $customer->kodenpd->viewAttributes() ?>>
-<?= $customer->kodenpd->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
 <?php if ($customer->klinik->Visible) { // klinik ?>
         <tr id="r_klinik">
             <td class="<?= $customer->TableLeftColumnClass ?>"><?= $customer->klinik->caption() ?></td>

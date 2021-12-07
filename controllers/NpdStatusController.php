@@ -37,10 +37,4 @@ class NpdStatusController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdStatusDelete");
     }
-
-    // preview
-    public function preview(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "NpdStatusPreview", false);
-    }
 }

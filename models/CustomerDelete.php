@@ -396,7 +396,7 @@ class CustomerDelete extends Customer
         $this->npwp->Visible = false;
         $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
-        $this->kodenpd->setVisibility();
+        $this->kodenpd->Visible = false;
         $this->klinik->setVisibility();
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -771,7 +771,6 @@ class CustomerDelete extends Customer
             $this->jabatan->ViewCustomAttributes = "";
 
             // idprov
-            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -793,7 +792,6 @@ class CustomerDelete extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
-            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -815,7 +813,6 @@ class CustomerDelete extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
-            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -837,7 +834,6 @@ class CustomerDelete extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
-            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -984,11 +980,6 @@ class CustomerDelete extends Customer
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
-
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
-            $this->kodenpd->TooltipValue = "";
 
             // klinik
             $this->klinik->LinkCustomAttributes = "";

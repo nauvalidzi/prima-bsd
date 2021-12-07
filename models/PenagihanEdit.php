@@ -483,6 +483,13 @@ class PenagihanEdit extends Penagihan
         $this->tgl_penagihan->setVisibility();
         $this->tgl_return->setVisibility();
         $this->tgl_cancel->setVisibility();
+        $this->messagets->setVisibility();
+        $this->statusts->setVisibility();
+        $this->statusbayar->setVisibility();
+        $this->nomorfaktur->setVisibility();
+        $this->pembayaran->setVisibility();
+        $this->keterangan->setVisibility();
+        $this->saldo->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -824,6 +831,76 @@ class PenagihanEdit extends Penagihan
             }
             $this->tgl_cancel->CurrentValue = UnFormatDateTime($this->tgl_cancel->CurrentValue, 0);
         }
+
+        // Check field name 'messagets' first before field var 'x_messagets'
+        $val = $CurrentForm->hasValue("messagets") ? $CurrentForm->getValue("messagets") : $CurrentForm->getValue("x_messagets");
+        if (!$this->messagets->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->messagets->Visible = false; // Disable update for API request
+            } else {
+                $this->messagets->setFormValue($val);
+            }
+        }
+
+        // Check field name 'statusts' first before field var 'x_statusts'
+        $val = $CurrentForm->hasValue("statusts") ? $CurrentForm->getValue("statusts") : $CurrentForm->getValue("x_statusts");
+        if (!$this->statusts->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->statusts->Visible = false; // Disable update for API request
+            } else {
+                $this->statusts->setFormValue($val);
+            }
+        }
+
+        // Check field name 'statusbayar' first before field var 'x_statusbayar'
+        $val = $CurrentForm->hasValue("statusbayar") ? $CurrentForm->getValue("statusbayar") : $CurrentForm->getValue("x_statusbayar");
+        if (!$this->statusbayar->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->statusbayar->Visible = false; // Disable update for API request
+            } else {
+                $this->statusbayar->setFormValue($val);
+            }
+        }
+
+        // Check field name 'nomorfaktur' first before field var 'x_nomorfaktur'
+        $val = $CurrentForm->hasValue("nomorfaktur") ? $CurrentForm->getValue("nomorfaktur") : $CurrentForm->getValue("x_nomorfaktur");
+        if (!$this->nomorfaktur->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->nomorfaktur->Visible = false; // Disable update for API request
+            } else {
+                $this->nomorfaktur->setFormValue($val);
+            }
+        }
+
+        // Check field name 'pembayaran' first before field var 'x_pembayaran'
+        $val = $CurrentForm->hasValue("pembayaran") ? $CurrentForm->getValue("pembayaran") : $CurrentForm->getValue("x_pembayaran");
+        if (!$this->pembayaran->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->pembayaran->Visible = false; // Disable update for API request
+            } else {
+                $this->pembayaran->setFormValue($val);
+            }
+        }
+
+        // Check field name 'keterangan' first before field var 'x_keterangan'
+        $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
+        if (!$this->keterangan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->keterangan->Visible = false; // Disable update for API request
+            } else {
+                $this->keterangan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'saldo' first before field var 'x_saldo'
+        $val = $CurrentForm->hasValue("saldo") ? $CurrentForm->getValue("saldo") : $CurrentForm->getValue("x_saldo");
+        if (!$this->saldo->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->saldo->Visible = false; // Disable update for API request
+            } else {
+                $this->saldo->setFormValue($val);
+            }
+        }
     }
 
     // Restore form values
@@ -852,6 +929,13 @@ class PenagihanEdit extends Penagihan
         $this->tgl_return->CurrentValue = UnFormatDateTime($this->tgl_return->CurrentValue, 0);
         $this->tgl_cancel->CurrentValue = $this->tgl_cancel->FormValue;
         $this->tgl_cancel->CurrentValue = UnFormatDateTime($this->tgl_cancel->CurrentValue, 0);
+        $this->messagets->CurrentValue = $this->messagets->FormValue;
+        $this->statusts->CurrentValue = $this->statusts->FormValue;
+        $this->statusbayar->CurrentValue = $this->statusbayar->FormValue;
+        $this->nomorfaktur->CurrentValue = $this->nomorfaktur->FormValue;
+        $this->pembayaran->CurrentValue = $this->pembayaran->FormValue;
+        $this->keterangan->CurrentValue = $this->keterangan->FormValue;
+        $this->saldo->CurrentValue = $this->saldo->FormValue;
     }
 
     /**
@@ -917,6 +1001,13 @@ class PenagihanEdit extends Penagihan
         $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
         $this->tgl_return->setDbValue($row['tgl_return']);
         $this->tgl_cancel->setDbValue($row['tgl_cancel']);
+        $this->messagets->setDbValue($row['messagets']);
+        $this->statusts->setDbValue($row['statusts']);
+        $this->statusbayar->setDbValue($row['statusbayar']);
+        $this->nomorfaktur->setDbValue($row['nomorfaktur']);
+        $this->pembayaran->setDbValue($row['pembayaran']);
+        $this->keterangan->setDbValue($row['keterangan']);
+        $this->saldo->setDbValue($row['saldo']);
     }
 
     // Return a row with default values
@@ -939,6 +1030,13 @@ class PenagihanEdit extends Penagihan
         $row['tgl_penagihan'] = null;
         $row['tgl_return'] = null;
         $row['tgl_cancel'] = null;
+        $row['messagets'] = null;
+        $row['statusts'] = null;
+        $row['statusbayar'] = null;
+        $row['nomorfaktur'] = null;
+        $row['pembayaran'] = null;
+        $row['keterangan'] = null;
+        $row['saldo'] = null;
         return $row;
     }
 
@@ -1001,6 +1099,20 @@ class PenagihanEdit extends Penagihan
         // tgl_return
 
         // tgl_cancel
+
+        // messagets
+
+        // statusts
+
+        // statusbayar
+
+        // nomorfaktur
+
+        // pembayaran
+
+        // keterangan
+
+        // saldo
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1079,6 +1191,37 @@ class PenagihanEdit extends Penagihan
             $this->tgl_cancel->ViewValue = $this->tgl_cancel->CurrentValue;
             $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 0);
             $this->tgl_cancel->ViewCustomAttributes = "";
+
+            // messagets
+            $this->messagets->ViewValue = $this->messagets->CurrentValue;
+            $this->messagets->ViewCustomAttributes = "";
+
+            // statusts
+            $this->statusts->ViewValue = $this->statusts->CurrentValue;
+            $this->statusts->ViewValue = FormatNumber($this->statusts->ViewValue, 0, -2, -2, -2);
+            $this->statusts->ViewCustomAttributes = "";
+
+            // statusbayar
+            $this->statusbayar->ViewValue = $this->statusbayar->CurrentValue;
+            $this->statusbayar->ViewCustomAttributes = "";
+
+            // nomorfaktur
+            $this->nomorfaktur->ViewValue = $this->nomorfaktur->CurrentValue;
+            $this->nomorfaktur->ViewCustomAttributes = "";
+
+            // pembayaran
+            $this->pembayaran->ViewValue = $this->pembayaran->CurrentValue;
+            $this->pembayaran->ViewValue = FormatNumber($this->pembayaran->ViewValue, 0, -2, -2, -2);
+            $this->pembayaran->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
+
+            // saldo
+            $this->saldo->ViewValue = $this->saldo->CurrentValue;
+            $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
+            $this->saldo->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
@@ -1159,6 +1302,41 @@ class PenagihanEdit extends Penagihan
             $this->tgl_cancel->LinkCustomAttributes = "";
             $this->tgl_cancel->HrefValue = "";
             $this->tgl_cancel->TooltipValue = "";
+
+            // messagets
+            $this->messagets->LinkCustomAttributes = "";
+            $this->messagets->HrefValue = "";
+            $this->messagets->TooltipValue = "";
+
+            // statusts
+            $this->statusts->LinkCustomAttributes = "";
+            $this->statusts->HrefValue = "";
+            $this->statusts->TooltipValue = "";
+
+            // statusbayar
+            $this->statusbayar->LinkCustomAttributes = "";
+            $this->statusbayar->HrefValue = "";
+            $this->statusbayar->TooltipValue = "";
+
+            // nomorfaktur
+            $this->nomorfaktur->LinkCustomAttributes = "";
+            $this->nomorfaktur->HrefValue = "";
+            $this->nomorfaktur->TooltipValue = "";
+
+            // pembayaran
+            $this->pembayaran->LinkCustomAttributes = "";
+            $this->pembayaran->HrefValue = "";
+            $this->pembayaran->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
+
+            // saldo
+            $this->saldo->LinkCustomAttributes = "";
+            $this->saldo->HrefValue = "";
+            $this->saldo->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->EditAttrs["class"] = "form-control";
@@ -1264,6 +1442,57 @@ class PenagihanEdit extends Penagihan
             $this->tgl_cancel->EditValue = HtmlEncode(FormatDateTime($this->tgl_cancel->CurrentValue, 8));
             $this->tgl_cancel->PlaceHolder = RemoveHtml($this->tgl_cancel->caption());
 
+            // messagets
+            $this->messagets->EditAttrs["class"] = "form-control";
+            $this->messagets->EditCustomAttributes = "";
+            $this->messagets->EditValue = HtmlEncode($this->messagets->CurrentValue);
+            $this->messagets->PlaceHolder = RemoveHtml($this->messagets->caption());
+
+            // statusts
+            $this->statusts->EditAttrs["class"] = "form-control";
+            $this->statusts->EditCustomAttributes = "";
+            $this->statusts->EditValue = HtmlEncode($this->statusts->CurrentValue);
+            $this->statusts->PlaceHolder = RemoveHtml($this->statusts->caption());
+
+            // statusbayar
+            $this->statusbayar->EditAttrs["class"] = "form-control";
+            $this->statusbayar->EditCustomAttributes = "";
+            if (!$this->statusbayar->Raw) {
+                $this->statusbayar->CurrentValue = HtmlDecode($this->statusbayar->CurrentValue);
+            }
+            $this->statusbayar->EditValue = HtmlEncode($this->statusbayar->CurrentValue);
+            $this->statusbayar->PlaceHolder = RemoveHtml($this->statusbayar->caption());
+
+            // nomorfaktur
+            $this->nomorfaktur->EditAttrs["class"] = "form-control";
+            $this->nomorfaktur->EditCustomAttributes = "";
+            if (!$this->nomorfaktur->Raw) {
+                $this->nomorfaktur->CurrentValue = HtmlDecode($this->nomorfaktur->CurrentValue);
+            }
+            $this->nomorfaktur->EditValue = HtmlEncode($this->nomorfaktur->CurrentValue);
+            $this->nomorfaktur->PlaceHolder = RemoveHtml($this->nomorfaktur->caption());
+
+            // pembayaran
+            $this->pembayaran->EditAttrs["class"] = "form-control";
+            $this->pembayaran->EditCustomAttributes = "";
+            $this->pembayaran->EditValue = HtmlEncode($this->pembayaran->CurrentValue);
+            $this->pembayaran->PlaceHolder = RemoveHtml($this->pembayaran->caption());
+
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            if (!$this->keterangan->Raw) {
+                $this->keterangan->CurrentValue = HtmlDecode($this->keterangan->CurrentValue);
+            }
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
+
+            // saldo
+            $this->saldo->EditAttrs["class"] = "form-control";
+            $this->saldo->EditCustomAttributes = "";
+            $this->saldo->EditValue = HtmlEncode($this->saldo->CurrentValue);
+            $this->saldo->PlaceHolder = RemoveHtml($this->saldo->caption());
+
             // Edit refer script
 
             // id
@@ -1329,6 +1558,34 @@ class PenagihanEdit extends Penagihan
             // tgl_cancel
             $this->tgl_cancel->LinkCustomAttributes = "";
             $this->tgl_cancel->HrefValue = "";
+
+            // messagets
+            $this->messagets->LinkCustomAttributes = "";
+            $this->messagets->HrefValue = "";
+
+            // statusts
+            $this->statusts->LinkCustomAttributes = "";
+            $this->statusts->HrefValue = "";
+
+            // statusbayar
+            $this->statusbayar->LinkCustomAttributes = "";
+            $this->statusbayar->HrefValue = "";
+
+            // nomorfaktur
+            $this->nomorfaktur->LinkCustomAttributes = "";
+            $this->nomorfaktur->HrefValue = "";
+
+            // pembayaran
+            $this->pembayaran->LinkCustomAttributes = "";
+            $this->pembayaran->HrefValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+
+            // saldo
+            $this->saldo->LinkCustomAttributes = "";
+            $this->saldo->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1459,6 +1716,50 @@ class PenagihanEdit extends Penagihan
         if (!CheckDate($this->tgl_cancel->FormValue)) {
             $this->tgl_cancel->addErrorMessage($this->tgl_cancel->getErrorMessage(false));
         }
+        if ($this->messagets->Required) {
+            if (!$this->messagets->IsDetailKey && EmptyValue($this->messagets->FormValue)) {
+                $this->messagets->addErrorMessage(str_replace("%s", $this->messagets->caption(), $this->messagets->RequiredErrorMessage));
+            }
+        }
+        if ($this->statusts->Required) {
+            if (!$this->statusts->IsDetailKey && EmptyValue($this->statusts->FormValue)) {
+                $this->statusts->addErrorMessage(str_replace("%s", $this->statusts->caption(), $this->statusts->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->statusts->FormValue)) {
+            $this->statusts->addErrorMessage($this->statusts->getErrorMessage(false));
+        }
+        if ($this->statusbayar->Required) {
+            if (!$this->statusbayar->IsDetailKey && EmptyValue($this->statusbayar->FormValue)) {
+                $this->statusbayar->addErrorMessage(str_replace("%s", $this->statusbayar->caption(), $this->statusbayar->RequiredErrorMessage));
+            }
+        }
+        if ($this->nomorfaktur->Required) {
+            if (!$this->nomorfaktur->IsDetailKey && EmptyValue($this->nomorfaktur->FormValue)) {
+                $this->nomorfaktur->addErrorMessage(str_replace("%s", $this->nomorfaktur->caption(), $this->nomorfaktur->RequiredErrorMessage));
+            }
+        }
+        if ($this->pembayaran->Required) {
+            if (!$this->pembayaran->IsDetailKey && EmptyValue($this->pembayaran->FormValue)) {
+                $this->pembayaran->addErrorMessage(str_replace("%s", $this->pembayaran->caption(), $this->pembayaran->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->pembayaran->FormValue)) {
+            $this->pembayaran->addErrorMessage($this->pembayaran->getErrorMessage(false));
+        }
+        if ($this->keterangan->Required) {
+            if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
+                $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
+            }
+        }
+        if ($this->saldo->Required) {
+            if (!$this->saldo->IsDetailKey && EmptyValue($this->saldo->FormValue)) {
+                $this->saldo->addErrorMessage(str_replace("%s", $this->saldo->caption(), $this->saldo->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->saldo->FormValue)) {
+            $this->saldo->addErrorMessage($this->saldo->getErrorMessage(false));
+        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -1539,6 +1840,27 @@ class PenagihanEdit extends Penagihan
 
             // tgl_cancel
             $this->tgl_cancel->setDbValueDef($rsnew, UnFormatDateTime($this->tgl_cancel->CurrentValue, 0), null, $this->tgl_cancel->ReadOnly);
+
+            // messagets
+            $this->messagets->setDbValueDef($rsnew, $this->messagets->CurrentValue, null, $this->messagets->ReadOnly);
+
+            // statusts
+            $this->statusts->setDbValueDef($rsnew, $this->statusts->CurrentValue, null, $this->statusts->ReadOnly);
+
+            // statusbayar
+            $this->statusbayar->setDbValueDef($rsnew, $this->statusbayar->CurrentValue, null, $this->statusbayar->ReadOnly);
+
+            // nomorfaktur
+            $this->nomorfaktur->setDbValueDef($rsnew, $this->nomorfaktur->CurrentValue, null, $this->nomorfaktur->ReadOnly);
+
+            // pembayaran
+            $this->pembayaran->setDbValueDef($rsnew, $this->pembayaran->CurrentValue, null, $this->pembayaran->ReadOnly);
+
+            // keterangan
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
+
+            // saldo
+            $this->saldo->setDbValueDef($rsnew, $this->saldo->CurrentValue, null, $this->saldo->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);

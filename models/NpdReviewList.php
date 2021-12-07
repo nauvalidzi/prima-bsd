@@ -571,36 +571,36 @@ class NpdReviewList extends NpdReview
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->idnpd_sample->setVisibility();
-        $this->tglreview->setVisibility();
-        $this->tglsubmit->setVisibility();
+        $this->tanggal_review->setVisibility();
+        $this->tanggal_submit->setVisibility();
         $this->wadah->Visible = false;
-        $this->bentukok->Visible = false;
-        $this->bentukrevisi->Visible = false;
-        $this->viskositasok->Visible = false;
-        $this->viskositasrevisi->Visible = false;
-        $this->jeniswarnaok->Visible = false;
-        $this->jeniswarnarevisi->Visible = false;
-        $this->tonewarnaok->Visible = false;
-        $this->tonewarnarevisi->Visible = false;
-        $this->gradasiwarnaok->Visible = false;
-        $this->gradasiwarnarevisi->Visible = false;
-        $this->bauok->Visible = false;
-        $this->baurevisi->Visible = false;
-        $this->estetikaok->Visible = false;
-        $this->estetikarevisi->Visible = false;
-        $this->aplikasiawalok->Visible = false;
-        $this->aplikasiawalrevisi->Visible = false;
-        $this->aplikasilamaok->Visible = false;
-        $this->aplikasilamarevisi->Visible = false;
-        $this->efekpositifok->Visible = false;
-        $this->efekpositifrevisi->Visible = false;
-        $this->efeknegatifok->Visible = false;
-        $this->efeknegatifrevisi->Visible = false;
+        $this->bentuk_opsi->Visible = false;
+        $this->bentuk_revisi->Visible = false;
+        $this->viskositas_opsi->Visible = false;
+        $this->viskositas_revisi->Visible = false;
+        $this->jeniswarna_opsi->Visible = false;
+        $this->jeniswarna_revisi->Visible = false;
+        $this->tonewarna_opsi->Visible = false;
+        $this->tonewarna_revisi->Visible = false;
+        $this->gradasiwarna_opsi->Visible = false;
+        $this->gradasiwarna_revisi->Visible = false;
+        $this->bauparfum_opsi->Visible = false;
+        $this->bauparfum_revisi->Visible = false;
+        $this->estetika_opsi->Visible = false;
+        $this->estetika_revisi->Visible = false;
+        $this->aplikasiawal_opsi->Visible = false;
+        $this->aplikasiawal_revisi->Visible = false;
+        $this->aplikasilama_opsi->Visible = false;
+        $this->aplikasilama_revisi->Visible = false;
+        $this->efekpositif_opsi->Visible = false;
+        $this->efekpositif_revisi->Visible = false;
+        $this->efeknegatif_opsi->Visible = false;
+        $this->efeknegatif_revisi->Visible = false;
         $this->kesimpulan->Visible = false;
         $this->status->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
+        $this->ukuran->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -682,8 +682,33 @@ class NpdReviewList extends NpdReview
                 $this->OtherOptions->hideAllOptions();
             }
 
+            // Get default search criteria
+            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+            // Get basic search values
+            $this->loadBasicSearchValues();
+
+            // Process filter list
+            if ($this->processFilterList()) {
+                $this->terminate();
+                return;
+            }
+
+            // Restore search parms from Session if not searching / reset / export
+            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+                $this->restoreSearchParms();
+            }
+
+            // Call Recordset SearchValidated event
+            $this->recordsetSearchValidated();
+
             // Set up sorting order
             $this->setupSortOrder();
+
+            // Get basic search criteria
+            if (!$this->hasInvalidFields()) {
+                $srchBasic = $this->basicSearchWhere();
+            }
         }
 
         // Restore display records
@@ -697,6 +722,31 @@ class NpdReviewList extends NpdReview
         // Load Sorting Order
         if ($this->Command != "json") {
             $this->loadSortOrder();
+        }
+
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms()) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere();
+            }
+        }
+
+        // Build search criteria
+        AddFilter($this->SearchWhere, $srchAdvanced);
+        AddFilter($this->SearchWhere, $srchBasic);
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json") {
+            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -858,6 +908,527 @@ class NpdReviewList extends NpdReview
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        global $UserProfile;
+
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
+        $filterList = Concat($filterList, $this->idnpd_sample->AdvancedSearch->toJson(), ","); // Field idnpd_sample
+        $filterList = Concat($filterList, $this->tanggal_review->AdvancedSearch->toJson(), ","); // Field tanggal_review
+        $filterList = Concat($filterList, $this->tanggal_submit->AdvancedSearch->toJson(), ","); // Field tanggal_submit
+        $filterList = Concat($filterList, $this->wadah->AdvancedSearch->toJson(), ","); // Field wadah
+        $filterList = Concat($filterList, $this->bentuk_opsi->AdvancedSearch->toJson(), ","); // Field bentuk_opsi
+        $filterList = Concat($filterList, $this->bentuk_revisi->AdvancedSearch->toJson(), ","); // Field bentuk_revisi
+        $filterList = Concat($filterList, $this->viskositas_opsi->AdvancedSearch->toJson(), ","); // Field viskositas_opsi
+        $filterList = Concat($filterList, $this->viskositas_revisi->AdvancedSearch->toJson(), ","); // Field viskositas_revisi
+        $filterList = Concat($filterList, $this->jeniswarna_opsi->AdvancedSearch->toJson(), ","); // Field jeniswarna_opsi
+        $filterList = Concat($filterList, $this->jeniswarna_revisi->AdvancedSearch->toJson(), ","); // Field jeniswarna_revisi
+        $filterList = Concat($filterList, $this->tonewarna_opsi->AdvancedSearch->toJson(), ","); // Field tonewarna_opsi
+        $filterList = Concat($filterList, $this->tonewarna_revisi->AdvancedSearch->toJson(), ","); // Field tonewarna_revisi
+        $filterList = Concat($filterList, $this->gradasiwarna_opsi->AdvancedSearch->toJson(), ","); // Field gradasiwarna_opsi
+        $filterList = Concat($filterList, $this->gradasiwarna_revisi->AdvancedSearch->toJson(), ","); // Field gradasiwarna_revisi
+        $filterList = Concat($filterList, $this->bauparfum_opsi->AdvancedSearch->toJson(), ","); // Field bauparfum_opsi
+        $filterList = Concat($filterList, $this->bauparfum_revisi->AdvancedSearch->toJson(), ","); // Field bauparfum_revisi
+        $filterList = Concat($filterList, $this->estetika_opsi->AdvancedSearch->toJson(), ","); // Field estetika_opsi
+        $filterList = Concat($filterList, $this->estetika_revisi->AdvancedSearch->toJson(), ","); // Field estetika_revisi
+        $filterList = Concat($filterList, $this->aplikasiawal_opsi->AdvancedSearch->toJson(), ","); // Field aplikasiawal_opsi
+        $filterList = Concat($filterList, $this->aplikasiawal_revisi->AdvancedSearch->toJson(), ","); // Field aplikasiawal_revisi
+        $filterList = Concat($filterList, $this->aplikasilama_opsi->AdvancedSearch->toJson(), ","); // Field aplikasilama_opsi
+        $filterList = Concat($filterList, $this->aplikasilama_revisi->AdvancedSearch->toJson(), ","); // Field aplikasilama_revisi
+        $filterList = Concat($filterList, $this->efekpositif_opsi->AdvancedSearch->toJson(), ","); // Field efekpositif_opsi
+        $filterList = Concat($filterList, $this->efekpositif_revisi->AdvancedSearch->toJson(), ","); // Field efekpositif_revisi
+        $filterList = Concat($filterList, $this->efeknegatif_opsi->AdvancedSearch->toJson(), ","); // Field efeknegatif_opsi
+        $filterList = Concat($filterList, $this->efeknegatif_revisi->AdvancedSearch->toJson(), ","); // Field efeknegatif_revisi
+        $filterList = Concat($filterList, $this->kesimpulan->AdvancedSearch->toJson(), ","); // Field kesimpulan
+        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
+        $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
+        $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
+        $filterList = Concat($filterList, $this->ukuran->AdvancedSearch->toJson(), ","); // Field ukuran
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        global $UserProfile;
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            $UserProfile->setSearchFilters(CurrentUserName(), "fnpd_reviewlistsrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
+
+        // Field idnpd
+        $this->idnpd->AdvancedSearch->SearchValue = @$filter["x_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator = @$filter["z_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchCondition = @$filter["v_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchValue2 = @$filter["y_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
+        $this->idnpd->AdvancedSearch->save();
+
+        // Field idnpd_sample
+        $this->idnpd_sample->AdvancedSearch->SearchValue = @$filter["x_idnpd_sample"];
+        $this->idnpd_sample->AdvancedSearch->SearchOperator = @$filter["z_idnpd_sample"];
+        $this->idnpd_sample->AdvancedSearch->SearchCondition = @$filter["v_idnpd_sample"];
+        $this->idnpd_sample->AdvancedSearch->SearchValue2 = @$filter["y_idnpd_sample"];
+        $this->idnpd_sample->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd_sample"];
+        $this->idnpd_sample->AdvancedSearch->save();
+
+        // Field tanggal_review
+        $this->tanggal_review->AdvancedSearch->SearchValue = @$filter["x_tanggal_review"];
+        $this->tanggal_review->AdvancedSearch->SearchOperator = @$filter["z_tanggal_review"];
+        $this->tanggal_review->AdvancedSearch->SearchCondition = @$filter["v_tanggal_review"];
+        $this->tanggal_review->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_review"];
+        $this->tanggal_review->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_review"];
+        $this->tanggal_review->AdvancedSearch->save();
+
+        // Field tanggal_submit
+        $this->tanggal_submit->AdvancedSearch->SearchValue = @$filter["x_tanggal_submit"];
+        $this->tanggal_submit->AdvancedSearch->SearchOperator = @$filter["z_tanggal_submit"];
+        $this->tanggal_submit->AdvancedSearch->SearchCondition = @$filter["v_tanggal_submit"];
+        $this->tanggal_submit->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_submit"];
+        $this->tanggal_submit->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_submit"];
+        $this->tanggal_submit->AdvancedSearch->save();
+
+        // Field wadah
+        $this->wadah->AdvancedSearch->SearchValue = @$filter["x_wadah"];
+        $this->wadah->AdvancedSearch->SearchOperator = @$filter["z_wadah"];
+        $this->wadah->AdvancedSearch->SearchCondition = @$filter["v_wadah"];
+        $this->wadah->AdvancedSearch->SearchValue2 = @$filter["y_wadah"];
+        $this->wadah->AdvancedSearch->SearchOperator2 = @$filter["w_wadah"];
+        $this->wadah->AdvancedSearch->save();
+
+        // Field bentuk_opsi
+        $this->bentuk_opsi->AdvancedSearch->SearchValue = @$filter["x_bentuk_opsi"];
+        $this->bentuk_opsi->AdvancedSearch->SearchOperator = @$filter["z_bentuk_opsi"];
+        $this->bentuk_opsi->AdvancedSearch->SearchCondition = @$filter["v_bentuk_opsi"];
+        $this->bentuk_opsi->AdvancedSearch->SearchValue2 = @$filter["y_bentuk_opsi"];
+        $this->bentuk_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_bentuk_opsi"];
+        $this->bentuk_opsi->AdvancedSearch->save();
+
+        // Field bentuk_revisi
+        $this->bentuk_revisi->AdvancedSearch->SearchValue = @$filter["x_bentuk_revisi"];
+        $this->bentuk_revisi->AdvancedSearch->SearchOperator = @$filter["z_bentuk_revisi"];
+        $this->bentuk_revisi->AdvancedSearch->SearchCondition = @$filter["v_bentuk_revisi"];
+        $this->bentuk_revisi->AdvancedSearch->SearchValue2 = @$filter["y_bentuk_revisi"];
+        $this->bentuk_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_bentuk_revisi"];
+        $this->bentuk_revisi->AdvancedSearch->save();
+
+        // Field viskositas_opsi
+        $this->viskositas_opsi->AdvancedSearch->SearchValue = @$filter["x_viskositas_opsi"];
+        $this->viskositas_opsi->AdvancedSearch->SearchOperator = @$filter["z_viskositas_opsi"];
+        $this->viskositas_opsi->AdvancedSearch->SearchCondition = @$filter["v_viskositas_opsi"];
+        $this->viskositas_opsi->AdvancedSearch->SearchValue2 = @$filter["y_viskositas_opsi"];
+        $this->viskositas_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_viskositas_opsi"];
+        $this->viskositas_opsi->AdvancedSearch->save();
+
+        // Field viskositas_revisi
+        $this->viskositas_revisi->AdvancedSearch->SearchValue = @$filter["x_viskositas_revisi"];
+        $this->viskositas_revisi->AdvancedSearch->SearchOperator = @$filter["z_viskositas_revisi"];
+        $this->viskositas_revisi->AdvancedSearch->SearchCondition = @$filter["v_viskositas_revisi"];
+        $this->viskositas_revisi->AdvancedSearch->SearchValue2 = @$filter["y_viskositas_revisi"];
+        $this->viskositas_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_viskositas_revisi"];
+        $this->viskositas_revisi->AdvancedSearch->save();
+
+        // Field jeniswarna_opsi
+        $this->jeniswarna_opsi->AdvancedSearch->SearchValue = @$filter["x_jeniswarna_opsi"];
+        $this->jeniswarna_opsi->AdvancedSearch->SearchOperator = @$filter["z_jeniswarna_opsi"];
+        $this->jeniswarna_opsi->AdvancedSearch->SearchCondition = @$filter["v_jeniswarna_opsi"];
+        $this->jeniswarna_opsi->AdvancedSearch->SearchValue2 = @$filter["y_jeniswarna_opsi"];
+        $this->jeniswarna_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_jeniswarna_opsi"];
+        $this->jeniswarna_opsi->AdvancedSearch->save();
+
+        // Field jeniswarna_revisi
+        $this->jeniswarna_revisi->AdvancedSearch->SearchValue = @$filter["x_jeniswarna_revisi"];
+        $this->jeniswarna_revisi->AdvancedSearch->SearchOperator = @$filter["z_jeniswarna_revisi"];
+        $this->jeniswarna_revisi->AdvancedSearch->SearchCondition = @$filter["v_jeniswarna_revisi"];
+        $this->jeniswarna_revisi->AdvancedSearch->SearchValue2 = @$filter["y_jeniswarna_revisi"];
+        $this->jeniswarna_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_jeniswarna_revisi"];
+        $this->jeniswarna_revisi->AdvancedSearch->save();
+
+        // Field tonewarna_opsi
+        $this->tonewarna_opsi->AdvancedSearch->SearchValue = @$filter["x_tonewarna_opsi"];
+        $this->tonewarna_opsi->AdvancedSearch->SearchOperator = @$filter["z_tonewarna_opsi"];
+        $this->tonewarna_opsi->AdvancedSearch->SearchCondition = @$filter["v_tonewarna_opsi"];
+        $this->tonewarna_opsi->AdvancedSearch->SearchValue2 = @$filter["y_tonewarna_opsi"];
+        $this->tonewarna_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_tonewarna_opsi"];
+        $this->tonewarna_opsi->AdvancedSearch->save();
+
+        // Field tonewarna_revisi
+        $this->tonewarna_revisi->AdvancedSearch->SearchValue = @$filter["x_tonewarna_revisi"];
+        $this->tonewarna_revisi->AdvancedSearch->SearchOperator = @$filter["z_tonewarna_revisi"];
+        $this->tonewarna_revisi->AdvancedSearch->SearchCondition = @$filter["v_tonewarna_revisi"];
+        $this->tonewarna_revisi->AdvancedSearch->SearchValue2 = @$filter["y_tonewarna_revisi"];
+        $this->tonewarna_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_tonewarna_revisi"];
+        $this->tonewarna_revisi->AdvancedSearch->save();
+
+        // Field gradasiwarna_opsi
+        $this->gradasiwarna_opsi->AdvancedSearch->SearchValue = @$filter["x_gradasiwarna_opsi"];
+        $this->gradasiwarna_opsi->AdvancedSearch->SearchOperator = @$filter["z_gradasiwarna_opsi"];
+        $this->gradasiwarna_opsi->AdvancedSearch->SearchCondition = @$filter["v_gradasiwarna_opsi"];
+        $this->gradasiwarna_opsi->AdvancedSearch->SearchValue2 = @$filter["y_gradasiwarna_opsi"];
+        $this->gradasiwarna_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_gradasiwarna_opsi"];
+        $this->gradasiwarna_opsi->AdvancedSearch->save();
+
+        // Field gradasiwarna_revisi
+        $this->gradasiwarna_revisi->AdvancedSearch->SearchValue = @$filter["x_gradasiwarna_revisi"];
+        $this->gradasiwarna_revisi->AdvancedSearch->SearchOperator = @$filter["z_gradasiwarna_revisi"];
+        $this->gradasiwarna_revisi->AdvancedSearch->SearchCondition = @$filter["v_gradasiwarna_revisi"];
+        $this->gradasiwarna_revisi->AdvancedSearch->SearchValue2 = @$filter["y_gradasiwarna_revisi"];
+        $this->gradasiwarna_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_gradasiwarna_revisi"];
+        $this->gradasiwarna_revisi->AdvancedSearch->save();
+
+        // Field bauparfum_opsi
+        $this->bauparfum_opsi->AdvancedSearch->SearchValue = @$filter["x_bauparfum_opsi"];
+        $this->bauparfum_opsi->AdvancedSearch->SearchOperator = @$filter["z_bauparfum_opsi"];
+        $this->bauparfum_opsi->AdvancedSearch->SearchCondition = @$filter["v_bauparfum_opsi"];
+        $this->bauparfum_opsi->AdvancedSearch->SearchValue2 = @$filter["y_bauparfum_opsi"];
+        $this->bauparfum_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_bauparfum_opsi"];
+        $this->bauparfum_opsi->AdvancedSearch->save();
+
+        // Field bauparfum_revisi
+        $this->bauparfum_revisi->AdvancedSearch->SearchValue = @$filter["x_bauparfum_revisi"];
+        $this->bauparfum_revisi->AdvancedSearch->SearchOperator = @$filter["z_bauparfum_revisi"];
+        $this->bauparfum_revisi->AdvancedSearch->SearchCondition = @$filter["v_bauparfum_revisi"];
+        $this->bauparfum_revisi->AdvancedSearch->SearchValue2 = @$filter["y_bauparfum_revisi"];
+        $this->bauparfum_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_bauparfum_revisi"];
+        $this->bauparfum_revisi->AdvancedSearch->save();
+
+        // Field estetika_opsi
+        $this->estetika_opsi->AdvancedSearch->SearchValue = @$filter["x_estetika_opsi"];
+        $this->estetika_opsi->AdvancedSearch->SearchOperator = @$filter["z_estetika_opsi"];
+        $this->estetika_opsi->AdvancedSearch->SearchCondition = @$filter["v_estetika_opsi"];
+        $this->estetika_opsi->AdvancedSearch->SearchValue2 = @$filter["y_estetika_opsi"];
+        $this->estetika_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_estetika_opsi"];
+        $this->estetika_opsi->AdvancedSearch->save();
+
+        // Field estetika_revisi
+        $this->estetika_revisi->AdvancedSearch->SearchValue = @$filter["x_estetika_revisi"];
+        $this->estetika_revisi->AdvancedSearch->SearchOperator = @$filter["z_estetika_revisi"];
+        $this->estetika_revisi->AdvancedSearch->SearchCondition = @$filter["v_estetika_revisi"];
+        $this->estetika_revisi->AdvancedSearch->SearchValue2 = @$filter["y_estetika_revisi"];
+        $this->estetika_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_estetika_revisi"];
+        $this->estetika_revisi->AdvancedSearch->save();
+
+        // Field aplikasiawal_opsi
+        $this->aplikasiawal_opsi->AdvancedSearch->SearchValue = @$filter["x_aplikasiawal_opsi"];
+        $this->aplikasiawal_opsi->AdvancedSearch->SearchOperator = @$filter["z_aplikasiawal_opsi"];
+        $this->aplikasiawal_opsi->AdvancedSearch->SearchCondition = @$filter["v_aplikasiawal_opsi"];
+        $this->aplikasiawal_opsi->AdvancedSearch->SearchValue2 = @$filter["y_aplikasiawal_opsi"];
+        $this->aplikasiawal_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_aplikasiawal_opsi"];
+        $this->aplikasiawal_opsi->AdvancedSearch->save();
+
+        // Field aplikasiawal_revisi
+        $this->aplikasiawal_revisi->AdvancedSearch->SearchValue = @$filter["x_aplikasiawal_revisi"];
+        $this->aplikasiawal_revisi->AdvancedSearch->SearchOperator = @$filter["z_aplikasiawal_revisi"];
+        $this->aplikasiawal_revisi->AdvancedSearch->SearchCondition = @$filter["v_aplikasiawal_revisi"];
+        $this->aplikasiawal_revisi->AdvancedSearch->SearchValue2 = @$filter["y_aplikasiawal_revisi"];
+        $this->aplikasiawal_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_aplikasiawal_revisi"];
+        $this->aplikasiawal_revisi->AdvancedSearch->save();
+
+        // Field aplikasilama_opsi
+        $this->aplikasilama_opsi->AdvancedSearch->SearchValue = @$filter["x_aplikasilama_opsi"];
+        $this->aplikasilama_opsi->AdvancedSearch->SearchOperator = @$filter["z_aplikasilama_opsi"];
+        $this->aplikasilama_opsi->AdvancedSearch->SearchCondition = @$filter["v_aplikasilama_opsi"];
+        $this->aplikasilama_opsi->AdvancedSearch->SearchValue2 = @$filter["y_aplikasilama_opsi"];
+        $this->aplikasilama_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_aplikasilama_opsi"];
+        $this->aplikasilama_opsi->AdvancedSearch->save();
+
+        // Field aplikasilama_revisi
+        $this->aplikasilama_revisi->AdvancedSearch->SearchValue = @$filter["x_aplikasilama_revisi"];
+        $this->aplikasilama_revisi->AdvancedSearch->SearchOperator = @$filter["z_aplikasilama_revisi"];
+        $this->aplikasilama_revisi->AdvancedSearch->SearchCondition = @$filter["v_aplikasilama_revisi"];
+        $this->aplikasilama_revisi->AdvancedSearch->SearchValue2 = @$filter["y_aplikasilama_revisi"];
+        $this->aplikasilama_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_aplikasilama_revisi"];
+        $this->aplikasilama_revisi->AdvancedSearch->save();
+
+        // Field efekpositif_opsi
+        $this->efekpositif_opsi->AdvancedSearch->SearchValue = @$filter["x_efekpositif_opsi"];
+        $this->efekpositif_opsi->AdvancedSearch->SearchOperator = @$filter["z_efekpositif_opsi"];
+        $this->efekpositif_opsi->AdvancedSearch->SearchCondition = @$filter["v_efekpositif_opsi"];
+        $this->efekpositif_opsi->AdvancedSearch->SearchValue2 = @$filter["y_efekpositif_opsi"];
+        $this->efekpositif_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_efekpositif_opsi"];
+        $this->efekpositif_opsi->AdvancedSearch->save();
+
+        // Field efekpositif_revisi
+        $this->efekpositif_revisi->AdvancedSearch->SearchValue = @$filter["x_efekpositif_revisi"];
+        $this->efekpositif_revisi->AdvancedSearch->SearchOperator = @$filter["z_efekpositif_revisi"];
+        $this->efekpositif_revisi->AdvancedSearch->SearchCondition = @$filter["v_efekpositif_revisi"];
+        $this->efekpositif_revisi->AdvancedSearch->SearchValue2 = @$filter["y_efekpositif_revisi"];
+        $this->efekpositif_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_efekpositif_revisi"];
+        $this->efekpositif_revisi->AdvancedSearch->save();
+
+        // Field efeknegatif_opsi
+        $this->efeknegatif_opsi->AdvancedSearch->SearchValue = @$filter["x_efeknegatif_opsi"];
+        $this->efeknegatif_opsi->AdvancedSearch->SearchOperator = @$filter["z_efeknegatif_opsi"];
+        $this->efeknegatif_opsi->AdvancedSearch->SearchCondition = @$filter["v_efeknegatif_opsi"];
+        $this->efeknegatif_opsi->AdvancedSearch->SearchValue2 = @$filter["y_efeknegatif_opsi"];
+        $this->efeknegatif_opsi->AdvancedSearch->SearchOperator2 = @$filter["w_efeknegatif_opsi"];
+        $this->efeknegatif_opsi->AdvancedSearch->save();
+
+        // Field efeknegatif_revisi
+        $this->efeknegatif_revisi->AdvancedSearch->SearchValue = @$filter["x_efeknegatif_revisi"];
+        $this->efeknegatif_revisi->AdvancedSearch->SearchOperator = @$filter["z_efeknegatif_revisi"];
+        $this->efeknegatif_revisi->AdvancedSearch->SearchCondition = @$filter["v_efeknegatif_revisi"];
+        $this->efeknegatif_revisi->AdvancedSearch->SearchValue2 = @$filter["y_efeknegatif_revisi"];
+        $this->efeknegatif_revisi->AdvancedSearch->SearchOperator2 = @$filter["w_efeknegatif_revisi"];
+        $this->efeknegatif_revisi->AdvancedSearch->save();
+
+        // Field kesimpulan
+        $this->kesimpulan->AdvancedSearch->SearchValue = @$filter["x_kesimpulan"];
+        $this->kesimpulan->AdvancedSearch->SearchOperator = @$filter["z_kesimpulan"];
+        $this->kesimpulan->AdvancedSearch->SearchCondition = @$filter["v_kesimpulan"];
+        $this->kesimpulan->AdvancedSearch->SearchValue2 = @$filter["y_kesimpulan"];
+        $this->kesimpulan->AdvancedSearch->SearchOperator2 = @$filter["w_kesimpulan"];
+        $this->kesimpulan->AdvancedSearch->save();
+
+        // Field status
+        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
+        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
+        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
+        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
+        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
+        $this->status->AdvancedSearch->save();
+
+        // Field created_at
+        $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
+        $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
+        $this->created_at->AdvancedSearch->SearchCondition = @$filter["v_created_at"];
+        $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
+        $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
+        $this->created_at->AdvancedSearch->save();
+
+        // Field readonly
+        $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
+        $this->readonly->AdvancedSearch->SearchOperator = @$filter["z_readonly"];
+        $this->readonly->AdvancedSearch->SearchCondition = @$filter["v_readonly"];
+        $this->readonly->AdvancedSearch->SearchValue2 = @$filter["y_readonly"];
+        $this->readonly->AdvancedSearch->SearchOperator2 = @$filter["w_readonly"];
+        $this->readonly->AdvancedSearch->save();
+
+        // Field ukuran
+        $this->ukuran->AdvancedSearch->SearchValue = @$filter["x_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchOperator = @$filter["z_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchCondition = @$filter["v_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchValue2 = @$filter["y_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchOperator2 = @$filter["w_ukuran"];
+        $this->ukuran->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Return basic search SQL
+    protected function basicSearchSql($arKeywords, $type)
+    {
+        $where = "";
+        $this->buildBasicSearchSql($where, $this->wadah, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->bentuk_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->viskositas_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->jeniswarna_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->tonewarna_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->gradasiwarna_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->bauparfum_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->estetika_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->aplikasiawal_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->aplikasilama_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->efekpositif_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->efeknegatif_revisi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kesimpulan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->ukuran, $arKeywords, $type);
+        return $where;
+    }
+
+    // Build basic search SQL
+    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
+    {
+        $defCond = ($type == "OR") ? "OR" : "AND";
+        $arSql = []; // Array for SQL parts
+        $arCond = []; // Array for search conditions
+        $cnt = count($arKeywords);
+        $j = 0; // Number of SQL parts
+        for ($i = 0; $i < $cnt; $i++) {
+            $keyword = $arKeywords[$i];
+            $keyword = trim($keyword);
+            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
+                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
+                $ar = explode("\\", $keyword);
+            } else {
+                $ar = [$keyword];
+            }
+            foreach ($ar as $keyword) {
+                if ($keyword != "") {
+                    $wrk = "";
+                    if ($keyword == "OR" && $type == "") {
+                        if ($j > 0) {
+                            $arCond[$j - 1] = "OR";
+                        }
+                    } elseif ($keyword == Config("NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NULL";
+                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NOT NULL";
+                    } elseif ($fld->IsVirtual && $fld->Visible) {
+                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
+                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    }
+                    if ($wrk != "") {
+                        $arSql[$j] = $wrk;
+                        $arCond[$j] = $defCond;
+                        $j += 1;
+                    }
+                }
+            }
+        }
+        $cnt = count($arSql);
+        $quoted = false;
+        $sql = "";
+        if ($cnt > 0) {
+            for ($i = 0; $i < $cnt - 1; $i++) {
+                if ($arCond[$i] == "OR") {
+                    if (!$quoted) {
+                        $sql .= "(";
+                    }
+                    $quoted = true;
+                }
+                $sql .= $arSql[$i];
+                if ($quoted && $arCond[$i] != "OR") {
+                    $sql .= ")";
+                    $quoted = false;
+                }
+                $sql .= " " . $arCond[$i] . " ";
+            }
+            $sql .= $arSql[$cnt - 1];
+            if ($quoted) {
+                $sql .= ")";
+            }
+        }
+        if ($sql != "") {
+            if ($where != "") {
+                $where .= " OR ";
+            }
+            $where .= "(" . $sql . ")";
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    protected function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            // Search keyword in any fields
+            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
+                foreach ($ar as $keyword) {
+                    if ($keyword != "") {
+                        if ($searchStr != "") {
+                            $searchStr .= " " . $searchType . " ";
+                        }
+                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
+                    }
+                }
+            } else {
+                $searchStr = $this->basicSearchSql($ar, $searchType);
+            }
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -867,9 +1438,10 @@ class NpdReviewList extends NpdReview
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->idnpd_sample); // idnpd_sample
-            $this->updateSort($this->tglreview); // tglreview
-            $this->updateSort($this->tglsubmit); // tglsubmit
+            $this->updateSort($this->tanggal_review); // tanggal_review
+            $this->updateSort($this->tanggal_submit); // tanggal_submit
             $this->updateSort($this->status); // status
+            $this->updateSort($this->ukuran); // ukuran
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -900,6 +1472,11 @@ class NpdReviewList extends NpdReview
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
+            }
+
             // Reset master/detail keys
             if ($this->Command == "resetall") {
                 $this->setCurrentMasterTable(""); // Clear master table
@@ -915,36 +1492,36 @@ class NpdReviewList extends NpdReview
                 $this->id->setSort("");
                 $this->idnpd->setSort("");
                 $this->idnpd_sample->setSort("");
-                $this->tglreview->setSort("");
-                $this->tglsubmit->setSort("");
+                $this->tanggal_review->setSort("");
+                $this->tanggal_submit->setSort("");
                 $this->wadah->setSort("");
-                $this->bentukok->setSort("");
-                $this->bentukrevisi->setSort("");
-                $this->viskositasok->setSort("");
-                $this->viskositasrevisi->setSort("");
-                $this->jeniswarnaok->setSort("");
-                $this->jeniswarnarevisi->setSort("");
-                $this->tonewarnaok->setSort("");
-                $this->tonewarnarevisi->setSort("");
-                $this->gradasiwarnaok->setSort("");
-                $this->gradasiwarnarevisi->setSort("");
-                $this->bauok->setSort("");
-                $this->baurevisi->setSort("");
-                $this->estetikaok->setSort("");
-                $this->estetikarevisi->setSort("");
-                $this->aplikasiawalok->setSort("");
-                $this->aplikasiawalrevisi->setSort("");
-                $this->aplikasilamaok->setSort("");
-                $this->aplikasilamarevisi->setSort("");
-                $this->efekpositifok->setSort("");
-                $this->efekpositifrevisi->setSort("");
-                $this->efeknegatifok->setSort("");
-                $this->efeknegatifrevisi->setSort("");
+                $this->bentuk_opsi->setSort("");
+                $this->bentuk_revisi->setSort("");
+                $this->viskositas_opsi->setSort("");
+                $this->viskositas_revisi->setSort("");
+                $this->jeniswarna_opsi->setSort("");
+                $this->jeniswarna_revisi->setSort("");
+                $this->tonewarna_opsi->setSort("");
+                $this->tonewarna_revisi->setSort("");
+                $this->gradasiwarna_opsi->setSort("");
+                $this->gradasiwarna_revisi->setSort("");
+                $this->bauparfum_opsi->setSort("");
+                $this->bauparfum_revisi->setSort("");
+                $this->estetika_opsi->setSort("");
+                $this->estetika_revisi->setSort("");
+                $this->aplikasiawal_opsi->setSort("");
+                $this->aplikasiawal_revisi->setSort("");
+                $this->aplikasilama_opsi->setSort("");
+                $this->aplikasilama_revisi->setSort("");
+                $this->efekpositif_opsi->setSort("");
+                $this->efekpositif_revisi->setSort("");
+                $this->efeknegatif_opsi->setSort("");
+                $this->efeknegatif_revisi->setSort("");
                 $this->kesimpulan->setSort("");
                 $this->status->setSort("");
                 $this->created_at->setSort("");
-                $this->created_by->setSort("");
                 $this->readonly->setSort("");
+                $this->ukuran->setSort("");
             }
 
             // Reset start position
@@ -1028,7 +1605,7 @@ class NpdReviewList extends NpdReview
             // "view"
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
+            if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1037,7 +1614,7 @@ class NpdReviewList extends NpdReview
             // "edit"
             $opt = $this->ListOptions["edit"];
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
+            if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1045,7 +1622,7 @@ class NpdReviewList extends NpdReview
 
             // "delete"
             $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
+            if ($Security->canDelete()) {
             $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1122,10 +1699,10 @@ class NpdReviewList extends NpdReview
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
         $item->Body = "<a class=\"ew-save-filter\" data-form=\"fnpd_reviewlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
         $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fnpd_reviewlistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1260,6 +1837,16 @@ class NpdReviewList extends NpdReview
         global $Security, $Language;
     }
 
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1331,36 +1918,36 @@ class NpdReviewList extends NpdReview
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
-        $this->tglreview->setDbValue($row['tglreview']);
-        $this->tglsubmit->setDbValue($row['tglsubmit']);
+        $this->tanggal_review->setDbValue($row['tanggal_review']);
+        $this->tanggal_submit->setDbValue($row['tanggal_submit']);
         $this->wadah->setDbValue($row['wadah']);
-        $this->bentukok->setDbValue($row['bentukok']);
-        $this->bentukrevisi->setDbValue($row['bentukrevisi']);
-        $this->viskositasok->setDbValue($row['viskositasok']);
-        $this->viskositasrevisi->setDbValue($row['viskositasrevisi']);
-        $this->jeniswarnaok->setDbValue($row['jeniswarnaok']);
-        $this->jeniswarnarevisi->setDbValue($row['jeniswarnarevisi']);
-        $this->tonewarnaok->setDbValue($row['tonewarnaok']);
-        $this->tonewarnarevisi->setDbValue($row['tonewarnarevisi']);
-        $this->gradasiwarnaok->setDbValue($row['gradasiwarnaok']);
-        $this->gradasiwarnarevisi->setDbValue($row['gradasiwarnarevisi']);
-        $this->bauok->setDbValue($row['bauok']);
-        $this->baurevisi->setDbValue($row['baurevisi']);
-        $this->estetikaok->setDbValue($row['estetikaok']);
-        $this->estetikarevisi->setDbValue($row['estetikarevisi']);
-        $this->aplikasiawalok->setDbValue($row['aplikasiawalok']);
-        $this->aplikasiawalrevisi->setDbValue($row['aplikasiawalrevisi']);
-        $this->aplikasilamaok->setDbValue($row['aplikasilamaok']);
-        $this->aplikasilamarevisi->setDbValue($row['aplikasilamarevisi']);
-        $this->efekpositifok->setDbValue($row['efekpositifok']);
-        $this->efekpositifrevisi->setDbValue($row['efekpositifrevisi']);
-        $this->efeknegatifok->setDbValue($row['efeknegatifok']);
-        $this->efeknegatifrevisi->setDbValue($row['efeknegatifrevisi']);
+        $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
+        $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
+        $this->viskositas_opsi->setDbValue($row['viskositas_opsi']);
+        $this->viskositas_revisi->setDbValue($row['viskositas_revisi']);
+        $this->jeniswarna_opsi->setDbValue($row['jeniswarna_opsi']);
+        $this->jeniswarna_revisi->setDbValue($row['jeniswarna_revisi']);
+        $this->tonewarna_opsi->setDbValue($row['tonewarna_opsi']);
+        $this->tonewarna_revisi->setDbValue($row['tonewarna_revisi']);
+        $this->gradasiwarna_opsi->setDbValue($row['gradasiwarna_opsi']);
+        $this->gradasiwarna_revisi->setDbValue($row['gradasiwarna_revisi']);
+        $this->bauparfum_opsi->setDbValue($row['bauparfum_opsi']);
+        $this->bauparfum_revisi->setDbValue($row['bauparfum_revisi']);
+        $this->estetika_opsi->setDbValue($row['estetika_opsi']);
+        $this->estetika_revisi->setDbValue($row['estetika_revisi']);
+        $this->aplikasiawal_opsi->setDbValue($row['aplikasiawal_opsi']);
+        $this->aplikasiawal_revisi->setDbValue($row['aplikasiawal_revisi']);
+        $this->aplikasilama_opsi->setDbValue($row['aplikasilama_opsi']);
+        $this->aplikasilama_revisi->setDbValue($row['aplikasilama_revisi']);
+        $this->efekpositif_opsi->setDbValue($row['efekpositif_opsi']);
+        $this->efekpositif_revisi->setDbValue($row['efekpositif_revisi']);
+        $this->efeknegatif_opsi->setDbValue($row['efeknegatif_opsi']);
+        $this->efeknegatif_revisi->setDbValue($row['efeknegatif_revisi']);
         $this->kesimpulan->setDbValue($row['kesimpulan']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->ukuran->setDbValue($row['ukuran']);
     }
 
     // Return a row with default values
@@ -1370,36 +1957,36 @@ class NpdReviewList extends NpdReview
         $row['id'] = null;
         $row['idnpd'] = null;
         $row['idnpd_sample'] = null;
-        $row['tglreview'] = null;
-        $row['tglsubmit'] = null;
+        $row['tanggal_review'] = null;
+        $row['tanggal_submit'] = null;
         $row['wadah'] = null;
-        $row['bentukok'] = null;
-        $row['bentukrevisi'] = null;
-        $row['viskositasok'] = null;
-        $row['viskositasrevisi'] = null;
-        $row['jeniswarnaok'] = null;
-        $row['jeniswarnarevisi'] = null;
-        $row['tonewarnaok'] = null;
-        $row['tonewarnarevisi'] = null;
-        $row['gradasiwarnaok'] = null;
-        $row['gradasiwarnarevisi'] = null;
-        $row['bauok'] = null;
-        $row['baurevisi'] = null;
-        $row['estetikaok'] = null;
-        $row['estetikarevisi'] = null;
-        $row['aplikasiawalok'] = null;
-        $row['aplikasiawalrevisi'] = null;
-        $row['aplikasilamaok'] = null;
-        $row['aplikasilamarevisi'] = null;
-        $row['efekpositifok'] = null;
-        $row['efekpositifrevisi'] = null;
-        $row['efeknegatifok'] = null;
-        $row['efeknegatifrevisi'] = null;
+        $row['bentuk_opsi'] = null;
+        $row['bentuk_revisi'] = null;
+        $row['viskositas_opsi'] = null;
+        $row['viskositas_revisi'] = null;
+        $row['jeniswarna_opsi'] = null;
+        $row['jeniswarna_revisi'] = null;
+        $row['tonewarna_opsi'] = null;
+        $row['tonewarna_revisi'] = null;
+        $row['gradasiwarna_opsi'] = null;
+        $row['gradasiwarna_revisi'] = null;
+        $row['bauparfum_opsi'] = null;
+        $row['bauparfum_revisi'] = null;
+        $row['estetika_opsi'] = null;
+        $row['estetika_revisi'] = null;
+        $row['aplikasiawal_opsi'] = null;
+        $row['aplikasiawal_revisi'] = null;
+        $row['aplikasilama_opsi'] = null;
+        $row['aplikasilama_revisi'] = null;
+        $row['efekpositif_opsi'] = null;
+        $row['efekpositif_revisi'] = null;
+        $row['efeknegatif_opsi'] = null;
+        $row['efeknegatif_revisi'] = null;
         $row['kesimpulan'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
+        $row['ukuran'] = null;
         return $row;
     }
 
@@ -1443,55 +2030,55 @@ class NpdReviewList extends NpdReview
 
         // idnpd_sample
 
-        // tglreview
+        // tanggal_review
 
-        // tglsubmit
+        // tanggal_submit
 
         // wadah
 
-        // bentukok
+        // bentuk_opsi
 
-        // bentukrevisi
+        // bentuk_revisi
 
-        // viskositasok
+        // viskositas_opsi
 
-        // viskositasrevisi
+        // viskositas_revisi
 
-        // jeniswarnaok
+        // jeniswarna_opsi
 
-        // jeniswarnarevisi
+        // jeniswarna_revisi
 
-        // tonewarnaok
+        // tonewarna_opsi
 
-        // tonewarnarevisi
+        // tonewarna_revisi
 
-        // gradasiwarnaok
+        // gradasiwarna_opsi
 
-        // gradasiwarnarevisi
+        // gradasiwarna_revisi
 
-        // bauok
+        // bauparfum_opsi
 
-        // baurevisi
+        // bauparfum_revisi
 
-        // estetikaok
+        // estetika_opsi
 
-        // estetikarevisi
+        // estetika_revisi
 
-        // aplikasiawalok
+        // aplikasiawal_opsi
 
-        // aplikasiawalrevisi
+        // aplikasiawal_revisi
 
-        // aplikasilamaok
+        // aplikasilama_opsi
 
-        // aplikasilamarevisi
+        // aplikasilama_revisi
 
-        // efekpositifok
+        // efekpositif_opsi
 
-        // efekpositifrevisi
+        // efekpositif_revisi
 
-        // efeknegatifok
+        // efeknegatif_opsi
 
-        // efeknegatifrevisi
+        // efeknegatif_revisi
 
         // kesimpulan
 
@@ -1499,9 +2086,9 @@ class NpdReviewList extends NpdReview
 
         // created_at
 
-        // created_by
-
         // readonly
+
+        // ukuran
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1557,151 +2144,151 @@ class NpdReviewList extends NpdReview
             }
             $this->idnpd_sample->ViewCustomAttributes = "";
 
-            // tglreview
-            $this->tglreview->ViewValue = $this->tglreview->CurrentValue;
-            $this->tglreview->ViewValue = FormatDateTime($this->tglreview->ViewValue, 0);
-            $this->tglreview->ViewCustomAttributes = "";
+            // tanggal_review
+            $this->tanggal_review->ViewValue = $this->tanggal_review->CurrentValue;
+            $this->tanggal_review->ViewValue = FormatDateTime($this->tanggal_review->ViewValue, 0);
+            $this->tanggal_review->ViewCustomAttributes = "";
 
-            // tglsubmit
-            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
-            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
-            $this->tglsubmit->ViewCustomAttributes = "";
+            // tanggal_submit
+            $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
+            $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
+            $this->tanggal_submit->ViewCustomAttributes = "";
 
             // wadah
             $this->wadah->ViewValue = $this->wadah->CurrentValue;
             $this->wadah->ViewCustomAttributes = "";
 
-            // bentukok
-            if (strval($this->bentukok->CurrentValue) != "") {
-                $this->bentukok->ViewValue = $this->bentukok->optionCaption($this->bentukok->CurrentValue);
+            // bentuk_opsi
+            if (strval($this->bentuk_opsi->CurrentValue) != "") {
+                $this->bentuk_opsi->ViewValue = $this->bentuk_opsi->optionCaption($this->bentuk_opsi->CurrentValue);
             } else {
-                $this->bentukok->ViewValue = null;
+                $this->bentuk_opsi->ViewValue = null;
             }
-            $this->bentukok->ViewCustomAttributes = "";
+            $this->bentuk_opsi->ViewCustomAttributes = "";
 
-            // bentukrevisi
-            $this->bentukrevisi->ViewValue = $this->bentukrevisi->CurrentValue;
-            $this->bentukrevisi->ViewCustomAttributes = "";
+            // bentuk_revisi
+            $this->bentuk_revisi->ViewValue = $this->bentuk_revisi->CurrentValue;
+            $this->bentuk_revisi->ViewCustomAttributes = "";
 
-            // viskositasok
-            if (strval($this->viskositasok->CurrentValue) != "") {
-                $this->viskositasok->ViewValue = $this->viskositasok->optionCaption($this->viskositasok->CurrentValue);
+            // viskositas_opsi
+            if (strval($this->viskositas_opsi->CurrentValue) != "") {
+                $this->viskositas_opsi->ViewValue = $this->viskositas_opsi->optionCaption($this->viskositas_opsi->CurrentValue);
             } else {
-                $this->viskositasok->ViewValue = null;
+                $this->viskositas_opsi->ViewValue = null;
             }
-            $this->viskositasok->ViewCustomAttributes = "";
+            $this->viskositas_opsi->ViewCustomAttributes = "";
 
-            // viskositasrevisi
-            $this->viskositasrevisi->ViewValue = $this->viskositasrevisi->CurrentValue;
-            $this->viskositasrevisi->ViewCustomAttributes = "";
+            // viskositas_revisi
+            $this->viskositas_revisi->ViewValue = $this->viskositas_revisi->CurrentValue;
+            $this->viskositas_revisi->ViewCustomAttributes = "";
 
-            // jeniswarnaok
-            if (strval($this->jeniswarnaok->CurrentValue) != "") {
-                $this->jeniswarnaok->ViewValue = $this->jeniswarnaok->optionCaption($this->jeniswarnaok->CurrentValue);
+            // jeniswarna_opsi
+            if (strval($this->jeniswarna_opsi->CurrentValue) != "") {
+                $this->jeniswarna_opsi->ViewValue = $this->jeniswarna_opsi->optionCaption($this->jeniswarna_opsi->CurrentValue);
             } else {
-                $this->jeniswarnaok->ViewValue = null;
+                $this->jeniswarna_opsi->ViewValue = null;
             }
-            $this->jeniswarnaok->ViewCustomAttributes = "";
+            $this->jeniswarna_opsi->ViewCustomAttributes = "";
 
-            // jeniswarnarevisi
-            $this->jeniswarnarevisi->ViewValue = $this->jeniswarnarevisi->CurrentValue;
-            $this->jeniswarnarevisi->ViewCustomAttributes = "";
+            // jeniswarna_revisi
+            $this->jeniswarna_revisi->ViewValue = $this->jeniswarna_revisi->CurrentValue;
+            $this->jeniswarna_revisi->ViewCustomAttributes = "";
 
-            // tonewarnaok
-            if (strval($this->tonewarnaok->CurrentValue) != "") {
-                $this->tonewarnaok->ViewValue = $this->tonewarnaok->optionCaption($this->tonewarnaok->CurrentValue);
+            // tonewarna_opsi
+            if (strval($this->tonewarna_opsi->CurrentValue) != "") {
+                $this->tonewarna_opsi->ViewValue = $this->tonewarna_opsi->optionCaption($this->tonewarna_opsi->CurrentValue);
             } else {
-                $this->tonewarnaok->ViewValue = null;
+                $this->tonewarna_opsi->ViewValue = null;
             }
-            $this->tonewarnaok->ViewCustomAttributes = "";
+            $this->tonewarna_opsi->ViewCustomAttributes = "";
 
-            // tonewarnarevisi
-            $this->tonewarnarevisi->ViewValue = $this->tonewarnarevisi->CurrentValue;
-            $this->tonewarnarevisi->ViewCustomAttributes = "";
+            // tonewarna_revisi
+            $this->tonewarna_revisi->ViewValue = $this->tonewarna_revisi->CurrentValue;
+            $this->tonewarna_revisi->ViewCustomAttributes = "";
 
-            // gradasiwarnaok
-            if (strval($this->gradasiwarnaok->CurrentValue) != "") {
-                $this->gradasiwarnaok->ViewValue = $this->gradasiwarnaok->optionCaption($this->gradasiwarnaok->CurrentValue);
+            // gradasiwarna_opsi
+            if (strval($this->gradasiwarna_opsi->CurrentValue) != "") {
+                $this->gradasiwarna_opsi->ViewValue = $this->gradasiwarna_opsi->optionCaption($this->gradasiwarna_opsi->CurrentValue);
             } else {
-                $this->gradasiwarnaok->ViewValue = null;
+                $this->gradasiwarna_opsi->ViewValue = null;
             }
-            $this->gradasiwarnaok->ViewCustomAttributes = "";
+            $this->gradasiwarna_opsi->ViewCustomAttributes = "";
 
-            // gradasiwarnarevisi
-            $this->gradasiwarnarevisi->ViewValue = $this->gradasiwarnarevisi->CurrentValue;
-            $this->gradasiwarnarevisi->ViewCustomAttributes = "";
+            // gradasiwarna_revisi
+            $this->gradasiwarna_revisi->ViewValue = $this->gradasiwarna_revisi->CurrentValue;
+            $this->gradasiwarna_revisi->ViewCustomAttributes = "";
 
-            // bauok
-            if (strval($this->bauok->CurrentValue) != "") {
-                $this->bauok->ViewValue = $this->bauok->optionCaption($this->bauok->CurrentValue);
+            // bauparfum_opsi
+            if (strval($this->bauparfum_opsi->CurrentValue) != "") {
+                $this->bauparfum_opsi->ViewValue = $this->bauparfum_opsi->optionCaption($this->bauparfum_opsi->CurrentValue);
             } else {
-                $this->bauok->ViewValue = null;
+                $this->bauparfum_opsi->ViewValue = null;
             }
-            $this->bauok->ViewCustomAttributes = "";
+            $this->bauparfum_opsi->ViewCustomAttributes = "";
 
-            // baurevisi
-            $this->baurevisi->ViewValue = $this->baurevisi->CurrentValue;
-            $this->baurevisi->ViewCustomAttributes = "";
+            // bauparfum_revisi
+            $this->bauparfum_revisi->ViewValue = $this->bauparfum_revisi->CurrentValue;
+            $this->bauparfum_revisi->ViewCustomAttributes = "";
 
-            // estetikaok
-            if (strval($this->estetikaok->CurrentValue) != "") {
-                $this->estetikaok->ViewValue = $this->estetikaok->optionCaption($this->estetikaok->CurrentValue);
+            // estetika_opsi
+            if (strval($this->estetika_opsi->CurrentValue) != "") {
+                $this->estetika_opsi->ViewValue = $this->estetika_opsi->optionCaption($this->estetika_opsi->CurrentValue);
             } else {
-                $this->estetikaok->ViewValue = null;
+                $this->estetika_opsi->ViewValue = null;
             }
-            $this->estetikaok->ViewCustomAttributes = "";
+            $this->estetika_opsi->ViewCustomAttributes = "";
 
-            // estetikarevisi
-            $this->estetikarevisi->ViewValue = $this->estetikarevisi->CurrentValue;
-            $this->estetikarevisi->ViewCustomAttributes = "";
+            // estetika_revisi
+            $this->estetika_revisi->ViewValue = $this->estetika_revisi->CurrentValue;
+            $this->estetika_revisi->ViewCustomAttributes = "";
 
-            // aplikasiawalok
-            if (strval($this->aplikasiawalok->CurrentValue) != "") {
-                $this->aplikasiawalok->ViewValue = $this->aplikasiawalok->optionCaption($this->aplikasiawalok->CurrentValue);
+            // aplikasiawal_opsi
+            if (strval($this->aplikasiawal_opsi->CurrentValue) != "") {
+                $this->aplikasiawal_opsi->ViewValue = $this->aplikasiawal_opsi->optionCaption($this->aplikasiawal_opsi->CurrentValue);
             } else {
-                $this->aplikasiawalok->ViewValue = null;
+                $this->aplikasiawal_opsi->ViewValue = null;
             }
-            $this->aplikasiawalok->ViewCustomAttributes = "";
+            $this->aplikasiawal_opsi->ViewCustomAttributes = "";
 
-            // aplikasiawalrevisi
-            $this->aplikasiawalrevisi->ViewValue = $this->aplikasiawalrevisi->CurrentValue;
-            $this->aplikasiawalrevisi->ViewCustomAttributes = "";
+            // aplikasiawal_revisi
+            $this->aplikasiawal_revisi->ViewValue = $this->aplikasiawal_revisi->CurrentValue;
+            $this->aplikasiawal_revisi->ViewCustomAttributes = "";
 
-            // aplikasilamaok
-            if (strval($this->aplikasilamaok->CurrentValue) != "") {
-                $this->aplikasilamaok->ViewValue = $this->aplikasilamaok->optionCaption($this->aplikasilamaok->CurrentValue);
+            // aplikasilama_opsi
+            if (strval($this->aplikasilama_opsi->CurrentValue) != "") {
+                $this->aplikasilama_opsi->ViewValue = $this->aplikasilama_opsi->optionCaption($this->aplikasilama_opsi->CurrentValue);
             } else {
-                $this->aplikasilamaok->ViewValue = null;
+                $this->aplikasilama_opsi->ViewValue = null;
             }
-            $this->aplikasilamaok->ViewCustomAttributes = "";
+            $this->aplikasilama_opsi->ViewCustomAttributes = "";
 
-            // aplikasilamarevisi
-            $this->aplikasilamarevisi->ViewValue = $this->aplikasilamarevisi->CurrentValue;
-            $this->aplikasilamarevisi->ViewCustomAttributes = "";
+            // aplikasilama_revisi
+            $this->aplikasilama_revisi->ViewValue = $this->aplikasilama_revisi->CurrentValue;
+            $this->aplikasilama_revisi->ViewCustomAttributes = "";
 
-            // efekpositifok
-            if (strval($this->efekpositifok->CurrentValue) != "") {
-                $this->efekpositifok->ViewValue = $this->efekpositifok->optionCaption($this->efekpositifok->CurrentValue);
+            // efekpositif_opsi
+            if (strval($this->efekpositif_opsi->CurrentValue) != "") {
+                $this->efekpositif_opsi->ViewValue = $this->efekpositif_opsi->optionCaption($this->efekpositif_opsi->CurrentValue);
             } else {
-                $this->efekpositifok->ViewValue = null;
+                $this->efekpositif_opsi->ViewValue = null;
             }
-            $this->efekpositifok->ViewCustomAttributes = "";
+            $this->efekpositif_opsi->ViewCustomAttributes = "";
 
-            // efekpositifrevisi
-            $this->efekpositifrevisi->ViewValue = $this->efekpositifrevisi->CurrentValue;
-            $this->efekpositifrevisi->ViewCustomAttributes = "";
+            // efekpositif_revisi
+            $this->efekpositif_revisi->ViewValue = $this->efekpositif_revisi->CurrentValue;
+            $this->efekpositif_revisi->ViewCustomAttributes = "";
 
-            // efeknegatifok
-            if (strval($this->efeknegatifok->CurrentValue) != "") {
-                $this->efeknegatifok->ViewValue = $this->efeknegatifok->optionCaption($this->efeknegatifok->CurrentValue);
+            // efeknegatif_opsi
+            if (strval($this->efeknegatif_opsi->CurrentValue) != "") {
+                $this->efeknegatif_opsi->ViewValue = $this->efeknegatif_opsi->optionCaption($this->efeknegatif_opsi->CurrentValue);
             } else {
-                $this->efeknegatifok->ViewValue = null;
+                $this->efeknegatif_opsi->ViewValue = null;
             }
-            $this->efeknegatifok->ViewCustomAttributes = "";
+            $this->efeknegatif_opsi->ViewCustomAttributes = "";
 
-            // efeknegatifrevisi
-            $this->efeknegatifrevisi->ViewValue = $this->efeknegatifrevisi->CurrentValue;
-            $this->efeknegatifrevisi->ViewCustomAttributes = "";
+            // efeknegatif_revisi
+            $this->efeknegatif_revisi->ViewValue = $this->efeknegatif_revisi->CurrentValue;
+            $this->efeknegatif_revisi->ViewCustomAttributes = "";
 
             // kesimpulan
             $this->kesimpulan->ViewValue = $this->kesimpulan->CurrentValue;
@@ -1720,11 +2307,6 @@ class NpdReviewList extends NpdReview
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
                 $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -1732,6 +2314,10 @@ class NpdReviewList extends NpdReview
                 $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
             }
             $this->readonly->ViewCustomAttributes = "";
+
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
@@ -1743,20 +2329,25 @@ class NpdReviewList extends NpdReview
             $this->idnpd_sample->HrefValue = "";
             $this->idnpd_sample->TooltipValue = "";
 
-            // tglreview
-            $this->tglreview->LinkCustomAttributes = "";
-            $this->tglreview->HrefValue = "";
-            $this->tglreview->TooltipValue = "";
+            // tanggal_review
+            $this->tanggal_review->LinkCustomAttributes = "";
+            $this->tanggal_review->HrefValue = "";
+            $this->tanggal_review->TooltipValue = "";
 
-            // tglsubmit
-            $this->tglsubmit->LinkCustomAttributes = "";
-            $this->tglsubmit->HrefValue = "";
-            $this->tglsubmit->TooltipValue = "";
+            // tanggal_submit
+            $this->tanggal_submit->LinkCustomAttributes = "";
+            $this->tanggal_submit->HrefValue = "";
+            $this->tanggal_submit->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1772,6 +2363,17 @@ class NpdReviewList extends NpdReview
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
+
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fnpd_reviewlistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1791,16 +2393,6 @@ class NpdReviewList extends NpdReview
             $this->SearchOptions->hideAllOptions();
             $this->FilterOptions->hideAllOptions();
         }
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
     }
 
     // Set up master/detail based on QueryString
@@ -1913,27 +2505,27 @@ class NpdReviewList extends NpdReview
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_bentukok":
+                case "x_bentuk_opsi":
                     break;
-                case "x_viskositasok":
+                case "x_viskositas_opsi":
                     break;
-                case "x_jeniswarnaok":
+                case "x_jeniswarna_opsi":
                     break;
-                case "x_tonewarnaok":
+                case "x_tonewarna_opsi":
                     break;
-                case "x_gradasiwarnaok":
+                case "x_gradasiwarna_opsi":
                     break;
-                case "x_bauok":
+                case "x_bauparfum_opsi":
                     break;
-                case "x_estetikaok":
+                case "x_estetika_opsi":
                     break;
-                case "x_aplikasiawalok":
+                case "x_aplikasiawal_opsi":
                     break;
-                case "x_aplikasilamaok":
+                case "x_aplikasilama_opsi":
                     break;
-                case "x_efekpositifok":
+                case "x_efekpositif_opsi":
                     break;
-                case "x_efeknegatifok":
+                case "x_efeknegatif_opsi":
                     break;
                 case "x_status":
                     break;

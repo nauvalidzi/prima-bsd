@@ -76,15 +76,6 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-    <?php if ($Page->SortUrl($Page->kodenpd) == "") { ?>
-        <th class="<?= $Page->kodenpd->headerCellClass() ?>"><?= $Page->kodenpd->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->kodenpd->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->kodenpd->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->kodenpd->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->kodenpd->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->kodenpd->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->kodenpd->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
 <?php if ($Page->klinik->Visible) { // klinik ?>
     <?php if ($Page->SortUrl($Page->klinik) == "") { ?>
         <th class="<?= $Page->klinik->headerCellClass() ?>"><?= $Page->klinik->caption() ?></th>
@@ -164,13 +155,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->hp->cellAttributes() ?>>
 <span<?= $Page->hp->viewAttributes() ?>>
 <?= $Page->hp->getViewValue() ?></span>
-</td>
-<?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <!-- kodenpd -->
-        <td<?= $Page->kodenpd->cellAttributes() ?>>
-<span<?= $Page->kodenpd->viewAttributes() ?>>
-<?= $Page->kodenpd->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->klinik->Visible) { // klinik ?>

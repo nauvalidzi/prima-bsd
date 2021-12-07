@@ -69,6 +69,8 @@ class BrandCustomer extends DbTable
         // idbrand
         $this->idbrand = new DbField('brand_customer', 'brand_customer', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 3, 11, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idbrand->IsForeignKey = true; // Foreign key field
+        $this->idbrand->Nullable = false; // NOT NULL field
+        $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
         $this->idbrand->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -87,6 +89,8 @@ class BrandCustomer extends DbTable
         // idcustomer
         $this->idcustomer = new DbField('brand_customer', 'brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -156,16 +160,16 @@ class BrandCustomer extends DbTable
     {
         // Master filter
         $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "brand") {
-            if ($this->idbrand->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
+        if ($this->getCurrentMasterTable() == "customer") {
+            if ($this->idcustomer->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
             } else {
                 return "";
             }
         }
-        if ($this->getCurrentMasterTable() == "customer") {
-            if ($this->idcustomer->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
+        if ($this->getCurrentMasterTable() == "brand") {
+            if ($this->idbrand->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
             } else {
                 return "";
             }
@@ -178,13 +182,6 @@ class BrandCustomer extends DbTable
     {
         // Detail filter
         $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "brand") {
-            if ($this->idbrand->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idbrand`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
         if ($this->getCurrentMasterTable() == "customer") {
             if ($this->idcustomer->getSessionValue() != "") {
                 $detailFilter .= "" . GetForeignKeySql("`idcustomer`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
@@ -192,18 +189,14 @@ class BrandCustomer extends DbTable
                 return "";
             }
         }
+        if ($this->getCurrentMasterTable() == "brand") {
+            if ($this->idbrand->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`idbrand`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
         return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_brand()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_brand()
-    {
-        return "`idbrand`=@idbrand@";
     }
 
     // Master filter
@@ -215,6 +208,17 @@ class BrandCustomer extends DbTable
     public function sqlDetailFilter_customer()
     {
         return "`idcustomer`=@idcustomer@";
+    }
+
+    // Master filter
+    public function sqlMasterFilter_brand()
+    {
+        return "`id`=@id@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_brand()
+    {
+        return "`idbrand`=@idbrand@";
     }
 
     // Table level SQL
@@ -742,13 +746,13 @@ class BrandCustomer extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "brand" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idbrand->CurrentValue ?? $this->idbrand->getSessionValue());
-        }
         if ($this->getCurrentMasterTable() == "customer" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
             $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
             $url .= "&" . GetForeignKeyUrl("fk_id", $this->idcustomer->CurrentValue ?? $this->idcustomer->getSessionValue());
+        }
+        if ($this->getCurrentMasterTable() == "brand" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idbrand->CurrentValue ?? $this->idbrand->getSessionValue());
         }
         return $url;
     }
@@ -914,7 +918,11 @@ SORTHTML;
             $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
@@ -992,7 +1000,11 @@ SORTHTML;
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found

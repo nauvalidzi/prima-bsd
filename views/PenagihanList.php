@@ -180,6 +180,24 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->tgl_cancel->Visible) { // tgl_cancel ?>
         <th data-name="tgl_cancel" class="<?= $Page->tgl_cancel->headerCellClass() ?>"><div id="elh_penagihan_tgl_cancel" class="penagihan_tgl_cancel"><?= $Page->renderSort($Page->tgl_cancel) ?></div></th>
 <?php } ?>
+<?php if ($Page->statusts->Visible) { // statusts ?>
+        <th data-name="statusts" class="<?= $Page->statusts->headerCellClass() ?>"><div id="elh_penagihan_statusts" class="penagihan_statusts"><?= $Page->renderSort($Page->statusts) ?></div></th>
+<?php } ?>
+<?php if ($Page->statusbayar->Visible) { // statusbayar ?>
+        <th data-name="statusbayar" class="<?= $Page->statusbayar->headerCellClass() ?>"><div id="elh_penagihan_statusbayar" class="penagihan_statusbayar"><?= $Page->renderSort($Page->statusbayar) ?></div></th>
+<?php } ?>
+<?php if ($Page->nomorfaktur->Visible) { // nomorfaktur ?>
+        <th data-name="nomorfaktur" class="<?= $Page->nomorfaktur->headerCellClass() ?>"><div id="elh_penagihan_nomorfaktur" class="penagihan_nomorfaktur"><?= $Page->renderSort($Page->nomorfaktur) ?></div></th>
+<?php } ?>
+<?php if ($Page->pembayaran->Visible) { // pembayaran ?>
+        <th data-name="pembayaran" class="<?= $Page->pembayaran->headerCellClass() ?>"><div id="elh_penagihan_pembayaran" class="penagihan_pembayaran"><?= $Page->renderSort($Page->pembayaran) ?></div></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_penagihan_keterangan" class="penagihan_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
+<?php } ?>
+<?php if ($Page->saldo->Visible) { // saldo ?>
+        <th data-name="saldo" class="<?= $Page->saldo->headerCellClass() ?>"><div id="elh_penagihan_saldo" class="penagihan_saldo"><?= $Page->renderSort($Page->saldo) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -367,6 +385,54 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_penagihan_tgl_cancel">
 <span<?= $Page->tgl_cancel->viewAttributes() ?>>
 <?= $Page->tgl_cancel->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->statusts->Visible) { // statusts ?>
+        <td data-name="statusts" <?= $Page->statusts->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_statusts">
+<span<?= $Page->statusts->viewAttributes() ?>>
+<?= $Page->statusts->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->statusbayar->Visible) { // statusbayar ?>
+        <td data-name="statusbayar" <?= $Page->statusbayar->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_statusbayar">
+<span<?= $Page->statusbayar->viewAttributes() ?>>
+<?= $Page->statusbayar->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->nomorfaktur->Visible) { // nomorfaktur ?>
+        <td data-name="nomorfaktur" <?= $Page->nomorfaktur->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_nomorfaktur">
+<span<?= $Page->nomorfaktur->viewAttributes() ?>>
+<?= $Page->nomorfaktur->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->pembayaran->Visible) { // pembayaran ?>
+        <td data-name="pembayaran" <?= $Page->pembayaran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_pembayaran">
+<span<?= $Page->pembayaran->viewAttributes() ?>>
+<?= $Page->pembayaran->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->saldo->Visible) { // saldo ?>
+        <td data-name="saldo" <?= $Page->saldo->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_penagihan_saldo">
+<span<?= $Page->saldo->viewAttributes() ?>>
+<?= $Page->saldo->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

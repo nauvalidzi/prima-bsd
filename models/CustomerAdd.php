@@ -1254,7 +1254,6 @@ class CustomerAdd extends Customer
             $this->jabatan->ViewCustomAttributes = "";
 
             // idprov
-            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -1276,7 +1275,6 @@ class CustomerAdd extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
-            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -1298,7 +1296,6 @@ class CustomerAdd extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
-            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -1320,7 +1317,6 @@ class CustomerAdd extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
-            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -1702,96 +1698,100 @@ class CustomerAdd extends Customer
             // idprov
             $this->idprov->EditAttrs["class"] = "form-control";
             $this->idprov->EditCustomAttributes = "";
-            $this->idprov->EditValue = HtmlEncode($this->idprov->CurrentValue);
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
-                $this->idprov->EditValue = $this->idprov->lookupCacheOption($curVal);
-                if ($this->idprov->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idprov->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idprov->Lookup->renderViewRow($rswrk[0]);
-                        $this->idprov->EditValue = $this->idprov->displayValue($arwrk);
-                    } else {
-                        $this->idprov->EditValue = HtmlEncode($this->idprov->CurrentValue);
-                    }
-                }
+                $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
             } else {
-                $this->idprov->EditValue = null;
+                $this->idprov->ViewValue = $this->idprov->Lookup !== null && is_array($this->idprov->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idprov->ViewValue !== null) { // Load from cache
+                $this->idprov->EditValue = array_values($this->idprov->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idprov->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idprov->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idprov->EditValue = $arwrk;
             }
             $this->idprov->PlaceHolder = RemoveHtml($this->idprov->caption());
 
             // idkab
             $this->idkab->EditAttrs["class"] = "form-control";
             $this->idkab->EditCustomAttributes = "";
-            $this->idkab->EditValue = HtmlEncode($this->idkab->CurrentValue);
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
-                $this->idkab->EditValue = $this->idkab->lookupCacheOption($curVal);
-                if ($this->idkab->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkab->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkab->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkab->EditValue = $this->idkab->displayValue($arwrk);
-                    } else {
-                        $this->idkab->EditValue = HtmlEncode($this->idkab->CurrentValue);
-                    }
-                }
+                $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
             } else {
-                $this->idkab->EditValue = null;
+                $this->idkab->ViewValue = $this->idkab->Lookup !== null && is_array($this->idkab->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkab->ViewValue !== null) { // Load from cache
+                $this->idkab->EditValue = array_values($this->idkab->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkab->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idkab->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkab->EditValue = $arwrk;
             }
             $this->idkab->PlaceHolder = RemoveHtml($this->idkab->caption());
 
             // idkec
             $this->idkec->EditAttrs["class"] = "form-control";
             $this->idkec->EditCustomAttributes = "";
-            $this->idkec->EditValue = HtmlEncode($this->idkec->CurrentValue);
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
-                $this->idkec->EditValue = $this->idkec->lookupCacheOption($curVal);
-                if ($this->idkec->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkec->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkec->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkec->EditValue = $this->idkec->displayValue($arwrk);
-                    } else {
-                        $this->idkec->EditValue = HtmlEncode($this->idkec->CurrentValue);
-                    }
-                }
+                $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
             } else {
-                $this->idkec->EditValue = null;
+                $this->idkec->ViewValue = $this->idkec->Lookup !== null && is_array($this->idkec->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkec->ViewValue !== null) { // Load from cache
+                $this->idkec->EditValue = array_values($this->idkec->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkec->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idkec->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkec->EditValue = $arwrk;
             }
             $this->idkec->PlaceHolder = RemoveHtml($this->idkec->caption());
 
             // idkel
             $this->idkel->EditAttrs["class"] = "form-control";
             $this->idkel->EditCustomAttributes = "";
-            $this->idkel->EditValue = HtmlEncode($this->idkel->CurrentValue);
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
-                $this->idkel->EditValue = $this->idkel->lookupCacheOption($curVal);
-                if ($this->idkel->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkel->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkel->EditValue = $this->idkel->displayValue($arwrk);
-                    } else {
-                        $this->idkel->EditValue = HtmlEncode($this->idkel->CurrentValue);
-                    }
-                }
+                $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
             } else {
-                $this->idkel->EditValue = null;
+                $this->idkel->ViewValue = $this->idkel->Lookup !== null && is_array($this->idkel->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkel->ViewValue !== null) { // Load from cache
+                $this->idkel->EditValue = array_values($this->idkel->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkel->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idkel->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkel->EditValue = $arwrk;
             }
             $this->idkel->PlaceHolder = RemoveHtml($this->idkel->caption());
 
@@ -2112,32 +2112,20 @@ class CustomerAdd extends Customer
                 $this->idprov->addErrorMessage(str_replace("%s", $this->idprov->caption(), $this->idprov->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idprov->FormValue)) {
-            $this->idprov->addErrorMessage($this->idprov->getErrorMessage(false));
-        }
         if ($this->idkab->Required) {
             if (!$this->idkab->IsDetailKey && EmptyValue($this->idkab->FormValue)) {
                 $this->idkab->addErrorMessage(str_replace("%s", $this->idkab->caption(), $this->idkab->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->idkab->FormValue)) {
-            $this->idkab->addErrorMessage($this->idkab->getErrorMessage(false));
         }
         if ($this->idkec->Required) {
             if (!$this->idkec->IsDetailKey && EmptyValue($this->idkec->FormValue)) {
                 $this->idkec->addErrorMessage(str_replace("%s", $this->idkec->caption(), $this->idkec->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idkec->FormValue)) {
-            $this->idkec->addErrorMessage($this->idkec->getErrorMessage(false));
-        }
         if ($this->idkel->Required) {
             if (!$this->idkel->IsDetailKey && EmptyValue($this->idkel->FormValue)) {
                 $this->idkel->addErrorMessage(str_replace("%s", $this->idkel->caption(), $this->idkel->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->idkel->FormValue)) {
-            $this->idkel->addErrorMessage($this->idkel->getErrorMessage(false));
         }
         if ($this->kodepos->Required) {
             if (!$this->kodepos->IsDetailKey && EmptyValue($this->kodepos->FormValue)) {
@@ -2225,16 +2213,16 @@ class CustomerAdd extends Customer
         if (in_array("alamat_customer", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("InvoiceGrid");
-        if (in_array("invoice", $detailTblVar) && $detailPage->DetailAdd) {
+        $detailPage = Container("BrandCustomerGrid");
+        if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
         $detailPage = Container("OrderGrid");
         if (in_array("order", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("BrandCustomerGrid");
-        if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
+        $detailPage = Container("InvoiceGrid");
+        if (in_array("invoice", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
 
@@ -2388,10 +2376,10 @@ class CustomerAdd extends Customer
         $this->npwp->setDbValueDef($rsnew, $this->npwp->CurrentValue, null, false);
 
         // limit_kredit_order
-        $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, 0, false);
+        $this->limit_kredit_order->setDbValueDef($rsnew, $this->limit_kredit_order->CurrentValue, null, false);
 
         // jatuh_tempo_invoice
-        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, strval($this->jatuh_tempo_invoice->CurrentValue) == "");
+        $this->jatuh_tempo_invoice->setDbValueDef($rsnew, $this->jatuh_tempo_invoice->CurrentValue, null, false);
 
         // kodenpd
         $this->kodenpd->setDbValueDef($rsnew, $this->kodenpd->CurrentValue, null, false);
@@ -2510,10 +2498,10 @@ class CustomerAdd extends Customer
                 $detailPage->idcustomer->setSessionValue(""); // Clear master key if insert failed
                 }
             }
-            $detailPage = Container("InvoiceGrid");
-            if (in_array("invoice", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage = Container("BrandCustomerGrid");
+            if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
                 $detailPage->idcustomer->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "invoice"); // Load user level of detail table
+                $Security->loadCurrentUserLevel($this->ProjectID . "brand_customer"); // Load user level of detail table
                 $addRow = $detailPage->gridInsert();
                 $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                 if (!$addRow) {
@@ -2530,10 +2518,10 @@ class CustomerAdd extends Customer
                 $detailPage->idcustomer->setSessionValue(""); // Clear master key if insert failed
                 }
             }
-            $detailPage = Container("BrandCustomerGrid");
-            if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage = Container("InvoiceGrid");
+            if (in_array("invoice", $detailTblVar) && $detailPage->DetailAdd) {
                 $detailPage->idcustomer->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "brand_customer"); // Load user level of detail table
+                $Security->loadCurrentUserLevel($this->ProjectID . "invoice"); // Load user level of detail table
                 $addRow = $detailPage->gridInsert();
                 $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                 if (!$addRow) {
@@ -2668,8 +2656,8 @@ class CustomerAdd extends Customer
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
                 }
             }
-            if (in_array("invoice", $detailTblVar)) {
-                $detailPageObj = Container("InvoiceGrid");
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
                 if ($detailPageObj->DetailAdd) {
                     if ($this->CopyRecord) {
                         $detailPageObj->CurrentMode = "copy";
@@ -2684,7 +2672,7 @@ class CustomerAdd extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                    $detailPageObj->id->setSessionValue(""); // Clear session key
+                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
                 }
             }
             if (in_array("order", $detailTblVar)) {
@@ -2705,8 +2693,8 @@ class CustomerAdd extends Customer
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
                 }
             }
-            if (in_array("brand_customer", $detailTblVar)) {
-                $detailPageObj = Container("BrandCustomerGrid");
+            if (in_array("invoice", $detailTblVar)) {
+                $detailPageObj = Container("InvoiceGrid");
                 if ($detailPageObj->DetailAdd) {
                     if ($this->CopyRecord) {
                         $detailPageObj->CurrentMode = "copy";
@@ -2721,7 +2709,7 @@ class CustomerAdd extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
+                    $detailPageObj->id->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -2744,9 +2732,9 @@ class CustomerAdd extends Customer
         $pages = new SubPages();
         $pages->Style = "tabs";
         $pages->add('alamat_customer');
-        $pages->add('invoice');
-        $pages->add('order');
         $pages->add('brand_customer');
+        $pages->add('order');
+        $pages->add('invoice');
         $this->DetailPages = $pages;
     }
 

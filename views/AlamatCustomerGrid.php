@@ -29,7 +29,7 @@ loadjs.ready("head", function () {
         ["idprovinsi", [fields.idprovinsi.visible && fields.idprovinsi.required ? ew.Validators.required(fields.idprovinsi.caption) : null], fields.idprovinsi.isInvalid],
         ["idkabupaten", [fields.idkabupaten.visible && fields.idkabupaten.required ? ew.Validators.required(fields.idkabupaten.caption) : null], fields.idkabupaten.isInvalid],
         ["idkecamatan", [fields.idkecamatan.visible && fields.idkecamatan.required ? ew.Validators.required(fields.idkecamatan.caption) : null], fields.idkecamatan.isInvalid],
-        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null], fields.idkelurahan.isInvalid]
+        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null, ew.Validators.integer], fields.idkelurahan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -602,57 +602,43 @@ loadjs.ready("head", function() {
         <td data-name="idkelurahan" <?= $Grid->idkelurahan->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_alamat_customer_idkelurahan" class="form-group">
-    <select
-        id="x<?= $Grid->RowIndex ?>_idkelurahan"
-        name="x<?= $Grid->RowIndex ?>_idkelurahan"
-        class="form-control ew-select<?= $Grid->idkelurahan->isInvalidClass() ?>"
-        data-select2-id="alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan"
-        data-table="alamat_customer"
-        data-field="x_idkelurahan"
-        data-value-separator="<?= $Grid->idkelurahan->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>"
-        <?= $Grid->idkelurahan->editAttributes() ?>>
-        <?= $Grid->idkelurahan->selectOptionListHtml("x{$Grid->RowIndex}_idkelurahan") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idkelurahan->getErrorMessage() ?></div>
-<?= $Grid->idkelurahan->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idkelurahan") ?>
+<?php
+$onchange = $Grid->idkelurahan->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Grid->idkelurahan->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?= $Grid->RowIndex ?>_idkelurahan" class="ew-auto-suggest">
+    <input type="<?= $Grid->idkelurahan->getInputTextType() ?>" class="form-control" name="sv_x<?= $Grid->RowIndex ?>_idkelurahan" id="sv_x<?= $Grid->RowIndex ?>_idkelurahan" value="<?= RemoveHtml($Grid->idkelurahan->EditValue) ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>"<?= $Grid->idkelurahan->editAttributes() ?>>
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="alamat_customer" data-field="x_idkelurahan" data-input="sv_x<?= $Grid->RowIndex ?>_idkelurahan" data-value-separator="<?= $Grid->idkelurahan->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_idkelurahan" id="x<?= $Grid->RowIndex ?>_idkelurahan" value="<?= HtmlEncode($Grid->idkelurahan->CurrentValue) ?>"<?= $onchange ?>>
+<div class="invalid-feedback"><?= $Grid->idkelurahan->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idkelurahan", selectId: "alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.alamat_customer.fields.idkelurahan.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["falamat_customergrid"], function() {
+    falamat_customergrid.createAutoSuggest(Object.assign({"id":"x<?= $Grid->RowIndex ?>_idkelurahan","forceSelect":false}, ew.vars.tables.alamat_customer.fields.idkelurahan.autoSuggestOptions));
 });
 </script>
+<?= $Grid->idkelurahan->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idkelurahan") ?>
 </span>
 <input type="hidden" data-table="alamat_customer" data-field="x_idkelurahan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idkelurahan" id="o<?= $Grid->RowIndex ?>_idkelurahan" value="<?= HtmlEncode($Grid->idkelurahan->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_alamat_customer_idkelurahan" class="form-group">
-    <select
-        id="x<?= $Grid->RowIndex ?>_idkelurahan"
-        name="x<?= $Grid->RowIndex ?>_idkelurahan"
-        class="form-control ew-select<?= $Grid->idkelurahan->isInvalidClass() ?>"
-        data-select2-id="alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan"
-        data-table="alamat_customer"
-        data-field="x_idkelurahan"
-        data-value-separator="<?= $Grid->idkelurahan->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>"
-        <?= $Grid->idkelurahan->editAttributes() ?>>
-        <?= $Grid->idkelurahan->selectOptionListHtml("x{$Grid->RowIndex}_idkelurahan") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idkelurahan->getErrorMessage() ?></div>
-<?= $Grid->idkelurahan->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idkelurahan") ?>
+<?php
+$onchange = $Grid->idkelurahan->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Grid->idkelurahan->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?= $Grid->RowIndex ?>_idkelurahan" class="ew-auto-suggest">
+    <input type="<?= $Grid->idkelurahan->getInputTextType() ?>" class="form-control" name="sv_x<?= $Grid->RowIndex ?>_idkelurahan" id="sv_x<?= $Grid->RowIndex ?>_idkelurahan" value="<?= RemoveHtml($Grid->idkelurahan->EditValue) ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>"<?= $Grid->idkelurahan->editAttributes() ?>>
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="alamat_customer" data-field="x_idkelurahan" data-input="sv_x<?= $Grid->RowIndex ?>_idkelurahan" data-value-separator="<?= $Grid->idkelurahan->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_idkelurahan" id="x<?= $Grid->RowIndex ?>_idkelurahan" value="<?= HtmlEncode($Grid->idkelurahan->CurrentValue) ?>"<?= $onchange ?>>
+<div class="invalid-feedback"><?= $Grid->idkelurahan->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idkelurahan", selectId: "alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.alamat_customer.fields.idkelurahan.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["falamat_customergrid"], function() {
+    falamat_customergrid.createAutoSuggest(Object.assign({"id":"x<?= $Grid->RowIndex ?>_idkelurahan","forceSelect":false}, ew.vars.tables.alamat_customer.fields.idkelurahan.autoSuggestOptions));
 });
 </script>
+<?= $Grid->idkelurahan->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idkelurahan") ?>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
@@ -900,29 +886,22 @@ loadjs.ready("head", function() {
         <td data-name="idkelurahan">
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_alamat_customer_idkelurahan" class="form-group alamat_customer_idkelurahan">
-    <select
-        id="x<?= $Grid->RowIndex ?>_idkelurahan"
-        name="x<?= $Grid->RowIndex ?>_idkelurahan"
-        class="form-control ew-select<?= $Grid->idkelurahan->isInvalidClass() ?>"
-        data-select2-id="alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan"
-        data-table="alamat_customer"
-        data-field="x_idkelurahan"
-        data-value-separator="<?= $Grid->idkelurahan->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>"
-        <?= $Grid->idkelurahan->editAttributes() ?>>
-        <?= $Grid->idkelurahan->selectOptionListHtml("x{$Grid->RowIndex}_idkelurahan") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idkelurahan->getErrorMessage() ?></div>
-<?= $Grid->idkelurahan->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idkelurahan") ?>
+<?php
+$onchange = $Grid->idkelurahan->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$Grid->idkelurahan->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?= $Grid->RowIndex ?>_idkelurahan" class="ew-auto-suggest">
+    <input type="<?= $Grid->idkelurahan->getInputTextType() ?>" class="form-control" name="sv_x<?= $Grid->RowIndex ?>_idkelurahan" id="sv_x<?= $Grid->RowIndex ?>_idkelurahan" value="<?= RemoveHtml($Grid->idkelurahan->EditValue) ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Grid->idkelurahan->getPlaceHolder()) ?>"<?= $Grid->idkelurahan->editAttributes() ?>>
+</span>
+<input type="hidden" is="selection-list" class="form-control" data-table="alamat_customer" data-field="x_idkelurahan" data-input="sv_x<?= $Grid->RowIndex ?>_idkelurahan" data-value-separator="<?= $Grid->idkelurahan->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_idkelurahan" id="x<?= $Grid->RowIndex ?>_idkelurahan" value="<?= HtmlEncode($Grid->idkelurahan->CurrentValue) ?>"<?= $onchange ?>>
+<div class="invalid-feedback"><?= $Grid->idkelurahan->getErrorMessage() ?></div>
 <script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idkelurahan", selectId: "alamat_customer_x<?= $Grid->RowIndex ?>_idkelurahan", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.alamat_customer.fields.idkelurahan.selectOptions);
-    ew.createSelect(options);
+loadjs.ready(["falamat_customergrid"], function() {
+    falamat_customergrid.createAutoSuggest(Object.assign({"id":"x<?= $Grid->RowIndex ?>_idkelurahan","forceSelect":false}, ew.vars.tables.alamat_customer.fields.idkelurahan.autoSuggestOptions));
 });
 </script>
+<?= $Grid->idkelurahan->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idkelurahan") ?>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_alamat_customer_idkelurahan" class="form-group alamat_customer_idkelurahan">

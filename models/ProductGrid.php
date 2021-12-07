@@ -514,11 +514,11 @@ class ProductGrid extends Product
         $this->idkualitasbarang->Visible = false;
         $this->idproduct_acuan->Visible = false;
         $this->idkemasanbarang->Visible = false;
-        $this->kemasanbarang->setVisibility();
-        $this->harga->setVisibility();
         $this->ukuran->setVisibility();
         $this->netto->Visible = false;
+        $this->kemasanbarang->setVisibility();
         $this->satuan->Visible = false;
+        $this->harga->setVisibility();
         $this->bahan->Visible = false;
         $this->warna->Visible = false;
         $this->parfum->Visible = false;
@@ -966,13 +966,13 @@ class ProductGrid extends Product
         if ($CurrentForm->hasValue("x_nama") && $CurrentForm->hasValue("o_nama") && $this->nama->CurrentValue != $this->nama->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_ukuran") && $CurrentForm->hasValue("o_ukuran") && $this->ukuran->CurrentValue != $this->ukuran->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_kemasanbarang") && $CurrentForm->hasValue("o_kemasanbarang") && $this->kemasanbarang->CurrentValue != $this->kemasanbarang->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_harga") && $CurrentForm->hasValue("o_harga") && $this->harga->CurrentValue != $this->harga->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_ukuran") && $CurrentForm->hasValue("o_ukuran") && $this->ukuran->CurrentValue != $this->ukuran->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_updated_at") && $CurrentForm->hasValue("o_updated_at") && $this->updated_at->CurrentValue != $this->updated_at->OldValue) {
@@ -1062,9 +1062,9 @@ class ProductGrid extends Product
         $this->idbrand->clearErrorMessage();
         $this->kode->clearErrorMessage();
         $this->nama->clearErrorMessage();
+        $this->ukuran->clearErrorMessage();
         $this->kemasanbarang->clearErrorMessage();
         $this->harga->clearErrorMessage();
-        $this->ukuran->clearErrorMessage();
         $this->updated_at->clearErrorMessage();
     }
 
@@ -1352,16 +1352,16 @@ class ProductGrid extends Product
         $this->idproduct_acuan->OldValue = $this->idproduct_acuan->CurrentValue;
         $this->idkemasanbarang->CurrentValue = null;
         $this->idkemasanbarang->OldValue = $this->idkemasanbarang->CurrentValue;
-        $this->kemasanbarang->CurrentValue = null;
-        $this->kemasanbarang->OldValue = $this->kemasanbarang->CurrentValue;
-        $this->harga->CurrentValue = null;
-        $this->harga->OldValue = $this->harga->CurrentValue;
         $this->ukuran->CurrentValue = null;
         $this->ukuran->OldValue = $this->ukuran->CurrentValue;
         $this->netto->CurrentValue = null;
         $this->netto->OldValue = $this->netto->CurrentValue;
+        $this->kemasanbarang->CurrentValue = null;
+        $this->kemasanbarang->OldValue = $this->kemasanbarang->CurrentValue;
         $this->satuan->CurrentValue = null;
         $this->satuan->OldValue = $this->satuan->CurrentValue;
+        $this->harga->CurrentValue = null;
+        $this->harga->OldValue = $this->harga->CurrentValue;
         $this->bahan->CurrentValue = null;
         $this->bahan->OldValue = $this->bahan->CurrentValue;
         $this->warna->CurrentValue = null;
@@ -1431,6 +1431,19 @@ class ProductGrid extends Product
             $this->nama->setOldValue($CurrentForm->getValue("o_nama"));
         }
 
+        // Check field name 'ukuran' first before field var 'x_ukuran'
+        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
+        if (!$this->ukuran->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->ukuran->Visible = false; // Disable update for API request
+            } else {
+                $this->ukuran->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_ukuran")) {
+            $this->ukuran->setOldValue($CurrentForm->getValue("o_ukuran"));
+        }
+
         // Check field name 'kemasanbarang' first before field var 'x_kemasanbarang'
         $val = $CurrentForm->hasValue("kemasanbarang") ? $CurrentForm->getValue("kemasanbarang") : $CurrentForm->getValue("x_kemasanbarang");
         if (!$this->kemasanbarang->IsDetailKey) {
@@ -1457,19 +1470,6 @@ class ProductGrid extends Product
             $this->harga->setOldValue($CurrentForm->getValue("o_harga"));
         }
 
-        // Check field name 'ukuran' first before field var 'x_ukuran'
-        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
-        if (!$this->ukuran->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->ukuran->Visible = false; // Disable update for API request
-            } else {
-                $this->ukuran->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_ukuran")) {
-            $this->ukuran->setOldValue($CurrentForm->getValue("o_ukuran"));
-        }
-
         // Check field name 'updated_at' first before field var 'x_updated_at'
         $val = $CurrentForm->hasValue("updated_at") ? $CurrentForm->getValue("updated_at") : $CurrentForm->getValue("x_updated_at");
         if (!$this->updated_at->IsDetailKey) {
@@ -1478,7 +1478,7 @@ class ProductGrid extends Product
             } else {
                 $this->updated_at->setFormValue($val);
             }
-            $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
+            $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 11);
         }
         if ($CurrentForm->hasValue("o_updated_at")) {
             $this->updated_at->setOldValue($CurrentForm->getValue("o_updated_at"));
@@ -1501,11 +1501,11 @@ class ProductGrid extends Product
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
+        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
         $this->kemasanbarang->CurrentValue = $this->kemasanbarang->FormValue;
         $this->harga->CurrentValue = $this->harga->FormValue;
-        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
         $this->updated_at->CurrentValue = $this->updated_at->FormValue;
-        $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
+        $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 11);
     }
 
     // Load recordset
@@ -1585,11 +1585,11 @@ class ProductGrid extends Product
         $this->idkualitasbarang->setDbValue($row['idkualitasbarang']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
         $this->idkemasanbarang->setDbValue($row['idkemasanbarang']);
-        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
-        $this->harga->setDbValue($row['harga']);
         $this->ukuran->setDbValue($row['ukuran']);
         $this->netto->setDbValue($row['netto']);
+        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
         $this->satuan->setDbValue($row['satuan']);
+        $this->harga->setDbValue($row['harga']);
         $this->bahan->setDbValue($row['bahan']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
@@ -1618,11 +1618,11 @@ class ProductGrid extends Product
         $row['idkualitasbarang'] = $this->idkualitasbarang->CurrentValue;
         $row['idproduct_acuan'] = $this->idproduct_acuan->CurrentValue;
         $row['idkemasanbarang'] = $this->idkemasanbarang->CurrentValue;
-        $row['kemasanbarang'] = $this->kemasanbarang->CurrentValue;
-        $row['harga'] = $this->harga->CurrentValue;
         $row['ukuran'] = $this->ukuran->CurrentValue;
         $row['netto'] = $this->netto->CurrentValue;
+        $row['kemasanbarang'] = $this->kemasanbarang->CurrentValue;
         $row['satuan'] = $this->satuan->CurrentValue;
+        $row['harga'] = $this->harga->CurrentValue;
         $row['bahan'] = $this->bahan->CurrentValue;
         $row['warna'] = $this->warna->CurrentValue;
         $row['parfum'] = $this->parfum->CurrentValue;
@@ -1687,17 +1687,17 @@ class ProductGrid extends Product
         // idkemasanbarang
         $this->idkemasanbarang->CellCssStyle = "white-space: nowrap;";
 
-        // kemasanbarang
-
-        // harga
-
         // ukuran
 
         // netto
         $this->netto->CellCssStyle = "white-space: nowrap;";
 
+        // kemasanbarang
+
         // satuan
         $this->satuan->CellCssStyle = "white-space: nowrap;";
+
+        // harga
 
         // bahan
 
@@ -1840,6 +1840,10 @@ class ProductGrid extends Product
             }
             $this->idproduct_acuan->ViewCustomAttributes = "";
 
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
+
             // kemasanbarang
             $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
             $this->kemasanbarang->ViewCustomAttributes = "";
@@ -1848,10 +1852,6 @@ class ProductGrid extends Product
             $this->harga->ViewValue = $this->harga->CurrentValue;
             $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
             $this->harga->ViewCustomAttributes = "";
-
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
 
             // bahan
             $this->bahan->ViewValue = $this->bahan->CurrentValue;
@@ -1904,7 +1904,7 @@ class ProductGrid extends Product
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
@@ -1922,6 +1922,11 @@ class ProductGrid extends Product
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
+
             // kemasanbarang
             $this->kemasanbarang->LinkCustomAttributes = "";
             $this->kemasanbarang->HrefValue = "";
@@ -1931,11 +1936,6 @@ class ProductGrid extends Product
             $this->harga->LinkCustomAttributes = "";
             $this->harga->HrefValue = "";
             $this->harga->TooltipValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
 
             // updated_at
             $this->updated_at->LinkCustomAttributes = "";
@@ -2009,6 +2009,15 @@ class ProductGrid extends Product
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
+            // ukuran
+            $this->ukuran->EditAttrs["class"] = "form-control";
+            $this->ukuran->EditCustomAttributes = "";
+            if (!$this->ukuran->Raw) {
+                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
+            }
+            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
+            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
+
             // kemasanbarang
             $this->kemasanbarang->EditAttrs["class"] = "form-control";
             $this->kemasanbarang->EditCustomAttributes = "";
@@ -2024,19 +2033,10 @@ class ProductGrid extends Product
             $this->harga->EditValue = HtmlEncode($this->harga->CurrentValue);
             $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
 
-            // ukuran
-            $this->ukuran->EditAttrs["class"] = "form-control";
-            $this->ukuran->EditCustomAttributes = "";
-            if (!$this->ukuran->Raw) {
-                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-            }
-            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
-            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
-
             // updated_at
             $this->updated_at->EditAttrs["class"] = "form-control";
             $this->updated_at->EditCustomAttributes = "";
-            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 8));
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 11));
             $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
             // Add refer script
@@ -2053,6 +2053,10 @@ class ProductGrid extends Product
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+
             // kemasanbarang
             $this->kemasanbarang->LinkCustomAttributes = "";
             $this->kemasanbarang->HrefValue = "";
@@ -2060,10 +2064,6 @@ class ProductGrid extends Product
             // harga
             $this->harga->LinkCustomAttributes = "";
             $this->harga->HrefValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
 
             // updated_at
             $this->updated_at->LinkCustomAttributes = "";
@@ -2136,6 +2136,15 @@ class ProductGrid extends Product
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
+            // ukuran
+            $this->ukuran->EditAttrs["class"] = "form-control";
+            $this->ukuran->EditCustomAttributes = "";
+            if (!$this->ukuran->Raw) {
+                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
+            }
+            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
+            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
+
             // kemasanbarang
             $this->kemasanbarang->EditAttrs["class"] = "form-control";
             $this->kemasanbarang->EditCustomAttributes = "";
@@ -2151,19 +2160,10 @@ class ProductGrid extends Product
             $this->harga->EditValue = HtmlEncode($this->harga->CurrentValue);
             $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
 
-            // ukuran
-            $this->ukuran->EditAttrs["class"] = "form-control";
-            $this->ukuran->EditCustomAttributes = "";
-            if (!$this->ukuran->Raw) {
-                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-            }
-            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
-            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
-
             // updated_at
             $this->updated_at->EditAttrs["class"] = "form-control";
             $this->updated_at->EditCustomAttributes = "";
-            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 8));
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 11));
             $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
             // Edit refer script
@@ -2180,6 +2180,10 @@ class ProductGrid extends Product
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+
             // kemasanbarang
             $this->kemasanbarang->LinkCustomAttributes = "";
             $this->kemasanbarang->HrefValue = "";
@@ -2187,10 +2191,6 @@ class ProductGrid extends Product
             // harga
             $this->harga->LinkCustomAttributes = "";
             $this->harga->HrefValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
 
             // updated_at
             $this->updated_at->LinkCustomAttributes = "";
@@ -2230,6 +2230,11 @@ class ProductGrid extends Product
                 $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
             }
         }
+        if ($this->ukuran->Required) {
+            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
+                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
+            }
+        }
         if ($this->kemasanbarang->Required) {
             if (!$this->kemasanbarang->IsDetailKey && EmptyValue($this->kemasanbarang->FormValue)) {
                 $this->kemasanbarang->addErrorMessage(str_replace("%s", $this->kemasanbarang->caption(), $this->kemasanbarang->RequiredErrorMessage));
@@ -2243,17 +2248,12 @@ class ProductGrid extends Product
         if (!CheckInteger($this->harga->FormValue)) {
             $this->harga->addErrorMessage($this->harga->getErrorMessage(false));
         }
-        if ($this->ukuran->Required) {
-            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
-                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
-            }
-        }
         if ($this->updated_at->Required) {
             if (!$this->updated_at->IsDetailKey && EmptyValue($this->updated_at->FormValue)) {
                 $this->updated_at->addErrorMessage(str_replace("%s", $this->updated_at->caption(), $this->updated_at->RequiredErrorMessage));
             }
         }
-        if (!CheckDate($this->updated_at->FormValue)) {
+        if (!CheckEuroDate($this->updated_at->FormValue)) {
             $this->updated_at->addErrorMessage($this->updated_at->getErrorMessage(false));
         }
 
@@ -2377,17 +2377,17 @@ class ProductGrid extends Product
             // nama
             $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);
 
+            // ukuran
+            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
+
             // kemasanbarang
             $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, null, $this->kemasanbarang->ReadOnly);
 
             // harga
             $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, $this->harga->ReadOnly);
 
-            // ukuran
-            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
-
             // updated_at
-            $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), $this->updated_at->ReadOnly);
+            $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 11), CurrentDate(), $this->updated_at->ReadOnly);
 
             // Check referential integrity for master table 'brand'
             $validMasterRecord = true;
@@ -2496,17 +2496,17 @@ class ProductGrid extends Product
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
 
+        // ukuran
+        $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, false);
+
         // kemasanbarang
         $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, null, false);
 
         // harga
         $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, false);
 
-        // ukuran
-        $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, false);
-
         // updated_at
-        $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), false);
+        $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 11), CurrentDate(), false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

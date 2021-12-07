@@ -44,6 +44,13 @@ class Penagihan extends DbTable
     public $tgl_penagihan;
     public $tgl_return;
     public $tgl_cancel;
+    public $messagets;
+    public $statusts;
+    public $statusbayar;
+    public $nomorfaktur;
+    public $pembayaran;
+    public $keterangan;
+    public $saldo;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -203,6 +210,51 @@ class Penagihan extends DbTable
         $this->tgl_cancel->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->tgl_cancel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_cancel->Param, "CustomMsg");
         $this->Fields['tgl_cancel'] = &$this->tgl_cancel;
+
+        // messagets
+        $this->messagets = new DbField('penagihan', 'penagihan', 'x_messagets', 'messagets', '`messagets`', '`messagets`', 201, 65535, -1, false, '`messagets`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->messagets->Sortable = true; // Allow sort
+        $this->messagets->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->messagets->Param, "CustomMsg");
+        $this->Fields['messagets'] = &$this->messagets;
+
+        // statusts
+        $this->statusts = new DbField('penagihan', 'penagihan', 'x_statusts', 'statusts', '`statusts`', '`statusts`', 16, 4, -1, false, '`statusts`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->statusts->Sortable = true; // Allow sort
+        $this->statusts->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->statusts->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->statusts->Param, "CustomMsg");
+        $this->Fields['statusts'] = &$this->statusts;
+
+        // statusbayar
+        $this->statusbayar = new DbField('penagihan', 'penagihan', 'x_statusbayar', 'statusbayar', '`statusbayar`', '`statusbayar`', 200, 100, -1, false, '`statusbayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->statusbayar->Sortable = true; // Allow sort
+        $this->statusbayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->statusbayar->Param, "CustomMsg");
+        $this->Fields['statusbayar'] = &$this->statusbayar;
+
+        // nomorfaktur
+        $this->nomorfaktur = new DbField('penagihan', 'penagihan', 'x_nomorfaktur', 'nomorfaktur', '`nomorfaktur`', '`nomorfaktur`', 200, 100, -1, false, '`nomorfaktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nomorfaktur->Sortable = true; // Allow sort
+        $this->nomorfaktur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nomorfaktur->Param, "CustomMsg");
+        $this->Fields['nomorfaktur'] = &$this->nomorfaktur;
+
+        // pembayaran
+        $this->pembayaran = new DbField('penagihan', 'penagihan', 'x_pembayaran', 'pembayaran', '`pembayaran`', '`pembayaran`', 20, 20, -1, false, '`pembayaran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->pembayaran->Sortable = true; // Allow sort
+        $this->pembayaran->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->pembayaran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->pembayaran->Param, "CustomMsg");
+        $this->Fields['pembayaran'] = &$this->pembayaran;
+
+        // keterangan
+        $this->keterangan = new DbField('penagihan', 'penagihan', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, 100, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->keterangan->Sortable = true; // Allow sort
+        $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
+        $this->Fields['keterangan'] = &$this->keterangan;
+
+        // saldo
+        $this->saldo = new DbField('penagihan', 'penagihan', 'x_saldo', 'saldo', '`saldo`', '`saldo`', 20, 20, -1, false, '`saldo`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->saldo->Sortable = true; // Allow sort
+        $this->saldo->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->saldo->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->saldo->Param, "CustomMsg");
+        $this->Fields['saldo'] = &$this->saldo;
     }
 
     // Field Visibility
@@ -632,6 +684,13 @@ class Penagihan extends DbTable
         $this->tgl_penagihan->DbValue = $row['tgl_penagihan'];
         $this->tgl_return->DbValue = $row['tgl_return'];
         $this->tgl_cancel->DbValue = $row['tgl_cancel'];
+        $this->messagets->DbValue = $row['messagets'];
+        $this->statusts->DbValue = $row['statusts'];
+        $this->statusbayar->DbValue = $row['statusbayar'];
+        $this->nomorfaktur->DbValue = $row['nomorfaktur'];
+        $this->pembayaran->DbValue = $row['pembayaran'];
+        $this->keterangan->DbValue = $row['keterangan'];
+        $this->saldo->DbValue = $row['saldo'];
     }
 
     // Delete uploaded files
@@ -968,6 +1027,13 @@ SORTHTML;
         $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
         $this->tgl_return->setDbValue($row['tgl_return']);
         $this->tgl_cancel->setDbValue($row['tgl_cancel']);
+        $this->messagets->setDbValue($row['messagets']);
+        $this->statusts->setDbValue($row['statusts']);
+        $this->statusbayar->setDbValue($row['statusbayar']);
+        $this->nomorfaktur->setDbValue($row['nomorfaktur']);
+        $this->pembayaran->setDbValue($row['pembayaran']);
+        $this->keterangan->setDbValue($row['keterangan']);
+        $this->saldo->setDbValue($row['saldo']);
     }
 
     // Render list row values
@@ -1011,6 +1077,20 @@ SORTHTML;
         // tgl_return
 
         // tgl_cancel
+
+        // messagets
+
+        // statusts
+
+        // statusbayar
+
+        // nomorfaktur
+
+        // pembayaran
+
+        // keterangan
+
+        // saldo
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1089,6 +1169,37 @@ SORTHTML;
         $this->tgl_cancel->ViewValue = $this->tgl_cancel->CurrentValue;
         $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 0);
         $this->tgl_cancel->ViewCustomAttributes = "";
+
+        // messagets
+        $this->messagets->ViewValue = $this->messagets->CurrentValue;
+        $this->messagets->ViewCustomAttributes = "";
+
+        // statusts
+        $this->statusts->ViewValue = $this->statusts->CurrentValue;
+        $this->statusts->ViewValue = FormatNumber($this->statusts->ViewValue, 0, -2, -2, -2);
+        $this->statusts->ViewCustomAttributes = "";
+
+        // statusbayar
+        $this->statusbayar->ViewValue = $this->statusbayar->CurrentValue;
+        $this->statusbayar->ViewCustomAttributes = "";
+
+        // nomorfaktur
+        $this->nomorfaktur->ViewValue = $this->nomorfaktur->CurrentValue;
+        $this->nomorfaktur->ViewCustomAttributes = "";
+
+        // pembayaran
+        $this->pembayaran->ViewValue = $this->pembayaran->CurrentValue;
+        $this->pembayaran->ViewValue = FormatNumber($this->pembayaran->ViewValue, 0, -2, -2, -2);
+        $this->pembayaran->ViewCustomAttributes = "";
+
+        // keterangan
+        $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+        $this->keterangan->ViewCustomAttributes = "";
+
+        // saldo
+        $this->saldo->ViewValue = $this->saldo->CurrentValue;
+        $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
+        $this->saldo->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1169,6 +1280,41 @@ SORTHTML;
         $this->tgl_cancel->LinkCustomAttributes = "";
         $this->tgl_cancel->HrefValue = "";
         $this->tgl_cancel->TooltipValue = "";
+
+        // messagets
+        $this->messagets->LinkCustomAttributes = "";
+        $this->messagets->HrefValue = "";
+        $this->messagets->TooltipValue = "";
+
+        // statusts
+        $this->statusts->LinkCustomAttributes = "";
+        $this->statusts->HrefValue = "";
+        $this->statusts->TooltipValue = "";
+
+        // statusbayar
+        $this->statusbayar->LinkCustomAttributes = "";
+        $this->statusbayar->HrefValue = "";
+        $this->statusbayar->TooltipValue = "";
+
+        // nomorfaktur
+        $this->nomorfaktur->LinkCustomAttributes = "";
+        $this->nomorfaktur->HrefValue = "";
+        $this->nomorfaktur->TooltipValue = "";
+
+        // pembayaran
+        $this->pembayaran->LinkCustomAttributes = "";
+        $this->pembayaran->HrefValue = "";
+        $this->pembayaran->TooltipValue = "";
+
+        // keterangan
+        $this->keterangan->LinkCustomAttributes = "";
+        $this->keterangan->HrefValue = "";
+        $this->keterangan->TooltipValue = "";
+
+        // saldo
+        $this->saldo->LinkCustomAttributes = "";
+        $this->saldo->HrefValue = "";
+        $this->saldo->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1289,6 +1435,57 @@ SORTHTML;
         $this->tgl_cancel->EditValue = FormatDateTime($this->tgl_cancel->CurrentValue, 8);
         $this->tgl_cancel->PlaceHolder = RemoveHtml($this->tgl_cancel->caption());
 
+        // messagets
+        $this->messagets->EditAttrs["class"] = "form-control";
+        $this->messagets->EditCustomAttributes = "";
+        $this->messagets->EditValue = $this->messagets->CurrentValue;
+        $this->messagets->PlaceHolder = RemoveHtml($this->messagets->caption());
+
+        // statusts
+        $this->statusts->EditAttrs["class"] = "form-control";
+        $this->statusts->EditCustomAttributes = "";
+        $this->statusts->EditValue = $this->statusts->CurrentValue;
+        $this->statusts->PlaceHolder = RemoveHtml($this->statusts->caption());
+
+        // statusbayar
+        $this->statusbayar->EditAttrs["class"] = "form-control";
+        $this->statusbayar->EditCustomAttributes = "";
+        if (!$this->statusbayar->Raw) {
+            $this->statusbayar->CurrentValue = HtmlDecode($this->statusbayar->CurrentValue);
+        }
+        $this->statusbayar->EditValue = $this->statusbayar->CurrentValue;
+        $this->statusbayar->PlaceHolder = RemoveHtml($this->statusbayar->caption());
+
+        // nomorfaktur
+        $this->nomorfaktur->EditAttrs["class"] = "form-control";
+        $this->nomorfaktur->EditCustomAttributes = "";
+        if (!$this->nomorfaktur->Raw) {
+            $this->nomorfaktur->CurrentValue = HtmlDecode($this->nomorfaktur->CurrentValue);
+        }
+        $this->nomorfaktur->EditValue = $this->nomorfaktur->CurrentValue;
+        $this->nomorfaktur->PlaceHolder = RemoveHtml($this->nomorfaktur->caption());
+
+        // pembayaran
+        $this->pembayaran->EditAttrs["class"] = "form-control";
+        $this->pembayaran->EditCustomAttributes = "";
+        $this->pembayaran->EditValue = $this->pembayaran->CurrentValue;
+        $this->pembayaran->PlaceHolder = RemoveHtml($this->pembayaran->caption());
+
+        // keterangan
+        $this->keterangan->EditAttrs["class"] = "form-control";
+        $this->keterangan->EditCustomAttributes = "";
+        if (!$this->keterangan->Raw) {
+            $this->keterangan->CurrentValue = HtmlDecode($this->keterangan->CurrentValue);
+        }
+        $this->keterangan->EditValue = $this->keterangan->CurrentValue;
+        $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
+
+        // saldo
+        $this->saldo->EditAttrs["class"] = "form-control";
+        $this->saldo->EditCustomAttributes = "";
+        $this->saldo->EditValue = $this->saldo->CurrentValue;
+        $this->saldo->PlaceHolder = RemoveHtml($this->saldo->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1333,6 +1530,13 @@ SORTHTML;
                     $doc->exportCaption($this->tgl_penagihan);
                     $doc->exportCaption($this->tgl_return);
                     $doc->exportCaption($this->tgl_cancel);
+                    $doc->exportCaption($this->messagets);
+                    $doc->exportCaption($this->statusts);
+                    $doc->exportCaption($this->statusbayar);
+                    $doc->exportCaption($this->nomorfaktur);
+                    $doc->exportCaption($this->pembayaran);
+                    $doc->exportCaption($this->keterangan);
+                    $doc->exportCaption($this->saldo);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->tgl_order);
@@ -1349,6 +1553,12 @@ SORTHTML;
                     $doc->exportCaption($this->tgl_penagihan);
                     $doc->exportCaption($this->tgl_return);
                     $doc->exportCaption($this->tgl_cancel);
+                    $doc->exportCaption($this->statusts);
+                    $doc->exportCaption($this->statusbayar);
+                    $doc->exportCaption($this->nomorfaktur);
+                    $doc->exportCaption($this->pembayaran);
+                    $doc->exportCaption($this->keterangan);
+                    $doc->exportCaption($this->saldo);
                 }
                 $doc->endExportRow();
             }
@@ -1394,6 +1604,13 @@ SORTHTML;
                         $doc->exportField($this->tgl_penagihan);
                         $doc->exportField($this->tgl_return);
                         $doc->exportField($this->tgl_cancel);
+                        $doc->exportField($this->messagets);
+                        $doc->exportField($this->statusts);
+                        $doc->exportField($this->statusbayar);
+                        $doc->exportField($this->nomorfaktur);
+                        $doc->exportField($this->pembayaran);
+                        $doc->exportField($this->keterangan);
+                        $doc->exportField($this->saldo);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->tgl_order);
@@ -1410,6 +1627,12 @@ SORTHTML;
                         $doc->exportField($this->tgl_penagihan);
                         $doc->exportField($this->tgl_return);
                         $doc->exportField($this->tgl_cancel);
+                        $doc->exportField($this->statusts);
+                        $doc->exportField($this->statusbayar);
+                        $doc->exportField($this->nomorfaktur);
+                        $doc->exportField($this->pembayaran);
+                        $doc->exportField($this->keterangan);
+                        $doc->exportField($this->saldo);
                     }
                     $doc->endExportRow($rowCnt);
                 }

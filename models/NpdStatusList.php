@@ -568,7 +568,7 @@ class NpdStatusList extends NpdStatus
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->idnpd->setVisibility();
         $this->idpegawai->setVisibility();
         $this->status->setVisibility();
@@ -577,9 +577,9 @@ class NpdStatusList extends NpdStatus
         $this->targetselesai->setVisibility();
         $this->tglselesai->setVisibility();
         $this->keterangan->setVisibility();
-        $this->lampiran->Visible = false;
-        $this->created_by->Visible = false;
-        $this->created_at->Visible = false;
+        $this->lampiran->setVisibility();
+        $this->created_at->setVisibility();
+        $this->created_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -589,9 +589,6 @@ class NpdStatusList extends NpdStatus
         if (method_exists($this, "pageLoad")) {
             $this->pageLoad();
         }
-
-        // Set up master detail parameters
-        $this->setupMasterParms();
 
         // Setup other options
         $this->setupOtherOptions();
@@ -610,8 +607,6 @@ class NpdStatusList extends NpdStatus
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idnpd);
-        $this->setupLookupOptions($this->idpegawai);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -733,35 +728,8 @@ class NpdStatusList extends NpdStatus
         if (!$Security->canList()) {
             $filter = "(0=1)"; // Filter all records
         }
-
-        // Restore master/detail filter
-        $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "npd") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "npd"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "npd") {
-            $masterTbl = Container("npd");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("NpdList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
 
         // Set up filter
         if ($this->Command == "json") {
@@ -912,8 +880,8 @@ class NpdStatusList extends NpdStatus
         $filterList = Concat($filterList, $this->tglselesai->AdvancedSearch->toJson(), ","); // Field tglselesai
         $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
         $filterList = Concat($filterList, $this->lampiran->AdvancedSearch->toJson(), ","); // Field lampiran
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
+        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1034,14 +1002,6 @@ class NpdStatusList extends NpdStatus
         $this->lampiran->AdvancedSearch->SearchOperator2 = @$filter["w_lampiran"];
         $this->lampiran->AdvancedSearch->save();
 
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
-
         // Field created_at
         $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
@@ -1049,6 +1009,14 @@ class NpdStatusList extends NpdStatus
         $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
+
+        // Field created_by
+        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
+        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
+        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
+        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
+        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
+        $this->created_by->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1222,6 +1190,7 @@ class NpdStatusList extends NpdStatus
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->id); // id
             $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->status); // status
@@ -1230,6 +1199,9 @@ class NpdStatusList extends NpdStatus
             $this->updateSort($this->targetselesai); // targetselesai
             $this->updateSort($this->tglselesai); // tglselesai
             $this->updateSort($this->keterangan); // keterangan
+            $this->updateSort($this->lampiran); // lampiran
+            $this->updateSort($this->created_at); // created_at
+            $this->updateSort($this->created_by); // created_by
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1239,14 +1211,10 @@ class NpdStatusList extends NpdStatus
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`id` DESC";
+            $this->DefaultSort = "";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
-                if ($this->id->getSort() != "") {
-                    $useDefaultSort = false;
-                }
                 if ($useDefaultSort) {
-                    $this->id->setSort("DESC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -1269,14 +1237,6 @@ class NpdStatusList extends NpdStatus
                 $this->resetSearchParms();
             }
 
-            // Reset master/detail keys
-            if ($this->Command == "resetall") {
-                $this->setCurrentMasterTable(""); // Clear master table
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-                        $this->idnpd->setSessionValue("");
-            }
-
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
@@ -1291,8 +1251,8 @@ class NpdStatusList extends NpdStatus
                 $this->tglselesai->setSort("");
                 $this->keterangan->setSort("");
                 $this->lampiran->setSort("");
-                $this->created_by->setSort("");
                 $this->created_at->setSort("");
+                $this->created_by->setSort("");
             }
 
             // Reset start position
@@ -1322,6 +1282,12 @@ class NpdStatusList extends NpdStatus
         $item = &$this->ListOptions->add("edit");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "copy"
+        $item = &$this->ListOptions->add("copy");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canAdd();
         $item->OnLeft = false;
 
         // "delete"
@@ -1376,7 +1342,7 @@ class NpdStatusList extends NpdStatus
             // "view"
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
+            if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1385,15 +1351,24 @@ class NpdStatusList extends NpdStatus
             // "edit"
             $opt = $this->ListOptions["edit"];
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
+            if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "copy"
+            $opt = $this->ListOptions["copy"];
+            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
+            if ($Security->canAdd()) {
+                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
 
             // "delete"
             $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
+            if ($Security->canDelete()) {
             $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1695,10 +1670,9 @@ class NpdStatusList extends NpdStatus
         $this->targetselesai->setDbValue($row['targetselesai']);
         $this->tglselesai->setDbValue($row['tglselesai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->lampiran->Upload->DbValue = $row['lampiran'];
-        $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->lampiran->setDbValue($row['lampiran']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->created_by->setDbValue($row['created_by']);
     }
 
     // Return a row with default values
@@ -1715,8 +1689,8 @@ class NpdStatusList extends NpdStatus
         $row['tglselesai'] = null;
         $row['keterangan'] = null;
         $row['lampiran'] = null;
-        $row['created_by'] = null;
         $row['created_at'] = null;
+        $row['created_by'] = null;
         return $row;
     }
 
@@ -1774,54 +1748,22 @@ class NpdStatusList extends NpdStatus
 
         // lampiran
 
-        // created_by
-
         // created_at
+
+        // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
             // idnpd
-            $curVal = trim(strval($this->idnpd->CurrentValue));
-            if ($curVal != "") {
-                $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
-                if ($this->idnpd->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idnpd->Lookup->renderViewRow($rswrk[0]);
-                        $this->idnpd->ViewValue = $this->idnpd->displayValue($arwrk);
-                    } else {
-                        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idnpd->ViewValue = null;
-            }
+            $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
+            $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
 
             // idpegawai
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
-            if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                    } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idpegawai->ViewValue = null;
-            }
+            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+            $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
             $this->idpegawai->ViewCustomAttributes = "";
 
             // status
@@ -1853,22 +1795,23 @@ class NpdStatusList extends NpdStatus
             $this->keterangan->ViewCustomAttributes = "";
 
             // lampiran
-            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-                $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
-            } else {
-                $this->lampiran->ViewValue = "";
-            }
+            $this->lampiran->ViewValue = $this->lampiran->CurrentValue;
             $this->lampiran->ViewCustomAttributes = "";
+
+            // created_at
+            $this->created_at->ViewValue = $this->created_at->CurrentValue;
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewCustomAttributes = "";
 
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
@@ -1909,6 +1852,21 @@ class NpdStatusList extends NpdStatus
             $this->keterangan->LinkCustomAttributes = "";
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
+
+            // lampiran
+            $this->lampiran->LinkCustomAttributes = "";
+            $this->lampiran->HrefValue = "";
+            $this->lampiran->TooltipValue = "";
+
+            // created_at
+            $this->created_at->LinkCustomAttributes = "";
+            $this->created_at->HrefValue = "";
+            $this->created_at->TooltipValue = "";
+
+            // created_by
+            $this->created_by->LinkCustomAttributes = "";
+            $this->created_by->HrefValue = "";
+            $this->created_by->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1956,91 +1914,6 @@ class NpdStatusList extends NpdStatus
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "npd") {
-                $validMaster = true;
-                $masterTbl = Container("npd");
-                if (($parm = Get("fk_id", Get("idnpd"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idnpd->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idnpd->setSessionValue($this->idnpd->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "npd") {
-                $validMaster = true;
-                $masterTbl = Container("npd");
-                if (($parm = Post("fk_id", Post("idnpd"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idnpd->setFormValue($masterTbl->id->FormValue);
-                    $this->idnpd->setSessionValue($this->idnpd->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Update URL
-            $this->AddUrl = $this->addMasterUrl($this->AddUrl);
-            $this->InlineAddUrl = $this->addMasterUrl($this->InlineAddUrl);
-            $this->GridAddUrl = $this->addMasterUrl($this->GridAddUrl);
-            $this->GridEditUrl = $this->addMasterUrl($this->GridEditUrl);
-
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "npd") {
-                if ($this->idnpd->CurrentValue == "") {
-                    $this->idnpd->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -2064,10 +1937,6 @@ class NpdStatusList extends NpdStatus
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idnpd":
-                    break;
-                case "x_idpegawai":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

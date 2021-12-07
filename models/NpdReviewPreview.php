@@ -393,36 +393,36 @@ class NpdReviewPreview extends NpdReview
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->idnpd_sample->setVisibility();
-        $this->tglreview->setVisibility();
-        $this->tglsubmit->setVisibility();
+        $this->tanggal_review->setVisibility();
+        $this->tanggal_submit->setVisibility();
         $this->wadah->Visible = false;
-        $this->bentukok->Visible = false;
-        $this->bentukrevisi->Visible = false;
-        $this->viskositasok->Visible = false;
-        $this->viskositasrevisi->Visible = false;
-        $this->jeniswarnaok->Visible = false;
-        $this->jeniswarnarevisi->Visible = false;
-        $this->tonewarnaok->Visible = false;
-        $this->tonewarnarevisi->Visible = false;
-        $this->gradasiwarnaok->Visible = false;
-        $this->gradasiwarnarevisi->Visible = false;
-        $this->bauok->Visible = false;
-        $this->baurevisi->Visible = false;
-        $this->estetikaok->Visible = false;
-        $this->estetikarevisi->Visible = false;
-        $this->aplikasiawalok->Visible = false;
-        $this->aplikasiawalrevisi->Visible = false;
-        $this->aplikasilamaok->Visible = false;
-        $this->aplikasilamarevisi->Visible = false;
-        $this->efekpositifok->Visible = false;
-        $this->efekpositifrevisi->Visible = false;
-        $this->efeknegatifok->Visible = false;
-        $this->efeknegatifrevisi->Visible = false;
+        $this->bentuk_opsi->Visible = false;
+        $this->bentuk_revisi->Visible = false;
+        $this->viskositas_opsi->Visible = false;
+        $this->viskositas_revisi->Visible = false;
+        $this->jeniswarna_opsi->Visible = false;
+        $this->jeniswarna_revisi->Visible = false;
+        $this->tonewarna_opsi->Visible = false;
+        $this->tonewarna_revisi->Visible = false;
+        $this->gradasiwarna_opsi->Visible = false;
+        $this->gradasiwarna_revisi->Visible = false;
+        $this->bauparfum_opsi->Visible = false;
+        $this->bauparfum_revisi->Visible = false;
+        $this->estetika_opsi->Visible = false;
+        $this->estetika_revisi->Visible = false;
+        $this->aplikasiawal_opsi->Visible = false;
+        $this->aplikasiawal_revisi->Visible = false;
+        $this->aplikasilama_opsi->Visible = false;
+        $this->aplikasilama_revisi->Visible = false;
+        $this->efekpositif_opsi->Visible = false;
+        $this->efekpositif_revisi->Visible = false;
+        $this->efeknegatif_opsi->Visible = false;
+        $this->efeknegatif_revisi->Visible = false;
         $this->kesimpulan->Visible = false;
         $this->status->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
+        $this->ukuran->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -513,36 +513,36 @@ class NpdReviewPreview extends NpdReview
             $this->id->setSort("");
             $this->idnpd->setSort("");
             $this->idnpd_sample->setSort("");
-            $this->tglreview->setSort("");
-            $this->tglsubmit->setSort("");
+            $this->tanggal_review->setSort("");
+            $this->tanggal_submit->setSort("");
             $this->wadah->setSort("");
-            $this->bentukok->setSort("");
-            $this->bentukrevisi->setSort("");
-            $this->viskositasok->setSort("");
-            $this->viskositasrevisi->setSort("");
-            $this->jeniswarnaok->setSort("");
-            $this->jeniswarnarevisi->setSort("");
-            $this->tonewarnaok->setSort("");
-            $this->tonewarnarevisi->setSort("");
-            $this->gradasiwarnaok->setSort("");
-            $this->gradasiwarnarevisi->setSort("");
-            $this->bauok->setSort("");
-            $this->baurevisi->setSort("");
-            $this->estetikaok->setSort("");
-            $this->estetikarevisi->setSort("");
-            $this->aplikasiawalok->setSort("");
-            $this->aplikasiawalrevisi->setSort("");
-            $this->aplikasilamaok->setSort("");
-            $this->aplikasilamarevisi->setSort("");
-            $this->efekpositifok->setSort("");
-            $this->efekpositifrevisi->setSort("");
-            $this->efeknegatifok->setSort("");
-            $this->efeknegatifrevisi->setSort("");
+            $this->bentuk_opsi->setSort("");
+            $this->bentuk_revisi->setSort("");
+            $this->viskositas_opsi->setSort("");
+            $this->viskositas_revisi->setSort("");
+            $this->jeniswarna_opsi->setSort("");
+            $this->jeniswarna_revisi->setSort("");
+            $this->tonewarna_opsi->setSort("");
+            $this->tonewarna_revisi->setSort("");
+            $this->gradasiwarna_opsi->setSort("");
+            $this->gradasiwarna_revisi->setSort("");
+            $this->bauparfum_opsi->setSort("");
+            $this->bauparfum_revisi->setSort("");
+            $this->estetika_opsi->setSort("");
+            $this->estetika_revisi->setSort("");
+            $this->aplikasiawal_opsi->setSort("");
+            $this->aplikasiawal_revisi->setSort("");
+            $this->aplikasilama_opsi->setSort("");
+            $this->aplikasilama_revisi->setSort("");
+            $this->efekpositif_opsi->setSort("");
+            $this->efekpositif_revisi->setSort("");
+            $this->efeknegatif_opsi->setSort("");
+            $this->efeknegatif_revisi->setSort("");
             $this->kesimpulan->setSort("");
             $this->status->setSort("");
             $this->created_at->setSort("");
-            $this->created_by->setSort("");
             $this->readonly->setSort("");
+            $this->ukuran->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -556,9 +556,10 @@ class NpdReviewPreview extends NpdReview
         if ($this->CurrentOrder !== "") {
             $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->idnpd_sample); // idnpd_sample
-            $this->updateSort($this->tglreview); // tglreview
-            $this->updateSort($this->tglsubmit); // tglsubmit
+            $this->updateSort($this->tanggal_review); // tanggal_review
+            $this->updateSort($this->tanggal_submit); // tanggal_submit
             $this->updateSort($this->status); // status
+            $this->updateSort($this->ukuran); // ukuran
         }
     }
 
@@ -805,27 +806,27 @@ class NpdReviewPreview extends NpdReview
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_bentukok":
+                case "x_bentuk_opsi":
                     break;
-                case "x_viskositasok":
+                case "x_viskositas_opsi":
                     break;
-                case "x_jeniswarnaok":
+                case "x_jeniswarna_opsi":
                     break;
-                case "x_tonewarnaok":
+                case "x_tonewarna_opsi":
                     break;
-                case "x_gradasiwarnaok":
+                case "x_gradasiwarna_opsi":
                     break;
-                case "x_bauok":
+                case "x_bauparfum_opsi":
                     break;
-                case "x_estetikaok":
+                case "x_estetika_opsi":
                     break;
-                case "x_aplikasiawalok":
+                case "x_aplikasiawal_opsi":
                     break;
-                case "x_aplikasilamaok":
+                case "x_aplikasilama_opsi":
                     break;
-                case "x_efekpositifok":
+                case "x_efekpositif_opsi":
                     break;
-                case "x_efeknegatifok":
+                case "x_efeknegatif_opsi":
                     break;
                 case "x_status":
                     break;

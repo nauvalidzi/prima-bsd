@@ -49,6 +49,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <?php if ($Page->SortUrl($Page->ukuran) == "") { ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><?= $Page->ukuran->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ukuran->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ukuran->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ukuran->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ukuran->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ukuran->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
     <?php if ($Page->SortUrl($Page->kemasanbarang) == "") { ?>
         <th class="<?= $Page->kemasanbarang->headerCellClass() ?>"><?= $Page->kemasanbarang->caption() ?></th>
@@ -64,15 +73,6 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->harga->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->harga->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->harga->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->harga->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->harga->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->harga->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <?php if ($Page->SortUrl($Page->ukuran) == "") { ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><?= $Page->ukuran->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ukuran->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ukuran->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ukuran->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ukuran->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ukuran->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -136,6 +136,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->nama->getViewValue() ?></span>
 </td>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <!-- ukuran -->
+        <td<?= $Page->ukuran->cellAttributes() ?>>
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</td>
+<?php } ?>
 <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
         <!-- kemasanbarang -->
         <td<?= $Page->kemasanbarang->cellAttributes() ?>>
@@ -148,13 +155,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->harga->cellAttributes() ?>>
 <span<?= $Page->harga->viewAttributes() ?>>
 <?= $Page->harga->getViewValue() ?></span>
-</td>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <!-- ukuran -->
-        <td<?= $Page->ukuran->cellAttributes() ?>>
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->updated_at->Visible) { // updated_at ?>

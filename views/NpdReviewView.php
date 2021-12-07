@@ -67,24 +67,24 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->tglreview->Visible) { // tglreview ?>
-    <tr id="r_tglreview">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tglreview"><?= $Page->tglreview->caption() ?></span></td>
-        <td data-name="tglreview" <?= $Page->tglreview->cellAttributes() ?>>
-<span id="el_npd_review_tglreview">
-<span<?= $Page->tglreview->viewAttributes() ?>>
-<?= $Page->tglreview->getViewValue() ?></span>
+<?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+    <tr id="r_tanggal_review">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tanggal_review"><?= $Page->tanggal_review->caption() ?></span></td>
+        <td data-name="tanggal_review" <?= $Page->tanggal_review->cellAttributes() ?>>
+<span id="el_npd_review_tanggal_review">
+<span<?= $Page->tanggal_review->viewAttributes() ?>>
+<?= $Page->tanggal_review->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-    <tr id="r_tglsubmit">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tglsubmit"><?= $Page->tglsubmit->caption() ?></span></td>
-        <td data-name="tglsubmit" <?= $Page->tglsubmit->cellAttributes() ?>>
-<span id="el_npd_review_tglsubmit">
-<span<?= $Page->tglsubmit->viewAttributes() ?>>
-<?= $Page->tglsubmit->getViewValue() ?></span>
+<?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+    <tr id="r_tanggal_submit">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tanggal_submit"><?= $Page->tanggal_submit->caption() ?></span></td>
+        <td data-name="tanggal_submit" <?= $Page->tanggal_submit->cellAttributes() ?>>
+<span id="el_npd_review_tanggal_submit">
+<span<?= $Page->tanggal_submit->viewAttributes() ?>>
+<?= $Page->tanggal_submit->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -100,244 +100,244 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->bentukok->Visible) { // bentukok ?>
-    <tr id="r_bentukok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_bentukok"><?= $Page->bentukok->caption() ?></span></td>
-        <td data-name="bentukok" <?= $Page->bentukok->cellAttributes() ?>>
-<span id="el_npd_review_bentukok">
-<span<?= $Page->bentukok->viewAttributes() ?>>
-<?= $Page->bentukok->getViewValue() ?></span>
+<?php if ($Page->bentuk_opsi->Visible) { // bentuk_opsi ?>
+    <tr id="r_bentuk_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_bentuk_opsi"><?= $Page->bentuk_opsi->caption() ?></span></td>
+        <td data-name="bentuk_opsi" <?= $Page->bentuk_opsi->cellAttributes() ?>>
+<span id="el_npd_review_bentuk_opsi">
+<span<?= $Page->bentuk_opsi->viewAttributes() ?>>
+<?= $Page->bentuk_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->bentukrevisi->Visible) { // bentukrevisi ?>
-    <tr id="r_bentukrevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_bentukrevisi"><?= $Page->bentukrevisi->caption() ?></span></td>
-        <td data-name="bentukrevisi" <?= $Page->bentukrevisi->cellAttributes() ?>>
-<span id="el_npd_review_bentukrevisi">
-<span<?= $Page->bentukrevisi->viewAttributes() ?>>
-<?= $Page->bentukrevisi->getViewValue() ?></span>
+<?php if ($Page->bentuk_revisi->Visible) { // bentuk_revisi ?>
+    <tr id="r_bentuk_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_bentuk_revisi"><?= $Page->bentuk_revisi->caption() ?></span></td>
+        <td data-name="bentuk_revisi" <?= $Page->bentuk_revisi->cellAttributes() ?>>
+<span id="el_npd_review_bentuk_revisi">
+<span<?= $Page->bentuk_revisi->viewAttributes() ?>>
+<?= $Page->bentuk_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->viskositasok->Visible) { // viskositasok ?>
-    <tr id="r_viskositasok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_viskositasok"><?= $Page->viskositasok->caption() ?></span></td>
-        <td data-name="viskositasok" <?= $Page->viskositasok->cellAttributes() ?>>
-<span id="el_npd_review_viskositasok">
-<span<?= $Page->viskositasok->viewAttributes() ?>>
-<?= $Page->viskositasok->getViewValue() ?></span>
+<?php if ($Page->viskositas_opsi->Visible) { // viskositas_opsi ?>
+    <tr id="r_viskositas_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_viskositas_opsi"><?= $Page->viskositas_opsi->caption() ?></span></td>
+        <td data-name="viskositas_opsi" <?= $Page->viskositas_opsi->cellAttributes() ?>>
+<span id="el_npd_review_viskositas_opsi">
+<span<?= $Page->viskositas_opsi->viewAttributes() ?>>
+<?= $Page->viskositas_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->viskositasrevisi->Visible) { // viskositasrevisi ?>
-    <tr id="r_viskositasrevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_viskositasrevisi"><?= $Page->viskositasrevisi->caption() ?></span></td>
-        <td data-name="viskositasrevisi" <?= $Page->viskositasrevisi->cellAttributes() ?>>
-<span id="el_npd_review_viskositasrevisi">
-<span<?= $Page->viskositasrevisi->viewAttributes() ?>>
-<?= $Page->viskositasrevisi->getViewValue() ?></span>
+<?php if ($Page->viskositas_revisi->Visible) { // viskositas_revisi ?>
+    <tr id="r_viskositas_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_viskositas_revisi"><?= $Page->viskositas_revisi->caption() ?></span></td>
+        <td data-name="viskositas_revisi" <?= $Page->viskositas_revisi->cellAttributes() ?>>
+<span id="el_npd_review_viskositas_revisi">
+<span<?= $Page->viskositas_revisi->viewAttributes() ?>>
+<?= $Page->viskositas_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->jeniswarnaok->Visible) { // jeniswarnaok ?>
-    <tr id="r_jeniswarnaok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_jeniswarnaok"><?= $Page->jeniswarnaok->caption() ?></span></td>
-        <td data-name="jeniswarnaok" <?= $Page->jeniswarnaok->cellAttributes() ?>>
-<span id="el_npd_review_jeniswarnaok">
-<span<?= $Page->jeniswarnaok->viewAttributes() ?>>
-<?= $Page->jeniswarnaok->getViewValue() ?></span>
+<?php if ($Page->jeniswarna_opsi->Visible) { // jeniswarna_opsi ?>
+    <tr id="r_jeniswarna_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_jeniswarna_opsi"><?= $Page->jeniswarna_opsi->caption() ?></span></td>
+        <td data-name="jeniswarna_opsi" <?= $Page->jeniswarna_opsi->cellAttributes() ?>>
+<span id="el_npd_review_jeniswarna_opsi">
+<span<?= $Page->jeniswarna_opsi->viewAttributes() ?>>
+<?= $Page->jeniswarna_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->jeniswarnarevisi->Visible) { // jeniswarnarevisi ?>
-    <tr id="r_jeniswarnarevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_jeniswarnarevisi"><?= $Page->jeniswarnarevisi->caption() ?></span></td>
-        <td data-name="jeniswarnarevisi" <?= $Page->jeniswarnarevisi->cellAttributes() ?>>
-<span id="el_npd_review_jeniswarnarevisi">
-<span<?= $Page->jeniswarnarevisi->viewAttributes() ?>>
-<?= $Page->jeniswarnarevisi->getViewValue() ?></span>
+<?php if ($Page->jeniswarna_revisi->Visible) { // jeniswarna_revisi ?>
+    <tr id="r_jeniswarna_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_jeniswarna_revisi"><?= $Page->jeniswarna_revisi->caption() ?></span></td>
+        <td data-name="jeniswarna_revisi" <?= $Page->jeniswarna_revisi->cellAttributes() ?>>
+<span id="el_npd_review_jeniswarna_revisi">
+<span<?= $Page->jeniswarna_revisi->viewAttributes() ?>>
+<?= $Page->jeniswarna_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->tonewarnaok->Visible) { // tonewarnaok ?>
-    <tr id="r_tonewarnaok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tonewarnaok"><?= $Page->tonewarnaok->caption() ?></span></td>
-        <td data-name="tonewarnaok" <?= $Page->tonewarnaok->cellAttributes() ?>>
-<span id="el_npd_review_tonewarnaok">
-<span<?= $Page->tonewarnaok->viewAttributes() ?>>
-<?= $Page->tonewarnaok->getViewValue() ?></span>
+<?php if ($Page->tonewarna_opsi->Visible) { // tonewarna_opsi ?>
+    <tr id="r_tonewarna_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tonewarna_opsi"><?= $Page->tonewarna_opsi->caption() ?></span></td>
+        <td data-name="tonewarna_opsi" <?= $Page->tonewarna_opsi->cellAttributes() ?>>
+<span id="el_npd_review_tonewarna_opsi">
+<span<?= $Page->tonewarna_opsi->viewAttributes() ?>>
+<?= $Page->tonewarna_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->tonewarnarevisi->Visible) { // tonewarnarevisi ?>
-    <tr id="r_tonewarnarevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tonewarnarevisi"><?= $Page->tonewarnarevisi->caption() ?></span></td>
-        <td data-name="tonewarnarevisi" <?= $Page->tonewarnarevisi->cellAttributes() ?>>
-<span id="el_npd_review_tonewarnarevisi">
-<span<?= $Page->tonewarnarevisi->viewAttributes() ?>>
-<?= $Page->tonewarnarevisi->getViewValue() ?></span>
+<?php if ($Page->tonewarna_revisi->Visible) { // tonewarna_revisi ?>
+    <tr id="r_tonewarna_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_tonewarna_revisi"><?= $Page->tonewarna_revisi->caption() ?></span></td>
+        <td data-name="tonewarna_revisi" <?= $Page->tonewarna_revisi->cellAttributes() ?>>
+<span id="el_npd_review_tonewarna_revisi">
+<span<?= $Page->tonewarna_revisi->viewAttributes() ?>>
+<?= $Page->tonewarna_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->gradasiwarnaok->Visible) { // gradasiwarnaok ?>
-    <tr id="r_gradasiwarnaok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_gradasiwarnaok"><?= $Page->gradasiwarnaok->caption() ?></span></td>
-        <td data-name="gradasiwarnaok" <?= $Page->gradasiwarnaok->cellAttributes() ?>>
-<span id="el_npd_review_gradasiwarnaok">
-<span<?= $Page->gradasiwarnaok->viewAttributes() ?>>
-<?= $Page->gradasiwarnaok->getViewValue() ?></span>
+<?php if ($Page->gradasiwarna_opsi->Visible) { // gradasiwarna_opsi ?>
+    <tr id="r_gradasiwarna_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_gradasiwarna_opsi"><?= $Page->gradasiwarna_opsi->caption() ?></span></td>
+        <td data-name="gradasiwarna_opsi" <?= $Page->gradasiwarna_opsi->cellAttributes() ?>>
+<span id="el_npd_review_gradasiwarna_opsi">
+<span<?= $Page->gradasiwarna_opsi->viewAttributes() ?>>
+<?= $Page->gradasiwarna_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->gradasiwarnarevisi->Visible) { // gradasiwarnarevisi ?>
-    <tr id="r_gradasiwarnarevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_gradasiwarnarevisi"><?= $Page->gradasiwarnarevisi->caption() ?></span></td>
-        <td data-name="gradasiwarnarevisi" <?= $Page->gradasiwarnarevisi->cellAttributes() ?>>
-<span id="el_npd_review_gradasiwarnarevisi">
-<span<?= $Page->gradasiwarnarevisi->viewAttributes() ?>>
-<?= $Page->gradasiwarnarevisi->getViewValue() ?></span>
+<?php if ($Page->gradasiwarna_revisi->Visible) { // gradasiwarna_revisi ?>
+    <tr id="r_gradasiwarna_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_gradasiwarna_revisi"><?= $Page->gradasiwarna_revisi->caption() ?></span></td>
+        <td data-name="gradasiwarna_revisi" <?= $Page->gradasiwarna_revisi->cellAttributes() ?>>
+<span id="el_npd_review_gradasiwarna_revisi">
+<span<?= $Page->gradasiwarna_revisi->viewAttributes() ?>>
+<?= $Page->gradasiwarna_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->bauok->Visible) { // bauok ?>
-    <tr id="r_bauok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_bauok"><?= $Page->bauok->caption() ?></span></td>
-        <td data-name="bauok" <?= $Page->bauok->cellAttributes() ?>>
-<span id="el_npd_review_bauok">
-<span<?= $Page->bauok->viewAttributes() ?>>
-<?= $Page->bauok->getViewValue() ?></span>
+<?php if ($Page->bauparfum_opsi->Visible) { // bauparfum_opsi ?>
+    <tr id="r_bauparfum_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_bauparfum_opsi"><?= $Page->bauparfum_opsi->caption() ?></span></td>
+        <td data-name="bauparfum_opsi" <?= $Page->bauparfum_opsi->cellAttributes() ?>>
+<span id="el_npd_review_bauparfum_opsi">
+<span<?= $Page->bauparfum_opsi->viewAttributes() ?>>
+<?= $Page->bauparfum_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->baurevisi->Visible) { // baurevisi ?>
-    <tr id="r_baurevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_baurevisi"><?= $Page->baurevisi->caption() ?></span></td>
-        <td data-name="baurevisi" <?= $Page->baurevisi->cellAttributes() ?>>
-<span id="el_npd_review_baurevisi">
-<span<?= $Page->baurevisi->viewAttributes() ?>>
-<?= $Page->baurevisi->getViewValue() ?></span>
+<?php if ($Page->bauparfum_revisi->Visible) { // bauparfum_revisi ?>
+    <tr id="r_bauparfum_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_bauparfum_revisi"><?= $Page->bauparfum_revisi->caption() ?></span></td>
+        <td data-name="bauparfum_revisi" <?= $Page->bauparfum_revisi->cellAttributes() ?>>
+<span id="el_npd_review_bauparfum_revisi">
+<span<?= $Page->bauparfum_revisi->viewAttributes() ?>>
+<?= $Page->bauparfum_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->estetikaok->Visible) { // estetikaok ?>
-    <tr id="r_estetikaok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_estetikaok"><?= $Page->estetikaok->caption() ?></span></td>
-        <td data-name="estetikaok" <?= $Page->estetikaok->cellAttributes() ?>>
-<span id="el_npd_review_estetikaok">
-<span<?= $Page->estetikaok->viewAttributes() ?>>
-<?= $Page->estetikaok->getViewValue() ?></span>
+<?php if ($Page->estetika_opsi->Visible) { // estetika_opsi ?>
+    <tr id="r_estetika_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_estetika_opsi"><?= $Page->estetika_opsi->caption() ?></span></td>
+        <td data-name="estetika_opsi" <?= $Page->estetika_opsi->cellAttributes() ?>>
+<span id="el_npd_review_estetika_opsi">
+<span<?= $Page->estetika_opsi->viewAttributes() ?>>
+<?= $Page->estetika_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->estetikarevisi->Visible) { // estetikarevisi ?>
-    <tr id="r_estetikarevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_estetikarevisi"><?= $Page->estetikarevisi->caption() ?></span></td>
-        <td data-name="estetikarevisi" <?= $Page->estetikarevisi->cellAttributes() ?>>
-<span id="el_npd_review_estetikarevisi">
-<span<?= $Page->estetikarevisi->viewAttributes() ?>>
-<?= $Page->estetikarevisi->getViewValue() ?></span>
+<?php if ($Page->estetika_revisi->Visible) { // estetika_revisi ?>
+    <tr id="r_estetika_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_estetika_revisi"><?= $Page->estetika_revisi->caption() ?></span></td>
+        <td data-name="estetika_revisi" <?= $Page->estetika_revisi->cellAttributes() ?>>
+<span id="el_npd_review_estetika_revisi">
+<span<?= $Page->estetika_revisi->viewAttributes() ?>>
+<?= $Page->estetika_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->aplikasiawalok->Visible) { // aplikasiawalok ?>
-    <tr id="r_aplikasiawalok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasiawalok"><?= $Page->aplikasiawalok->caption() ?></span></td>
-        <td data-name="aplikasiawalok" <?= $Page->aplikasiawalok->cellAttributes() ?>>
-<span id="el_npd_review_aplikasiawalok">
-<span<?= $Page->aplikasiawalok->viewAttributes() ?>>
-<?= $Page->aplikasiawalok->getViewValue() ?></span>
+<?php if ($Page->aplikasiawal_opsi->Visible) { // aplikasiawal_opsi ?>
+    <tr id="r_aplikasiawal_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasiawal_opsi"><?= $Page->aplikasiawal_opsi->caption() ?></span></td>
+        <td data-name="aplikasiawal_opsi" <?= $Page->aplikasiawal_opsi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasiawal_opsi">
+<span<?= $Page->aplikasiawal_opsi->viewAttributes() ?>>
+<?= $Page->aplikasiawal_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->aplikasiawalrevisi->Visible) { // aplikasiawalrevisi ?>
-    <tr id="r_aplikasiawalrevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasiawalrevisi"><?= $Page->aplikasiawalrevisi->caption() ?></span></td>
-        <td data-name="aplikasiawalrevisi" <?= $Page->aplikasiawalrevisi->cellAttributes() ?>>
-<span id="el_npd_review_aplikasiawalrevisi">
-<span<?= $Page->aplikasiawalrevisi->viewAttributes() ?>>
-<?= $Page->aplikasiawalrevisi->getViewValue() ?></span>
+<?php if ($Page->aplikasiawal_revisi->Visible) { // aplikasiawal_revisi ?>
+    <tr id="r_aplikasiawal_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasiawal_revisi"><?= $Page->aplikasiawal_revisi->caption() ?></span></td>
+        <td data-name="aplikasiawal_revisi" <?= $Page->aplikasiawal_revisi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasiawal_revisi">
+<span<?= $Page->aplikasiawal_revisi->viewAttributes() ?>>
+<?= $Page->aplikasiawal_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->aplikasilamaok->Visible) { // aplikasilamaok ?>
-    <tr id="r_aplikasilamaok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasilamaok"><?= $Page->aplikasilamaok->caption() ?></span></td>
-        <td data-name="aplikasilamaok" <?= $Page->aplikasilamaok->cellAttributes() ?>>
-<span id="el_npd_review_aplikasilamaok">
-<span<?= $Page->aplikasilamaok->viewAttributes() ?>>
-<?= $Page->aplikasilamaok->getViewValue() ?></span>
+<?php if ($Page->aplikasilama_opsi->Visible) { // aplikasilama_opsi ?>
+    <tr id="r_aplikasilama_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasilama_opsi"><?= $Page->aplikasilama_opsi->caption() ?></span></td>
+        <td data-name="aplikasilama_opsi" <?= $Page->aplikasilama_opsi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasilama_opsi">
+<span<?= $Page->aplikasilama_opsi->viewAttributes() ?>>
+<?= $Page->aplikasilama_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->aplikasilamarevisi->Visible) { // aplikasilamarevisi ?>
-    <tr id="r_aplikasilamarevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasilamarevisi"><?= $Page->aplikasilamarevisi->caption() ?></span></td>
-        <td data-name="aplikasilamarevisi" <?= $Page->aplikasilamarevisi->cellAttributes() ?>>
-<span id="el_npd_review_aplikasilamarevisi">
-<span<?= $Page->aplikasilamarevisi->viewAttributes() ?>>
-<?= $Page->aplikasilamarevisi->getViewValue() ?></span>
+<?php if ($Page->aplikasilama_revisi->Visible) { // aplikasilama_revisi ?>
+    <tr id="r_aplikasilama_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_aplikasilama_revisi"><?= $Page->aplikasilama_revisi->caption() ?></span></td>
+        <td data-name="aplikasilama_revisi" <?= $Page->aplikasilama_revisi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasilama_revisi">
+<span<?= $Page->aplikasilama_revisi->viewAttributes() ?>>
+<?= $Page->aplikasilama_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->efekpositifok->Visible) { // efekpositifok ?>
-    <tr id="r_efekpositifok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efekpositifok"><?= $Page->efekpositifok->caption() ?></span></td>
-        <td data-name="efekpositifok" <?= $Page->efekpositifok->cellAttributes() ?>>
-<span id="el_npd_review_efekpositifok">
-<span<?= $Page->efekpositifok->viewAttributes() ?>>
-<?= $Page->efekpositifok->getViewValue() ?></span>
+<?php if ($Page->efekpositif_opsi->Visible) { // efekpositif_opsi ?>
+    <tr id="r_efekpositif_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efekpositif_opsi"><?= $Page->efekpositif_opsi->caption() ?></span></td>
+        <td data-name="efekpositif_opsi" <?= $Page->efekpositif_opsi->cellAttributes() ?>>
+<span id="el_npd_review_efekpositif_opsi">
+<span<?= $Page->efekpositif_opsi->viewAttributes() ?>>
+<?= $Page->efekpositif_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->efekpositifrevisi->Visible) { // efekpositifrevisi ?>
-    <tr id="r_efekpositifrevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efekpositifrevisi"><?= $Page->efekpositifrevisi->caption() ?></span></td>
-        <td data-name="efekpositifrevisi" <?= $Page->efekpositifrevisi->cellAttributes() ?>>
-<span id="el_npd_review_efekpositifrevisi">
-<span<?= $Page->efekpositifrevisi->viewAttributes() ?>>
-<?= $Page->efekpositifrevisi->getViewValue() ?></span>
+<?php if ($Page->efekpositif_revisi->Visible) { // efekpositif_revisi ?>
+    <tr id="r_efekpositif_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efekpositif_revisi"><?= $Page->efekpositif_revisi->caption() ?></span></td>
+        <td data-name="efekpositif_revisi" <?= $Page->efekpositif_revisi->cellAttributes() ?>>
+<span id="el_npd_review_efekpositif_revisi">
+<span<?= $Page->efekpositif_revisi->viewAttributes() ?>>
+<?= $Page->efekpositif_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->efeknegatifok->Visible) { // efeknegatifok ?>
-    <tr id="r_efeknegatifok">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efeknegatifok"><?= $Page->efeknegatifok->caption() ?></span></td>
-        <td data-name="efeknegatifok" <?= $Page->efeknegatifok->cellAttributes() ?>>
-<span id="el_npd_review_efeknegatifok">
-<span<?= $Page->efeknegatifok->viewAttributes() ?>>
-<?= $Page->efeknegatifok->getViewValue() ?></span>
+<?php if ($Page->efeknegatif_opsi->Visible) { // efeknegatif_opsi ?>
+    <tr id="r_efeknegatif_opsi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efeknegatif_opsi"><?= $Page->efeknegatif_opsi->caption() ?></span></td>
+        <td data-name="efeknegatif_opsi" <?= $Page->efeknegatif_opsi->cellAttributes() ?>>
+<span id="el_npd_review_efeknegatif_opsi">
+<span<?= $Page->efeknegatif_opsi->viewAttributes() ?>>
+<?= $Page->efeknegatif_opsi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->efeknegatifrevisi->Visible) { // efeknegatifrevisi ?>
-    <tr id="r_efeknegatifrevisi">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efeknegatifrevisi"><?= $Page->efeknegatifrevisi->caption() ?></span></td>
-        <td data-name="efeknegatifrevisi" <?= $Page->efeknegatifrevisi->cellAttributes() ?>>
-<span id="el_npd_review_efeknegatifrevisi">
-<span<?= $Page->efeknegatifrevisi->viewAttributes() ?>>
-<?= $Page->efeknegatifrevisi->getViewValue() ?></span>
+<?php if ($Page->efeknegatif_revisi->Visible) { // efeknegatif_revisi ?>
+    <tr id="r_efeknegatif_revisi">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_efeknegatif_revisi"><?= $Page->efeknegatif_revisi->caption() ?></span></td>
+        <td data-name="efeknegatif_revisi" <?= $Page->efeknegatif_revisi->cellAttributes() ?>>
+<span id="el_npd_review_efeknegatif_revisi">
+<span<?= $Page->efeknegatif_revisi->viewAttributes() ?>>
+<?= $Page->efeknegatif_revisi->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -360,6 +360,17 @@ $Page->showMessage();
 <span id="el_npd_review_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <tr id="r_ukuran">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_ukuran"><?= $Page->ukuran->caption() ?></span></td>
+        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el_npd_review_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
 </span>
 </td>
     </tr>

@@ -34,7 +34,14 @@ loadjs.ready("head", function () {
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["tgl_penagihan", [fields.tgl_penagihan.visible && fields.tgl_penagihan.required ? ew.Validators.required(fields.tgl_penagihan.caption) : null, ew.Validators.datetime(0)], fields.tgl_penagihan.isInvalid],
         ["tgl_return", [fields.tgl_return.visible && fields.tgl_return.required ? ew.Validators.required(fields.tgl_return.caption) : null, ew.Validators.datetime(0)], fields.tgl_return.isInvalid],
-        ["tgl_cancel", [fields.tgl_cancel.visible && fields.tgl_cancel.required ? ew.Validators.required(fields.tgl_cancel.caption) : null, ew.Validators.datetime(0)], fields.tgl_cancel.isInvalid]
+        ["tgl_cancel", [fields.tgl_cancel.visible && fields.tgl_cancel.required ? ew.Validators.required(fields.tgl_cancel.caption) : null, ew.Validators.datetime(0)], fields.tgl_cancel.isInvalid],
+        ["messagets", [fields.messagets.visible && fields.messagets.required ? ew.Validators.required(fields.messagets.caption) : null], fields.messagets.isInvalid],
+        ["statusts", [fields.statusts.visible && fields.statusts.required ? ew.Validators.required(fields.statusts.caption) : null, ew.Validators.integer], fields.statusts.isInvalid],
+        ["statusbayar", [fields.statusbayar.visible && fields.statusbayar.required ? ew.Validators.required(fields.statusbayar.caption) : null], fields.statusbayar.isInvalid],
+        ["nomorfaktur", [fields.nomorfaktur.visible && fields.nomorfaktur.required ? ew.Validators.required(fields.nomorfaktur.caption) : null], fields.nomorfaktur.isInvalid],
+        ["pembayaran", [fields.pembayaran.visible && fields.pembayaran.required ? ew.Validators.required(fields.pembayaran.caption) : null, ew.Validators.integer], fields.pembayaran.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
+        ["saldo", [fields.saldo.visible && fields.saldo.required ? ew.Validators.required(fields.saldo.caption) : null, ew.Validators.integer], fields.saldo.isInvalid]
     ]);
 
     // Set invalid fields
@@ -283,8 +290,8 @@ loadjs.ready(["fpenagihanadd", "datetimepicker"], function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
 <span id="el_penagihan_status">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->status->isInvalidClass() ?>" data-table="penagihan" data-field="x_status" name="x_status[]" id="x_status_322768" value="1"<?= ConvertToBool($Page->status->CurrentValue) ? " checked" : "" ?><?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
-    <label class="custom-control-label" for="x_status_322768"></label>
+    <input type="checkbox" class="custom-control-input<?= $Page->status->isInvalidClass() ?>" data-table="penagihan" data-field="x_status" name="x_status[]" id="x_status_368597" value="1"<?= ConvertToBool($Page->status->CurrentValue) ? " checked" : "" ?><?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
+    <label class="custom-control-label" for="x_status_368597"></label>
 </div>
 <?= $Page->status->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
@@ -345,6 +352,90 @@ loadjs.ready(["fpenagihanadd", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->messagets->Visible) { // messagets ?>
+    <div id="r_messagets" class="form-group row">
+        <label id="elh_penagihan_messagets" for="x_messagets" class="<?= $Page->LeftColumnClass ?>"><?= $Page->messagets->caption() ?><?= $Page->messagets->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->messagets->cellAttributes() ?>>
+<span id="el_penagihan_messagets">
+<textarea data-table="penagihan" data-field="x_messagets" name="x_messagets" id="x_messagets" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->messagets->getPlaceHolder()) ?>"<?= $Page->messagets->editAttributes() ?> aria-describedby="x_messagets_help"><?= $Page->messagets->EditValue ?></textarea>
+<?= $Page->messagets->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->messagets->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->statusts->Visible) { // statusts ?>
+    <div id="r_statusts" class="form-group row">
+        <label id="elh_penagihan_statusts" for="x_statusts" class="<?= $Page->LeftColumnClass ?>"><?= $Page->statusts->caption() ?><?= $Page->statusts->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->statusts->cellAttributes() ?>>
+<span id="el_penagihan_statusts">
+<input type="<?= $Page->statusts->getInputTextType() ?>" data-table="penagihan" data-field="x_statusts" name="x_statusts" id="x_statusts" size="30" placeholder="<?= HtmlEncode($Page->statusts->getPlaceHolder()) ?>" value="<?= $Page->statusts->EditValue ?>"<?= $Page->statusts->editAttributes() ?> aria-describedby="x_statusts_help">
+<?= $Page->statusts->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->statusts->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->statusbayar->Visible) { // statusbayar ?>
+    <div id="r_statusbayar" class="form-group row">
+        <label id="elh_penagihan_statusbayar" for="x_statusbayar" class="<?= $Page->LeftColumnClass ?>"><?= $Page->statusbayar->caption() ?><?= $Page->statusbayar->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->statusbayar->cellAttributes() ?>>
+<span id="el_penagihan_statusbayar">
+<input type="<?= $Page->statusbayar->getInputTextType() ?>" data-table="penagihan" data-field="x_statusbayar" name="x_statusbayar" id="x_statusbayar" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->statusbayar->getPlaceHolder()) ?>" value="<?= $Page->statusbayar->EditValue ?>"<?= $Page->statusbayar->editAttributes() ?> aria-describedby="x_statusbayar_help">
+<?= $Page->statusbayar->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->statusbayar->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->nomorfaktur->Visible) { // nomorfaktur ?>
+    <div id="r_nomorfaktur" class="form-group row">
+        <label id="elh_penagihan_nomorfaktur" for="x_nomorfaktur" class="<?= $Page->LeftColumnClass ?>"><?= $Page->nomorfaktur->caption() ?><?= $Page->nomorfaktur->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->nomorfaktur->cellAttributes() ?>>
+<span id="el_penagihan_nomorfaktur">
+<input type="<?= $Page->nomorfaktur->getInputTextType() ?>" data-table="penagihan" data-field="x_nomorfaktur" name="x_nomorfaktur" id="x_nomorfaktur" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->nomorfaktur->getPlaceHolder()) ?>" value="<?= $Page->nomorfaktur->EditValue ?>"<?= $Page->nomorfaktur->editAttributes() ?> aria-describedby="x_nomorfaktur_help">
+<?= $Page->nomorfaktur->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->nomorfaktur->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->pembayaran->Visible) { // pembayaran ?>
+    <div id="r_pembayaran" class="form-group row">
+        <label id="elh_penagihan_pembayaran" for="x_pembayaran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->pembayaran->caption() ?><?= $Page->pembayaran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->pembayaran->cellAttributes() ?>>
+<span id="el_penagihan_pembayaran">
+<input type="<?= $Page->pembayaran->getInputTextType() ?>" data-table="penagihan" data-field="x_pembayaran" name="x_pembayaran" id="x_pembayaran" size="30" placeholder="<?= HtmlEncode($Page->pembayaran->getPlaceHolder()) ?>" value="<?= $Page->pembayaran->EditValue ?>"<?= $Page->pembayaran->editAttributes() ?> aria-describedby="x_pembayaran_help">
+<?= $Page->pembayaran->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->pembayaran->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <div id="r_keterangan" class="form-group row">
+        <label id="elh_penagihan_keterangan" for="x_keterangan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->keterangan->caption() ?><?= $Page->keterangan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el_penagihan_keterangan">
+<input type="<?= $Page->keterangan->getInputTextType() ?>" data-table="penagihan" data-field="x_keterangan" name="x_keterangan" id="x_keterangan" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->keterangan->getPlaceHolder()) ?>" value="<?= $Page->keterangan->EditValue ?>"<?= $Page->keterangan->editAttributes() ?> aria-describedby="x_keterangan_help">
+<?= $Page->keterangan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->keterangan->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->saldo->Visible) { // saldo ?>
+    <div id="r_saldo" class="form-group row">
+        <label id="elh_penagihan_saldo" for="x_saldo" class="<?= $Page->LeftColumnClass ?>"><?= $Page->saldo->caption() ?><?= $Page->saldo->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->saldo->cellAttributes() ?>>
+<span id="el_penagihan_saldo">
+<input type="<?= $Page->saldo->getInputTextType() ?>" data-table="penagihan" data-field="x_saldo" name="x_saldo" id="x_saldo" size="30" placeholder="<?= HtmlEncode($Page->saldo->getPlaceHolder()) ?>" value="<?= $Page->saldo->EditValue ?>"<?= $Page->saldo->editAttributes() ?> aria-describedby="x_saldo_help">
+<?= $Page->saldo->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->saldo->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

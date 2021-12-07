@@ -224,6 +224,83 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->messagets->Visible) { // messagets ?>
+    <tr id="r_messagets">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_penagihan_messagets"><?= $Page->messagets->caption() ?></span></td>
+        <td data-name="messagets" <?= $Page->messagets->cellAttributes() ?>>
+<span id="el_penagihan_messagets">
+<span<?= $Page->messagets->viewAttributes() ?>>
+<?= $Page->messagets->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->statusts->Visible) { // statusts ?>
+    <tr id="r_statusts">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_penagihan_statusts"><?= $Page->statusts->caption() ?></span></td>
+        <td data-name="statusts" <?= $Page->statusts->cellAttributes() ?>>
+<span id="el_penagihan_statusts">
+<span<?= $Page->statusts->viewAttributes() ?>>
+<?= $Page->statusts->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->statusbayar->Visible) { // statusbayar ?>
+    <tr id="r_statusbayar">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_penagihan_statusbayar"><?= $Page->statusbayar->caption() ?></span></td>
+        <td data-name="statusbayar" <?= $Page->statusbayar->cellAttributes() ?>>
+<span id="el_penagihan_statusbayar">
+<span<?= $Page->statusbayar->viewAttributes() ?>>
+<?= $Page->statusbayar->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->nomorfaktur->Visible) { // nomorfaktur ?>
+    <tr id="r_nomorfaktur">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_penagihan_nomorfaktur"><?= $Page->nomorfaktur->caption() ?></span></td>
+        <td data-name="nomorfaktur" <?= $Page->nomorfaktur->cellAttributes() ?>>
+<span id="el_penagihan_nomorfaktur">
+<span<?= $Page->nomorfaktur->viewAttributes() ?>>
+<?= $Page->nomorfaktur->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->pembayaran->Visible) { // pembayaran ?>
+    <tr id="r_pembayaran">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_penagihan_pembayaran"><?= $Page->pembayaran->caption() ?></span></td>
+        <td data-name="pembayaran" <?= $Page->pembayaran->cellAttributes() ?>>
+<span id="el_penagihan_pembayaran">
+<span<?= $Page->pembayaran->viewAttributes() ?>>
+<?= $Page->pembayaran->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <tr id="r_keterangan">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_penagihan_keterangan"><?= $Page->keterangan->caption() ?></span></td>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el_penagihan_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->saldo->Visible) { // saldo ?>
+    <tr id="r_saldo">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_penagihan_saldo"><?= $Page->saldo->caption() ?></span></td>
+        <td data-name="saldo" <?= $Page->saldo->cellAttributes() ?>>
+<span id="el_penagihan_saldo">
+<span<?= $Page->saldo->viewAttributes() ?>>
+<?= $Page->saldo->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 </form>
 <?php

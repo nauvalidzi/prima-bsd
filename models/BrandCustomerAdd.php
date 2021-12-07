@@ -760,7 +760,11 @@ class BrandCustomerAdd extends BrandCustomer
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -843,7 +847,11 @@ class BrandCustomerAdd extends BrandCustomer
                     $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                     if ($this->idcustomer->ViewValue === null) { // Lookup from database
                         $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $lookupFilter = function() {
+                            return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                        };
+                        $lookupFilter = $lookupFilter->bindTo($this);
+                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                         $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                         $ari = count($rswrk);
                         if ($ari > 0) { // Lookup values found
@@ -872,7 +880,11 @@ class BrandCustomerAdd extends BrandCustomer
                     } else {
                         $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
                     }
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     $arwrk = $rswrk;
@@ -940,24 +952,6 @@ class BrandCustomerAdd extends BrandCustomer
 
         // Check referential integrity for master table 'brand_customer'
         $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_brand();
-        if (strval($this->idbrand->CurrentValue) != "") {
-            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
-        }
-
-        // Check referential integrity for master table 'brand_customer'
-        $validMasterRecord = true;
         $masterFilter = $this->sqlMasterFilter_customer();
         if (strval($this->idcustomer->CurrentValue) != "") {
             $masterFilter = str_replace("@id@", AdjustSql($this->idcustomer->CurrentValue, "DB"), $masterFilter);
@@ -973,6 +967,24 @@ class BrandCustomerAdd extends BrandCustomer
             $this->setFailureMessage($relatedRecordMsg);
             return false;
         }
+
+        // Check referential integrity for master table 'brand_customer'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_brand();
+        if (strval($this->idbrand->CurrentValue) != "") {
+            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
+        }
         $conn = $this->getConnection();
 
         // Load db values from rsold
@@ -982,10 +994,10 @@ class BrandCustomerAdd extends BrandCustomer
         $rsnew = [];
 
         // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, null, false);
+        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -1038,20 +1050,6 @@ class BrandCustomerAdd extends BrandCustomer
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
             }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Get("fk_id", Get("idbrand"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idbrand->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idbrand->setSessionValue($this->idbrand->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
             if ($masterTblVar == "customer") {
                 $validMaster = true;
                 $masterTbl = Container("customer");
@@ -1066,26 +1064,26 @@ class BrandCustomerAdd extends BrandCustomer
                     $validMaster = false;
                 }
             }
+            if ($masterTblVar == "brand") {
+                $validMaster = true;
+                $masterTbl = Container("brand");
+                if (($parm = Get("fk_id", Get("idbrand"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idbrand->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idbrand->setSessionValue($this->idbrand->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
         } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
             $masterTblVar = $master;
             if ($masterTblVar == "") {
                     $validMaster = true;
                     $this->DbMasterFilter = "";
                     $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "brand") {
-                $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Post("fk_id", Post("idbrand"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idbrand->setFormValue($masterTbl->id->FormValue);
-                    $this->idbrand->setSessionValue($this->idbrand->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
             }
             if ($masterTblVar == "customer") {
                 $validMaster = true;
@@ -1094,6 +1092,20 @@ class BrandCustomerAdd extends BrandCustomer
                     $masterTbl->id->setFormValue($parm);
                     $this->idcustomer->setFormValue($masterTbl->id->FormValue);
                     $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "brand") {
+                $validMaster = true;
+                $masterTbl = Container("brand");
+                if (($parm = Post("fk_id", Post("idbrand"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idbrand->setFormValue($masterTbl->id->FormValue);
+                    $this->idbrand->setSessionValue($this->idbrand->FormValue);
                     if (!is_numeric($masterTbl->id->FormValue)) {
                         $validMaster = false;
                     }
@@ -1113,14 +1125,14 @@ class BrandCustomerAdd extends BrandCustomer
             }
 
             // Clear previous master key from Session
-            if ($masterTblVar != "brand") {
-                if ($this->idbrand->CurrentValue == "") {
-                    $this->idbrand->setSessionValue("");
-                }
-            }
             if ($masterTblVar != "customer") {
                 if ($this->idcustomer->CurrentValue == "") {
                     $this->idcustomer->setSessionValue("");
+                }
+            }
+            if ($masterTblVar != "brand") {
+                if ($this->idbrand->CurrentValue == "") {
+                    $this->idbrand->setSessionValue("");
                 }
             }
         }
@@ -1155,6 +1167,10 @@ class BrandCustomerAdd extends BrandCustomer
                 case "x_idbrand":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

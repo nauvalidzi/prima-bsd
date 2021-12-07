@@ -584,6 +584,13 @@ class PenagihanList extends Penagihan
         $this->tgl_penagihan->setVisibility();
         $this->tgl_return->setVisibility();
         $this->tgl_cancel->setVisibility();
+        $this->messagets->Visible = false;
+        $this->statusts->setVisibility();
+        $this->statusbayar->setVisibility();
+        $this->nomorfaktur->setVisibility();
+        $this->pembayaran->setVisibility();
+        $this->keterangan->setVisibility();
+        $this->saldo->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -890,6 +897,13 @@ class PenagihanList extends Penagihan
         $filterList = Concat($filterList, $this->tgl_penagihan->AdvancedSearch->toJson(), ","); // Field tgl_penagihan
         $filterList = Concat($filterList, $this->tgl_return->AdvancedSearch->toJson(), ","); // Field tgl_return
         $filterList = Concat($filterList, $this->tgl_cancel->AdvancedSearch->toJson(), ","); // Field tgl_cancel
+        $filterList = Concat($filterList, $this->messagets->AdvancedSearch->toJson(), ","); // Field messagets
+        $filterList = Concat($filterList, $this->statusts->AdvancedSearch->toJson(), ","); // Field statusts
+        $filterList = Concat($filterList, $this->statusbayar->AdvancedSearch->toJson(), ","); // Field statusbayar
+        $filterList = Concat($filterList, $this->nomorfaktur->AdvancedSearch->toJson(), ","); // Field nomorfaktur
+        $filterList = Concat($filterList, $this->pembayaran->AdvancedSearch->toJson(), ","); // Field pembayaran
+        $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
+        $filterList = Concat($filterList, $this->saldo->AdvancedSearch->toJson(), ","); // Field saldo
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1057,6 +1071,62 @@ class PenagihanList extends Penagihan
         $this->tgl_cancel->AdvancedSearch->SearchValue2 = @$filter["y_tgl_cancel"];
         $this->tgl_cancel->AdvancedSearch->SearchOperator2 = @$filter["w_tgl_cancel"];
         $this->tgl_cancel->AdvancedSearch->save();
+
+        // Field messagets
+        $this->messagets->AdvancedSearch->SearchValue = @$filter["x_messagets"];
+        $this->messagets->AdvancedSearch->SearchOperator = @$filter["z_messagets"];
+        $this->messagets->AdvancedSearch->SearchCondition = @$filter["v_messagets"];
+        $this->messagets->AdvancedSearch->SearchValue2 = @$filter["y_messagets"];
+        $this->messagets->AdvancedSearch->SearchOperator2 = @$filter["w_messagets"];
+        $this->messagets->AdvancedSearch->save();
+
+        // Field statusts
+        $this->statusts->AdvancedSearch->SearchValue = @$filter["x_statusts"];
+        $this->statusts->AdvancedSearch->SearchOperator = @$filter["z_statusts"];
+        $this->statusts->AdvancedSearch->SearchCondition = @$filter["v_statusts"];
+        $this->statusts->AdvancedSearch->SearchValue2 = @$filter["y_statusts"];
+        $this->statusts->AdvancedSearch->SearchOperator2 = @$filter["w_statusts"];
+        $this->statusts->AdvancedSearch->save();
+
+        // Field statusbayar
+        $this->statusbayar->AdvancedSearch->SearchValue = @$filter["x_statusbayar"];
+        $this->statusbayar->AdvancedSearch->SearchOperator = @$filter["z_statusbayar"];
+        $this->statusbayar->AdvancedSearch->SearchCondition = @$filter["v_statusbayar"];
+        $this->statusbayar->AdvancedSearch->SearchValue2 = @$filter["y_statusbayar"];
+        $this->statusbayar->AdvancedSearch->SearchOperator2 = @$filter["w_statusbayar"];
+        $this->statusbayar->AdvancedSearch->save();
+
+        // Field nomorfaktur
+        $this->nomorfaktur->AdvancedSearch->SearchValue = @$filter["x_nomorfaktur"];
+        $this->nomorfaktur->AdvancedSearch->SearchOperator = @$filter["z_nomorfaktur"];
+        $this->nomorfaktur->AdvancedSearch->SearchCondition = @$filter["v_nomorfaktur"];
+        $this->nomorfaktur->AdvancedSearch->SearchValue2 = @$filter["y_nomorfaktur"];
+        $this->nomorfaktur->AdvancedSearch->SearchOperator2 = @$filter["w_nomorfaktur"];
+        $this->nomorfaktur->AdvancedSearch->save();
+
+        // Field pembayaran
+        $this->pembayaran->AdvancedSearch->SearchValue = @$filter["x_pembayaran"];
+        $this->pembayaran->AdvancedSearch->SearchOperator = @$filter["z_pembayaran"];
+        $this->pembayaran->AdvancedSearch->SearchCondition = @$filter["v_pembayaran"];
+        $this->pembayaran->AdvancedSearch->SearchValue2 = @$filter["y_pembayaran"];
+        $this->pembayaran->AdvancedSearch->SearchOperator2 = @$filter["w_pembayaran"];
+        $this->pembayaran->AdvancedSearch->save();
+
+        // Field keterangan
+        $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
+        $this->keterangan->AdvancedSearch->save();
+
+        // Field saldo
+        $this->saldo->AdvancedSearch->SearchValue = @$filter["x_saldo"];
+        $this->saldo->AdvancedSearch->SearchOperator = @$filter["z_saldo"];
+        $this->saldo->AdvancedSearch->SearchCondition = @$filter["v_saldo"];
+        $this->saldo->AdvancedSearch->SearchValue2 = @$filter["y_saldo"];
+        $this->saldo->AdvancedSearch->SearchOperator2 = @$filter["w_saldo"];
+        $this->saldo->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1069,6 +1139,10 @@ class PenagihanList extends Penagihan
         $this->buildBasicSearchSql($where, $this->kode_order, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->nama_customer, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->nomor_handphone, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->messagets, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->statusbayar, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nomorfaktur, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->keterangan, $arKeywords, $type);
         return $where;
     }
 
@@ -1246,6 +1320,12 @@ class PenagihanList extends Penagihan
             $this->updateSort($this->tgl_penagihan); // tgl_penagihan
             $this->updateSort($this->tgl_return); // tgl_return
             $this->updateSort($this->tgl_cancel); // tgl_cancel
+            $this->updateSort($this->statusts); // statusts
+            $this->updateSort($this->statusbayar); // statusbayar
+            $this->updateSort($this->nomorfaktur); // nomorfaktur
+            $this->updateSort($this->pembayaran); // pembayaran
+            $this->updateSort($this->keterangan); // keterangan
+            $this->updateSort($this->saldo); // saldo
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1301,6 +1381,13 @@ class PenagihanList extends Penagihan
                 $this->tgl_penagihan->setSort("");
                 $this->tgl_return->setSort("");
                 $this->tgl_cancel->setSort("");
+                $this->messagets->setSort("");
+                $this->statusts->setSort("");
+                $this->statusbayar->setSort("");
+                $this->nomorfaktur->setSort("");
+                $this->pembayaran->setSort("");
+                $this->keterangan->setSort("");
+                $this->saldo->setSort("");
             }
 
             // Reset start position
@@ -1725,6 +1812,13 @@ class PenagihanList extends Penagihan
         $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
         $this->tgl_return->setDbValue($row['tgl_return']);
         $this->tgl_cancel->setDbValue($row['tgl_cancel']);
+        $this->messagets->setDbValue($row['messagets']);
+        $this->statusts->setDbValue($row['statusts']);
+        $this->statusbayar->setDbValue($row['statusbayar']);
+        $this->nomorfaktur->setDbValue($row['nomorfaktur']);
+        $this->pembayaran->setDbValue($row['pembayaran']);
+        $this->keterangan->setDbValue($row['keterangan']);
+        $this->saldo->setDbValue($row['saldo']);
     }
 
     // Return a row with default values
@@ -1747,6 +1841,13 @@ class PenagihanList extends Penagihan
         $row['tgl_penagihan'] = null;
         $row['tgl_return'] = null;
         $row['tgl_cancel'] = null;
+        $row['messagets'] = null;
+        $row['statusts'] = null;
+        $row['statusbayar'] = null;
+        $row['nomorfaktur'] = null;
+        $row['pembayaran'] = null;
+        $row['keterangan'] = null;
+        $row['saldo'] = null;
         return $row;
     }
 
@@ -1815,6 +1916,20 @@ class PenagihanList extends Penagihan
         // tgl_return
 
         // tgl_cancel
+
+        // messagets
+
+        // statusts
+
+        // statusbayar
+
+        // nomorfaktur
+
+        // pembayaran
+
+        // keterangan
+
+        // saldo
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1890,6 +2005,33 @@ class PenagihanList extends Penagihan
             $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 0);
             $this->tgl_cancel->ViewCustomAttributes = "";
 
+            // statusts
+            $this->statusts->ViewValue = $this->statusts->CurrentValue;
+            $this->statusts->ViewValue = FormatNumber($this->statusts->ViewValue, 0, -2, -2, -2);
+            $this->statusts->ViewCustomAttributes = "";
+
+            // statusbayar
+            $this->statusbayar->ViewValue = $this->statusbayar->CurrentValue;
+            $this->statusbayar->ViewCustomAttributes = "";
+
+            // nomorfaktur
+            $this->nomorfaktur->ViewValue = $this->nomorfaktur->CurrentValue;
+            $this->nomorfaktur->ViewCustomAttributes = "";
+
+            // pembayaran
+            $this->pembayaran->ViewValue = $this->pembayaran->CurrentValue;
+            $this->pembayaran->ViewValue = FormatNumber($this->pembayaran->ViewValue, 0, -2, -2, -2);
+            $this->pembayaran->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
+
+            // saldo
+            $this->saldo->ViewValue = $this->saldo->CurrentValue;
+            $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
+            $this->saldo->ViewCustomAttributes = "";
+
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
@@ -1964,6 +2106,36 @@ class PenagihanList extends Penagihan
             $this->tgl_cancel->LinkCustomAttributes = "";
             $this->tgl_cancel->HrefValue = "";
             $this->tgl_cancel->TooltipValue = "";
+
+            // statusts
+            $this->statusts->LinkCustomAttributes = "";
+            $this->statusts->HrefValue = "";
+            $this->statusts->TooltipValue = "";
+
+            // statusbayar
+            $this->statusbayar->LinkCustomAttributes = "";
+            $this->statusbayar->HrefValue = "";
+            $this->statusbayar->TooltipValue = "";
+
+            // nomorfaktur
+            $this->nomorfaktur->LinkCustomAttributes = "";
+            $this->nomorfaktur->HrefValue = "";
+            $this->nomorfaktur->TooltipValue = "";
+
+            // pembayaran
+            $this->pembayaran->LinkCustomAttributes = "";
+            $this->pembayaran->HrefValue = "";
+            $this->pembayaran->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
+
+            // saldo
+            $this->saldo->LinkCustomAttributes = "";
+            $this->saldo->HrefValue = "";
+            $this->saldo->TooltipValue = "";
         }
 
         // Call Row Rendered event

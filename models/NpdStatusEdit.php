@@ -467,8 +467,8 @@ class NpdStatusEdit extends NpdStatus
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
-        $this->idnpd->Visible = false;
+        $this->id->setVisibility();
+        $this->idnpd->setVisibility();
         $this->idpegawai->setVisibility();
         $this->status->setVisibility();
         $this->targetmulai->setVisibility();
@@ -477,8 +477,8 @@ class NpdStatusEdit extends NpdStatus
         $this->tglselesai->setVisibility();
         $this->keterangan->setVisibility();
         $this->lampiran->setVisibility();
-        $this->created_by->Visible = false;
-        $this->created_at->Visible = false;
+        $this->created_at->setVisibility();
+        $this->created_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -493,8 +493,6 @@ class NpdStatusEdit extends NpdStatus
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idnpd);
-        $this->setupLookupOptions($this->idpegawai);
 
         // Check modal
         if ($this->IsModal) {
@@ -552,9 +550,6 @@ class NpdStatusEdit extends NpdStatus
                     $this->id->CurrentValue = null;
                 }
             }
-
-            // Set up master detail parameters
-            $this->setupMasterParms();
 
             // Load recordset
             if ($this->isShow()) {
@@ -656,9 +651,6 @@ class NpdStatusEdit extends NpdStatus
     protected function getUploadFiles()
     {
         global $CurrentForm, $Language;
-        $this->lampiran->Upload->Index = $CurrentForm->Index;
-        $this->lampiran->Upload->uploadFile();
-        $this->lampiran->CurrentValue = $this->lampiran->Upload->FileName;
     }
 
     // Load form values
@@ -666,6 +658,22 @@ class NpdStatusEdit extends NpdStatus
     {
         // Load from form
         global $CurrentForm;
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
+
+        // Check field name 'idnpd' first before field var 'x_idnpd'
+        $val = $CurrentForm->hasValue("idnpd") ? $CurrentForm->getValue("idnpd") : $CurrentForm->getValue("x_idnpd");
+        if (!$this->idnpd->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idnpd->Visible = false; // Disable update for API request
+            } else {
+                $this->idnpd->setFormValue($val);
+            }
+        }
 
         // Check field name 'idpegawai' first before field var 'x_idpegawai'
         $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
@@ -741,12 +749,36 @@ class NpdStatusEdit extends NpdStatus
             }
         }
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
+        // Check field name 'lampiran' first before field var 'x_lampiran'
+        $val = $CurrentForm->hasValue("lampiran") ? $CurrentForm->getValue("lampiran") : $CurrentForm->getValue("x_lampiran");
+        if (!$this->lampiran->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->lampiran->Visible = false; // Disable update for API request
+            } else {
+                $this->lampiran->setFormValue($val);
+            }
         }
-        $this->getUploadFiles(); // Get upload files
+
+        // Check field name 'created_at' first before field var 'x_created_at'
+        $val = $CurrentForm->hasValue("created_at") ? $CurrentForm->getValue("created_at") : $CurrentForm->getValue("x_created_at");
+        if (!$this->created_at->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->created_at->Visible = false; // Disable update for API request
+            } else {
+                $this->created_at->setFormValue($val);
+            }
+            $this->created_at->CurrentValue = UnFormatDateTime($this->created_at->CurrentValue, 0);
+        }
+
+        // Check field name 'created_by' first before field var 'x_created_by'
+        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
+        if (!$this->created_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->created_by->Visible = false; // Disable update for API request
+            } else {
+                $this->created_by->setFormValue($val);
+            }
+        }
     }
 
     // Restore form values
@@ -754,6 +786,7 @@ class NpdStatusEdit extends NpdStatus
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
+        $this->idnpd->CurrentValue = $this->idnpd->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
         $this->targetmulai->CurrentValue = $this->targetmulai->FormValue;
@@ -765,6 +798,10 @@ class NpdStatusEdit extends NpdStatus
         $this->tglselesai->CurrentValue = $this->tglselesai->FormValue;
         $this->tglselesai->CurrentValue = UnFormatDateTime($this->tglselesai->CurrentValue, 0);
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
+        $this->lampiran->CurrentValue = $this->lampiran->FormValue;
+        $this->created_at->CurrentValue = $this->created_at->FormValue;
+        $this->created_at->CurrentValue = UnFormatDateTime($this->created_at->CurrentValue, 0);
+        $this->created_by->CurrentValue = $this->created_by->FormValue;
     }
 
     /**
@@ -789,15 +826,6 @@ class NpdStatusEdit extends NpdStatus
         if ($row) {
             $res = true;
             $this->loadRowValues($row); // Load row values
-        }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("edit");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
         }
         return $res;
     }
@@ -832,10 +860,9 @@ class NpdStatusEdit extends NpdStatus
         $this->targetselesai->setDbValue($row['targetselesai']);
         $this->tglselesai->setDbValue($row['tglselesai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->lampiran->Upload->DbValue = $row['lampiran'];
-        $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->lampiran->setDbValue($row['lampiran']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->created_by->setDbValue($row['created_by']);
     }
 
     // Return a row with default values
@@ -852,8 +879,8 @@ class NpdStatusEdit extends NpdStatus
         $row['tglselesai'] = null;
         $row['keterangan'] = null;
         $row['lampiran'] = null;
-        $row['created_by'] = null;
         $row['created_at'] = null;
+        $row['created_by'] = null;
         return $row;
     }
 
@@ -905,54 +932,22 @@ class NpdStatusEdit extends NpdStatus
 
         // lampiran
 
-        // created_by
-
         // created_at
+
+        // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
             // idnpd
-            $curVal = trim(strval($this->idnpd->CurrentValue));
-            if ($curVal != "") {
-                $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
-                if ($this->idnpd->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idnpd->Lookup->renderViewRow($rswrk[0]);
-                        $this->idnpd->ViewValue = $this->idnpd->displayValue($arwrk);
-                    } else {
-                        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idnpd->ViewValue = null;
-            }
+            $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
+            $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
 
             // idpegawai
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
-            if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                    } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idpegawai->ViewValue = null;
-            }
+            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+            $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
             $this->idpegawai->ViewCustomAttributes = "";
 
             // status
@@ -984,22 +979,28 @@ class NpdStatusEdit extends NpdStatus
             $this->keterangan->ViewCustomAttributes = "";
 
             // lampiran
-            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-                $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
-            } else {
-                $this->lampiran->ViewValue = "";
-            }
+            $this->lampiran->ViewValue = $this->lampiran->CurrentValue;
             $this->lampiran->ViewCustomAttributes = "";
+
+            // created_at
+            $this->created_at->ViewValue = $this->created_at->CurrentValue;
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewCustomAttributes = "";
 
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
+            // idnpd
+            $this->idnpd->LinkCustomAttributes = "";
+            $this->idnpd->HrefValue = "";
+            $this->idnpd->TooltipValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -1039,32 +1040,34 @@ class NpdStatusEdit extends NpdStatus
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
             $this->lampiran->HrefValue = "";
-            $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
+
+            // created_at
+            $this->created_at->LinkCustomAttributes = "";
+            $this->created_at->HrefValue = "";
+            $this->created_at->TooltipValue = "";
+
+            // created_by
+            $this->created_by->LinkCustomAttributes = "";
+            $this->created_by->HrefValue = "";
+            $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
+            // idnpd
+            $this->idnpd->EditAttrs["class"] = "form-control";
+            $this->idnpd->EditCustomAttributes = "";
+            $this->idnpd->EditValue = HtmlEncode($this->idnpd->CurrentValue);
+            $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
+
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
             $this->idpegawai->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
-            if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-            } else {
-                $this->idpegawai->ViewValue = $this->idpegawai->Lookup !== null && is_array($this->idpegawai->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idpegawai->ViewValue !== null) { // Load from cache
-                $this->idpegawai->EditValue = array_values($this->idpegawai->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idpegawai->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idpegawai->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idpegawai->EditValue = $arwrk;
-            }
+            $this->idpegawai->EditValue = HtmlEncode($this->idpegawai->CurrentValue);
             $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
 
             // status
@@ -1112,19 +1115,33 @@ class NpdStatusEdit extends NpdStatus
             // lampiran
             $this->lampiran->EditAttrs["class"] = "form-control";
             $this->lampiran->EditCustomAttributes = "";
-            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-                $this->lampiran->EditValue = $this->lampiran->Upload->DbValue;
-            } else {
-                $this->lampiran->EditValue = "";
+            if (!$this->lampiran->Raw) {
+                $this->lampiran->CurrentValue = HtmlDecode($this->lampiran->CurrentValue);
             }
-            if (!EmptyValue($this->lampiran->CurrentValue)) {
-                $this->lampiran->Upload->FileName = $this->lampiran->CurrentValue;
-            }
-            if ($this->isShow()) {
-                RenderUploadField($this->lampiran);
-            }
+            $this->lampiran->EditValue = HtmlEncode($this->lampiran->CurrentValue);
+            $this->lampiran->PlaceHolder = RemoveHtml($this->lampiran->caption());
+
+            // created_at
+            $this->created_at->EditAttrs["class"] = "form-control";
+            $this->created_at->EditCustomAttributes = "";
+            $this->created_at->EditValue = HtmlEncode(FormatDateTime($this->created_at->CurrentValue, 8));
+            $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
+
+            // created_by
+            $this->created_by->EditAttrs["class"] = "form-control";
+            $this->created_by->EditCustomAttributes = "";
+            $this->created_by->EditValue = HtmlEncode($this->created_by->CurrentValue);
+            $this->created_by->PlaceHolder = RemoveHtml($this->created_by->caption());
 
             // Edit refer script
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+
+            // idnpd
+            $this->idnpd->LinkCustomAttributes = "";
+            $this->idnpd->HrefValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -1157,7 +1174,14 @@ class NpdStatusEdit extends NpdStatus
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
             $this->lampiran->HrefValue = "";
-            $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
+
+            // created_at
+            $this->created_at->LinkCustomAttributes = "";
+            $this->created_at->HrefValue = "";
+
+            // created_by
+            $this->created_by->LinkCustomAttributes = "";
+            $this->created_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1178,10 +1202,26 @@ class NpdStatusEdit extends NpdStatus
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if ($this->idnpd->Required) {
+            if (!$this->idnpd->IsDetailKey && EmptyValue($this->idnpd->FormValue)) {
+                $this->idnpd->addErrorMessage(str_replace("%s", $this->idnpd->caption(), $this->idnpd->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->idnpd->FormValue)) {
+            $this->idnpd->addErrorMessage($this->idnpd->getErrorMessage(false));
+        }
         if ($this->idpegawai->Required) {
             if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
                 $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idpegawai->FormValue)) {
+            $this->idpegawai->addErrorMessage($this->idpegawai->getErrorMessage(false));
         }
         if ($this->status->Required) {
             if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
@@ -1226,9 +1266,25 @@ class NpdStatusEdit extends NpdStatus
             }
         }
         if ($this->lampiran->Required) {
-            if ($this->lampiran->Upload->FileName == "" && !$this->lampiran->Upload->KeepFile) {
+            if (!$this->lampiran->IsDetailKey && EmptyValue($this->lampiran->FormValue)) {
                 $this->lampiran->addErrorMessage(str_replace("%s", $this->lampiran->caption(), $this->lampiran->RequiredErrorMessage));
             }
+        }
+        if ($this->created_at->Required) {
+            if (!$this->created_at->IsDetailKey && EmptyValue($this->created_at->FormValue)) {
+                $this->created_at->addErrorMessage(str_replace("%s", $this->created_at->caption(), $this->created_at->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->created_at->FormValue)) {
+            $this->created_at->addErrorMessage($this->created_at->getErrorMessage(false));
+        }
+        if ($this->created_by->Required) {
+            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
+                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->created_by->FormValue)) {
+            $this->created_by->addErrorMessage($this->created_by->getErrorMessage(false));
         }
 
         // Return validate result
@@ -1262,6 +1318,9 @@ class NpdStatusEdit extends NpdStatus
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // idnpd
+            $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, $this->idnpd->ReadOnly);
+
             // idpegawai
             $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, $this->idpegawai->ReadOnly);
 
@@ -1284,74 +1343,13 @@ class NpdStatusEdit extends NpdStatus
             $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
 
             // lampiran
-            if ($this->lampiran->Visible && !$this->lampiran->ReadOnly && !$this->lampiran->Upload->KeepFile) {
-                $this->lampiran->Upload->DbValue = $rsold['lampiran']; // Get original value
-                if ($this->lampiran->Upload->FileName == "") {
-                    $rsnew['lampiran'] = null;
-                } else {
-                    $rsnew['lampiran'] = $this->lampiran->Upload->FileName;
-                }
-            }
+            $this->lampiran->setDbValueDef($rsnew, $this->lampiran->CurrentValue, null, $this->lampiran->ReadOnly);
 
-            // Check referential integrity for master table 'npd'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_npd();
-            $keyValue = $rsnew['idnpd'] ?? $rsold['idnpd'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("npd")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "npd", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
-            if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
-                $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
-                if (!EmptyValue($this->lampiran->Upload->FileName)) {
-                    $newFiles = [$this->lampiran->Upload->FileName];
-                    $NewFileCount = count($newFiles);
-                    for ($i = 0; $i < $NewFileCount; $i++) {
-                        if ($newFiles[$i] != "") {
-                            $file = $newFiles[$i];
-                            $tempPath = UploadTempPath($this->lampiran, $this->lampiran->Upload->Index);
-                            if (file_exists($tempPath . $file)) {
-                                if (Config("DELETE_UPLOADED_FILES")) {
-                                    $oldFileFound = false;
-                                    $oldFileCount = count($oldFiles);
-                                    for ($j = 0; $j < $oldFileCount; $j++) {
-                                        $oldFile = $oldFiles[$j];
-                                        if ($oldFile == $file) { // Old file found, no need to delete anymore
-                                            array_splice($oldFiles, $j, 1);
-                                            $oldFileFound = true;
-                                            break;
-                                        }
-                                    }
-                                    if ($oldFileFound) { // No need to check if file exists further
-                                        continue;
-                                    }
-                                }
-                                $file1 = UniqueFilename($this->lampiran->physicalUploadPath(), $file); // Get new file name
-                                if ($file1 != $file) { // Rename temp file
-                                    while (file_exists($tempPath . $file1) || file_exists($this->lampiran->physicalUploadPath() . $file1)) { // Make sure no file name clash
-                                        $file1 = UniqueFilename([$this->lampiran->physicalUploadPath(), $tempPath], $file1, true); // Use indexed name
-                                    }
-                                    rename($tempPath . $file, $tempPath . $file1);
-                                    $newFiles[$i] = $file1;
-                                }
-                            }
-                        }
-                    }
-                    $this->lampiran->Upload->DbValue = empty($oldFiles) ? "" : implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $oldFiles);
-                    $this->lampiran->Upload->FileName = implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $newFiles);
-                    $this->lampiran->setDbValueDef($rsnew, $this->lampiran->Upload->FileName, null, $this->lampiran->ReadOnly);
-                }
-            }
+            // created_at
+            $this->created_at->setDbValueDef($rsnew, UnFormatDateTime($this->created_at->CurrentValue, 0), CurrentDate(), $this->created_at->ReadOnly);
+
+            // created_by
+            $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, $this->created_by->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -1366,37 +1364,6 @@ class NpdStatusEdit extends NpdStatus
                     $editRow = true; // No field to update
                 }
                 if ($editRow) {
-                    if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
-                        $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
-                        if (!EmptyValue($this->lampiran->Upload->FileName)) {
-                            $newFiles = [$this->lampiran->Upload->FileName];
-                            $newFiles2 = [$this->lampiran->htmlDecode($rsnew['lampiran'])];
-                            $newFileCount = count($newFiles);
-                            for ($i = 0; $i < $newFileCount; $i++) {
-                                if ($newFiles[$i] != "") {
-                                    $file = UploadTempPath($this->lampiran, $this->lampiran->Upload->Index) . $newFiles[$i];
-                                    if (file_exists($file)) {
-                                        if (@$newFiles2[$i] != "") { // Use correct file name
-                                            $newFiles[$i] = $newFiles2[$i];
-                                        }
-                                        if (!$this->lampiran->Upload->SaveToFile($newFiles[$i], true, $i)) { // Just replace
-                                            $this->setFailureMessage($Language->phrase("UploadErrMsg7"));
-                                            return false;
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            $newFiles = [];
-                        }
-                        if (Config("DELETE_UPLOADED_FILES")) {
-                            foreach ($oldFiles as $oldFile) {
-                                if ($oldFile != "" && !in_array($oldFile, $newFiles)) {
-                                    @unlink($this->lampiran->oldPhysicalUploadPath() . $oldFile);
-                                }
-                            }
-                        }
-                    }
                 }
             } else {
                 if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
@@ -1418,8 +1385,6 @@ class NpdStatusEdit extends NpdStatus
 
         // Clean upload path if any
         if ($editRow) {
-            // lampiran
-            CleanUploadTempPath($this->lampiran, $this->lampiran->Upload->Index);
         }
 
         // Write JSON for API request
@@ -1428,86 +1393,6 @@ class NpdStatusEdit extends NpdStatus
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
         return $editRow;
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "npd") {
-                $validMaster = true;
-                $masterTbl = Container("npd");
-                if (($parm = Get("fk_id", Get("idnpd"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idnpd->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idnpd->setSessionValue($this->idnpd->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "npd") {
-                $validMaster = true;
-                $masterTbl = Container("npd");
-                if (($parm = Post("fk_id", Post("idnpd"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idnpd->setFormValue($masterTbl->id->FormValue);
-                    $this->idnpd->setSessionValue($this->idnpd->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-            $this->setSessionWhere($this->getDetailFilter());
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "npd") {
-                if ($this->idnpd->CurrentValue == "") {
-                    $this->idnpd->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
     }
 
     // Set up Breadcrumb
@@ -1534,10 +1419,6 @@ class NpdStatusEdit extends NpdStatus
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idnpd":
-                    break;
-                case "x_idpegawai":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

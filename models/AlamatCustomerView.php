@@ -911,6 +911,7 @@ class AlamatCustomerView extends AlamatCustomer
             $this->idkecamatan->ViewCustomAttributes = "";
 
             // idkelurahan
+            $this->idkelurahan->ViewValue = $this->idkelurahan->CurrentValue;
             $curVal = trim(strval($this->idkelurahan->CurrentValue));
             if ($curVal != "") {
                 $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);

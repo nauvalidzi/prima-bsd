@@ -123,10 +123,10 @@ class NpdHarga extends DbTable
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","nama","",""], [], ["x_idnpd_sample"], [], [], [], [], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], ["x_idnpd_sample"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","nama","",""], [], ["x_idnpd_sample"], [], [], [], [], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], ["x_idnpd_sample"], [], [], [], [], '', '');
                 break;
         }
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

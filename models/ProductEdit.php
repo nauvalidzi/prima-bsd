@@ -476,11 +476,11 @@ class ProductEdit extends Product
         $this->idkualitasbarang->setVisibility();
         $this->idproduct_acuan->setVisibility();
         $this->idkemasanbarang->Visible = false;
-        $this->kemasanbarang->setVisibility();
-        $this->harga->setVisibility();
         $this->ukuran->setVisibility();
         $this->netto->Visible = false;
+        $this->kemasanbarang->setVisibility();
         $this->satuan->Visible = false;
+        $this->harga->setVisibility();
         $this->bahan->setVisibility();
         $this->warna->setVisibility();
         $this->parfum->setVisibility();
@@ -753,6 +753,16 @@ class ProductEdit extends Product
             }
         }
 
+        // Check field name 'ukuran' first before field var 'x_ukuran'
+        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
+        if (!$this->ukuran->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->ukuran->Visible = false; // Disable update for API request
+            } else {
+                $this->ukuran->setFormValue($val);
+            }
+        }
+
         // Check field name 'kemasanbarang' first before field var 'x_kemasanbarang'
         $val = $CurrentForm->hasValue("kemasanbarang") ? $CurrentForm->getValue("kemasanbarang") : $CurrentForm->getValue("x_kemasanbarang");
         if (!$this->kemasanbarang->IsDetailKey) {
@@ -770,16 +780,6 @@ class ProductEdit extends Product
                 $this->harga->Visible = false; // Disable update for API request
             } else {
                 $this->harga->setFormValue($val);
-            }
-        }
-
-        // Check field name 'ukuran' first before field var 'x_ukuran'
-        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
-        if (!$this->ukuran->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->ukuran->Visible = false; // Disable update for API request
-            } else {
-                $this->ukuran->setFormValue($val);
             }
         }
 
@@ -873,9 +873,9 @@ class ProductEdit extends Product
         $this->idjenisbarang->CurrentValue = $this->idjenisbarang->FormValue;
         $this->idkualitasbarang->CurrentValue = $this->idkualitasbarang->FormValue;
         $this->idproduct_acuan->CurrentValue = $this->idproduct_acuan->FormValue;
+        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
         $this->kemasanbarang->CurrentValue = $this->kemasanbarang->FormValue;
         $this->harga->CurrentValue = $this->harga->FormValue;
-        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
         $this->bahan->CurrentValue = $this->bahan->FormValue;
         $this->warna->CurrentValue = $this->warna->FormValue;
         $this->parfum->CurrentValue = $this->parfum->FormValue;
@@ -941,11 +941,11 @@ class ProductEdit extends Product
         $this->idkualitasbarang->setDbValue($row['idkualitasbarang']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
         $this->idkemasanbarang->setDbValue($row['idkemasanbarang']);
-        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
-        $this->harga->setDbValue($row['harga']);
         $this->ukuran->setDbValue($row['ukuran']);
         $this->netto->setDbValue($row['netto']);
+        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
         $this->satuan->setDbValue($row['satuan']);
+        $this->harga->setDbValue($row['harga']);
         $this->bahan->setDbValue($row['bahan']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
@@ -972,11 +972,11 @@ class ProductEdit extends Product
         $row['idkualitasbarang'] = null;
         $row['idproduct_acuan'] = null;
         $row['idkemasanbarang'] = null;
-        $row['kemasanbarang'] = null;
-        $row['harga'] = null;
         $row['ukuran'] = null;
         $row['netto'] = null;
+        $row['kemasanbarang'] = null;
         $row['satuan'] = null;
+        $row['harga'] = null;
         $row['bahan'] = null;
         $row['warna'] = null;
         $row['parfum'] = null;
@@ -1036,15 +1036,15 @@ class ProductEdit extends Product
 
         // idkemasanbarang
 
-        // kemasanbarang
-
-        // harga
-
         // ukuran
 
         // netto
 
+        // kemasanbarang
+
         // satuan
+
+        // harga
 
         // bahan
 
@@ -1187,6 +1187,10 @@ class ProductEdit extends Product
             }
             $this->idproduct_acuan->ViewCustomAttributes = "";
 
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
+
             // kemasanbarang
             $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
             $this->kemasanbarang->ViewCustomAttributes = "";
@@ -1195,10 +1199,6 @@ class ProductEdit extends Product
             $this->harga->ViewValue = $this->harga->CurrentValue;
             $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
             $this->harga->ViewCustomAttributes = "";
-
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
 
             // bahan
             $this->bahan->ViewValue = $this->bahan->CurrentValue;
@@ -1251,7 +1251,7 @@ class ProductEdit extends Product
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
@@ -1289,6 +1289,11 @@ class ProductEdit extends Product
             $this->idproduct_acuan->HrefValue = "";
             $this->idproduct_acuan->TooltipValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
+
             // kemasanbarang
             $this->kemasanbarang->LinkCustomAttributes = "";
             $this->kemasanbarang->HrefValue = "";
@@ -1298,11 +1303,6 @@ class ProductEdit extends Product
             $this->harga->LinkCustomAttributes = "";
             $this->harga->HrefValue = "";
             $this->harga->TooltipValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
 
             // bahan
             $this->bahan->LinkCustomAttributes = "";
@@ -1515,6 +1515,15 @@ class ProductEdit extends Product
             }
             $this->idproduct_acuan->PlaceHolder = RemoveHtml($this->idproduct_acuan->caption());
 
+            // ukuran
+            $this->ukuran->EditAttrs["class"] = "form-control";
+            $this->ukuran->EditCustomAttributes = "";
+            if (!$this->ukuran->Raw) {
+                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
+            }
+            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
+            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
+
             // kemasanbarang
             $this->kemasanbarang->EditAttrs["class"] = "form-control";
             $this->kemasanbarang->EditCustomAttributes = "";
@@ -1529,15 +1538,6 @@ class ProductEdit extends Product
             $this->harga->EditCustomAttributes = "";
             $this->harga->EditValue = HtmlEncode($this->harga->CurrentValue);
             $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
-
-            // ukuran
-            $this->ukuran->EditAttrs["class"] = "form-control";
-            $this->ukuran->EditCustomAttributes = "";
-            if (!$this->ukuran->Raw) {
-                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-            }
-            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
-            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
 
             // bahan
             $this->bahan->EditAttrs["class"] = "form-control";
@@ -1636,6 +1636,10 @@ class ProductEdit extends Product
             $this->idproduct_acuan->LinkCustomAttributes = "";
             $this->idproduct_acuan->HrefValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+
             // kemasanbarang
             $this->kemasanbarang->LinkCustomAttributes = "";
             $this->kemasanbarang->HrefValue = "";
@@ -1643,10 +1647,6 @@ class ProductEdit extends Product
             // harga
             $this->harga->LinkCustomAttributes = "";
             $this->harga->HrefValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
 
             // bahan
             $this->bahan->LinkCustomAttributes = "";
@@ -1735,6 +1735,11 @@ class ProductEdit extends Product
                 $this->idproduct_acuan->addErrorMessage(str_replace("%s", $this->idproduct_acuan->caption(), $this->idproduct_acuan->RequiredErrorMessage));
             }
         }
+        if ($this->ukuran->Required) {
+            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
+                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
+            }
+        }
         if ($this->kemasanbarang->Required) {
             if (!$this->kemasanbarang->IsDetailKey && EmptyValue($this->kemasanbarang->FormValue)) {
                 $this->kemasanbarang->addErrorMessage(str_replace("%s", $this->kemasanbarang->caption(), $this->kemasanbarang->RequiredErrorMessage));
@@ -1747,11 +1752,6 @@ class ProductEdit extends Product
         }
         if (!CheckInteger($this->harga->FormValue)) {
             $this->harga->addErrorMessage($this->harga->getErrorMessage(false));
-        }
-        if ($this->ukuran->Required) {
-            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
-                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
-            }
         }
         if ($this->bahan->Required) {
             if (!$this->bahan->IsDetailKey && EmptyValue($this->bahan->FormValue)) {
@@ -1849,14 +1849,14 @@ class ProductEdit extends Product
             // idproduct_acuan
             $this->idproduct_acuan->setDbValueDef($rsnew, $this->idproduct_acuan->CurrentValue, null, $this->idproduct_acuan->ReadOnly);
 
+            // ukuran
+            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
+
             // kemasanbarang
             $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, null, $this->kemasanbarang->ReadOnly);
 
             // harga
             $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, $this->harga->ReadOnly);
-
-            // ukuran
-            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
 
             // bahan
             $this->bahan->setDbValueDef($rsnew, $this->bahan->CurrentValue, null, $this->bahan->ReadOnly);

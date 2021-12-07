@@ -576,10 +576,10 @@ class BrandList extends Brand
         $this->ijinhaki->setVisibility();
         $this->ijinbpom->setVisibility();
         $this->aktaperusahaan->Visible = false;
-        $this->kode_sip->setVisibility();
+        $this->kode_sip->Visible = false;
         $this->aktif->setVisibility();
         $this->created_at->Visible = false;
-        $this->updated_at->setVisibility();
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -1197,9 +1197,7 @@ class BrandList extends Brand
             $this->updateSort($this->titipmerk); // titipmerk
             $this->updateSort($this->ijinhaki); // ijinhaki
             $this->updateSort($this->ijinbpom); // ijinbpom
-            $this->updateSort($this->kode_sip); // kode_sip
             $this->updateSort($this->aktif); // aktif
-            $this->updateSort($this->updated_at); // updated_at
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -2107,12 +2105,12 @@ class BrandList extends Brand
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
             $this->created_at->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // kode
@@ -2140,20 +2138,10 @@ class BrandList extends Brand
             $this->ijinbpom->HrefValue = "";
             $this->ijinbpom->TooltipValue = "";
 
-            // kode_sip
-            $this->kode_sip->LinkCustomAttributes = "";
-            $this->kode_sip->HrefValue = "";
-            $this->kode_sip->TooltipValue = "";
-
             // aktif
             $this->aktif->LinkCustomAttributes = "";
             $this->aktif->HrefValue = "";
             $this->aktif->TooltipValue = "";
-
-            // updated_at
-            $this->updated_at->LinkCustomAttributes = "";
-            $this->updated_at->HrefValue = "";
-            $this->updated_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2299,6 +2287,7 @@ class BrandList extends Brand
     // Page Load event
     public function pageLoad()
     {
+        //Log("Page Load");
     }
 
     // Page Unload event
@@ -2340,6 +2329,13 @@ class BrandList extends Brand
     {
         // Example:
         //$header = "your header";
+        echo "
+        <style>
+        	.ew-list-other-options .ew-add-edit-option {
+        		display: none;
+        	}
+        </style>
+        ";
     }
 
     // Page Data Rendered event

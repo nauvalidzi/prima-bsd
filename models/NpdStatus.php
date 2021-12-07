@@ -38,8 +38,8 @@ class NpdStatus extends DbTable
     public $tglselesai;
     public $keterangan;
     public $lampiran;
-    public $created_by;
     public $created_at;
+    public $created_by;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -67,12 +67,13 @@ class NpdStatus extends DbTable
         $this->ExportExcelPageSize = ""; // Page size (PhpSpreadsheet only)
         $this->ExportWordPageOrientation = "portrait"; // Page orientation (PHPWord only)
         $this->ExportWordColumnWidth = null; // Cell width (PHPWord only)
-        $this->DetailAdd = true; // Allow detail add
-        $this->DetailEdit = true; // Allow detail edit
-        $this->DetailView = true; // Allow detail view
+        $this->DetailAdd = false; // Allow detail add
+        $this->DetailEdit = false; // Allow detail edit
+        $this->DetailView = false; // Allow detail view
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
@@ -85,40 +86,19 @@ class NpdStatus extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idnpd
-        $this->idnpd = new DbField('npd_status', 'npd_status', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 3, 11, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idnpd->IsForeignKey = true; // Foreign key field
+        $this->idnpd = new DbField('npd_status', 'npd_status', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 3, 11, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idnpd->Nullable = false; // NOT NULL field
         $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort
-        $this->idnpd->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
         $this->Fields['idnpd'] = &$this->idnpd;
 
         // idpegawai
-        $this->idpegawai = new DbField('npd_status', 'npd_status', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idpegawai = new DbField('npd_status', 'npd_status', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idpegawai->Nullable = false; // NOT NULL field
         $this->idpegawai->Required = true; // Required field
         $this->idpegawai->Sortable = true; // Allow sort
-        $this->idpegawai->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idpegawai->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->idpegawai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
         $this->Fields['idpegawai'] = &$this->idpegawai;
@@ -172,17 +152,10 @@ class NpdStatus extends DbTable
         $this->Fields['keterangan'] = &$this->keterangan;
 
         // lampiran
-        $this->lampiran = new DbField('npd_status', 'npd_status', 'x_lampiran', 'lampiran', '`lampiran`', '`lampiran`', 200, 255, -1, true, '`lampiran`', false, false, false, 'FORMATTED TEXT', 'FILE');
+        $this->lampiran = new DbField('npd_status', 'npd_status', 'x_lampiran', 'lampiran', '`lampiran`', '`lampiran`', 200, 255, -1, false, '`lampiran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->lampiran->Sortable = true; // Allow sort
         $this->lampiran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->lampiran->Param, "CustomMsg");
         $this->Fields['lampiran'] = &$this->lampiran;
-
-        // created_by
-        $this->created_by = new DbField('npd_status', 'npd_status', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
 
         // created_at
         $this->created_at = new DbField('npd_status', 'npd_status', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -192,6 +165,13 @@ class NpdStatus extends DbTable
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
+
+        // created_by
+        $this->created_by = new DbField('npd_status', 'npd_status', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_by->Sortable = true; // Allow sort
+        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
+        $this->Fields['created_by'] = &$this->created_by;
     }
 
     // Field Visibility
@@ -229,58 +209,6 @@ class NpdStatus extends DbTable
         } else {
             $fld->setSort("");
         }
-    }
-
-    // Current master table name
-    public function getCurrentMasterTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
-    }
-
-    public function setCurrentMasterTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
-    }
-
-    // Session master WHERE clause
-    public function getMasterFilter()
-    {
-        // Master filter
-        $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "npd") {
-            if ($this->idnpd->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idnpd->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $masterFilter;
-    }
-
-    // Session detail WHERE clause
-    public function getDetailFilter()
-    {
-        // Detail filter
-        $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "npd") {
-            if ($this->idnpd->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idnpd`", $this->idnpd->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_npd()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_npd()
-    {
-        return "`idnpd`=@idnpd@";
     }
 
     // Table level SQL
@@ -380,11 +308,6 @@ class NpdStatus extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -671,21 +594,15 @@ class NpdStatus extends DbTable
         $this->targetselesai->DbValue = $row['targetselesai'];
         $this->tglselesai->DbValue = $row['tglselesai'];
         $this->keterangan->DbValue = $row['keterangan'];
-        $this->lampiran->Upload->DbValue = $row['lampiran'];
-        $this->created_by->DbValue = $row['created_by'];
+        $this->lampiran->DbValue = $row['lampiran'];
         $this->created_at->DbValue = $row['created_at'];
+        $this->created_by->DbValue = $row['created_by'];
     }
 
     // Delete uploaded files
     public function deleteUploadedFiles($row)
     {
         $this->loadDbValues($row);
-        $oldFiles = EmptyValue($row['lampiran']) ? [] : [$row['lampiran']];
-        foreach ($oldFiles as $oldFile) {
-            if (file_exists($this->lampiran->oldPhysicalUploadPath() . $oldFile)) {
-                @unlink($this->lampiran->oldPhysicalUploadPath() . $oldFile);
-            }
-        }
     }
 
     // Record filter WHERE clause
@@ -859,10 +776,6 @@ class NpdStatus extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "npd" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idnpd->CurrentValue ?? $this->idnpd->getSessionValue());
-        }
         return $url;
     }
 
@@ -1013,10 +926,9 @@ SORTHTML;
         $this->targetselesai->setDbValue($row['targetselesai']);
         $this->tglselesai->setDbValue($row['tglselesai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->lampiran->Upload->DbValue = $row['lampiran'];
-        $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->lampiran->setDbValue($row['lampiran']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->created_by->setDbValue($row['created_by']);
     }
 
     // Render list row values
@@ -1049,54 +961,22 @@ SORTHTML;
 
         // lampiran
 
-        // created_by
-
         // created_at
+
+        // created_by
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
         // idnpd
-        $curVal = trim(strval($this->idnpd->CurrentValue));
-        if ($curVal != "") {
-            $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
-            if ($this->idnpd->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idnpd->Lookup->renderViewRow($rswrk[0]);
-                    $this->idnpd->ViewValue = $this->idnpd->displayValue($arwrk);
-                } else {
-                    $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
-                }
-            }
-        } else {
-            $this->idnpd->ViewValue = null;
-        }
+        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
+        $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
         $this->idnpd->ViewCustomAttributes = "";
 
         // idpegawai
-        $curVal = trim(strval($this->idpegawai->CurrentValue));
-        if ($curVal != "") {
-            $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-            if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                    $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                } else {
-                    $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                }
-            }
-        } else {
-            $this->idpegawai->ViewValue = null;
-        }
+        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+        $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
         $this->idpegawai->ViewCustomAttributes = "";
 
         // status
@@ -1128,22 +1008,18 @@ SORTHTML;
         $this->keterangan->ViewCustomAttributes = "";
 
         // lampiran
-        if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-            $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
-        } else {
-            $this->lampiran->ViewValue = "";
-        }
+        $this->lampiran->ViewValue = $this->lampiran->CurrentValue;
         $this->lampiran->ViewCustomAttributes = "";
-
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
+
+        // created_by
+        $this->created_by->ViewValue = $this->created_by->CurrentValue;
+        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
+        $this->created_by->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1193,18 +1069,17 @@ SORTHTML;
         // lampiran
         $this->lampiran->LinkCustomAttributes = "";
         $this->lampiran->HrefValue = "";
-        $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
         $this->lampiran->TooltipValue = "";
-
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
 
         // created_at
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
+
+        // created_by
+        $this->created_by->LinkCustomAttributes = "";
+        $this->created_by->HrefValue = "";
+        $this->created_by->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1230,34 +1105,13 @@ SORTHTML;
         // idnpd
         $this->idnpd->EditAttrs["class"] = "form-control";
         $this->idnpd->EditCustomAttributes = "";
-        if ($this->idnpd->getSessionValue() != "") {
-            $this->idnpd->CurrentValue = GetForeignKeyValue($this->idnpd->getSessionValue());
-            $curVal = trim(strval($this->idnpd->CurrentValue));
-            if ($curVal != "") {
-                $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
-                if ($this->idnpd->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idnpd->Lookup->renderViewRow($rswrk[0]);
-                        $this->idnpd->ViewValue = $this->idnpd->displayValue($arwrk);
-                    } else {
-                        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idnpd->ViewValue = null;
-            }
-            $this->idnpd->ViewCustomAttributes = "";
-        } else {
-            $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
-        }
+        $this->idnpd->EditValue = $this->idnpd->CurrentValue;
+        $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
         $this->idpegawai->EditCustomAttributes = "";
+        $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
         $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
 
         // status
@@ -1305,24 +1159,23 @@ SORTHTML;
         // lampiran
         $this->lampiran->EditAttrs["class"] = "form-control";
         $this->lampiran->EditCustomAttributes = "";
-        if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-            $this->lampiran->EditValue = $this->lampiran->Upload->DbValue;
-        } else {
-            $this->lampiran->EditValue = "";
+        if (!$this->lampiran->Raw) {
+            $this->lampiran->CurrentValue = HtmlDecode($this->lampiran->CurrentValue);
         }
-        if (!EmptyValue($this->lampiran->CurrentValue)) {
-            $this->lampiran->Upload->FileName = $this->lampiran->CurrentValue;
-        }
-
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
+        $this->lampiran->EditValue = $this->lampiran->CurrentValue;
+        $this->lampiran->PlaceHolder = RemoveHtml($this->lampiran->caption());
 
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
+
+        // created_by
+        $this->created_by->EditAttrs["class"] = "form-control";
+        $this->created_by->EditCustomAttributes = "";
+        $this->created_by->EditValue = $this->created_by->CurrentValue;
+        $this->created_by->PlaceHolder = RemoveHtml($this->created_by->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1352,6 +1205,7 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
+                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->status);
@@ -1361,6 +1215,8 @@ SORTHTML;
                     $doc->exportCaption($this->tglselesai);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->lampiran);
+                    $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->created_by);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
@@ -1372,8 +1228,8 @@ SORTHTML;
                     $doc->exportCaption($this->tglselesai);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->lampiran);
-                    $doc->exportCaption($this->created_by);
                     $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->created_by);
                 }
                 $doc->endExportRow();
             }
@@ -1403,6 +1259,7 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
+                        $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->status);
@@ -1412,6 +1269,8 @@ SORTHTML;
                         $doc->exportField($this->tglselesai);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->lampiran);
+                        $doc->exportField($this->created_at);
+                        $doc->exportField($this->created_by);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
@@ -1423,8 +1282,8 @@ SORTHTML;
                         $doc->exportField($this->tglselesai);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->lampiran);
-                        $doc->exportField($this->created_by);
                         $doc->exportField($this->created_at);
+                        $doc->exportField($this->created_by);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1441,194 +1300,10 @@ SORTHTML;
         }
     }
 
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `npd_status`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
-    }
-
-    // Add master User ID filter
-    public function addMasterUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "npd") {
-            $filterWrk = Container("npd")->addUserIDFilter($filterWrk);
-        }
-        return $filterWrk;
-    }
-
-    // Add detail User ID filter
-    public function addDetailUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "npd") {
-            $mastertable = Container("npd");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->idnpd, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        return $filterWrk;
-    }
-
     // Get file data
     public function getFileData($fldparm, $key, $resize, $width = 0, $height = 0, $plugins = [])
     {
-        $width = ($width > 0) ? $width : Config("THUMBNAIL_DEFAULT_WIDTH");
-        $height = ($height > 0) ? $height : Config("THUMBNAIL_DEFAULT_HEIGHT");
-
-        // Set up field name / file name field / file type field
-        $fldName = "";
-        $fileNameFld = "";
-        $fileTypeFld = "";
-        if ($fldparm == 'lampiran') {
-            $fldName = "lampiran";
-            $fileNameFld = "lampiran";
-        } else {
-            return false; // Incorrect field
-        }
-
-        // Set up key values
-        $ar = explode(Config("COMPOSITE_KEY_SEPARATOR"), $key);
-        if (count($ar) == 1) {
-            $this->id->CurrentValue = $ar[0];
-        } else {
-            return false; // Incorrect key
-        }
-
-        // Set up filter (WHERE Clause)
-        $filter = $this->getRecordFilter();
-        $this->CurrentFilter = $filter;
-        $sql = $this->getCurrentSql();
-        $conn = $this->getConnection();
-        $dbtype = GetConnectionType($this->Dbid);
-        if ($row = $conn->fetchAssoc($sql)) {
-            $val = $row[$fldName];
-            if (!EmptyValue($val)) {
-                $fld = $this->Fields[$fldName];
-
-                // Binary data
-                if ($fld->DataType == DATATYPE_BLOB) {
-                    if ($dbtype != "MYSQL") {
-                        if (is_resource($val) && get_resource_type($val) == "stream") { // Byte array
-                            $val = stream_get_contents($val);
-                        }
-                    }
-                    if ($resize) {
-                        ResizeBinary($val, $width, $height, 100, $plugins);
-                    }
-
-                    // Write file type
-                    if ($fileTypeFld != "" && !EmptyValue($row[$fileTypeFld])) {
-                        AddHeader("Content-type", $row[$fileTypeFld]);
-                    } else {
-                        AddHeader("Content-type", ContentType($val));
-                    }
-
-                    // Write file name
-                    $downloadPdf = !Config("EMBED_PDF") && Config("DOWNLOAD_PDF_FILE");
-                    if ($fileNameFld != "" && !EmptyValue($row[$fileNameFld])) {
-                        $fileName = $row[$fileNameFld];
-                        $pathinfo = pathinfo($fileName);
-                        $ext = strtolower(@$pathinfo["extension"]);
-                        $isPdf = SameText($ext, "pdf");
-                        if ($downloadPdf || !$isPdf) { // Skip header if not download PDF
-                            AddHeader("Content-Disposition", "attachment; filename=\"" . $fileName . "\"");
-                        }
-                    } else {
-                        $ext = ContentExtension($val);
-                        $isPdf = SameText($ext, ".pdf");
-                        if ($isPdf && $downloadPdf) { // Add header if download PDF
-                            AddHeader("Content-Disposition", "attachment; filename=\"" . $fileName . "\"");
-                        }
-                    }
-
-                    // Write file data
-                    if (
-                        StartsString("PK", $val) &&
-                        ContainsString($val, "[Content_Types].xml") &&
-                        ContainsString($val, "_rels") &&
-                        ContainsString($val, "docProps")
-                    ) { // Fix Office 2007 documents
-                        if (!EndsString("\0\0\0", $val)) { // Not ends with 3 or 4 \0
-                            $val .= "\0\0\0\0";
-                        }
-                    }
-
-                    // Clear any debug message
-                    if (ob_get_length()) {
-                        ob_end_clean();
-                    }
-
-                    // Write binary data
-                    Write($val);
-
-                // Upload to folder
-                } else {
-                    if ($fld->UploadMultiple) {
-                        $files = explode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $val);
-                    } else {
-                        $files = [$val];
-                    }
-                    $data = [];
-                    $ar = [];
-                    foreach ($files as $file) {
-                        if (!EmptyValue($file)) {
-                            if (Config("ENCRYPT_FILE_PATH")) {
-                                $ar[$file] = FullUrl(GetApiUrl(Config("API_FILE_ACTION") .
-                                    "/" . $this->TableVar . "/" . Encrypt($fld->physicalUploadPath() . $file)));
-                            } else {
-                                $ar[$file] = FullUrl($fld->hrefPath() . $file);
-                            }
-                        }
-                    }
-                    $data[$fld->Param] = $ar;
-                    WriteJson($data);
-                }
-            }
-            return true;
-        }
+        // No binary fields
         return false;
     }
 
@@ -1683,7 +1358,6 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        updateStatus("npd", $rsnew['idnpd']);
     }
 
     // Row Updating event
@@ -1698,7 +1372,6 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
-        updateStatus("npd", $rsold['idnpd']);
     }
 
     // Row Update Conflict event
@@ -1749,7 +1422,6 @@ SORTHTML;
     public function rowDeleted(&$rs)
     {
         //Log("Row Deleted");
-        updateStatus("npd", $rs['idnpd']);
     }
 
     // Email Sending event

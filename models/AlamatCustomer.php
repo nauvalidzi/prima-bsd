@@ -86,6 +86,8 @@ class AlamatCustomer extends DbTable
         // idcustomer
         $this->idcustomer = new DbField('alamat_customer', 'alamat_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -127,16 +129,13 @@ class AlamatCustomer extends DbTable
 
         // alamat
         $this->alamat = new DbField('alamat_customer', 'alamat_customer', 'x_alamat', 'alamat', '`alamat`', '`alamat`', 201, 65535, -1, false, '`alamat`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->alamat->Nullable = false; // NOT NULL field
-        $this->alamat->Required = true; // Required field
         $this->alamat->Sortable = true; // Allow sort
         $this->alamat->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alamat->Param, "CustomMsg");
         $this->Fields['alamat'] = &$this->alamat;
 
         // idprovinsi
-        $this->idprovinsi = new DbField('alamat_customer', 'alamat_customer', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 200, 2, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idprovinsi = new DbField('alamat_customer', 'alamat_customer', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 3, 11, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idprovinsi->Nullable = false; // NOT NULL field
-        $this->idprovinsi->Required = true; // Required field
         $this->idprovinsi->Sortable = true; // Allow sort
         $this->idprovinsi->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idprovinsi->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -148,13 +147,13 @@ class AlamatCustomer extends DbTable
                 $this->idprovinsi->Lookup = new Lookup('idprovinsi', 'provinsi', false, 'id', ["name","","",""], [], ["x_idkabupaten"], [], [], [], [], '', '');
                 break;
         }
+        $this->idprovinsi->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idprovinsi->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idprovinsi->Param, "CustomMsg");
         $this->Fields['idprovinsi'] = &$this->idprovinsi;
 
         // idkabupaten
-        $this->idkabupaten = new DbField('alamat_customer', 'alamat_customer', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 200, 4, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkabupaten = new DbField('alamat_customer', 'alamat_customer', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 3, 11, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkabupaten->Nullable = false; // NOT NULL field
-        $this->idkabupaten->Required = true; // Required field
         $this->idkabupaten->Sortable = true; // Allow sort
         $this->idkabupaten->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkabupaten->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -166,13 +165,13 @@ class AlamatCustomer extends DbTable
                 $this->idkabupaten->Lookup = new Lookup('idkabupaten', 'kabupaten', false, 'id', ["nama","","",""], ["x_idprovinsi"], ["x_idkecamatan"], ["idprovinsi"], ["x_idprovinsi"], [], [], '', '');
                 break;
         }
+        $this->idkabupaten->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkabupaten->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkabupaten->Param, "CustomMsg");
         $this->Fields['idkabupaten'] = &$this->idkabupaten;
 
         // idkecamatan
-        $this->idkecamatan = new DbField('alamat_customer', 'alamat_customer', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 200, 7, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkecamatan = new DbField('alamat_customer', 'alamat_customer', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 3, 11, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkecamatan->Nullable = false; // NOT NULL field
-        $this->idkecamatan->Required = true; // Required field
         $this->idkecamatan->Sortable = true; // Allow sort
         $this->idkecamatan->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkecamatan->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -184,14 +183,13 @@ class AlamatCustomer extends DbTable
                 $this->idkecamatan->Lookup = new Lookup('idkecamatan', 'kecamatan', false, 'id', ["nama","","",""], ["x_idkabupaten"], ["x_idkelurahan"], ["idkabupaten"], ["x_idkabupaten"], [], [], '', '');
                 break;
         }
+        $this->idkecamatan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkecamatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkecamatan->Param, "CustomMsg");
         $this->Fields['idkecamatan'] = &$this->idkecamatan;
 
         // idkelurahan
-        $this->idkelurahan = new DbField('alamat_customer', 'alamat_customer', 'x_idkelurahan', 'idkelurahan', '`idkelurahan`', '`idkelurahan`', 200, 10, -1, false, '`idkelurahan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkelurahan = new DbField('alamat_customer', 'alamat_customer', 'x_idkelurahan', 'idkelurahan', '`idkelurahan`', '`idkelurahan`', 3, 11, -1, false, '`idkelurahan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idkelurahan->Sortable = true; // Allow sort
-        $this->idkelurahan->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idkelurahan->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkelurahan->Lookup = new Lookup('idkelurahan', 'kelurahan', false, 'id', ["nama","","",""], ["x_idkecamatan"], [], ["idkecamatan"], ["x_idkecamatan"], [], [], '', '');
@@ -200,6 +198,7 @@ class AlamatCustomer extends DbTable
                 $this->idkelurahan->Lookup = new Lookup('idkelurahan', 'kelurahan', false, 'id', ["nama","","",""], ["x_idkecamatan"], [], ["idkecamatan"], ["x_idkecamatan"], [], [], '', '');
                 break;
         }
+        $this->idkelurahan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkelurahan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkelurahan->Param, "CustomMsg");
         $this->Fields['idkelurahan'] = &$this->idkelurahan;
     }
@@ -1148,6 +1147,7 @@ SORTHTML;
         $this->idkecamatan->ViewCustomAttributes = "";
 
         // idkelurahan
+        $this->idkelurahan->ViewValue = $this->idkelurahan->CurrentValue;
         $curVal = trim(strval($this->idkelurahan->CurrentValue));
         if ($curVal != "") {
             $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
@@ -1318,6 +1318,7 @@ SORTHTML;
         // idkelurahan
         $this->idkelurahan->EditAttrs["class"] = "form-control";
         $this->idkelurahan->EditCustomAttributes = "";
+        $this->idkelurahan->EditValue = $this->idkelurahan->CurrentValue;
         $this->idkelurahan->PlaceHolder = RemoveHtml($this->idkelurahan->caption());
 
         // Call Row Rendered event

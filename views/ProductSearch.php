@@ -30,11 +30,11 @@ loadjs.ready("head", function () {
         ["idjenisbarang", [], fields.idjenisbarang.isInvalid],
         ["idkualitasbarang", [], fields.idkualitasbarang.isInvalid],
         ["idproduct_acuan", [], fields.idproduct_acuan.isInvalid],
-        ["kemasanbarang", [], fields.kemasanbarang.isInvalid],
-        ["harga", [ew.Validators.integer], fields.harga.isInvalid],
         ["ukuran", [], fields.ukuran.isInvalid],
         ["netto", [], fields.netto.isInvalid],
+        ["kemasanbarang", [], fields.kemasanbarang.isInvalid],
         ["satuan", [], fields.satuan.isInvalid],
+        ["harga", [ew.Validators.integer], fields.harga.isInvalid],
         ["bahan", [], fields.bahan.isInvalid],
         ["warna", [], fields.warna.isInvalid],
         ["parfum", [], fields.parfum.isInvalid],
@@ -44,7 +44,7 @@ loadjs.ready("head", function () {
         ["ijinbpom", [], fields.ijinbpom.isInvalid],
         ["aktif", [], fields.aktif.isInvalid],
         ["created_at", [ew.Validators.datetime(0)], fields.created_at.isInvalid],
-        ["updated_at", [ew.Validators.datetime(0)], fields.updated_at.isInvalid]
+        ["updated_at", [ew.Validators.datetime(11)], fields.updated_at.isInvalid]
     ]);
 
     // Set invalid fields
@@ -345,38 +345,6 @@ loadjs.ready("head", function() {
         </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
-    <div id="r_kemasanbarang" class="form-group row">
-        <label for="x_kemasanbarang" class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_kemasanbarang"><?= $Page->kemasanbarang->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("LIKE") ?>
-<input type="hidden" name="z_kemasanbarang" id="z_kemasanbarang" value="LIKE">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasanbarang->cellAttributes() ?>>
-            <span id="el_product_kemasanbarang" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->kemasanbarang->getInputTextType() ?>" data-table="product" data-field="x_kemasanbarang" name="x_kemasanbarang" id="x_kemasanbarang" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->kemasanbarang->getPlaceHolder()) ?>" value="<?= $Page->kemasanbarang->EditValue ?>"<?= $Page->kemasanbarang->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->kemasanbarang->getErrorMessage(false) ?></div>
-</span>
-        </div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->harga->Visible) { // harga ?>
-    <div id="r_harga" class="form-group row">
-        <label for="x_harga" class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_harga"><?= $Page->harga->caption() ?></span>
-        <span class="ew-search-operator">
-<?= $Language->phrase("=") ?>
-<input type="hidden" name="z_harga" id="z_harga" value="=">
-</span>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->harga->cellAttributes() ?>>
-            <span id="el_product_harga" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->harga->getInputTextType() ?>" data-table="product" data-field="x_harga" name="x_harga" id="x_harga" size="30" placeholder="<?= HtmlEncode($Page->harga->getPlaceHolder()) ?>" value="<?= $Page->harga->EditValue ?>"<?= $Page->harga->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->harga->getErrorMessage(false) ?></div>
-</span>
-        </div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->ukuran->Visible) { // ukuran ?>
     <div id="r_ukuran" class="form-group row">
         <label for="x_ukuran" class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_ukuran"><?= $Page->ukuran->caption() ?></span>
@@ -409,6 +377,22 @@ loadjs.ready("head", function() {
         </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
+    <div id="r_kemasanbarang" class="form-group row">
+        <label for="x_kemasanbarang" class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_kemasanbarang"><?= $Page->kemasanbarang->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_kemasanbarang" id="z_kemasanbarang" value="LIKE">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasanbarang->cellAttributes() ?>>
+            <span id="el_product_kemasanbarang" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->kemasanbarang->getInputTextType() ?>" data-table="product" data-field="x_kemasanbarang" name="x_kemasanbarang" id="x_kemasanbarang" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->kemasanbarang->getPlaceHolder()) ?>" value="<?= $Page->kemasanbarang->EditValue ?>"<?= $Page->kemasanbarang->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->kemasanbarang->getErrorMessage(false) ?></div>
+</span>
+        </div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->satuan->Visible) { // satuan ?>
     <div id="r_satuan" class="form-group row">
         <label for="x_satuan" class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_satuan"><?= $Page->satuan->caption() ?></span>
@@ -421,6 +405,22 @@ loadjs.ready("head", function() {
             <span id="el_product_satuan" class="ew-search-field ew-search-field-single">
 <input type="<?= $Page->satuan->getInputTextType() ?>" data-table="product" data-field="x_satuan" name="x_satuan" id="x_satuan" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->satuan->getPlaceHolder()) ?>" value="<?= $Page->satuan->EditValue ?>"<?= $Page->satuan->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->satuan->getErrorMessage(false) ?></div>
+</span>
+        </div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->harga->Visible) { // harga ?>
+    <div id="r_harga" class="form-group row">
+        <label for="x_harga" class="<?= $Page->LeftColumnClass ?>"><span id="elh_product_harga"><?= $Page->harga->caption() ?></span>
+        <span class="ew-search-operator">
+<?= $Language->phrase("=") ?>
+<input type="hidden" name="z_harga" id="z_harga" value="=">
+</span>
+        </label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->harga->cellAttributes() ?>>
+            <span id="el_product_harga" class="ew-search-field ew-search-field-single">
+<input type="<?= $Page->harga->getInputTextType() ?>" data-table="product" data-field="x_harga" name="x_harga" id="x_harga" size="30" placeholder="<?= HtmlEncode($Page->harga->getPlaceHolder()) ?>" value="<?= $Page->harga->EditValue ?>"<?= $Page->harga->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Page->harga->getErrorMessage(false) ?></div>
 </span>
         </div></div>
     </div>
@@ -626,12 +626,12 @@ loadjs.ready(["fproductsearch", "datetimepicker"], function() {
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->updated_at->cellAttributes() ?>>
             <span id="el_product_updated_at" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x_updated_at" id="x_updated_at" placeholder="<?= HtmlEncode($Page->updated_at->getPlaceHolder()) ?>" value="<?= $Page->updated_at->EditValue ?>"<?= $Page->updated_at->editAttributes() ?>>
+<input type="<?= $Page->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" data-format="11" name="x_updated_at" id="x_updated_at" placeholder="<?= HtmlEncode($Page->updated_at->getPlaceHolder()) ?>" value="<?= $Page->updated_at->EditValue ?>"<?= $Page->updated_at->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Page->updated_at->getErrorMessage(false) ?></div>
 <?php if (!$Page->updated_at->ReadOnly && !$Page->updated_at->Disabled && !isset($Page->updated_at->EditAttrs["readonly"]) && !isset($Page->updated_at->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fproductsearch", "datetimepicker"], function() {
-    ew.createDateTimePicker("fproductsearch", "x_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fproductsearch", "x_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":11});
 });
 </script>
 <?php } ?>

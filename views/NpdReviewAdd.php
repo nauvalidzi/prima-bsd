@@ -22,34 +22,34 @@ loadjs.ready("head", function () {
     fnpd_reviewadd.addFields([
         ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null], fields.idnpd.isInvalid],
         ["idnpd_sample", [fields.idnpd_sample.visible && fields.idnpd_sample.required ? ew.Validators.required(fields.idnpd_sample.caption) : null], fields.idnpd_sample.isInvalid],
-        ["tglreview", [fields.tglreview.visible && fields.tglreview.required ? ew.Validators.required(fields.tglreview.caption) : null, ew.Validators.datetime(0)], fields.tglreview.isInvalid],
-        ["tglsubmit", [fields.tglsubmit.visible && fields.tglsubmit.required ? ew.Validators.required(fields.tglsubmit.caption) : null, ew.Validators.datetime(0)], fields.tglsubmit.isInvalid],
+        ["tanggal_review", [fields.tanggal_review.visible && fields.tanggal_review.required ? ew.Validators.required(fields.tanggal_review.caption) : null, ew.Validators.datetime(0)], fields.tanggal_review.isInvalid],
+        ["tanggal_submit", [fields.tanggal_submit.visible && fields.tanggal_submit.required ? ew.Validators.required(fields.tanggal_submit.caption) : null, ew.Validators.datetime(0)], fields.tanggal_submit.isInvalid],
         ["wadah", [fields.wadah.visible && fields.wadah.required ? ew.Validators.required(fields.wadah.caption) : null], fields.wadah.isInvalid],
-        ["bentukok", [fields.bentukok.visible && fields.bentukok.required ? ew.Validators.required(fields.bentukok.caption) : null], fields.bentukok.isInvalid],
-        ["bentukrevisi", [fields.bentukrevisi.visible && fields.bentukrevisi.required ? ew.Validators.required(fields.bentukrevisi.caption) : null], fields.bentukrevisi.isInvalid],
-        ["viskositasok", [fields.viskositasok.visible && fields.viskositasok.required ? ew.Validators.required(fields.viskositasok.caption) : null], fields.viskositasok.isInvalid],
-        ["viskositasrevisi", [fields.viskositasrevisi.visible && fields.viskositasrevisi.required ? ew.Validators.required(fields.viskositasrevisi.caption) : null], fields.viskositasrevisi.isInvalid],
-        ["jeniswarnaok", [fields.jeniswarnaok.visible && fields.jeniswarnaok.required ? ew.Validators.required(fields.jeniswarnaok.caption) : null], fields.jeniswarnaok.isInvalid],
-        ["jeniswarnarevisi", [fields.jeniswarnarevisi.visible && fields.jeniswarnarevisi.required ? ew.Validators.required(fields.jeniswarnarevisi.caption) : null], fields.jeniswarnarevisi.isInvalid],
-        ["tonewarnaok", [fields.tonewarnaok.visible && fields.tonewarnaok.required ? ew.Validators.required(fields.tonewarnaok.caption) : null], fields.tonewarnaok.isInvalid],
-        ["tonewarnarevisi", [fields.tonewarnarevisi.visible && fields.tonewarnarevisi.required ? ew.Validators.required(fields.tonewarnarevisi.caption) : null], fields.tonewarnarevisi.isInvalid],
-        ["gradasiwarnaok", [fields.gradasiwarnaok.visible && fields.gradasiwarnaok.required ? ew.Validators.required(fields.gradasiwarnaok.caption) : null], fields.gradasiwarnaok.isInvalid],
-        ["gradasiwarnarevisi", [fields.gradasiwarnarevisi.visible && fields.gradasiwarnarevisi.required ? ew.Validators.required(fields.gradasiwarnarevisi.caption) : null], fields.gradasiwarnarevisi.isInvalid],
-        ["bauok", [fields.bauok.visible && fields.bauok.required ? ew.Validators.required(fields.bauok.caption) : null], fields.bauok.isInvalid],
-        ["baurevisi", [fields.baurevisi.visible && fields.baurevisi.required ? ew.Validators.required(fields.baurevisi.caption) : null], fields.baurevisi.isInvalid],
-        ["estetikaok", [fields.estetikaok.visible && fields.estetikaok.required ? ew.Validators.required(fields.estetikaok.caption) : null], fields.estetikaok.isInvalid],
-        ["estetikarevisi", [fields.estetikarevisi.visible && fields.estetikarevisi.required ? ew.Validators.required(fields.estetikarevisi.caption) : null], fields.estetikarevisi.isInvalid],
-        ["aplikasiawalok", [fields.aplikasiawalok.visible && fields.aplikasiawalok.required ? ew.Validators.required(fields.aplikasiawalok.caption) : null], fields.aplikasiawalok.isInvalid],
-        ["aplikasiawalrevisi", [fields.aplikasiawalrevisi.visible && fields.aplikasiawalrevisi.required ? ew.Validators.required(fields.aplikasiawalrevisi.caption) : null], fields.aplikasiawalrevisi.isInvalid],
-        ["aplikasilamaok", [fields.aplikasilamaok.visible && fields.aplikasilamaok.required ? ew.Validators.required(fields.aplikasilamaok.caption) : null], fields.aplikasilamaok.isInvalid],
-        ["aplikasilamarevisi", [fields.aplikasilamarevisi.visible && fields.aplikasilamarevisi.required ? ew.Validators.required(fields.aplikasilamarevisi.caption) : null], fields.aplikasilamarevisi.isInvalid],
-        ["efekpositifok", [fields.efekpositifok.visible && fields.efekpositifok.required ? ew.Validators.required(fields.efekpositifok.caption) : null], fields.efekpositifok.isInvalid],
-        ["efekpositifrevisi", [fields.efekpositifrevisi.visible && fields.efekpositifrevisi.required ? ew.Validators.required(fields.efekpositifrevisi.caption) : null], fields.efekpositifrevisi.isInvalid],
-        ["efeknegatifok", [fields.efeknegatifok.visible && fields.efeknegatifok.required ? ew.Validators.required(fields.efeknegatifok.caption) : null], fields.efeknegatifok.isInvalid],
-        ["efeknegatifrevisi", [fields.efeknegatifrevisi.visible && fields.efeknegatifrevisi.required ? ew.Validators.required(fields.efeknegatifrevisi.caption) : null], fields.efeknegatifrevisi.isInvalid],
+        ["bentuk_opsi", [fields.bentuk_opsi.visible && fields.bentuk_opsi.required ? ew.Validators.required(fields.bentuk_opsi.caption) : null], fields.bentuk_opsi.isInvalid],
+        ["bentuk_revisi", [fields.bentuk_revisi.visible && fields.bentuk_revisi.required ? ew.Validators.required(fields.bentuk_revisi.caption) : null], fields.bentuk_revisi.isInvalid],
+        ["viskositas_opsi", [fields.viskositas_opsi.visible && fields.viskositas_opsi.required ? ew.Validators.required(fields.viskositas_opsi.caption) : null], fields.viskositas_opsi.isInvalid],
+        ["viskositas_revisi", [fields.viskositas_revisi.visible && fields.viskositas_revisi.required ? ew.Validators.required(fields.viskositas_revisi.caption) : null], fields.viskositas_revisi.isInvalid],
+        ["jeniswarna_opsi", [fields.jeniswarna_opsi.visible && fields.jeniswarna_opsi.required ? ew.Validators.required(fields.jeniswarna_opsi.caption) : null], fields.jeniswarna_opsi.isInvalid],
+        ["jeniswarna_revisi", [fields.jeniswarna_revisi.visible && fields.jeniswarna_revisi.required ? ew.Validators.required(fields.jeniswarna_revisi.caption) : null], fields.jeniswarna_revisi.isInvalid],
+        ["tonewarna_opsi", [fields.tonewarna_opsi.visible && fields.tonewarna_opsi.required ? ew.Validators.required(fields.tonewarna_opsi.caption) : null], fields.tonewarna_opsi.isInvalid],
+        ["tonewarna_revisi", [fields.tonewarna_revisi.visible && fields.tonewarna_revisi.required ? ew.Validators.required(fields.tonewarna_revisi.caption) : null], fields.tonewarna_revisi.isInvalid],
+        ["gradasiwarna_opsi", [fields.gradasiwarna_opsi.visible && fields.gradasiwarna_opsi.required ? ew.Validators.required(fields.gradasiwarna_opsi.caption) : null], fields.gradasiwarna_opsi.isInvalid],
+        ["gradasiwarna_revisi", [fields.gradasiwarna_revisi.visible && fields.gradasiwarna_revisi.required ? ew.Validators.required(fields.gradasiwarna_revisi.caption) : null], fields.gradasiwarna_revisi.isInvalid],
+        ["bauparfum_opsi", [fields.bauparfum_opsi.visible && fields.bauparfum_opsi.required ? ew.Validators.required(fields.bauparfum_opsi.caption) : null], fields.bauparfum_opsi.isInvalid],
+        ["bauparfum_revisi", [fields.bauparfum_revisi.visible && fields.bauparfum_revisi.required ? ew.Validators.required(fields.bauparfum_revisi.caption) : null], fields.bauparfum_revisi.isInvalid],
+        ["estetika_opsi", [fields.estetika_opsi.visible && fields.estetika_opsi.required ? ew.Validators.required(fields.estetika_opsi.caption) : null], fields.estetika_opsi.isInvalid],
+        ["estetika_revisi", [fields.estetika_revisi.visible && fields.estetika_revisi.required ? ew.Validators.required(fields.estetika_revisi.caption) : null], fields.estetika_revisi.isInvalid],
+        ["aplikasiawal_opsi", [fields.aplikasiawal_opsi.visible && fields.aplikasiawal_opsi.required ? ew.Validators.required(fields.aplikasiawal_opsi.caption) : null], fields.aplikasiawal_opsi.isInvalid],
+        ["aplikasiawal_revisi", [fields.aplikasiawal_revisi.visible && fields.aplikasiawal_revisi.required ? ew.Validators.required(fields.aplikasiawal_revisi.caption) : null], fields.aplikasiawal_revisi.isInvalid],
+        ["aplikasilama_opsi", [fields.aplikasilama_opsi.visible && fields.aplikasilama_opsi.required ? ew.Validators.required(fields.aplikasilama_opsi.caption) : null], fields.aplikasilama_opsi.isInvalid],
+        ["aplikasilama_revisi", [fields.aplikasilama_revisi.visible && fields.aplikasilama_revisi.required ? ew.Validators.required(fields.aplikasilama_revisi.caption) : null], fields.aplikasilama_revisi.isInvalid],
+        ["efekpositif_opsi", [fields.efekpositif_opsi.visible && fields.efekpositif_opsi.required ? ew.Validators.required(fields.efekpositif_opsi.caption) : null], fields.efekpositif_opsi.isInvalid],
+        ["efekpositif_revisi", [fields.efekpositif_revisi.visible && fields.efekpositif_revisi.required ? ew.Validators.required(fields.efekpositif_revisi.caption) : null], fields.efekpositif_revisi.isInvalid],
+        ["efeknegatif_opsi", [fields.efeknegatif_opsi.visible && fields.efeknegatif_opsi.required ? ew.Validators.required(fields.efeknegatif_opsi.caption) : null], fields.efeknegatif_opsi.isInvalid],
+        ["efeknegatif_revisi", [fields.efeknegatif_revisi.visible && fields.efeknegatif_revisi.required ? ew.Validators.required(fields.efeknegatif_revisi.caption) : null], fields.efeknegatif_revisi.isInvalid],
         ["kesimpulan", [fields.kesimpulan.visible && fields.kesimpulan.required ? ew.Validators.required(fields.kesimpulan.caption) : null], fields.kesimpulan.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
+        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid]
     ]);
 
     // Set invalid fields
@@ -118,17 +118,17 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     fnpd_reviewadd.lists.idnpd = <?= $Page->idnpd->toClientList($Page) ?>;
     fnpd_reviewadd.lists.idnpd_sample = <?= $Page->idnpd_sample->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.bentukok = <?= $Page->bentukok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.viskositasok = <?= $Page->viskositasok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.jeniswarnaok = <?= $Page->jeniswarnaok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.tonewarnaok = <?= $Page->tonewarnaok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.gradasiwarnaok = <?= $Page->gradasiwarnaok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.bauok = <?= $Page->bauok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.estetikaok = <?= $Page->estetikaok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.aplikasiawalok = <?= $Page->aplikasiawalok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.aplikasilamaok = <?= $Page->aplikasilamaok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.efekpositifok = <?= $Page->efekpositifok->toClientList($Page) ?>;
-    fnpd_reviewadd.lists.efeknegatifok = <?= $Page->efeknegatifok->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.bentuk_opsi = <?= $Page->bentuk_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.viskositas_opsi = <?= $Page->viskositas_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.jeniswarna_opsi = <?= $Page->jeniswarna_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.tonewarna_opsi = <?= $Page->tonewarna_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.gradasiwarna_opsi = <?= $Page->gradasiwarna_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.bauparfum_opsi = <?= $Page->bauparfum_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.estetika_opsi = <?= $Page->estetika_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.aplikasiawal_opsi = <?= $Page->aplikasiawal_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.aplikasilama_opsi = <?= $Page->aplikasilama_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.efekpositif_opsi = <?= $Page->efekpositif_opsi->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.efeknegatif_opsi = <?= $Page->efeknegatif_opsi->toClientList($Page) ?>;
     fnpd_reviewadd.lists.status = <?= $Page->status->toClientList($Page) ?>;
     loadjs.done("fnpd_reviewadd");
 });
@@ -231,18 +231,18 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tglreview->Visible) { // tglreview ?>
-    <div id="r_tglreview" class="form-group row">
-        <label id="elh_npd_review_tglreview" for="x_tglreview" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tglreview->caption() ?><?= $Page->tglreview->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglreview->cellAttributes() ?>>
-<span id="el_npd_review_tglreview">
-<input type="<?= $Page->tglreview->getInputTextType() ?>" data-table="npd_review" data-field="x_tglreview" name="x_tglreview" id="x_tglreview" placeholder="<?= HtmlEncode($Page->tglreview->getPlaceHolder()) ?>" value="<?= $Page->tglreview->EditValue ?>"<?= $Page->tglreview->editAttributes() ?> aria-describedby="x_tglreview_help">
-<?= $Page->tglreview->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tglreview->getErrorMessage() ?></div>
-<?php if (!$Page->tglreview->ReadOnly && !$Page->tglreview->Disabled && !isset($Page->tglreview->EditAttrs["readonly"]) && !isset($Page->tglreview->EditAttrs["disabled"])) { ?>
+<?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+    <div id="r_tanggal_review" class="form-group row">
+        <label id="elh_npd_review_tanggal_review" for="x_tanggal_review" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal_review->caption() ?><?= $Page->tanggal_review->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tanggal_review->cellAttributes() ?>>
+<span id="el_npd_review_tanggal_review">
+<input type="<?= $Page->tanggal_review->getInputTextType() ?>" data-table="npd_review" data-field="x_tanggal_review" name="x_tanggal_review" id="x_tanggal_review" placeholder="<?= HtmlEncode($Page->tanggal_review->getPlaceHolder()) ?>" value="<?= $Page->tanggal_review->EditValue ?>"<?= $Page->tanggal_review->editAttributes() ?> aria-describedby="x_tanggal_review_help">
+<?= $Page->tanggal_review->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tanggal_review->getErrorMessage() ?></div>
+<?php if (!$Page->tanggal_review->ReadOnly && !$Page->tanggal_review->Disabled && !isset($Page->tanggal_review->EditAttrs["readonly"]) && !isset($Page->tanggal_review->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fnpd_reviewadd", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpd_reviewadd", "x_tglreview", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fnpd_reviewadd", "x_tanggal_review", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 });
 </script>
 <?php } ?>
@@ -250,18 +250,18 @@ loadjs.ready(["fnpd_reviewadd", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-    <div id="r_tglsubmit" class="form-group row">
-        <label id="elh_npd_review_tglsubmit" for="x_tglsubmit" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tglsubmit->caption() ?><?= $Page->tglsubmit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglsubmit->cellAttributes() ?>>
-<span id="el_npd_review_tglsubmit">
-<input type="<?= $Page->tglsubmit->getInputTextType() ?>" data-table="npd_review" data-field="x_tglsubmit" name="x_tglsubmit" id="x_tglsubmit" placeholder="<?= HtmlEncode($Page->tglsubmit->getPlaceHolder()) ?>" value="<?= $Page->tglsubmit->EditValue ?>"<?= $Page->tglsubmit->editAttributes() ?> aria-describedby="x_tglsubmit_help">
-<?= $Page->tglsubmit->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tglsubmit->getErrorMessage() ?></div>
-<?php if (!$Page->tglsubmit->ReadOnly && !$Page->tglsubmit->Disabled && !isset($Page->tglsubmit->EditAttrs["readonly"]) && !isset($Page->tglsubmit->EditAttrs["disabled"])) { ?>
+<?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+    <div id="r_tanggal_submit" class="form-group row">
+        <label id="elh_npd_review_tanggal_submit" for="x_tanggal_submit" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal_submit->caption() ?><?= $Page->tanggal_submit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tanggal_submit->cellAttributes() ?>>
+<span id="el_npd_review_tanggal_submit">
+<input type="<?= $Page->tanggal_submit->getInputTextType() ?>" data-table="npd_review" data-field="x_tanggal_submit" name="x_tanggal_submit" id="x_tanggal_submit" placeholder="<?= HtmlEncode($Page->tanggal_submit->getPlaceHolder()) ?>" value="<?= $Page->tanggal_submit->EditValue ?>"<?= $Page->tanggal_submit->editAttributes() ?> aria-describedby="x_tanggal_submit_help">
+<?= $Page->tanggal_submit->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tanggal_submit->getErrorMessage() ?></div>
+<?php if (!$Page->tanggal_submit->ReadOnly && !$Page->tanggal_submit->Disabled && !isset($Page->tanggal_submit->EditAttrs["readonly"]) && !isset($Page->tanggal_submit->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fnpd_reviewadd", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpd_reviewadd", "x_tglsubmit", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fnpd_reviewadd", "x_tanggal_submit", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 });
 </script>
 <?php } ?>
@@ -281,486 +281,486 @@ loadjs.ready(["fnpd_reviewadd", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->bentukok->Visible) { // bentukok ?>
-    <div id="r_bentukok" class="form-group row">
-        <label id="elh_npd_review_bentukok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bentukok->caption() ?><?= $Page->bentukok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bentukok->cellAttributes() ?>>
-<span id="el_npd_review_bentukok">
-<template id="tp_x_bentukok">
+<?php if ($Page->bentuk_opsi->Visible) { // bentuk_opsi ?>
+    <div id="r_bentuk_opsi" class="form-group row">
+        <label id="elh_npd_review_bentuk_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bentuk_opsi->caption() ?><?= $Page->bentuk_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bentuk_opsi->cellAttributes() ?>>
+<span id="el_npd_review_bentuk_opsi">
+<template id="tp_x_bentuk_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_bentukok" name="x_bentukok" id="x_bentukok"<?= $Page->bentukok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_bentuk_opsi" name="x_bentuk_opsi" id="x_bentuk_opsi"<?= $Page->bentuk_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_bentukok" class="ew-item-list"></div>
+<div id="dsl_x_bentuk_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_bentukok"
-    name="x_bentukok"
-    value="<?= HtmlEncode($Page->bentukok->CurrentValue) ?>"
+    id="x_bentuk_opsi"
+    name="x_bentuk_opsi"
+    value="<?= HtmlEncode($Page->bentuk_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_bentukok"
-    data-target="dsl_x_bentukok"
+    data-template="tp_x_bentuk_opsi"
+    data-target="dsl_x_bentuk_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->bentukok->isInvalidClass() ?>"
+    class="form-control<?= $Page->bentuk_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_bentukok"
-    data-value-separator="<?= $Page->bentukok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->bentukok->editAttributes() ?>>
-<?= $Page->bentukok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->bentukok->getErrorMessage() ?></div>
+    data-field="x_bentuk_opsi"
+    data-value-separator="<?= $Page->bentuk_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->bentuk_opsi->editAttributes() ?>>
+<?= $Page->bentuk_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->bentuk_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->bentukrevisi->Visible) { // bentukrevisi ?>
-    <div id="r_bentukrevisi" class="form-group row">
-        <label id="elh_npd_review_bentukrevisi" for="x_bentukrevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bentukrevisi->caption() ?><?= $Page->bentukrevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bentukrevisi->cellAttributes() ?>>
-<span id="el_npd_review_bentukrevisi">
-<input type="<?= $Page->bentukrevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_bentukrevisi" name="x_bentukrevisi" id="x_bentukrevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->bentukrevisi->getPlaceHolder()) ?>" value="<?= $Page->bentukrevisi->EditValue ?>"<?= $Page->bentukrevisi->editAttributes() ?> aria-describedby="x_bentukrevisi_help">
-<?= $Page->bentukrevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->bentukrevisi->getErrorMessage() ?></div>
+<?php if ($Page->bentuk_revisi->Visible) { // bentuk_revisi ?>
+    <div id="r_bentuk_revisi" class="form-group row">
+        <label id="elh_npd_review_bentuk_revisi" for="x_bentuk_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bentuk_revisi->caption() ?><?= $Page->bentuk_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bentuk_revisi->cellAttributes() ?>>
+<span id="el_npd_review_bentuk_revisi">
+<input type="<?= $Page->bentuk_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_bentuk_revisi" name="x_bentuk_revisi" id="x_bentuk_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->bentuk_revisi->getPlaceHolder()) ?>" value="<?= $Page->bentuk_revisi->EditValue ?>"<?= $Page->bentuk_revisi->editAttributes() ?> aria-describedby="x_bentuk_revisi_help">
+<?= $Page->bentuk_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->bentuk_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->viskositasok->Visible) { // viskositasok ?>
-    <div id="r_viskositasok" class="form-group row">
-        <label id="elh_npd_review_viskositasok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->viskositasok->caption() ?><?= $Page->viskositasok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->viskositasok->cellAttributes() ?>>
-<span id="el_npd_review_viskositasok">
-<template id="tp_x_viskositasok">
+<?php if ($Page->viskositas_opsi->Visible) { // viskositas_opsi ?>
+    <div id="r_viskositas_opsi" class="form-group row">
+        <label id="elh_npd_review_viskositas_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->viskositas_opsi->caption() ?><?= $Page->viskositas_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->viskositas_opsi->cellAttributes() ?>>
+<span id="el_npd_review_viskositas_opsi">
+<template id="tp_x_viskositas_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_viskositasok" name="x_viskositasok" id="x_viskositasok"<?= $Page->viskositasok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_viskositas_opsi" name="x_viskositas_opsi" id="x_viskositas_opsi"<?= $Page->viskositas_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_viskositasok" class="ew-item-list"></div>
+<div id="dsl_x_viskositas_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_viskositasok"
-    name="x_viskositasok"
-    value="<?= HtmlEncode($Page->viskositasok->CurrentValue) ?>"
+    id="x_viskositas_opsi"
+    name="x_viskositas_opsi"
+    value="<?= HtmlEncode($Page->viskositas_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_viskositasok"
-    data-target="dsl_x_viskositasok"
+    data-template="tp_x_viskositas_opsi"
+    data-target="dsl_x_viskositas_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->viskositasok->isInvalidClass() ?>"
+    class="form-control<?= $Page->viskositas_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_viskositasok"
-    data-value-separator="<?= $Page->viskositasok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->viskositasok->editAttributes() ?>>
-<?= $Page->viskositasok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->viskositasok->getErrorMessage() ?></div>
+    data-field="x_viskositas_opsi"
+    data-value-separator="<?= $Page->viskositas_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->viskositas_opsi->editAttributes() ?>>
+<?= $Page->viskositas_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->viskositas_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->viskositasrevisi->Visible) { // viskositasrevisi ?>
-    <div id="r_viskositasrevisi" class="form-group row">
-        <label id="elh_npd_review_viskositasrevisi" for="x_viskositasrevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->viskositasrevisi->caption() ?><?= $Page->viskositasrevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->viskositasrevisi->cellAttributes() ?>>
-<span id="el_npd_review_viskositasrevisi">
-<input type="<?= $Page->viskositasrevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_viskositasrevisi" name="x_viskositasrevisi" id="x_viskositasrevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->viskositasrevisi->getPlaceHolder()) ?>" value="<?= $Page->viskositasrevisi->EditValue ?>"<?= $Page->viskositasrevisi->editAttributes() ?> aria-describedby="x_viskositasrevisi_help">
-<?= $Page->viskositasrevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->viskositasrevisi->getErrorMessage() ?></div>
+<?php if ($Page->viskositas_revisi->Visible) { // viskositas_revisi ?>
+    <div id="r_viskositas_revisi" class="form-group row">
+        <label id="elh_npd_review_viskositas_revisi" for="x_viskositas_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->viskositas_revisi->caption() ?><?= $Page->viskositas_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->viskositas_revisi->cellAttributes() ?>>
+<span id="el_npd_review_viskositas_revisi">
+<input type="<?= $Page->viskositas_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_viskositas_revisi" name="x_viskositas_revisi" id="x_viskositas_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->viskositas_revisi->getPlaceHolder()) ?>" value="<?= $Page->viskositas_revisi->EditValue ?>"<?= $Page->viskositas_revisi->editAttributes() ?> aria-describedby="x_viskositas_revisi_help">
+<?= $Page->viskositas_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->viskositas_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->jeniswarnaok->Visible) { // jeniswarnaok ?>
-    <div id="r_jeniswarnaok" class="form-group row">
-        <label id="elh_npd_review_jeniswarnaok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jeniswarnaok->caption() ?><?= $Page->jeniswarnaok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jeniswarnaok->cellAttributes() ?>>
-<span id="el_npd_review_jeniswarnaok">
-<template id="tp_x_jeniswarnaok">
+<?php if ($Page->jeniswarna_opsi->Visible) { // jeniswarna_opsi ?>
+    <div id="r_jeniswarna_opsi" class="form-group row">
+        <label id="elh_npd_review_jeniswarna_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jeniswarna_opsi->caption() ?><?= $Page->jeniswarna_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jeniswarna_opsi->cellAttributes() ?>>
+<span id="el_npd_review_jeniswarna_opsi">
+<template id="tp_x_jeniswarna_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_jeniswarnaok" name="x_jeniswarnaok" id="x_jeniswarnaok"<?= $Page->jeniswarnaok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_jeniswarna_opsi" name="x_jeniswarna_opsi" id="x_jeniswarna_opsi"<?= $Page->jeniswarna_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_jeniswarnaok" class="ew-item-list"></div>
+<div id="dsl_x_jeniswarna_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_jeniswarnaok"
-    name="x_jeniswarnaok"
-    value="<?= HtmlEncode($Page->jeniswarnaok->CurrentValue) ?>"
+    id="x_jeniswarna_opsi"
+    name="x_jeniswarna_opsi"
+    value="<?= HtmlEncode($Page->jeniswarna_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_jeniswarnaok"
-    data-target="dsl_x_jeniswarnaok"
+    data-template="tp_x_jeniswarna_opsi"
+    data-target="dsl_x_jeniswarna_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->jeniswarnaok->isInvalidClass() ?>"
+    class="form-control<?= $Page->jeniswarna_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_jeniswarnaok"
-    data-value-separator="<?= $Page->jeniswarnaok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->jeniswarnaok->editAttributes() ?>>
-<?= $Page->jeniswarnaok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jeniswarnaok->getErrorMessage() ?></div>
+    data-field="x_jeniswarna_opsi"
+    data-value-separator="<?= $Page->jeniswarna_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->jeniswarna_opsi->editAttributes() ?>>
+<?= $Page->jeniswarna_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->jeniswarna_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->jeniswarnarevisi->Visible) { // jeniswarnarevisi ?>
-    <div id="r_jeniswarnarevisi" class="form-group row">
-        <label id="elh_npd_review_jeniswarnarevisi" for="x_jeniswarnarevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jeniswarnarevisi->caption() ?><?= $Page->jeniswarnarevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jeniswarnarevisi->cellAttributes() ?>>
-<span id="el_npd_review_jeniswarnarevisi">
-<input type="<?= $Page->jeniswarnarevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_jeniswarnarevisi" name="x_jeniswarnarevisi" id="x_jeniswarnarevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->jeniswarnarevisi->getPlaceHolder()) ?>" value="<?= $Page->jeniswarnarevisi->EditValue ?>"<?= $Page->jeniswarnarevisi->editAttributes() ?> aria-describedby="x_jeniswarnarevisi_help">
-<?= $Page->jeniswarnarevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jeniswarnarevisi->getErrorMessage() ?></div>
+<?php if ($Page->jeniswarna_revisi->Visible) { // jeniswarna_revisi ?>
+    <div id="r_jeniswarna_revisi" class="form-group row">
+        <label id="elh_npd_review_jeniswarna_revisi" for="x_jeniswarna_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jeniswarna_revisi->caption() ?><?= $Page->jeniswarna_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jeniswarna_revisi->cellAttributes() ?>>
+<span id="el_npd_review_jeniswarna_revisi">
+<input type="<?= $Page->jeniswarna_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_jeniswarna_revisi" name="x_jeniswarna_revisi" id="x_jeniswarna_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->jeniswarna_revisi->getPlaceHolder()) ?>" value="<?= $Page->jeniswarna_revisi->EditValue ?>"<?= $Page->jeniswarna_revisi->editAttributes() ?> aria-describedby="x_jeniswarna_revisi_help">
+<?= $Page->jeniswarna_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->jeniswarna_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tonewarnaok->Visible) { // tonewarnaok ?>
-    <div id="r_tonewarnaok" class="form-group row">
-        <label id="elh_npd_review_tonewarnaok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tonewarnaok->caption() ?><?= $Page->tonewarnaok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tonewarnaok->cellAttributes() ?>>
-<span id="el_npd_review_tonewarnaok">
-<template id="tp_x_tonewarnaok">
+<?php if ($Page->tonewarna_opsi->Visible) { // tonewarna_opsi ?>
+    <div id="r_tonewarna_opsi" class="form-group row">
+        <label id="elh_npd_review_tonewarna_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tonewarna_opsi->caption() ?><?= $Page->tonewarna_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tonewarna_opsi->cellAttributes() ?>>
+<span id="el_npd_review_tonewarna_opsi">
+<template id="tp_x_tonewarna_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_tonewarnaok" name="x_tonewarnaok" id="x_tonewarnaok"<?= $Page->tonewarnaok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_tonewarna_opsi" name="x_tonewarna_opsi" id="x_tonewarna_opsi"<?= $Page->tonewarna_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_tonewarnaok" class="ew-item-list"></div>
+<div id="dsl_x_tonewarna_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_tonewarnaok"
-    name="x_tonewarnaok"
-    value="<?= HtmlEncode($Page->tonewarnaok->CurrentValue) ?>"
+    id="x_tonewarna_opsi"
+    name="x_tonewarna_opsi"
+    value="<?= HtmlEncode($Page->tonewarna_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_tonewarnaok"
-    data-target="dsl_x_tonewarnaok"
+    data-template="tp_x_tonewarna_opsi"
+    data-target="dsl_x_tonewarna_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->tonewarnaok->isInvalidClass() ?>"
+    class="form-control<?= $Page->tonewarna_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_tonewarnaok"
-    data-value-separator="<?= $Page->tonewarnaok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->tonewarnaok->editAttributes() ?>>
-<?= $Page->tonewarnaok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tonewarnaok->getErrorMessage() ?></div>
+    data-field="x_tonewarna_opsi"
+    data-value-separator="<?= $Page->tonewarna_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->tonewarna_opsi->editAttributes() ?>>
+<?= $Page->tonewarna_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tonewarna_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tonewarnarevisi->Visible) { // tonewarnarevisi ?>
-    <div id="r_tonewarnarevisi" class="form-group row">
-        <label id="elh_npd_review_tonewarnarevisi" for="x_tonewarnarevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tonewarnarevisi->caption() ?><?= $Page->tonewarnarevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tonewarnarevisi->cellAttributes() ?>>
-<span id="el_npd_review_tonewarnarevisi">
-<input type="<?= $Page->tonewarnarevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_tonewarnarevisi" name="x_tonewarnarevisi" id="x_tonewarnarevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->tonewarnarevisi->getPlaceHolder()) ?>" value="<?= $Page->tonewarnarevisi->EditValue ?>"<?= $Page->tonewarnarevisi->editAttributes() ?> aria-describedby="x_tonewarnarevisi_help">
-<?= $Page->tonewarnarevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tonewarnarevisi->getErrorMessage() ?></div>
+<?php if ($Page->tonewarna_revisi->Visible) { // tonewarna_revisi ?>
+    <div id="r_tonewarna_revisi" class="form-group row">
+        <label id="elh_npd_review_tonewarna_revisi" for="x_tonewarna_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tonewarna_revisi->caption() ?><?= $Page->tonewarna_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tonewarna_revisi->cellAttributes() ?>>
+<span id="el_npd_review_tonewarna_revisi">
+<input type="<?= $Page->tonewarna_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_tonewarna_revisi" name="x_tonewarna_revisi" id="x_tonewarna_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->tonewarna_revisi->getPlaceHolder()) ?>" value="<?= $Page->tonewarna_revisi->EditValue ?>"<?= $Page->tonewarna_revisi->editAttributes() ?> aria-describedby="x_tonewarna_revisi_help">
+<?= $Page->tonewarna_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tonewarna_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->gradasiwarnaok->Visible) { // gradasiwarnaok ?>
-    <div id="r_gradasiwarnaok" class="form-group row">
-        <label id="elh_npd_review_gradasiwarnaok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->gradasiwarnaok->caption() ?><?= $Page->gradasiwarnaok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->gradasiwarnaok->cellAttributes() ?>>
-<span id="el_npd_review_gradasiwarnaok">
-<template id="tp_x_gradasiwarnaok">
+<?php if ($Page->gradasiwarna_opsi->Visible) { // gradasiwarna_opsi ?>
+    <div id="r_gradasiwarna_opsi" class="form-group row">
+        <label id="elh_npd_review_gradasiwarna_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->gradasiwarna_opsi->caption() ?><?= $Page->gradasiwarna_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->gradasiwarna_opsi->cellAttributes() ?>>
+<span id="el_npd_review_gradasiwarna_opsi">
+<template id="tp_x_gradasiwarna_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_gradasiwarnaok" name="x_gradasiwarnaok" id="x_gradasiwarnaok"<?= $Page->gradasiwarnaok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_gradasiwarna_opsi" name="x_gradasiwarna_opsi" id="x_gradasiwarna_opsi"<?= $Page->gradasiwarna_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_gradasiwarnaok" class="ew-item-list"></div>
+<div id="dsl_x_gradasiwarna_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_gradasiwarnaok"
-    name="x_gradasiwarnaok"
-    value="<?= HtmlEncode($Page->gradasiwarnaok->CurrentValue) ?>"
+    id="x_gradasiwarna_opsi"
+    name="x_gradasiwarna_opsi"
+    value="<?= HtmlEncode($Page->gradasiwarna_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_gradasiwarnaok"
-    data-target="dsl_x_gradasiwarnaok"
+    data-template="tp_x_gradasiwarna_opsi"
+    data-target="dsl_x_gradasiwarna_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->gradasiwarnaok->isInvalidClass() ?>"
+    class="form-control<?= $Page->gradasiwarna_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_gradasiwarnaok"
-    data-value-separator="<?= $Page->gradasiwarnaok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->gradasiwarnaok->editAttributes() ?>>
-<?= $Page->gradasiwarnaok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->gradasiwarnaok->getErrorMessage() ?></div>
+    data-field="x_gradasiwarna_opsi"
+    data-value-separator="<?= $Page->gradasiwarna_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->gradasiwarna_opsi->editAttributes() ?>>
+<?= $Page->gradasiwarna_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->gradasiwarna_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->gradasiwarnarevisi->Visible) { // gradasiwarnarevisi ?>
-    <div id="r_gradasiwarnarevisi" class="form-group row">
-        <label id="elh_npd_review_gradasiwarnarevisi" for="x_gradasiwarnarevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->gradasiwarnarevisi->caption() ?><?= $Page->gradasiwarnarevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->gradasiwarnarevisi->cellAttributes() ?>>
-<span id="el_npd_review_gradasiwarnarevisi">
-<input type="<?= $Page->gradasiwarnarevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_gradasiwarnarevisi" name="x_gradasiwarnarevisi" id="x_gradasiwarnarevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->gradasiwarnarevisi->getPlaceHolder()) ?>" value="<?= $Page->gradasiwarnarevisi->EditValue ?>"<?= $Page->gradasiwarnarevisi->editAttributes() ?> aria-describedby="x_gradasiwarnarevisi_help">
-<?= $Page->gradasiwarnarevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->gradasiwarnarevisi->getErrorMessage() ?></div>
+<?php if ($Page->gradasiwarna_revisi->Visible) { // gradasiwarna_revisi ?>
+    <div id="r_gradasiwarna_revisi" class="form-group row">
+        <label id="elh_npd_review_gradasiwarna_revisi" for="x_gradasiwarna_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->gradasiwarna_revisi->caption() ?><?= $Page->gradasiwarna_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->gradasiwarna_revisi->cellAttributes() ?>>
+<span id="el_npd_review_gradasiwarna_revisi">
+<input type="<?= $Page->gradasiwarna_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_gradasiwarna_revisi" name="x_gradasiwarna_revisi" id="x_gradasiwarna_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->gradasiwarna_revisi->getPlaceHolder()) ?>" value="<?= $Page->gradasiwarna_revisi->EditValue ?>"<?= $Page->gradasiwarna_revisi->editAttributes() ?> aria-describedby="x_gradasiwarna_revisi_help">
+<?= $Page->gradasiwarna_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->gradasiwarna_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->bauok->Visible) { // bauok ?>
-    <div id="r_bauok" class="form-group row">
-        <label id="elh_npd_review_bauok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bauok->caption() ?><?= $Page->bauok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bauok->cellAttributes() ?>>
-<span id="el_npd_review_bauok">
-<template id="tp_x_bauok">
+<?php if ($Page->bauparfum_opsi->Visible) { // bauparfum_opsi ?>
+    <div id="r_bauparfum_opsi" class="form-group row">
+        <label id="elh_npd_review_bauparfum_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bauparfum_opsi->caption() ?><?= $Page->bauparfum_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bauparfum_opsi->cellAttributes() ?>>
+<span id="el_npd_review_bauparfum_opsi">
+<template id="tp_x_bauparfum_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_bauok" name="x_bauok" id="x_bauok"<?= $Page->bauok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_bauparfum_opsi" name="x_bauparfum_opsi" id="x_bauparfum_opsi"<?= $Page->bauparfum_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_bauok" class="ew-item-list"></div>
+<div id="dsl_x_bauparfum_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_bauok"
-    name="x_bauok"
-    value="<?= HtmlEncode($Page->bauok->CurrentValue) ?>"
+    id="x_bauparfum_opsi"
+    name="x_bauparfum_opsi"
+    value="<?= HtmlEncode($Page->bauparfum_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_bauok"
-    data-target="dsl_x_bauok"
+    data-template="tp_x_bauparfum_opsi"
+    data-target="dsl_x_bauparfum_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->bauok->isInvalidClass() ?>"
+    class="form-control<?= $Page->bauparfum_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_bauok"
-    data-value-separator="<?= $Page->bauok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->bauok->editAttributes() ?>>
-<?= $Page->bauok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->bauok->getErrorMessage() ?></div>
+    data-field="x_bauparfum_opsi"
+    data-value-separator="<?= $Page->bauparfum_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->bauparfum_opsi->editAttributes() ?>>
+<?= $Page->bauparfum_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->bauparfum_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->baurevisi->Visible) { // baurevisi ?>
-    <div id="r_baurevisi" class="form-group row">
-        <label id="elh_npd_review_baurevisi" for="x_baurevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->baurevisi->caption() ?><?= $Page->baurevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->baurevisi->cellAttributes() ?>>
-<span id="el_npd_review_baurevisi">
-<input type="<?= $Page->baurevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_baurevisi" name="x_baurevisi" id="x_baurevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->baurevisi->getPlaceHolder()) ?>" value="<?= $Page->baurevisi->EditValue ?>"<?= $Page->baurevisi->editAttributes() ?> aria-describedby="x_baurevisi_help">
-<?= $Page->baurevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->baurevisi->getErrorMessage() ?></div>
+<?php if ($Page->bauparfum_revisi->Visible) { // bauparfum_revisi ?>
+    <div id="r_bauparfum_revisi" class="form-group row">
+        <label id="elh_npd_review_bauparfum_revisi" for="x_bauparfum_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bauparfum_revisi->caption() ?><?= $Page->bauparfum_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bauparfum_revisi->cellAttributes() ?>>
+<span id="el_npd_review_bauparfum_revisi">
+<input type="<?= $Page->bauparfum_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_bauparfum_revisi" name="x_bauparfum_revisi" id="x_bauparfum_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->bauparfum_revisi->getPlaceHolder()) ?>" value="<?= $Page->bauparfum_revisi->EditValue ?>"<?= $Page->bauparfum_revisi->editAttributes() ?> aria-describedby="x_bauparfum_revisi_help">
+<?= $Page->bauparfum_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->bauparfum_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->estetikaok->Visible) { // estetikaok ?>
-    <div id="r_estetikaok" class="form-group row">
-        <label id="elh_npd_review_estetikaok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->estetikaok->caption() ?><?= $Page->estetikaok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->estetikaok->cellAttributes() ?>>
-<span id="el_npd_review_estetikaok">
-<template id="tp_x_estetikaok">
+<?php if ($Page->estetika_opsi->Visible) { // estetika_opsi ?>
+    <div id="r_estetika_opsi" class="form-group row">
+        <label id="elh_npd_review_estetika_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->estetika_opsi->caption() ?><?= $Page->estetika_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->estetika_opsi->cellAttributes() ?>>
+<span id="el_npd_review_estetika_opsi">
+<template id="tp_x_estetika_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_estetikaok" name="x_estetikaok" id="x_estetikaok"<?= $Page->estetikaok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_estetika_opsi" name="x_estetika_opsi" id="x_estetika_opsi"<?= $Page->estetika_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_estetikaok" class="ew-item-list"></div>
+<div id="dsl_x_estetika_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_estetikaok"
-    name="x_estetikaok"
-    value="<?= HtmlEncode($Page->estetikaok->CurrentValue) ?>"
+    id="x_estetika_opsi"
+    name="x_estetika_opsi"
+    value="<?= HtmlEncode($Page->estetika_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_estetikaok"
-    data-target="dsl_x_estetikaok"
+    data-template="tp_x_estetika_opsi"
+    data-target="dsl_x_estetika_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->estetikaok->isInvalidClass() ?>"
+    class="form-control<?= $Page->estetika_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_estetikaok"
-    data-value-separator="<?= $Page->estetikaok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->estetikaok->editAttributes() ?>>
-<?= $Page->estetikaok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->estetikaok->getErrorMessage() ?></div>
+    data-field="x_estetika_opsi"
+    data-value-separator="<?= $Page->estetika_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->estetika_opsi->editAttributes() ?>>
+<?= $Page->estetika_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->estetika_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->estetikarevisi->Visible) { // estetikarevisi ?>
-    <div id="r_estetikarevisi" class="form-group row">
-        <label id="elh_npd_review_estetikarevisi" for="x_estetikarevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->estetikarevisi->caption() ?><?= $Page->estetikarevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->estetikarevisi->cellAttributes() ?>>
-<span id="el_npd_review_estetikarevisi">
-<input type="<?= $Page->estetikarevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_estetikarevisi" name="x_estetikarevisi" id="x_estetikarevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->estetikarevisi->getPlaceHolder()) ?>" value="<?= $Page->estetikarevisi->EditValue ?>"<?= $Page->estetikarevisi->editAttributes() ?> aria-describedby="x_estetikarevisi_help">
-<?= $Page->estetikarevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->estetikarevisi->getErrorMessage() ?></div>
+<?php if ($Page->estetika_revisi->Visible) { // estetika_revisi ?>
+    <div id="r_estetika_revisi" class="form-group row">
+        <label id="elh_npd_review_estetika_revisi" for="x_estetika_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->estetika_revisi->caption() ?><?= $Page->estetika_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->estetika_revisi->cellAttributes() ?>>
+<span id="el_npd_review_estetika_revisi">
+<input type="<?= $Page->estetika_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_estetika_revisi" name="x_estetika_revisi" id="x_estetika_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->estetika_revisi->getPlaceHolder()) ?>" value="<?= $Page->estetika_revisi->EditValue ?>"<?= $Page->estetika_revisi->editAttributes() ?> aria-describedby="x_estetika_revisi_help">
+<?= $Page->estetika_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->estetika_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aplikasiawalok->Visible) { // aplikasiawalok ?>
-    <div id="r_aplikasiawalok" class="form-group row">
-        <label id="elh_npd_review_aplikasiawalok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasiawalok->caption() ?><?= $Page->aplikasiawalok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasiawalok->cellAttributes() ?>>
-<span id="el_npd_review_aplikasiawalok">
-<template id="tp_x_aplikasiawalok">
+<?php if ($Page->aplikasiawal_opsi->Visible) { // aplikasiawal_opsi ?>
+    <div id="r_aplikasiawal_opsi" class="form-group row">
+        <label id="elh_npd_review_aplikasiawal_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasiawal_opsi->caption() ?><?= $Page->aplikasiawal_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasiawal_opsi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasiawal_opsi">
+<template id="tp_x_aplikasiawal_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_aplikasiawalok" name="x_aplikasiawalok" id="x_aplikasiawalok"<?= $Page->aplikasiawalok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_aplikasiawal_opsi" name="x_aplikasiawal_opsi" id="x_aplikasiawal_opsi"<?= $Page->aplikasiawal_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_aplikasiawalok" class="ew-item-list"></div>
+<div id="dsl_x_aplikasiawal_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_aplikasiawalok"
-    name="x_aplikasiawalok"
-    value="<?= HtmlEncode($Page->aplikasiawalok->CurrentValue) ?>"
+    id="x_aplikasiawal_opsi"
+    name="x_aplikasiawal_opsi"
+    value="<?= HtmlEncode($Page->aplikasiawal_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_aplikasiawalok"
-    data-target="dsl_x_aplikasiawalok"
+    data-template="tp_x_aplikasiawal_opsi"
+    data-target="dsl_x_aplikasiawal_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->aplikasiawalok->isInvalidClass() ?>"
+    class="form-control<?= $Page->aplikasiawal_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_aplikasiawalok"
-    data-value-separator="<?= $Page->aplikasiawalok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->aplikasiawalok->editAttributes() ?>>
-<?= $Page->aplikasiawalok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aplikasiawalok->getErrorMessage() ?></div>
+    data-field="x_aplikasiawal_opsi"
+    data-value-separator="<?= $Page->aplikasiawal_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->aplikasiawal_opsi->editAttributes() ?>>
+<?= $Page->aplikasiawal_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->aplikasiawal_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aplikasiawalrevisi->Visible) { // aplikasiawalrevisi ?>
-    <div id="r_aplikasiawalrevisi" class="form-group row">
-        <label id="elh_npd_review_aplikasiawalrevisi" for="x_aplikasiawalrevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasiawalrevisi->caption() ?><?= $Page->aplikasiawalrevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasiawalrevisi->cellAttributes() ?>>
-<span id="el_npd_review_aplikasiawalrevisi">
-<input type="<?= $Page->aplikasiawalrevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_aplikasiawalrevisi" name="x_aplikasiawalrevisi" id="x_aplikasiawalrevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aplikasiawalrevisi->getPlaceHolder()) ?>" value="<?= $Page->aplikasiawalrevisi->EditValue ?>"<?= $Page->aplikasiawalrevisi->editAttributes() ?> aria-describedby="x_aplikasiawalrevisi_help">
-<?= $Page->aplikasiawalrevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aplikasiawalrevisi->getErrorMessage() ?></div>
+<?php if ($Page->aplikasiawal_revisi->Visible) { // aplikasiawal_revisi ?>
+    <div id="r_aplikasiawal_revisi" class="form-group row">
+        <label id="elh_npd_review_aplikasiawal_revisi" for="x_aplikasiawal_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasiawal_revisi->caption() ?><?= $Page->aplikasiawal_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasiawal_revisi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasiawal_revisi">
+<input type="<?= $Page->aplikasiawal_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_aplikasiawal_revisi" name="x_aplikasiawal_revisi" id="x_aplikasiawal_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aplikasiawal_revisi->getPlaceHolder()) ?>" value="<?= $Page->aplikasiawal_revisi->EditValue ?>"<?= $Page->aplikasiawal_revisi->editAttributes() ?> aria-describedby="x_aplikasiawal_revisi_help">
+<?= $Page->aplikasiawal_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->aplikasiawal_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aplikasilamaok->Visible) { // aplikasilamaok ?>
-    <div id="r_aplikasilamaok" class="form-group row">
-        <label id="elh_npd_review_aplikasilamaok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasilamaok->caption() ?><?= $Page->aplikasilamaok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasilamaok->cellAttributes() ?>>
-<span id="el_npd_review_aplikasilamaok">
-<template id="tp_x_aplikasilamaok">
+<?php if ($Page->aplikasilama_opsi->Visible) { // aplikasilama_opsi ?>
+    <div id="r_aplikasilama_opsi" class="form-group row">
+        <label id="elh_npd_review_aplikasilama_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasilama_opsi->caption() ?><?= $Page->aplikasilama_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasilama_opsi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasilama_opsi">
+<template id="tp_x_aplikasilama_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_aplikasilamaok" name="x_aplikasilamaok" id="x_aplikasilamaok"<?= $Page->aplikasilamaok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_aplikasilama_opsi" name="x_aplikasilama_opsi" id="x_aplikasilama_opsi"<?= $Page->aplikasilama_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_aplikasilamaok" class="ew-item-list"></div>
+<div id="dsl_x_aplikasilama_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_aplikasilamaok"
-    name="x_aplikasilamaok"
-    value="<?= HtmlEncode($Page->aplikasilamaok->CurrentValue) ?>"
+    id="x_aplikasilama_opsi"
+    name="x_aplikasilama_opsi"
+    value="<?= HtmlEncode($Page->aplikasilama_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_aplikasilamaok"
-    data-target="dsl_x_aplikasilamaok"
+    data-template="tp_x_aplikasilama_opsi"
+    data-target="dsl_x_aplikasilama_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->aplikasilamaok->isInvalidClass() ?>"
+    class="form-control<?= $Page->aplikasilama_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_aplikasilamaok"
-    data-value-separator="<?= $Page->aplikasilamaok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->aplikasilamaok->editAttributes() ?>>
-<?= $Page->aplikasilamaok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aplikasilamaok->getErrorMessage() ?></div>
+    data-field="x_aplikasilama_opsi"
+    data-value-separator="<?= $Page->aplikasilama_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->aplikasilama_opsi->editAttributes() ?>>
+<?= $Page->aplikasilama_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->aplikasilama_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aplikasilamarevisi->Visible) { // aplikasilamarevisi ?>
-    <div id="r_aplikasilamarevisi" class="form-group row">
-        <label id="elh_npd_review_aplikasilamarevisi" for="x_aplikasilamarevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasilamarevisi->caption() ?><?= $Page->aplikasilamarevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasilamarevisi->cellAttributes() ?>>
-<span id="el_npd_review_aplikasilamarevisi">
-<input type="<?= $Page->aplikasilamarevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_aplikasilamarevisi" name="x_aplikasilamarevisi" id="x_aplikasilamarevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aplikasilamarevisi->getPlaceHolder()) ?>" value="<?= $Page->aplikasilamarevisi->EditValue ?>"<?= $Page->aplikasilamarevisi->editAttributes() ?> aria-describedby="x_aplikasilamarevisi_help">
-<?= $Page->aplikasilamarevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aplikasilamarevisi->getErrorMessage() ?></div>
+<?php if ($Page->aplikasilama_revisi->Visible) { // aplikasilama_revisi ?>
+    <div id="r_aplikasilama_revisi" class="form-group row">
+        <label id="elh_npd_review_aplikasilama_revisi" for="x_aplikasilama_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasilama_revisi->caption() ?><?= $Page->aplikasilama_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasilama_revisi->cellAttributes() ?>>
+<span id="el_npd_review_aplikasilama_revisi">
+<input type="<?= $Page->aplikasilama_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_aplikasilama_revisi" name="x_aplikasilama_revisi" id="x_aplikasilama_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aplikasilama_revisi->getPlaceHolder()) ?>" value="<?= $Page->aplikasilama_revisi->EditValue ?>"<?= $Page->aplikasilama_revisi->editAttributes() ?> aria-describedby="x_aplikasilama_revisi_help">
+<?= $Page->aplikasilama_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->aplikasilama_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->efekpositifok->Visible) { // efekpositifok ?>
-    <div id="r_efekpositifok" class="form-group row">
-        <label id="elh_npd_review_efekpositifok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efekpositifok->caption() ?><?= $Page->efekpositifok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efekpositifok->cellAttributes() ?>>
-<span id="el_npd_review_efekpositifok">
-<template id="tp_x_efekpositifok">
+<?php if ($Page->efekpositif_opsi->Visible) { // efekpositif_opsi ?>
+    <div id="r_efekpositif_opsi" class="form-group row">
+        <label id="elh_npd_review_efekpositif_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efekpositif_opsi->caption() ?><?= $Page->efekpositif_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efekpositif_opsi->cellAttributes() ?>>
+<span id="el_npd_review_efekpositif_opsi">
+<template id="tp_x_efekpositif_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_efekpositifok" name="x_efekpositifok" id="x_efekpositifok"<?= $Page->efekpositifok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_efekpositif_opsi" name="x_efekpositif_opsi" id="x_efekpositif_opsi"<?= $Page->efekpositif_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_efekpositifok" class="ew-item-list"></div>
+<div id="dsl_x_efekpositif_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_efekpositifok"
-    name="x_efekpositifok"
-    value="<?= HtmlEncode($Page->efekpositifok->CurrentValue) ?>"
+    id="x_efekpositif_opsi"
+    name="x_efekpositif_opsi"
+    value="<?= HtmlEncode($Page->efekpositif_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_efekpositifok"
-    data-target="dsl_x_efekpositifok"
+    data-template="tp_x_efekpositif_opsi"
+    data-target="dsl_x_efekpositif_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->efekpositifok->isInvalidClass() ?>"
+    class="form-control<?= $Page->efekpositif_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_efekpositifok"
-    data-value-separator="<?= $Page->efekpositifok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->efekpositifok->editAttributes() ?>>
-<?= $Page->efekpositifok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->efekpositifok->getErrorMessage() ?></div>
+    data-field="x_efekpositif_opsi"
+    data-value-separator="<?= $Page->efekpositif_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->efekpositif_opsi->editAttributes() ?>>
+<?= $Page->efekpositif_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->efekpositif_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->efekpositifrevisi->Visible) { // efekpositifrevisi ?>
-    <div id="r_efekpositifrevisi" class="form-group row">
-        <label id="elh_npd_review_efekpositifrevisi" for="x_efekpositifrevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efekpositifrevisi->caption() ?><?= $Page->efekpositifrevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efekpositifrevisi->cellAttributes() ?>>
-<span id="el_npd_review_efekpositifrevisi">
-<input type="<?= $Page->efekpositifrevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_efekpositifrevisi" name="x_efekpositifrevisi" id="x_efekpositifrevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->efekpositifrevisi->getPlaceHolder()) ?>" value="<?= $Page->efekpositifrevisi->EditValue ?>"<?= $Page->efekpositifrevisi->editAttributes() ?> aria-describedby="x_efekpositifrevisi_help">
-<?= $Page->efekpositifrevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->efekpositifrevisi->getErrorMessage() ?></div>
+<?php if ($Page->efekpositif_revisi->Visible) { // efekpositif_revisi ?>
+    <div id="r_efekpositif_revisi" class="form-group row">
+        <label id="elh_npd_review_efekpositif_revisi" for="x_efekpositif_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efekpositif_revisi->caption() ?><?= $Page->efekpositif_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efekpositif_revisi->cellAttributes() ?>>
+<span id="el_npd_review_efekpositif_revisi">
+<input type="<?= $Page->efekpositif_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_efekpositif_revisi" name="x_efekpositif_revisi" id="x_efekpositif_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->efekpositif_revisi->getPlaceHolder()) ?>" value="<?= $Page->efekpositif_revisi->EditValue ?>"<?= $Page->efekpositif_revisi->editAttributes() ?> aria-describedby="x_efekpositif_revisi_help">
+<?= $Page->efekpositif_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->efekpositif_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->efeknegatifok->Visible) { // efeknegatifok ?>
-    <div id="r_efeknegatifok" class="form-group row">
-        <label id="elh_npd_review_efeknegatifok" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efeknegatifok->caption() ?><?= $Page->efeknegatifok->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efeknegatifok->cellAttributes() ?>>
-<span id="el_npd_review_efeknegatifok">
-<template id="tp_x_efeknegatifok">
+<?php if ($Page->efeknegatif_opsi->Visible) { // efeknegatif_opsi ?>
+    <div id="r_efeknegatif_opsi" class="form-group row">
+        <label id="elh_npd_review_efeknegatif_opsi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efeknegatif_opsi->caption() ?><?= $Page->efeknegatif_opsi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efeknegatif_opsi->cellAttributes() ?>>
+<span id="el_npd_review_efeknegatif_opsi">
+<template id="tp_x_efeknegatif_opsi">
     <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_efeknegatifok" name="x_efeknegatifok" id="x_efeknegatifok"<?= $Page->efeknegatifok->editAttributes() ?>>
+        <input type="radio" class="custom-control-input" data-table="npd_review" data-field="x_efeknegatif_opsi" name="x_efeknegatif_opsi" id="x_efeknegatif_opsi"<?= $Page->efeknegatif_opsi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_efeknegatifok" class="ew-item-list"></div>
+<div id="dsl_x_efeknegatif_opsi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_efeknegatifok"
-    name="x_efeknegatifok"
-    value="<?= HtmlEncode($Page->efeknegatifok->CurrentValue) ?>"
+    id="x_efeknegatif_opsi"
+    name="x_efeknegatif_opsi"
+    value="<?= HtmlEncode($Page->efeknegatif_opsi->CurrentValue) ?>"
     data-type="select-one"
-    data-template="tp_x_efeknegatifok"
-    data-target="dsl_x_efeknegatifok"
+    data-template="tp_x_efeknegatif_opsi"
+    data-target="dsl_x_efeknegatif_opsi"
     data-repeatcolumn="5"
-    class="form-control<?= $Page->efeknegatifok->isInvalidClass() ?>"
+    class="form-control<?= $Page->efeknegatif_opsi->isInvalidClass() ?>"
     data-table="npd_review"
-    data-field="x_efeknegatifok"
-    data-value-separator="<?= $Page->efeknegatifok->displayValueSeparatorAttribute() ?>"
-    <?= $Page->efeknegatifok->editAttributes() ?>>
-<?= $Page->efeknegatifok->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->efeknegatifok->getErrorMessage() ?></div>
+    data-field="x_efeknegatif_opsi"
+    data-value-separator="<?= $Page->efeknegatif_opsi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->efeknegatif_opsi->editAttributes() ?>>
+<?= $Page->efeknegatif_opsi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->efeknegatif_opsi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->efeknegatifrevisi->Visible) { // efeknegatifrevisi ?>
-    <div id="r_efeknegatifrevisi" class="form-group row">
-        <label id="elh_npd_review_efeknegatifrevisi" for="x_efeknegatifrevisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efeknegatifrevisi->caption() ?><?= $Page->efeknegatifrevisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efeknegatifrevisi->cellAttributes() ?>>
-<span id="el_npd_review_efeknegatifrevisi">
-<input type="<?= $Page->efeknegatifrevisi->getInputTextType() ?>" data-table="npd_review" data-field="x_efeknegatifrevisi" name="x_efeknegatifrevisi" id="x_efeknegatifrevisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->efeknegatifrevisi->getPlaceHolder()) ?>" value="<?= $Page->efeknegatifrevisi->EditValue ?>"<?= $Page->efeknegatifrevisi->editAttributes() ?> aria-describedby="x_efeknegatifrevisi_help">
-<?= $Page->efeknegatifrevisi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->efeknegatifrevisi->getErrorMessage() ?></div>
+<?php if ($Page->efeknegatif_revisi->Visible) { // efeknegatif_revisi ?>
+    <div id="r_efeknegatif_revisi" class="form-group row">
+        <label id="elh_npd_review_efeknegatif_revisi" for="x_efeknegatif_revisi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->efeknegatif_revisi->caption() ?><?= $Page->efeknegatif_revisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->efeknegatif_revisi->cellAttributes() ?>>
+<span id="el_npd_review_efeknegatif_revisi">
+<input type="<?= $Page->efeknegatif_revisi->getInputTextType() ?>" data-table="npd_review" data-field="x_efeknegatif_revisi" name="x_efeknegatif_revisi" id="x_efeknegatif_revisi" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->efeknegatif_revisi->getPlaceHolder()) ?>" value="<?= $Page->efeknegatif_revisi->EditValue ?>"<?= $Page->efeknegatif_revisi->editAttributes() ?> aria-describedby="x_efeknegatif_revisi_help">
+<?= $Page->efeknegatif_revisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->efeknegatif_revisi->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -809,9 +809,18 @@ loadjs.ready(["fnpd_reviewadd", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_npd_review_created_by">
-    <input type="hidden" data-table="npd_review" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
-    </span>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <div id="r_ukuran" class="form-group row">
+        <label id="elh_npd_review_ukuran" for="x_ukuran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ukuran->caption() ?><?= $Page->ukuran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el_npd_review_ukuran">
+<input type="<?= $Page->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x_ukuran" id="x_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ukuran->getPlaceHolder()) ?>" value="<?= $Page->ukuran->EditValue ?>"<?= $Page->ukuran->editAttributes() ?> aria-describedby="x_ukuran_help">
+<?= $Page->ukuran->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ukuran->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->

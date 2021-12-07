@@ -20,15 +20,17 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd_status)
         ew.vars.tables.npd_status = currentTable;
     fnpd_statusadd.addFields([
-        ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
+        ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null, ew.Validators.integer], fields.idnpd.isInvalid],
+        ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null, ew.Validators.integer], fields.idpegawai.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["targetmulai", [fields.targetmulai.visible && fields.targetmulai.required ? ew.Validators.required(fields.targetmulai.caption) : null, ew.Validators.datetime(0)], fields.targetmulai.isInvalid],
         ["tglmulai", [fields.tglmulai.visible && fields.tglmulai.required ? ew.Validators.required(fields.tglmulai.caption) : null, ew.Validators.datetime(0)], fields.tglmulai.isInvalid],
         ["targetselesai", [fields.targetselesai.visible && fields.targetselesai.required ? ew.Validators.required(fields.targetselesai.caption) : null, ew.Validators.datetime(0)], fields.targetselesai.isInvalid],
         ["tglselesai", [fields.tglselesai.visible && fields.tglselesai.required ? ew.Validators.required(fields.tglselesai.caption) : null, ew.Validators.datetime(0)], fields.tglselesai.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
-        ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
+        ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.required(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
+        ["created_at", [fields.created_at.visible && fields.created_at.required ? ew.Validators.required(fields.created_at.caption) : null, ew.Validators.datetime(0)], fields.created_at.isInvalid],
+        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null, ew.Validators.integer], fields.created_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -95,7 +97,6 @@ loadjs.ready("head", function () {
     fnpd_statusadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fnpd_statusadd.lists.idpegawai = <?= $Page->idpegawai->toClientList($Page) ?>;
     loadjs.done("fnpd_statusadd");
 });
 </script>
@@ -117,40 +118,27 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="insert">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<?php if ($Page->getCurrentMasterTable() == "npd") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
-<?php } ?>
 <div class="ew-add-div"><!-- page* -->
+<?php if ($Page->idnpd->Visible) { // idnpd ?>
+    <div id="r_idnpd" class="form-group row">
+        <label id="elh_npd_status_idnpd" for="x_idnpd" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idnpd->caption() ?><?= $Page->idnpd->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idnpd->cellAttributes() ?>>
+<span id="el_npd_status_idnpd">
+<input type="<?= $Page->idnpd->getInputTextType() ?>" data-table="npd_status" data-field="x_idnpd" name="x_idnpd" id="x_idnpd" size="30" placeholder="<?= HtmlEncode($Page->idnpd->getPlaceHolder()) ?>" value="<?= $Page->idnpd->EditValue ?>"<?= $Page->idnpd->editAttributes() ?> aria-describedby="x_idnpd_help">
+<?= $Page->idnpd->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idnpd->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
     <div id="r_idpegawai" class="form-group row">
         <label id="elh_npd_status_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idpegawai->cellAttributes() ?>>
 <span id="el_npd_status_idpegawai">
-    <select
-        id="x_idpegawai"
-        name="x_idpegawai"
-        class="form-control ew-select<?= $Page->idpegawai->isInvalidClass() ?>"
-        data-select2-id="npd_status_x_idpegawai"
-        data-table="npd_status"
-        data-field="x_idpegawai"
-        data-value-separator="<?= $Page->idpegawai->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idpegawai->getPlaceHolder()) ?>"
-        <?= $Page->idpegawai->editAttributes() ?>>
-        <?= $Page->idpegawai->selectOptionListHtml("x_idpegawai") ?>
-    </select>
-    <?= $Page->idpegawai->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idpegawai->getErrorMessage() ?></div>
-<?= $Page->idpegawai->Lookup->getParamTag($Page, "p_x_idpegawai") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_status_x_idpegawai']"),
-        options = { name: "x_idpegawai", selectId: "npd_status_x_idpegawai", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_status.fields.idpegawai.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Page->idpegawai->getInputTextType() ?>" data-table="npd_status" data-field="x_idpegawai" name="x_idpegawai" id="x_idpegawai" size="30" placeholder="<?= HtmlEncode($Page->idpegawai->getPlaceHolder()) ?>" value="<?= $Page->idpegawai->EditValue ?>"<?= $Page->idpegawai->editAttributes() ?> aria-describedby="x_idpegawai_help">
+<?= $Page->idpegawai->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idpegawai->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -248,7 +236,7 @@ loadjs.ready(["fnpd_statusadd", "datetimepicker"], function() {
         <label id="elh_npd_status_keterangan" for="x_keterangan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->keterangan->caption() ?><?= $Page->keterangan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->keterangan->cellAttributes() ?>>
 <span id="el_npd_status_keterangan">
-<input type="<?= $Page->keterangan->getInputTextType() ?>" data-table="npd_status" data-field="x_keterangan" name="x_keterangan" id="x_keterangan" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->keterangan->getPlaceHolder()) ?>" value="<?= $Page->keterangan->EditValue ?>"<?= $Page->keterangan->editAttributes() ?> aria-describedby="x_keterangan_help">
+<input type="<?= $Page->keterangan->getInputTextType() ?>" data-table="npd_status" data-field="x_keterangan" name="x_keterangan" id="x_keterangan" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->keterangan->getPlaceHolder()) ?>" value="<?= $Page->keterangan->EditValue ?>"<?= $Page->keterangan->editAttributes() ?> aria-describedby="x_keterangan_help">
 <?= $Page->keterangan->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->keterangan->getErrorMessage() ?></div>
 </span>
@@ -257,36 +245,48 @@ loadjs.ready(["fnpd_statusadd", "datetimepicker"], function() {
 <?php } ?>
 <?php if ($Page->lampiran->Visible) { // lampiran ?>
     <div id="r_lampiran" class="form-group row">
-        <label id="elh_npd_status_lampiran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->lampiran->caption() ?><?= $Page->lampiran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_status_lampiran" for="x_lampiran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->lampiran->caption() ?><?= $Page->lampiran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->lampiran->cellAttributes() ?>>
 <span id="el_npd_status_lampiran">
-<div id="fd_x_lampiran">
-<div class="input-group">
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" title="<?= $Page->lampiran->title() ?>" data-table="npd_status" data-field="x_lampiran" name="x_lampiran" id="x_lampiran" lang="<?= CurrentLanguageID() ?>"<?= $Page->lampiran->editAttributes() ?><?= ($Page->lampiran->ReadOnly || $Page->lampiran->Disabled) ? " disabled" : "" ?> aria-describedby="x_lampiran_help">
-        <label class="custom-file-label ew-file-label" for="x_lampiran"><?= $Language->phrase("ChooseFile") ?></label>
-    </div>
-</div>
+<input type="<?= $Page->lampiran->getInputTextType() ?>" data-table="npd_status" data-field="x_lampiran" name="x_lampiran" id="x_lampiran" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->lampiran->getPlaceHolder()) ?>" value="<?= $Page->lampiran->EditValue ?>"<?= $Page->lampiran->editAttributes() ?> aria-describedby="x_lampiran_help">
 <?= $Page->lampiran->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->lampiran->getErrorMessage() ?></div>
-<input type="hidden" name="fn_x_lampiran" id= "fn_x_lampiran" value="<?= $Page->lampiran->Upload->FileName ?>">
-<input type="hidden" name="fa_x_lampiran" id= "fa_x_lampiran" value="0">
-<input type="hidden" name="fs_x_lampiran" id= "fs_x_lampiran" value="255">
-<input type="hidden" name="fx_x_lampiran" id= "fx_x_lampiran" value="<?= $Page->lampiran->UploadAllowedFileExt ?>">
-<input type="hidden" name="fm_x_lampiran" id= "fm_x_lampiran" value="<?= $Page->lampiran->UploadMaxFileSize ?>">
-</div>
-<table id="ft_x_lampiran" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
 </span>
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_npd_status_created_by">
-    <input type="hidden" data-table="npd_status" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
-    </span>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+    <div id="r_created_at" class="form-group row">
+        <label id="elh_npd_status_created_at" for="x_created_at" class="<?= $Page->LeftColumnClass ?>"><?= $Page->created_at->caption() ?><?= $Page->created_at->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->created_at->cellAttributes() ?>>
+<span id="el_npd_status_created_at">
+<input type="<?= $Page->created_at->getInputTextType() ?>" data-table="npd_status" data-field="x_created_at" name="x_created_at" id="x_created_at" placeholder="<?= HtmlEncode($Page->created_at->getPlaceHolder()) ?>" value="<?= $Page->created_at->EditValue ?>"<?= $Page->created_at->editAttributes() ?> aria-describedby="x_created_at_help">
+<?= $Page->created_at->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->created_at->getErrorMessage() ?></div>
+<?php if (!$Page->created_at->ReadOnly && !$Page->created_at->Disabled && !isset($Page->created_at->EditAttrs["readonly"]) && !isset($Page->created_at->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fnpd_statusadd", "datetimepicker"], function() {
+    ew.createDateTimePicker("fnpd_statusadd", "x_created_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->created_by->Visible) { // created_by ?>
+    <div id="r_created_by" class="form-group row">
+        <label id="elh_npd_status_created_by" for="x_created_by" class="<?= $Page->LeftColumnClass ?>"><?= $Page->created_by->caption() ?><?= $Page->created_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->created_by->cellAttributes() ?>>
+<span id="el_npd_status_created_by">
+<input type="<?= $Page->created_by->getInputTextType() ?>" data-table="npd_status" data-field="x_created_by" name="x_created_by" id="x_created_by" size="30" placeholder="<?= HtmlEncode($Page->created_by->getPlaceHolder()) ?>" value="<?= $Page->created_by->EditValue ?>"<?= $Page->created_by->editAttributes() ?> aria-describedby="x_created_by_help">
+<?= $Page->created_by->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->created_by->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
-    <?php if (strval($Page->idnpd->getSessionValue()) != "") { ?>
-    <input type="hidden" name="x_idnpd" id="x_idnpd" value="<?= HtmlEncode(strval($Page->idnpd->getSessionValue())) ?>">
-    <?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

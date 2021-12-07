@@ -27,9 +27,9 @@ loadjs.ready("head", function () {
         ["idjenisbarang", [fields.idjenisbarang.visible && fields.idjenisbarang.required ? ew.Validators.required(fields.idjenisbarang.caption) : null], fields.idjenisbarang.isInvalid],
         ["idkualitasbarang", [fields.idkualitasbarang.visible && fields.idkualitasbarang.required ? ew.Validators.required(fields.idkualitasbarang.caption) : null], fields.idkualitasbarang.isInvalid],
         ["idproduct_acuan", [fields.idproduct_acuan.visible && fields.idproduct_acuan.required ? ew.Validators.required(fields.idproduct_acuan.caption) : null], fields.idproduct_acuan.isInvalid],
+        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["kemasanbarang", [fields.kemasanbarang.visible && fields.kemasanbarang.required ? ew.Validators.required(fields.kemasanbarang.caption) : null], fields.kemasanbarang.isInvalid],
         ["harga", [fields.harga.visible && fields.harga.required ? ew.Validators.required(fields.harga.caption) : null, ew.Validators.integer], fields.harga.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["bahan", [fields.bahan.visible && fields.bahan.required ? ew.Validators.required(fields.bahan.caption) : null], fields.bahan.isInvalid],
         ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
         ["parfum", [fields.parfum.visible && fields.parfum.required ? ew.Validators.required(fields.parfum.caption) : null], fields.parfum.isInvalid],
@@ -335,6 +335,18 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <div id="r_ukuran" class="form-group row">
+        <label id="elh_product_ukuran" for="x_ukuran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ukuran->caption() ?><?= $Page->ukuran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el_product_ukuran">
+<input type="<?= $Page->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x_ukuran" id="x_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ukuran->getPlaceHolder()) ?>" value="<?= $Page->ukuran->EditValue ?>"<?= $Page->ukuran->editAttributes() ?> aria-describedby="x_ukuran_help">
+<?= $Page->ukuran->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ukuran->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
     <div id="r_kemasanbarang" class="form-group row">
         <label id="elh_product_kemasanbarang" for="x_kemasanbarang" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kemasanbarang->caption() ?><?= $Page->kemasanbarang->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -355,18 +367,6 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->harga->getInputTextType() ?>" data-table="product" data-field="x_harga" name="x_harga" id="x_harga" size="30" placeholder="<?= HtmlEncode($Page->harga->getPlaceHolder()) ?>" value="<?= $Page->harga->EditValue ?>"<?= $Page->harga->editAttributes() ?> aria-describedby="x_harga_help">
 <?= $Page->harga->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->harga->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <div id="r_ukuran" class="form-group row">
-        <label id="elh_product_ukuran" for="x_ukuran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ukuran->caption() ?><?= $Page->ukuran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el_product_ukuran">
-<input type="<?= $Page->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x_ukuran" id="x_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ukuran->getPlaceHolder()) ?>" value="<?= $Page->ukuran->EditValue ?>"<?= $Page->ukuran->editAttributes() ?> aria-describedby="x_ukuran_help">
-<?= $Page->ukuran->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->ukuran->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

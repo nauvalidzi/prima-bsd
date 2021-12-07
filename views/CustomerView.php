@@ -351,12 +351,12 @@ $Page->showMessage();
     }
 ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")) ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")) ?></a></li>
 <?php
     }
 ?>
@@ -371,12 +371,12 @@ $Page->showMessage();
     }
 ?>
 <?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")) ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")) ?></a></li>
 <?php
     }
 ?>
@@ -393,13 +393,13 @@ $Page->showMessage();
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
-<?php include_once "InvoiceGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
+<?php include_once "BrandCustomerGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
 <?php
@@ -413,13 +413,13 @@ $Page->showMessage();
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
-<?php include_once "BrandCustomerGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
+<?php include_once "InvoiceGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

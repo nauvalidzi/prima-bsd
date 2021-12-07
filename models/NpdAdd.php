@@ -466,31 +466,40 @@ class NpdAdd extends Npd
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->status->setVisibility();
-        $this->idpegawai->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->kodeorder->setVisibility();
-        $this->idproduct_acuan->setVisibility();
-        $this->nama->setVisibility();
-        $this->idjenisbarang->setVisibility();
-        $this->idkategoribarang->setVisibility();
-        $this->warna->setVisibility();
-        $this->parfum->setVisibility();
-        $this->tambahan->setVisibility();
-        $this->kemasanbarang->setVisibility();
-        $this->label->setVisibility();
-        $this->orderperdana->setVisibility();
-        $this->orderreguler->setVisibility();
-        $this->selesai->Visible = false;
-        $this->readonly->Visible = false;
-        $this->created_at->Visible = false;
         $this->tanggal_order->setVisibility();
         $this->target_selesai->setVisibility();
-        $this->kategori->setVisibility();
-        $this->fungsi_produk->setVisibility();
-        $this->kualitasbarang->setVisibility();
+        $this->status->setVisibility();
+        $this->kodeorder->setVisibility();
+        $this->nomororder->setVisibility();
+        $this->idpegawai->setVisibility();
+        $this->idcustomer->setVisibility();
+        $this->idproduct_acuan->setVisibility();
+        $this->idjenisproduk->setVisibility();
+        $this->idkategoriproduk->setVisibility();
+        $this->fungsiproduk->setVisibility();
+        $this->kualitasproduk->setVisibility();
         $this->bahan_campaign->setVisibility();
         $this->ukuran_sediaan->setVisibility();
+        $this->bentuk->setVisibility();
+        $this->viskositas->setVisibility();
+        $this->warna->setVisibility();
+        $this->parfum->setVisibility();
+        $this->aplikasi->setVisibility();
+        $this->estetika->setVisibility();
+        $this->tambahan->setVisibility();
+        $this->ukurankemasan->setVisibility();
+        $this->kemasanbentuk->setVisibility();
+        $this->kemasantutup->setVisibility();
+        $this->kemasancatatan->setVisibility();
+        $this->labelbahan->setVisibility();
+        $this->labelkualitas->setVisibility();
+        $this->labelposisi->setVisibility();
+        $this->labelcatatan->setVisibility();
+        $this->statusdokumen->setVisibility();
+        $this->readonly->Visible = false;
+        $this->selesai->Visible = false;
+        $this->created_at->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -511,8 +520,19 @@ class NpdAdd extends Npd
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idproduct_acuan);
-        $this->setupLookupOptions($this->idjenisbarang);
-        $this->setupLookupOptions($this->idkategoribarang);
+        $this->setupLookupOptions($this->idjenisproduk);
+        $this->setupLookupOptions($this->idkategoriproduk);
+        $this->setupLookupOptions($this->bentuk);
+        $this->setupLookupOptions($this->viskositas);
+        $this->setupLookupOptions($this->warna);
+        $this->setupLookupOptions($this->parfum);
+        $this->setupLookupOptions($this->aplikasi);
+        $this->setupLookupOptions($this->estetika);
+        $this->setupLookupOptions($this->kemasanbentuk);
+        $this->setupLookupOptions($this->kemasantutup);
+        $this->setupLookupOptions($this->labelbahan);
+        $this->setupLookupOptions($this->labelkualitas);
+        $this->setupLookupOptions($this->labelposisi);
 
         // Check modal
         if ($this->IsModal) {
@@ -660,51 +680,69 @@ class NpdAdd extends Npd
     {
         $this->id->CurrentValue = null;
         $this->id->OldValue = $this->id->CurrentValue;
-        $this->status->CurrentValue = "Baru";
-        $this->idpegawai->CurrentValue = CurrentUserID();
-        $this->idcustomer->CurrentValue = null;
-        $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-        $this->kodeorder->CurrentValue = null;
-        $this->kodeorder->OldValue = $this->kodeorder->CurrentValue;
-        $this->idproduct_acuan->CurrentValue = null;
-        $this->idproduct_acuan->OldValue = $this->idproduct_acuan->CurrentValue;
-        $this->nama->CurrentValue = null;
-        $this->nama->OldValue = $this->nama->CurrentValue;
-        $this->idjenisbarang->CurrentValue = null;
-        $this->idjenisbarang->OldValue = $this->idjenisbarang->CurrentValue;
-        $this->idkategoribarang->CurrentValue = null;
-        $this->idkategoribarang->OldValue = $this->idkategoribarang->CurrentValue;
-        $this->warna->CurrentValue = null;
-        $this->warna->OldValue = $this->warna->CurrentValue;
-        $this->parfum->CurrentValue = null;
-        $this->parfum->OldValue = $this->parfum->CurrentValue;
-        $this->tambahan->CurrentValue = null;
-        $this->tambahan->OldValue = $this->tambahan->CurrentValue;
-        $this->kemasanbarang->CurrentValue = null;
-        $this->kemasanbarang->OldValue = $this->kemasanbarang->CurrentValue;
-        $this->label->CurrentValue = null;
-        $this->label->OldValue = $this->label->CurrentValue;
-        $this->orderperdana->CurrentValue = null;
-        $this->orderperdana->OldValue = $this->orderperdana->CurrentValue;
-        $this->orderreguler->CurrentValue = null;
-        $this->orderreguler->OldValue = $this->orderreguler->CurrentValue;
-        $this->selesai->CurrentValue = 0;
-        $this->readonly->CurrentValue = 0;
-        $this->created_at->CurrentValue = null;
-        $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->tanggal_order->CurrentValue = null;
         $this->tanggal_order->OldValue = $this->tanggal_order->CurrentValue;
         $this->target_selesai->CurrentValue = null;
         $this->target_selesai->OldValue = $this->target_selesai->CurrentValue;
-        $this->kategori->CurrentValue = "Baru";
-        $this->fungsi_produk->CurrentValue = null;
-        $this->fungsi_produk->OldValue = $this->fungsi_produk->CurrentValue;
-        $this->kualitasbarang->CurrentValue = null;
-        $this->kualitasbarang->OldValue = $this->kualitasbarang->CurrentValue;
+        $this->status->CurrentValue = "Baru";
+        $this->kodeorder->CurrentValue = null;
+        $this->kodeorder->OldValue = $this->kodeorder->CurrentValue;
+        $this->nomororder->CurrentValue = "Baru";
+        $this->idpegawai->CurrentValue = CurrentUserID();
+        $this->idcustomer->CurrentValue = null;
+        $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
+        $this->idproduct_acuan->CurrentValue = null;
+        $this->idproduct_acuan->OldValue = $this->idproduct_acuan->CurrentValue;
+        $this->idjenisproduk->CurrentValue = null;
+        $this->idjenisproduk->OldValue = $this->idjenisproduk->CurrentValue;
+        $this->idkategoriproduk->CurrentValue = null;
+        $this->idkategoriproduk->OldValue = $this->idkategoriproduk->CurrentValue;
+        $this->fungsiproduk->CurrentValue = null;
+        $this->fungsiproduk->OldValue = $this->fungsiproduk->CurrentValue;
+        $this->kualitasproduk->CurrentValue = null;
+        $this->kualitasproduk->OldValue = $this->kualitasproduk->CurrentValue;
         $this->bahan_campaign->CurrentValue = null;
         $this->bahan_campaign->OldValue = $this->bahan_campaign->CurrentValue;
         $this->ukuran_sediaan->CurrentValue = null;
         $this->ukuran_sediaan->OldValue = $this->ukuran_sediaan->CurrentValue;
+        $this->bentuk->CurrentValue = null;
+        $this->bentuk->OldValue = $this->bentuk->CurrentValue;
+        $this->viskositas->CurrentValue = null;
+        $this->viskositas->OldValue = $this->viskositas->CurrentValue;
+        $this->warna->CurrentValue = null;
+        $this->warna->OldValue = $this->warna->CurrentValue;
+        $this->parfum->CurrentValue = null;
+        $this->parfum->OldValue = $this->parfum->CurrentValue;
+        $this->aplikasi->CurrentValue = null;
+        $this->aplikasi->OldValue = $this->aplikasi->CurrentValue;
+        $this->estetika->CurrentValue = null;
+        $this->estetika->OldValue = $this->estetika->CurrentValue;
+        $this->tambahan->CurrentValue = null;
+        $this->tambahan->OldValue = $this->tambahan->CurrentValue;
+        $this->ukurankemasan->CurrentValue = null;
+        $this->ukurankemasan->OldValue = $this->ukurankemasan->CurrentValue;
+        $this->kemasanbentuk->CurrentValue = null;
+        $this->kemasanbentuk->OldValue = $this->kemasanbentuk->CurrentValue;
+        $this->kemasantutup->CurrentValue = null;
+        $this->kemasantutup->OldValue = $this->kemasantutup->CurrentValue;
+        $this->kemasancatatan->CurrentValue = null;
+        $this->kemasancatatan->OldValue = $this->kemasancatatan->CurrentValue;
+        $this->labelbahan->CurrentValue = null;
+        $this->labelbahan->OldValue = $this->labelbahan->CurrentValue;
+        $this->labelkualitas->CurrentValue = null;
+        $this->labelkualitas->OldValue = $this->labelkualitas->CurrentValue;
+        $this->labelposisi->CurrentValue = null;
+        $this->labelposisi->OldValue = $this->labelposisi->CurrentValue;
+        $this->labelcatatan->CurrentValue = null;
+        $this->labelcatatan->OldValue = $this->labelcatatan->CurrentValue;
+        $this->statusdokumen->CurrentValue = null;
+        $this->statusdokumen->OldValue = $this->statusdokumen->CurrentValue;
+        $this->readonly->CurrentValue = 0;
+        $this->selesai->CurrentValue = 0;
+        $this->created_at->CurrentValue = null;
+        $this->created_at->OldValue = $this->created_at->CurrentValue;
+        $this->updated_at->CurrentValue = null;
+        $this->updated_at->OldValue = $this->updated_at->CurrentValue;
     }
 
     // Load form values
@@ -712,156 +750,6 @@ class NpdAdd extends Npd
     {
         // Load from form
         global $CurrentForm;
-
-        // Check field name 'status' first before field var 'x_status'
-        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
-        if (!$this->status->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->status->Visible = false; // Disable update for API request
-            } else {
-                $this->status->setFormValue($val);
-            }
-        }
-
-        // Check field name 'idpegawai' first before field var 'x_idpegawai'
-        $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
-        if (!$this->idpegawai->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idpegawai->Visible = false; // Disable update for API request
-            } else {
-                $this->idpegawai->setFormValue($val);
-            }
-        }
-
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
-            } else {
-                $this->idcustomer->setFormValue($val);
-            }
-        }
-
-        // Check field name 'kodeorder' first before field var 'x_kodeorder'
-        $val = $CurrentForm->hasValue("kodeorder") ? $CurrentForm->getValue("kodeorder") : $CurrentForm->getValue("x_kodeorder");
-        if (!$this->kodeorder->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->kodeorder->Visible = false; // Disable update for API request
-            } else {
-                $this->kodeorder->setFormValue($val);
-            }
-        }
-
-        // Check field name 'idproduct_acuan' first before field var 'x_idproduct_acuan'
-        $val = $CurrentForm->hasValue("idproduct_acuan") ? $CurrentForm->getValue("idproduct_acuan") : $CurrentForm->getValue("x_idproduct_acuan");
-        if (!$this->idproduct_acuan->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idproduct_acuan->Visible = false; // Disable update for API request
-            } else {
-                $this->idproduct_acuan->setFormValue($val);
-            }
-        }
-
-        // Check field name 'nama' first before field var 'x_nama'
-        $val = $CurrentForm->hasValue("nama") ? $CurrentForm->getValue("nama") : $CurrentForm->getValue("x_nama");
-        if (!$this->nama->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->nama->Visible = false; // Disable update for API request
-            } else {
-                $this->nama->setFormValue($val);
-            }
-        }
-
-        // Check field name 'idjenisbarang' first before field var 'x_idjenisbarang'
-        $val = $CurrentForm->hasValue("idjenisbarang") ? $CurrentForm->getValue("idjenisbarang") : $CurrentForm->getValue("x_idjenisbarang");
-        if (!$this->idjenisbarang->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idjenisbarang->Visible = false; // Disable update for API request
-            } else {
-                $this->idjenisbarang->setFormValue($val);
-            }
-        }
-
-        // Check field name 'idkategoribarang' first before field var 'x_idkategoribarang'
-        $val = $CurrentForm->hasValue("idkategoribarang") ? $CurrentForm->getValue("idkategoribarang") : $CurrentForm->getValue("x_idkategoribarang");
-        if (!$this->idkategoribarang->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idkategoribarang->Visible = false; // Disable update for API request
-            } else {
-                $this->idkategoribarang->setFormValue($val);
-            }
-        }
-
-        // Check field name 'warna' first before field var 'x_warna'
-        $val = $CurrentForm->hasValue("warna") ? $CurrentForm->getValue("warna") : $CurrentForm->getValue("x_warna");
-        if (!$this->warna->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->warna->Visible = false; // Disable update for API request
-            } else {
-                $this->warna->setFormValue($val);
-            }
-        }
-
-        // Check field name 'parfum' first before field var 'x_parfum'
-        $val = $CurrentForm->hasValue("parfum") ? $CurrentForm->getValue("parfum") : $CurrentForm->getValue("x_parfum");
-        if (!$this->parfum->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->parfum->Visible = false; // Disable update for API request
-            } else {
-                $this->parfum->setFormValue($val);
-            }
-        }
-
-        // Check field name 'tambahan' first before field var 'x_tambahan'
-        $val = $CurrentForm->hasValue("tambahan") ? $CurrentForm->getValue("tambahan") : $CurrentForm->getValue("x_tambahan");
-        if (!$this->tambahan->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->tambahan->Visible = false; // Disable update for API request
-            } else {
-                $this->tambahan->setFormValue($val);
-            }
-        }
-
-        // Check field name 'kemasanbarang' first before field var 'x_kemasanbarang'
-        $val = $CurrentForm->hasValue("kemasanbarang") ? $CurrentForm->getValue("kemasanbarang") : $CurrentForm->getValue("x_kemasanbarang");
-        if (!$this->kemasanbarang->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->kemasanbarang->Visible = false; // Disable update for API request
-            } else {
-                $this->kemasanbarang->setFormValue($val);
-            }
-        }
-
-        // Check field name 'label' first before field var 'x_label'
-        $val = $CurrentForm->hasValue("label") ? $CurrentForm->getValue("label") : $CurrentForm->getValue("x_label");
-        if (!$this->label->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->label->Visible = false; // Disable update for API request
-            } else {
-                $this->label->setFormValue($val);
-            }
-        }
-
-        // Check field name 'orderperdana' first before field var 'x_orderperdana'
-        $val = $CurrentForm->hasValue("orderperdana") ? $CurrentForm->getValue("orderperdana") : $CurrentForm->getValue("x_orderperdana");
-        if (!$this->orderperdana->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->orderperdana->Visible = false; // Disable update for API request
-            } else {
-                $this->orderperdana->setFormValue($val);
-            }
-        }
-
-        // Check field name 'orderreguler' first before field var 'x_orderreguler'
-        $val = $CurrentForm->hasValue("orderreguler") ? $CurrentForm->getValue("orderreguler") : $CurrentForm->getValue("x_orderreguler");
-        if (!$this->orderreguler->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->orderreguler->Visible = false; // Disable update for API request
-            } else {
-                $this->orderreguler->setFormValue($val);
-            }
-        }
 
         // Check field name 'tanggal_order' first before field var 'x_tanggal_order'
         $val = $CurrentForm->hasValue("tanggal_order") ? $CurrentForm->getValue("tanggal_order") : $CurrentForm->getValue("x_tanggal_order");
@@ -885,33 +773,103 @@ class NpdAdd extends Npd
             $this->target_selesai->CurrentValue = UnFormatDateTime($this->target_selesai->CurrentValue, 0);
         }
 
-        // Check field name 'kategori' first before field var 'x_kategori'
-        $val = $CurrentForm->hasValue("kategori") ? $CurrentForm->getValue("kategori") : $CurrentForm->getValue("x_kategori");
-        if (!$this->kategori->IsDetailKey) {
+        // Check field name 'status' first before field var 'x_status'
+        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
+        if (!$this->status->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->kategori->Visible = false; // Disable update for API request
+                $this->status->Visible = false; // Disable update for API request
             } else {
-                $this->kategori->setFormValue($val);
+                $this->status->setFormValue($val);
             }
         }
 
-        // Check field name 'fungsi_produk' first before field var 'x_fungsi_produk'
-        $val = $CurrentForm->hasValue("fungsi_produk") ? $CurrentForm->getValue("fungsi_produk") : $CurrentForm->getValue("x_fungsi_produk");
-        if (!$this->fungsi_produk->IsDetailKey) {
+        // Check field name 'kodeorder' first before field var 'x_kodeorder'
+        $val = $CurrentForm->hasValue("kodeorder") ? $CurrentForm->getValue("kodeorder") : $CurrentForm->getValue("x_kodeorder");
+        if (!$this->kodeorder->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->fungsi_produk->Visible = false; // Disable update for API request
+                $this->kodeorder->Visible = false; // Disable update for API request
             } else {
-                $this->fungsi_produk->setFormValue($val);
+                $this->kodeorder->setFormValue($val);
             }
         }
 
-        // Check field name 'kualitasbarang' first before field var 'x_kualitasbarang'
-        $val = $CurrentForm->hasValue("kualitasbarang") ? $CurrentForm->getValue("kualitasbarang") : $CurrentForm->getValue("x_kualitasbarang");
-        if (!$this->kualitasbarang->IsDetailKey) {
+        // Check field name 'nomororder' first before field var 'x_nomororder'
+        $val = $CurrentForm->hasValue("nomororder") ? $CurrentForm->getValue("nomororder") : $CurrentForm->getValue("x_nomororder");
+        if (!$this->nomororder->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->kualitasbarang->Visible = false; // Disable update for API request
+                $this->nomororder->Visible = false; // Disable update for API request
             } else {
-                $this->kualitasbarang->setFormValue($val);
+                $this->nomororder->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idpegawai' first before field var 'x_idpegawai'
+        $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
+        if (!$this->idpegawai->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idpegawai->Visible = false; // Disable update for API request
+            } else {
+                $this->idpegawai->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idcustomer' first before field var 'x_idcustomer'
+        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
+        if (!$this->idcustomer->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idcustomer->Visible = false; // Disable update for API request
+            } else {
+                $this->idcustomer->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idproduct_acuan' first before field var 'x_idproduct_acuan'
+        $val = $CurrentForm->hasValue("idproduct_acuan") ? $CurrentForm->getValue("idproduct_acuan") : $CurrentForm->getValue("x_idproduct_acuan");
+        if (!$this->idproduct_acuan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idproduct_acuan->Visible = false; // Disable update for API request
+            } else {
+                $this->idproduct_acuan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idjenisproduk' first before field var 'x_idjenisproduk'
+        $val = $CurrentForm->hasValue("idjenisproduk") ? $CurrentForm->getValue("idjenisproduk") : $CurrentForm->getValue("x_idjenisproduk");
+        if (!$this->idjenisproduk->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idjenisproduk->Visible = false; // Disable update for API request
+            } else {
+                $this->idjenisproduk->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idkategoriproduk' first before field var 'x_idkategoriproduk'
+        $val = $CurrentForm->hasValue("idkategoriproduk") ? $CurrentForm->getValue("idkategoriproduk") : $CurrentForm->getValue("x_idkategoriproduk");
+        if (!$this->idkategoriproduk->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idkategoriproduk->Visible = false; // Disable update for API request
+            } else {
+                $this->idkategoriproduk->setFormValue($val);
+            }
+        }
+
+        // Check field name 'fungsiproduk' first before field var 'x_fungsiproduk'
+        $val = $CurrentForm->hasValue("fungsiproduk") ? $CurrentForm->getValue("fungsiproduk") : $CurrentForm->getValue("x_fungsiproduk");
+        if (!$this->fungsiproduk->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->fungsiproduk->Visible = false; // Disable update for API request
+            } else {
+                $this->fungsiproduk->setFormValue($val);
+            }
+        }
+
+        // Check field name 'kualitasproduk' first before field var 'x_kualitasproduk'
+        $val = $CurrentForm->hasValue("kualitasproduk") ? $CurrentForm->getValue("kualitasproduk") : $CurrentForm->getValue("x_kualitasproduk");
+        if (!$this->kualitasproduk->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kualitasproduk->Visible = false; // Disable update for API request
+            } else {
+                $this->kualitasproduk->setFormValue($val);
             }
         }
 
@@ -935,6 +893,177 @@ class NpdAdd extends Npd
             }
         }
 
+        // Check field name 'bentuk' first before field var 'x_bentuk'
+        $val = $CurrentForm->hasValue("bentuk") ? $CurrentForm->getValue("bentuk") : $CurrentForm->getValue("x_bentuk");
+        if (!$this->bentuk->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->bentuk->Visible = false; // Disable update for API request
+            } else {
+                $this->bentuk->setFormValue($val);
+            }
+        }
+
+        // Check field name 'viskositas' first before field var 'x_viskositas'
+        $val = $CurrentForm->hasValue("viskositas") ? $CurrentForm->getValue("viskositas") : $CurrentForm->getValue("x_viskositas");
+        if (!$this->viskositas->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->viskositas->Visible = false; // Disable update for API request
+            } else {
+                $this->viskositas->setFormValue($val);
+            }
+        }
+
+        // Check field name 'warna' first before field var 'x_warna'
+        $val = $CurrentForm->hasValue("warna") ? $CurrentForm->getValue("warna") : $CurrentForm->getValue("x_warna");
+        if (!$this->warna->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->warna->Visible = false; // Disable update for API request
+            } else {
+                $this->warna->setFormValue($val);
+            }
+        }
+
+        // Check field name 'parfum' first before field var 'x_parfum'
+        $val = $CurrentForm->hasValue("parfum") ? $CurrentForm->getValue("parfum") : $CurrentForm->getValue("x_parfum");
+        if (!$this->parfum->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->parfum->Visible = false; // Disable update for API request
+            } else {
+                $this->parfum->setFormValue($val);
+            }
+        }
+
+        // Check field name 'aplikasi' first before field var 'x_aplikasi'
+        $val = $CurrentForm->hasValue("aplikasi") ? $CurrentForm->getValue("aplikasi") : $CurrentForm->getValue("x_aplikasi");
+        if (!$this->aplikasi->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->aplikasi->Visible = false; // Disable update for API request
+            } else {
+                $this->aplikasi->setFormValue($val);
+            }
+        }
+
+        // Check field name 'estetika' first before field var 'x_estetika'
+        $val = $CurrentForm->hasValue("estetika") ? $CurrentForm->getValue("estetika") : $CurrentForm->getValue("x_estetika");
+        if (!$this->estetika->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->estetika->Visible = false; // Disable update for API request
+            } else {
+                $this->estetika->setFormValue($val);
+            }
+        }
+
+        // Check field name 'tambahan' first before field var 'x_tambahan'
+        $val = $CurrentForm->hasValue("tambahan") ? $CurrentForm->getValue("tambahan") : $CurrentForm->getValue("x_tambahan");
+        if (!$this->tambahan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->tambahan->Visible = false; // Disable update for API request
+            } else {
+                $this->tambahan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'ukurankemasan' first before field var 'x_ukurankemasan'
+        $val = $CurrentForm->hasValue("ukurankemasan") ? $CurrentForm->getValue("ukurankemasan") : $CurrentForm->getValue("x_ukurankemasan");
+        if (!$this->ukurankemasan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->ukurankemasan->Visible = false; // Disable update for API request
+            } else {
+                $this->ukurankemasan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'kemasanbentuk' first before field var 'x_kemasanbentuk'
+        $val = $CurrentForm->hasValue("kemasanbentuk") ? $CurrentForm->getValue("kemasanbentuk") : $CurrentForm->getValue("x_kemasanbentuk");
+        if (!$this->kemasanbentuk->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kemasanbentuk->Visible = false; // Disable update for API request
+            } else {
+                $this->kemasanbentuk->setFormValue($val);
+            }
+        }
+
+        // Check field name 'kemasantutup' first before field var 'x_kemasantutup'
+        $val = $CurrentForm->hasValue("kemasantutup") ? $CurrentForm->getValue("kemasantutup") : $CurrentForm->getValue("x_kemasantutup");
+        if (!$this->kemasantutup->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kemasantutup->Visible = false; // Disable update for API request
+            } else {
+                $this->kemasantutup->setFormValue($val);
+            }
+        }
+
+        // Check field name 'kemasancatatan' first before field var 'x_kemasancatatan'
+        $val = $CurrentForm->hasValue("kemasancatatan") ? $CurrentForm->getValue("kemasancatatan") : $CurrentForm->getValue("x_kemasancatatan");
+        if (!$this->kemasancatatan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kemasancatatan->Visible = false; // Disable update for API request
+            } else {
+                $this->kemasancatatan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'labelbahan' first before field var 'x_labelbahan'
+        $val = $CurrentForm->hasValue("labelbahan") ? $CurrentForm->getValue("labelbahan") : $CurrentForm->getValue("x_labelbahan");
+        if (!$this->labelbahan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->labelbahan->Visible = false; // Disable update for API request
+            } else {
+                $this->labelbahan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'labelkualitas' first before field var 'x_labelkualitas'
+        $val = $CurrentForm->hasValue("labelkualitas") ? $CurrentForm->getValue("labelkualitas") : $CurrentForm->getValue("x_labelkualitas");
+        if (!$this->labelkualitas->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->labelkualitas->Visible = false; // Disable update for API request
+            } else {
+                $this->labelkualitas->setFormValue($val);
+            }
+        }
+
+        // Check field name 'labelposisi' first before field var 'x_labelposisi'
+        $val = $CurrentForm->hasValue("labelposisi") ? $CurrentForm->getValue("labelposisi") : $CurrentForm->getValue("x_labelposisi");
+        if (!$this->labelposisi->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->labelposisi->Visible = false; // Disable update for API request
+            } else {
+                $this->labelposisi->setFormValue($val);
+            }
+        }
+
+        // Check field name 'labelcatatan' first before field var 'x_labelcatatan'
+        $val = $CurrentForm->hasValue("labelcatatan") ? $CurrentForm->getValue("labelcatatan") : $CurrentForm->getValue("x_labelcatatan");
+        if (!$this->labelcatatan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->labelcatatan->Visible = false; // Disable update for API request
+            } else {
+                $this->labelcatatan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'statusdokumen' first before field var 'x_statusdokumen'
+        $val = $CurrentForm->hasValue("statusdokumen") ? $CurrentForm->getValue("statusdokumen") : $CurrentForm->getValue("x_statusdokumen");
+        if (!$this->statusdokumen->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->statusdokumen->Visible = false; // Disable update for API request
+            } else {
+                $this->statusdokumen->setFormValue($val);
+            }
+        }
+
+        // Check field name 'updated_at' first before field var 'x_updated_at'
+        $val = $CurrentForm->hasValue("updated_at") ? $CurrentForm->getValue("updated_at") : $CurrentForm->getValue("x_updated_at");
+        if (!$this->updated_at->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->updated_at->Visible = false; // Disable update for API request
+            } else {
+                $this->updated_at->setFormValue($val);
+            }
+            $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -943,30 +1072,40 @@ class NpdAdd extends Npd
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->status->CurrentValue = $this->status->FormValue;
-        $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->kodeorder->CurrentValue = $this->kodeorder->FormValue;
-        $this->idproduct_acuan->CurrentValue = $this->idproduct_acuan->FormValue;
-        $this->nama->CurrentValue = $this->nama->FormValue;
-        $this->idjenisbarang->CurrentValue = $this->idjenisbarang->FormValue;
-        $this->idkategoribarang->CurrentValue = $this->idkategoribarang->FormValue;
-        $this->warna->CurrentValue = $this->warna->FormValue;
-        $this->parfum->CurrentValue = $this->parfum->FormValue;
-        $this->tambahan->CurrentValue = $this->tambahan->FormValue;
-        $this->kemasanbarang->CurrentValue = $this->kemasanbarang->FormValue;
-        $this->label->CurrentValue = $this->label->FormValue;
-        $this->orderperdana->CurrentValue = $this->orderperdana->FormValue;
-        $this->orderreguler->CurrentValue = $this->orderreguler->FormValue;
         $this->tanggal_order->CurrentValue = $this->tanggal_order->FormValue;
         $this->tanggal_order->CurrentValue = UnFormatDateTime($this->tanggal_order->CurrentValue, 0);
         $this->target_selesai->CurrentValue = $this->target_selesai->FormValue;
         $this->target_selesai->CurrentValue = UnFormatDateTime($this->target_selesai->CurrentValue, 0);
-        $this->kategori->CurrentValue = $this->kategori->FormValue;
-        $this->fungsi_produk->CurrentValue = $this->fungsi_produk->FormValue;
-        $this->kualitasbarang->CurrentValue = $this->kualitasbarang->FormValue;
+        $this->status->CurrentValue = $this->status->FormValue;
+        $this->kodeorder->CurrentValue = $this->kodeorder->FormValue;
+        $this->nomororder->CurrentValue = $this->nomororder->FormValue;
+        $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
+        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        $this->idproduct_acuan->CurrentValue = $this->idproduct_acuan->FormValue;
+        $this->idjenisproduk->CurrentValue = $this->idjenisproduk->FormValue;
+        $this->idkategoriproduk->CurrentValue = $this->idkategoriproduk->FormValue;
+        $this->fungsiproduk->CurrentValue = $this->fungsiproduk->FormValue;
+        $this->kualitasproduk->CurrentValue = $this->kualitasproduk->FormValue;
         $this->bahan_campaign->CurrentValue = $this->bahan_campaign->FormValue;
         $this->ukuran_sediaan->CurrentValue = $this->ukuran_sediaan->FormValue;
+        $this->bentuk->CurrentValue = $this->bentuk->FormValue;
+        $this->viskositas->CurrentValue = $this->viskositas->FormValue;
+        $this->warna->CurrentValue = $this->warna->FormValue;
+        $this->parfum->CurrentValue = $this->parfum->FormValue;
+        $this->aplikasi->CurrentValue = $this->aplikasi->FormValue;
+        $this->estetika->CurrentValue = $this->estetika->FormValue;
+        $this->tambahan->CurrentValue = $this->tambahan->FormValue;
+        $this->ukurankemasan->CurrentValue = $this->ukurankemasan->FormValue;
+        $this->kemasanbentuk->CurrentValue = $this->kemasanbentuk->FormValue;
+        $this->kemasantutup->CurrentValue = $this->kemasantutup->FormValue;
+        $this->kemasancatatan->CurrentValue = $this->kemasancatatan->FormValue;
+        $this->labelbahan->CurrentValue = $this->labelbahan->FormValue;
+        $this->labelkualitas->CurrentValue = $this->labelkualitas->FormValue;
+        $this->labelposisi->CurrentValue = $this->labelposisi->FormValue;
+        $this->labelcatatan->CurrentValue = $this->labelcatatan->FormValue;
+        $this->statusdokumen->CurrentValue = $this->statusdokumen->FormValue;
+        $this->updated_at->CurrentValue = $this->updated_at->FormValue;
+        $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
     }
 
     /**
@@ -1017,31 +1156,40 @@ class NpdAdd extends Npd
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->status->setDbValue($row['status']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->kodeorder->setDbValue($row['kodeorder']);
-        $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
-        $this->nama->setDbValue($row['nama']);
-        $this->idjenisbarang->setDbValue($row['idjenisbarang']);
-        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
-        $this->warna->setDbValue($row['warna']);
-        $this->parfum->setDbValue($row['parfum']);
-        $this->tambahan->setDbValue($row['tambahan']);
-        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
-        $this->label->setDbValue($row['label']);
-        $this->orderperdana->setDbValue($row['orderperdana']);
-        $this->orderreguler->setDbValue($row['orderreguler']);
-        $this->selesai->setDbValue($row['selesai']);
-        $this->readonly->setDbValue($row['readonly']);
-        $this->created_at->setDbValue($row['created_at']);
         $this->tanggal_order->setDbValue($row['tanggal_order']);
         $this->target_selesai->setDbValue($row['target_selesai']);
-        $this->kategori->setDbValue($row['kategori']);
-        $this->fungsi_produk->setDbValue($row['fungsi_produk']);
-        $this->kualitasbarang->setDbValue($row['kualitasbarang']);
+        $this->status->setDbValue($row['status']);
+        $this->kodeorder->setDbValue($row['kodeorder']);
+        $this->nomororder->setDbValue($row['nomororder']);
+        $this->idpegawai->setDbValue($row['idpegawai']);
+        $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
+        $this->idjenisproduk->setDbValue($row['idjenisproduk']);
+        $this->idkategoriproduk->setDbValue($row['idkategoriproduk']);
+        $this->fungsiproduk->setDbValue($row['fungsiproduk']);
+        $this->kualitasproduk->setDbValue($row['kualitasproduk']);
         $this->bahan_campaign->setDbValue($row['bahan_campaign']);
         $this->ukuran_sediaan->setDbValue($row['ukuran_sediaan']);
+        $this->bentuk->setDbValue($row['bentuk']);
+        $this->viskositas->setDbValue($row['viskositas']);
+        $this->warna->setDbValue($row['warna']);
+        $this->parfum->setDbValue($row['parfum']);
+        $this->aplikasi->setDbValue($row['aplikasi']);
+        $this->estetika->setDbValue($row['estetika']);
+        $this->tambahan->setDbValue($row['tambahan']);
+        $this->ukurankemasan->setDbValue($row['ukurankemasan']);
+        $this->kemasanbentuk->setDbValue($row['kemasanbentuk']);
+        $this->kemasantutup->setDbValue($row['kemasantutup']);
+        $this->kemasancatatan->setDbValue($row['kemasancatatan']);
+        $this->labelbahan->setDbValue($row['labelbahan']);
+        $this->labelkualitas->setDbValue($row['labelkualitas']);
+        $this->labelposisi->setDbValue($row['labelposisi']);
+        $this->labelcatatan->setDbValue($row['labelcatatan']);
+        $this->statusdokumen->setDbValue($row['statusdokumen']);
+        $this->readonly->setDbValue($row['readonly']);
+        $this->selesai->setDbValue($row['selesai']);
+        $this->created_at->setDbValue($row['created_at']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -1050,31 +1198,40 @@ class NpdAdd extends Npd
         $this->loadDefaultValues();
         $row = [];
         $row['id'] = $this->id->CurrentValue;
-        $row['status'] = $this->status->CurrentValue;
-        $row['idpegawai'] = $this->idpegawai->CurrentValue;
-        $row['idcustomer'] = $this->idcustomer->CurrentValue;
-        $row['kodeorder'] = $this->kodeorder->CurrentValue;
-        $row['idproduct_acuan'] = $this->idproduct_acuan->CurrentValue;
-        $row['nama'] = $this->nama->CurrentValue;
-        $row['idjenisbarang'] = $this->idjenisbarang->CurrentValue;
-        $row['idkategoribarang'] = $this->idkategoribarang->CurrentValue;
-        $row['warna'] = $this->warna->CurrentValue;
-        $row['parfum'] = $this->parfum->CurrentValue;
-        $row['tambahan'] = $this->tambahan->CurrentValue;
-        $row['kemasanbarang'] = $this->kemasanbarang->CurrentValue;
-        $row['label'] = $this->label->CurrentValue;
-        $row['orderperdana'] = $this->orderperdana->CurrentValue;
-        $row['orderreguler'] = $this->orderreguler->CurrentValue;
-        $row['selesai'] = $this->selesai->CurrentValue;
-        $row['readonly'] = $this->readonly->CurrentValue;
-        $row['created_at'] = $this->created_at->CurrentValue;
         $row['tanggal_order'] = $this->tanggal_order->CurrentValue;
         $row['target_selesai'] = $this->target_selesai->CurrentValue;
-        $row['kategori'] = $this->kategori->CurrentValue;
-        $row['fungsi_produk'] = $this->fungsi_produk->CurrentValue;
-        $row['kualitasbarang'] = $this->kualitasbarang->CurrentValue;
+        $row['status'] = $this->status->CurrentValue;
+        $row['kodeorder'] = $this->kodeorder->CurrentValue;
+        $row['nomororder'] = $this->nomororder->CurrentValue;
+        $row['idpegawai'] = $this->idpegawai->CurrentValue;
+        $row['idcustomer'] = $this->idcustomer->CurrentValue;
+        $row['idproduct_acuan'] = $this->idproduct_acuan->CurrentValue;
+        $row['idjenisproduk'] = $this->idjenisproduk->CurrentValue;
+        $row['idkategoriproduk'] = $this->idkategoriproduk->CurrentValue;
+        $row['fungsiproduk'] = $this->fungsiproduk->CurrentValue;
+        $row['kualitasproduk'] = $this->kualitasproduk->CurrentValue;
         $row['bahan_campaign'] = $this->bahan_campaign->CurrentValue;
         $row['ukuran_sediaan'] = $this->ukuran_sediaan->CurrentValue;
+        $row['bentuk'] = $this->bentuk->CurrentValue;
+        $row['viskositas'] = $this->viskositas->CurrentValue;
+        $row['warna'] = $this->warna->CurrentValue;
+        $row['parfum'] = $this->parfum->CurrentValue;
+        $row['aplikasi'] = $this->aplikasi->CurrentValue;
+        $row['estetika'] = $this->estetika->CurrentValue;
+        $row['tambahan'] = $this->tambahan->CurrentValue;
+        $row['ukurankemasan'] = $this->ukurankemasan->CurrentValue;
+        $row['kemasanbentuk'] = $this->kemasanbentuk->CurrentValue;
+        $row['kemasantutup'] = $this->kemasantutup->CurrentValue;
+        $row['kemasancatatan'] = $this->kemasancatatan->CurrentValue;
+        $row['labelbahan'] = $this->labelbahan->CurrentValue;
+        $row['labelkualitas'] = $this->labelkualitas->CurrentValue;
+        $row['labelposisi'] = $this->labelposisi->CurrentValue;
+        $row['labelcatatan'] = $this->labelcatatan->CurrentValue;
+        $row['statusdokumen'] = $this->statusdokumen->CurrentValue;
+        $row['readonly'] = $this->readonly->CurrentValue;
+        $row['selesai'] = $this->selesai->CurrentValue;
+        $row['created_at'] = $this->created_at->CurrentValue;
+        $row['updated_at'] = $this->updated_at->CurrentValue;
         return $row;
     }
 
@@ -1108,63 +1265,99 @@ class NpdAdd extends Npd
 
         // id
 
+        // tanggal_order
+
+        // target_selesai
+
         // status
+
+        // kodeorder
+
+        // nomororder
 
         // idpegawai
 
         // idcustomer
 
-        // kodeorder
-
         // idproduct_acuan
 
-        // nama
+        // idjenisproduk
 
-        // idjenisbarang
+        // idkategoriproduk
 
-        // idkategoribarang
+        // fungsiproduk
+
+        // kualitasproduk
+
+        // bahan_campaign
+
+        // ukuran_sediaan
+
+        // bentuk
+
+        // viskositas
 
         // warna
 
         // parfum
 
+        // aplikasi
+
+        // estetika
+
         // tambahan
 
-        // kemasanbarang
+        // ukurankemasan
 
-        // label
+        // kemasanbentuk
 
-        // orderperdana
+        // kemasantutup
 
-        // orderreguler
+        // kemasancatatan
 
-        // selesai
+        // labelbahan
+
+        // labelkualitas
+
+        // labelposisi
+
+        // labelcatatan
+
+        // statusdokumen
 
         // readonly
 
+        // selesai
+
         // created_at
 
-        // tanggal_order
-
-        // target_selesai
-
-        // kategori
-
-        // fungsi_produk
-
-        // kualitasbarang
-
-        // bahan_campaign
-
-        // ukuran_sediaan
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
+            // tanggal_order
+            $this->tanggal_order->ViewValue = $this->tanggal_order->CurrentValue;
+            $this->tanggal_order->ViewValue = FormatDateTime($this->tanggal_order->ViewValue, 0);
+            $this->tanggal_order->ViewCustomAttributes = "";
+
+            // target_selesai
+            $this->target_selesai->ViewValue = $this->target_selesai->CurrentValue;
+            $this->target_selesai->ViewValue = FormatDateTime($this->target_selesai->ViewValue, 0);
+            $this->target_selesai->ViewCustomAttributes = "";
+
             // status
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewCustomAttributes = "";
+
+            // kodeorder
+            $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
+            $this->kodeorder->ViewCustomAttributes = "";
+
+            // nomororder
+            $this->nomororder->ViewValue = $this->nomororder->CurrentValue;
+            $this->nomororder->ViewCustomAttributes = "";
 
             // idpegawai
             $curVal = trim(strval($this->idpegawai->CurrentValue));
@@ -1209,10 +1402,6 @@ class NpdAdd extends Npd
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // kodeorder
-            $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
-            $this->kodeorder->ViewCustomAttributes = "";
-
             // idproduct_acuan
             $curVal = trim(strval($this->idproduct_acuan->CurrentValue));
             if ($curVal != "") {
@@ -1238,124 +1427,55 @@ class NpdAdd extends Npd
             }
             $this->idproduct_acuan->ViewCustomAttributes = "";
 
-            // nama
-            $this->nama->ViewValue = $this->nama->CurrentValue;
-            $this->nama->ViewCustomAttributes = "";
-
-            // idjenisbarang
-            $curVal = trim(strval($this->idjenisbarang->CurrentValue));
+            // idjenisproduk
+            $curVal = trim(strval($this->idjenisproduk->CurrentValue));
             if ($curVal != "") {
-                $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
-                if ($this->idjenisbarang->ViewValue === null) { // Lookup from database
+                $this->idjenisproduk->ViewValue = $this->idjenisproduk->lookupCacheOption($curVal);
+                if ($this->idjenisproduk->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idjenisbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->idjenisproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idjenisbarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idjenisbarang->ViewValue = $this->idjenisbarang->displayValue($arwrk);
+                        $arwrk = $this->idjenisproduk->Lookup->renderViewRow($rswrk[0]);
+                        $this->idjenisproduk->ViewValue = $this->idjenisproduk->displayValue($arwrk);
                     } else {
-                        $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
+                        $this->idjenisproduk->ViewValue = $this->idjenisproduk->CurrentValue;
                     }
                 }
             } else {
-                $this->idjenisbarang->ViewValue = null;
+                $this->idjenisproduk->ViewValue = null;
             }
-            $this->idjenisbarang->ViewCustomAttributes = "";
+            $this->idjenisproduk->ViewCustomAttributes = "";
 
-            // idkategoribarang
-            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+            // idkategoriproduk
+            $curVal = trim(strval($this->idkategoriproduk->CurrentValue));
             if ($curVal != "") {
-                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
-                if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
+                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->lookupCacheOption($curVal);
+                if ($this->idkategoriproduk->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->idkategoriproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
+                        $arwrk = $this->idkategoriproduk->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->displayValue($arwrk);
                     } else {
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->CurrentValue;
                     }
                 }
             } else {
-                $this->idkategoribarang->ViewValue = null;
+                $this->idkategoriproduk->ViewValue = null;
             }
-            $this->idkategoribarang->ViewCustomAttributes = "";
+            $this->idkategoriproduk->ViewCustomAttributes = "";
 
-            // warna
-            $this->warna->ViewValue = $this->warna->CurrentValue;
-            $this->warna->ViewCustomAttributes = "";
+            // fungsiproduk
+            $this->fungsiproduk->ViewValue = $this->fungsiproduk->CurrentValue;
+            $this->fungsiproduk->ViewCustomAttributes = "";
 
-            // parfum
-            $this->parfum->ViewValue = $this->parfum->CurrentValue;
-            $this->parfum->ViewCustomAttributes = "";
-
-            // tambahan
-            $this->tambahan->ViewValue = $this->tambahan->CurrentValue;
-            $this->tambahan->ViewCustomAttributes = "";
-
-            // kemasanbarang
-            $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
-            $this->kemasanbarang->ViewCustomAttributes = "";
-
-            // label
-            $this->label->ViewValue = $this->label->CurrentValue;
-            $this->label->ViewCustomAttributes = "";
-
-            // orderperdana
-            $this->orderperdana->ViewValue = $this->orderperdana->CurrentValue;
-            $this->orderperdana->ViewValue = FormatNumber($this->orderperdana->ViewValue, 0, -2, -2, -2);
-            $this->orderperdana->ViewCustomAttributes = "";
-
-            // orderreguler
-            $this->orderreguler->ViewValue = $this->orderreguler->CurrentValue;
-            $this->orderreguler->ViewValue = FormatNumber($this->orderreguler->ViewValue, 0, -2, -2, -2);
-            $this->orderreguler->ViewCustomAttributes = "";
-
-            // selesai
-            if (strval($this->selesai->CurrentValue) != "") {
-                $this->selesai->ViewValue = $this->selesai->optionCaption($this->selesai->CurrentValue);
-            } else {
-                $this->selesai->ViewValue = null;
-            }
-            $this->selesai->ViewCustomAttributes = "";
-
-            // readonly
-            if (strval($this->readonly->CurrentValue) != "") {
-                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
-            } else {
-                $this->readonly->ViewValue = null;
-            }
-            $this->readonly->ViewCustomAttributes = "";
-
-            // created_at
-            $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
-            $this->created_at->ViewCustomAttributes = "";
-
-            // tanggal_order
-            $this->tanggal_order->ViewValue = $this->tanggal_order->CurrentValue;
-            $this->tanggal_order->ViewValue = FormatDateTime($this->tanggal_order->ViewValue, 0);
-            $this->tanggal_order->ViewCustomAttributes = "";
-
-            // target_selesai
-            $this->target_selesai->ViewValue = $this->target_selesai->CurrentValue;
-            $this->target_selesai->ViewValue = FormatDateTime($this->target_selesai->ViewValue, 0);
-            $this->target_selesai->ViewCustomAttributes = "";
-
-            // kategori
-            $this->kategori->ViewValue = $this->kategori->CurrentValue;
-            $this->kategori->ViewCustomAttributes = "";
-
-            // fungsi_produk
-            $this->fungsi_produk->ViewValue = $this->fungsi_produk->CurrentValue;
-            $this->fungsi_produk->ViewCustomAttributes = "";
-
-            // kualitasbarang
-            $this->kualitasbarang->ViewValue = $this->kualitasbarang->CurrentValue;
-            $this->kualitasbarang->ViewCustomAttributes = "";
+            // kualitasproduk
+            $this->kualitasproduk->ViewValue = $this->kualitasproduk->CurrentValue;
+            $this->kualitasproduk->ViewCustomAttributes = "";
 
             // bahan_campaign
             $this->bahan_campaign->ViewValue = $this->bahan_campaign->CurrentValue;
@@ -1365,80 +1485,392 @@ class NpdAdd extends Npd
             $this->ukuran_sediaan->ViewValue = $this->ukuran_sediaan->CurrentValue;
             $this->ukuran_sediaan->ViewCustomAttributes = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
+            // bentuk
+            $curVal = trim(strval($this->bentuk->CurrentValue));
+            if ($curVal != "") {
+                $this->bentuk->ViewValue = $this->bentuk->lookupCacheOption($curVal);
+                if ($this->bentuk->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->bentuk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->bentuk->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->bentuk->Lookup->renderViewRow($row);
+                            $this->bentuk->ViewValue->add($this->bentuk->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->bentuk->ViewValue = $this->bentuk->CurrentValue;
+                    }
+                }
+            } else {
+                $this->bentuk->ViewValue = null;
+            }
+            $this->bentuk->ViewCustomAttributes = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // kodeorder
-            $this->kodeorder->LinkCustomAttributes = "";
-            $this->kodeorder->HrefValue = "";
-            $this->kodeorder->TooltipValue = "";
-
-            // idproduct_acuan
-            $this->idproduct_acuan->LinkCustomAttributes = "";
-            $this->idproduct_acuan->HrefValue = "";
-            $this->idproduct_acuan->TooltipValue = "";
-
-            // nama
-            $this->nama->LinkCustomAttributes = "";
-            $this->nama->HrefValue = "";
-            $this->nama->TooltipValue = "";
-
-            // idjenisbarang
-            $this->idjenisbarang->LinkCustomAttributes = "";
-            $this->idjenisbarang->HrefValue = "";
-            $this->idjenisbarang->TooltipValue = "";
-
-            // idkategoribarang
-            $this->idkategoribarang->LinkCustomAttributes = "";
-            $this->idkategoribarang->HrefValue = "";
-            $this->idkategoribarang->TooltipValue = "";
+            // viskositas
+            $curVal = trim(strval($this->viskositas->CurrentValue));
+            if ($curVal != "") {
+                $this->viskositas->ViewValue = $this->viskositas->lookupCacheOption($curVal);
+                if ($this->viskositas->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->viskositas->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->viskositas->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->viskositas->Lookup->renderViewRow($row);
+                            $this->viskositas->ViewValue->add($this->viskositas->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
+                    }
+                }
+            } else {
+                $this->viskositas->ViewValue = null;
+            }
+            $this->viskositas->ViewCustomAttributes = "";
 
             // warna
-            $this->warna->LinkCustomAttributes = "";
-            $this->warna->HrefValue = "";
-            $this->warna->TooltipValue = "";
+            $curVal = trim(strval($this->warna->CurrentValue));
+            if ($curVal != "") {
+                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
+                if ($this->warna->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->warna->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->warna->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->warna->Lookup->renderViewRow($row);
+                            $this->warna->ViewValue->add($this->warna->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->warna->ViewValue = $this->warna->CurrentValue;
+                    }
+                }
+            } else {
+                $this->warna->ViewValue = null;
+            }
+            $this->warna->ViewCustomAttributes = "";
 
             // parfum
-            $this->parfum->LinkCustomAttributes = "";
-            $this->parfum->HrefValue = "";
-            $this->parfum->TooltipValue = "";
+            $curVal = trim(strval($this->parfum->CurrentValue));
+            if ($curVal != "") {
+                $this->parfum->ViewValue = $this->parfum->lookupCacheOption($curVal);
+                if ($this->parfum->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->parfum->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->parfum->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->parfum->Lookup->renderViewRow($row);
+                            $this->parfum->ViewValue->add($this->parfum->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->parfum->ViewValue = $this->parfum->CurrentValue;
+                    }
+                }
+            } else {
+                $this->parfum->ViewValue = null;
+            }
+            $this->parfum->ViewCustomAttributes = "";
+
+            // aplikasi
+            $curVal = trim(strval($this->aplikasi->CurrentValue));
+            if ($curVal != "") {
+                $this->aplikasi->ViewValue = $this->aplikasi->lookupCacheOption($curVal);
+                if ($this->aplikasi->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->aplikasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->aplikasi->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->aplikasi->Lookup->renderViewRow($row);
+                            $this->aplikasi->ViewValue->add($this->aplikasi->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->aplikasi->ViewValue = $this->aplikasi->CurrentValue;
+                    }
+                }
+            } else {
+                $this->aplikasi->ViewValue = null;
+            }
+            $this->aplikasi->ViewCustomAttributes = "";
+
+            // estetika
+            $curVal = trim(strval($this->estetika->CurrentValue));
+            if ($curVal != "") {
+                $this->estetika->ViewValue = $this->estetika->lookupCacheOption($curVal);
+                if ($this->estetika->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->estetika->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->estetika->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->estetika->Lookup->renderViewRow($row);
+                            $this->estetika->ViewValue->add($this->estetika->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->estetika->ViewValue = $this->estetika->CurrentValue;
+                    }
+                }
+            } else {
+                $this->estetika->ViewValue = null;
+            }
+            $this->estetika->ViewCustomAttributes = "";
 
             // tambahan
-            $this->tambahan->LinkCustomAttributes = "";
-            $this->tambahan->HrefValue = "";
-            $this->tambahan->TooltipValue = "";
+            $this->tambahan->ViewValue = $this->tambahan->CurrentValue;
+            $this->tambahan->ViewCustomAttributes = "";
 
-            // kemasanbarang
-            $this->kemasanbarang->LinkCustomAttributes = "";
-            $this->kemasanbarang->HrefValue = "";
-            $this->kemasanbarang->TooltipValue = "";
+            // ukurankemasan
+            $this->ukurankemasan->ViewValue = $this->ukurankemasan->CurrentValue;
+            $this->ukurankemasan->ViewCustomAttributes = "";
 
-            // label
-            $this->label->LinkCustomAttributes = "";
-            $this->label->HrefValue = "";
-            $this->label->TooltipValue = "";
+            // kemasanbentuk
+            $curVal = trim(strval($this->kemasanbentuk->CurrentValue));
+            if ($curVal != "") {
+                $this->kemasanbentuk->ViewValue = $this->kemasanbentuk->lookupCacheOption($curVal);
+                if ($this->kemasanbentuk->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->kemasanbentuk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->kemasanbentuk->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->kemasanbentuk->Lookup->renderViewRow($row);
+                            $this->kemasanbentuk->ViewValue->add($this->kemasanbentuk->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->kemasanbentuk->ViewValue = $this->kemasanbentuk->CurrentValue;
+                    }
+                }
+            } else {
+                $this->kemasanbentuk->ViewValue = null;
+            }
+            $this->kemasanbentuk->ViewCustomAttributes = "";
 
-            // orderperdana
-            $this->orderperdana->LinkCustomAttributes = "";
-            $this->orderperdana->HrefValue = "";
-            $this->orderperdana->TooltipValue = "";
+            // kemasantutup
+            $curVal = trim(strval($this->kemasantutup->CurrentValue));
+            if ($curVal != "") {
+                $this->kemasantutup->ViewValue = $this->kemasantutup->lookupCacheOption($curVal);
+                if ($this->kemasantutup->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->kemasantutup->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->kemasantutup->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->kemasantutup->Lookup->renderViewRow($row);
+                            $this->kemasantutup->ViewValue->add($this->kemasantutup->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->kemasantutup->ViewValue = $this->kemasantutup->CurrentValue;
+                    }
+                }
+            } else {
+                $this->kemasantutup->ViewValue = null;
+            }
+            $this->kemasantutup->ViewCustomAttributes = "";
 
-            // orderreguler
-            $this->orderreguler->LinkCustomAttributes = "";
-            $this->orderreguler->HrefValue = "";
-            $this->orderreguler->TooltipValue = "";
+            // kemasancatatan
+            $this->kemasancatatan->ViewValue = $this->kemasancatatan->CurrentValue;
+            $this->kemasancatatan->ViewCustomAttributes = "";
+
+            // labelbahan
+            $curVal = trim(strval($this->labelbahan->CurrentValue));
+            if ($curVal != "") {
+                $this->labelbahan->ViewValue = $this->labelbahan->lookupCacheOption($curVal);
+                if ($this->labelbahan->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->labelbahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->labelbahan->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->labelbahan->Lookup->renderViewRow($row);
+                            $this->labelbahan->ViewValue->add($this->labelbahan->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->labelbahan->ViewValue = $this->labelbahan->CurrentValue;
+                    }
+                }
+            } else {
+                $this->labelbahan->ViewValue = null;
+            }
+            $this->labelbahan->ViewCustomAttributes = "";
+
+            // labelkualitas
+            $curVal = trim(strval($this->labelkualitas->CurrentValue));
+            if ($curVal != "") {
+                $this->labelkualitas->ViewValue = $this->labelkualitas->lookupCacheOption($curVal);
+                if ($this->labelkualitas->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->labelkualitas->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->labelkualitas->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->labelkualitas->Lookup->renderViewRow($row);
+                            $this->labelkualitas->ViewValue->add($this->labelkualitas->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->labelkualitas->ViewValue = $this->labelkualitas->CurrentValue;
+                    }
+                }
+            } else {
+                $this->labelkualitas->ViewValue = null;
+            }
+            $this->labelkualitas->ViewCustomAttributes = "";
+
+            // labelposisi
+            $curVal = trim(strval($this->labelposisi->CurrentValue));
+            if ($curVal != "") {
+                $this->labelposisi->ViewValue = $this->labelposisi->lookupCacheOption($curVal);
+                if ($this->labelposisi->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->labelposisi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->labelposisi->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->labelposisi->Lookup->renderViewRow($row);
+                            $this->labelposisi->ViewValue->add($this->labelposisi->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->labelposisi->ViewValue = $this->labelposisi->CurrentValue;
+                    }
+                }
+            } else {
+                $this->labelposisi->ViewValue = null;
+            }
+            $this->labelposisi->ViewCustomAttributes = "";
+
+            // labelcatatan
+            $this->labelcatatan->ViewValue = $this->labelcatatan->CurrentValue;
+            $this->labelcatatan->ViewCustomAttributes = "";
+
+            // statusdokumen
+            $this->statusdokumen->ViewValue = $this->statusdokumen->CurrentValue;
+            $this->statusdokumen->ViewCustomAttributes = "";
+
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
+            } else {
+                $this->readonly->ViewValue = null;
+            }
+            $this->readonly->ViewCustomAttributes = "";
+
+            // selesai
+            if (strval($this->selesai->CurrentValue) != "") {
+                $this->selesai->ViewValue = $this->selesai->optionCaption($this->selesai->CurrentValue);
+            } else {
+                $this->selesai->ViewValue = null;
+            }
+            $this->selesai->ViewCustomAttributes = "";
+
+            // created_at
+            $this->created_at->ViewValue = $this->created_at->CurrentValue;
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewCustomAttributes = "";
+
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // tanggal_order
             $this->tanggal_order->LinkCustomAttributes = "";
@@ -1450,20 +1882,55 @@ class NpdAdd extends Npd
             $this->target_selesai->HrefValue = "";
             $this->target_selesai->TooltipValue = "";
 
-            // kategori
-            $this->kategori->LinkCustomAttributes = "";
-            $this->kategori->HrefValue = "";
-            $this->kategori->TooltipValue = "";
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
 
-            // fungsi_produk
-            $this->fungsi_produk->LinkCustomAttributes = "";
-            $this->fungsi_produk->HrefValue = "";
-            $this->fungsi_produk->TooltipValue = "";
+            // kodeorder
+            $this->kodeorder->LinkCustomAttributes = "";
+            $this->kodeorder->HrefValue = "";
+            $this->kodeorder->TooltipValue = "";
 
-            // kualitasbarang
-            $this->kualitasbarang->LinkCustomAttributes = "";
-            $this->kualitasbarang->HrefValue = "";
-            $this->kualitasbarang->TooltipValue = "";
+            // nomororder
+            $this->nomororder->LinkCustomAttributes = "";
+            $this->nomororder->HrefValue = "";
+            $this->nomororder->TooltipValue = "";
+
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
+            $this->idpegawai->TooltipValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
+            // idproduct_acuan
+            $this->idproduct_acuan->LinkCustomAttributes = "";
+            $this->idproduct_acuan->HrefValue = "";
+            $this->idproduct_acuan->TooltipValue = "";
+
+            // idjenisproduk
+            $this->idjenisproduk->LinkCustomAttributes = "";
+            $this->idjenisproduk->HrefValue = "";
+            $this->idjenisproduk->TooltipValue = "";
+
+            // idkategoriproduk
+            $this->idkategoriproduk->LinkCustomAttributes = "";
+            $this->idkategoriproduk->HrefValue = "";
+            $this->idkategoriproduk->TooltipValue = "";
+
+            // fungsiproduk
+            $this->fungsiproduk->LinkCustomAttributes = "";
+            $this->fungsiproduk->HrefValue = "";
+            $this->fungsiproduk->TooltipValue = "";
+
+            // kualitasproduk
+            $this->kualitasproduk->LinkCustomAttributes = "";
+            $this->kualitasproduk->HrefValue = "";
+            $this->kualitasproduk->TooltipValue = "";
 
             // bahan_campaign
             $this->bahan_campaign->LinkCustomAttributes = "";
@@ -1474,7 +1941,104 @@ class NpdAdd extends Npd
             $this->ukuran_sediaan->LinkCustomAttributes = "";
             $this->ukuran_sediaan->HrefValue = "";
             $this->ukuran_sediaan->TooltipValue = "";
+
+            // bentuk
+            $this->bentuk->LinkCustomAttributes = "";
+            $this->bentuk->HrefValue = "";
+            $this->bentuk->TooltipValue = "";
+
+            // viskositas
+            $this->viskositas->LinkCustomAttributes = "";
+            $this->viskositas->HrefValue = "";
+            $this->viskositas->TooltipValue = "";
+
+            // warna
+            $this->warna->LinkCustomAttributes = "";
+            $this->warna->HrefValue = "";
+            $this->warna->TooltipValue = "";
+
+            // parfum
+            $this->parfum->LinkCustomAttributes = "";
+            $this->parfum->HrefValue = "";
+            $this->parfum->TooltipValue = "";
+
+            // aplikasi
+            $this->aplikasi->LinkCustomAttributes = "";
+            $this->aplikasi->HrefValue = "";
+            $this->aplikasi->TooltipValue = "";
+
+            // estetika
+            $this->estetika->LinkCustomAttributes = "";
+            $this->estetika->HrefValue = "";
+            $this->estetika->TooltipValue = "";
+
+            // tambahan
+            $this->tambahan->LinkCustomAttributes = "";
+            $this->tambahan->HrefValue = "";
+            $this->tambahan->TooltipValue = "";
+
+            // ukurankemasan
+            $this->ukurankemasan->LinkCustomAttributes = "";
+            $this->ukurankemasan->HrefValue = "";
+            $this->ukurankemasan->TooltipValue = "";
+
+            // kemasanbentuk
+            $this->kemasanbentuk->LinkCustomAttributes = "";
+            $this->kemasanbentuk->HrefValue = "";
+            $this->kemasanbentuk->TooltipValue = "";
+
+            // kemasantutup
+            $this->kemasantutup->LinkCustomAttributes = "";
+            $this->kemasantutup->HrefValue = "";
+            $this->kemasantutup->TooltipValue = "";
+
+            // kemasancatatan
+            $this->kemasancatatan->LinkCustomAttributes = "";
+            $this->kemasancatatan->HrefValue = "";
+            $this->kemasancatatan->TooltipValue = "";
+
+            // labelbahan
+            $this->labelbahan->LinkCustomAttributes = "";
+            $this->labelbahan->HrefValue = "";
+            $this->labelbahan->TooltipValue = "";
+
+            // labelkualitas
+            $this->labelkualitas->LinkCustomAttributes = "";
+            $this->labelkualitas->HrefValue = "";
+            $this->labelkualitas->TooltipValue = "";
+
+            // labelposisi
+            $this->labelposisi->LinkCustomAttributes = "";
+            $this->labelposisi->HrefValue = "";
+            $this->labelposisi->TooltipValue = "";
+
+            // labelcatatan
+            $this->labelcatatan->LinkCustomAttributes = "";
+            $this->labelcatatan->HrefValue = "";
+            $this->labelcatatan->TooltipValue = "";
+
+            // statusdokumen
+            $this->statusdokumen->LinkCustomAttributes = "";
+            $this->statusdokumen->HrefValue = "";
+            $this->statusdokumen->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // tanggal_order
+            $this->tanggal_order->EditAttrs["class"] = "form-control";
+            $this->tanggal_order->EditCustomAttributes = "";
+            $this->tanggal_order->EditValue = HtmlEncode(FormatDateTime($this->tanggal_order->CurrentValue, 8));
+            $this->tanggal_order->PlaceHolder = RemoveHtml($this->tanggal_order->caption());
+
+            // target_selesai
+            $this->target_selesai->EditAttrs["class"] = "form-control";
+            $this->target_selesai->EditCustomAttributes = "";
+            $this->target_selesai->EditValue = HtmlEncode(FormatDateTime($this->target_selesai->CurrentValue, 8));
+            $this->target_selesai->PlaceHolder = RemoveHtml($this->target_selesai->caption());
+
             // status
             $this->status->EditAttrs["class"] = "form-control";
             $this->status->EditCustomAttributes = "";
@@ -1483,6 +2047,24 @@ class NpdAdd extends Npd
             }
             $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
+            // kodeorder
+            $this->kodeorder->EditAttrs["class"] = "form-control";
+            $this->kodeorder->EditCustomAttributes = "";
+            if (!$this->kodeorder->Raw) {
+                $this->kodeorder->CurrentValue = HtmlDecode($this->kodeorder->CurrentValue);
+            }
+            $this->kodeorder->EditValue = HtmlEncode($this->kodeorder->CurrentValue);
+            $this->kodeorder->PlaceHolder = RemoveHtml($this->kodeorder->caption());
+
+            // nomororder
+            $this->nomororder->EditAttrs["class"] = "form-control";
+            $this->nomororder->EditCustomAttributes = "";
+            if (!$this->nomororder->Raw) {
+                $this->nomororder->CurrentValue = HtmlDecode($this->nomororder->CurrentValue);
+            }
+            $this->nomororder->EditValue = HtmlEncode($this->nomororder->CurrentValue);
+            $this->nomororder->PlaceHolder = RemoveHtml($this->nomororder->caption());
 
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -1533,15 +2115,6 @@ class NpdAdd extends Npd
             }
             $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
-            // kodeorder
-            $this->kodeorder->EditAttrs["class"] = "form-control";
-            $this->kodeorder->EditCustomAttributes = "";
-            if (!$this->kodeorder->Raw) {
-                $this->kodeorder->CurrentValue = HtmlDecode($this->kodeorder->CurrentValue);
-            }
-            $this->kodeorder->EditValue = HtmlEncode($this->kodeorder->CurrentValue);
-            $this->kodeorder->PlaceHolder = RemoveHtml($this->kodeorder->caption());
-
             // idproduct_acuan
             $this->idproduct_acuan->EditAttrs["class"] = "form-control";
             $this->idproduct_acuan->EditCustomAttributes = "";
@@ -1571,151 +2144,73 @@ class NpdAdd extends Npd
             }
             $this->idproduct_acuan->PlaceHolder = RemoveHtml($this->idproduct_acuan->caption());
 
-            // nama
-            $this->nama->EditAttrs["class"] = "form-control";
-            $this->nama->EditCustomAttributes = "";
-            if (!$this->nama->Raw) {
-                $this->nama->CurrentValue = HtmlDecode($this->nama->CurrentValue);
-            }
-            $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
-            $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
-
-            // idjenisbarang
-            $this->idjenisbarang->EditAttrs["class"] = "form-control";
-            $this->idjenisbarang->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idjenisbarang->CurrentValue));
+            // idjenisproduk
+            $this->idjenisproduk->EditAttrs["class"] = "form-control";
+            $this->idjenisproduk->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idjenisproduk->CurrentValue));
             if ($curVal != "") {
-                $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
+                $this->idjenisproduk->ViewValue = $this->idjenisproduk->lookupCacheOption($curVal);
             } else {
-                $this->idjenisbarang->ViewValue = $this->idjenisbarang->Lookup !== null && is_array($this->idjenisbarang->Lookup->Options) ? $curVal : null;
+                $this->idjenisproduk->ViewValue = $this->idjenisproduk->Lookup !== null && is_array($this->idjenisproduk->Lookup->Options) ? $curVal : null;
             }
-            if ($this->idjenisbarang->ViewValue !== null) { // Load from cache
-                $this->idjenisbarang->EditValue = array_values($this->idjenisbarang->Lookup->Options);
+            if ($this->idjenisproduk->ViewValue !== null) { // Load from cache
+                $this->idjenisproduk->EditValue = array_values($this->idjenisproduk->Lookup->Options);
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idjenisbarang->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->idjenisproduk->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $sqlWrk = $this->idjenisbarang->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $sqlWrk = $this->idjenisproduk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                $this->idjenisbarang->EditValue = $arwrk;
+                $this->idjenisproduk->EditValue = $arwrk;
             }
-            $this->idjenisbarang->PlaceHolder = RemoveHtml($this->idjenisbarang->caption());
+            $this->idjenisproduk->PlaceHolder = RemoveHtml($this->idjenisproduk->caption());
 
-            // idkategoribarang
-            $this->idkategoribarang->EditAttrs["class"] = "form-control";
-            $this->idkategoribarang->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+            // idkategoriproduk
+            $this->idkategoriproduk->EditAttrs["class"] = "form-control";
+            $this->idkategoriproduk->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idkategoriproduk->CurrentValue));
             if ($curVal != "") {
-                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
+                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->lookupCacheOption($curVal);
             } else {
-                $this->idkategoribarang->ViewValue = $this->idkategoribarang->Lookup !== null && is_array($this->idkategoribarang->Lookup->Options) ? $curVal : null;
+                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->Lookup !== null && is_array($this->idkategoriproduk->Lookup->Options) ? $curVal : null;
             }
-            if ($this->idkategoribarang->ViewValue !== null) { // Load from cache
-                $this->idkategoribarang->EditValue = array_values($this->idkategoribarang->Lookup->Options);
+            if ($this->idkategoriproduk->ViewValue !== null) { // Load from cache
+                $this->idkategoriproduk->EditValue = array_values($this->idkategoriproduk->Lookup->Options);
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkategoribarang->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->idkategoriproduk->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $sqlWrk = $this->idkategoribarang->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $sqlWrk = $this->idkategoriproduk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                $this->idkategoribarang->EditValue = $arwrk;
+                $this->idkategoriproduk->EditValue = $arwrk;
             }
-            $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
+            $this->idkategoriproduk->PlaceHolder = RemoveHtml($this->idkategoriproduk->caption());
 
-            // warna
-            $this->warna->EditAttrs["class"] = "form-control";
-            $this->warna->EditCustomAttributes = "";
-            if (!$this->warna->Raw) {
-                $this->warna->CurrentValue = HtmlDecode($this->warna->CurrentValue);
+            // fungsiproduk
+            $this->fungsiproduk->EditAttrs["class"] = "form-control";
+            $this->fungsiproduk->EditCustomAttributes = "";
+            if (!$this->fungsiproduk->Raw) {
+                $this->fungsiproduk->CurrentValue = HtmlDecode($this->fungsiproduk->CurrentValue);
             }
-            $this->warna->EditValue = HtmlEncode($this->warna->CurrentValue);
-            $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
+            $this->fungsiproduk->EditValue = HtmlEncode($this->fungsiproduk->CurrentValue);
+            $this->fungsiproduk->PlaceHolder = RemoveHtml($this->fungsiproduk->caption());
 
-            // parfum
-            $this->parfum->EditAttrs["class"] = "form-control";
-            $this->parfum->EditCustomAttributes = "";
-            if (!$this->parfum->Raw) {
-                $this->parfum->CurrentValue = HtmlDecode($this->parfum->CurrentValue);
+            // kualitasproduk
+            $this->kualitasproduk->EditAttrs["class"] = "form-control";
+            $this->kualitasproduk->EditCustomAttributes = "";
+            if (!$this->kualitasproduk->Raw) {
+                $this->kualitasproduk->CurrentValue = HtmlDecode($this->kualitasproduk->CurrentValue);
             }
-            $this->parfum->EditValue = HtmlEncode($this->parfum->CurrentValue);
-            $this->parfum->PlaceHolder = RemoveHtml($this->parfum->caption());
-
-            // tambahan
-            $this->tambahan->EditAttrs["class"] = "form-control";
-            $this->tambahan->EditCustomAttributes = "";
-            $this->tambahan->EditValue = HtmlEncode($this->tambahan->CurrentValue);
-            $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
-
-            // kemasanbarang
-            $this->kemasanbarang->EditAttrs["class"] = "form-control";
-            $this->kemasanbarang->EditCustomAttributes = "";
-            $this->kemasanbarang->EditValue = HtmlEncode($this->kemasanbarang->CurrentValue);
-            $this->kemasanbarang->PlaceHolder = RemoveHtml($this->kemasanbarang->caption());
-
-            // label
-            $this->label->EditAttrs["class"] = "form-control";
-            $this->label->EditCustomAttributes = "";
-            $this->label->EditValue = HtmlEncode($this->label->CurrentValue);
-            $this->label->PlaceHolder = RemoveHtml($this->label->caption());
-
-            // orderperdana
-            $this->orderperdana->EditAttrs["class"] = "form-control";
-            $this->orderperdana->EditCustomAttributes = "";
-            $this->orderperdana->EditValue = HtmlEncode($this->orderperdana->CurrentValue);
-            $this->orderperdana->PlaceHolder = RemoveHtml($this->orderperdana->caption());
-
-            // orderreguler
-            $this->orderreguler->EditAttrs["class"] = "form-control";
-            $this->orderreguler->EditCustomAttributes = "";
-            $this->orderreguler->EditValue = HtmlEncode($this->orderreguler->CurrentValue);
-            $this->orderreguler->PlaceHolder = RemoveHtml($this->orderreguler->caption());
-
-            // tanggal_order
-            $this->tanggal_order->EditAttrs["class"] = "form-control";
-            $this->tanggal_order->EditCustomAttributes = "";
-            $this->tanggal_order->EditValue = HtmlEncode(FormatDateTime($this->tanggal_order->CurrentValue, 8));
-            $this->tanggal_order->PlaceHolder = RemoveHtml($this->tanggal_order->caption());
-
-            // target_selesai
-            $this->target_selesai->EditAttrs["class"] = "form-control";
-            $this->target_selesai->EditCustomAttributes = "";
-            $this->target_selesai->EditValue = HtmlEncode(FormatDateTime($this->target_selesai->CurrentValue, 8));
-            $this->target_selesai->PlaceHolder = RemoveHtml($this->target_selesai->caption());
-
-            // kategori
-            $this->kategori->EditAttrs["class"] = "form-control";
-            $this->kategori->EditCustomAttributes = "";
-            if (!$this->kategori->Raw) {
-                $this->kategori->CurrentValue = HtmlDecode($this->kategori->CurrentValue);
-            }
-            $this->kategori->EditValue = HtmlEncode($this->kategori->CurrentValue);
-            $this->kategori->PlaceHolder = RemoveHtml($this->kategori->caption());
-
-            // fungsi_produk
-            $this->fungsi_produk->EditAttrs["class"] = "form-control";
-            $this->fungsi_produk->EditCustomAttributes = "";
-            if (!$this->fungsi_produk->Raw) {
-                $this->fungsi_produk->CurrentValue = HtmlDecode($this->fungsi_produk->CurrentValue);
-            }
-            $this->fungsi_produk->EditValue = HtmlEncode($this->fungsi_produk->CurrentValue);
-            $this->fungsi_produk->PlaceHolder = RemoveHtml($this->fungsi_produk->caption());
-
-            // kualitasbarang
-            $this->kualitasbarang->EditAttrs["class"] = "form-control";
-            $this->kualitasbarang->EditCustomAttributes = "";
-            if (!$this->kualitasbarang->Raw) {
-                $this->kualitasbarang->CurrentValue = HtmlDecode($this->kualitasbarang->CurrentValue);
-            }
-            $this->kualitasbarang->EditValue = HtmlEncode($this->kualitasbarang->CurrentValue);
-            $this->kualitasbarang->PlaceHolder = RemoveHtml($this->kualitasbarang->caption());
+            $this->kualitasproduk->EditValue = HtmlEncode($this->kualitasproduk->CurrentValue);
+            $this->kualitasproduk->PlaceHolder = RemoveHtml($this->kualitasproduk->caption());
 
             // bahan_campaign
             $this->bahan_campaign->EditAttrs["class"] = "form-control";
@@ -1735,67 +2230,390 @@ class NpdAdd extends Npd
             $this->ukuran_sediaan->EditValue = HtmlEncode($this->ukuran_sediaan->CurrentValue);
             $this->ukuran_sediaan->PlaceHolder = RemoveHtml($this->ukuran_sediaan->caption());
 
-            // Add refer script
+            // bentuk
+            $this->bentuk->EditCustomAttributes = "";
+            $curVal = trim(strval($this->bentuk->CurrentValue));
+            if ($curVal != "") {
+                $this->bentuk->ViewValue = $this->bentuk->lookupCacheOption($curVal);
+            } else {
+                $this->bentuk->ViewValue = $this->bentuk->Lookup !== null && is_array($this->bentuk->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->bentuk->ViewValue !== null) { // Load from cache
+                $this->bentuk->EditValue = array_values($this->bentuk->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->bentuk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->bentuk->EditValue = $arwrk;
+            }
+            $this->bentuk->PlaceHolder = RemoveHtml($this->bentuk->caption());
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-
-            // kodeorder
-            $this->kodeorder->LinkCustomAttributes = "";
-            $this->kodeorder->HrefValue = "";
-
-            // idproduct_acuan
-            $this->idproduct_acuan->LinkCustomAttributes = "";
-            $this->idproduct_acuan->HrefValue = "";
-
-            // nama
-            $this->nama->LinkCustomAttributes = "";
-            $this->nama->HrefValue = "";
-
-            // idjenisbarang
-            $this->idjenisbarang->LinkCustomAttributes = "";
-            $this->idjenisbarang->HrefValue = "";
-
-            // idkategoribarang
-            $this->idkategoribarang->LinkCustomAttributes = "";
-            $this->idkategoribarang->HrefValue = "";
+            // viskositas
+            $this->viskositas->EditCustomAttributes = "";
+            $curVal = trim(strval($this->viskositas->CurrentValue));
+            if ($curVal != "") {
+                $this->viskositas->ViewValue = $this->viskositas->lookupCacheOption($curVal);
+            } else {
+                $this->viskositas->ViewValue = $this->viskositas->Lookup !== null && is_array($this->viskositas->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->viskositas->ViewValue !== null) { // Load from cache
+                $this->viskositas->EditValue = array_values($this->viskositas->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->viskositas->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->viskositas->EditValue = $arwrk;
+            }
+            $this->viskositas->PlaceHolder = RemoveHtml($this->viskositas->caption());
 
             // warna
-            $this->warna->LinkCustomAttributes = "";
-            $this->warna->HrefValue = "";
+            $this->warna->EditCustomAttributes = "";
+            $curVal = trim(strval($this->warna->CurrentValue));
+            if ($curVal != "") {
+                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
+            } else {
+                $this->warna->ViewValue = $this->warna->Lookup !== null && is_array($this->warna->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->warna->ViewValue !== null) { // Load from cache
+                $this->warna->EditValue = array_values($this->warna->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->warna->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->warna->EditValue = $arwrk;
+            }
+            $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
 
             // parfum
-            $this->parfum->LinkCustomAttributes = "";
-            $this->parfum->HrefValue = "";
+            $this->parfum->EditCustomAttributes = "";
+            $curVal = trim(strval($this->parfum->CurrentValue));
+            if ($curVal != "") {
+                $this->parfum->ViewValue = $this->parfum->lookupCacheOption($curVal);
+            } else {
+                $this->parfum->ViewValue = $this->parfum->Lookup !== null && is_array($this->parfum->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->parfum->ViewValue !== null) { // Load from cache
+                $this->parfum->EditValue = array_values($this->parfum->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->parfum->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->parfum->EditValue = $arwrk;
+            }
+            $this->parfum->PlaceHolder = RemoveHtml($this->parfum->caption());
+
+            // aplikasi
+            $this->aplikasi->EditCustomAttributes = "";
+            $curVal = trim(strval($this->aplikasi->CurrentValue));
+            if ($curVal != "") {
+                $this->aplikasi->ViewValue = $this->aplikasi->lookupCacheOption($curVal);
+            } else {
+                $this->aplikasi->ViewValue = $this->aplikasi->Lookup !== null && is_array($this->aplikasi->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->aplikasi->ViewValue !== null) { // Load from cache
+                $this->aplikasi->EditValue = array_values($this->aplikasi->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->aplikasi->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->aplikasi->EditValue = $arwrk;
+            }
+            $this->aplikasi->PlaceHolder = RemoveHtml($this->aplikasi->caption());
+
+            // estetika
+            $this->estetika->EditCustomAttributes = "";
+            $curVal = trim(strval($this->estetika->CurrentValue));
+            if ($curVal != "") {
+                $this->estetika->ViewValue = $this->estetika->lookupCacheOption($curVal);
+            } else {
+                $this->estetika->ViewValue = $this->estetika->Lookup !== null && is_array($this->estetika->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->estetika->ViewValue !== null) { // Load from cache
+                $this->estetika->EditValue = array_values($this->estetika->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->estetika->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->estetika->EditValue = $arwrk;
+            }
+            $this->estetika->PlaceHolder = RemoveHtml($this->estetika->caption());
 
             // tambahan
-            $this->tambahan->LinkCustomAttributes = "";
-            $this->tambahan->HrefValue = "";
+            $this->tambahan->EditAttrs["class"] = "form-control";
+            $this->tambahan->EditCustomAttributes = "";
+            $this->tambahan->EditValue = HtmlEncode($this->tambahan->CurrentValue);
+            $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
 
-            // kemasanbarang
-            $this->kemasanbarang->LinkCustomAttributes = "";
-            $this->kemasanbarang->HrefValue = "";
+            // ukurankemasan
+            $this->ukurankemasan->EditAttrs["class"] = "form-control";
+            $this->ukurankemasan->EditCustomAttributes = "";
+            if (!$this->ukurankemasan->Raw) {
+                $this->ukurankemasan->CurrentValue = HtmlDecode($this->ukurankemasan->CurrentValue);
+            }
+            $this->ukurankemasan->EditValue = HtmlEncode($this->ukurankemasan->CurrentValue);
+            $this->ukurankemasan->PlaceHolder = RemoveHtml($this->ukurankemasan->caption());
 
-            // label
-            $this->label->LinkCustomAttributes = "";
-            $this->label->HrefValue = "";
+            // kemasanbentuk
+            $this->kemasanbentuk->EditCustomAttributes = "";
+            $curVal = trim(strval($this->kemasanbentuk->CurrentValue));
+            if ($curVal != "") {
+                $this->kemasanbentuk->ViewValue = $this->kemasanbentuk->lookupCacheOption($curVal);
+            } else {
+                $this->kemasanbentuk->ViewValue = $this->kemasanbentuk->Lookup !== null && is_array($this->kemasanbentuk->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->kemasanbentuk->ViewValue !== null) { // Load from cache
+                $this->kemasanbentuk->EditValue = array_values($this->kemasanbentuk->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->kemasanbentuk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->kemasanbentuk->EditValue = $arwrk;
+            }
+            $this->kemasanbentuk->PlaceHolder = RemoveHtml($this->kemasanbentuk->caption());
 
-            // orderperdana
-            $this->orderperdana->LinkCustomAttributes = "";
-            $this->orderperdana->HrefValue = "";
+            // kemasantutup
+            $this->kemasantutup->EditCustomAttributes = "";
+            $curVal = trim(strval($this->kemasantutup->CurrentValue));
+            if ($curVal != "") {
+                $this->kemasantutup->ViewValue = $this->kemasantutup->lookupCacheOption($curVal);
+            } else {
+                $this->kemasantutup->ViewValue = $this->kemasantutup->Lookup !== null && is_array($this->kemasantutup->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->kemasantutup->ViewValue !== null) { // Load from cache
+                $this->kemasantutup->EditValue = array_values($this->kemasantutup->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->kemasantutup->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->kemasantutup->EditValue = $arwrk;
+            }
+            $this->kemasantutup->PlaceHolder = RemoveHtml($this->kemasantutup->caption());
 
-            // orderreguler
-            $this->orderreguler->LinkCustomAttributes = "";
-            $this->orderreguler->HrefValue = "";
+            // kemasancatatan
+            $this->kemasancatatan->EditAttrs["class"] = "form-control";
+            $this->kemasancatatan->EditCustomAttributes = "";
+            $this->kemasancatatan->EditValue = HtmlEncode($this->kemasancatatan->CurrentValue);
+            $this->kemasancatatan->PlaceHolder = RemoveHtml($this->kemasancatatan->caption());
+
+            // labelbahan
+            $this->labelbahan->EditCustomAttributes = "";
+            $curVal = trim(strval($this->labelbahan->CurrentValue));
+            if ($curVal != "") {
+                $this->labelbahan->ViewValue = $this->labelbahan->lookupCacheOption($curVal);
+            } else {
+                $this->labelbahan->ViewValue = $this->labelbahan->Lookup !== null && is_array($this->labelbahan->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->labelbahan->ViewValue !== null) { // Load from cache
+                $this->labelbahan->EditValue = array_values($this->labelbahan->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->labelbahan->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->labelbahan->EditValue = $arwrk;
+            }
+            $this->labelbahan->PlaceHolder = RemoveHtml($this->labelbahan->caption());
+
+            // labelkualitas
+            $this->labelkualitas->EditCustomAttributes = "";
+            $curVal = trim(strval($this->labelkualitas->CurrentValue));
+            if ($curVal != "") {
+                $this->labelkualitas->ViewValue = $this->labelkualitas->lookupCacheOption($curVal);
+            } else {
+                $this->labelkualitas->ViewValue = $this->labelkualitas->Lookup !== null && is_array($this->labelkualitas->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->labelkualitas->ViewValue !== null) { // Load from cache
+                $this->labelkualitas->EditValue = array_values($this->labelkualitas->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->labelkualitas->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->labelkualitas->EditValue = $arwrk;
+            }
+            $this->labelkualitas->PlaceHolder = RemoveHtml($this->labelkualitas->caption());
+
+            // labelposisi
+            $this->labelposisi->EditCustomAttributes = "";
+            $curVal = trim(strval($this->labelposisi->CurrentValue));
+            if ($curVal != "") {
+                $this->labelposisi->ViewValue = $this->labelposisi->lookupCacheOption($curVal);
+            } else {
+                $this->labelposisi->ViewValue = $this->labelposisi->Lookup !== null && is_array($this->labelposisi->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->labelposisi->ViewValue !== null) { // Load from cache
+                $this->labelposisi->EditValue = array_values($this->labelposisi->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                }
+                $sqlWrk = $this->labelposisi->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->labelposisi->EditValue = $arwrk;
+            }
+            $this->labelposisi->PlaceHolder = RemoveHtml($this->labelposisi->caption());
+
+            // labelcatatan
+            $this->labelcatatan->EditAttrs["class"] = "form-control";
+            $this->labelcatatan->EditCustomAttributes = "";
+            $this->labelcatatan->EditValue = HtmlEncode($this->labelcatatan->CurrentValue);
+            $this->labelcatatan->PlaceHolder = RemoveHtml($this->labelcatatan->caption());
+
+            // statusdokumen
+            $this->statusdokumen->EditAttrs["class"] = "form-control";
+            $this->statusdokumen->EditCustomAttributes = "";
+            if (!$this->statusdokumen->Raw) {
+                $this->statusdokumen->CurrentValue = HtmlDecode($this->statusdokumen->CurrentValue);
+            }
+            $this->statusdokumen->EditValue = HtmlEncode($this->statusdokumen->CurrentValue);
+            $this->statusdokumen->PlaceHolder = RemoveHtml($this->statusdokumen->caption());
+
+            // updated_at
+            $this->updated_at->EditAttrs["class"] = "form-control";
+            $this->updated_at->EditCustomAttributes = "";
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 8));
+            $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
+
+            // Add refer script
 
             // tanggal_order
             $this->tanggal_order->LinkCustomAttributes = "";
@@ -1805,17 +2623,45 @@ class NpdAdd extends Npd
             $this->target_selesai->LinkCustomAttributes = "";
             $this->target_selesai->HrefValue = "";
 
-            // kategori
-            $this->kategori->LinkCustomAttributes = "";
-            $this->kategori->HrefValue = "";
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
 
-            // fungsi_produk
-            $this->fungsi_produk->LinkCustomAttributes = "";
-            $this->fungsi_produk->HrefValue = "";
+            // kodeorder
+            $this->kodeorder->LinkCustomAttributes = "";
+            $this->kodeorder->HrefValue = "";
 
-            // kualitasbarang
-            $this->kualitasbarang->LinkCustomAttributes = "";
-            $this->kualitasbarang->HrefValue = "";
+            // nomororder
+            $this->nomororder->LinkCustomAttributes = "";
+            $this->nomororder->HrefValue = "";
+
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+
+            // idproduct_acuan
+            $this->idproduct_acuan->LinkCustomAttributes = "";
+            $this->idproduct_acuan->HrefValue = "";
+
+            // idjenisproduk
+            $this->idjenisproduk->LinkCustomAttributes = "";
+            $this->idjenisproduk->HrefValue = "";
+
+            // idkategoriproduk
+            $this->idkategoriproduk->LinkCustomAttributes = "";
+            $this->idkategoriproduk->HrefValue = "";
+
+            // fungsiproduk
+            $this->fungsiproduk->LinkCustomAttributes = "";
+            $this->fungsiproduk->HrefValue = "";
+
+            // kualitasproduk
+            $this->kualitasproduk->LinkCustomAttributes = "";
+            $this->kualitasproduk->HrefValue = "";
 
             // bahan_campaign
             $this->bahan_campaign->LinkCustomAttributes = "";
@@ -1824,6 +2670,74 @@ class NpdAdd extends Npd
             // ukuran_sediaan
             $this->ukuran_sediaan->LinkCustomAttributes = "";
             $this->ukuran_sediaan->HrefValue = "";
+
+            // bentuk
+            $this->bentuk->LinkCustomAttributes = "";
+            $this->bentuk->HrefValue = "";
+
+            // viskositas
+            $this->viskositas->LinkCustomAttributes = "";
+            $this->viskositas->HrefValue = "";
+
+            // warna
+            $this->warna->LinkCustomAttributes = "";
+            $this->warna->HrefValue = "";
+
+            // parfum
+            $this->parfum->LinkCustomAttributes = "";
+            $this->parfum->HrefValue = "";
+
+            // aplikasi
+            $this->aplikasi->LinkCustomAttributes = "";
+            $this->aplikasi->HrefValue = "";
+
+            // estetika
+            $this->estetika->LinkCustomAttributes = "";
+            $this->estetika->HrefValue = "";
+
+            // tambahan
+            $this->tambahan->LinkCustomAttributes = "";
+            $this->tambahan->HrefValue = "";
+
+            // ukurankemasan
+            $this->ukurankemasan->LinkCustomAttributes = "";
+            $this->ukurankemasan->HrefValue = "";
+
+            // kemasanbentuk
+            $this->kemasanbentuk->LinkCustomAttributes = "";
+            $this->kemasanbentuk->HrefValue = "";
+
+            // kemasantutup
+            $this->kemasantutup->LinkCustomAttributes = "";
+            $this->kemasantutup->HrefValue = "";
+
+            // kemasancatatan
+            $this->kemasancatatan->LinkCustomAttributes = "";
+            $this->kemasancatatan->HrefValue = "";
+
+            // labelbahan
+            $this->labelbahan->LinkCustomAttributes = "";
+            $this->labelbahan->HrefValue = "";
+
+            // labelkualitas
+            $this->labelkualitas->LinkCustomAttributes = "";
+            $this->labelkualitas->HrefValue = "";
+
+            // labelposisi
+            $this->labelposisi->LinkCustomAttributes = "";
+            $this->labelposisi->HrefValue = "";
+
+            // labelcatatan
+            $this->labelcatatan->LinkCustomAttributes = "";
+            $this->labelcatatan->HrefValue = "";
+
+            // statusdokumen
+            $this->statusdokumen->LinkCustomAttributes = "";
+            $this->statusdokumen->HrefValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1844,90 +2758,6 @@ class NpdAdd extends Npd
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->status->Required) {
-            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
-                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
-            }
-        }
-        if ($this->idpegawai->Required) {
-            if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
-                $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
-            }
-        }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->idcustomer->FormValue)) {
-            $this->idcustomer->addErrorMessage($this->idcustomer->getErrorMessage(false));
-        }
-        if ($this->kodeorder->Required) {
-            if (!$this->kodeorder->IsDetailKey && EmptyValue($this->kodeorder->FormValue)) {
-                $this->kodeorder->addErrorMessage(str_replace("%s", $this->kodeorder->caption(), $this->kodeorder->RequiredErrorMessage));
-            }
-        }
-        if ($this->idproduct_acuan->Required) {
-            if (!$this->idproduct_acuan->IsDetailKey && EmptyValue($this->idproduct_acuan->FormValue)) {
-                $this->idproduct_acuan->addErrorMessage(str_replace("%s", $this->idproduct_acuan->caption(), $this->idproduct_acuan->RequiredErrorMessage));
-            }
-        }
-        if ($this->nama->Required) {
-            if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
-                $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
-            }
-        }
-        if ($this->idjenisbarang->Required) {
-            if (!$this->idjenisbarang->IsDetailKey && EmptyValue($this->idjenisbarang->FormValue)) {
-                $this->idjenisbarang->addErrorMessage(str_replace("%s", $this->idjenisbarang->caption(), $this->idjenisbarang->RequiredErrorMessage));
-            }
-        }
-        if ($this->idkategoribarang->Required) {
-            if (!$this->idkategoribarang->IsDetailKey && EmptyValue($this->idkategoribarang->FormValue)) {
-                $this->idkategoribarang->addErrorMessage(str_replace("%s", $this->idkategoribarang->caption(), $this->idkategoribarang->RequiredErrorMessage));
-            }
-        }
-        if ($this->warna->Required) {
-            if (!$this->warna->IsDetailKey && EmptyValue($this->warna->FormValue)) {
-                $this->warna->addErrorMessage(str_replace("%s", $this->warna->caption(), $this->warna->RequiredErrorMessage));
-            }
-        }
-        if ($this->parfum->Required) {
-            if (!$this->parfum->IsDetailKey && EmptyValue($this->parfum->FormValue)) {
-                $this->parfum->addErrorMessage(str_replace("%s", $this->parfum->caption(), $this->parfum->RequiredErrorMessage));
-            }
-        }
-        if ($this->tambahan->Required) {
-            if (!$this->tambahan->IsDetailKey && EmptyValue($this->tambahan->FormValue)) {
-                $this->tambahan->addErrorMessage(str_replace("%s", $this->tambahan->caption(), $this->tambahan->RequiredErrorMessage));
-            }
-        }
-        if ($this->kemasanbarang->Required) {
-            if (!$this->kemasanbarang->IsDetailKey && EmptyValue($this->kemasanbarang->FormValue)) {
-                $this->kemasanbarang->addErrorMessage(str_replace("%s", $this->kemasanbarang->caption(), $this->kemasanbarang->RequiredErrorMessage));
-            }
-        }
-        if ($this->label->Required) {
-            if (!$this->label->IsDetailKey && EmptyValue($this->label->FormValue)) {
-                $this->label->addErrorMessage(str_replace("%s", $this->label->caption(), $this->label->RequiredErrorMessage));
-            }
-        }
-        if ($this->orderperdana->Required) {
-            if (!$this->orderperdana->IsDetailKey && EmptyValue($this->orderperdana->FormValue)) {
-                $this->orderperdana->addErrorMessage(str_replace("%s", $this->orderperdana->caption(), $this->orderperdana->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->orderperdana->FormValue)) {
-            $this->orderperdana->addErrorMessage($this->orderperdana->getErrorMessage(false));
-        }
-        if ($this->orderreguler->Required) {
-            if (!$this->orderreguler->IsDetailKey && EmptyValue($this->orderreguler->FormValue)) {
-                $this->orderreguler->addErrorMessage(str_replace("%s", $this->orderreguler->caption(), $this->orderreguler->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->orderreguler->FormValue)) {
-            $this->orderreguler->addErrorMessage($this->orderreguler->getErrorMessage(false));
-        }
         if ($this->tanggal_order->Required) {
             if (!$this->tanggal_order->IsDetailKey && EmptyValue($this->tanggal_order->FormValue)) {
                 $this->tanggal_order->addErrorMessage(str_replace("%s", $this->tanggal_order->caption(), $this->tanggal_order->RequiredErrorMessage));
@@ -1944,19 +2774,57 @@ class NpdAdd extends Npd
         if (!CheckDate($this->target_selesai->FormValue)) {
             $this->target_selesai->addErrorMessage($this->target_selesai->getErrorMessage(false));
         }
-        if ($this->kategori->Required) {
-            if (!$this->kategori->IsDetailKey && EmptyValue($this->kategori->FormValue)) {
-                $this->kategori->addErrorMessage(str_replace("%s", $this->kategori->caption(), $this->kategori->RequiredErrorMessage));
+        if ($this->status->Required) {
+            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
+                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
-        if ($this->fungsi_produk->Required) {
-            if (!$this->fungsi_produk->IsDetailKey && EmptyValue($this->fungsi_produk->FormValue)) {
-                $this->fungsi_produk->addErrorMessage(str_replace("%s", $this->fungsi_produk->caption(), $this->fungsi_produk->RequiredErrorMessage));
+        if ($this->kodeorder->Required) {
+            if (!$this->kodeorder->IsDetailKey && EmptyValue($this->kodeorder->FormValue)) {
+                $this->kodeorder->addErrorMessage(str_replace("%s", $this->kodeorder->caption(), $this->kodeorder->RequiredErrorMessage));
             }
         }
-        if ($this->kualitasbarang->Required) {
-            if (!$this->kualitasbarang->IsDetailKey && EmptyValue($this->kualitasbarang->FormValue)) {
-                $this->kualitasbarang->addErrorMessage(str_replace("%s", $this->kualitasbarang->caption(), $this->kualitasbarang->RequiredErrorMessage));
+        if ($this->nomororder->Required) {
+            if (!$this->nomororder->IsDetailKey && EmptyValue($this->nomororder->FormValue)) {
+                $this->nomororder->addErrorMessage(str_replace("%s", $this->nomororder->caption(), $this->nomororder->RequiredErrorMessage));
+            }
+        }
+        if ($this->idpegawai->Required) {
+            if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
+                $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
+            }
+        }
+        if ($this->idcustomer->Required) {
+            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
+                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->idcustomer->FormValue)) {
+            $this->idcustomer->addErrorMessage($this->idcustomer->getErrorMessage(false));
+        }
+        if ($this->idproduct_acuan->Required) {
+            if (!$this->idproduct_acuan->IsDetailKey && EmptyValue($this->idproduct_acuan->FormValue)) {
+                $this->idproduct_acuan->addErrorMessage(str_replace("%s", $this->idproduct_acuan->caption(), $this->idproduct_acuan->RequiredErrorMessage));
+            }
+        }
+        if ($this->idjenisproduk->Required) {
+            if (!$this->idjenisproduk->IsDetailKey && EmptyValue($this->idjenisproduk->FormValue)) {
+                $this->idjenisproduk->addErrorMessage(str_replace("%s", $this->idjenisproduk->caption(), $this->idjenisproduk->RequiredErrorMessage));
+            }
+        }
+        if ($this->idkategoriproduk->Required) {
+            if (!$this->idkategoriproduk->IsDetailKey && EmptyValue($this->idkategoriproduk->FormValue)) {
+                $this->idkategoriproduk->addErrorMessage(str_replace("%s", $this->idkategoriproduk->caption(), $this->idkategoriproduk->RequiredErrorMessage));
+            }
+        }
+        if ($this->fungsiproduk->Required) {
+            if (!$this->fungsiproduk->IsDetailKey && EmptyValue($this->fungsiproduk->FormValue)) {
+                $this->fungsiproduk->addErrorMessage(str_replace("%s", $this->fungsiproduk->caption(), $this->fungsiproduk->RequiredErrorMessage));
+            }
+        }
+        if ($this->kualitasproduk->Required) {
+            if (!$this->kualitasproduk->IsDetailKey && EmptyValue($this->kualitasproduk->FormValue)) {
+                $this->kualitasproduk->addErrorMessage(str_replace("%s", $this->kualitasproduk->caption(), $this->kualitasproduk->RequiredErrorMessage));
             }
         }
         if ($this->bahan_campaign->Required) {
@@ -1968,6 +2836,94 @@ class NpdAdd extends Npd
             if (!$this->ukuran_sediaan->IsDetailKey && EmptyValue($this->ukuran_sediaan->FormValue)) {
                 $this->ukuran_sediaan->addErrorMessage(str_replace("%s", $this->ukuran_sediaan->caption(), $this->ukuran_sediaan->RequiredErrorMessage));
             }
+        }
+        if ($this->bentuk->Required) {
+            if ($this->bentuk->FormValue == "") {
+                $this->bentuk->addErrorMessage(str_replace("%s", $this->bentuk->caption(), $this->bentuk->RequiredErrorMessage));
+            }
+        }
+        if ($this->viskositas->Required) {
+            if ($this->viskositas->FormValue == "") {
+                $this->viskositas->addErrorMessage(str_replace("%s", $this->viskositas->caption(), $this->viskositas->RequiredErrorMessage));
+            }
+        }
+        if ($this->warna->Required) {
+            if ($this->warna->FormValue == "") {
+                $this->warna->addErrorMessage(str_replace("%s", $this->warna->caption(), $this->warna->RequiredErrorMessage));
+            }
+        }
+        if ($this->parfum->Required) {
+            if ($this->parfum->FormValue == "") {
+                $this->parfum->addErrorMessage(str_replace("%s", $this->parfum->caption(), $this->parfum->RequiredErrorMessage));
+            }
+        }
+        if ($this->aplikasi->Required) {
+            if ($this->aplikasi->FormValue == "") {
+                $this->aplikasi->addErrorMessage(str_replace("%s", $this->aplikasi->caption(), $this->aplikasi->RequiredErrorMessage));
+            }
+        }
+        if ($this->estetika->Required) {
+            if ($this->estetika->FormValue == "") {
+                $this->estetika->addErrorMessage(str_replace("%s", $this->estetika->caption(), $this->estetika->RequiredErrorMessage));
+            }
+        }
+        if ($this->tambahan->Required) {
+            if (!$this->tambahan->IsDetailKey && EmptyValue($this->tambahan->FormValue)) {
+                $this->tambahan->addErrorMessage(str_replace("%s", $this->tambahan->caption(), $this->tambahan->RequiredErrorMessage));
+            }
+        }
+        if ($this->ukurankemasan->Required) {
+            if (!$this->ukurankemasan->IsDetailKey && EmptyValue($this->ukurankemasan->FormValue)) {
+                $this->ukurankemasan->addErrorMessage(str_replace("%s", $this->ukurankemasan->caption(), $this->ukurankemasan->RequiredErrorMessage));
+            }
+        }
+        if ($this->kemasanbentuk->Required) {
+            if ($this->kemasanbentuk->FormValue == "") {
+                $this->kemasanbentuk->addErrorMessage(str_replace("%s", $this->kemasanbentuk->caption(), $this->kemasanbentuk->RequiredErrorMessage));
+            }
+        }
+        if ($this->kemasantutup->Required) {
+            if ($this->kemasantutup->FormValue == "") {
+                $this->kemasantutup->addErrorMessage(str_replace("%s", $this->kemasantutup->caption(), $this->kemasantutup->RequiredErrorMessage));
+            }
+        }
+        if ($this->kemasancatatan->Required) {
+            if (!$this->kemasancatatan->IsDetailKey && EmptyValue($this->kemasancatatan->FormValue)) {
+                $this->kemasancatatan->addErrorMessage(str_replace("%s", $this->kemasancatatan->caption(), $this->kemasancatatan->RequiredErrorMessage));
+            }
+        }
+        if ($this->labelbahan->Required) {
+            if ($this->labelbahan->FormValue == "") {
+                $this->labelbahan->addErrorMessage(str_replace("%s", $this->labelbahan->caption(), $this->labelbahan->RequiredErrorMessage));
+            }
+        }
+        if ($this->labelkualitas->Required) {
+            if ($this->labelkualitas->FormValue == "") {
+                $this->labelkualitas->addErrorMessage(str_replace("%s", $this->labelkualitas->caption(), $this->labelkualitas->RequiredErrorMessage));
+            }
+        }
+        if ($this->labelposisi->Required) {
+            if ($this->labelposisi->FormValue == "") {
+                $this->labelposisi->addErrorMessage(str_replace("%s", $this->labelposisi->caption(), $this->labelposisi->RequiredErrorMessage));
+            }
+        }
+        if ($this->labelcatatan->Required) {
+            if (!$this->labelcatatan->IsDetailKey && EmptyValue($this->labelcatatan->FormValue)) {
+                $this->labelcatatan->addErrorMessage(str_replace("%s", $this->labelcatatan->caption(), $this->labelcatatan->RequiredErrorMessage));
+            }
+        }
+        if ($this->statusdokumen->Required) {
+            if (!$this->statusdokumen->IsDetailKey && EmptyValue($this->statusdokumen->FormValue)) {
+                $this->statusdokumen->addErrorMessage(str_replace("%s", $this->statusdokumen->caption(), $this->statusdokumen->RequiredErrorMessage));
+            }
+        }
+        if ($this->updated_at->Required) {
+            if (!$this->updated_at->IsDetailKey && EmptyValue($this->updated_at->FormValue)) {
+                $this->updated_at->addErrorMessage(str_replace("%s", $this->updated_at->caption(), $this->updated_at->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->updated_at->FormValue)) {
+            $this->updated_at->addErrorMessage($this->updated_at->getErrorMessage(false));
         }
 
         // Validate detail grid
@@ -1986,6 +2942,14 @@ class NpdAdd extends Npd
         }
         $detailPage = Container("NpdHargaGrid");
         if (in_array("npd_harga", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage->validateGridForm();
+        }
+        $detailPage = Container("NpdDesainGrid");
+        if (in_array("npd_desain", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage->validateGridForm();
+        }
+        $detailPage = Container("NpdTermsGrid");
+        if (in_array("npd_terms", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
 
@@ -2028,8 +2992,20 @@ class NpdAdd extends Npd
         }
         $rsnew = [];
 
+        // tanggal_order
+        $this->tanggal_order->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_order->CurrentValue, 0), null, false);
+
+        // target_selesai
+        $this->target_selesai->setDbValueDef($rsnew, UnFormatDateTime($this->target_selesai->CurrentValue, 0), null, false);
+
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", false);
+
+        // kodeorder
+        $this->kodeorder->setDbValueDef($rsnew, $this->kodeorder->CurrentValue, "", false);
+
+        // nomororder
+        $this->nomororder->setDbValueDef($rsnew, $this->nomororder->CurrentValue, "", strval($this->nomororder->CurrentValue) == "");
 
         // idpegawai
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
@@ -2037,20 +3013,32 @@ class NpdAdd extends Npd
         // idcustomer
         $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
-        // kodeorder
-        $this->kodeorder->setDbValueDef($rsnew, $this->kodeorder->CurrentValue, "", false);
-
         // idproduct_acuan
         $this->idproduct_acuan->setDbValueDef($rsnew, $this->idproduct_acuan->CurrentValue, 0, false);
 
-        // nama
-        $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
+        // idjenisproduk
+        $this->idjenisproduk->setDbValueDef($rsnew, $this->idjenisproduk->CurrentValue, 0, false);
 
-        // idjenisbarang
-        $this->idjenisbarang->setDbValueDef($rsnew, $this->idjenisbarang->CurrentValue, 0, false);
+        // idkategoriproduk
+        $this->idkategoriproduk->setDbValueDef($rsnew, $this->idkategoriproduk->CurrentValue, 0, false);
 
-        // idkategoribarang
-        $this->idkategoribarang->setDbValueDef($rsnew, $this->idkategoribarang->CurrentValue, 0, false);
+        // fungsiproduk
+        $this->fungsiproduk->setDbValueDef($rsnew, $this->fungsiproduk->CurrentValue, "", false);
+
+        // kualitasproduk
+        $this->kualitasproduk->setDbValueDef($rsnew, $this->kualitasproduk->CurrentValue, "", false);
+
+        // bahan_campaign
+        $this->bahan_campaign->setDbValueDef($rsnew, $this->bahan_campaign->CurrentValue, "", false);
+
+        // ukuran_sediaan
+        $this->ukuran_sediaan->setDbValueDef($rsnew, $this->ukuran_sediaan->CurrentValue, "", false);
+
+        // bentuk
+        $this->bentuk->setDbValueDef($rsnew, $this->bentuk->CurrentValue, "", false);
+
+        // viskositas
+        $this->viskositas->setDbValueDef($rsnew, $this->viskositas->CurrentValue, "", false);
 
         // warna
         $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, "", false);
@@ -2058,41 +3046,44 @@ class NpdAdd extends Npd
         // parfum
         $this->parfum->setDbValueDef($rsnew, $this->parfum->CurrentValue, "", false);
 
+        // aplikasi
+        $this->aplikasi->setDbValueDef($rsnew, $this->aplikasi->CurrentValue, "", false);
+
+        // estetika
+        $this->estetika->setDbValueDef($rsnew, $this->estetika->CurrentValue, "", false);
+
         // tambahan
         $this->tambahan->setDbValueDef($rsnew, $this->tambahan->CurrentValue, null, false);
 
-        // kemasanbarang
-        $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, "", false);
+        // ukurankemasan
+        $this->ukurankemasan->setDbValueDef($rsnew, $this->ukurankemasan->CurrentValue, "", false);
 
-        // label
-        $this->label->setDbValueDef($rsnew, $this->label->CurrentValue, "", false);
+        // kemasanbentuk
+        $this->kemasanbentuk->setDbValueDef($rsnew, $this->kemasanbentuk->CurrentValue, "", false);
 
-        // orderperdana
-        $this->orderperdana->setDbValueDef($rsnew, $this->orderperdana->CurrentValue, null, false);
+        // kemasantutup
+        $this->kemasantutup->setDbValueDef($rsnew, $this->kemasantutup->CurrentValue, "", false);
 
-        // orderreguler
-        $this->orderreguler->setDbValueDef($rsnew, $this->orderreguler->CurrentValue, null, false);
+        // kemasancatatan
+        $this->kemasancatatan->setDbValueDef($rsnew, $this->kemasancatatan->CurrentValue, null, false);
 
-        // tanggal_order
-        $this->tanggal_order->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_order->CurrentValue, 0), null, false);
+        // labelbahan
+        $this->labelbahan->setDbValueDef($rsnew, $this->labelbahan->CurrentValue, "", false);
 
-        // target_selesai
-        $this->target_selesai->setDbValueDef($rsnew, UnFormatDateTime($this->target_selesai->CurrentValue, 0), null, false);
+        // labelkualitas
+        $this->labelkualitas->setDbValueDef($rsnew, $this->labelkualitas->CurrentValue, "", false);
 
-        // kategori
-        $this->kategori->setDbValueDef($rsnew, $this->kategori->CurrentValue, "", strval($this->kategori->CurrentValue) == "");
+        // labelposisi
+        $this->labelposisi->setDbValueDef($rsnew, $this->labelposisi->CurrentValue, "", false);
 
-        // fungsi_produk
-        $this->fungsi_produk->setDbValueDef($rsnew, $this->fungsi_produk->CurrentValue, "", false);
+        // labelcatatan
+        $this->labelcatatan->setDbValueDef($rsnew, $this->labelcatatan->CurrentValue, null, false);
 
-        // kualitasbarang
-        $this->kualitasbarang->setDbValueDef($rsnew, $this->kualitasbarang->CurrentValue, "", false);
+        // statusdokumen
+        $this->statusdokumen->setDbValueDef($rsnew, $this->statusdokumen->CurrentValue, null, false);
 
-        // bahan_campaign
-        $this->bahan_campaign->setDbValueDef($rsnew, $this->bahan_campaign->CurrentValue, "", false);
-
-        // ukuran_sediaan
-        $this->ukuran_sediaan->setDbValueDef($rsnew, $this->ukuran_sediaan->CurrentValue, "", false);
+        // updated_at
+        $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -2154,6 +3145,26 @@ class NpdAdd extends Npd
             if (in_array("npd_harga", $detailTblVar) && $detailPage->DetailAdd) {
                 $detailPage->idnpd->setSessionValue($this->id->CurrentValue); // Set master key
                 $Security->loadCurrentUserLevel($this->ProjectID . "npd_harga"); // Load user level of detail table
+                $addRow = $detailPage->gridInsert();
+                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+                if (!$addRow) {
+                $detailPage->idnpd->setSessionValue(""); // Clear master key if insert failed
+                }
+            }
+            $detailPage = Container("NpdDesainGrid");
+            if (in_array("npd_desain", $detailTblVar) && $detailPage->DetailAdd) {
+                $detailPage->idnpd->setSessionValue($this->id->CurrentValue); // Set master key
+                $Security->loadCurrentUserLevel($this->ProjectID . "npd_desain"); // Load user level of detail table
+                $addRow = $detailPage->gridInsert();
+                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+                if (!$addRow) {
+                $detailPage->idnpd->setSessionValue(""); // Clear master key if insert failed
+                }
+            }
+            $detailPage = Container("NpdTermsGrid");
+            if (in_array("npd_terms", $detailTblVar) && $detailPage->DetailAdd) {
+                $detailPage->idnpd->setSessionValue($this->id->CurrentValue); // Set master key
+                $Security->loadCurrentUserLevel($this->ProjectID . "npd_terms"); // Load user level of detail table
                 $addRow = $detailPage->gridInsert();
                 $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                 if (!$addRow) {
@@ -2272,6 +3283,42 @@ class NpdAdd extends Npd
                     $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
                 }
             }
+            if (in_array("npd_desain", $detailTblVar)) {
+                $detailPageObj = Container("NpdDesainGrid");
+                if ($detailPageObj->DetailAdd) {
+                    if ($this->CopyRecord) {
+                        $detailPageObj->CurrentMode = "copy";
+                    } else {
+                        $detailPageObj->CurrentMode = "add";
+                    }
+                    $detailPageObj->CurrentAction = "gridadd";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idnpd->IsDetailKey = true;
+                    $detailPageObj->idnpd->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
+                }
+            }
+            if (in_array("npd_terms", $detailTblVar)) {
+                $detailPageObj = Container("NpdTermsGrid");
+                if ($detailPageObj->DetailAdd) {
+                    if ($this->CopyRecord) {
+                        $detailPageObj->CurrentMode = "copy";
+                    } else {
+                        $detailPageObj->CurrentMode = "add";
+                    }
+                    $detailPageObj->CurrentAction = "gridadd";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idnpd->IsDetailKey = true;
+                    $detailPageObj->idnpd->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
+                }
+            }
         }
     }
 
@@ -2295,6 +3342,8 @@ class NpdAdd extends Npd
         $pages->add('npd_review');
         $pages->add('npd_confirm');
         $pages->add('npd_harga');
+        $pages->add('npd_desain');
+        $pages->add('npd_terms');
         $this->DetailPages = $pages;
     }
 
@@ -2321,13 +3370,35 @@ class NpdAdd extends Npd
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_idjenisbarang":
+                case "x_idjenisproduk":
                     break;
-                case "x_idkategoribarang":
+                case "x_idkategoriproduk":
                     break;
-                case "x_selesai":
+                case "x_bentuk":
+                    break;
+                case "x_viskositas":
+                    break;
+                case "x_warna":
+                    break;
+                case "x_parfum":
+                    break;
+                case "x_aplikasi":
+                    break;
+                case "x_estetika":
+                    break;
+                case "x_kemasanbentuk":
+                    break;
+                case "x_kemasantutup":
+                    break;
+                case "x_labelbahan":
+                    break;
+                case "x_labelkualitas":
+                    break;
+                case "x_labelposisi":
                     break;
                 case "x_readonly":
+                    break;
+                case "x_selesai":
                     break;
                 default:
                     $lookupFilter = "";
@@ -2399,8 +3470,6 @@ class NpdAdd extends Npd
     {
         // Example:
         //$header = "your header";
-        $this->warna->CustomMsg = "Gelap / Terang / Transparan / Opaq / Lainnya";
-        $this->label->CustomMsg = "Transparan / Vynil";
     }
 
     // Page Data Rendered event

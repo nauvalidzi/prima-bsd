@@ -186,20 +186,20 @@ class Brand extends DbTable
         $this->Fields['aktif'] = &$this->aktif;
 
         // created_at
-        $this->created_at = new DbField('brand', 'brand', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at = new DbField('brand', 'brand', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 11, "DB"), 135, 19, 11, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Nullable = false; // NOT NULL field
         $this->created_at->Required = true; // Required field
         $this->created_at->Sortable = true; // Allow sort
-        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
 
         // updated_at
-        $this->updated_at = new DbField('brand', 'brand', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at = new DbField('brand', 'brand', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 11, "DB"), 135, 19, 11, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->updated_at->Nullable = false; // NOT NULL field
         $this->updated_at->Required = true; // Required field
         $this->updated_at->Sortable = true; // Allow sort
-        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
     }
@@ -1217,12 +1217,12 @@ SORTHTML;
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
-        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
         $this->created_at->ViewCustomAttributes = "";
 
         // updated_at
         $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
         $this->updated_at->ViewCustomAttributes = "";
 
         // id
@@ -1414,13 +1414,13 @@ SORTHTML;
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
-        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
+        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 11);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
         // updated_at
         $this->updated_at->EditAttrs["class"] = "form-control";
         $this->updated_at->EditCustomAttributes = "";
-        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
+        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 11);
         $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
         // Call Row Rendered event
@@ -1718,11 +1718,6 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $idcustomer = $rsnew['idcustomer'];
-        $status = check_count_brand($idcustomer);
-        if ($status === true) {
-            Execute("INSERT INTO brand_link (idcustomer, idcustomer_brand) VALUES ({$idcustomer}, {$idcustomer})");
-        }
     }
 
     // Row Updating event

@@ -1723,6 +1723,7 @@ class AlamatCustomerGrid extends AlamatCustomer
             $this->idkecamatan->ViewCustomAttributes = "";
 
             // idkelurahan
+            $this->idkelurahan->ViewValue = $this->idkelurahan->CurrentValue;
             $curVal = trim(strval($this->idkelurahan->CurrentValue));
             if ($curVal != "") {
                 $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
@@ -1894,25 +1895,24 @@ class AlamatCustomerGrid extends AlamatCustomer
             // idkelurahan
             $this->idkelurahan->EditAttrs["class"] = "form-control";
             $this->idkelurahan->EditCustomAttributes = "";
+            $this->idkelurahan->EditValue = HtmlEncode($this->idkelurahan->CurrentValue);
             $curVal = trim(strval($this->idkelurahan->CurrentValue));
             if ($curVal != "") {
-                $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
-            } else {
-                $this->idkelurahan->ViewValue = $this->idkelurahan->Lookup !== null && is_array($this->idkelurahan->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idkelurahan->ViewValue !== null) { // Load from cache
-                $this->idkelurahan->EditValue = array_values($this->idkelurahan->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkelurahan->CurrentValue, DATATYPE_STRING, "");
+                $this->idkelurahan->EditValue = $this->idkelurahan->lookupCacheOption($curVal);
+                if ($this->idkelurahan->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->idkelurahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idkelurahan->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkelurahan->EditValue = $this->idkelurahan->displayValue($arwrk);
+                    } else {
+                        $this->idkelurahan->EditValue = HtmlEncode($this->idkelurahan->CurrentValue);
+                    }
                 }
-                $sqlWrk = $this->idkelurahan->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idkelurahan->EditValue = $arwrk;
+            } else {
+                $this->idkelurahan->EditValue = null;
             }
             $this->idkelurahan->PlaceHolder = RemoveHtml($this->idkelurahan->caption());
 
@@ -2061,25 +2061,24 @@ class AlamatCustomerGrid extends AlamatCustomer
             // idkelurahan
             $this->idkelurahan->EditAttrs["class"] = "form-control";
             $this->idkelurahan->EditCustomAttributes = "";
+            $this->idkelurahan->EditValue = HtmlEncode($this->idkelurahan->CurrentValue);
             $curVal = trim(strval($this->idkelurahan->CurrentValue));
             if ($curVal != "") {
-                $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
-            } else {
-                $this->idkelurahan->ViewValue = $this->idkelurahan->Lookup !== null && is_array($this->idkelurahan->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idkelurahan->ViewValue !== null) { // Load from cache
-                $this->idkelurahan->EditValue = array_values($this->idkelurahan->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkelurahan->CurrentValue, DATATYPE_STRING, "");
+                $this->idkelurahan->EditValue = $this->idkelurahan->lookupCacheOption($curVal);
+                if ($this->idkelurahan->EditValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->idkelurahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idkelurahan->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkelurahan->EditValue = $this->idkelurahan->displayValue($arwrk);
+                    } else {
+                        $this->idkelurahan->EditValue = HtmlEncode($this->idkelurahan->CurrentValue);
+                    }
                 }
-                $sqlWrk = $this->idkelurahan->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idkelurahan->EditValue = $arwrk;
+            } else {
+                $this->idkelurahan->EditValue = null;
             }
             $this->idkelurahan->PlaceHolder = RemoveHtml($this->idkelurahan->caption());
 
@@ -2175,6 +2174,9 @@ class AlamatCustomerGrid extends AlamatCustomer
             if (!$this->idkelurahan->IsDetailKey && EmptyValue($this->idkelurahan->FormValue)) {
                 $this->idkelurahan->addErrorMessage(str_replace("%s", $this->idkelurahan->caption(), $this->idkelurahan->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idkelurahan->FormValue)) {
+            $this->idkelurahan->addErrorMessage($this->idkelurahan->getErrorMessage(false));
         }
 
         // Return validate result
@@ -2295,16 +2297,16 @@ class AlamatCustomerGrid extends AlamatCustomer
             $this->telepon->setDbValueDef($rsnew, $this->telepon->CurrentValue, "", $this->telepon->ReadOnly);
 
             // alamat
-            $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, "", $this->alamat->ReadOnly);
+            $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, $this->alamat->ReadOnly);
 
             // idprovinsi
-            $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, "", $this->idprovinsi->ReadOnly);
+            $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, 0, $this->idprovinsi->ReadOnly);
 
             // idkabupaten
-            $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, "", $this->idkabupaten->ReadOnly);
+            $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, 0, $this->idkabupaten->ReadOnly);
 
             // idkecamatan
-            $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, "", $this->idkecamatan->ReadOnly);
+            $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, $this->idkecamatan->ReadOnly);
 
             // idkelurahan
             $this->idkelurahan->setDbValueDef($rsnew, $this->idkelurahan->CurrentValue, null, $this->idkelurahan->ReadOnly);
@@ -2380,16 +2382,16 @@ class AlamatCustomerGrid extends AlamatCustomer
         $this->telepon->setDbValueDef($rsnew, $this->telepon->CurrentValue, "", strval($this->telepon->CurrentValue) == "");
 
         // alamat
-        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, "", false);
+        $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, false);
 
         // idprovinsi
-        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, "", false);
+        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, 0, strval($this->idprovinsi->CurrentValue) == "");
 
         // idkabupaten
-        $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, "", false);
+        $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, 0, strval($this->idkabupaten->CurrentValue) == "");
 
         // idkecamatan
-        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, "", false);
+        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, strval($this->idkecamatan->CurrentValue) == "");
 
         // idkelurahan
         $this->idkelurahan->setDbValueDef($rsnew, $this->idkelurahan->CurrentValue, null, false);

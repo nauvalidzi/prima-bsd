@@ -122,6 +122,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <tr id="r_ukuran">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_product_ukuran"><?= $Page->ukuran->caption() ?></span></td>
+        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el_product_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
     <tr id="r_kemasanbarang">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_product_kemasanbarang"><?= $Page->kemasanbarang->caption() ?></span></td>
@@ -140,17 +151,6 @@ $Page->showMessage();
 <span id="el_product_harga">
 <span<?= $Page->harga->viewAttributes() ?>>
 <?= $Page->harga->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <tr id="r_ukuran">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_product_ukuran"><?= $Page->ukuran->caption() ?></span></td>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el_product_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
 </span>
 </td>
     </tr>

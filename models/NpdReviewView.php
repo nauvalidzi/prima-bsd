@@ -521,36 +521,36 @@ class NpdReviewView extends NpdReview
         $this->id->setVisibility();
         $this->idnpd->setVisibility();
         $this->idnpd_sample->setVisibility();
-        $this->tglreview->setVisibility();
-        $this->tglsubmit->setVisibility();
+        $this->tanggal_review->setVisibility();
+        $this->tanggal_submit->setVisibility();
         $this->wadah->setVisibility();
-        $this->bentukok->setVisibility();
-        $this->bentukrevisi->setVisibility();
-        $this->viskositasok->setVisibility();
-        $this->viskositasrevisi->setVisibility();
-        $this->jeniswarnaok->setVisibility();
-        $this->jeniswarnarevisi->setVisibility();
-        $this->tonewarnaok->setVisibility();
-        $this->tonewarnarevisi->setVisibility();
-        $this->gradasiwarnaok->setVisibility();
-        $this->gradasiwarnarevisi->setVisibility();
-        $this->bauok->setVisibility();
-        $this->baurevisi->setVisibility();
-        $this->estetikaok->setVisibility();
-        $this->estetikarevisi->setVisibility();
-        $this->aplikasiawalok->setVisibility();
-        $this->aplikasiawalrevisi->setVisibility();
-        $this->aplikasilamaok->setVisibility();
-        $this->aplikasilamarevisi->setVisibility();
-        $this->efekpositifok->setVisibility();
-        $this->efekpositifrevisi->setVisibility();
-        $this->efeknegatifok->setVisibility();
-        $this->efeknegatifrevisi->setVisibility();
+        $this->bentuk_opsi->setVisibility();
+        $this->bentuk_revisi->setVisibility();
+        $this->viskositas_opsi->setVisibility();
+        $this->viskositas_revisi->setVisibility();
+        $this->jeniswarna_opsi->setVisibility();
+        $this->jeniswarna_revisi->setVisibility();
+        $this->tonewarna_opsi->setVisibility();
+        $this->tonewarna_revisi->setVisibility();
+        $this->gradasiwarna_opsi->setVisibility();
+        $this->gradasiwarna_revisi->setVisibility();
+        $this->bauparfum_opsi->setVisibility();
+        $this->bauparfum_revisi->setVisibility();
+        $this->estetika_opsi->setVisibility();
+        $this->estetika_revisi->setVisibility();
+        $this->aplikasiawal_opsi->setVisibility();
+        $this->aplikasiawal_revisi->setVisibility();
+        $this->aplikasilama_opsi->setVisibility();
+        $this->aplikasilama_revisi->setVisibility();
+        $this->efekpositif_opsi->setVisibility();
+        $this->efekpositif_revisi->setVisibility();
+        $this->efeknegatif_opsi->setVisibility();
+        $this->efeknegatif_revisi->setVisibility();
         $this->kesimpulan->setVisibility();
         $this->status->setVisibility();
         $this->created_at->setVisibility();
-        $this->created_by->setVisibility();
         $this->readonly->setVisibility();
+        $this->ukuran->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -691,7 +691,7 @@ class NpdReviewView extends NpdReview
         } else {
             $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
         }
-        $item->Visible = ($this->EditUrl != "" && $Security->canEdit() && $this->showOptionLink("edit"));
+        $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
         // Delete
         $item = &$option->add("delete");
@@ -700,7 +700,7 @@ class NpdReviewView extends NpdReview
         } else {
             $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
         }
-        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete() && $this->showOptionLink("delete"));
+        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
 
         // Set up action default
         $option = $options["action"];
@@ -762,36 +762,36 @@ class NpdReviewView extends NpdReview
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
-        $this->tglreview->setDbValue($row['tglreview']);
-        $this->tglsubmit->setDbValue($row['tglsubmit']);
+        $this->tanggal_review->setDbValue($row['tanggal_review']);
+        $this->tanggal_submit->setDbValue($row['tanggal_submit']);
         $this->wadah->setDbValue($row['wadah']);
-        $this->bentukok->setDbValue($row['bentukok']);
-        $this->bentukrevisi->setDbValue($row['bentukrevisi']);
-        $this->viskositasok->setDbValue($row['viskositasok']);
-        $this->viskositasrevisi->setDbValue($row['viskositasrevisi']);
-        $this->jeniswarnaok->setDbValue($row['jeniswarnaok']);
-        $this->jeniswarnarevisi->setDbValue($row['jeniswarnarevisi']);
-        $this->tonewarnaok->setDbValue($row['tonewarnaok']);
-        $this->tonewarnarevisi->setDbValue($row['tonewarnarevisi']);
-        $this->gradasiwarnaok->setDbValue($row['gradasiwarnaok']);
-        $this->gradasiwarnarevisi->setDbValue($row['gradasiwarnarevisi']);
-        $this->bauok->setDbValue($row['bauok']);
-        $this->baurevisi->setDbValue($row['baurevisi']);
-        $this->estetikaok->setDbValue($row['estetikaok']);
-        $this->estetikarevisi->setDbValue($row['estetikarevisi']);
-        $this->aplikasiawalok->setDbValue($row['aplikasiawalok']);
-        $this->aplikasiawalrevisi->setDbValue($row['aplikasiawalrevisi']);
-        $this->aplikasilamaok->setDbValue($row['aplikasilamaok']);
-        $this->aplikasilamarevisi->setDbValue($row['aplikasilamarevisi']);
-        $this->efekpositifok->setDbValue($row['efekpositifok']);
-        $this->efekpositifrevisi->setDbValue($row['efekpositifrevisi']);
-        $this->efeknegatifok->setDbValue($row['efeknegatifok']);
-        $this->efeknegatifrevisi->setDbValue($row['efeknegatifrevisi']);
+        $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
+        $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
+        $this->viskositas_opsi->setDbValue($row['viskositas_opsi']);
+        $this->viskositas_revisi->setDbValue($row['viskositas_revisi']);
+        $this->jeniswarna_opsi->setDbValue($row['jeniswarna_opsi']);
+        $this->jeniswarna_revisi->setDbValue($row['jeniswarna_revisi']);
+        $this->tonewarna_opsi->setDbValue($row['tonewarna_opsi']);
+        $this->tonewarna_revisi->setDbValue($row['tonewarna_revisi']);
+        $this->gradasiwarna_opsi->setDbValue($row['gradasiwarna_opsi']);
+        $this->gradasiwarna_revisi->setDbValue($row['gradasiwarna_revisi']);
+        $this->bauparfum_opsi->setDbValue($row['bauparfum_opsi']);
+        $this->bauparfum_revisi->setDbValue($row['bauparfum_revisi']);
+        $this->estetika_opsi->setDbValue($row['estetika_opsi']);
+        $this->estetika_revisi->setDbValue($row['estetika_revisi']);
+        $this->aplikasiawal_opsi->setDbValue($row['aplikasiawal_opsi']);
+        $this->aplikasiawal_revisi->setDbValue($row['aplikasiawal_revisi']);
+        $this->aplikasilama_opsi->setDbValue($row['aplikasilama_opsi']);
+        $this->aplikasilama_revisi->setDbValue($row['aplikasilama_revisi']);
+        $this->efekpositif_opsi->setDbValue($row['efekpositif_opsi']);
+        $this->efekpositif_revisi->setDbValue($row['efekpositif_revisi']);
+        $this->efeknegatif_opsi->setDbValue($row['efeknegatif_opsi']);
+        $this->efeknegatif_revisi->setDbValue($row['efeknegatif_revisi']);
         $this->kesimpulan->setDbValue($row['kesimpulan']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->ukuran->setDbValue($row['ukuran']);
     }
 
     // Return a row with default values
@@ -801,36 +801,36 @@ class NpdReviewView extends NpdReview
         $row['id'] = null;
         $row['idnpd'] = null;
         $row['idnpd_sample'] = null;
-        $row['tglreview'] = null;
-        $row['tglsubmit'] = null;
+        $row['tanggal_review'] = null;
+        $row['tanggal_submit'] = null;
         $row['wadah'] = null;
-        $row['bentukok'] = null;
-        $row['bentukrevisi'] = null;
-        $row['viskositasok'] = null;
-        $row['viskositasrevisi'] = null;
-        $row['jeniswarnaok'] = null;
-        $row['jeniswarnarevisi'] = null;
-        $row['tonewarnaok'] = null;
-        $row['tonewarnarevisi'] = null;
-        $row['gradasiwarnaok'] = null;
-        $row['gradasiwarnarevisi'] = null;
-        $row['bauok'] = null;
-        $row['baurevisi'] = null;
-        $row['estetikaok'] = null;
-        $row['estetikarevisi'] = null;
-        $row['aplikasiawalok'] = null;
-        $row['aplikasiawalrevisi'] = null;
-        $row['aplikasilamaok'] = null;
-        $row['aplikasilamarevisi'] = null;
-        $row['efekpositifok'] = null;
-        $row['efekpositifrevisi'] = null;
-        $row['efeknegatifok'] = null;
-        $row['efeknegatifrevisi'] = null;
+        $row['bentuk_opsi'] = null;
+        $row['bentuk_revisi'] = null;
+        $row['viskositas_opsi'] = null;
+        $row['viskositas_revisi'] = null;
+        $row['jeniswarna_opsi'] = null;
+        $row['jeniswarna_revisi'] = null;
+        $row['tonewarna_opsi'] = null;
+        $row['tonewarna_revisi'] = null;
+        $row['gradasiwarna_opsi'] = null;
+        $row['gradasiwarna_revisi'] = null;
+        $row['bauparfum_opsi'] = null;
+        $row['bauparfum_revisi'] = null;
+        $row['estetika_opsi'] = null;
+        $row['estetika_revisi'] = null;
+        $row['aplikasiawal_opsi'] = null;
+        $row['aplikasiawal_revisi'] = null;
+        $row['aplikasilama_opsi'] = null;
+        $row['aplikasilama_revisi'] = null;
+        $row['efekpositif_opsi'] = null;
+        $row['efekpositif_revisi'] = null;
+        $row['efeknegatif_opsi'] = null;
+        $row['efeknegatif_revisi'] = null;
         $row['kesimpulan'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
+        $row['ukuran'] = null;
         return $row;
     }
 
@@ -858,55 +858,55 @@ class NpdReviewView extends NpdReview
 
         // idnpd_sample
 
-        // tglreview
+        // tanggal_review
 
-        // tglsubmit
+        // tanggal_submit
 
         // wadah
 
-        // bentukok
+        // bentuk_opsi
 
-        // bentukrevisi
+        // bentuk_revisi
 
-        // viskositasok
+        // viskositas_opsi
 
-        // viskositasrevisi
+        // viskositas_revisi
 
-        // jeniswarnaok
+        // jeniswarna_opsi
 
-        // jeniswarnarevisi
+        // jeniswarna_revisi
 
-        // tonewarnaok
+        // tonewarna_opsi
 
-        // tonewarnarevisi
+        // tonewarna_revisi
 
-        // gradasiwarnaok
+        // gradasiwarna_opsi
 
-        // gradasiwarnarevisi
+        // gradasiwarna_revisi
 
-        // bauok
+        // bauparfum_opsi
 
-        // baurevisi
+        // bauparfum_revisi
 
-        // estetikaok
+        // estetika_opsi
 
-        // estetikarevisi
+        // estetika_revisi
 
-        // aplikasiawalok
+        // aplikasiawal_opsi
 
-        // aplikasiawalrevisi
+        // aplikasiawal_revisi
 
-        // aplikasilamaok
+        // aplikasilama_opsi
 
-        // aplikasilamarevisi
+        // aplikasilama_revisi
 
-        // efekpositifok
+        // efekpositif_opsi
 
-        // efekpositifrevisi
+        // efekpositif_revisi
 
-        // efeknegatifok
+        // efeknegatif_opsi
 
-        // efeknegatifrevisi
+        // efeknegatif_revisi
 
         // kesimpulan
 
@@ -914,9 +914,9 @@ class NpdReviewView extends NpdReview
 
         // created_at
 
-        // created_by
-
         // readonly
+
+        // ukuran
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -972,151 +972,151 @@ class NpdReviewView extends NpdReview
             }
             $this->idnpd_sample->ViewCustomAttributes = "";
 
-            // tglreview
-            $this->tglreview->ViewValue = $this->tglreview->CurrentValue;
-            $this->tglreview->ViewValue = FormatDateTime($this->tglreview->ViewValue, 0);
-            $this->tglreview->ViewCustomAttributes = "";
+            // tanggal_review
+            $this->tanggal_review->ViewValue = $this->tanggal_review->CurrentValue;
+            $this->tanggal_review->ViewValue = FormatDateTime($this->tanggal_review->ViewValue, 0);
+            $this->tanggal_review->ViewCustomAttributes = "";
 
-            // tglsubmit
-            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
-            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
-            $this->tglsubmit->ViewCustomAttributes = "";
+            // tanggal_submit
+            $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
+            $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
+            $this->tanggal_submit->ViewCustomAttributes = "";
 
             // wadah
             $this->wadah->ViewValue = $this->wadah->CurrentValue;
             $this->wadah->ViewCustomAttributes = "";
 
-            // bentukok
-            if (strval($this->bentukok->CurrentValue) != "") {
-                $this->bentukok->ViewValue = $this->bentukok->optionCaption($this->bentukok->CurrentValue);
+            // bentuk_opsi
+            if (strval($this->bentuk_opsi->CurrentValue) != "") {
+                $this->bentuk_opsi->ViewValue = $this->bentuk_opsi->optionCaption($this->bentuk_opsi->CurrentValue);
             } else {
-                $this->bentukok->ViewValue = null;
+                $this->bentuk_opsi->ViewValue = null;
             }
-            $this->bentukok->ViewCustomAttributes = "";
+            $this->bentuk_opsi->ViewCustomAttributes = "";
 
-            // bentukrevisi
-            $this->bentukrevisi->ViewValue = $this->bentukrevisi->CurrentValue;
-            $this->bentukrevisi->ViewCustomAttributes = "";
+            // bentuk_revisi
+            $this->bentuk_revisi->ViewValue = $this->bentuk_revisi->CurrentValue;
+            $this->bentuk_revisi->ViewCustomAttributes = "";
 
-            // viskositasok
-            if (strval($this->viskositasok->CurrentValue) != "") {
-                $this->viskositasok->ViewValue = $this->viskositasok->optionCaption($this->viskositasok->CurrentValue);
+            // viskositas_opsi
+            if (strval($this->viskositas_opsi->CurrentValue) != "") {
+                $this->viskositas_opsi->ViewValue = $this->viskositas_opsi->optionCaption($this->viskositas_opsi->CurrentValue);
             } else {
-                $this->viskositasok->ViewValue = null;
+                $this->viskositas_opsi->ViewValue = null;
             }
-            $this->viskositasok->ViewCustomAttributes = "";
+            $this->viskositas_opsi->ViewCustomAttributes = "";
 
-            // viskositasrevisi
-            $this->viskositasrevisi->ViewValue = $this->viskositasrevisi->CurrentValue;
-            $this->viskositasrevisi->ViewCustomAttributes = "";
+            // viskositas_revisi
+            $this->viskositas_revisi->ViewValue = $this->viskositas_revisi->CurrentValue;
+            $this->viskositas_revisi->ViewCustomAttributes = "";
 
-            // jeniswarnaok
-            if (strval($this->jeniswarnaok->CurrentValue) != "") {
-                $this->jeniswarnaok->ViewValue = $this->jeniswarnaok->optionCaption($this->jeniswarnaok->CurrentValue);
+            // jeniswarna_opsi
+            if (strval($this->jeniswarna_opsi->CurrentValue) != "") {
+                $this->jeniswarna_opsi->ViewValue = $this->jeniswarna_opsi->optionCaption($this->jeniswarna_opsi->CurrentValue);
             } else {
-                $this->jeniswarnaok->ViewValue = null;
+                $this->jeniswarna_opsi->ViewValue = null;
             }
-            $this->jeniswarnaok->ViewCustomAttributes = "";
+            $this->jeniswarna_opsi->ViewCustomAttributes = "";
 
-            // jeniswarnarevisi
-            $this->jeniswarnarevisi->ViewValue = $this->jeniswarnarevisi->CurrentValue;
-            $this->jeniswarnarevisi->ViewCustomAttributes = "";
+            // jeniswarna_revisi
+            $this->jeniswarna_revisi->ViewValue = $this->jeniswarna_revisi->CurrentValue;
+            $this->jeniswarna_revisi->ViewCustomAttributes = "";
 
-            // tonewarnaok
-            if (strval($this->tonewarnaok->CurrentValue) != "") {
-                $this->tonewarnaok->ViewValue = $this->tonewarnaok->optionCaption($this->tonewarnaok->CurrentValue);
+            // tonewarna_opsi
+            if (strval($this->tonewarna_opsi->CurrentValue) != "") {
+                $this->tonewarna_opsi->ViewValue = $this->tonewarna_opsi->optionCaption($this->tonewarna_opsi->CurrentValue);
             } else {
-                $this->tonewarnaok->ViewValue = null;
+                $this->tonewarna_opsi->ViewValue = null;
             }
-            $this->tonewarnaok->ViewCustomAttributes = "";
+            $this->tonewarna_opsi->ViewCustomAttributes = "";
 
-            // tonewarnarevisi
-            $this->tonewarnarevisi->ViewValue = $this->tonewarnarevisi->CurrentValue;
-            $this->tonewarnarevisi->ViewCustomAttributes = "";
+            // tonewarna_revisi
+            $this->tonewarna_revisi->ViewValue = $this->tonewarna_revisi->CurrentValue;
+            $this->tonewarna_revisi->ViewCustomAttributes = "";
 
-            // gradasiwarnaok
-            if (strval($this->gradasiwarnaok->CurrentValue) != "") {
-                $this->gradasiwarnaok->ViewValue = $this->gradasiwarnaok->optionCaption($this->gradasiwarnaok->CurrentValue);
+            // gradasiwarna_opsi
+            if (strval($this->gradasiwarna_opsi->CurrentValue) != "") {
+                $this->gradasiwarna_opsi->ViewValue = $this->gradasiwarna_opsi->optionCaption($this->gradasiwarna_opsi->CurrentValue);
             } else {
-                $this->gradasiwarnaok->ViewValue = null;
+                $this->gradasiwarna_opsi->ViewValue = null;
             }
-            $this->gradasiwarnaok->ViewCustomAttributes = "";
+            $this->gradasiwarna_opsi->ViewCustomAttributes = "";
 
-            // gradasiwarnarevisi
-            $this->gradasiwarnarevisi->ViewValue = $this->gradasiwarnarevisi->CurrentValue;
-            $this->gradasiwarnarevisi->ViewCustomAttributes = "";
+            // gradasiwarna_revisi
+            $this->gradasiwarna_revisi->ViewValue = $this->gradasiwarna_revisi->CurrentValue;
+            $this->gradasiwarna_revisi->ViewCustomAttributes = "";
 
-            // bauok
-            if (strval($this->bauok->CurrentValue) != "") {
-                $this->bauok->ViewValue = $this->bauok->optionCaption($this->bauok->CurrentValue);
+            // bauparfum_opsi
+            if (strval($this->bauparfum_opsi->CurrentValue) != "") {
+                $this->bauparfum_opsi->ViewValue = $this->bauparfum_opsi->optionCaption($this->bauparfum_opsi->CurrentValue);
             } else {
-                $this->bauok->ViewValue = null;
+                $this->bauparfum_opsi->ViewValue = null;
             }
-            $this->bauok->ViewCustomAttributes = "";
+            $this->bauparfum_opsi->ViewCustomAttributes = "";
 
-            // baurevisi
-            $this->baurevisi->ViewValue = $this->baurevisi->CurrentValue;
-            $this->baurevisi->ViewCustomAttributes = "";
+            // bauparfum_revisi
+            $this->bauparfum_revisi->ViewValue = $this->bauparfum_revisi->CurrentValue;
+            $this->bauparfum_revisi->ViewCustomAttributes = "";
 
-            // estetikaok
-            if (strval($this->estetikaok->CurrentValue) != "") {
-                $this->estetikaok->ViewValue = $this->estetikaok->optionCaption($this->estetikaok->CurrentValue);
+            // estetika_opsi
+            if (strval($this->estetika_opsi->CurrentValue) != "") {
+                $this->estetika_opsi->ViewValue = $this->estetika_opsi->optionCaption($this->estetika_opsi->CurrentValue);
             } else {
-                $this->estetikaok->ViewValue = null;
+                $this->estetika_opsi->ViewValue = null;
             }
-            $this->estetikaok->ViewCustomAttributes = "";
+            $this->estetika_opsi->ViewCustomAttributes = "";
 
-            // estetikarevisi
-            $this->estetikarevisi->ViewValue = $this->estetikarevisi->CurrentValue;
-            $this->estetikarevisi->ViewCustomAttributes = "";
+            // estetika_revisi
+            $this->estetika_revisi->ViewValue = $this->estetika_revisi->CurrentValue;
+            $this->estetika_revisi->ViewCustomAttributes = "";
 
-            // aplikasiawalok
-            if (strval($this->aplikasiawalok->CurrentValue) != "") {
-                $this->aplikasiawalok->ViewValue = $this->aplikasiawalok->optionCaption($this->aplikasiawalok->CurrentValue);
+            // aplikasiawal_opsi
+            if (strval($this->aplikasiawal_opsi->CurrentValue) != "") {
+                $this->aplikasiawal_opsi->ViewValue = $this->aplikasiawal_opsi->optionCaption($this->aplikasiawal_opsi->CurrentValue);
             } else {
-                $this->aplikasiawalok->ViewValue = null;
+                $this->aplikasiawal_opsi->ViewValue = null;
             }
-            $this->aplikasiawalok->ViewCustomAttributes = "";
+            $this->aplikasiawal_opsi->ViewCustomAttributes = "";
 
-            // aplikasiawalrevisi
-            $this->aplikasiawalrevisi->ViewValue = $this->aplikasiawalrevisi->CurrentValue;
-            $this->aplikasiawalrevisi->ViewCustomAttributes = "";
+            // aplikasiawal_revisi
+            $this->aplikasiawal_revisi->ViewValue = $this->aplikasiawal_revisi->CurrentValue;
+            $this->aplikasiawal_revisi->ViewCustomAttributes = "";
 
-            // aplikasilamaok
-            if (strval($this->aplikasilamaok->CurrentValue) != "") {
-                $this->aplikasilamaok->ViewValue = $this->aplikasilamaok->optionCaption($this->aplikasilamaok->CurrentValue);
+            // aplikasilama_opsi
+            if (strval($this->aplikasilama_opsi->CurrentValue) != "") {
+                $this->aplikasilama_opsi->ViewValue = $this->aplikasilama_opsi->optionCaption($this->aplikasilama_opsi->CurrentValue);
             } else {
-                $this->aplikasilamaok->ViewValue = null;
+                $this->aplikasilama_opsi->ViewValue = null;
             }
-            $this->aplikasilamaok->ViewCustomAttributes = "";
+            $this->aplikasilama_opsi->ViewCustomAttributes = "";
 
-            // aplikasilamarevisi
-            $this->aplikasilamarevisi->ViewValue = $this->aplikasilamarevisi->CurrentValue;
-            $this->aplikasilamarevisi->ViewCustomAttributes = "";
+            // aplikasilama_revisi
+            $this->aplikasilama_revisi->ViewValue = $this->aplikasilama_revisi->CurrentValue;
+            $this->aplikasilama_revisi->ViewCustomAttributes = "";
 
-            // efekpositifok
-            if (strval($this->efekpositifok->CurrentValue) != "") {
-                $this->efekpositifok->ViewValue = $this->efekpositifok->optionCaption($this->efekpositifok->CurrentValue);
+            // efekpositif_opsi
+            if (strval($this->efekpositif_opsi->CurrentValue) != "") {
+                $this->efekpositif_opsi->ViewValue = $this->efekpositif_opsi->optionCaption($this->efekpositif_opsi->CurrentValue);
             } else {
-                $this->efekpositifok->ViewValue = null;
+                $this->efekpositif_opsi->ViewValue = null;
             }
-            $this->efekpositifok->ViewCustomAttributes = "";
+            $this->efekpositif_opsi->ViewCustomAttributes = "";
 
-            // efekpositifrevisi
-            $this->efekpositifrevisi->ViewValue = $this->efekpositifrevisi->CurrentValue;
-            $this->efekpositifrevisi->ViewCustomAttributes = "";
+            // efekpositif_revisi
+            $this->efekpositif_revisi->ViewValue = $this->efekpositif_revisi->CurrentValue;
+            $this->efekpositif_revisi->ViewCustomAttributes = "";
 
-            // efeknegatifok
-            if (strval($this->efeknegatifok->CurrentValue) != "") {
-                $this->efeknegatifok->ViewValue = $this->efeknegatifok->optionCaption($this->efeknegatifok->CurrentValue);
+            // efeknegatif_opsi
+            if (strval($this->efeknegatif_opsi->CurrentValue) != "") {
+                $this->efeknegatif_opsi->ViewValue = $this->efeknegatif_opsi->optionCaption($this->efeknegatif_opsi->CurrentValue);
             } else {
-                $this->efeknegatifok->ViewValue = null;
+                $this->efeknegatif_opsi->ViewValue = null;
             }
-            $this->efeknegatifok->ViewCustomAttributes = "";
+            $this->efeknegatif_opsi->ViewCustomAttributes = "";
 
-            // efeknegatifrevisi
-            $this->efeknegatifrevisi->ViewValue = $this->efeknegatifrevisi->CurrentValue;
-            $this->efeknegatifrevisi->ViewCustomAttributes = "";
+            // efeknegatif_revisi
+            $this->efeknegatif_revisi->ViewValue = $this->efeknegatif_revisi->CurrentValue;
+            $this->efeknegatif_revisi->ViewCustomAttributes = "";
 
             // kesimpulan
             $this->kesimpulan->ViewValue = $this->kesimpulan->CurrentValue;
@@ -1135,11 +1135,6 @@ class NpdReviewView extends NpdReview
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
                 $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -1147,6 +1142,10 @@ class NpdReviewView extends NpdReview
                 $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
             }
             $this->readonly->ViewCustomAttributes = "";
+
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
@@ -1158,130 +1157,130 @@ class NpdReviewView extends NpdReview
             $this->idnpd_sample->HrefValue = "";
             $this->idnpd_sample->TooltipValue = "";
 
-            // tglreview
-            $this->tglreview->LinkCustomAttributes = "";
-            $this->tglreview->HrefValue = "";
-            $this->tglreview->TooltipValue = "";
+            // tanggal_review
+            $this->tanggal_review->LinkCustomAttributes = "";
+            $this->tanggal_review->HrefValue = "";
+            $this->tanggal_review->TooltipValue = "";
 
-            // tglsubmit
-            $this->tglsubmit->LinkCustomAttributes = "";
-            $this->tglsubmit->HrefValue = "";
-            $this->tglsubmit->TooltipValue = "";
+            // tanggal_submit
+            $this->tanggal_submit->LinkCustomAttributes = "";
+            $this->tanggal_submit->HrefValue = "";
+            $this->tanggal_submit->TooltipValue = "";
 
             // wadah
             $this->wadah->LinkCustomAttributes = "";
             $this->wadah->HrefValue = "";
             $this->wadah->TooltipValue = "";
 
-            // bentukok
-            $this->bentukok->LinkCustomAttributes = "";
-            $this->bentukok->HrefValue = "";
-            $this->bentukok->TooltipValue = "";
+            // bentuk_opsi
+            $this->bentuk_opsi->LinkCustomAttributes = "";
+            $this->bentuk_opsi->HrefValue = "";
+            $this->bentuk_opsi->TooltipValue = "";
 
-            // bentukrevisi
-            $this->bentukrevisi->LinkCustomAttributes = "";
-            $this->bentukrevisi->HrefValue = "";
-            $this->bentukrevisi->TooltipValue = "";
+            // bentuk_revisi
+            $this->bentuk_revisi->LinkCustomAttributes = "";
+            $this->bentuk_revisi->HrefValue = "";
+            $this->bentuk_revisi->TooltipValue = "";
 
-            // viskositasok
-            $this->viskositasok->LinkCustomAttributes = "";
-            $this->viskositasok->HrefValue = "";
-            $this->viskositasok->TooltipValue = "";
+            // viskositas_opsi
+            $this->viskositas_opsi->LinkCustomAttributes = "";
+            $this->viskositas_opsi->HrefValue = "";
+            $this->viskositas_opsi->TooltipValue = "";
 
-            // viskositasrevisi
-            $this->viskositasrevisi->LinkCustomAttributes = "";
-            $this->viskositasrevisi->HrefValue = "";
-            $this->viskositasrevisi->TooltipValue = "";
+            // viskositas_revisi
+            $this->viskositas_revisi->LinkCustomAttributes = "";
+            $this->viskositas_revisi->HrefValue = "";
+            $this->viskositas_revisi->TooltipValue = "";
 
-            // jeniswarnaok
-            $this->jeniswarnaok->LinkCustomAttributes = "";
-            $this->jeniswarnaok->HrefValue = "";
-            $this->jeniswarnaok->TooltipValue = "";
+            // jeniswarna_opsi
+            $this->jeniswarna_opsi->LinkCustomAttributes = "";
+            $this->jeniswarna_opsi->HrefValue = "";
+            $this->jeniswarna_opsi->TooltipValue = "";
 
-            // jeniswarnarevisi
-            $this->jeniswarnarevisi->LinkCustomAttributes = "";
-            $this->jeniswarnarevisi->HrefValue = "";
-            $this->jeniswarnarevisi->TooltipValue = "";
+            // jeniswarna_revisi
+            $this->jeniswarna_revisi->LinkCustomAttributes = "";
+            $this->jeniswarna_revisi->HrefValue = "";
+            $this->jeniswarna_revisi->TooltipValue = "";
 
-            // tonewarnaok
-            $this->tonewarnaok->LinkCustomAttributes = "";
-            $this->tonewarnaok->HrefValue = "";
-            $this->tonewarnaok->TooltipValue = "";
+            // tonewarna_opsi
+            $this->tonewarna_opsi->LinkCustomAttributes = "";
+            $this->tonewarna_opsi->HrefValue = "";
+            $this->tonewarna_opsi->TooltipValue = "";
 
-            // tonewarnarevisi
-            $this->tonewarnarevisi->LinkCustomAttributes = "";
-            $this->tonewarnarevisi->HrefValue = "";
-            $this->tonewarnarevisi->TooltipValue = "";
+            // tonewarna_revisi
+            $this->tonewarna_revisi->LinkCustomAttributes = "";
+            $this->tonewarna_revisi->HrefValue = "";
+            $this->tonewarna_revisi->TooltipValue = "";
 
-            // gradasiwarnaok
-            $this->gradasiwarnaok->LinkCustomAttributes = "";
-            $this->gradasiwarnaok->HrefValue = "";
-            $this->gradasiwarnaok->TooltipValue = "";
+            // gradasiwarna_opsi
+            $this->gradasiwarna_opsi->LinkCustomAttributes = "";
+            $this->gradasiwarna_opsi->HrefValue = "";
+            $this->gradasiwarna_opsi->TooltipValue = "";
 
-            // gradasiwarnarevisi
-            $this->gradasiwarnarevisi->LinkCustomAttributes = "";
-            $this->gradasiwarnarevisi->HrefValue = "";
-            $this->gradasiwarnarevisi->TooltipValue = "";
+            // gradasiwarna_revisi
+            $this->gradasiwarna_revisi->LinkCustomAttributes = "";
+            $this->gradasiwarna_revisi->HrefValue = "";
+            $this->gradasiwarna_revisi->TooltipValue = "";
 
-            // bauok
-            $this->bauok->LinkCustomAttributes = "";
-            $this->bauok->HrefValue = "";
-            $this->bauok->TooltipValue = "";
+            // bauparfum_opsi
+            $this->bauparfum_opsi->LinkCustomAttributes = "";
+            $this->bauparfum_opsi->HrefValue = "";
+            $this->bauparfum_opsi->TooltipValue = "";
 
-            // baurevisi
-            $this->baurevisi->LinkCustomAttributes = "";
-            $this->baurevisi->HrefValue = "";
-            $this->baurevisi->TooltipValue = "";
+            // bauparfum_revisi
+            $this->bauparfum_revisi->LinkCustomAttributes = "";
+            $this->bauparfum_revisi->HrefValue = "";
+            $this->bauparfum_revisi->TooltipValue = "";
 
-            // estetikaok
-            $this->estetikaok->LinkCustomAttributes = "";
-            $this->estetikaok->HrefValue = "";
-            $this->estetikaok->TooltipValue = "";
+            // estetika_opsi
+            $this->estetika_opsi->LinkCustomAttributes = "";
+            $this->estetika_opsi->HrefValue = "";
+            $this->estetika_opsi->TooltipValue = "";
 
-            // estetikarevisi
-            $this->estetikarevisi->LinkCustomAttributes = "";
-            $this->estetikarevisi->HrefValue = "";
-            $this->estetikarevisi->TooltipValue = "";
+            // estetika_revisi
+            $this->estetika_revisi->LinkCustomAttributes = "";
+            $this->estetika_revisi->HrefValue = "";
+            $this->estetika_revisi->TooltipValue = "";
 
-            // aplikasiawalok
-            $this->aplikasiawalok->LinkCustomAttributes = "";
-            $this->aplikasiawalok->HrefValue = "";
-            $this->aplikasiawalok->TooltipValue = "";
+            // aplikasiawal_opsi
+            $this->aplikasiawal_opsi->LinkCustomAttributes = "";
+            $this->aplikasiawal_opsi->HrefValue = "";
+            $this->aplikasiawal_opsi->TooltipValue = "";
 
-            // aplikasiawalrevisi
-            $this->aplikasiawalrevisi->LinkCustomAttributes = "";
-            $this->aplikasiawalrevisi->HrefValue = "";
-            $this->aplikasiawalrevisi->TooltipValue = "";
+            // aplikasiawal_revisi
+            $this->aplikasiawal_revisi->LinkCustomAttributes = "";
+            $this->aplikasiawal_revisi->HrefValue = "";
+            $this->aplikasiawal_revisi->TooltipValue = "";
 
-            // aplikasilamaok
-            $this->aplikasilamaok->LinkCustomAttributes = "";
-            $this->aplikasilamaok->HrefValue = "";
-            $this->aplikasilamaok->TooltipValue = "";
+            // aplikasilama_opsi
+            $this->aplikasilama_opsi->LinkCustomAttributes = "";
+            $this->aplikasilama_opsi->HrefValue = "";
+            $this->aplikasilama_opsi->TooltipValue = "";
 
-            // aplikasilamarevisi
-            $this->aplikasilamarevisi->LinkCustomAttributes = "";
-            $this->aplikasilamarevisi->HrefValue = "";
-            $this->aplikasilamarevisi->TooltipValue = "";
+            // aplikasilama_revisi
+            $this->aplikasilama_revisi->LinkCustomAttributes = "";
+            $this->aplikasilama_revisi->HrefValue = "";
+            $this->aplikasilama_revisi->TooltipValue = "";
 
-            // efekpositifok
-            $this->efekpositifok->LinkCustomAttributes = "";
-            $this->efekpositifok->HrefValue = "";
-            $this->efekpositifok->TooltipValue = "";
+            // efekpositif_opsi
+            $this->efekpositif_opsi->LinkCustomAttributes = "";
+            $this->efekpositif_opsi->HrefValue = "";
+            $this->efekpositif_opsi->TooltipValue = "";
 
-            // efekpositifrevisi
-            $this->efekpositifrevisi->LinkCustomAttributes = "";
-            $this->efekpositifrevisi->HrefValue = "";
-            $this->efekpositifrevisi->TooltipValue = "";
+            // efekpositif_revisi
+            $this->efekpositif_revisi->LinkCustomAttributes = "";
+            $this->efekpositif_revisi->HrefValue = "";
+            $this->efekpositif_revisi->TooltipValue = "";
 
-            // efeknegatifok
-            $this->efeknegatifok->LinkCustomAttributes = "";
-            $this->efeknegatifok->HrefValue = "";
-            $this->efeknegatifok->TooltipValue = "";
+            // efeknegatif_opsi
+            $this->efeknegatif_opsi->LinkCustomAttributes = "";
+            $this->efeknegatif_opsi->HrefValue = "";
+            $this->efeknegatif_opsi->TooltipValue = "";
 
-            // efeknegatifrevisi
-            $this->efeknegatifrevisi->LinkCustomAttributes = "";
-            $this->efeknegatifrevisi->HrefValue = "";
-            $this->efeknegatifrevisi->TooltipValue = "";
+            // efeknegatif_revisi
+            $this->efeknegatif_revisi->LinkCustomAttributes = "";
+            $this->efeknegatif_revisi->HrefValue = "";
+            $this->efeknegatif_revisi->TooltipValue = "";
 
             // kesimpulan
             $this->kesimpulan->LinkCustomAttributes = "";
@@ -1292,22 +1291,17 @@ class NpdReviewView extends NpdReview
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
     }
 
     // Set up master/detail based on QueryString
@@ -1416,27 +1410,27 @@ class NpdReviewView extends NpdReview
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_bentukok":
+                case "x_bentuk_opsi":
                     break;
-                case "x_viskositasok":
+                case "x_viskositas_opsi":
                     break;
-                case "x_jeniswarnaok":
+                case "x_jeniswarna_opsi":
                     break;
-                case "x_tonewarnaok":
+                case "x_tonewarna_opsi":
                     break;
-                case "x_gradasiwarnaok":
+                case "x_gradasiwarna_opsi":
                     break;
-                case "x_bauok":
+                case "x_bauparfum_opsi":
                     break;
-                case "x_estetikaok":
+                case "x_estetika_opsi":
                     break;
-                case "x_aplikasiawalok":
+                case "x_aplikasiawal_opsi":
                     break;
-                case "x_aplikasilamaok":
+                case "x_aplikasilama_opsi":
                     break;
-                case "x_efekpositifok":
+                case "x_efekpositif_opsi":
                     break;
-                case "x_efeknegatifok":
+                case "x_efeknegatif_opsi":
                     break;
                 case "x_status":
                     break;

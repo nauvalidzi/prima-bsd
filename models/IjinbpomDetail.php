@@ -101,10 +101,10 @@ class IjinbpomDetail extends DbTable
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["nama","idproduct_acuan"], ["x_nama","x_idproduct_acuan"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["idproduct_acuan"], ["x_idproduct_acuan"], '', '');
                 break;
             default:
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["nama","idproduct_acuan"], ["x_nama","x_idproduct_acuan"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["idproduct_acuan"], ["x_idproduct_acuan"], '', '');
                 break;
         }
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

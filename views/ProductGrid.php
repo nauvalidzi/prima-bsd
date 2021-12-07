@@ -25,10 +25,10 @@ loadjs.ready("head", function () {
         ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
+        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["kemasanbarang", [fields.kemasanbarang.visible && fields.kemasanbarang.required ? ew.Validators.required(fields.kemasanbarang.caption) : null], fields.kemasanbarang.isInvalid],
         ["harga", [fields.harga.visible && fields.harga.required ? ew.Validators.required(fields.harga.caption) : null, ew.Validators.integer], fields.harga.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
-        ["updated_at", [fields.updated_at.visible && fields.updated_at.required ? ew.Validators.required(fields.updated_at.caption) : null, ew.Validators.datetime(0)], fields.updated_at.isInvalid]
+        ["updated_at", [fields.updated_at.visible && fields.updated_at.required ? ew.Validators.required(fields.updated_at.caption) : null, ew.Validators.datetime(11)], fields.updated_at.isInvalid]
     ]);
 
     // Set invalid fields
@@ -88,11 +88,11 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "nama", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "ukuran", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "kemasanbarang", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "harga", false))
-            return false;
-        if (ew.valueChanged(fobj, rowIndex, "ukuran", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "updated_at", false))
             return false;
@@ -143,14 +143,14 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Grid->nama->headerCellClass() ?>"><div id="elh_product_nama" class="product_nama"><?= $Grid->renderSort($Grid->nama) ?></div></th>
 <?php } ?>
+<?php if ($Grid->ukuran->Visible) { // ukuran ?>
+        <th data-name="ukuran" class="<?= $Grid->ukuran->headerCellClass() ?>"><div id="elh_product_ukuran" class="product_ukuran"><?= $Grid->renderSort($Grid->ukuran) ?></div></th>
+<?php } ?>
 <?php if ($Grid->kemasanbarang->Visible) { // kemasanbarang ?>
         <th data-name="kemasanbarang" class="<?= $Grid->kemasanbarang->headerCellClass() ?>"><div id="elh_product_kemasanbarang" class="product_kemasanbarang"><?= $Grid->renderSort($Grid->kemasanbarang) ?></div></th>
 <?php } ?>
 <?php if ($Grid->harga->Visible) { // harga ?>
         <th data-name="harga" class="<?= $Grid->harga->headerCellClass() ?>"><div id="elh_product_harga" class="product_harga"><?= $Grid->renderSort($Grid->harga) ?></div></th>
-<?php } ?>
-<?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Grid->ukuran->headerCellClass() ?>"><div id="elh_product_ukuran" class="product_ukuran"><?= $Grid->renderSort($Grid->ukuran) ?></div></th>
 <?php } ?>
 <?php if ($Grid->updated_at->Visible) { // updated_at ?>
         <th data-name="updated_at" class="<?= $Grid->updated_at->headerCellClass() ?>"><div id="elh_product_updated_at" class="product_updated_at"><?= $Grid->renderSort($Grid->updated_at) ?></div></th>
@@ -407,6 +407,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
+        <td data-name="ukuran" <?= $Grid->ukuran->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_product_ukuran" class="form-group">
+<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_product_ukuran" class="form-group">
+<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_product_ukuran">
+<span<?= $Grid->ukuran->viewAttributes() ?>>
+<?= $Grid->ukuran->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="fproductgrid$x<?= $Grid->RowIndex ?>_ukuran" id="fproductgrid$x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
+<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="fproductgrid$o<?= $Grid->RowIndex ?>_ukuran" id="fproductgrid$o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
     <?php if ($Grid->kemasanbarang->Visible) { // kemasanbarang ?>
         <td data-name="kemasanbarang" <?= $Grid->kemasanbarang->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -461,43 +488,16 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Grid->ukuran->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_product_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_product_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_product_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<?= $Grid->ukuran->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="fproductgrid$x<?= $Grid->RowIndex ?>_ukuran" id="fproductgrid$x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
-<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="fproductgrid$o<?= $Grid->RowIndex ?>_ukuran" id="fproductgrid$o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
     <?php if ($Grid->updated_at->Visible) { // updated_at ?>
         <td data-name="updated_at" <?= $Grid->updated_at->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_product_updated_at" class="form-group">
-<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
+<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" data-format="11" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Grid->updated_at->getErrorMessage() ?></div>
 <?php if (!$Grid->updated_at->ReadOnly && !$Grid->updated_at->Disabled && !isset($Grid->updated_at->EditAttrs["readonly"]) && !isset($Grid->updated_at->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fproductgrid", "datetimepicker"], function() {
-    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":11});
 });
 </script>
 <?php } ?>
@@ -506,12 +506,12 @@ loadjs.ready(["fproductgrid", "datetimepicker"], function() {
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_product_updated_at" class="form-group">
-<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
+<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" data-format="11" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Grid->updated_at->getErrorMessage() ?></div>
 <?php if (!$Grid->updated_at->ReadOnly && !$Grid->updated_at->Disabled && !isset($Grid->updated_at->EditAttrs["readonly"]) && !isset($Grid->updated_at->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fproductgrid", "datetimepicker"], function() {
-    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":11});
 });
 </script>
 <?php } ?>
@@ -653,6 +653,23 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="product" data-field="x_nama" data-hidden="1" name="o<?= $Grid->RowIndex ?>_nama" id="o<?= $Grid->RowIndex ?>_nama" value="<?= HtmlEncode($Grid->nama->OldValue) ?>">
 </td>
     <?php } ?>
+    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
+        <td data-name="ukuran">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_product_ukuran" class="form-group product_ukuran">
+<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_product_ukuran" class="form-group product_ukuran">
+<span<?= $Grid->ukuran->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->ukuran->getDisplayValue($Grid->ukuran->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+</td>
+    <?php } ?>
     <?php if ($Grid->kemasanbarang->Visible) { // kemasanbarang ?>
         <td data-name="kemasanbarang">
 <?php if (!$Grid->isConfirm()) { ?>
@@ -687,33 +704,16 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="product" data-field="x_harga" data-hidden="1" name="o<?= $Grid->RowIndex ?>_harga" id="o<?= $Grid->RowIndex ?>_harga" value="<?= HtmlEncode($Grid->harga->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_product_ukuran" class="form-group product_ukuran">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="product" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_product_ukuran" class="form-group product_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->ukuran->getDisplayValue($Grid->ukuran->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="product" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-</td>
-    <?php } ?>
     <?php if ($Grid->updated_at->Visible) { // updated_at ?>
         <td data-name="updated_at">
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_product_updated_at" class="form-group product_updated_at">
-<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
+<input type="<?= $Grid->updated_at->getInputTextType() ?>" data-table="product" data-field="x_updated_at" data-format="11" name="x<?= $Grid->RowIndex ?>_updated_at" id="x<?= $Grid->RowIndex ?>_updated_at" placeholder="<?= HtmlEncode($Grid->updated_at->getPlaceHolder()) ?>" value="<?= $Grid->updated_at->EditValue ?>"<?= $Grid->updated_at->editAttributes() ?>>
 <div class="invalid-feedback"><?= $Grid->updated_at->getErrorMessage() ?></div>
 <?php if (!$Grid->updated_at->ReadOnly && !$Grid->updated_at->Disabled && !isset($Grid->updated_at->EditAttrs["readonly"]) && !isset($Grid->updated_at->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fproductgrid", "datetimepicker"], function() {
-    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fproductgrid", "x<?= $Grid->RowIndex ?>_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":11});
 });
 </script>
 <?php } ?>

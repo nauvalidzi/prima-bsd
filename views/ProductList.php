@@ -157,14 +157,14 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_product_nama" class="product_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_product_ukuran" class="product_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
+<?php } ?>
 <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
         <th data-name="kemasanbarang" class="<?= $Page->kemasanbarang->headerCellClass() ?>"><div id="elh_product_kemasanbarang" class="product_kemasanbarang"><?= $Page->renderSort($Page->kemasanbarang) ?></div></th>
 <?php } ?>
 <?php if ($Page->harga->Visible) { // harga ?>
         <th data-name="harga" class="<?= $Page->harga->headerCellClass() ?>"><div id="elh_product_harga" class="product_harga"><?= $Page->renderSort($Page->harga) ?></div></th>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_product_ukuran" class="product_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
 <?php } ?>
 <?php if ($Page->updated_at->Visible) { // updated_at ?>
         <th data-name="updated_at" class="<?= $Page->updated_at->headerCellClass() ?>"><div id="elh_product_updated_at" class="product_updated_at"><?= $Page->renderSort($Page->updated_at) ?></div></th>
@@ -260,6 +260,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_product_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
         <td data-name="kemasanbarang" <?= $Page->kemasanbarang->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_product_kemasanbarang">
@@ -273,14 +281,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_product_harga">
 <span<?= $Page->harga->viewAttributes() ?>>
 <?= $Page->harga->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_product_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

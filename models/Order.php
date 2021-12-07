@@ -1855,7 +1855,8 @@ SORTHTML;
                     'jumlah' => $row['jumlah'] + $row['bonus'],
                     'harga_satuan' => 0,
                     'status' => 'Send',
-                    'keterangan' => $row['keterangan']
+                    'keterangan' => $row['keterangan'],
+                    'sales_jns' => 'Eksis'
                 ]
             ];
             curl_post($url_integrasi . "?action=force-database", json_encode($order_detail), $url_auth);

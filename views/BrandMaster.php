@@ -64,17 +64,6 @@ $brand = Container("brand");
 </td>
         </tr>
 <?php } ?>
-<?php if ($brand->kode_sip->Visible) { // kode_sip ?>
-        <tr id="r_kode_sip">
-            <td class="<?= $brand->TableLeftColumnClass ?>"><?= $brand->kode_sip->caption() ?></td>
-            <td <?= $brand->kode_sip->cellAttributes() ?>>
-<span id="el_brand_kode_sip">
-<span<?= $brand->kode_sip->viewAttributes() ?>>
-<?= $brand->kode_sip->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
 <?php if ($brand->aktif->Visible) { // aktif ?>
         <tr id="r_aktif">
             <td class="<?= $brand->TableLeftColumnClass ?>"><?= $brand->aktif->caption() ?></td>
@@ -82,17 +71,6 @@ $brand = Container("brand");
 <span id="el_brand_aktif">
 <span<?= $brand->aktif->viewAttributes() ?>>
 <?= $brand->aktif->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($brand->updated_at->Visible) { // updated_at ?>
-        <tr id="r_updated_at">
-            <td class="<?= $brand->TableLeftColumnClass ?>"><?= $brand->updated_at->caption() ?></td>
-            <td <?= $brand->updated_at->cellAttributes() ?>>
-<span id="el_brand_updated_at">
-<span<?= $brand->updated_at->viewAttributes() ?>>
-<?= $brand->updated_at->getViewValue() ?></span>
 </span>
 </td>
         </tr>

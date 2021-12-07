@@ -166,9 +166,6 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->hp->Visible) { // hp ?>
         <th data-name="hp" class="<?= $Page->hp->headerCellClass() ?>"><div id="elh_customer_hp" class="customer_hp"><?= $Page->renderSort($Page->hp) ?></div></th>
 <?php } ?>
-<?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <th data-name="kodenpd" class="<?= $Page->kodenpd->headerCellClass() ?>"><div id="elh_customer_kodenpd" class="customer_kodenpd"><?= $Page->renderSort($Page->kodenpd) ?></div></th>
-<?php } ?>
 <?php if ($Page->klinik->Visible) { // klinik ?>
         <th data-name="klinik" class="<?= $Page->klinik->headerCellClass() ?>"><div id="elh_customer_klinik" class="customer_klinik"><?= $Page->renderSort($Page->klinik) ?></div></th>
 <?php } ?>
@@ -287,14 +284,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->kodenpd->Visible) { // kodenpd ?>
-        <td data-name="kodenpd" <?= $Page->kodenpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_customer_kodenpd">
-<span<?= $Page->kodenpd->viewAttributes() ?>>
-<?= $Page->kodenpd->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->klinik->Visible) { // klinik ?>
         <td data-name="klinik" <?= $Page->klinik->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_customer_klinik">
@@ -364,7 +353,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer");
+    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer"),$("a[data-table=brand_customer]").html("Brand");
 });
 </script>
 <?php } ?>

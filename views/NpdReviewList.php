@@ -17,6 +17,18 @@ loadjs.ready("head", function () {
     fnpd_reviewlist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
     loadjs.done("fnpd_reviewlist");
 });
+var fnpd_reviewlistsrch, currentSearchForm, currentAdvancedSearchForm;
+loadjs.ready("head", function () {
+    var $ = jQuery;
+    // Form object for search
+    fnpd_reviewlistsrch = currentSearchForm = new ew.Form("fnpd_reviewlistsrch");
+
+    // Dynamic selection lists
+
+    // Filters
+    fnpd_reviewlistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fnpd_reviewlistsrch");
+});
 </script>
 <style>
 .ew-table-preview-row { /* main table preview row color */
@@ -56,6 +68,12 @@ loadjs.ready("head", function () {
 <?php if ($Page->ImportOptions->visible()) { ?>
 <?php $Page->ImportOptions->render("body") ?>
 <?php } ?>
+<?php if ($Page->SearchOptions->visible()) { ?>
+<?php $Page->SearchOptions->render("body") ?>
+<?php } ?>
+<?php if ($Page->FilterOptions->visible()) { ?>
+<?php $Page->FilterOptions->render("body") ?>
+<?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -71,6 +89,34 @@ if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd") {
 <?php
 $Page->renderOtherOptions();
 ?>
+<?php if ($Security->canSearch()) { ?>
+<?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
+<form name="fnpd_reviewlistsrch" id="fnpd_reviewlistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fnpd_reviewlistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<input type="hidden" name="cmd" value="search">
+<input type="hidden" name="t" value="npd_review">
+    <div class="ew-extended-search">
+<div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
+    <div class="ew-quick-search input-group">
+        <input type="text" name="<?= Config("TABLE_BASIC_SEARCH") ?>" id="<?= Config("TABLE_BASIC_SEARCH") ?>" class="form-control" value="<?= HtmlEncode($Page->BasicSearch->getKeyword()) ?>" placeholder="<?= HtmlEncode($Language->phrase("Search")) ?>">
+        <input type="hidden" name="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" value="<?= HtmlEncode($Page->BasicSearch->getType()) ?>">
+        <div class="input-group-append">
+            <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span></button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this);"><?= $Language->phrase("QuickSearchAuto") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "=") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, '=');"><?= $Language->phrase("QuickSearchExact") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "AND") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'AND');"><?= $Language->phrase("QuickSearchAll") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "OR") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'OR');"><?= $Language->phrase("QuickSearchAny") ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+    </div><!-- /.ew-extended-search -->
+</div><!-- /.ew-search-panel -->
+</form>
+<?php } ?>
+<?php } ?>
 <?php $Page->showPageHeader(); ?>
 <?php
 $Page->showMessage();
@@ -108,14 +154,17 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
         <th data-name="idnpd_sample" class="<?= $Page->idnpd_sample->headerCellClass() ?>"><div id="elh_npd_review_idnpd_sample" class="npd_review_idnpd_sample"><?= $Page->renderSort($Page->idnpd_sample) ?></div></th>
 <?php } ?>
-<?php if ($Page->tglreview->Visible) { // tglreview ?>
-        <th data-name="tglreview" class="<?= $Page->tglreview->headerCellClass() ?>"><div id="elh_npd_review_tglreview" class="npd_review_tglreview"><?= $Page->renderSort($Page->tglreview) ?></div></th>
+<?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+        <th data-name="tanggal_review" class="<?= $Page->tanggal_review->headerCellClass() ?>"><div id="elh_npd_review_tanggal_review" class="npd_review_tanggal_review"><?= $Page->renderSort($Page->tanggal_review) ?></div></th>
 <?php } ?>
-<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-        <th data-name="tglsubmit" class="<?= $Page->tglsubmit->headerCellClass() ?>"><div id="elh_npd_review_tglsubmit" class="npd_review_tglsubmit"><?= $Page->renderSort($Page->tglsubmit) ?></div></th>
+<?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+        <th data-name="tanggal_submit" class="<?= $Page->tanggal_submit->headerCellClass() ?>"><div id="elh_npd_review_tanggal_submit" class="npd_review_tanggal_submit"><?= $Page->renderSort($Page->tanggal_submit) ?></div></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_npd_review_status" class="npd_review_status"><?= $Page->renderSort($Page->status) ?></div></th>
+<?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -200,19 +249,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tglreview->Visible) { // tglreview ?>
-        <td data-name="tglreview" <?= $Page->tglreview->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_review_tglreview">
-<span<?= $Page->tglreview->viewAttributes() ?>>
-<?= $Page->tglreview->getViewValue() ?></span>
+    <?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+        <td data-name="tanggal_review" <?= $Page->tanggal_review->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_tanggal_review">
+<span<?= $Page->tanggal_review->viewAttributes() ?>>
+<?= $Page->tanggal_review->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-        <td data-name="tglsubmit" <?= $Page->tglsubmit->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_review_tglsubmit">
-<span<?= $Page->tglsubmit->viewAttributes() ?>>
-<?= $Page->tglsubmit->getViewValue() ?></span>
+    <?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+        <td data-name="tanggal_submit" <?= $Page->tanggal_submit->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_tanggal_submit">
+<span<?= $Page->tanggal_submit->viewAttributes() ?>>
+<?= $Page->tanggal_submit->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -221,6 +270,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_review_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

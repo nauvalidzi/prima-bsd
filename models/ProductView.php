@@ -527,11 +527,11 @@ class ProductView extends Product
         $this->idkualitasbarang->setVisibility();
         $this->idproduct_acuan->setVisibility();
         $this->idkemasanbarang->setVisibility();
-        $this->kemasanbarang->setVisibility();
-        $this->harga->setVisibility();
         $this->ukuran->setVisibility();
         $this->netto->setVisibility();
+        $this->kemasanbarang->setVisibility();
         $this->satuan->setVisibility();
+        $this->harga->setVisibility();
         $this->bahan->setVisibility();
         $this->warna->setVisibility();
         $this->parfum->setVisibility();
@@ -763,11 +763,11 @@ class ProductView extends Product
         $this->idkualitasbarang->setDbValue($row['idkualitasbarang']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
         $this->idkemasanbarang->setDbValue($row['idkemasanbarang']);
-        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
-        $this->harga->setDbValue($row['harga']);
         $this->ukuran->setDbValue($row['ukuran']);
         $this->netto->setDbValue($row['netto']);
+        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
         $this->satuan->setDbValue($row['satuan']);
+        $this->harga->setDbValue($row['harga']);
         $this->bahan->setDbValue($row['bahan']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
@@ -794,11 +794,11 @@ class ProductView extends Product
         $row['idkualitasbarang'] = null;
         $row['idproduct_acuan'] = null;
         $row['idkemasanbarang'] = null;
-        $row['kemasanbarang'] = null;
-        $row['harga'] = null;
         $row['ukuran'] = null;
         $row['netto'] = null;
+        $row['kemasanbarang'] = null;
         $row['satuan'] = null;
+        $row['harga'] = null;
         $row['bahan'] = null;
         $row['warna'] = null;
         $row['parfum'] = null;
@@ -848,15 +848,15 @@ class ProductView extends Product
 
         // idkemasanbarang
 
-        // kemasanbarang
-
-        // harga
-
         // ukuran
 
         // netto
 
+        // kemasanbarang
+
         // satuan
+
+        // harga
 
         // bahan
 
@@ -999,6 +999,10 @@ class ProductView extends Product
             }
             $this->idproduct_acuan->ViewCustomAttributes = "";
 
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
+
             // kemasanbarang
             $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
             $this->kemasanbarang->ViewCustomAttributes = "";
@@ -1007,10 +1011,6 @@ class ProductView extends Product
             $this->harga->ViewValue = $this->harga->CurrentValue;
             $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
             $this->harga->ViewCustomAttributes = "";
-
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
 
             // bahan
             $this->bahan->ViewValue = $this->bahan->CurrentValue;
@@ -1063,7 +1063,7 @@ class ProductView extends Product
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // idbrand
@@ -1101,6 +1101,11 @@ class ProductView extends Product
             $this->idproduct_acuan->HrefValue = "";
             $this->idproduct_acuan->TooltipValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
+
             // kemasanbarang
             $this->kemasanbarang->LinkCustomAttributes = "";
             $this->kemasanbarang->HrefValue = "";
@@ -1110,11 +1115,6 @@ class ProductView extends Product
             $this->harga->LinkCustomAttributes = "";
             $this->harga->HrefValue = "";
             $this->harga->TooltipValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
 
             // bahan
             $this->bahan->LinkCustomAttributes = "";

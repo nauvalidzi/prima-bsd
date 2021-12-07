@@ -50,14 +50,17 @@ $Page->showMessage();
 <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
         <th class="<?= $Page->idnpd_sample->headerCellClass() ?>"><span id="elh_npd_review_idnpd_sample" class="npd_review_idnpd_sample"><?= $Page->idnpd_sample->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->tglreview->Visible) { // tglreview ?>
-        <th class="<?= $Page->tglreview->headerCellClass() ?>"><span id="elh_npd_review_tglreview" class="npd_review_tglreview"><?= $Page->tglreview->caption() ?></span></th>
+<?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+        <th class="<?= $Page->tanggal_review->headerCellClass() ?>"><span id="elh_npd_review_tanggal_review" class="npd_review_tanggal_review"><?= $Page->tanggal_review->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-        <th class="<?= $Page->tglsubmit->headerCellClass() ?>"><span id="elh_npd_review_tglsubmit" class="npd_review_tglsubmit"><?= $Page->tglsubmit->caption() ?></span></th>
+<?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+        <th class="<?= $Page->tanggal_submit->headerCellClass() ?>"><span id="elh_npd_review_tanggal_submit" class="npd_review_tanggal_submit"><?= $Page->tanggal_submit->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_npd_review_status" class="npd_review_status"><?= $Page->status->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><span id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Page->ukuran->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -96,19 +99,19 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->tglreview->Visible) { // tglreview ?>
-        <td <?= $Page->tglreview->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_review_tglreview" class="npd_review_tglreview">
-<span<?= $Page->tglreview->viewAttributes() ?>>
-<?= $Page->tglreview->getViewValue() ?></span>
+<?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+        <td <?= $Page->tanggal_review->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_tanggal_review" class="npd_review_tanggal_review">
+<span<?= $Page->tanggal_review->viewAttributes() ?>>
+<?= $Page->tanggal_review->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-        <td <?= $Page->tglsubmit->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_review_tglsubmit" class="npd_review_tglsubmit">
-<span<?= $Page->tglsubmit->viewAttributes() ?>>
-<?= $Page->tglsubmit->getViewValue() ?></span>
+<?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+        <td <?= $Page->tanggal_submit->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_tanggal_submit" class="npd_review_tanggal_submit">
+<span<?= $Page->tanggal_submit->viewAttributes() ?>>
+<?= $Page->tanggal_submit->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -117,6 +120,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_npd_review_status" class="npd_review_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <td <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_ukuran" class="npd_review_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

@@ -412,7 +412,7 @@ class CustomerPreview extends Customer
         $this->npwp->Visible = false;
         $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
-        $this->kodenpd->setVisibility();
+        $this->kodenpd->Visible = false;
         $this->klinik->setVisibility();
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -555,7 +555,6 @@ class CustomerPreview extends Customer
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->jenis_usaha); // jenis_usaha
             $this->updateSort($this->hp); // hp
-            $this->updateSort($this->kodenpd); // kodenpd
             $this->updateSort($this->klinik); // klinik
         }
     }

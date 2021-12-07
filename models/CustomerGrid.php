@@ -527,7 +527,7 @@ class CustomerGrid extends Customer
         $this->npwp->Visible = false;
         $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
-        $this->kodenpd->setVisibility();
+        $this->kodenpd->Visible = false;
         $this->klinik->setVisibility();
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -987,9 +987,6 @@ class CustomerGrid extends Customer
         if ($CurrentForm->hasValue("x_hp") && $CurrentForm->hasValue("o_hp") && $this->hp->CurrentValue != $this->hp->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_kodenpd") && $CurrentForm->hasValue("o_kodenpd") && $this->kodenpd->CurrentValue != $this->kodenpd->OldValue) {
-            return false;
-        }
         if ($CurrentForm->hasValue("x_klinik") && $CurrentForm->hasValue("o_klinik") && $this->klinik->CurrentValue != $this->klinik->OldValue) {
             return false;
         }
@@ -1080,7 +1077,6 @@ class CustomerGrid extends Customer
         $this->nama->clearErrorMessage();
         $this->jenis_usaha->clearErrorMessage();
         $this->hp->clearErrorMessage();
-        $this->kodenpd->clearErrorMessage();
         $this->klinik->clearErrorMessage();
     }
 
@@ -1376,29 +1372,29 @@ class CustomerGrid extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_invoice"
-        if ($this->DetailPages && $this->DetailPages["invoice"] && $this->DetailPages["invoice"]->Visible) {
+        // Column "detail_brand_customer"
+        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
             $link = "";
-            $option = $this->ListOptions["detail_invoice"];
-            $url = "InvoicePreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"invoice\" data-url=\"" . $url . "\">";
+            $option = $this->ListOptions["detail_brand_customer"];
+            $url = "BrandCustomerPreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("invoice", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"invoice\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $label = $Language->TablePhrase("brand_customer", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
-                $detaillnk = JsEncodeAttribute("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("invoice", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
-            $detailPageObj = Container("InvoiceGrid");
+            $detailPageObj = Container("BrandCustomerGrid");
             if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -1442,29 +1438,29 @@ class CustomerGrid extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_brand_customer"
-        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
+        // Column "detail_invoice"
+        if ($this->DetailPages && $this->DetailPages["invoice"] && $this->DetailPages["invoice"]->Visible) {
             $link = "";
-            $option = $this->ListOptions["detail_brand_customer"];
-            $url = "BrandCustomerPreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
+            $option = $this->ListOptions["detail_invoice"];
+            $url = "InvoicePreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"invoice\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("brand_customer", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $label = $Language->TablePhrase("invoice", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"invoice\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
-                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+                $detaillnk = JsEncodeAttribute("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("invoice", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
-            $detailPageObj = Container("BrandCustomerGrid");
+            $detailPageObj = Container("InvoiceGrid");
             if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -1662,19 +1658,6 @@ class CustomerGrid extends Customer
             $this->hp->setOldValue($CurrentForm->getValue("o_hp"));
         }
 
-        // Check field name 'kodenpd' first before field var 'x_kodenpd'
-        $val = $CurrentForm->hasValue("kodenpd") ? $CurrentForm->getValue("kodenpd") : $CurrentForm->getValue("x_kodenpd");
-        if (!$this->kodenpd->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->kodenpd->Visible = false; // Disable update for API request
-            } else {
-                $this->kodenpd->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_kodenpd")) {
-            $this->kodenpd->setOldValue($CurrentForm->getValue("o_kodenpd"));
-        }
-
         // Check field name 'klinik' first before field var 'x_klinik'
         $val = $CurrentForm->hasValue("klinik") ? $CurrentForm->getValue("klinik") : $CurrentForm->getValue("x_klinik");
         if (!$this->klinik->IsDetailKey) {
@@ -1708,7 +1691,6 @@ class CustomerGrid extends Customer
         $this->nama->CurrentValue = $this->nama->FormValue;
         $this->jenis_usaha->CurrentValue = $this->jenis_usaha->FormValue;
         $this->hp->CurrentValue = $this->hp->FormValue;
-        $this->kodenpd->CurrentValue = $this->kodenpd->FormValue;
         $this->klinik->CurrentValue = $this->klinik->FormValue;
     }
 
@@ -1999,7 +1981,6 @@ class CustomerGrid extends Customer
             $this->jabatan->ViewCustomAttributes = "";
 
             // idprov
-            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -2021,7 +2002,6 @@ class CustomerGrid extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
-            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -2043,7 +2023,6 @@ class CustomerGrid extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
-            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -2065,7 +2044,6 @@ class CustomerGrid extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
-            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -2213,11 +2191,6 @@ class CustomerGrid extends Customer
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
 
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
-            $this->kodenpd->TooltipValue = "";
-
             // klinik
             $this->klinik->LinkCustomAttributes = "";
             $this->klinik->HrefValue = "";
@@ -2333,15 +2306,6 @@ class CustomerGrid extends Customer
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
 
-            // kodenpd
-            $this->kodenpd->EditAttrs["class"] = "form-control";
-            $this->kodenpd->EditCustomAttributes = "";
-            if (!$this->kodenpd->Raw) {
-                $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
-            }
-            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->CurrentValue);
-            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
-
             // klinik
             $this->klinik->EditAttrs["class"] = "form-control";
             $this->klinik->EditCustomAttributes = "";
@@ -2376,10 +2340,6 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
-
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
 
             // klinik
             $this->klinik->LinkCustomAttributes = "";
@@ -2492,15 +2452,6 @@ class CustomerGrid extends Customer
             $this->hp->EditValue = HtmlEncode($this->hp->CurrentValue);
             $this->hp->PlaceHolder = RemoveHtml($this->hp->caption());
 
-            // kodenpd
-            $this->kodenpd->EditAttrs["class"] = "form-control";
-            $this->kodenpd->EditCustomAttributes = "";
-            if (!$this->kodenpd->Raw) {
-                $this->kodenpd->CurrentValue = HtmlDecode($this->kodenpd->CurrentValue);
-            }
-            $this->kodenpd->EditValue = HtmlEncode($this->kodenpd->CurrentValue);
-            $this->kodenpd->PlaceHolder = RemoveHtml($this->kodenpd->caption());
-
             // klinik
             $this->klinik->EditAttrs["class"] = "form-control";
             $this->klinik->EditCustomAttributes = "";
@@ -2536,10 +2487,6 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
-
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
 
             // klinik
             $this->klinik->LinkCustomAttributes = "";
@@ -2596,11 +2543,6 @@ class CustomerGrid extends Customer
         }
         if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
-        }
-        if ($this->kodenpd->Required) {
-            if (!$this->kodenpd->IsDetailKey && EmptyValue($this->kodenpd->FormValue)) {
-                $this->kodenpd->addErrorMessage(str_replace("%s", $this->kodenpd->caption(), $this->kodenpd->RequiredErrorMessage));
-            }
         }
         if ($this->klinik->Required) {
             if (!$this->klinik->IsDetailKey && EmptyValue($this->klinik->FormValue)) {
@@ -2768,9 +2710,6 @@ class CustomerGrid extends Customer
             // hp
             $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", $this->hp->ReadOnly);
 
-            // kodenpd
-            $this->kodenpd->setDbValueDef($rsnew, $this->kodenpd->CurrentValue, null, $this->kodenpd->ReadOnly);
-
             // klinik
             $this->klinik->setDbValueDef($rsnew, $this->klinik->CurrentValue, null, $this->klinik->ReadOnly);
 
@@ -2898,9 +2837,6 @@ class CustomerGrid extends Customer
 
         // hp
         $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", false);
-
-        // kodenpd
-        $this->kodenpd->setDbValueDef($rsnew, $this->kodenpd->CurrentValue, null, false);
 
         // klinik
         $this->klinik->setDbValueDef($rsnew, $this->klinik->CurrentValue, null, false);

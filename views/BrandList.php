@@ -150,14 +150,8 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->ijinbpom->Visible) { // ijinbpom ?>
         <th data-name="ijinbpom" class="<?= $Page->ijinbpom->headerCellClass() ?>"><div id="elh_brand_ijinbpom" class="brand_ijinbpom"><?= $Page->renderSort($Page->ijinbpom) ?></div></th>
 <?php } ?>
-<?php if ($Page->kode_sip->Visible) { // kode_sip ?>
-        <th data-name="kode_sip" class="<?= $Page->kode_sip->headerCellClass() ?>"><div id="elh_brand_kode_sip" class="brand_kode_sip"><?= $Page->renderSort($Page->kode_sip) ?></div></th>
-<?php } ?>
 <?php if ($Page->aktif->Visible) { // aktif ?>
         <th data-name="aktif" class="<?= $Page->aktif->headerCellClass() ?>"><div id="elh_brand_aktif" class="brand_aktif"><?= $Page->renderSort($Page->aktif) ?></div></th>
-<?php } ?>
-<?php if ($Page->updated_at->Visible) { // updated_at ?>
-        <th data-name="updated_at" class="<?= $Page->updated_at->headerCellClass() ?>"><div id="elh_brand_updated_at" class="brand_updated_at"><?= $Page->renderSort($Page->updated_at) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -266,27 +260,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->kode_sip->Visible) { // kode_sip ?>
-        <td data-name="kode_sip" <?= $Page->kode_sip->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_kode_sip">
-<span<?= $Page->kode_sip->viewAttributes() ?>>
-<?= $Page->kode_sip->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->aktif->Visible) { // aktif ?>
         <td data-name="aktif" <?= $Page->aktif->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_brand_aktif">
 <span<?= $Page->aktif->viewAttributes() ?>>
 <?= $Page->aktif->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->updated_at->Visible) { // updated_at ?>
-        <td data-name="updated_at" <?= $Page->updated_at->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_updated_at">
-<span<?= $Page->updated_at->viewAttributes() ?>>
-<?= $Page->updated_at->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -351,7 +329,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Brand");
+    $(".ew-detail-add-group").html("Add Brand"),$("a[data-table=brand_customer]").html("Customer List");
 });
 </script>
 <?php } ?>

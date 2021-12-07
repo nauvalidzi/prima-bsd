@@ -293,7 +293,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $("a[data-table=po_limit_approval_detail").html("Purchase Order History");
 });
 </script>
 <?php } ?>

@@ -590,7 +590,7 @@ class CustomerList extends Customer
         $this->npwp->Visible = false;
         $this->limit_kredit_order->Visible = false;
         $this->jatuh_tempo_invoice->Visible = false;
-        $this->kodenpd->setVisibility();
+        $this->kodenpd->Visible = false;
         $this->klinik->setVisibility();
         $this->keterangan->Visible = false;
         $this->aktif->Visible = false;
@@ -1697,7 +1697,6 @@ class CustomerList extends Customer
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->jenis_usaha); // jenis_usaha
             $this->updateSort($this->hp); // hp
-            $this->updateSort($this->kodenpd); // kodenpd
             $this->updateSort($this->klinik); // klinik
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1822,10 +1821,10 @@ class CustomerList extends Customer
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
-        // "detail_invoice"
-        $item = &$this->ListOptions->add("detail_invoice");
+        // "detail_brand_customer"
+        $item = &$this->ListOptions->add("detail_brand_customer");
         $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'invoice') && !$this->ShowMultipleDetails;
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer') && !$this->ShowMultipleDetails;
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
@@ -1836,10 +1835,10 @@ class CustomerList extends Customer
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
-        // "detail_brand_customer"
-        $item = &$this->ListOptions->add("detail_brand_customer");
+        // "detail_invoice"
+        $item = &$this->ListOptions->add("detail_invoice");
         $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer') && !$this->ShowMultipleDetails;
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'invoice') && !$this->ShowMultipleDetails;
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
@@ -1855,9 +1854,9 @@ class CustomerList extends Customer
         // Set up detail pages
         $pages = new SubPages();
         $pages->add("alamat_customer");
-        $pages->add("invoice");
-        $pages->add("order");
         $pages->add("brand_customer");
+        $pages->add("order");
+        $pages->add("invoice");
         $this->DetailPages = $pages;
 
         // List actions
@@ -2013,31 +2012,31 @@ class CustomerList extends Customer
             }
         }
 
-        // "detail_invoice"
-        $opt = $this->ListOptions["detail_invoice"];
-        if ($Security->allowList(CurrentProjectID() . 'invoice')) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("invoice", "TblCaption");
-            $body .= "&nbsp;" . str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount"));
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
+        // "detail_brand_customer"
+        $opt = $this->ListOptions["detail_brand_customer"];
+        if ($Security->allowList(CurrentProjectID() . 'brand_customer')) {
+            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+            $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
             $links = "";
-            $detailPage = Container("InvoiceGrid");
+            $detailPage = Container("BrandCustomerGrid");
             if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
                 if ($detailViewTblVar != "") {
                     $detailViewTblVar .= ",";
                 }
-                $detailViewTblVar .= "invoice";
+                $detailViewTblVar .= "brand_customer";
             }
             if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
                 if ($detailEditTblVar != "") {
                     $detailEditTblVar .= ",";
                 }
-                $detailEditTblVar .= "invoice";
+                $detailEditTblVar .= "brand_customer";
             }
             if ($links != "") {
                 $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -2087,31 +2086,31 @@ class CustomerList extends Customer
             }
         }
 
-        // "detail_brand_customer"
-        $opt = $this->ListOptions["detail_brand_customer"];
-        if ($Security->allowList(CurrentProjectID() . 'brand_customer')) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
-            $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
+        // "detail_invoice"
+        $opt = $this->ListOptions["detail_invoice"];
+        if ($Security->allowList(CurrentProjectID() . 'invoice')) {
+            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("invoice", "TblCaption");
+            $body .= "&nbsp;" . str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount"));
+            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
             $links = "";
-            $detailPage = Container("BrandCustomerGrid");
+            $detailPage = Container("InvoiceGrid");
             if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
                 if ($detailViewTblVar != "") {
                     $detailViewTblVar .= ",";
                 }
-                $detailViewTblVar .= "brand_customer";
+                $detailViewTblVar .= "invoice";
             }
             if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
                 if ($detailEditTblVar != "") {
                     $detailEditTblVar .= ",";
                 }
-                $detailEditTblVar .= "brand_customer";
+                $detailEditTblVar .= "invoice";
             }
             if ($links != "") {
                 $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -2180,9 +2179,9 @@ class CustomerList extends Customer
                     }
                     $detailTableLink .= "alamat_customer";
                 }
-                $item = &$option->add("detailadd_invoice");
-                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
-                $detailPage = Container("InvoiceGrid");
+                $item = &$option->add("detailadd_brand_customer");
+                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $detailPage = Container("BrandCustomerGrid");
                 $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
                 $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
                 $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'customer') && $Security->canAdd());
@@ -2190,7 +2189,7 @@ class CustomerList extends Customer
                     if ($detailTableLink != "") {
                         $detailTableLink .= ",";
                     }
-                    $detailTableLink .= "invoice";
+                    $detailTableLink .= "brand_customer";
                 }
                 $item = &$option->add("detailadd_order");
                 $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=order");
@@ -2204,9 +2203,9 @@ class CustomerList extends Customer
                     }
                     $detailTableLink .= "order";
                 }
-                $item = &$option->add("detailadd_brand_customer");
-                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
-                $detailPage = Container("BrandCustomerGrid");
+                $item = &$option->add("detailadd_invoice");
+                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $detailPage = Container("InvoiceGrid");
                 $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
                 $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
                 $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'customer') && $Security->canAdd());
@@ -2214,7 +2213,7 @@ class CustomerList extends Customer
                     if ($detailTableLink != "") {
                         $detailTableLink .= ",";
                     }
-                    $detailTableLink .= "brand_customer";
+                    $detailTableLink .= "invoice";
                 }
 
         // Add multiple details
@@ -2424,29 +2423,29 @@ class CustomerList extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_invoice"
-        if ($this->DetailPages && $this->DetailPages["invoice"] && $this->DetailPages["invoice"]->Visible) {
+        // Column "detail_brand_customer"
+        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
             $link = "";
-            $option = $this->ListOptions["detail_invoice"];
-            $url = "InvoicePreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"invoice\" data-url=\"" . $url . "\">";
+            $option = $this->ListOptions["detail_brand_customer"];
+            $url = "BrandCustomerPreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("invoice", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"invoice\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $label = $Language->TablePhrase("brand_customer", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
-                $detaillnk = JsEncodeAttribute("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("invoice", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
-            $detailPageObj = Container("InvoiceGrid");
+            $detailPageObj = Container("BrandCustomerGrid");
             if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -2490,29 +2489,29 @@ class CustomerList extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_brand_customer"
-        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
+        // Column "detail_invoice"
+        if ($this->DetailPages && $this->DetailPages["invoice"] && $this->DetailPages["invoice"]->Visible) {
             $link = "";
-            $option = $this->ListOptions["detail_brand_customer"];
-            $url = "BrandCustomerPreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
+            $option = $this->ListOptions["detail_invoice"];
+            $url = "InvoicePreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"invoice\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("brand_customer", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $label = $Language->TablePhrase("invoice", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("invoice")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"invoice\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
-                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+                $detaillnk = JsEncodeAttribute("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("invoice", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
-            $detailPageObj = Container("BrandCustomerGrid");
+            $detailPageObj = Container("InvoiceGrid");
             if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -2894,7 +2893,7 @@ class CustomerList extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("invoice");
+        $detailTbl = Container("brand_customer");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -2906,7 +2905,7 @@ class CustomerList extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("brand_customer");
+        $detailTbl = Container("invoice");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -3102,7 +3101,6 @@ class CustomerList extends Customer
             $this->jabatan->ViewCustomAttributes = "";
 
             // idprov
-            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -3124,7 +3122,6 @@ class CustomerList extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
-            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -3146,7 +3143,6 @@ class CustomerList extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
-            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -3168,7 +3164,6 @@ class CustomerList extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
-            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -3315,11 +3310,6 @@ class CustomerList extends Customer
             $this->hp->LinkCustomAttributes = "";
             $this->hp->HrefValue = "";
             $this->hp->TooltipValue = "";
-
-            // kodenpd
-            $this->kodenpd->LinkCustomAttributes = "";
-            $this->kodenpd->HrefValue = "";
-            $this->kodenpd->TooltipValue = "";
 
             // klinik
             $this->klinik->LinkCustomAttributes = "";

@@ -26,10 +26,10 @@ loadjs.ready("head", function () {
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["jenis_usaha", [fields.jenis_usaha.visible && fields.jenis_usaha.required ? ew.Validators.required(fields.jenis_usaha.caption) : null], fields.jenis_usaha.isInvalid],
         ["jabatan", [fields.jabatan.visible && fields.jabatan.required ? ew.Validators.required(fields.jabatan.caption) : null], fields.jabatan.isInvalid],
-        ["idprov", [fields.idprov.visible && fields.idprov.required ? ew.Validators.required(fields.idprov.caption) : null, ew.Validators.integer], fields.idprov.isInvalid],
-        ["idkab", [fields.idkab.visible && fields.idkab.required ? ew.Validators.required(fields.idkab.caption) : null, ew.Validators.integer], fields.idkab.isInvalid],
-        ["idkec", [fields.idkec.visible && fields.idkec.required ? ew.Validators.required(fields.idkec.caption) : null, ew.Validators.integer], fields.idkec.isInvalid],
-        ["idkel", [fields.idkel.visible && fields.idkel.required ? ew.Validators.required(fields.idkel.caption) : null, ew.Validators.integer], fields.idkel.isInvalid],
+        ["idprov", [fields.idprov.visible && fields.idprov.required ? ew.Validators.required(fields.idprov.caption) : null], fields.idprov.isInvalid],
+        ["idkab", [fields.idkab.visible && fields.idkab.required ? ew.Validators.required(fields.idkab.caption) : null], fields.idkab.isInvalid],
+        ["idkec", [fields.idkec.visible && fields.idkec.required ? ew.Validators.required(fields.idkec.caption) : null], fields.idkec.isInvalid],
+        ["idkel", [fields.idkel.visible && fields.idkel.required ? ew.Validators.required(fields.idkel.caption) : null], fields.idkel.isInvalid],
         ["kodepos", [fields.kodepos.visible && fields.kodepos.required ? ew.Validators.required(fields.kodepos.caption) : null], fields.kodepos.isInvalid],
         ["alamat", [fields.alamat.visible && fields.alamat.required ? ew.Validators.required(fields.alamat.caption) : null], fields.alamat.isInvalid],
         ["telpon", [fields.telpon.visible && fields.telpon.required ? ew.Validators.required(fields.telpon.caption) : null], fields.telpon.isInvalid],
@@ -269,104 +269,135 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->idprov->Visible) { // idprov ?>
     <div id="r_idprov" class="form-group row">
-        <label id="elh_customer_idprov" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idprov->caption() ?><?= $Page->idprov->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idprov" for="x_idprov" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idprov->caption() ?><?= $Page->idprov->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idprov->cellAttributes() ?>>
 <span id="el_customer_idprov">
-<?php
-$onchange = $Page->idprov->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->idprov->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_idprov" class="ew-auto-suggest">
-    <input type="<?= $Page->idprov->getInputTextType() ?>" class="form-control" name="sv_x_idprov" id="sv_x_idprov" value="<?= RemoveHtml($Page->idprov->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>"<?= $Page->idprov->editAttributes() ?> aria-describedby="x_idprov_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idprov" data-input="sv_x_idprov" data-value-separator="<?= $Page->idprov->displayValueSeparatorAttribute() ?>" name="x_idprov" id="x_idprov" value="<?= HtmlEncode($Page->idprov->CurrentValue) ?>"<?= $onchange ?>>
-<?= $Page->idprov->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idprov->getErrorMessage() ?></div>
+<?php $Page->idprov->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_idprov"
+        name="x_idprov"
+        class="form-control ew-select<?= $Page->idprov->isInvalidClass() ?>"
+        data-select2-id="customer_x_idprov"
+        data-table="customer"
+        data-field="x_idprov"
+        data-value-separator="<?= $Page->idprov->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idprov->getPlaceHolder()) ?>"
+        <?= $Page->idprov->editAttributes() ?>>
+        <?= $Page->idprov->selectOptionListHtml("x_idprov") ?>
+    </select>
+    <?= $Page->idprov->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idprov->getErrorMessage() ?></div>
+<?= $Page->idprov->Lookup->getParamTag($Page, "p_x_idprov") ?>
 <script>
-loadjs.ready(["fcustomeredit"], function() {
-    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idprov","forceSelect":false}, ew.vars.tables.customer.fields.idprov.autoSuggestOptions));
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='customer_x_idprov']"),
+        options = { name: "x_idprov", selectId: "customer_x_idprov", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.customer.fields.idprov.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?= $Page->idprov->Lookup->getParamTag($Page, "p_x_idprov") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkab->Visible) { // idkab ?>
     <div id="r_idkab" class="form-group row">
-        <label id="elh_customer_idkab" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkab->caption() ?><?= $Page->idkab->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idkab" for="x_idkab" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkab->caption() ?><?= $Page->idkab->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkab->cellAttributes() ?>>
 <span id="el_customer_idkab">
-<?php
-$onchange = $Page->idkab->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->idkab->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_idkab" class="ew-auto-suggest">
-    <input type="<?= $Page->idkab->getInputTextType() ?>" class="form-control" name="sv_x_idkab" id="sv_x_idkab" value="<?= RemoveHtml($Page->idkab->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>"<?= $Page->idkab->editAttributes() ?> aria-describedby="x_idkab_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkab" data-input="sv_x_idkab" data-value-separator="<?= $Page->idkab->displayValueSeparatorAttribute() ?>" name="x_idkab" id="x_idkab" value="<?= HtmlEncode($Page->idkab->CurrentValue) ?>"<?= $onchange ?>>
-<?= $Page->idkab->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idkab->getErrorMessage() ?></div>
+<?php $Page->idkab->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_idkab"
+        name="x_idkab"
+        class="form-control ew-select<?= $Page->idkab->isInvalidClass() ?>"
+        data-select2-id="customer_x_idkab"
+        data-table="customer"
+        data-field="x_idkab"
+        data-value-separator="<?= $Page->idkab->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idkab->getPlaceHolder()) ?>"
+        <?= $Page->idkab->editAttributes() ?>>
+        <?= $Page->idkab->selectOptionListHtml("x_idkab") ?>
+    </select>
+    <?= $Page->idkab->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idkab->getErrorMessage() ?></div>
+<?= $Page->idkab->Lookup->getParamTag($Page, "p_x_idkab") ?>
 <script>
-loadjs.ready(["fcustomeredit"], function() {
-    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idkab","forceSelect":false}, ew.vars.tables.customer.fields.idkab.autoSuggestOptions));
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='customer_x_idkab']"),
+        options = { name: "x_idkab", selectId: "customer_x_idkab", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.customer.fields.idkab.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?= $Page->idkab->Lookup->getParamTag($Page, "p_x_idkab") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkec->Visible) { // idkec ?>
     <div id="r_idkec" class="form-group row">
-        <label id="elh_customer_idkec" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkec->caption() ?><?= $Page->idkec->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idkec" for="x_idkec" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkec->caption() ?><?= $Page->idkec->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkec->cellAttributes() ?>>
 <span id="el_customer_idkec">
-<?php
-$onchange = $Page->idkec->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->idkec->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_idkec" class="ew-auto-suggest">
-    <input type="<?= $Page->idkec->getInputTextType() ?>" class="form-control" name="sv_x_idkec" id="sv_x_idkec" value="<?= RemoveHtml($Page->idkec->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>"<?= $Page->idkec->editAttributes() ?> aria-describedby="x_idkec_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkec" data-input="sv_x_idkec" data-value-separator="<?= $Page->idkec->displayValueSeparatorAttribute() ?>" name="x_idkec" id="x_idkec" value="<?= HtmlEncode($Page->idkec->CurrentValue) ?>"<?= $onchange ?>>
-<?= $Page->idkec->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idkec->getErrorMessage() ?></div>
+<?php $Page->idkec->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_idkec"
+        name="x_idkec"
+        class="form-control ew-select<?= $Page->idkec->isInvalidClass() ?>"
+        data-select2-id="customer_x_idkec"
+        data-table="customer"
+        data-field="x_idkec"
+        data-value-separator="<?= $Page->idkec->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idkec->getPlaceHolder()) ?>"
+        <?= $Page->idkec->editAttributes() ?>>
+        <?= $Page->idkec->selectOptionListHtml("x_idkec") ?>
+    </select>
+    <?= $Page->idkec->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idkec->getErrorMessage() ?></div>
+<?= $Page->idkec->Lookup->getParamTag($Page, "p_x_idkec") ?>
 <script>
-loadjs.ready(["fcustomeredit"], function() {
-    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idkec","forceSelect":false}, ew.vars.tables.customer.fields.idkec.autoSuggestOptions));
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='customer_x_idkec']"),
+        options = { name: "x_idkec", selectId: "customer_x_idkec", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.customer.fields.idkec.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?= $Page->idkec->Lookup->getParamTag($Page, "p_x_idkec") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idkel->Visible) { // idkel ?>
     <div id="r_idkel" class="form-group row">
-        <label id="elh_customer_idkel" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkel->caption() ?><?= $Page->idkel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_customer_idkel" for="x_idkel" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkel->caption() ?><?= $Page->idkel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkel->cellAttributes() ?>>
 <span id="el_customer_idkel">
-<?php
-$onchange = $Page->idkel->EditAttrs->prepend("onchange", "");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->idkel->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_idkel" class="ew-auto-suggest">
-    <input type="<?= $Page->idkel->getInputTextType() ?>" class="form-control" name="sv_x_idkel" id="sv_x_idkel" value="<?= RemoveHtml($Page->idkel->EditValue) ?>" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>"<?= $Page->idkel->editAttributes() ?> aria-describedby="x_idkel_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="customer" data-field="x_idkel" data-input="sv_x_idkel" data-value-separator="<?= $Page->idkel->displayValueSeparatorAttribute() ?>" name="x_idkel" id="x_idkel" value="<?= HtmlEncode($Page->idkel->CurrentValue) ?>"<?= $onchange ?>>
-<?= $Page->idkel->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idkel->getErrorMessage() ?></div>
+    <select
+        id="x_idkel"
+        name="x_idkel"
+        class="form-control ew-select<?= $Page->idkel->isInvalidClass() ?>"
+        data-select2-id="customer_x_idkel"
+        data-table="customer"
+        data-field="x_idkel"
+        data-value-separator="<?= $Page->idkel->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idkel->getPlaceHolder()) ?>"
+        <?= $Page->idkel->editAttributes() ?>>
+        <?= $Page->idkel->selectOptionListHtml("x_idkel") ?>
+    </select>
+    <?= $Page->idkel->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idkel->getErrorMessage() ?></div>
+<?= $Page->idkel->Lookup->getParamTag($Page, "p_x_idkel") ?>
 <script>
-loadjs.ready(["fcustomeredit"], function() {
-    fcustomeredit.createAutoSuggest(Object.assign({"id":"x_idkel","forceSelect":false}, ew.vars.tables.customer.fields.idkel.autoSuggestOptions));
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='customer_x_idkel']"),
+        options = { name: "x_idkel", selectId: "customer_x_idkel", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.customer.fields.idkel.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?= $Page->idkel->Lookup->getParamTag($Page, "p_x_idkel") ?>
 </span>
 </div></div>
     </div>
@@ -627,12 +658,12 @@ loadjs.ready("head", function() {
     }
 ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?></a></li>
 <?php
     }
 ?>
@@ -647,12 +678,12 @@ loadjs.ready("head", function() {
     }
 ?>
 <?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("invoice") ?>" href="#tab_invoice" data-toggle="tab"><?= $Language->tablePhrase("invoice", "TblCaption") ?></a></li>
 <?php
     }
 ?>
@@ -669,13 +700,13 @@ loadjs.ready("head", function() {
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
-            $firstActiveDetailTable = "invoice";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
-<?php include_once "InvoiceGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
+<?php include_once "BrandCustomerGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
 <?php
@@ -689,13 +720,13 @@ loadjs.ready("head", function() {
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
+    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "invoice") {
+            $firstActiveDetailTable = "invoice";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
-<?php include_once "BrandCustomerGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
+<?php include_once "InvoiceGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

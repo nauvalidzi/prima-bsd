@@ -467,11 +467,11 @@ class ProductSearch extends Product
         $this->idkualitasbarang->setVisibility();
         $this->idproduct_acuan->setVisibility();
         $this->idkemasanbarang->Visible = false;
-        $this->kemasanbarang->setVisibility();
-        $this->harga->setVisibility();
         $this->ukuran->setVisibility();
         $this->netto->setVisibility();
+        $this->kemasanbarang->setVisibility();
         $this->satuan->setVisibility();
+        $this->harga->setVisibility();
         $this->bahan->setVisibility();
         $this->warna->setVisibility();
         $this->parfum->setVisibility();
@@ -574,11 +574,11 @@ class ProductSearch extends Product
         $this->buildSearchUrl($srchUrl, $this->idjenisbarang); // idjenisbarang
         $this->buildSearchUrl($srchUrl, $this->idkualitasbarang); // idkualitasbarang
         $this->buildSearchUrl($srchUrl, $this->idproduct_acuan); // idproduct_acuan
-        $this->buildSearchUrl($srchUrl, $this->kemasanbarang); // kemasanbarang
-        $this->buildSearchUrl($srchUrl, $this->harga); // harga
         $this->buildSearchUrl($srchUrl, $this->ukuran); // ukuran
         $this->buildSearchUrl($srchUrl, $this->netto); // netto
+        $this->buildSearchUrl($srchUrl, $this->kemasanbarang); // kemasanbarang
         $this->buildSearchUrl($srchUrl, $this->satuan); // satuan
+        $this->buildSearchUrl($srchUrl, $this->harga); // harga
         $this->buildSearchUrl($srchUrl, $this->bahan); // bahan
         $this->buildSearchUrl($srchUrl, $this->warna); // warna
         $this->buildSearchUrl($srchUrl, $this->parfum); // parfum
@@ -693,19 +693,19 @@ class ProductSearch extends Product
         if ($this->idproduct_acuan->AdvancedSearch->post()) {
             $hasValue = true;
         }
-        if ($this->kemasanbarang->AdvancedSearch->post()) {
-            $hasValue = true;
-        }
-        if ($this->harga->AdvancedSearch->post()) {
-            $hasValue = true;
-        }
         if ($this->ukuran->AdvancedSearch->post()) {
             $hasValue = true;
         }
         if ($this->netto->AdvancedSearch->post()) {
             $hasValue = true;
         }
+        if ($this->kemasanbarang->AdvancedSearch->post()) {
+            $hasValue = true;
+        }
         if ($this->satuan->AdvancedSearch->post()) {
+            $hasValue = true;
+        }
+        if ($this->harga->AdvancedSearch->post()) {
             $hasValue = true;
         }
         if ($this->bahan->AdvancedSearch->post()) {
@@ -771,15 +771,15 @@ class ProductSearch extends Product
 
         // idkemasanbarang
 
-        // kemasanbarang
-
-        // harga
-
         // ukuran
 
         // netto
 
+        // kemasanbarang
+
         // satuan
+
+        // harga
 
         // bahan
 
@@ -922,15 +922,6 @@ class ProductSearch extends Product
             }
             $this->idproduct_acuan->ViewCustomAttributes = "";
 
-            // kemasanbarang
-            $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
-            $this->kemasanbarang->ViewCustomAttributes = "";
-
-            // harga
-            $this->harga->ViewValue = $this->harga->CurrentValue;
-            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-            $this->harga->ViewCustomAttributes = "";
-
             // ukuran
             $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
             $this->ukuran->ViewCustomAttributes = "";
@@ -939,9 +930,18 @@ class ProductSearch extends Product
             $this->netto->ViewValue = $this->netto->CurrentValue;
             $this->netto->ViewCustomAttributes = "";
 
+            // kemasanbarang
+            $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
+            $this->kemasanbarang->ViewCustomAttributes = "";
+
             // satuan
             $this->satuan->ViewValue = $this->satuan->CurrentValue;
             $this->satuan->ViewCustomAttributes = "";
+
+            // harga
+            $this->harga->ViewValue = $this->harga->CurrentValue;
+            $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
+            $this->harga->ViewCustomAttributes = "";
 
             // bahan
             $this->bahan->ViewValue = $this->bahan->CurrentValue;
@@ -994,7 +994,7 @@ class ProductSearch extends Product
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
             $this->updated_at->ViewCustomAttributes = "";
 
             // id
@@ -1037,16 +1037,6 @@ class ProductSearch extends Product
             $this->idproduct_acuan->HrefValue = "";
             $this->idproduct_acuan->TooltipValue = "";
 
-            // kemasanbarang
-            $this->kemasanbarang->LinkCustomAttributes = "";
-            $this->kemasanbarang->HrefValue = "";
-            $this->kemasanbarang->TooltipValue = "";
-
-            // harga
-            $this->harga->LinkCustomAttributes = "";
-            $this->harga->HrefValue = "";
-            $this->harga->TooltipValue = "";
-
             // ukuran
             $this->ukuran->LinkCustomAttributes = "";
             $this->ukuran->HrefValue = "";
@@ -1057,10 +1047,20 @@ class ProductSearch extends Product
             $this->netto->HrefValue = "";
             $this->netto->TooltipValue = "";
 
+            // kemasanbarang
+            $this->kemasanbarang->LinkCustomAttributes = "";
+            $this->kemasanbarang->HrefValue = "";
+            $this->kemasanbarang->TooltipValue = "";
+
             // satuan
             $this->satuan->LinkCustomAttributes = "";
             $this->satuan->HrefValue = "";
             $this->satuan->TooltipValue = "";
+
+            // harga
+            $this->harga->LinkCustomAttributes = "";
+            $this->harga->HrefValue = "";
+            $this->harga->TooltipValue = "";
 
             // bahan
             $this->bahan->LinkCustomAttributes = "";
@@ -1266,21 +1266,6 @@ class ProductSearch extends Product
             }
             $this->idproduct_acuan->PlaceHolder = RemoveHtml($this->idproduct_acuan->caption());
 
-            // kemasanbarang
-            $this->kemasanbarang->EditAttrs["class"] = "form-control";
-            $this->kemasanbarang->EditCustomAttributes = "";
-            if (!$this->kemasanbarang->Raw) {
-                $this->kemasanbarang->AdvancedSearch->SearchValue = HtmlDecode($this->kemasanbarang->AdvancedSearch->SearchValue);
-            }
-            $this->kemasanbarang->EditValue = HtmlEncode($this->kemasanbarang->AdvancedSearch->SearchValue);
-            $this->kemasanbarang->PlaceHolder = RemoveHtml($this->kemasanbarang->caption());
-
-            // harga
-            $this->harga->EditAttrs["class"] = "form-control";
-            $this->harga->EditCustomAttributes = "";
-            $this->harga->EditValue = HtmlEncode($this->harga->AdvancedSearch->SearchValue);
-            $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
-
             // ukuran
             $this->ukuran->EditAttrs["class"] = "form-control";
             $this->ukuran->EditCustomAttributes = "";
@@ -1299,6 +1284,15 @@ class ProductSearch extends Product
             $this->netto->EditValue = HtmlEncode($this->netto->AdvancedSearch->SearchValue);
             $this->netto->PlaceHolder = RemoveHtml($this->netto->caption());
 
+            // kemasanbarang
+            $this->kemasanbarang->EditAttrs["class"] = "form-control";
+            $this->kemasanbarang->EditCustomAttributes = "";
+            if (!$this->kemasanbarang->Raw) {
+                $this->kemasanbarang->AdvancedSearch->SearchValue = HtmlDecode($this->kemasanbarang->AdvancedSearch->SearchValue);
+            }
+            $this->kemasanbarang->EditValue = HtmlEncode($this->kemasanbarang->AdvancedSearch->SearchValue);
+            $this->kemasanbarang->PlaceHolder = RemoveHtml($this->kemasanbarang->caption());
+
             // satuan
             $this->satuan->EditAttrs["class"] = "form-control";
             $this->satuan->EditCustomAttributes = "";
@@ -1307,6 +1301,12 @@ class ProductSearch extends Product
             }
             $this->satuan->EditValue = HtmlEncode($this->satuan->AdvancedSearch->SearchValue);
             $this->satuan->PlaceHolder = RemoveHtml($this->satuan->caption());
+
+            // harga
+            $this->harga->EditAttrs["class"] = "form-control";
+            $this->harga->EditCustomAttributes = "";
+            $this->harga->EditValue = HtmlEncode($this->harga->AdvancedSearch->SearchValue);
+            $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
 
             // bahan
             $this->bahan->EditAttrs["class"] = "form-control";
@@ -1378,7 +1378,7 @@ class ProductSearch extends Product
             // updated_at
             $this->updated_at->EditAttrs["class"] = "form-control";
             $this->updated_at->EditCustomAttributes = "";
-            $this->updated_at->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->updated_at->AdvancedSearch->SearchValue, 0), 8));
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->updated_at->AdvancedSearch->SearchValue, 11), 11));
             $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
@@ -1407,7 +1407,7 @@ class ProductSearch extends Product
         if (!CheckDate($this->created_at->AdvancedSearch->SearchValue)) {
             $this->created_at->addErrorMessage($this->created_at->getErrorMessage(false));
         }
-        if (!CheckDate($this->updated_at->AdvancedSearch->SearchValue)) {
+        if (!CheckEuroDate($this->updated_at->AdvancedSearch->SearchValue)) {
             $this->updated_at->addErrorMessage($this->updated_at->getErrorMessage(false));
         }
 
@@ -1434,11 +1434,11 @@ class ProductSearch extends Product
         $this->idjenisbarang->AdvancedSearch->load();
         $this->idkualitasbarang->AdvancedSearch->load();
         $this->idproduct_acuan->AdvancedSearch->load();
-        $this->kemasanbarang->AdvancedSearch->load();
-        $this->harga->AdvancedSearch->load();
         $this->ukuran->AdvancedSearch->load();
         $this->netto->AdvancedSearch->load();
+        $this->kemasanbarang->AdvancedSearch->load();
         $this->satuan->AdvancedSearch->load();
+        $this->harga->AdvancedSearch->load();
         $this->bahan->AdvancedSearch->load();
         $this->warna->AdvancedSearch->load();
         $this->parfum->AdvancedSearch->load();

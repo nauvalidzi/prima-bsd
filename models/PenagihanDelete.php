@@ -390,6 +390,13 @@ class PenagihanDelete extends Penagihan
         $this->tgl_penagihan->setVisibility();
         $this->tgl_return->setVisibility();
         $this->tgl_cancel->setVisibility();
+        $this->messagets->Visible = false;
+        $this->statusts->setVisibility();
+        $this->statusbayar->setVisibility();
+        $this->nomorfaktur->setVisibility();
+        $this->pembayaran->setVisibility();
+        $this->keterangan->setVisibility();
+        $this->saldo->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -568,6 +575,13 @@ class PenagihanDelete extends Penagihan
         $this->tgl_penagihan->setDbValue($row['tgl_penagihan']);
         $this->tgl_return->setDbValue($row['tgl_return']);
         $this->tgl_cancel->setDbValue($row['tgl_cancel']);
+        $this->messagets->setDbValue($row['messagets']);
+        $this->statusts->setDbValue($row['statusts']);
+        $this->statusbayar->setDbValue($row['statusbayar']);
+        $this->nomorfaktur->setDbValue($row['nomorfaktur']);
+        $this->pembayaran->setDbValue($row['pembayaran']);
+        $this->keterangan->setDbValue($row['keterangan']);
+        $this->saldo->setDbValue($row['saldo']);
     }
 
     // Return a row with default values
@@ -590,6 +604,13 @@ class PenagihanDelete extends Penagihan
         $row['tgl_penagihan'] = null;
         $row['tgl_return'] = null;
         $row['tgl_cancel'] = null;
+        $row['messagets'] = null;
+        $row['statusts'] = null;
+        $row['statusbayar'] = null;
+        $row['nomorfaktur'] = null;
+        $row['pembayaran'] = null;
+        $row['keterangan'] = null;
+        $row['saldo'] = null;
         return $row;
     }
 
@@ -636,6 +657,20 @@ class PenagihanDelete extends Penagihan
         // tgl_return
 
         // tgl_cancel
+
+        // messagets
+
+        // statusts
+
+        // statusbayar
+
+        // nomorfaktur
+
+        // pembayaran
+
+        // keterangan
+
+        // saldo
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -711,6 +746,33 @@ class PenagihanDelete extends Penagihan
             $this->tgl_cancel->ViewValue = FormatDateTime($this->tgl_cancel->ViewValue, 0);
             $this->tgl_cancel->ViewCustomAttributes = "";
 
+            // statusts
+            $this->statusts->ViewValue = $this->statusts->CurrentValue;
+            $this->statusts->ViewValue = FormatNumber($this->statusts->ViewValue, 0, -2, -2, -2);
+            $this->statusts->ViewCustomAttributes = "";
+
+            // statusbayar
+            $this->statusbayar->ViewValue = $this->statusbayar->CurrentValue;
+            $this->statusbayar->ViewCustomAttributes = "";
+
+            // nomorfaktur
+            $this->nomorfaktur->ViewValue = $this->nomorfaktur->CurrentValue;
+            $this->nomorfaktur->ViewCustomAttributes = "";
+
+            // pembayaran
+            $this->pembayaran->ViewValue = $this->pembayaran->CurrentValue;
+            $this->pembayaran->ViewValue = FormatNumber($this->pembayaran->ViewValue, 0, -2, -2, -2);
+            $this->pembayaran->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
+
+            // saldo
+            $this->saldo->ViewValue = $this->saldo->CurrentValue;
+            $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
+            $this->saldo->ViewCustomAttributes = "";
+
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
@@ -785,6 +847,36 @@ class PenagihanDelete extends Penagihan
             $this->tgl_cancel->LinkCustomAttributes = "";
             $this->tgl_cancel->HrefValue = "";
             $this->tgl_cancel->TooltipValue = "";
+
+            // statusts
+            $this->statusts->LinkCustomAttributes = "";
+            $this->statusts->HrefValue = "";
+            $this->statusts->TooltipValue = "";
+
+            // statusbayar
+            $this->statusbayar->LinkCustomAttributes = "";
+            $this->statusbayar->HrefValue = "";
+            $this->statusbayar->TooltipValue = "";
+
+            // nomorfaktur
+            $this->nomorfaktur->LinkCustomAttributes = "";
+            $this->nomorfaktur->HrefValue = "";
+            $this->nomorfaktur->TooltipValue = "";
+
+            // pembayaran
+            $this->pembayaran->LinkCustomAttributes = "";
+            $this->pembayaran->HrefValue = "";
+            $this->pembayaran->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
+
+            // saldo
+            $this->saldo->LinkCustomAttributes = "";
+            $this->saldo->HrefValue = "";
+            $this->saldo->TooltipValue = "";
         }
 
         // Call Row Rendered event

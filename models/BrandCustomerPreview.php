@@ -601,11 +601,11 @@ class BrandCustomerPreview extends BrandCustomer
     {
         $masterTblVar = Get("t", "");
         $url = "";
-        if ($masterTblVar == "brand") {
-            $url = "" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->idbrand->QueryStringValue) . "";
-        }
         if ($masterTblVar == "customer") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->idcustomer->QueryStringValue) . "";
+        }
+        if ($masterTblVar == "brand") {
+            $url = "" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->idbrand->QueryStringValue) . "";
         }
         return $url;
     }
@@ -614,16 +614,6 @@ class BrandCustomerPreview extends BrandCustomer
     protected function setupForeignKeysFromFilter($f)
     {
         $masterTblVar = Get("t", "");
-        if ($masterTblVar == "brand") {
-            $find = "`idbrand`=";
-            $x = strpos($f, $find);
-            if ($x !== false) {
-                $x += strlen($find);
-                $val = substr($f, $x);
-                $val = $this->unquoteValue($val, "DB");
-                 $this->idbrand->setQueryStringValue($val);
-            }
-        }
         if ($masterTblVar == "customer") {
             $find = "`idcustomer`=";
             $x = strpos($f, $find);
@@ -632,6 +622,16 @@ class BrandCustomerPreview extends BrandCustomer
                 $val = substr($f, $x);
                 $val = $this->unquoteValue($val, "DB");
                  $this->idcustomer->setQueryStringValue($val);
+            }
+        }
+        if ($masterTblVar == "brand") {
+            $find = "`idbrand`=";
+            $x = strpos($f, $find);
+            if ($x !== false) {
+                $x += strlen($find);
+                $val = substr($f, $x);
+                $val = $this->unquoteValue($val, "DB");
+                 $this->idbrand->setQueryStringValue($val);
             }
         }
     }
@@ -676,6 +676,10 @@ class BrandCustomerPreview extends BrandCustomer
                 case "x_idbrand":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

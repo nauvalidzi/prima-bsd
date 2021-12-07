@@ -77,15 +77,6 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
-<?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/NpdMaster.php";
-    }
-}
-?>
-<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
@@ -129,10 +120,6 @@ $Page->showMessage();
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
 <input type="hidden" name="t" value="npd_status">
-<?php if ($Page->getCurrentMasterTable() == "npd" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
-<?php } ?>
 <div id="gmp_npd_status" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
 <table id="tbl_npd_statuslist" class="table ew-table"><!-- .ew-table -->
@@ -148,6 +135,9 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->id->Visible) { // id ?>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_npd_status_id" class="npd_status_id"><?= $Page->renderSort($Page->id) ?></div></th>
+<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_status_idnpd" class="npd_status_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
 <?php } ?>
@@ -171,6 +161,15 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->keterangan->Visible) { // keterangan ?>
         <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_npd_status_keterangan" class="npd_status_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
+<?php } ?>
+<?php if ($Page->lampiran->Visible) { // lampiran ?>
+        <th data-name="lampiran" class="<?= $Page->lampiran->headerCellClass() ?>"><div id="elh_npd_status_lampiran" class="npd_status_lampiran"><?= $Page->renderSort($Page->lampiran) ?></div></th>
+<?php } ?>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+        <th data-name="created_at" class="<?= $Page->created_at->headerCellClass() ?>"><div id="elh_npd_status_created_at" class="npd_status_created_at"><?= $Page->renderSort($Page->created_at) ?></div></th>
+<?php } ?>
+<?php if ($Page->created_by->Visible) { // created_by ?>
+        <th data-name="created_by" class="<?= $Page->created_by->headerCellClass() ?>"><div id="elh_npd_status_created_by" class="npd_status_created_by"><?= $Page->renderSort($Page->created_by) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -239,6 +238,14 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->id->Visible) { // id ?>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_status_idnpd">
@@ -300,6 +307,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_status_keterangan">
 <span<?= $Page->keterangan->viewAttributes() ?>>
 <?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->lampiran->Visible) { // lampiran ?>
+        <td data-name="lampiran" <?= $Page->lampiran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_lampiran">
+<span<?= $Page->lampiran->viewAttributes() ?>>
+<?= $Page->lampiran->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->created_at->Visible) { // created_at ?>
+        <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_created_at">
+<span<?= $Page->created_at->viewAttributes() ?>>
+<?= $Page->created_at->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->created_by->Visible) { // created_by ?>
+        <td data-name="created_by" <?= $Page->created_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_created_by">
+<span<?= $Page->created_by->viewAttributes() ?>>
+<?= $Page->created_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

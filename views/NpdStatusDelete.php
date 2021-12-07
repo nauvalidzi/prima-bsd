@@ -44,6 +44,9 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
+<?php if ($Page->id->Visible) { // id ?>
+        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_npd_status_id" class="npd_status_id"><?= $Page->id->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <th class="<?= $Page->idnpd->headerCellClass() ?>"><span id="elh_npd_status_idnpd" class="npd_status_idnpd"><?= $Page->idnpd->caption() ?></span></th>
 <?php } ?>
@@ -68,6 +71,15 @@ $Page->showMessage();
 <?php if ($Page->keterangan->Visible) { // keterangan ?>
         <th class="<?= $Page->keterangan->headerCellClass() ?>"><span id="elh_npd_status_keterangan" class="npd_status_keterangan"><?= $Page->keterangan->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->lampiran->Visible) { // lampiran ?>
+        <th class="<?= $Page->lampiran->headerCellClass() ?>"><span id="elh_npd_status_lampiran" class="npd_status_lampiran"><?= $Page->lampiran->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+        <th class="<?= $Page->created_at->headerCellClass() ?>"><span id="elh_npd_status_created_at" class="npd_status_created_at"><?= $Page->created_at->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->created_by->Visible) { // created_by ?>
+        <th class="<?= $Page->created_by->headerCellClass() ?>"><span id="elh_npd_status_created_by" class="npd_status_created_by"><?= $Page->created_by->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -89,6 +101,14 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
+<?php if ($Page->id->Visible) { // id ?>
+        <td <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_id" class="npd_status_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <td <?= $Page->idnpd->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_status_idnpd" class="npd_status_idnpd">
@@ -150,6 +170,30 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_npd_status_keterangan" class="npd_status_keterangan">
 <span<?= $Page->keterangan->viewAttributes() ?>>
 <?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->lampiran->Visible) { // lampiran ?>
+        <td <?= $Page->lampiran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_lampiran" class="npd_status_lampiran">
+<span<?= $Page->lampiran->viewAttributes() ?>>
+<?= $Page->lampiran->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+        <td <?= $Page->created_at->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_created_at" class="npd_status_created_at">
+<span<?= $Page->created_at->viewAttributes() ?>>
+<?= $Page->created_at->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->created_by->Visible) { // created_by ?>
+        <td <?= $Page->created_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status_created_by" class="npd_status_created_by">
+<span<?= $Page->created_by->viewAttributes() ?>>
+<?= $Page->created_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

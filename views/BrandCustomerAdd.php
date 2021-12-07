@@ -111,13 +111,13 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="insert">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<?php if ($Page->getCurrentMasterTable() == "brand") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="brand">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idbrand->getSessionValue()) ?>">
-<?php } ?>
 <?php if ($Page->getCurrentMasterTable() == "customer") { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="customer">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
+<?php } ?>
+<?php if ($Page->getCurrentMasterTable() == "brand") { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="brand">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idbrand->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
 <?php if ($Page->idbrand->Visible) { // idbrand ?>

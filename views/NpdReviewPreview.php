@@ -40,21 +40,21 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->tglreview->Visible) { // tglreview ?>
-    <?php if ($Page->SortUrl($Page->tglreview) == "") { ?>
-        <th class="<?= $Page->tglreview->headerCellClass() ?>"><?= $Page->tglreview->caption() ?></th>
+<?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+    <?php if ($Page->SortUrl($Page->tanggal_review) == "") { ?>
+        <th class="<?= $Page->tanggal_review->headerCellClass() ?>"><?= $Page->tanggal_review->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->tglreview->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->tglreview->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->tglreview->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->tglreview->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->tglreview->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->tglreview->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->tanggal_review->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->tanggal_review->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->tanggal_review->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->tanggal_review->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->tanggal_review->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->tanggal_review->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-    <?php if ($Page->SortUrl($Page->tglsubmit) == "") { ?>
-        <th class="<?= $Page->tglsubmit->headerCellClass() ?>"><?= $Page->tglsubmit->caption() ?></th>
+<?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+    <?php if ($Page->SortUrl($Page->tanggal_submit) == "") { ?>
+        <th class="<?= $Page->tanggal_submit->headerCellClass() ?>"><?= $Page->tanggal_submit->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->tglsubmit->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->tglsubmit->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->tglsubmit->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->tglsubmit->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->tglsubmit->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->tglsubmit->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->tanggal_submit->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->tanggal_submit->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->tanggal_submit->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->tanggal_submit->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->tanggal_submit->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->tanggal_submit->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -64,6 +64,15 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->status->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->status->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->status->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->status->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->status->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <?php if ($Page->SortUrl($Page->ukuran) == "") { ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><?= $Page->ukuran->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ukuran->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ukuran->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ukuran->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ukuran->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ukuran->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -111,18 +120,18 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->idnpd_sample->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->tglreview->Visible) { // tglreview ?>
-        <!-- tglreview -->
-        <td<?= $Page->tglreview->cellAttributes() ?>>
-<span<?= $Page->tglreview->viewAttributes() ?>>
-<?= $Page->tglreview->getViewValue() ?></span>
+<?php if ($Page->tanggal_review->Visible) { // tanggal_review ?>
+        <!-- tanggal_review -->
+        <td<?= $Page->tanggal_review->cellAttributes() ?>>
+<span<?= $Page->tanggal_review->viewAttributes() ?>>
+<?= $Page->tanggal_review->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
-        <!-- tglsubmit -->
-        <td<?= $Page->tglsubmit->cellAttributes() ?>>
-<span<?= $Page->tglsubmit->viewAttributes() ?>>
-<?= $Page->tglsubmit->getViewValue() ?></span>
+<?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
+        <!-- tanggal_submit -->
+        <td<?= $Page->tanggal_submit->cellAttributes() ?>>
+<span<?= $Page->tanggal_submit->viewAttributes() ?>>
+<?= $Page->tanggal_submit->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
@@ -130,6 +139,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->status->cellAttributes() ?>>
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <!-- ukuran -->
+        <td<?= $Page->ukuran->cellAttributes() ?>>
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

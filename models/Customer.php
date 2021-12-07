@@ -170,8 +170,10 @@ class Customer extends DbTable
         $this->Fields['jabatan'] = &$this->jabatan;
 
         // idprov
-        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 3, 11, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 3, 11, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idprov->Sortable = true; // Allow sort
+        $this->idprov->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idprov->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idprov->Lookup = new Lookup('idprov', 'provinsi', false, 'id', ["name","","",""], [], ["x_idkab"], [], [], [], [], '', '');
@@ -185,8 +187,10 @@ class Customer extends DbTable
         $this->Fields['idprov'] = &$this->idprov;
 
         // idkab
-        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 3, 11, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 3, 11, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkab->Sortable = true; // Allow sort
+        $this->idkab->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idkab->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkab->Lookup = new Lookup('idkab', 'kabupaten', false, 'id', ["nama","","",""], ["x_idprov"], ["x_idkec"], ["idprovinsi"], ["x_idprovinsi"], [], [], '', '');
@@ -200,8 +204,10 @@ class Customer extends DbTable
         $this->Fields['idkab'] = &$this->idkab;
 
         // idkec
-        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 3, 11, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 3, 11, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkec->Sortable = true; // Allow sort
+        $this->idkec->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idkec->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkec->Lookup = new Lookup('idkec', 'kecamatan', false, 'id', ["nama","","",""], ["x_idkab"], ["x_idkel"], ["idkabupaten"], ["x_idkabupaten"], [], [], '', '');
@@ -215,8 +221,10 @@ class Customer extends DbTable
         $this->Fields['idkec'] = &$this->idkec;
 
         // idkel
-        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 3, 11, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 3, 11, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkel->Sortable = true; // Allow sort
+        $this->idkel->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idkel->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkel->Lookup = new Lookup('idkel', 'kelurahan', false, 'id', ["nama","","",""], ["x_idkec"], [], ["idkecamatan"], ["x_idkecamatan"], [], [], '', '');
@@ -292,8 +300,6 @@ class Customer extends DbTable
 
         // limit_kredit_order
         $this->limit_kredit_order = new DbField('customer', 'customer', 'x_limit_kredit_order', 'limit_kredit_order', '`limit_kredit_order`', '`limit_kredit_order`', 3, 15, -1, false, '`limit_kredit_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->limit_kredit_order->Nullable = false; // NOT NULL field
-        $this->limit_kredit_order->Required = true; // Required field
         $this->limit_kredit_order->Sortable = true; // Allow sort
         $this->limit_kredit_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->limit_kredit_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->limit_kredit_order->Param, "CustomMsg");
@@ -475,16 +481,16 @@ class Customer extends DbTable
             $detailUrl = Container("alamat_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "invoice") {
-            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+        if ($this->getCurrentDetailTable() == "brand_customer") {
+            $detailUrl = Container("brand_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($this->getCurrentDetailTable() == "order") {
             $detailUrl = Container("order")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "brand_customer") {
-            $detailUrl = Container("brand_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+        if ($this->getCurrentDetailTable() == "invoice") {
+            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -827,6 +833,31 @@ class Customer extends DbTable
     // Update
     public function update(&$rs, $where = "", $rsold = null, $curfilter = true)
     {
+        // Cascade Update detail table 'brand_customer'
+        $cascadeUpdate = false;
+        $rscascade = [];
+        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idcustomer'
+            $cascadeUpdate = true;
+            $rscascade['idcustomer'] = $rs['id'];
+        }
+        if ($cascadeUpdate) {
+            $rswrk = Container("brand_customer")->loadRs("`idcustomer` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($rswrk as $rsdtlold) {
+                $rskey = [];
+                $rsdtlnew = array_merge($rsdtlold, $rscascade);
+                // Call Row_Updating event
+                $success = Container("brand_customer")->rowUpdating($rsdtlold, $rsdtlnew);
+                if ($success) {
+                    $success = Container("brand_customer")->update($rscascade, $rskey, $rsdtlold);
+                }
+                if (!$success) {
+                    return false;
+                }
+                // Call Row_Updated event
+                Container("brand_customer")->rowUpdated($rsdtlold, $rsdtlnew);
+            }
+        }
+
         // Cascade Update detail table 'order'
         $cascadeUpdate = false;
         $rscascade = [];
@@ -851,31 +882,6 @@ class Customer extends DbTable
                 }
                 // Call Row_Updated event
                 Container("order")->rowUpdated($rsdtlold, $rsdtlnew);
-            }
-        }
-
-        // Cascade Update detail table 'brand_customer'
-        $cascadeUpdate = false;
-        $rscascade = [];
-        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idcustomer'
-            $cascadeUpdate = true;
-            $rscascade['idcustomer'] = $rs['id'];
-        }
-        if ($cascadeUpdate) {
-            $rswrk = Container("brand_customer")->loadRs("`idcustomer` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($rswrk as $rsdtlold) {
-                $rskey = [];
-                $rsdtlnew = array_merge($rsdtlold, $rscascade);
-                // Call Row_Updating event
-                $success = Container("brand_customer")->rowUpdating($rsdtlold, $rsdtlnew);
-                if ($success) {
-                    $success = Container("brand_customer")->update($rscascade, $rskey, $rsdtlold);
-                }
-                if (!$success) {
-                    return false;
-                }
-                // Call Row_Updated event
-                Container("brand_customer")->rowUpdated($rsdtlold, $rsdtlnew);
             }
         }
 
@@ -915,30 +921,6 @@ class Customer extends DbTable
     {
         $success = true;
 
-        // Cascade delete detail table 'order'
-        $dtlrows = Container("order")->loadRs("`idcustomer` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
-        // Call Row Deleting event
-        foreach ($dtlrows as $dtlrow) {
-            $success = Container("order")->rowDeleting($dtlrow);
-            if (!$success) {
-                break;
-            }
-        }
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                $success = Container("order")->delete($dtlrow); // Delete
-                if (!$success) {
-                    break;
-                }
-            }
-        }
-        // Call Row Deleted event
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                Container("order")->rowDeleted($dtlrow);
-            }
-        }
-
         // Cascade delete detail table 'brand_customer'
         $dtlrows = Container("brand_customer")->loadRs("`idcustomer` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
         // Call Row Deleting event
@@ -960,6 +942,30 @@ class Customer extends DbTable
         if ($success) {
             foreach ($dtlrows as $dtlrow) {
                 Container("brand_customer")->rowDeleted($dtlrow);
+            }
+        }
+
+        // Cascade delete detail table 'order'
+        $dtlrows = Container("order")->loadRs("`idcustomer` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
+        // Call Row Deleting event
+        foreach ($dtlrows as $dtlrow) {
+            $success = Container("order")->rowDeleting($dtlrow);
+            if (!$success) {
+                break;
+            }
+        }
+        if ($success) {
+            foreach ($dtlrows as $dtlrow) {
+                $success = Container("order")->delete($dtlrow); // Delete
+                if (!$success) {
+                    break;
+                }
+            }
+        }
+        // Call Row Deleted event
+        if ($success) {
+            foreach ($dtlrows as $dtlrow) {
+                Container("order")->rowDeleted($dtlrow);
             }
         }
         if ($success) {
@@ -1500,7 +1506,6 @@ SORTHTML;
         $this->jabatan->ViewCustomAttributes = "";
 
         // idprov
-        $this->idprov->ViewValue = $this->idprov->CurrentValue;
         $curVal = trim(strval($this->idprov->CurrentValue));
         if ($curVal != "") {
             $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -1522,7 +1527,6 @@ SORTHTML;
         $this->idprov->ViewCustomAttributes = "";
 
         // idkab
-        $this->idkab->ViewValue = $this->idkab->CurrentValue;
         $curVal = trim(strval($this->idkab->CurrentValue));
         if ($curVal != "") {
             $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -1544,7 +1548,6 @@ SORTHTML;
         $this->idkab->ViewCustomAttributes = "";
 
         // idkec
-        $this->idkec->ViewValue = $this->idkec->CurrentValue;
         $curVal = trim(strval($this->idkec->CurrentValue));
         if ($curVal != "") {
             $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -1566,7 +1569,6 @@ SORTHTML;
         $this->idkec->ViewCustomAttributes = "";
 
         // idkel
-        $this->idkel->ViewValue = $this->idkel->CurrentValue;
         $curVal = trim(strval($this->idkel->CurrentValue));
         if ($curVal != "") {
             $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -1946,25 +1948,21 @@ SORTHTML;
         // idprov
         $this->idprov->EditAttrs["class"] = "form-control";
         $this->idprov->EditCustomAttributes = "";
-        $this->idprov->EditValue = $this->idprov->CurrentValue;
         $this->idprov->PlaceHolder = RemoveHtml($this->idprov->caption());
 
         // idkab
         $this->idkab->EditAttrs["class"] = "form-control";
         $this->idkab->EditCustomAttributes = "";
-        $this->idkab->EditValue = $this->idkab->CurrentValue;
         $this->idkab->PlaceHolder = RemoveHtml($this->idkab->caption());
 
         // idkec
         $this->idkec->EditAttrs["class"] = "form-control";
         $this->idkec->EditCustomAttributes = "";
-        $this->idkec->EditValue = $this->idkec->CurrentValue;
         $this->idkec->PlaceHolder = RemoveHtml($this->idkec->caption());
 
         // idkel
         $this->idkel->EditAttrs["class"] = "form-control";
         $this->idkel->EditCustomAttributes = "";
-        $this->idkel->EditValue = $this->idkel->CurrentValue;
         $this->idkel->PlaceHolder = RemoveHtml($this->idkel->caption());
 
         // kodepos

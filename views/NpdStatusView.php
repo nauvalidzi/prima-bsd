@@ -45,6 +45,17 @@ $Page->showMessage();
 <input type="hidden" name="t" value="npd_status">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
+<?php if ($Page->id->Visible) { // id ?>
+    <tr id="r_id">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status_id"><?= $Page->id->caption() ?></span></td>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el_npd_status_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
     <tr id="r_idnpd">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status_idnpd"><?= $Page->idnpd->caption() ?></span></td>
@@ -139,8 +150,29 @@ $Page->showMessage();
         <td data-name="lampiran" <?= $Page->lampiran->cellAttributes() ?>>
 <span id="el_npd_status_lampiran">
 <span<?= $Page->lampiran->viewAttributes() ?>>
-<?= GetFileViewTag($Page->lampiran, $Page->lampiran->getViewValue(), false) ?>
+<?= $Page->lampiran->getViewValue() ?></span>
 </span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+    <tr id="r_created_at">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status_created_at"><?= $Page->created_at->caption() ?></span></td>
+        <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
+<span id="el_npd_status_created_at">
+<span<?= $Page->created_at->viewAttributes() ?>>
+<?= $Page->created_at->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->created_by->Visible) { // created_by ?>
+    <tr id="r_created_by">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status_created_by"><?= $Page->created_by->caption() ?></span></td>
+        <td data-name="created_by" <?= $Page->created_by->cellAttributes() ?>>
+<span id="el_npd_status_created_by">
+<span<?= $Page->created_by->viewAttributes() ?>>
+<?= $Page->created_by->getViewValue() ?></span>
 </span>
 </td>
     </tr>

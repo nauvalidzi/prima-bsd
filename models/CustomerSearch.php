@@ -893,7 +893,6 @@ class CustomerSearch extends Customer
             $this->jabatan->ViewCustomAttributes = "";
 
             // idprov
-            $this->idprov->ViewValue = $this->idprov->CurrentValue;
             $curVal = trim(strval($this->idprov->CurrentValue));
             if ($curVal != "") {
                 $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
@@ -915,7 +914,6 @@ class CustomerSearch extends Customer
             $this->idprov->ViewCustomAttributes = "";
 
             // idkab
-            $this->idkab->ViewValue = $this->idkab->CurrentValue;
             $curVal = trim(strval($this->idkab->CurrentValue));
             if ($curVal != "") {
                 $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
@@ -937,7 +935,6 @@ class CustomerSearch extends Customer
             $this->idkab->ViewCustomAttributes = "";
 
             // idkec
-            $this->idkec->ViewValue = $this->idkec->CurrentValue;
             $curVal = trim(strval($this->idkec->CurrentValue));
             if ($curVal != "") {
                 $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
@@ -959,7 +956,6 @@ class CustomerSearch extends Customer
             $this->idkec->ViewCustomAttributes = "";
 
             // idkel
-            $this->idkel->ViewValue = $this->idkel->CurrentValue;
             $curVal = trim(strval($this->idkel->CurrentValue));
             if ($curVal != "") {
                 $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
@@ -1333,96 +1329,100 @@ class CustomerSearch extends Customer
             // idprov
             $this->idprov->EditAttrs["class"] = "form-control";
             $this->idprov->EditCustomAttributes = "";
-            $this->idprov->EditValue = HtmlEncode($this->idprov->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idprov->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idprov->EditValue = $this->idprov->lookupCacheOption($curVal);
-                if ($this->idprov->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idprov->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idprov->Lookup->renderViewRow($rswrk[0]);
-                        $this->idprov->EditValue = $this->idprov->displayValue($arwrk);
-                    } else {
-                        $this->idprov->EditValue = HtmlEncode($this->idprov->AdvancedSearch->SearchValue);
-                    }
-                }
+                $this->idprov->AdvancedSearch->ViewValue = $this->idprov->lookupCacheOption($curVal);
             } else {
-                $this->idprov->EditValue = null;
+                $this->idprov->AdvancedSearch->ViewValue = $this->idprov->Lookup !== null && is_array($this->idprov->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idprov->AdvancedSearch->ViewValue !== null) { // Load from cache
+                $this->idprov->EditValue = array_values($this->idprov->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idprov->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idprov->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idprov->EditValue = $arwrk;
             }
             $this->idprov->PlaceHolder = RemoveHtml($this->idprov->caption());
 
             // idkab
             $this->idkab->EditAttrs["class"] = "form-control";
             $this->idkab->EditCustomAttributes = "";
-            $this->idkab->EditValue = HtmlEncode($this->idkab->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idkab->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idkab->EditValue = $this->idkab->lookupCacheOption($curVal);
-                if ($this->idkab->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkab->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkab->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkab->EditValue = $this->idkab->displayValue($arwrk);
-                    } else {
-                        $this->idkab->EditValue = HtmlEncode($this->idkab->AdvancedSearch->SearchValue);
-                    }
-                }
+                $this->idkab->AdvancedSearch->ViewValue = $this->idkab->lookupCacheOption($curVal);
             } else {
-                $this->idkab->EditValue = null;
+                $this->idkab->AdvancedSearch->ViewValue = $this->idkab->Lookup !== null && is_array($this->idkab->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkab->AdvancedSearch->ViewValue !== null) { // Load from cache
+                $this->idkab->EditValue = array_values($this->idkab->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkab->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idkab->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkab->EditValue = $arwrk;
             }
             $this->idkab->PlaceHolder = RemoveHtml($this->idkab->caption());
 
             // idkec
             $this->idkec->EditAttrs["class"] = "form-control";
             $this->idkec->EditCustomAttributes = "";
-            $this->idkec->EditValue = HtmlEncode($this->idkec->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idkec->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idkec->EditValue = $this->idkec->lookupCacheOption($curVal);
-                if ($this->idkec->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkec->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkec->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkec->EditValue = $this->idkec->displayValue($arwrk);
-                    } else {
-                        $this->idkec->EditValue = HtmlEncode($this->idkec->AdvancedSearch->SearchValue);
-                    }
-                }
+                $this->idkec->AdvancedSearch->ViewValue = $this->idkec->lookupCacheOption($curVal);
             } else {
-                $this->idkec->EditValue = null;
+                $this->idkec->AdvancedSearch->ViewValue = $this->idkec->Lookup !== null && is_array($this->idkec->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkec->AdvancedSearch->ViewValue !== null) { // Load from cache
+                $this->idkec->EditValue = array_values($this->idkec->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkec->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idkec->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkec->EditValue = $arwrk;
             }
             $this->idkec->PlaceHolder = RemoveHtml($this->idkec->caption());
 
             // idkel
             $this->idkel->EditAttrs["class"] = "form-control";
             $this->idkel->EditCustomAttributes = "";
-            $this->idkel->EditValue = HtmlEncode($this->idkel->AdvancedSearch->SearchValue);
             $curVal = trim(strval($this->idkel->AdvancedSearch->SearchValue));
             if ($curVal != "") {
-                $this->idkel->EditValue = $this->idkel->lookupCacheOption($curVal);
-                if ($this->idkel->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkel->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkel->EditValue = $this->idkel->displayValue($arwrk);
-                    } else {
-                        $this->idkel->EditValue = HtmlEncode($this->idkel->AdvancedSearch->SearchValue);
-                    }
-                }
+                $this->idkel->AdvancedSearch->ViewValue = $this->idkel->lookupCacheOption($curVal);
             } else {
-                $this->idkel->EditValue = null;
+                $this->idkel->AdvancedSearch->ViewValue = $this->idkel->Lookup !== null && is_array($this->idkel->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkel->AdvancedSearch->ViewValue !== null) { // Load from cache
+                $this->idkel->EditValue = array_values($this->idkel->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkel->AdvancedSearch->SearchValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->idkel->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkel->EditValue = $arwrk;
             }
             $this->idkel->PlaceHolder = RemoveHtml($this->idkel->caption());
 
@@ -1592,18 +1592,6 @@ class CustomerSearch extends Customer
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if (!CheckInteger($this->idprov->AdvancedSearch->SearchValue)) {
-            $this->idprov->addErrorMessage($this->idprov->getErrorMessage(false));
-        }
-        if (!CheckInteger($this->idkab->AdvancedSearch->SearchValue)) {
-            $this->idkab->addErrorMessage($this->idkab->getErrorMessage(false));
-        }
-        if (!CheckInteger($this->idkec->AdvancedSearch->SearchValue)) {
-            $this->idkec->addErrorMessage($this->idkec->getErrorMessage(false));
-        }
-        if (!CheckInteger($this->idkel->AdvancedSearch->SearchValue)) {
-            $this->idkel->addErrorMessage($this->idkel->getErrorMessage(false));
         }
         if (!CheckByRegEx($this->hp->AdvancedSearch->SearchValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
             $this->hp->addErrorMessage($this->hp->getErrorMessage(false));

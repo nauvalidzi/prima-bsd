@@ -37,11 +37,11 @@ class Product extends DbTable
     public $idkualitasbarang;
     public $idproduct_acuan;
     public $idkemasanbarang;
-    public $kemasanbarang;
-    public $harga;
     public $ukuran;
     public $netto;
+    public $kemasanbarang;
     public $satuan;
+    public $harga;
     public $bahan;
     public $warna;
     public $parfum;
@@ -218,21 +218,6 @@ class Product extends DbTable
         $this->idkemasanbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkemasanbarang->Param, "CustomMsg");
         $this->Fields['idkemasanbarang'] = &$this->idkemasanbarang;
 
-        // kemasanbarang
-        $this->kemasanbarang = new DbField('product', 'product', 'x_kemasanbarang', 'kemasanbarang', '`kemasanbarang`', '`kemasanbarang`', 200, 50, -1, false, '`kemasanbarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kemasanbarang->Sortable = true; // Allow sort
-        $this->kemasanbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kemasanbarang->Param, "CustomMsg");
-        $this->Fields['kemasanbarang'] = &$this->kemasanbarang;
-
-        // harga
-        $this->harga = new DbField('product', 'product', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->harga->Nullable = false; // NOT NULL field
-        $this->harga->Required = true; // Required field
-        $this->harga->Sortable = true; // Allow sort
-        $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");
-        $this->Fields['harga'] = &$this->harga;
-
         // ukuran
         $this->ukuran = new DbField('product', 'product', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 50, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->ukuran->Sortable = true; // Allow sort
@@ -245,11 +230,26 @@ class Product extends DbTable
         $this->netto->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->netto->Param, "CustomMsg");
         $this->Fields['netto'] = &$this->netto;
 
+        // kemasanbarang
+        $this->kemasanbarang = new DbField('product', 'product', 'x_kemasanbarang', 'kemasanbarang', '`kemasanbarang`', '`kemasanbarang`', 200, 50, -1, false, '`kemasanbarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kemasanbarang->Sortable = true; // Allow sort
+        $this->kemasanbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kemasanbarang->Param, "CustomMsg");
+        $this->Fields['kemasanbarang'] = &$this->kemasanbarang;
+
         // satuan
         $this->satuan = new DbField('product', 'product', 'x_satuan', 'satuan', '`satuan`', '`satuan`', 200, 50, -1, false, '`satuan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->satuan->Sortable = false; // Allow sort
         $this->satuan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->satuan->Param, "CustomMsg");
         $this->Fields['satuan'] = &$this->satuan;
+
+        // harga
+        $this->harga = new DbField('product', 'product', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->harga->Nullable = false; // NOT NULL field
+        $this->harga->Required = true; // Required field
+        $this->harga->Sortable = true; // Allow sort
+        $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");
+        $this->Fields['harga'] = &$this->harga;
 
         // bahan
         $this->bahan = new DbField('product', 'product', 'x_bahan', 'bahan', '`bahan`', '`bahan`', 201, 65535, -1, false, '`bahan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -331,11 +331,11 @@ class Product extends DbTable
         $this->Fields['created_at'] = &$this->created_at;
 
         // updated_at
-        $this->updated_at = new DbField('product', 'product', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at = new DbField('product', 'product', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 11, "DB"), 135, 19, 11, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->updated_at->Nullable = false; // NOT NULL field
         $this->updated_at->Required = true; // Required field
         $this->updated_at->Sortable = true; // Allow sort
-        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
     }
@@ -812,11 +812,11 @@ class Product extends DbTable
         $this->idkualitasbarang->DbValue = $row['idkualitasbarang'];
         $this->idproduct_acuan->DbValue = $row['idproduct_acuan'];
         $this->idkemasanbarang->DbValue = $row['idkemasanbarang'];
-        $this->kemasanbarang->DbValue = $row['kemasanbarang'];
-        $this->harga->DbValue = $row['harga'];
         $this->ukuran->DbValue = $row['ukuran'];
         $this->netto->DbValue = $row['netto'];
+        $this->kemasanbarang->DbValue = $row['kemasanbarang'];
         $this->satuan->DbValue = $row['satuan'];
+        $this->harga->DbValue = $row['harga'];
         $this->bahan->DbValue = $row['bahan'];
         $this->warna->DbValue = $row['warna'];
         $this->parfum->DbValue = $row['parfum'];
@@ -1166,11 +1166,11 @@ SORTHTML;
         $this->idkualitasbarang->setDbValue($row['idkualitasbarang']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
         $this->idkemasanbarang->setDbValue($row['idkemasanbarang']);
-        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
-        $this->harga->setDbValue($row['harga']);
         $this->ukuran->setDbValue($row['ukuran']);
         $this->netto->setDbValue($row['netto']);
+        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
         $this->satuan->setDbValue($row['satuan']);
+        $this->harga->setDbValue($row['harga']);
         $this->bahan->setDbValue($row['bahan']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
@@ -1213,17 +1213,17 @@ SORTHTML;
         // idkemasanbarang
         $this->idkemasanbarang->CellCssStyle = "white-space: nowrap;";
 
-        // kemasanbarang
-
-        // harga
-
         // ukuran
 
         // netto
         $this->netto->CellCssStyle = "white-space: nowrap;";
 
+        // kemasanbarang
+
         // satuan
         $this->satuan->CellCssStyle = "white-space: nowrap;";
+
+        // harga
 
         // bahan
 
@@ -1387,15 +1387,6 @@ SORTHTML;
         }
         $this->idkemasanbarang->ViewCustomAttributes = "";
 
-        // kemasanbarang
-        $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
-        $this->kemasanbarang->ViewCustomAttributes = "";
-
-        // harga
-        $this->harga->ViewValue = $this->harga->CurrentValue;
-        $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
-        $this->harga->ViewCustomAttributes = "";
-
         // ukuran
         $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
         $this->ukuran->ViewCustomAttributes = "";
@@ -1404,9 +1395,18 @@ SORTHTML;
         $this->netto->ViewValue = $this->netto->CurrentValue;
         $this->netto->ViewCustomAttributes = "";
 
+        // kemasanbarang
+        $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
+        $this->kemasanbarang->ViewCustomAttributes = "";
+
         // satuan
         $this->satuan->ViewValue = $this->satuan->CurrentValue;
         $this->satuan->ViewCustomAttributes = "";
+
+        // harga
+        $this->harga->ViewValue = $this->harga->CurrentValue;
+        $this->harga->ViewValue = FormatCurrency($this->harga->ViewValue, 2, -2, -2, -2);
+        $this->harga->ViewCustomAttributes = "";
 
         // bahan
         $this->bahan->ViewValue = $this->bahan->CurrentValue;
@@ -1459,7 +1459,7 @@ SORTHTML;
 
         // updated_at
         $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 11);
         $this->updated_at->ViewCustomAttributes = "";
 
         // id
@@ -1507,16 +1507,6 @@ SORTHTML;
         $this->idkemasanbarang->HrefValue = "";
         $this->idkemasanbarang->TooltipValue = "";
 
-        // kemasanbarang
-        $this->kemasanbarang->LinkCustomAttributes = "";
-        $this->kemasanbarang->HrefValue = "";
-        $this->kemasanbarang->TooltipValue = "";
-
-        // harga
-        $this->harga->LinkCustomAttributes = "";
-        $this->harga->HrefValue = "";
-        $this->harga->TooltipValue = "";
-
         // ukuran
         $this->ukuran->LinkCustomAttributes = "";
         $this->ukuran->HrefValue = "";
@@ -1527,10 +1517,20 @@ SORTHTML;
         $this->netto->HrefValue = "";
         $this->netto->TooltipValue = "";
 
+        // kemasanbarang
+        $this->kemasanbarang->LinkCustomAttributes = "";
+        $this->kemasanbarang->HrefValue = "";
+        $this->kemasanbarang->TooltipValue = "";
+
         // satuan
         $this->satuan->LinkCustomAttributes = "";
         $this->satuan->HrefValue = "";
         $this->satuan->TooltipValue = "";
+
+        // harga
+        $this->harga->LinkCustomAttributes = "";
+        $this->harga->HrefValue = "";
+        $this->harga->TooltipValue = "";
 
         // bahan
         $this->bahan->LinkCustomAttributes = "";
@@ -1675,21 +1675,6 @@ SORTHTML;
         $this->idkemasanbarang->EditCustomAttributes = "";
         $this->idkemasanbarang->PlaceHolder = RemoveHtml($this->idkemasanbarang->caption());
 
-        // kemasanbarang
-        $this->kemasanbarang->EditAttrs["class"] = "form-control";
-        $this->kemasanbarang->EditCustomAttributes = "";
-        if (!$this->kemasanbarang->Raw) {
-            $this->kemasanbarang->CurrentValue = HtmlDecode($this->kemasanbarang->CurrentValue);
-        }
-        $this->kemasanbarang->EditValue = $this->kemasanbarang->CurrentValue;
-        $this->kemasanbarang->PlaceHolder = RemoveHtml($this->kemasanbarang->caption());
-
-        // harga
-        $this->harga->EditAttrs["class"] = "form-control";
-        $this->harga->EditCustomAttributes = "";
-        $this->harga->EditValue = $this->harga->CurrentValue;
-        $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
-
         // ukuran
         $this->ukuran->EditAttrs["class"] = "form-control";
         $this->ukuran->EditCustomAttributes = "";
@@ -1708,6 +1693,15 @@ SORTHTML;
         $this->netto->EditValue = $this->netto->CurrentValue;
         $this->netto->PlaceHolder = RemoveHtml($this->netto->caption());
 
+        // kemasanbarang
+        $this->kemasanbarang->EditAttrs["class"] = "form-control";
+        $this->kemasanbarang->EditCustomAttributes = "";
+        if (!$this->kemasanbarang->Raw) {
+            $this->kemasanbarang->CurrentValue = HtmlDecode($this->kemasanbarang->CurrentValue);
+        }
+        $this->kemasanbarang->EditValue = $this->kemasanbarang->CurrentValue;
+        $this->kemasanbarang->PlaceHolder = RemoveHtml($this->kemasanbarang->caption());
+
         // satuan
         $this->satuan->EditAttrs["class"] = "form-control";
         $this->satuan->EditCustomAttributes = "";
@@ -1716,6 +1710,12 @@ SORTHTML;
         }
         $this->satuan->EditValue = $this->satuan->CurrentValue;
         $this->satuan->PlaceHolder = RemoveHtml($this->satuan->caption());
+
+        // harga
+        $this->harga->EditAttrs["class"] = "form-control";
+        $this->harga->EditCustomAttributes = "";
+        $this->harga->EditValue = $this->harga->CurrentValue;
+        $this->harga->PlaceHolder = RemoveHtml($this->harga->caption());
 
         // bahan
         $this->bahan->EditAttrs["class"] = "form-control";
@@ -1790,7 +1790,7 @@ SORTHTML;
         // updated_at
         $this->updated_at->EditAttrs["class"] = "form-control";
         $this->updated_at->EditCustomAttributes = "";
-        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
+        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 11);
         $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
         // Call Row Rendered event
@@ -1828,9 +1828,9 @@ SORTHTML;
                     $doc->exportCaption($this->idjenisbarang);
                     $doc->exportCaption($this->idkualitasbarang);
                     $doc->exportCaption($this->idproduct_acuan);
+                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->kemasanbarang);
                     $doc->exportCaption($this->harga);
-                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->bahan);
                     $doc->exportCaption($this->warna);
                     $doc->exportCaption($this->parfum);
@@ -1849,9 +1849,9 @@ SORTHTML;
                     $doc->exportCaption($this->idjenisbarang);
                     $doc->exportCaption($this->idkualitasbarang);
                     $doc->exportCaption($this->idproduct_acuan);
+                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->kemasanbarang);
                     $doc->exportCaption($this->harga);
-                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->bahan);
                     $doc->exportCaption($this->warna);
                     $doc->exportCaption($this->parfum);
@@ -1898,9 +1898,9 @@ SORTHTML;
                         $doc->exportField($this->idjenisbarang);
                         $doc->exportField($this->idkualitasbarang);
                         $doc->exportField($this->idproduct_acuan);
+                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->kemasanbarang);
                         $doc->exportField($this->harga);
-                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->bahan);
                         $doc->exportField($this->warna);
                         $doc->exportField($this->parfum);
@@ -1919,9 +1919,9 @@ SORTHTML;
                         $doc->exportField($this->idjenisbarang);
                         $doc->exportField($this->idkualitasbarang);
                         $doc->exportField($this->idproduct_acuan);
+                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->kemasanbarang);
                         $doc->exportField($this->harga);
-                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->bahan);
                         $doc->exportField($this->warna);
                         $doc->exportField($this->parfum);
