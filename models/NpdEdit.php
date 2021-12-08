@@ -502,7 +502,7 @@ class NpdEdit extends Npd
         $this->readonly->Visible = false;
         $this->selesai->Visible = false;
         $this->created_at->Visible = false;
-        $this->updated_at->setVisibility();
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
         $this->kodeorder->Required = false;
         $this->idpegawai->Required = false;
@@ -1020,17 +1020,6 @@ class NpdEdit extends Npd
             }
         }
 
-        // Check field name 'updated_at' first before field var 'x_updated_at'
-        $val = $CurrentForm->hasValue("updated_at") ? $CurrentForm->getValue("updated_at") : $CurrentForm->getValue("x_updated_at");
-        if (!$this->updated_at->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->updated_at->Visible = false; // Disable update for API request
-            } else {
-                $this->updated_at->setFormValue($val);
-            }
-            $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
@@ -1075,8 +1064,6 @@ class NpdEdit extends Npd
         $this->labelposisi->CurrentValue = $this->labelposisi->FormValue;
         $this->labelcatatan->CurrentValue = $this->labelcatatan->FormValue;
         $this->statusdokumen->CurrentValue = $this->statusdokumen->FormValue;
-        $this->updated_at->CurrentValue = $this->updated_at->FormValue;
-        $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
     }
 
     /**
@@ -1834,12 +1821,12 @@ class NpdEdit extends Npd
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
             $this->created_at->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
             $this->updated_at->ViewCustomAttributes = "";
 
             // tanggal_order
@@ -1991,11 +1978,6 @@ class NpdEdit extends Npd
             $this->statusdokumen->LinkCustomAttributes = "";
             $this->statusdokumen->HrefValue = "";
             $this->statusdokumen->TooltipValue = "";
-
-            // updated_at
-            $this->updated_at->LinkCustomAttributes = "";
-            $this->updated_at->HrefValue = "";
-            $this->updated_at->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // tanggal_order
             $this->tanggal_order->EditAttrs["class"] = "form-control";
@@ -2572,12 +2554,6 @@ class NpdEdit extends Npd
             $this->statusdokumen->EditValue = HtmlEncode($this->statusdokumen->CurrentValue);
             $this->statusdokumen->PlaceHolder = RemoveHtml($this->statusdokumen->caption());
 
-            // updated_at
-            $this->updated_at->EditAttrs["class"] = "form-control";
-            $this->updated_at->EditCustomAttributes = "";
-            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 8));
-            $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
-
             // Edit refer script
 
             // tanggal_order
@@ -2702,10 +2678,6 @@ class NpdEdit extends Npd
             // statusdokumen
             $this->statusdokumen->LinkCustomAttributes = "";
             $this->statusdokumen->HrefValue = "";
-
-            // updated_at
-            $this->updated_at->LinkCustomAttributes = "";
-            $this->updated_at->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2882,14 +2854,6 @@ class NpdEdit extends Npd
                 $this->statusdokumen->addErrorMessage(str_replace("%s", $this->statusdokumen->caption(), $this->statusdokumen->RequiredErrorMessage));
             }
         }
-        if ($this->updated_at->Required) {
-            if (!$this->updated_at->IsDetailKey && EmptyValue($this->updated_at->FormValue)) {
-                $this->updated_at->addErrorMessage(str_replace("%s", $this->updated_at->caption(), $this->updated_at->RequiredErrorMessage));
-            }
-        }
-        if (!CheckDate($this->updated_at->FormValue)) {
-            $this->updated_at->addErrorMessage($this->updated_at->getErrorMessage(false));
-        }
 
         // Validate detail grid
         $detailTblVar = explode(",", $this->getCurrentDetailTable());
@@ -3051,9 +3015,6 @@ class NpdEdit extends Npd
 
             // statusdokumen
             $this->statusdokumen->setDbValueDef($rsnew, $this->statusdokumen->CurrentValue, null, $this->statusdokumen->ReadOnly);
-
-            // updated_at
-            $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), $this->updated_at->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);

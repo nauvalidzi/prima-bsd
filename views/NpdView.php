@@ -386,6 +386,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+    <tr id="r_created_at">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_created_at"><?= $Page->created_at->caption() ?></span></td>
+        <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
+<span id="el_npd_created_at">
+<span<?= $Page->created_at->viewAttributes() ?>>
+<?= $Page->created_at->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->updated_at->Visible) { // updated_at ?>
     <tr id="r_updated_at">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_updated_at"><?= $Page->updated_at->caption() ?></span></td>

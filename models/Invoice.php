@@ -155,9 +155,10 @@ class Invoice extends DbTable
         $this->Fields['totalnonpajak'] = &$this->totalnonpajak;
 
         // pajak
-        $this->pajak = new DbField('invoice', 'invoice', 'x_pajak', 'pajak', '`pajak`', '`pajak`', 5, 22, -1, false, '`pajak`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->pajak = new DbField('invoice', 'invoice', 'x_pajak', 'pajak', '`pajak`', '`pajak`', 5, 22, -1, false, '`pajak`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->pajak->Nullable = false; // NOT NULL field
         $this->pajak->Sortable = true; // Allow sort
+        $this->pajak->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->pajak->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->pajak->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->pajak->Param, "CustomMsg");
         $this->Fields['pajak'] = &$this->pajak;
@@ -1578,6 +1579,9 @@ SORTHTML;
         $this->pajak->EditCustomAttributes = "";
         $this->pajak->EditValue = $this->pajak->CurrentValue;
         $this->pajak->PlaceHolder = RemoveHtml($this->pajak->caption());
+        if (strval($this->pajak->EditValue) != "" && is_numeric($this->pajak->EditValue)) {
+            $this->pajak->EditValue = FormatNumber($this->pajak->EditValue, -2, -2, -2, -2);
+        }
 
         // totaltagihan
         $this->totaltagihan->EditAttrs["class"] = "form-control";

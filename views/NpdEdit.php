@@ -49,8 +49,7 @@ loadjs.ready("head", function () {
         ["labelkualitas", [fields.labelkualitas.visible && fields.labelkualitas.required ? ew.Validators.required(fields.labelkualitas.caption) : null], fields.labelkualitas.isInvalid],
         ["labelposisi", [fields.labelposisi.visible && fields.labelposisi.required ? ew.Validators.required(fields.labelposisi.caption) : null], fields.labelposisi.isInvalid],
         ["labelcatatan", [fields.labelcatatan.visible && fields.labelcatatan.required ? ew.Validators.required(fields.labelcatatan.caption) : null], fields.labelcatatan.isInvalid],
-        ["statusdokumen", [fields.statusdokumen.visible && fields.statusdokumen.required ? ew.Validators.required(fields.statusdokumen.caption) : null], fields.statusdokumen.isInvalid],
-        ["updated_at", [fields.updated_at.visible && fields.updated_at.required ? ew.Validators.required(fields.updated_at.caption) : null, ew.Validators.datetime(0)], fields.updated_at.isInvalid]
+        ["statusdokumen", [fields.statusdokumen.visible && fields.statusdokumen.required ? ew.Validators.required(fields.statusdokumen.caption) : null], fields.statusdokumen.isInvalid]
     ]);
 
     // Set invalid fields
@@ -817,25 +816,6 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->statusdokumen->getInputTextType() ?>" data-table="npd" data-field="x_statusdokumen" name="x_statusdokumen" id="x_statusdokumen" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->statusdokumen->getPlaceHolder()) ?>" value="<?= $Page->statusdokumen->EditValue ?>"<?= $Page->statusdokumen->editAttributes() ?> aria-describedby="x_statusdokumen_help">
 <?= $Page->statusdokumen->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->statusdokumen->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->updated_at->Visible) { // updated_at ?>
-    <div id="r_updated_at" class="form-group row">
-        <label id="elh_npd_updated_at" for="x_updated_at" class="<?= $Page->LeftColumnClass ?>"><?= $Page->updated_at->caption() ?><?= $Page->updated_at->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->updated_at->cellAttributes() ?>>
-<span id="el_npd_updated_at">
-<input type="<?= $Page->updated_at->getInputTextType() ?>" data-table="npd" data-field="x_updated_at" name="x_updated_at" id="x_updated_at" placeholder="<?= HtmlEncode($Page->updated_at->getPlaceHolder()) ?>" value="<?= $Page->updated_at->EditValue ?>"<?= $Page->updated_at->editAttributes() ?> aria-describedby="x_updated_at_help">
-<?= $Page->updated_at->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->updated_at->getErrorMessage() ?></div>
-<?php if (!$Page->updated_at->ReadOnly && !$Page->updated_at->Disabled && !isset($Page->updated_at->EditAttrs["readonly"]) && !isset($Page->updated_at->EditAttrs["disabled"])) { ?>
-<script>
-loadjs.ready(["fnpdedit", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpdedit", "x_updated_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
-});
-</script>
-<?php } ?>
 </span>
 </div></div>
     </div>

@@ -880,6 +880,11 @@ class InvoiceView extends Invoice
         $this->ListUrl = $this->getListUrl();
         $this->setupOtherOptions();
 
+        // Convert decimal values if posted back
+        if ($this->pajak->FormValue == $this->pajak->CurrentValue && is_numeric(ConvertToFloatString($this->pajak->CurrentValue))) {
+            $this->pajak->CurrentValue = ConvertToFloatString($this->pajak->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 

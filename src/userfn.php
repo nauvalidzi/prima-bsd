@@ -482,9 +482,9 @@ function removeNpdFromProduct($idNpd) {
 
 // UNTUK API
 function getNextKodeNpd($idCustomer) {
-	$kode = ExecuteScalar("SELECT kodenpd FROM customer WHERE id = ".$idCustomer);
+	$kode = ExecuteScalar("SELECT kodenpd FROM customer WHERE id = {$idCustomer}");
     $kode = "TM-".$kode."-";
-   	$maxKode = ExecuteScalar("SELECT MAX(kodeorder) FROM npd WHERE kodeorder LIKE '".$kode."%'");
+   	$maxKode = ExecuteScalar("SELECT MAX(kodeorder) FROM npd WHERE kodeorder LIKE '{$kode}%'");
    	if ($maxKode == null) {
    		return $kode."001";
    	} else {

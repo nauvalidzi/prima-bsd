@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/12/7" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/12/8" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1905,7 +1905,7 @@
         <phrase id="fldcaption" value="Created at" />
       </field>
       <field id="updated_at">
-        <phrase id="fldcaption" value="updated at" />
+        <phrase id="fldcaption" value="Updated at" />
       </field>
     </table>
     <table id="npd_sample">

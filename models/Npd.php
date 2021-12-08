@@ -514,20 +514,20 @@ class Npd extends DbTable
         $this->Fields['selesai'] = &$this->selesai;
 
         // created_at
-        $this->created_at = new DbField('npd', 'npd', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at = new DbField('npd', 'npd', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 11, "DB"), 135, 19, 11, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Nullable = false; // NOT NULL field
         $this->created_at->Required = true; // Required field
         $this->created_at->Sortable = true; // Allow sort
-        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
 
         // updated_at
-        $this->updated_at = new DbField('npd', 'npd', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at = new DbField('npd', 'npd', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 17, "DB"), 135, 19, 17, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->updated_at->Nullable = false; // NOT NULL field
         $this->updated_at->Required = true; // Required field
         $this->updated_at->Sortable = true; // Allow sort
-        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectShortDateDMY"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
     }
@@ -2255,12 +2255,12 @@ SORTHTML;
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
-        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
         $this->created_at->ViewCustomAttributes = "";
 
         // updated_at
         $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
         $this->updated_at->ViewCustomAttributes = "";
 
         // id
@@ -2686,13 +2686,13 @@ SORTHTML;
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
-        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
+        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 11);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
         // updated_at
         $this->updated_at->EditAttrs["class"] = "form-control";
         $this->updated_at->EditCustomAttributes = "";
-        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
+        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 17);
         $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
         // Call Row Rendered event
@@ -2754,6 +2754,7 @@ SORTHTML;
                     $doc->exportCaption($this->labelcatatan);
                     $doc->exportCaption($this->statusdokumen);
                     $doc->exportCaption($this->selesai);
+                    $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
                 } else {
                     $doc->exportCaption($this->id);
@@ -2849,6 +2850,7 @@ SORTHTML;
                         $doc->exportField($this->labelcatatan);
                         $doc->exportField($this->statusdokumen);
                         $doc->exportField($this->selesai);
+                        $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
                     } else {
                         $doc->exportField($this->id);
@@ -2951,8 +2953,9 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        //$idcustomer = $rsnew['idcustomer'];
-        //$rsnew['kodeorder'] = getNextKodeNpd($idcustomer);
+        $rsnew['kodeorder'] = getNextKodeNpd($rsnew['idcustomer']);
+        $rsnew['created_at'] = date('Y-m-d H:i:s');
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
 
@@ -2967,6 +2970,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;
     }
 

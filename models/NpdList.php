@@ -3308,12 +3308,12 @@ class NpdList extends Npd
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
             $this->created_at->ViewCustomAttributes = "";
 
             // updated_at
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
             $this->updated_at->ViewCustomAttributes = "";
 
             // tanggal_order
@@ -3592,7 +3592,7 @@ class NpdList extends Npd
         <script>
 
         function selesai(id) {
-    		$.get('/bsd/api/npd/selesai/'+id, function(data) {
+    		$.get('api/npd/selesai/'+id, function(data) {
     			if (data == 1) {
     				location.reload();
     			} else {
@@ -3602,7 +3602,7 @@ class NpdList extends Npd
     	}
 
         function belumselesai(id) {
-    		$.get('/bsd/api/npd/belumselesai/'+id, function(data) {
+    		$.get('api/npd/belumselesai/'+id, function(data) {
     			if (data == 1) {
     				location.reload();
     			} else {
