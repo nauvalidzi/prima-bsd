@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.alamat_customer)
         ew.vars.tables.alamat_customer = currentTable;
     falamat_customeradd.addFields([
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["alias", [fields.alias.visible && fields.alias.required ? ew.Validators.required(fields.alias.caption) : null], fields.alias.isInvalid],
         ["penerima", [fields.penerima.visible && fields.penerima.required ? ew.Validators.required(fields.penerima.caption) : null], fields.penerima.isInvalid],
@@ -28,7 +29,7 @@ loadjs.ready("head", function () {
         ["idprovinsi", [fields.idprovinsi.visible && fields.idprovinsi.required ? ew.Validators.required(fields.idprovinsi.caption) : null], fields.idprovinsi.isInvalid],
         ["idkabupaten", [fields.idkabupaten.visible && fields.idkabupaten.required ? ew.Validators.required(fields.idkabupaten.caption) : null], fields.idkabupaten.isInvalid],
         ["idkecamatan", [fields.idkecamatan.visible && fields.idkecamatan.required ? ew.Validators.required(fields.idkecamatan.caption) : null], fields.idkecamatan.isInvalid],
-        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null, ew.Validators.integer], fields.idkelurahan.isInvalid]
+        ["idkelurahan", [fields.idkelurahan.visible && fields.idkelurahan.required ? ew.Validators.required(fields.idkelurahan.caption) : null], fields.idkelurahan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -126,6 +127,18 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
+<?php if ($Page->id->Visible) { // id ?>
+    <div id="r_id" class="form-group row">
+        <label id="elh_alamat_customer_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
+<span id="el_alamat_customer_id">
+<input type="<?= $Page->id->getInputTextType() ?>" data-table="alamat_customer" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
+<?= $Page->id->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
     <div id="r_idcustomer" class="form-group row">
         <label id="elh_alamat_customer_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -319,26 +332,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->idkelurahan->Visible) { // idkelurahan ?>
     <div id="r_idkelurahan" class="form-group row">
-        <label id="elh_alamat_customer_idkelurahan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkelurahan->caption() ?><?= $Page->idkelurahan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_alamat_customer_idkelurahan" for="x_idkelurahan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkelurahan->caption() ?><?= $Page->idkelurahan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkelurahan->cellAttributes() ?>>
 <span id="el_alamat_customer_idkelurahan">
-<?php
-$onchange = $Page->idkelurahan->EditAttrs->prepend("onchange", "");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->idkelurahan->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_idkelurahan" class="ew-auto-suggest">
-    <input type="<?= $Page->idkelurahan->getInputTextType() ?>" class="form-control" name="sv_x_idkelurahan" id="sv_x_idkelurahan" value="<?= RemoveHtml($Page->idkelurahan->EditValue) ?>" size="30" maxlength="10" placeholder="<?= HtmlEncode($Page->idkelurahan->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idkelurahan->getPlaceHolder()) ?>"<?= $Page->idkelurahan->editAttributes() ?> aria-describedby="x_idkelurahan_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="alamat_customer" data-field="x_idkelurahan" data-input="sv_x_idkelurahan" data-value-separator="<?= $Page->idkelurahan->displayValueSeparatorAttribute() ?>" name="x_idkelurahan" id="x_idkelurahan" value="<?= HtmlEncode($Page->idkelurahan->CurrentValue) ?>"<?= $onchange ?>>
-<?= $Page->idkelurahan->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idkelurahan->getErrorMessage() ?></div>
+    <select
+        id="x_idkelurahan"
+        name="x_idkelurahan"
+        class="form-control ew-select<?= $Page->idkelurahan->isInvalidClass() ?>"
+        data-select2-id="alamat_customer_x_idkelurahan"
+        data-table="alamat_customer"
+        data-field="x_idkelurahan"
+        data-value-separator="<?= $Page->idkelurahan->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idkelurahan->getPlaceHolder()) ?>"
+        <?= $Page->idkelurahan->editAttributes() ?>>
+        <?= $Page->idkelurahan->selectOptionListHtml("x_idkelurahan") ?>
+    </select>
+    <?= $Page->idkelurahan->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idkelurahan->getErrorMessage() ?></div>
+<?= $Page->idkelurahan->Lookup->getParamTag($Page, "p_x_idkelurahan") ?>
 <script>
-loadjs.ready(["falamat_customeradd"], function() {
-    falamat_customeradd.createAutoSuggest(Object.assign({"id":"x_idkelurahan","forceSelect":false}, ew.vars.tables.alamat_customer.fields.idkelurahan.autoSuggestOptions));
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='alamat_customer_x_idkelurahan']"),
+        options = { name: "x_idkelurahan", selectId: "alamat_customer_x_idkelurahan", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.alamat_customer.fields.idkelurahan.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?= $Page->idkelurahan->Lookup->getParamTag($Page, "p_x_idkelurahan") ?>
 </span>
 </div></div>
     </div>

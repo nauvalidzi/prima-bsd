@@ -73,10 +73,10 @@ class Suratjalan extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('suratjalan', 'suratjalan', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('suratjalan', 'suratjalan', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -109,9 +109,8 @@ class Suratjalan extends DbTable
         $this->Fields['tglkirim'] = &$this->tglkirim;
 
         // idcustomer
-        $this->idcustomer = new DbField('suratjalan', 'suratjalan', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('suratjalan', 'suratjalan', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
-        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -128,9 +127,8 @@ class Suratjalan extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idalamat_customer
-        $this->idalamat_customer = new DbField('suratjalan', 'suratjalan', 'x_idalamat_customer', 'idalamat_customer', '`idalamat_customer`', '`idalamat_customer`', 3, 11, -1, false, '`idalamat_customer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idalamat_customer = new DbField('suratjalan', 'suratjalan', 'x_idalamat_customer', 'idalamat_customer', '`idalamat_customer`', '`idalamat_customer`', 20, 20, -1, false, '`idalamat_customer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idalamat_customer->Nullable = false; // NOT NULL field
-        $this->idalamat_customer->Required = true; // Required field
         $this->idalamat_customer->Sortable = true; // Allow sort
         $this->idalamat_customer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idalamat_customer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -147,7 +145,7 @@ class Suratjalan extends DbTable
         $this->Fields['idalamat_customer'] = &$this->idalamat_customer;
 
         // keterangan
-        $this->keterangan = new DbField('suratjalan', 'suratjalan', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 200, 255, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keterangan = new DbField('suratjalan', 'suratjalan', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;
@@ -522,9 +520,6 @@ class Suratjalan extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1127,7 +1122,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";

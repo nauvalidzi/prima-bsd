@@ -76,19 +76,18 @@ class IjinhakiStatus extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('ijinhaki_status', 'ijinhaki_status', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('ijinhaki_status', 'ijinhaki_status', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idijinhaki
-        $this->idijinhaki = new DbField('ijinhaki_status', 'ijinhaki_status', 'x_idijinhaki', 'idijinhaki', '`idijinhaki`', '`idijinhaki`', 3, 11, -1, false, '`idijinhaki`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idijinhaki = new DbField('ijinhaki_status', 'ijinhaki_status', 'x_idijinhaki', 'idijinhaki', '`idijinhaki`', '`idijinhaki`', 20, 20, -1, false, '`idijinhaki`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idijinhaki->IsForeignKey = true; // Foreign key field
         $this->idijinhaki->Nullable = false; // NOT NULL field
-        $this->idijinhaki->Required = true; // Required field
         $this->idijinhaki->Sortable = true; // Allow sort
         $this->idijinhaki->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idijinhaki->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idijinhaki->Param, "CustomMsg");
@@ -565,9 +564,6 @@ class IjinhakiStatus extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1199,7 +1195,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // idijinhaki
         $this->idijinhaki->EditAttrs["class"] = "form-control";

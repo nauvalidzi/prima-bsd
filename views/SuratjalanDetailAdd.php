@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.suratjalan_detail)
         ew.vars.tables.suratjalan_detail = currentTable;
     fsuratjalan_detailadd.addFields([
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["idinvoice", [fields.idinvoice.visible && fields.idinvoice.required ? ew.Validators.required(fields.idinvoice.caption) : null], fields.idinvoice.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
@@ -116,6 +117,18 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idsuratjalan->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
+<?php if ($Page->id->Visible) { // id ?>
+    <div id="r_id" class="form-group row">
+        <label id="elh_suratjalan_detail_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
+<span id="el_suratjalan_detail_id">
+<input type="<?= $Page->id->getInputTextType() ?>" data-table="suratjalan_detail" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
+<?= $Page->id->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->idinvoice->Visible) { // idinvoice ?>
     <div id="r_idinvoice" class="form-group row">
         <label id="elh_suratjalan_detail_idinvoice" for="x_idinvoice" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idinvoice->caption() ?><?= $Page->idinvoice->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

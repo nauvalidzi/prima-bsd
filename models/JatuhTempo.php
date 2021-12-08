@@ -100,15 +100,15 @@ class JatuhTempo extends ReportTable
         $this->Fields['namapegawai'] = &$this->namapegawai;
 
         // idcustomer
-        $this->idcustomer = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->GroupingFieldId = 2;
         $this->idcustomer->ShowGroupHeaderAsRow = $this->ShowGroupHeaderAsRow;
         $this->idcustomer->ShowCompactSummaryFooter = $this->ShowCompactSummaryFooter;
         $this->idcustomer->GroupByType = "";
         $this->idcustomer->GroupInterval = "0";
         $this->idcustomer->GroupSql = "";
-        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -131,9 +131,9 @@ class JatuhTempo extends ReportTable
         $this->Fields['namacustomer'] = &$this->namacustomer;
 
         // idinvoice
-        $this->idinvoice = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 3, 11, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idinvoice->IsAutoIncrement = true; // Autoincrement field
+        $this->idinvoice = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idinvoice->IsPrimaryKey = true; // Primary key field
+        $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":

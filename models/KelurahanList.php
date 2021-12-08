@@ -1608,6 +1608,7 @@ class KelurahanList extends Kelurahan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // idkecamatan
@@ -1616,7 +1617,7 @@ class KelurahanList extends Kelurahan
             if ($curVal != "") {
                 $this->idkecamatan->ViewValue = $this->idkecamatan->lookupCacheOption($curVal);
                 if ($this->idkecamatan->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkecamatan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);

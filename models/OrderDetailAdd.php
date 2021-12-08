@@ -369,9 +369,6 @@ class OrderDetailAdd extends OrderDetail
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -464,7 +461,7 @@ class OrderDetailAdd extends OrderDetail
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->idorder->Visible = false;
         $this->idproduct->setVisibility();
         $this->jumlah->setVisibility();
@@ -659,6 +656,16 @@ class OrderDetailAdd extends OrderDetail
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+
         // Check field name 'idproduct' first before field var 'x_idproduct'
         $val = $CurrentForm->hasValue("idproduct") ? $CurrentForm->getValue("idproduct") : $CurrentForm->getValue("x_idproduct");
         if (!$this->idproduct->IsDetailKey) {
@@ -738,15 +745,13 @@ class OrderDetailAdd extends OrderDetail
                 $this->created_by->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->idproduct->CurrentValue = $this->idproduct->FormValue;
         $this->jumlah->CurrentValue = $this->jumlah->FormValue;
         $this->bonus->CurrentValue = $this->bonus->FormValue;
@@ -984,6 +989,11 @@ class OrderDetailAdd extends OrderDetail
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
             $this->idproduct->HrefValue = "";
@@ -1024,6 +1034,12 @@ class OrderDetailAdd extends OrderDetail
             $this->created_by->HrefValue = "";
             $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
             // idproduct
             $this->idproduct->EditAttrs["class"] = "form-control";
             $this->idproduct->EditCustomAttributes = "";
@@ -1096,6 +1112,10 @@ class OrderDetailAdd extends OrderDetail
 
             // Add refer script
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
             $this->idproduct->HrefValue = "";
@@ -1146,6 +1166,14 @@ class OrderDetailAdd extends OrderDetail
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idproduct->Required) {
             if (!$this->idproduct->IsDetailKey && EmptyValue($this->idproduct->FormValue)) {
@@ -1283,26 +1311,29 @@ class OrderDetailAdd extends OrderDetail
         }
         $rsnew = [];
 
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
+
         // idproduct
-        $this->idproduct->setDbValueDef($rsnew, $this->idproduct->CurrentValue, 0, false);
+        $this->idproduct->setDbValueDef($rsnew, $this->idproduct->CurrentValue, 0, strval($this->idproduct->CurrentValue) == "");
 
         // jumlah
-        $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, false);
+        $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, strval($this->jumlah->CurrentValue) == "");
 
         // bonus
-        $this->bonus->setDbValueDef($rsnew, $this->bonus->CurrentValue, 0, false);
+        $this->bonus->setDbValueDef($rsnew, $this->bonus->CurrentValue, 0, strval($this->bonus->CurrentValue) == "");
 
         // sisa
-        $this->sisa->setDbValueDef($rsnew, $this->sisa->CurrentValue, 0, false);
+        $this->sisa->setDbValueDef($rsnew, $this->sisa->CurrentValue, 0, strval($this->sisa->CurrentValue) == "");
 
         // harga
         $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, false);
 
         // total
-        $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, false);
+        $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, strval($this->total->CurrentValue) == "");
 
         // keterangan
-        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", false);
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
@@ -1314,6 +1345,23 @@ class OrderDetailAdd extends OrderDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

@@ -438,9 +438,6 @@ class VStockProdukList extends VStockProduk
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idproduk->Visible = false;
-        }
     }
 
     // Lookup data

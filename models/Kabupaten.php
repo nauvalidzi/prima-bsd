@@ -68,18 +68,17 @@ class Kabupaten extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('kabupaten', 'kabupaten', 'x_id', 'id', '`id`', '`id`', 200, 4, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('kabupaten', 'kabupaten', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Nullable = false; // NOT NULL field
-        $this->id->Required = true; // Required field
         $this->id->Sortable = true; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idprovinsi
-        $this->idprovinsi = new DbField('kabupaten', 'kabupaten', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 200, 2, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idprovinsi = new DbField('kabupaten', 'kabupaten', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 20, 20, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idprovinsi->Nullable = false; // NOT NULL field
-        $this->idprovinsi->Required = true; // Required field
         $this->idprovinsi->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -89,6 +88,7 @@ class Kabupaten extends DbTable
                 $this->idprovinsi->Lookup = new Lookup('idprovinsi', 'provinsi', false, 'id', ["name","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
+        $this->idprovinsi->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idprovinsi->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idprovinsi->Param, "CustomMsg");
         $this->Fields['idprovinsi'] = &$this->idprovinsi;
 
@@ -523,7 +523,7 @@ class Kabupaten extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = '@id@'";
+        return "`id` = @id@";
     }
 
     // Get Key
@@ -561,6 +561,9 @@ class Kabupaten extends DbTable
             $val = array_key_exists('id', $row) ? $row['id'] : null;
         } else {
             $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
         }
         if ($val === null) {
             return "0=1"; // Invalid key
@@ -694,7 +697,7 @@ class Kabupaten extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "id:" . JsonEncode($this->id->CurrentValue, "string");
+        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -782,6 +785,9 @@ SORTHTML;
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
+                if (!is_numeric($key)) {
+                    continue;
+                }
                 $ar[] = $key;
             }
         }
@@ -849,6 +855,7 @@ SORTHTML;
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
         // idprovinsi
@@ -857,7 +864,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idprovinsi->ViewValue = $this->idprovinsi->lookupCacheOption($curVal);
             if ($this->idprovinsi->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idprovinsi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -910,18 +917,12 @@ SORTHTML;
         // id
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
-        if (!$this->id->Raw) {
-            $this->id->CurrentValue = HtmlDecode($this->id->CurrentValue);
-        }
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // idprovinsi
         $this->idprovinsi->EditAttrs["class"] = "form-control";
         $this->idprovinsi->EditCustomAttributes = "";
-        if (!$this->idprovinsi->Raw) {
-            $this->idprovinsi->CurrentValue = HtmlDecode($this->idprovinsi->CurrentValue);
-        }
         $this->idprovinsi->EditValue = $this->idprovinsi->CurrentValue;
         $this->idprovinsi->PlaceHolder = RemoveHtml($this->idprovinsi->caption());
 

@@ -363,9 +363,6 @@ class DeliveryorderDetailPreview extends DeliveryorderDetail
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
     public $Recordset;
     public $TotalRecords;

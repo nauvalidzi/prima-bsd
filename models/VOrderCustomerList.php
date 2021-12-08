@@ -439,12 +439,6 @@ class VOrderCustomerList extends VOrderCustomer
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idorder->Visible = false;
-        }
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idcustomer->Visible = false;
-        }
     }
 
     // Lookup data

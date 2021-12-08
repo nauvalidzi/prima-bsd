@@ -70,9 +70,9 @@ class VBonuscustomerDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idcustomer
-        $this->idcustomer = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
+        $this->idcustomer = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -87,9 +87,9 @@ class VBonuscustomerDetail extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idinvoice
-        $this->idinvoice = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 3, 11, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idinvoice->IsAutoIncrement = true; // Autoincrement field
+        $this->idinvoice = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idinvoice->IsPrimaryKey = true; // Primary key field
+        $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -511,13 +511,6 @@ class VBonuscustomerDetail extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->idcustomer->setDbValue($conn->lastInsertId());
-            $rs['idcustomer'] = $this->idcustomer->DbValue;
-
-            // Get insert id if necessary
-            $this->idinvoice->setDbValue($conn->lastInsertId());
-            $rs['idinvoice'] = $this->idinvoice->DbValue;
         }
         return $success;
     }
@@ -1089,25 +1082,7 @@ SORTHTML;
         $this->idinvoice->EditAttrs["class"] = "form-control";
         $this->idinvoice->EditCustomAttributes = "";
         $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-        $curVal = trim(strval($this->idinvoice->CurrentValue));
-        if ($curVal != "") {
-            $this->idinvoice->EditValue = $this->idinvoice->lookupCacheOption($curVal);
-            if ($this->idinvoice->EditValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                    $this->idinvoice->EditValue = $this->idinvoice->displayValue($arwrk);
-                } else {
-                    $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-                }
-            }
-        } else {
-            $this->idinvoice->EditValue = null;
-        }
-        $this->idinvoice->ViewCustomAttributes = "";
+        $this->idinvoice->PlaceHolder = RemoveHtml($this->idinvoice->caption());
 
         // nama_customer
         $this->nama_customer->EditAttrs["class"] = "form-control";

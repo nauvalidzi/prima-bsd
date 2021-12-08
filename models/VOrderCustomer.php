@@ -72,9 +72,9 @@ class VOrderCustomer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idorder
-        $this->idorder = new DbField('v_order_customer', 'v_order_customer', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idorder->IsAutoIncrement = true; // Autoincrement field
+        $this->idorder = new DbField('v_order_customer', 'v_order_customer', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder->IsPrimaryKey = true; // Primary key field
+        $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Sortable = true; // Allow sort
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
@@ -98,9 +98,9 @@ class VOrderCustomer extends DbTable
         $this->Fields['tanggalorder'] = &$this->tanggalorder;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_order_customer', 'v_order_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
+        $this->idcustomer = new DbField('v_order_customer', 'v_order_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
@@ -465,13 +465,6 @@ class VOrderCustomer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->idorder->setDbValue($conn->lastInsertId());
-            $rs['idorder'] = $this->idorder->DbValue;
-
-            // Get insert id if necessary
-            $this->idcustomer->setDbValue($conn->lastInsertId());
-            $rs['idcustomer'] = $this->idcustomer->DbValue;
         }
         return $success;
     }
@@ -1060,7 +1053,7 @@ SORTHTML;
         $this->idorder->EditAttrs["class"] = "form-control";
         $this->idorder->EditCustomAttributes = "";
         $this->idorder->EditValue = $this->idorder->CurrentValue;
-        $this->idorder->ViewCustomAttributes = "";
+        $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
         // kodeorder
         $this->kodeorder->EditAttrs["class"] = "form-control";
@@ -1081,7 +1074,7 @@ SORTHTML;
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->ViewCustomAttributes = "";
+        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
         // kodecustomer
         $this->kodecustomer->EditAttrs["class"] = "form-control";

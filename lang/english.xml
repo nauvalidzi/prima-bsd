@@ -3209,6 +3209,77 @@
     </table>
     <table id="v_npd_customer">
       <phrase id="tblcaption" value="v npd customer" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="idpegawai">
+        <phrase id="fldcaption" value="idpegawai" />
+      </field>
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodeorder">
+        <phrase id="fldcaption" value="kodeorder" />
+      </field>
+      <field id="idkategoriproduk">
+        <phrase id="fldcaption" value="idkategoriproduk" />
+      </field>
+      <field id="idjenisproduk">
+        <phrase id="fldcaption" value="idjenisproduk" />
+      </field>
+      <field id="idproduct_acuan">
+        <phrase id="fldcaption" value="idproduct acuan" />
+      </field>
+      <field id="kualitasproduk">
+        <phrase id="fldcaption" value="kualitasproduk" />
+      </field>
+      <field id="bahan_campaign">
+        <phrase id="fldcaption" value="bahan campaign" />
+      </field>
+      <field id="ukuran_sediaan">
+        <phrase id="fldcaption" value="ukuran sediaan" />
+      </field>
+      <field id="warna">
+        <phrase id="fldcaption" value="warna" />
+      </field>
+      <field id="parfum">
+        <phrase id="fldcaption" value="parfum" />
+      </field>
+      <field id="tambahan">
+        <phrase id="fldcaption" value="tambahan" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="status" />
+      </field>
+      <field id="created_at">
+        <phrase id="fldcaption" value="created at" />
+      </field>
+      <field id="selesai">
+        <phrase id="fldcaption" value="selesai" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="readonly">
+        <phrase id="fldcaption" value="readonly" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="nama_pemesan">
+        <phrase id="fldcaption" value="nama pemesan" />
+      </field>
+      <field id="alamat_pemesan">
+        <phrase id="fldcaption" value="alamat pemesan" />
+      </field>
+      <field id="jabatan_pemesan">
+        <phrase id="fldcaption" value="jabatan pemesan" />
+      </field>
+      <field id="hp_pemesan">
+        <phrase id="fldcaption" value="hp pemesan" />
+      </field>
     </table>
     <table id="v_order_customer">
       <phrase id="tblcaption" value="v order customer" />

@@ -764,6 +764,7 @@ class KabupatenAdd extends Kabupaten
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // idprovinsi
@@ -772,7 +773,7 @@ class KabupatenAdd extends Kabupaten
             if ($curVal != "") {
                 $this->idprovinsi->ViewValue = $this->idprovinsi->lookupCacheOption($curVal);
                 if ($this->idprovinsi->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idprovinsi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -810,24 +811,18 @@ class KabupatenAdd extends Kabupaten
             // id
             $this->id->EditAttrs["class"] = "form-control";
             $this->id->EditCustomAttributes = "";
-            if (!$this->id->Raw) {
-                $this->id->CurrentValue = HtmlDecode($this->id->CurrentValue);
-            }
             $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
             $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
             // idprovinsi
             $this->idprovinsi->EditAttrs["class"] = "form-control";
             $this->idprovinsi->EditCustomAttributes = "";
-            if (!$this->idprovinsi->Raw) {
-                $this->idprovinsi->CurrentValue = HtmlDecode($this->idprovinsi->CurrentValue);
-            }
             $this->idprovinsi->EditValue = HtmlEncode($this->idprovinsi->CurrentValue);
             $curVal = trim(strval($this->idprovinsi->CurrentValue));
             if ($curVal != "") {
                 $this->idprovinsi->EditValue = $this->idprovinsi->lookupCacheOption($curVal);
                 if ($this->idprovinsi->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idprovinsi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -890,10 +885,16 @@ class KabupatenAdd extends Kabupaten
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
+        }
         if ($this->idprovinsi->Required) {
             if (!$this->idprovinsi->IsDetailKey && EmptyValue($this->idprovinsi->FormValue)) {
                 $this->idprovinsi->addErrorMessage(str_replace("%s", $this->idprovinsi->caption(), $this->idprovinsi->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idprovinsi->FormValue)) {
+            $this->idprovinsi->addErrorMessage($this->idprovinsi->getErrorMessage(false));
         }
         if ($this->nama->Required) {
             if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
@@ -926,10 +927,10 @@ class KabupatenAdd extends Kabupaten
         $rsnew = [];
 
         // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, "", false);
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
 
         // idprovinsi
-        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, "", false);
+        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, 0, strval($this->idprovinsi->CurrentValue) == "");
 
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);

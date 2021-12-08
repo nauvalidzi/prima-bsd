@@ -70,16 +70,16 @@ class KpiMarketing extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('kpi_marketing', 'kpi_marketing', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('kpi_marketing', 'kpi_marketing', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idpegawai
-        $this->idpegawai = new DbField('kpi_marketing', 'kpi_marketing', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 20, 20, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idpegawai = new DbField('kpi_marketing', 'kpi_marketing', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idpegawai->Required = true; // Required field
         $this->idpegawai->Sortable = true; // Allow sort
         $this->idpegawai->UsePleaseSelect = true; // Use PleaseSelect by default
@@ -105,7 +105,7 @@ class KpiMarketing extends DbTable
         $this->Fields['bulan'] = &$this->bulan;
 
         // target
-        $this->target = new DbField('kpi_marketing', 'kpi_marketing', 'x_target', 'target', '`target`', '`target`', 3, 30, -1, false, '`target`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->target = new DbField('kpi_marketing', 'kpi_marketing', 'x_target', 'target', '`target`', '`target`', 20, 20, -1, false, '`target`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->target->Required = true; // Required field
         $this->target->Sortable = true; // Allow sort
         $this->target->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -444,9 +444,6 @@ class KpiMarketing extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -969,8 +966,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";

@@ -100,10 +100,10 @@ class Npd extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('npd', 'npd', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('npd', 'npd', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -142,6 +142,7 @@ class Npd extends DbTable
         // nomororder
         $this->nomororder = new DbField('npd', 'npd', 'x_nomororder', 'nomororder', '`nomororder`', '`nomororder`', 200, 50, -1, false, '`nomororder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nomororder->Nullable = false; // NOT NULL field
+        $this->nomororder->Required = true; // Required field
         $this->nomororder->Sortable = true; // Allow sort
         $this->nomororder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nomororder->Param, "CustomMsg");
         $this->Fields['nomororder'] = &$this->nomororder;
@@ -166,7 +167,7 @@ class Npd extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('npd', 'npd', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('npd', 'npd', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -183,9 +184,8 @@ class Npd extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idproduct_acuan
-        $this->idproduct_acuan = new DbField('npd', 'npd', 'x_idproduct_acuan', 'idproduct_acuan', '`idproduct_acuan`', '`idproduct_acuan`', 3, 11, -1, false, '`idproduct_acuan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idproduct_acuan = new DbField('npd', 'npd', 'x_idproduct_acuan', 'idproduct_acuan', '`idproduct_acuan`', '`idproduct_acuan`', 20, 20, -1, false, '`idproduct_acuan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idproduct_acuan->Nullable = false; // NOT NULL field
-        $this->idproduct_acuan->Required = true; // Required field
         $this->idproduct_acuan->Sortable = true; // Allow sort
         $this->idproduct_acuan->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idproduct_acuan->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -415,6 +415,8 @@ class Npd extends DbTable
 
         // kemasancatatan
         $this->kemasancatatan = new DbField('npd', 'npd', 'x_kemasancatatan', 'kemasancatatan', '`kemasancatatan`', '`kemasancatatan`', 201, 65535, -1, false, '`kemasancatatan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->kemasancatatan->Nullable = false; // NOT NULL field
+        $this->kemasancatatan->Required = true; // Required field
         $this->kemasancatatan->Sortable = true; // Allow sort
         $this->kemasancatatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kemasancatatan->Param, "CustomMsg");
         $this->Fields['kemasancatatan'] = &$this->kemasancatatan;
@@ -469,12 +471,16 @@ class Npd extends DbTable
 
         // labelcatatan
         $this->labelcatatan = new DbField('npd', 'npd', 'x_labelcatatan', 'labelcatatan', '`labelcatatan`', '`labelcatatan`', 201, 65535, -1, false, '`labelcatatan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->labelcatatan->Nullable = false; // NOT NULL field
+        $this->labelcatatan->Required = true; // Required field
         $this->labelcatatan->Sortable = true; // Allow sort
         $this->labelcatatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->labelcatatan->Param, "CustomMsg");
         $this->Fields['labelcatatan'] = &$this->labelcatatan;
 
         // statusdokumen
         $this->statusdokumen = new DbField('npd', 'npd', 'x_statusdokumen', 'statusdokumen', '`statusdokumen`', '`statusdokumen`', 200, 50, -1, false, '`statusdokumen`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->statusdokumen->Nullable = false; // NOT NULL field
+        $this->statusdokumen->Required = true; // Required field
         $this->statusdokumen->Sortable = true; // Allow sort
         $this->statusdokumen->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->statusdokumen->Param, "CustomMsg");
         $this->Fields['statusdokumen'] = &$this->statusdokumen;
@@ -902,9 +908,6 @@ class Npd extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -2457,7 +2460,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // tanggal_order
         $this->tanggal_order->EditAttrs["class"] = "form-control";

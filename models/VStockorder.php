@@ -71,9 +71,9 @@ class VStockorder extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idstockorder
-        $this->idstockorder = new DbField('v_stockorder', 'v_stockorder', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 3, 11, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idstockorder->IsAutoIncrement = true; // Autoincrement field
+        $this->idstockorder = new DbField('v_stockorder', 'v_stockorder', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 20, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idstockorder->IsPrimaryKey = true; // Primary key field
+        $this->idstockorder->Nullable = false; // NOT NULL field
         $this->idstockorder->Sortable = true; // Allow sort
         $this->idstockorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idstockorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idstockorder->Param, "CustomMsg");
@@ -457,9 +457,6 @@ class VStockorder extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->idstockorder->setDbValue($conn->lastInsertId());
-            $rs['idstockorder'] = $this->idstockorder->DbValue;
         }
         return $success;
     }
@@ -980,7 +977,7 @@ SORTHTML;
         $this->idstockorder->EditAttrs["class"] = "form-control";
         $this->idstockorder->EditCustomAttributes = "";
         $this->idstockorder->EditValue = $this->idstockorder->CurrentValue;
-        $this->idstockorder->ViewCustomAttributes = "";
+        $this->idstockorder->PlaceHolder = RemoveHtml($this->idstockorder->caption());
 
         // kode_stockorder
         $this->kode_stockorder->EditAttrs["class"] = "form-control";

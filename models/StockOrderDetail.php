@@ -73,16 +73,16 @@ class StockOrderDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('stock_order_detail', 'stock_order_detail', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('stock_order_detail', 'stock_order_detail', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // pid
-        $this->pid = new DbField('stock_order_detail', 'stock_order_detail', 'x_pid', 'pid', '`pid`', '`pid`', 3, 11, -1, false, '`pid`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->pid = new DbField('stock_order_detail', 'stock_order_detail', 'x_pid', 'pid', '`pid`', '`pid`', 20, 20, -1, false, '`pid`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->pid->IsForeignKey = true; // Foreign key field
         $this->pid->Nullable = false; // NOT NULL field
         $this->pid->Required = true; // Required field
@@ -92,7 +92,7 @@ class StockOrderDetail extends DbTable
         $this->Fields['pid'] = &$this->pid;
 
         // idbrand
-        $this->idbrand = new DbField('stock_order_detail', 'stock_order_detail', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 3, 11, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idbrand = new DbField('stock_order_detail', 'stock_order_detail', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
@@ -111,7 +111,7 @@ class StockOrderDetail extends DbTable
         $this->Fields['idbrand'] = &$this->idbrand;
 
         // idproduct
-        $this->idproduct = new DbField('stock_order_detail', 'stock_order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 3, 11, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idproduct = new DbField('stock_order_detail', 'stock_order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 20, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idproduct->Nullable = false; // NOT NULL field
         $this->idproduct->Required = true; // Required field
         $this->idproduct->Sortable = true; // Allow sort
@@ -130,7 +130,7 @@ class StockOrderDetail extends DbTable
         $this->Fields['idproduct'] = &$this->idproduct;
 
         // stok_akhir
-        $this->stok_akhir = new DbField('stock_order_detail', 'stock_order_detail', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 3, 11, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->stok_akhir = new DbField('stock_order_detail', 'stock_order_detail', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 20, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->stok_akhir->Nullable = false; // NOT NULL field
         $this->stok_akhir->Required = true; // Required field
         $this->stok_akhir->Sortable = true; // Allow sort
@@ -541,9 +541,6 @@ class StockOrderDetail extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1126,7 +1123,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // pid
         $this->pid->EditAttrs["class"] = "form-control";

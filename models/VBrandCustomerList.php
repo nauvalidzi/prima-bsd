@@ -439,12 +439,6 @@ class VBrandCustomerList extends VBrandCustomer
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idbrand->Visible = false;
-        }
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idcustomer->Visible = false;
-        }
     }
 
     // Lookup data

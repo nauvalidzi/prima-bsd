@@ -375,9 +375,6 @@ class NpdTermsGrid extends NpdTerms
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -972,6 +969,9 @@ class NpdTermsGrid extends NpdTerms
     public function emptyRow()
     {
         global $CurrentForm;
+        if ($CurrentForm->hasValue("x_id") && $CurrentForm->hasValue("o_id") && $this->id->CurrentValue != $this->id->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_idnpd") && $CurrentForm->hasValue("o_idnpd") && $this->idnpd->CurrentValue != $this->idnpd->OldValue) {
             return false;
         }
@@ -1594,8 +1594,15 @@ class NpdTermsGrid extends NpdTerms
 
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
-            $this->id->setFormValue($val);
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_id")) {
+            $this->id->setOldValue($CurrentForm->getValue("o_id"));
         }
 
         // Check field name 'idnpd' first before field var 'x_idnpd'
@@ -2164,9 +2171,7 @@ class NpdTermsGrid extends NpdTerms
     public function restoreFormValues()
     {
         global $CurrentForm;
-        if (!$this->isGridAdd() && !$this->isAdd()) {
-            $this->id->CurrentValue = $this->id->FormValue;
-        }
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->idnpd->CurrentValue = $this->idnpd->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
         $this->tglsubmit->CurrentValue = $this->tglsubmit->FormValue;
@@ -2930,6 +2935,10 @@ class NpdTermsGrid extends NpdTerms
             $this->created_at->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -3428,8 +3437,8 @@ class NpdTermsGrid extends NpdTerms
             // id
             $this->id->EditAttrs["class"] = "form-control";
             $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -3949,6 +3958,9 @@ class NpdTermsGrid extends NpdTerms
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
+        }
         if ($this->idnpd->Required) {
             if (!$this->idnpd->IsDetailKey && EmptyValue($this->idnpd->FormValue)) {
                 $this->idnpd->addErrorMessage(str_replace("%s", $this->idnpd->caption(), $this->idnpd->RequiredErrorMessage));
@@ -4348,6 +4360,9 @@ class NpdTermsGrid extends NpdTerms
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // id
+            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
+
             // idnpd
             if ($this->idnpd->getSessionValue() != "") {
                 $this->idnpd->ReadOnly = true;
@@ -4486,6 +4501,19 @@ class NpdTermsGrid extends NpdTerms
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
+
+            // Check for duplicate key when key changed
+            if ($updateRow) {
+                $newKeyFilter = $this->getRecordFilter($rsnew);
+                if ($newKeyFilter != $oldKeyFilter) {
+                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
+                    if ($rsChk !== false) {
+                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
+                        $this->setFailureMessage($keyErrMsg);
+                        $updateRow = false;
+                    }
+                }
+            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -4544,6 +4572,9 @@ class NpdTermsGrid extends NpdTerms
         if ($rsold) {
         }
         $rsnew = [];
+
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
 
         // idnpd
         $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
@@ -4680,6 +4711,23 @@ class NpdTermsGrid extends NpdTerms
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

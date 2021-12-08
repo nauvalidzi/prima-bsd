@@ -443,12 +443,6 @@ class DJatuhtempoList extends DJatuhtempo
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
             $this->idpegawai->Visible = false;
         }
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idcustomer->Visible = false;
-        }
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idinvoice->Visible = false;
-        }
     }
 
     // Lookup data

@@ -369,9 +369,6 @@ class NpdConfirmAdd extends NpdConfirm
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -464,7 +461,7 @@ class NpdConfirmAdd extends NpdConfirm
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->idnpd->setVisibility();
         $this->tglkonfirmasi->setVisibility();
         $this->idnpd_sample->setVisibility();
@@ -663,6 +660,16 @@ class NpdConfirmAdd extends NpdConfirm
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+
         // Check field name 'idnpd' first before field var 'x_idnpd'
         $val = $CurrentForm->hasValue("idnpd") ? $CurrentForm->getValue("idnpd") : $CurrentForm->getValue("x_idnpd");
         if (!$this->idnpd->IsDetailKey) {
@@ -753,9 +760,6 @@ class NpdConfirmAdd extends NpdConfirm
                 $this->created_by->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         $this->getUploadFiles(); // Get upload files
     }
 
@@ -763,6 +767,7 @@ class NpdConfirmAdd extends NpdConfirm
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->idnpd->CurrentValue = $this->idnpd->FormValue;
         $this->tglkonfirmasi->CurrentValue = $this->tglkonfirmasi->FormValue;
         $this->tglkonfirmasi->CurrentValue = UnFormatDateTime($this->tglkonfirmasi->CurrentValue, 0);
@@ -998,6 +1003,11 @@ class NpdConfirmAdd extends NpdConfirm
             }
             $this->readonly->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
@@ -1049,6 +1059,12 @@ class NpdConfirmAdd extends NpdConfirm
             $this->created_by->HrefValue = "";
             $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
             $this->idnpd->EditCustomAttributes = "";
@@ -1164,6 +1180,10 @@ class NpdConfirmAdd extends NpdConfirm
 
             // Add refer script
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
@@ -1223,6 +1243,14 @@ class NpdConfirmAdd extends NpdConfirm
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idnpd->Required) {
             if (!$this->idnpd->IsDetailKey && EmptyValue($this->idnpd->FormValue)) {
@@ -1323,14 +1351,17 @@ class NpdConfirmAdd extends NpdConfirm
         }
         $rsnew = [];
 
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
+
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // tglkonfirmasi
         $this->tglkonfirmasi->setDbValueDef($rsnew, UnFormatDateTime($this->tglkonfirmasi->CurrentValue, 0), CurrentDate(), false);
 
         // idnpd_sample
-        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, false);
+        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, strval($this->idnpd_sample->CurrentValue) == "");
 
         // foto
         if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
@@ -1403,6 +1434,23 @@ class NpdConfirmAdd extends NpdConfirm
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

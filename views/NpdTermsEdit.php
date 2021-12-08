@@ -20,7 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd_terms)
         ew.vars.tables.npd_terms = currentTable;
     fnpd_termsedit.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null, ew.Validators.integer], fields.idnpd.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["tglsubmit", [fields.tglsubmit.visible && fields.tglsubmit.required ? ew.Validators.required(fields.tglsubmit.caption) : null, ew.Validators.datetime(0)], fields.tglsubmit.isInvalid],
@@ -160,13 +160,12 @@ $Page->showMessage();
 <div class="ew-edit-div"><!-- page* -->
 <?php if ($Page->id->Visible) { // id ?>
     <div id="r_id" class="form-group row">
-        <label id="elh_npd_terms_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_terms_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
-<span id="el_npd_terms_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd_terms" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<input type="<?= $Page->id->getInputTextType() ?>" data-table="npd_terms" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
+<?= $Page->id->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
+<input type="hidden" data-table="npd_terms" data-field="x_id" data-hidden="1" name="o_id" id="o_id" value="<?= HtmlEncode($Page->id->OldValue ?? $Page->id->CurrentValue) ?>">
 </div></div>
     </div>
 <?php } ?>
@@ -227,8 +226,8 @@ loadjs.ready(["fnpd_termsedit", "datetimepicker"], function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sifat_order->cellAttributes() ?>>
 <span id="el_npd_terms_sifat_order">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x_sifat_order[]" id="x_sifat_order_431473" value="1"<?= ConvertToBool($Page->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Page->sifat_order->editAttributes() ?> aria-describedby="x_sifat_order_help">
-    <label class="custom-control-label" for="x_sifat_order_431473"></label>
+    <input type="checkbox" class="custom-control-input<?= $Page->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x_sifat_order[]" id="x_sifat_order_500291" value="1"<?= ConvertToBool($Page->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Page->sifat_order->editAttributes() ?> aria-describedby="x_sifat_order_help">
+    <label class="custom-control-label" for="x_sifat_order_500291"></label>
 </div>
 <?= $Page->sifat_order->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->sifat_order->getErrorMessage() ?></div>

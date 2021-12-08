@@ -369,9 +369,6 @@ class InvoiceAdd extends Invoice
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -464,7 +461,7 @@ class InvoiceAdd extends Invoice
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->kode->setVisibility();
         $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
@@ -682,6 +679,16 @@ class InvoiceAdd extends Invoice
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
         if (!$this->kode->IsDetailKey) {
@@ -802,15 +809,13 @@ class InvoiceAdd extends Invoice
                 $this->readonly->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tglinvoice->CurrentValue = $this->tglinvoice->FormValue;
         $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
@@ -1144,6 +1149,11 @@ class InvoiceAdd extends Invoice
             $this->readonly->ViewValue = $this->readonly->CurrentValue;
             $this->readonly->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1212,6 +1222,18 @@ class InvoiceAdd extends Invoice
             $this->readonly->HrefValue = "";
             $this->readonly->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            if ($this->id->getSessionValue() != "") {
+                $this->id->CurrentValue = GetForeignKeyValue($this->id->getSessionValue());
+                $this->id->ViewValue = $this->id->CurrentValue;
+                $this->id->ViewCustomAttributes = "";
+            } else {
+                $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+                $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+            }
+
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
             $this->kode->EditCustomAttributes = "readonly";
@@ -1403,6 +1425,10 @@ class InvoiceAdd extends Invoice
 
             // Add refer script
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1477,6 +1503,14 @@ class InvoiceAdd extends Invoice
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->kode->Required) {
             if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
@@ -1647,6 +1681,9 @@ class InvoiceAdd extends Invoice
         }
         $rsnew = [];
 
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
+
         // kode
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
 
@@ -1654,10 +1691,10 @@ class InvoiceAdd extends Invoice
         $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), false);
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
 
         // idorder
-        $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, false);
+        $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, strval($this->idorder->CurrentValue) == "");
 
         // totalnonpajak
         $this->totalnonpajak->setDbValueDef($rsnew, $this->totalnonpajak->CurrentValue, 0, strval($this->totalnonpajak->CurrentValue) == "");
@@ -1669,7 +1706,7 @@ class InvoiceAdd extends Invoice
         $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // idtermpayment
-        $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, strval($this->idtermpayment->CurrentValue) == "");
+        $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, false);
 
         // idtipepayment
         $this->idtipepayment->setDbValueDef($rsnew, $this->idtipepayment->CurrentValue, null, false);
@@ -1683,13 +1720,25 @@ class InvoiceAdd extends Invoice
         // readonly
         $this->readonly->setDbValueDef($rsnew, $this->readonly->CurrentValue, 0, strval($this->readonly->CurrentValue) == "");
 
-        // id
-        if ($this->id->getSessionValue() != "") {
-            $rsnew['id'] = $this->id->getSessionValue();
-        }
-
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

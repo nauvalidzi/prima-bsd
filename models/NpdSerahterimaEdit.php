@@ -369,9 +369,6 @@ class NpdSerahterimaEdit extends NpdSerahterima
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -658,7 +655,14 @@ class NpdSerahterimaEdit extends NpdSerahterima
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_id")) {
+            $this->id->setOldValue($CurrentForm->getValue("o_id"));
         }
 
         // Check field name 'idpegawai' first before field var 'x_idpegawai'
@@ -952,8 +956,8 @@ class NpdSerahterimaEdit extends NpdSerahterima
             // id
             $this->id->EditAttrs["class"] = "form-control";
             $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -1057,6 +1061,9 @@ class NpdSerahterimaEdit extends NpdSerahterima
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
+        }
         if ($this->idpegawai->Required) {
             if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
                 $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
@@ -1139,6 +1146,9 @@ class NpdSerahterimaEdit extends NpdSerahterima
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // id
+            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
+
             // idpegawai
             $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, $this->idpegawai->ReadOnly);
 
@@ -1166,6 +1176,19 @@ class NpdSerahterimaEdit extends NpdSerahterima
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
+
+            // Check for duplicate key when key changed
+            if ($updateRow) {
+                $newKeyFilter = $this->getRecordFilter($rsnew);
+                if ($newKeyFilter != $oldKeyFilter) {
+                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
+                    if ($rsChk !== false) {
+                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
+                        $this->setFailureMessage($keyErrMsg);
+                        $updateRow = false;
+                    }
+                }
+            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

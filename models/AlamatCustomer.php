@@ -75,19 +75,18 @@ class AlamatCustomer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('alamat_customer', 'alamat_customer', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('alamat_customer', 'alamat_customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idcustomer
-        $this->idcustomer = new DbField('alamat_customer', 'alamat_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('alamat_customer', 'alamat_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
-        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -134,7 +133,7 @@ class AlamatCustomer extends DbTable
         $this->Fields['alamat'] = &$this->alamat;
 
         // idprovinsi
-        $this->idprovinsi = new DbField('alamat_customer', 'alamat_customer', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 3, 11, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idprovinsi = new DbField('alamat_customer', 'alamat_customer', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 20, 20, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idprovinsi->Nullable = false; // NOT NULL field
         $this->idprovinsi->Sortable = true; // Allow sort
         $this->idprovinsi->UsePleaseSelect = true; // Use PleaseSelect by default
@@ -152,7 +151,7 @@ class AlamatCustomer extends DbTable
         $this->Fields['idprovinsi'] = &$this->idprovinsi;
 
         // idkabupaten
-        $this->idkabupaten = new DbField('alamat_customer', 'alamat_customer', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 3, 11, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkabupaten = new DbField('alamat_customer', 'alamat_customer', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 20, 20, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkabupaten->Nullable = false; // NOT NULL field
         $this->idkabupaten->Sortable = true; // Allow sort
         $this->idkabupaten->UsePleaseSelect = true; // Use PleaseSelect by default
@@ -170,7 +169,7 @@ class AlamatCustomer extends DbTable
         $this->Fields['idkabupaten'] = &$this->idkabupaten;
 
         // idkecamatan
-        $this->idkecamatan = new DbField('alamat_customer', 'alamat_customer', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 3, 11, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkecamatan = new DbField('alamat_customer', 'alamat_customer', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 20, 20, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkecamatan->Nullable = false; // NOT NULL field
         $this->idkecamatan->Sortable = true; // Allow sort
         $this->idkecamatan->UsePleaseSelect = true; // Use PleaseSelect by default
@@ -188,8 +187,10 @@ class AlamatCustomer extends DbTable
         $this->Fields['idkecamatan'] = &$this->idkecamatan;
 
         // idkelurahan
-        $this->idkelurahan = new DbField('alamat_customer', 'alamat_customer', 'x_idkelurahan', 'idkelurahan', '`idkelurahan`', '`idkelurahan`', 3, 11, -1, false, '`idkelurahan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkelurahan = new DbField('alamat_customer', 'alamat_customer', 'x_idkelurahan', 'idkelurahan', '`idkelurahan`', '`idkelurahan`', 20, 20, -1, false, '`idkelurahan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkelurahan->Sortable = true; // Allow sort
+        $this->idkelurahan->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idkelurahan->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idkelurahan->Lookup = new Lookup('idkelurahan', 'kelurahan', false, 'id', ["nama","","",""], ["x_idkecamatan"], [], ["idkecamatan"], ["x_idkecamatan"], [], [], '', '');
@@ -579,9 +580,6 @@ class AlamatCustomer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1088,7 +1086,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idprovinsi->ViewValue = $this->idprovinsi->lookupCacheOption($curVal);
             if ($this->idprovinsi->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idprovinsi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1109,7 +1107,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idkabupaten->ViewValue = $this->idkabupaten->lookupCacheOption($curVal);
             if ($this->idkabupaten->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idkabupaten->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1130,7 +1128,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idkecamatan->ViewValue = $this->idkecamatan->lookupCacheOption($curVal);
             if ($this->idkecamatan->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idkecamatan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1147,12 +1145,11 @@ SORTHTML;
         $this->idkecamatan->ViewCustomAttributes = "";
 
         // idkelurahan
-        $this->idkelurahan->ViewValue = $this->idkelurahan->CurrentValue;
         $curVal = trim(strval($this->idkelurahan->CurrentValue));
         if ($curVal != "") {
             $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
             if ($this->idkelurahan->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idkelurahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1237,7 +1234,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
@@ -1318,7 +1315,6 @@ SORTHTML;
         // idkelurahan
         $this->idkelurahan->EditAttrs["class"] = "form-control";
         $this->idkelurahan->EditCustomAttributes = "";
-        $this->idkelurahan->EditValue = $this->idkelurahan->CurrentValue;
         $this->idkelurahan->PlaceHolder = RemoveHtml($this->idkelurahan->caption());
 
         // Call Row Rendered event

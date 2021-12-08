@@ -72,9 +72,9 @@ class VOrderdetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('v_orderdetail', 'v_orderdetail', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('v_orderdetail', 'v_orderdetail', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -89,9 +89,8 @@ class VOrderdetail extends DbTable
         $this->Fields['nama'] = &$this->nama;
 
         // idorder
-        $this->idorder = new DbField('v_orderdetail', 'v_orderdetail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder = new DbField('v_orderdetail', 'v_orderdetail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder->Nullable = false; // NOT NULL field
-        $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
@@ -107,7 +106,7 @@ class VOrderdetail extends DbTable
         $this->Fields['harga'] = &$this->harga;
 
         // totalorder
-        $this->totalorder = new DbField('v_orderdetail', 'v_orderdetail', 'x_totalorder', 'totalorder', '`totalorder`', '`totalorder`', 20, 21, -1, false, '`totalorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totalorder = new DbField('v_orderdetail', 'v_orderdetail', 'x_totalorder', 'totalorder', '`totalorder`', '`totalorder`', 20, 12, -1, false, '`totalorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totalorder->Nullable = false; // NOT NULL field
         $this->totalorder->Sortable = true; // Allow sort
         $this->totalorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -115,9 +114,8 @@ class VOrderdetail extends DbTable
         $this->Fields['totalorder'] = &$this->totalorder;
 
         // sisa
-        $this->sisa = new DbField('v_orderdetail', 'v_orderdetail', 'x_sisa', 'sisa', '`sisa`', '`sisa`', 20, 20, -1, false, '`sisa`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisa = new DbField('v_orderdetail', 'v_orderdetail', 'x_sisa', 'sisa', '`sisa`', '`sisa`', 3, 11, -1, false, '`sisa`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisa->Nullable = false; // NOT NULL field
-        $this->sisa->Required = true; // Required field
         $this->sisa->Sortable = true; // Allow sort
         $this->sisa->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisa->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisa->Param, "CustomMsg");
@@ -466,9 +464,6 @@ class VOrderdetail extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1003,7 +998,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // nama
         $this->nama->EditAttrs["class"] = "form-control";

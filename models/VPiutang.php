@@ -112,7 +112,7 @@ class VPiutang extends DbTable
         $this->Fields['pegawai'] = &$this->pegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_piutang', 'v_piutang', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_piutang', 'v_piutang', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = false; // Allow sort

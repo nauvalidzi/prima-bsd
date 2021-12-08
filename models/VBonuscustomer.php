@@ -111,7 +111,7 @@ class VBonuscustomer extends DbTable
         $this->Fields['nama_pegawai'] = &$this->nama_pegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = false; // Allow sort

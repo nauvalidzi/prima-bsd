@@ -369,9 +369,6 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -464,7 +461,7 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->iddeliveryorder->Visible = false;
         $this->idorder->setVisibility();
         $this->idorder_detail->setVisibility();
@@ -652,6 +649,16 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+
         // Check field name 'idorder' first before field var 'x_idorder'
         $val = $CurrentForm->hasValue("idorder") ? $CurrentForm->getValue("idorder") : $CurrentForm->getValue("x_idorder");
         if (!$this->idorder->IsDetailKey) {
@@ -711,15 +718,13 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
                 $this->created_by->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->idorder->CurrentValue = $this->idorder->FormValue;
         $this->idorder_detail->CurrentValue = $this->idorder_detail->FormValue;
         $this->totalorder->CurrentValue = $this->totalorder->FormValue;
@@ -946,6 +951,11 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // idorder
             $this->idorder->LinkCustomAttributes = "";
             $this->idorder->HrefValue = "";
@@ -976,6 +986,12 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
             $this->created_by->HrefValue = "";
             $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
             // idorder
             $this->idorder->EditAttrs["class"] = "form-control";
             $this->idorder->EditCustomAttributes = "";
@@ -1059,6 +1075,10 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
 
             // Add refer script
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+
             // idorder
             $this->idorder->LinkCustomAttributes = "";
             $this->idorder->HrefValue = "";
@@ -1101,6 +1121,14 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idorder->Required) {
             if (!$this->idorder->IsDetailKey && EmptyValue($this->idorder->FormValue)) {
@@ -1204,11 +1232,14 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
         }
         $rsnew = [];
 
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
+
         // idorder
-        $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, false);
+        $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, strval($this->idorder->CurrentValue) == "");
 
         // idorder_detail
-        $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, false);
+        $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, strval($this->idorder_detail->CurrentValue) == "");
 
         // totalorder
         $this->totalorder->setDbValueDef($rsnew, $this->totalorder->CurrentValue, 0, false);
@@ -1229,6 +1260,23 @@ class DeliveryorderDetailAdd extends DeliveryorderDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

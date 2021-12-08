@@ -85,9 +85,9 @@ class Crosstab1 extends CrosstabTable
         $this->Fields['namapegawai'] = &$this->namapegawai;
 
         // idcustomer
-        $this->idcustomer = new ReportField('Crosstab1', 'Crosstab1', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
+        $this->idcustomer = new ReportField('Crosstab1', 'Crosstab1', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
+        $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
@@ -102,9 +102,9 @@ class Crosstab1 extends CrosstabTable
         $this->Fields['namacustomer'] = &$this->namacustomer;
 
         // idinvoice
-        $this->idinvoice = new ReportField('Crosstab1', 'Crosstab1', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 3, 11, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idinvoice->IsAutoIncrement = true; // Autoincrement field
+        $this->idinvoice = new ReportField('Crosstab1', 'Crosstab1', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idinvoice->IsPrimaryKey = true; // Primary key field
+        $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Sortable = true; // Allow sort
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idinvoice->Param, "CustomMsg");

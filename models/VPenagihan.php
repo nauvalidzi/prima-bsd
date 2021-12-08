@@ -93,7 +93,7 @@ class VPenagihan extends DbTable
         $this->Fields['nama_customer'] = &$this->nama_customer;
 
         // nilai_po
-        $this->nilai_po = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 131, 41, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nilai_po = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 131, 32, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nilai_po->Sortable = true; // Allow sort
         $this->nilai_po->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->nilai_po->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -146,7 +146,7 @@ class VPenagihan extends DbTable
         $this->Fields['umur_faktur'] = &$this->umur_faktur;
 
         // idorder
-        $this->idorder = new DbField('v_penagihan', 'v_penagihan', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder = new DbField('v_penagihan', 'v_penagihan', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Sortable = true; // Allow sort
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

@@ -375,9 +375,6 @@ class SuratjalanDetailGrid extends SuratjalanDetail
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -1399,7 +1396,7 @@ class SuratjalanDetailGrid extends SuratjalanDetail
 
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
+        if (!$this->id->IsDetailKey) {
             $this->id->setFormValue($val);
         }
     }
@@ -1408,9 +1405,7 @@ class SuratjalanDetailGrid extends SuratjalanDetail
     public function restoreFormValues()
     {
         global $CurrentForm;
-        if (!$this->isGridAdd() && !$this->isAdd()) {
-            $this->id->CurrentValue = $this->id->FormValue;
-        }
+                        $this->id->CurrentValue = $this->id->FormValue;
         $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
@@ -1849,6 +1844,19 @@ class SuratjalanDetailGrid extends SuratjalanDetail
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
+
+            // Check for duplicate key when key changed
+            if ($updateRow) {
+                $newKeyFilter = $this->getRecordFilter($rsnew);
+                if ($newKeyFilter != $oldKeyFilter) {
+                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
+                    if ($rsChk !== false) {
+                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
+                        $this->setFailureMessage($keyErrMsg);
+                        $updateRow = false;
+                    }
+                }
+            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -1947,7 +1955,7 @@ class SuratjalanDetailGrid extends SuratjalanDetail
         $rsnew = [];
 
         // idinvoice
-        $this->idinvoice->setDbValueDef($rsnew, $this->idinvoice->CurrentValue, 0, false);
+        $this->idinvoice->setDbValueDef($rsnew, $this->idinvoice->CurrentValue, 0, strval($this->idinvoice->CurrentValue) == "");
 
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
@@ -1964,6 +1972,23 @@ class SuratjalanDetailGrid extends SuratjalanDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

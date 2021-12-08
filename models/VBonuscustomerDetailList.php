@@ -438,12 +438,6 @@ class VBonuscustomerDetailList extends VBonuscustomerDetail
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAddOrEdit()) {
-            $this->idcustomer->Visible = false;
-        }
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idinvoice->Visible = false;
-        }
     }
 
     // Lookup data

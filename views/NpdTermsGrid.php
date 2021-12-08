@@ -22,7 +22,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd_terms)
         ew.vars.tables.npd_terms = currentTable;
     fnpd_termsgrid.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null, ew.Validators.integer], fields.idnpd.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["tglsubmit", [fields.tglsubmit.visible && fields.tglsubmit.required ? ew.Validators.required(fields.tglsubmit.caption) : null, ew.Validators.datetime(0)], fields.tglsubmit.isInvalid],
@@ -119,6 +119,8 @@ loadjs.ready("head", function () {
     // Check empty row
     fnpd_termsgrid.emptyRow = function (rowIndex) {
         var fobj = this.getForm();
+        if (ew.valueChanged(fobj, rowIndex, "id", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "idnpd", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "status", false))
@@ -491,15 +493,16 @@ $Grid->ListOptions->render("body", "left", $Grid->RowCount);
     <?php if ($Grid->id->Visible) { // id ?>
         <td data-name="id" <?= $Grid->id->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_terms_id" class="form-group"></span>
+<span id="el<?= $Grid->RowCount ?>_npd_terms_id" class="form-group">
+<input type="<?= $Grid->id->getInputTextType() ?>" data-table="npd_terms" data-field="x_id" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" placeholder="<?= HtmlEncode($Grid->id->getPlaceHolder()) ?>" value="<?= $Grid->id->EditValue ?>"<?= $Grid->id->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->id->getErrorMessage() ?></div>
+</span>
 <input type="hidden" data-table="npd_terms" data-field="x_id" data-hidden="1" name="o<?= $Grid->RowIndex ?>_id" id="o<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_terms_id" class="form-group">
-<span<?= $Grid->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->id->getDisplayValue($Grid->id->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd_terms" data-field="x_id" data-hidden="1" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->CurrentValue) ?>">
+<input type="<?= $Grid->id->getInputTextType() ?>" data-table="npd_terms" data-field="x_id" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" placeholder="<?= HtmlEncode($Grid->id->getPlaceHolder()) ?>" value="<?= $Grid->id->EditValue ?>"<?= $Grid->id->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->id->getErrorMessage() ?></div>
+<input type="hidden" data-table="npd_terms" data-field="x_id" data-hidden="1" name="o<?= $Grid->RowIndex ?>_id" id="o<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->OldValue ?? $Grid->id->CurrentValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_terms_id">
@@ -631,8 +634,8 @@ loadjs.ready(["fnpd_termsgrid", "datetimepicker"], function() {
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_terms_sifat_order" class="form-group">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_727456" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
-    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_727456"></label>
+    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_444031" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
+    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_444031"></label>
 </div>
 <div class="invalid-feedback"><?= $Grid->sifat_order->getErrorMessage() ?></div>
 </span>
@@ -641,8 +644,8 @@ loadjs.ready(["fnpd_termsgrid", "datetimepicker"], function() {
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_terms_sifat_order" class="form-group">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_885258" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
-    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_885258"></label>
+    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_427674" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
+    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_427674"></label>
 </div>
 <div class="invalid-feedback"><?= $Grid->sifat_order->getErrorMessage() ?></div>
 </span>
@@ -1776,7 +1779,10 @@ $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
     <?php if ($Grid->id->Visible) { // id ?>
         <td data-name="id">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_npd_terms_id" class="form-group npd_terms_id"></span>
+<span id="el$rowindex$_npd_terms_id" class="form-group npd_terms_id">
+<input type="<?= $Grid->id->getInputTextType() ?>" data-table="npd_terms" data-field="x_id" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" placeholder="<?= HtmlEncode($Grid->id->getPlaceHolder()) ?>" value="<?= $Grid->id->EditValue ?>"<?= $Grid->id->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->id->getErrorMessage() ?></div>
+</span>
 <?php } else { ?>
 <span id="el$rowindex$_npd_terms_id" class="form-group npd_terms_id">
 <span<?= $Grid->id->viewAttributes() ?>>
@@ -1858,8 +1864,8 @@ loadjs.ready(["fnpd_termsgrid", "datetimepicker"], function() {
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_npd_terms_sifat_order" class="form-group npd_terms_sifat_order">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_103297" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
-    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_103297"></label>
+    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_465410" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
+    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_465410"></label>
 </div>
 <div class="invalid-feedback"><?= $Grid->sifat_order->getErrorMessage() ?></div>
 </span>

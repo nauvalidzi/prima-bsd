@@ -772,6 +772,7 @@ class ProvinsiEdit extends Provinsi
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // name
@@ -791,9 +792,6 @@ class ProvinsiEdit extends Provinsi
             // id
             $this->id->EditAttrs["class"] = "form-control";
             $this->id->EditCustomAttributes = "";
-            if (!$this->id->Raw) {
-                $this->id->CurrentValue = HtmlDecode($this->id->CurrentValue);
-            }
             $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
             $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
@@ -840,6 +838,9 @@ class ProvinsiEdit extends Provinsi
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
+        }
         if ($this->name->Required) {
             if (!$this->name->IsDetailKey && EmptyValue($this->name->FormValue)) {
                 $this->name->addErrorMessage(str_replace("%s", $this->name->caption(), $this->name->RequiredErrorMessage));
@@ -878,7 +879,7 @@ class ProvinsiEdit extends Provinsi
             $rsnew = [];
 
             // id
-            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, "", $this->id->ReadOnly);
+            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
 
             // name
             $this->name->setDbValueDef($rsnew, $this->name->CurrentValue, "", $this->name->ReadOnly);

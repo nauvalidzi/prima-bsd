@@ -438,9 +438,6 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data

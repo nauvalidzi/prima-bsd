@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.deliveryorder_detail)
         ew.vars.tables.deliveryorder_detail = currentTable;
     fdeliveryorder_detailadd.addFields([
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
         ["idorder_detail", [fields.idorder_detail.visible && fields.idorder_detail.required ? ew.Validators.required(fields.idorder_detail.caption) : null], fields.idorder_detail.isInvalid],
         ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null, ew.Validators.integer], fields.totalorder.isInvalid],
@@ -120,6 +121,18 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->iddeliveryorder->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
+<?php if ($Page->id->Visible) { // id ?>
+    <div id="r_id" class="form-group row">
+        <label id="elh_deliveryorder_detail_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
+<span id="el_deliveryorder_detail_id">
+<input type="<?= $Page->id->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_id" name="x_id" id="x_id" size="30" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
+<?= $Page->id->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->idorder->Visible) { // idorder ?>
     <div id="r_idorder" class="form-group row">
         <label id="elh_deliveryorder_detail_idorder" for="x_idorder" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idorder->caption() ?><?= $Page->idorder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

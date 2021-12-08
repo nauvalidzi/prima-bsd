@@ -88,9 +88,9 @@ class Penagihan extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('penagihan', 'penagihan', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('penagihan', 'penagihan', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -132,7 +132,7 @@ class Penagihan extends DbTable
         $this->Fields['nomor_handphone'] = &$this->nomor_handphone;
 
         // nilai_po
-        $this->nilai_po = new DbField('penagihan', 'penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 3, 15, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nilai_po = new DbField('penagihan', 'penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 20, 20, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nilai_po->Sortable = true; // Allow sort
         $this->nilai_po->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->nilai_po->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nilai_po->Param, "CustomMsg");
@@ -146,14 +146,14 @@ class Penagihan extends DbTable
         $this->Fields['tgl_faktur'] = &$this->tgl_faktur;
 
         // nilai_faktur
-        $this->nilai_faktur = new DbField('penagihan', 'penagihan', 'x_nilai_faktur', 'nilai_faktur', '`nilai_faktur`', '`nilai_faktur`', 3, 15, -1, false, '`nilai_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nilai_faktur = new DbField('penagihan', 'penagihan', 'x_nilai_faktur', 'nilai_faktur', '`nilai_faktur`', '`nilai_faktur`', 20, 20, -1, false, '`nilai_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nilai_faktur->Sortable = true; // Allow sort
         $this->nilai_faktur->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->nilai_faktur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nilai_faktur->Param, "CustomMsg");
         $this->Fields['nilai_faktur'] = &$this->nilai_faktur;
 
         // piutang
-        $this->piutang = new DbField('penagihan', 'penagihan', 'x_piutang', 'piutang', '`piutang`', '`piutang`', 3, 15, -1, false, '`piutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->piutang = new DbField('penagihan', 'penagihan', 'x_piutang', 'piutang', '`piutang`', '`piutang`', 20, 20, -1, false, '`piutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->piutang->Sortable = true; // Allow sort
         $this->piutang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->piutang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->piutang->Param, "CustomMsg");
@@ -581,9 +581,6 @@ class Penagihan extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1335,7 +1332,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // messages
         $this->messages->EditAttrs["class"] = "form-control";

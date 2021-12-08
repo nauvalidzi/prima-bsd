@@ -68,18 +68,17 @@ class Kecamatan extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('kecamatan', 'kecamatan', 'x_id', 'id', '`id`', '`id`', 200, 7, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('kecamatan', 'kecamatan', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Nullable = false; // NOT NULL field
-        $this->id->Required = true; // Required field
         $this->id->Sortable = true; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idkabupaten
-        $this->idkabupaten = new DbField('kecamatan', 'kecamatan', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 200, 4, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkabupaten = new DbField('kecamatan', 'kecamatan', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 20, 20, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idkabupaten->Nullable = false; // NOT NULL field
-        $this->idkabupaten->Required = true; // Required field
         $this->idkabupaten->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -89,6 +88,7 @@ class Kecamatan extends DbTable
                 $this->idkabupaten->Lookup = new Lookup('idkabupaten', 'kabupaten', false, 'id', ["nama","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
+        $this->idkabupaten->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkabupaten->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkabupaten->Param, "CustomMsg");
         $this->Fields['idkabupaten'] = &$this->idkabupaten;
 
@@ -523,7 +523,7 @@ class Kecamatan extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = '@id@'";
+        return "`id` = @id@";
     }
 
     // Get Key
@@ -561,6 +561,9 @@ class Kecamatan extends DbTable
             $val = array_key_exists('id', $row) ? $row['id'] : null;
         } else {
             $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
         }
         if ($val === null) {
             return "0=1"; // Invalid key
@@ -694,7 +697,7 @@ class Kecamatan extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "id:" . JsonEncode($this->id->CurrentValue, "string");
+        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -782,6 +785,9 @@ SORTHTML;
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
+                if (!is_numeric($key)) {
+                    continue;
+                }
                 $ar[] = $key;
             }
         }
@@ -849,6 +855,7 @@ SORTHTML;
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
         // idkabupaten
@@ -857,7 +864,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idkabupaten->ViewValue = $this->idkabupaten->lookupCacheOption($curVal);
             if ($this->idkabupaten->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idkabupaten->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -910,18 +917,12 @@ SORTHTML;
         // id
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
-        if (!$this->id->Raw) {
-            $this->id->CurrentValue = HtmlDecode($this->id->CurrentValue);
-        }
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // idkabupaten
         $this->idkabupaten->EditAttrs["class"] = "form-control";
         $this->idkabupaten->EditCustomAttributes = "";
-        if (!$this->idkabupaten->Raw) {
-            $this->idkabupaten->CurrentValue = HtmlDecode($this->idkabupaten->CurrentValue);
-        }
         $this->idkabupaten->EditValue = $this->idkabupaten->CurrentValue;
         $this->idkabupaten->PlaceHolder = RemoveHtml($this->idkabupaten->caption());
 

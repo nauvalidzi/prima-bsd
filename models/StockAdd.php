@@ -369,9 +369,6 @@ class StockAdd extends Stock
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -464,7 +461,7 @@ class StockAdd extends Stock
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->idproduct->setVisibility();
         $this->idorder_detail->setVisibility();
         $this->jumlah->setVisibility();
@@ -632,6 +629,16 @@ class StockAdd extends Stock
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+
         // Check field name 'idproduct' first before field var 'x_idproduct'
         $val = $CurrentForm->hasValue("idproduct") ? $CurrentForm->getValue("idproduct") : $CurrentForm->getValue("x_idproduct");
         if (!$this->idproduct->IsDetailKey) {
@@ -671,15 +678,13 @@ class StockAdd extends Stock
                 $this->aktif->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->idproduct->CurrentValue = $this->idproduct->FormValue;
         $this->idorder_detail->CurrentValue = $this->idorder_detail->FormValue;
         $this->jumlah->CurrentValue = $this->jumlah->FormValue;
@@ -818,6 +823,11 @@ class StockAdd extends Stock
             }
             $this->aktif->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
             $this->idproduct->HrefValue = "";
@@ -838,6 +848,12 @@ class StockAdd extends Stock
             $this->aktif->HrefValue = "";
             $this->aktif->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
             // idproduct
             $this->idproduct->EditAttrs["class"] = "form-control";
             $this->idproduct->EditCustomAttributes = "";
@@ -862,6 +878,10 @@ class StockAdd extends Stock
             $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
 
             // Add refer script
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
 
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";
@@ -897,6 +917,14 @@ class StockAdd extends Stock
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idproduct->Required) {
             if (!$this->idproduct->IsDetailKey && EmptyValue($this->idproduct->FormValue)) {
@@ -952,11 +980,14 @@ class StockAdd extends Stock
         }
         $rsnew = [];
 
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
+
         // idproduct
-        $this->idproduct->setDbValueDef($rsnew, $this->idproduct->CurrentValue, 0, false);
+        $this->idproduct->setDbValueDef($rsnew, $this->idproduct->CurrentValue, 0, strval($this->idproduct->CurrentValue) == "");
 
         // idorder_detail
-        $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, false);
+        $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, strval($this->idorder_detail->CurrentValue) == "");
 
         // jumlah
         $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, false);
@@ -970,6 +1001,23 @@ class StockAdd extends Stock
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

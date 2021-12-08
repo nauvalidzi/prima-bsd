@@ -67,7 +67,7 @@ class BrandCustomer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idbrand
-        $this->idbrand = new DbField('brand_customer', 'brand_customer', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 3, 11, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idbrand = new DbField('brand_customer', 'brand_customer', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idbrand->IsForeignKey = true; // Foreign key field
         $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Required = true; // Required field
@@ -87,7 +87,7 @@ class BrandCustomer extends DbTable
         $this->Fields['idbrand'] = &$this->idbrand;
 
         // idcustomer
-        $this->idcustomer = new DbField('brand_customer', 'brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 3, 11, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('brand_customer', 'brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field

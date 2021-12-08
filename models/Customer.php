@@ -93,10 +93,10 @@ class Customer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('customer', 'customer', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('customer', 'customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -113,7 +113,6 @@ class Customer extends DbTable
         // idtipecustomer
         $this->idtipecustomer = new DbField('customer', 'customer', 'x_idtipecustomer', 'idtipecustomer', '`idtipecustomer`', '`idtipecustomer`', 3, 11, -1, false, '`idtipecustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idtipecustomer->Nullable = false; // NOT NULL field
-        $this->idtipecustomer->Required = true; // Required field
         $this->idtipecustomer->Sortable = true; // Allow sort
         $this->idtipecustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idtipecustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -170,7 +169,7 @@ class Customer extends DbTable
         $this->Fields['jabatan'] = &$this->jabatan;
 
         // idprov
-        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 3, 11, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 20, 20, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idprov->Sortable = true; // Allow sort
         $this->idprov->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idprov->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -187,7 +186,7 @@ class Customer extends DbTable
         $this->Fields['idprov'] = &$this->idprov;
 
         // idkab
-        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 3, 11, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 20, 20, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkab->Sortable = true; // Allow sort
         $this->idkab->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkab->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -204,7 +203,7 @@ class Customer extends DbTable
         $this->Fields['idkab'] = &$this->idkab;
 
         // idkec
-        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 3, 11, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 20, 20, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkec->Sortable = true; // Allow sort
         $this->idkec->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkec->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -221,7 +220,7 @@ class Customer extends DbTable
         $this->Fields['idkec'] = &$this->idkec;
 
         // idkel
-        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 3, 11, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 20, 20, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkel->Sortable = true; // Allow sort
         $this->idkel->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkel->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -299,14 +298,14 @@ class Customer extends DbTable
         $this->Fields['npwp'] = &$this->npwp;
 
         // limit_kredit_order
-        $this->limit_kredit_order = new DbField('customer', 'customer', 'x_limit_kredit_order', 'limit_kredit_order', '`limit_kredit_order`', '`limit_kredit_order`', 3, 15, -1, false, '`limit_kredit_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit_order = new DbField('customer', 'customer', 'x_limit_kredit_order', 'limit_kredit_order', '`limit_kredit_order`', '`limit_kredit_order`', 20, 20, -1, false, '`limit_kredit_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->limit_kredit_order->Sortable = true; // Allow sort
         $this->limit_kredit_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->limit_kredit_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->limit_kredit_order->Param, "CustomMsg");
         $this->Fields['limit_kredit_order'] = &$this->limit_kredit_order;
 
         // jatuh_tempo_invoice
-        $this->jatuh_tempo_invoice = new DbField('customer', 'customer', 'x_jatuh_tempo_invoice', 'jatuh_tempo_invoice', '`jatuh_tempo_invoice`', '`jatuh_tempo_invoice`', 2, 6, -1, false, '`jatuh_tempo_invoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->jatuh_tempo_invoice = new DbField('customer', 'customer', 'x_jatuh_tempo_invoice', 'jatuh_tempo_invoice', '`jatuh_tempo_invoice`', '`jatuh_tempo_invoice`', 3, 11, -1, false, '`jatuh_tempo_invoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->jatuh_tempo_invoice->Sortable = true; // Allow sort
         $this->jatuh_tempo_invoice->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->jatuh_tempo_invoice->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -793,9 +792,6 @@ class Customer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1510,7 +1506,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idprov->ViewValue = $this->idprov->lookupCacheOption($curVal);
             if ($this->idprov->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idprov->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1531,7 +1527,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idkab->ViewValue = $this->idkab->lookupCacheOption($curVal);
             if ($this->idkab->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idkab->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1552,7 +1548,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idkec->ViewValue = $this->idkec->lookupCacheOption($curVal);
             if ($this->idkec->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idkec->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1573,7 +1569,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idkel->ViewValue = $this->idkel->lookupCacheOption($curVal);
             if ($this->idkel->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idkel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1877,7 +1873,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";

@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.stock_deliveryorder_detail)
         ew.vars.tables.stock_deliveryorder_detail = currentTable;
     fstock_deliveryorder_detailadd.addFields([
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["idstockorder", [fields.idstockorder.visible && fields.idstockorder.required ? ew.Validators.required(fields.idstockorder.caption) : null], fields.idstockorder.isInvalid],
         ["idstockorder_detail", [fields.idstockorder_detail.visible && fields.idstockorder_detail.required ? ew.Validators.required(fields.idstockorder_detail.caption) : null], fields.idstockorder_detail.isInvalid],
         ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null, ew.Validators.integer], fields.totalorder.isInvalid],
@@ -120,6 +121,18 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->pid->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
+<?php if ($Page->id->Visible) { // id ?>
+    <div id="r_id" class="form-group row">
+        <label id="elh_stock_deliveryorder_detail_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
+<span id="el_stock_deliveryorder_detail_id">
+<input type="<?= $Page->id->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
+<?= $Page->id->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->idstockorder->Visible) { // idstockorder ?>
     <div id="r_idstockorder" class="form-group row">
         <label id="elh_stock_deliveryorder_detail_idstockorder" for="x_idstockorder" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idstockorder->caption() ?><?= $Page->idstockorder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

@@ -74,19 +74,18 @@ class DeliveryorderDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // iddeliveryorder
-        $this->iddeliveryorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_iddeliveryorder', 'iddeliveryorder', '`iddeliveryorder`', '`iddeliveryorder`', 3, 11, -1, false, '`iddeliveryorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->iddeliveryorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_iddeliveryorder', 'iddeliveryorder', '`iddeliveryorder`', '`iddeliveryorder`', 20, 20, -1, false, '`iddeliveryorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->iddeliveryorder->IsForeignKey = true; // Foreign key field
         $this->iddeliveryorder->Nullable = false; // NOT NULL field
-        $this->iddeliveryorder->Required = true; // Required field
         $this->iddeliveryorder->Sortable = true; // Allow sort
         $this->iddeliveryorder->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->iddeliveryorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -95,7 +94,7 @@ class DeliveryorderDetail extends DbTable
         $this->Fields['iddeliveryorder'] = &$this->iddeliveryorder;
 
         // idorder
-        $this->idorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 3, 11, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort
@@ -114,7 +113,7 @@ class DeliveryorderDetail extends DbTable
         $this->Fields['idorder'] = &$this->idorder;
 
         // idorder_detail
-        $this->idorder_detail = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 3, 11, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idorder_detail = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 20, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idorder_detail->Nullable = false; // NOT NULL field
         $this->idorder_detail->Required = true; // Required field
         $this->idorder_detail->Sortable = true; // Allow sort
@@ -151,7 +150,7 @@ class DeliveryorderDetail extends DbTable
         $this->Fields['sisa'] = &$this->sisa;
 
         // jumlahkirim
-        $this->jumlahkirim = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_jumlahkirim', 'jumlahkirim', '`jumlahkirim`', '`jumlahkirim`', 3, 11, -1, false, '`jumlahkirim`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jumlahkirim = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_jumlahkirim', 'jumlahkirim', '`jumlahkirim`', '`jumlahkirim`', 19, 11, -1, false, '`jumlahkirim`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->jumlahkirim->Nullable = false; // NOT NULL field
         $this->jumlahkirim->Required = true; // Required field
         $this->jumlahkirim->Sortable = true; // Allow sort
@@ -563,9 +562,6 @@ class DeliveryorderDetail extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1184,8 +1180,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // iddeliveryorder
         $this->iddeliveryorder->EditAttrs["class"] = "form-control";

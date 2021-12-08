@@ -369,9 +369,6 @@ class AlamatCustomerAdd extends AlamatCustomer
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -464,7 +461,7 @@ class AlamatCustomerAdd extends AlamatCustomer
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->idcustomer->setVisibility();
         $this->alias->setVisibility();
         $this->penerima->setVisibility();
@@ -657,6 +654,16 @@ class AlamatCustomerAdd extends AlamatCustomer
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+
         // Check field name 'idcustomer' first before field var 'x_idcustomer'
         $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
         if (!$this->idcustomer->IsDetailKey) {
@@ -746,15 +753,13 @@ class AlamatCustomerAdd extends AlamatCustomer
                 $this->idkelurahan->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->alias->CurrentValue = $this->alias->FormValue;
         $this->penerima->CurrentValue = $this->penerima->FormValue;
@@ -937,7 +942,7 @@ class AlamatCustomerAdd extends AlamatCustomer
             if ($curVal != "") {
                 $this->idprovinsi->ViewValue = $this->idprovinsi->lookupCacheOption($curVal);
                 if ($this->idprovinsi->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idprovinsi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -958,7 +963,7 @@ class AlamatCustomerAdd extends AlamatCustomer
             if ($curVal != "") {
                 $this->idkabupaten->ViewValue = $this->idkabupaten->lookupCacheOption($curVal);
                 if ($this->idkabupaten->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkabupaten->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -979,7 +984,7 @@ class AlamatCustomerAdd extends AlamatCustomer
             if ($curVal != "") {
                 $this->idkecamatan->ViewValue = $this->idkecamatan->lookupCacheOption($curVal);
                 if ($this->idkecamatan->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkecamatan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -996,12 +1001,11 @@ class AlamatCustomerAdd extends AlamatCustomer
             $this->idkecamatan->ViewCustomAttributes = "";
 
             // idkelurahan
-            $this->idkelurahan->ViewValue = $this->idkelurahan->CurrentValue;
             $curVal = trim(strval($this->idkelurahan->CurrentValue));
             if ($curVal != "") {
                 $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
                 if ($this->idkelurahan->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkelurahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -1016,6 +1020,11 @@ class AlamatCustomerAdd extends AlamatCustomer
                 $this->idkelurahan->ViewValue = null;
             }
             $this->idkelurahan->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
@@ -1062,6 +1071,12 @@ class AlamatCustomerAdd extends AlamatCustomer
             $this->idkelurahan->HrefValue = "";
             $this->idkelurahan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
@@ -1158,7 +1173,7 @@ class AlamatCustomerAdd extends AlamatCustomer
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idprovinsi->CurrentValue, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->idprovinsi->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $sqlWrk = $this->idprovinsi->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1183,7 +1198,7 @@ class AlamatCustomerAdd extends AlamatCustomer
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkabupaten->CurrentValue, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->idkabupaten->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $sqlWrk = $this->idkabupaten->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1208,7 +1223,7 @@ class AlamatCustomerAdd extends AlamatCustomer
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkecamatan->CurrentValue, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->idkecamatan->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $sqlWrk = $this->idkecamatan->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1221,28 +1236,33 @@ class AlamatCustomerAdd extends AlamatCustomer
             // idkelurahan
             $this->idkelurahan->EditAttrs["class"] = "form-control";
             $this->idkelurahan->EditCustomAttributes = "";
-            $this->idkelurahan->EditValue = HtmlEncode($this->idkelurahan->CurrentValue);
             $curVal = trim(strval($this->idkelurahan->CurrentValue));
             if ($curVal != "") {
-                $this->idkelurahan->EditValue = $this->idkelurahan->lookupCacheOption($curVal);
-                if ($this->idkelurahan->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
-                    $sqlWrk = $this->idkelurahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkelurahan->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkelurahan->EditValue = $this->idkelurahan->displayValue($arwrk);
-                    } else {
-                        $this->idkelurahan->EditValue = HtmlEncode($this->idkelurahan->CurrentValue);
-                    }
-                }
+                $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
             } else {
-                $this->idkelurahan->EditValue = null;
+                $this->idkelurahan->ViewValue = $this->idkelurahan->Lookup !== null && is_array($this->idkelurahan->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkelurahan->ViewValue !== null) { // Load from cache
+                $this->idkelurahan->EditValue = array_values($this->idkelurahan->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkelurahan->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idkelurahan->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkelurahan->EditValue = $arwrk;
             }
             $this->idkelurahan->PlaceHolder = RemoveHtml($this->idkelurahan->caption());
 
             // Add refer script
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
@@ -1299,6 +1319,14 @@ class AlamatCustomerAdd extends AlamatCustomer
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
+        }
         if ($this->idcustomer->Required) {
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
@@ -1344,9 +1372,6 @@ class AlamatCustomerAdd extends AlamatCustomer
                 $this->idkelurahan->addErrorMessage(str_replace("%s", $this->idkelurahan->caption(), $this->idkelurahan->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idkelurahan->FormValue)) {
-            $this->idkelurahan->addErrorMessage($this->idkelurahan->getErrorMessage(false));
-        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -1372,8 +1397,11 @@ class AlamatCustomerAdd extends AlamatCustomer
         }
         $rsnew = [];
 
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
+
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
 
         // alias
         $this->alias->setDbValueDef($rsnew, $this->alias->CurrentValue, "", false);
@@ -1401,6 +1429,23 @@ class AlamatCustomerAdd extends AlamatCustomer
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

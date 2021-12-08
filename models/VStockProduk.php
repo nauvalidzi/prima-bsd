@@ -70,9 +70,9 @@ class VStockProduk extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idproduk
-        $this->idproduk = new DbField('v_stock_produk', 'v_stock_produk', 'x_idproduk', 'idproduk', '`idproduk`', '`idproduk`', 3, 11, -1, false, '`idproduk`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idproduk->IsAutoIncrement = true; // Autoincrement field
+        $this->idproduk = new DbField('v_stock_produk', 'v_stock_produk', 'x_idproduk', 'idproduk', '`idproduk`', '`idproduk`', 20, 20, -1, false, '`idproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idproduk->IsPrimaryKey = true; // Primary key field
+        $this->idproduk->Nullable = false; // NOT NULL field
         $this->idproduk->Sortable = true; // Allow sort
         $this->idproduk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idproduk->Param, "CustomMsg");
@@ -95,7 +95,7 @@ class VStockProduk extends DbTable
         $this->Fields['nama_produk'] = &$this->nama_produk;
 
         // stok_akhir
-        $this->stok_akhir = new DbField('v_stock_produk', 'v_stock_produk', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 3, 11, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->stok_akhir = new DbField('v_stock_produk', 'v_stock_produk', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 20, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->stok_akhir->Nullable = false; // NOT NULL field
         $this->stok_akhir->Required = true; // Required field
         $this->stok_akhir->Sortable = true; // Allow sort
@@ -104,9 +104,8 @@ class VStockProduk extends DbTable
         $this->Fields['stok_akhir'] = &$this->stok_akhir;
 
         // idbrand
-        $this->idbrand = new DbField('v_stock_produk', 'v_stock_produk', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 3, 11, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idbrand = new DbField('v_stock_produk', 'v_stock_produk', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idbrand->Nullable = false; // NOT NULL field
-        $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
         $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
@@ -437,9 +436,6 @@ class VStockProduk extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->idproduk->setDbValue($conn->lastInsertId());
-            $rs['idproduk'] = $this->idproduk->DbValue;
         }
         return $success;
     }
@@ -942,7 +938,7 @@ SORTHTML;
         $this->idproduk->EditAttrs["class"] = "form-control";
         $this->idproduk->EditCustomAttributes = "";
         $this->idproduk->EditValue = $this->idproduk->CurrentValue;
-        $this->idproduk->ViewCustomAttributes = "";
+        $this->idproduk->PlaceHolder = RemoveHtml($this->idproduk->caption());
 
         // kode_produk
         $this->kode_produk->EditAttrs["class"] = "form-control";

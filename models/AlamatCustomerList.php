@@ -438,9 +438,6 @@ class AlamatCustomerList extends AlamatCustomer
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -1790,7 +1787,7 @@ class AlamatCustomerList extends AlamatCustomer
             if ($curVal != "") {
                 $this->idprovinsi->ViewValue = $this->idprovinsi->lookupCacheOption($curVal);
                 if ($this->idprovinsi->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idprovinsi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -1811,7 +1808,7 @@ class AlamatCustomerList extends AlamatCustomer
             if ($curVal != "") {
                 $this->idkabupaten->ViewValue = $this->idkabupaten->lookupCacheOption($curVal);
                 if ($this->idkabupaten->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkabupaten->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -1832,7 +1829,7 @@ class AlamatCustomerList extends AlamatCustomer
             if ($curVal != "") {
                 $this->idkecamatan->ViewValue = $this->idkecamatan->lookupCacheOption($curVal);
                 if ($this->idkecamatan->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkecamatan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -1849,12 +1846,11 @@ class AlamatCustomerList extends AlamatCustomer
             $this->idkecamatan->ViewCustomAttributes = "";
 
             // idkelurahan
-            $this->idkelurahan->ViewValue = $this->idkelurahan->CurrentValue;
             $curVal = trim(strval($this->idkelurahan->CurrentValue));
             if ($curVal != "") {
                 $this->idkelurahan->ViewValue = $this->idkelurahan->lookupCacheOption($curVal);
                 if ($this->idkelurahan->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkelurahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);

@@ -764,6 +764,7 @@ class KelurahanAdd extends Kelurahan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // idkecamatan
@@ -772,7 +773,7 @@ class KelurahanAdd extends Kelurahan
             if ($curVal != "") {
                 $this->idkecamatan->ViewValue = $this->idkecamatan->lookupCacheOption($curVal);
                 if ($this->idkecamatan->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkecamatan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -810,24 +811,18 @@ class KelurahanAdd extends Kelurahan
             // id
             $this->id->EditAttrs["class"] = "form-control";
             $this->id->EditCustomAttributes = "";
-            if (!$this->id->Raw) {
-                $this->id->CurrentValue = HtmlDecode($this->id->CurrentValue);
-            }
             $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
             $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
             // idkecamatan
             $this->idkecamatan->EditAttrs["class"] = "form-control";
             $this->idkecamatan->EditCustomAttributes = "";
-            if (!$this->idkecamatan->Raw) {
-                $this->idkecamatan->CurrentValue = HtmlDecode($this->idkecamatan->CurrentValue);
-            }
             $this->idkecamatan->EditValue = HtmlEncode($this->idkecamatan->CurrentValue);
             $curVal = trim(strval($this->idkecamatan->CurrentValue));
             if ($curVal != "") {
                 $this->idkecamatan->EditValue = $this->idkecamatan->lookupCacheOption($curVal);
                 if ($this->idkecamatan->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idkecamatan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -890,10 +885,16 @@ class KelurahanAdd extends Kelurahan
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
+        }
         if ($this->idkecamatan->Required) {
             if (!$this->idkecamatan->IsDetailKey && EmptyValue($this->idkecamatan->FormValue)) {
                 $this->idkecamatan->addErrorMessage(str_replace("%s", $this->idkecamatan->caption(), $this->idkecamatan->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idkecamatan->FormValue)) {
+            $this->idkecamatan->addErrorMessage($this->idkecamatan->getErrorMessage(false));
         }
         if ($this->nama->Required) {
             if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
@@ -926,10 +927,10 @@ class KelurahanAdd extends Kelurahan
         $rsnew = [];
 
         // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, "", false);
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
 
         // idkecamatan
-        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, "", false);
+        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, strval($this->idkecamatan->CurrentValue) == "");
 
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
