@@ -101,10 +101,10 @@ class Npd extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('npd', 'npd', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
+        $this->id = new DbField('npd', 'npd', 'x_id', 'id', '`id`', '`id`', 21, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
+        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -127,7 +127,6 @@ class Npd extends DbTable
         // idbrand
         $this->idbrand = new DbField('npd', 'npd', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 21, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idbrand->Nullable = false; // NOT NULL field
-        $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
         $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
@@ -186,10 +185,12 @@ class Npd extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('npd', 'npd', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('npd', 'npd', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
+        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], [], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
@@ -425,8 +426,6 @@ class Npd extends DbTable
 
         // kemasancatatan
         $this->kemasancatatan = new DbField('npd', 'npd', 'x_kemasancatatan', 'kemasancatatan', '`kemasancatatan`', '`kemasancatatan`', 201, 65535, -1, false, '`kemasancatatan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->kemasancatatan->Nullable = false; // NOT NULL field
-        $this->kemasancatatan->Required = true; // Required field
         $this->kemasancatatan->Sortable = true; // Allow sort
         $this->kemasancatatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kemasancatatan->Param, "CustomMsg");
         $this->Fields['kemasancatatan'] = &$this->kemasancatatan;
@@ -481,8 +480,6 @@ class Npd extends DbTable
 
         // labelcatatan
         $this->labelcatatan = new DbField('npd', 'npd', 'x_labelcatatan', 'labelcatatan', '`labelcatatan`', '`labelcatatan`', 201, 65535, -1, false, '`labelcatatan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->labelcatatan->Nullable = false; // NOT NULL field
-        $this->labelcatatan->Required = true; // Required field
         $this->labelcatatan->Sortable = true; // Allow sort
         $this->labelcatatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->labelcatatan->Param, "CustomMsg");
         $this->Fields['labelcatatan'] = &$this->labelcatatan;
@@ -918,9 +915,6 @@ class Npd extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1802,7 +1796,6 @@ SORTHTML;
         $this->idpegawai->ViewCustomAttributes = "";
 
         // idcustomer
-        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
         $curVal = trim(strval($this->idcustomer->CurrentValue));
         if ($curVal != "") {
             $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
@@ -2492,7 +2485,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // tanggal_order
         $this->tanggal_order->EditAttrs["class"] = "form-control";
@@ -2558,7 +2551,6 @@ SORTHTML;
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $curVal = trim(strval($this->idcustomer->CurrentValue));
         if ($curVal != "") {
             $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);

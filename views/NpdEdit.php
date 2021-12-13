@@ -272,7 +272,7 @@ loadjs.ready(["fnpdedit", "datetimepicker"], function() {
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
     <div id="r_idcustomer" class="form-group row">
-        <label id="elh_npd_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
 <span id="el_npd_idcustomer">
 <span<?= $Page->idcustomer->viewAttributes() ?>>

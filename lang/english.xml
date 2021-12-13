@@ -925,9 +925,6 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2021 PT. Prima Visi Globalindo" />
-    <menu id="924">
-      <phrase id="menutext" value="npd produk master" />
-    </menu>
     <menu id="807">
       <phrase id="menutext" value="npd status" />
     </menu>
@@ -4326,51 +4323,6 @@
     </table>
     <table id="pengembangan_produk">
       <phrase id="tblcaption" value="Pengembangan Produk" />
-    </table>
-    <table id="npd_produk_master">
-      <phrase id="tblcaption" value="npd produk master" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="grup">
-        <phrase id="fldcaption" value="Grup" />
-      </field>
-      <field id="kategori">
-        <phrase id="fldcaption" value="Kategori" />
-      </field>
-      <field id="sediaan">
-        <phrase id="fldcaption" value="Sediaan" />
-      </field>
-      <field id="bentukan">
-        <phrase id="fldcaption" value="Bentukan" />
-      </field>
-      <field id="konsep">
-        <phrase id="fldcaption" value="Konsep" />
-      </field>
-      <field id="bahanaktif">
-        <phrase id="fldcaption" value="Bahanaktif" />
-      </field>
-      <field id="fragrance">
-        <phrase id="fldcaption" value="Fragrance" />
-      </field>
-      <field id="aroma">
-        <phrase id="fldcaption" value="Aroma" />
-      </field>
-      <field id="warna">
-        <phrase id="fldcaption" value="Warna" />
-      </field>
-      <field id="aplikasi_sediaan">
-        <phrase id="fldcaption" value="Aplikasi Sediaan" />
-      </field>
-      <field id="aksesoris">
-        <phrase id="fldcaption" value="Aksesoris" />
-      </field>
-      <field id="nour">
-        <phrase id="fldcaption" value="Nour" />
-      </field>
-      <field id="updated_at">
-        <phrase id="fldcaption" value="updated at" />
-      </field>
     </table>
   </project>
 </ew-language>

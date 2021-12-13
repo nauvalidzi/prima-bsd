@@ -369,9 +369,6 @@ class NpdAdd extends Npd
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -465,7 +462,7 @@ class NpdAdd extends Npd
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->tanggal_order->setVisibility();
         $this->target_selesai->setVisibility();
         $this->idbrand->setVisibility();
@@ -755,6 +752,16 @@ class NpdAdd extends Npd
     {
         // Load from form
         global $CurrentForm;
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
 
         // Check field name 'tanggal_order' first before field var 'x_tanggal_order'
         $val = $CurrentForm->hasValue("tanggal_order") ? $CurrentForm->getValue("tanggal_order") : $CurrentForm->getValue("x_tanggal_order");
@@ -1057,15 +1064,13 @@ class NpdAdd extends Npd
                 $this->status->setFormValue($val);
             }
         }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->tanggal_order->CurrentValue = $this->tanggal_order->FormValue;
         $this->tanggal_order->CurrentValue = UnFormatDateTime($this->tanggal_order->CurrentValue, 0);
         $this->target_selesai->CurrentValue = $this->target_selesai->FormValue;
@@ -1386,7 +1391,6 @@ class NpdAdd extends Npd
             $this->idpegawai->ViewCustomAttributes = "";
 
             // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
@@ -1852,6 +1856,11 @@ class NpdAdd extends Npd
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
             $this->updated_at->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // tanggal_order
             $this->tanggal_order->LinkCustomAttributes = "";
             $this->tanggal_order->HrefValue = "";
@@ -2002,6 +2011,12 @@ class NpdAdd extends Npd
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
+            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
             // tanggal_order
             $this->tanggal_order->EditAttrs["class"] = "form-control";
             $this->tanggal_order->EditCustomAttributes = "";
@@ -2071,24 +2086,25 @@ class NpdAdd extends Npd
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
-                $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->EditValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->EditValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
-                    }
-                }
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             } else {
-                $this->idcustomer->EditValue = null;
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
             }
             $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
@@ -2557,6 +2573,10 @@ class NpdAdd extends Npd
 
             // Add refer script
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+
             // tanggal_order
             $this->tanggal_order->LinkCustomAttributes = "";
             $this->tanggal_order->HrefValue = "";
@@ -2696,6 +2716,14 @@ class NpdAdd extends Npd
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->id->FormValue)) {
+            $this->id->addErrorMessage($this->id->getErrorMessage(false));
+        }
         if ($this->tanggal_order->Required) {
             if (!$this->tanggal_order->IsDetailKey && EmptyValue($this->tanggal_order->FormValue)) {
                 $this->tanggal_order->addErrorMessage(str_replace("%s", $this->tanggal_order->caption(), $this->tanggal_order->RequiredErrorMessage));
@@ -2744,9 +2772,6 @@ class NpdAdd extends Npd
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->idcustomer->FormValue)) {
-            $this->idcustomer->addErrorMessage($this->idcustomer->getErrorMessage(false));
         }
         if ($this->idkategoriproduk->Required) {
             if (!$this->idkategoriproduk->IsDetailKey && EmptyValue($this->idkategoriproduk->FormValue)) {
@@ -2925,6 +2950,9 @@ class NpdAdd extends Npd
         }
         $rsnew = [];
 
+        // id
+        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
+
         // tanggal_order
         $this->tanggal_order->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_order->CurrentValue, 0), null, false);
 
@@ -2932,7 +2960,7 @@ class NpdAdd extends Npd
         $this->target_selesai->setDbValueDef($rsnew, UnFormatDateTime($this->target_selesai->CurrentValue, 0), null, false);
 
         // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
+        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, strval($this->idbrand->CurrentValue) == "");
 
         // sifatorder
         $this->sifatorder->setDbValueDef($rsnew, $this->sifatorder->CurrentValue, "", false);
@@ -2947,7 +2975,7 @@ class NpdAdd extends Npd
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
 
         // idkategoriproduk
         $this->idkategoriproduk->setDbValueDef($rsnew, $this->idkategoriproduk->CurrentValue, 0, false);
@@ -2998,7 +3026,7 @@ class NpdAdd extends Npd
         $this->kemasantutup->setDbValueDef($rsnew, $this->kemasantutup->CurrentValue, "", false);
 
         // kemasancatatan
-        $this->kemasancatatan->setDbValueDef($rsnew, $this->kemasancatatan->CurrentValue, "", false);
+        $this->kemasancatatan->setDbValueDef($rsnew, $this->kemasancatatan->CurrentValue, null, false);
 
         // labelbahan
         $this->labelbahan->setDbValueDef($rsnew, $this->labelbahan->CurrentValue, "", false);
@@ -3010,13 +3038,30 @@ class NpdAdd extends Npd
         $this->labelposisi->setDbValueDef($rsnew, $this->labelposisi->CurrentValue, "", false);
 
         // labelcatatan
-        $this->labelcatatan->setDbValueDef($rsnew, $this->labelcatatan->CurrentValue, "", false);
+        $this->labelcatatan->setDbValueDef($rsnew, $this->labelcatatan->CurrentValue, null, false);
 
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd)
         ew.vars.tables.npd = currentTable;
     fnpdadd.addFields([
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["tanggal_order", [fields.tanggal_order.visible && fields.tanggal_order.required ? ew.Validators.required(fields.tanggal_order.caption) : null, ew.Validators.datetime(0)], fields.tanggal_order.isInvalid],
         ["target_selesai", [fields.target_selesai.visible && fields.target_selesai.required ? ew.Validators.required(fields.target_selesai.caption) : null, ew.Validators.datetime(0)], fields.target_selesai.isInvalid],
         ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null, ew.Validators.integer], fields.idbrand.isInvalid],
@@ -27,7 +28,7 @@ loadjs.ready("head", function () {
         ["kodeorder", [fields.kodeorder.visible && fields.kodeorder.required ? ew.Validators.required(fields.kodeorder.caption) : null], fields.kodeorder.isInvalid],
         ["nomororder", [fields.nomororder.visible && fields.nomororder.required ? ew.Validators.required(fields.nomororder.caption) : null], fields.nomororder.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null, ew.Validators.integer], fields.idcustomer.isInvalid],
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["idkategoriproduk", [fields.idkategoriproduk.visible && fields.idkategoriproduk.required ? ew.Validators.required(fields.idkategoriproduk.caption) : null], fields.idkategoriproduk.isInvalid],
         ["idjenisproduk", [fields.idjenisproduk.visible && fields.idjenisproduk.required ? ew.Validators.required(fields.idjenisproduk.caption) : null], fields.idjenisproduk.isInvalid],
         ["fungsiproduk", [fields.fungsiproduk.visible && fields.fungsiproduk.required ? ew.Validators.required(fields.fungsiproduk.caption) : null], fields.fungsiproduk.isInvalid],
@@ -154,6 +155,18 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-add-div"><!-- page* -->
+<?php if ($Page->id->Visible) { // id ?>
+    <div id="r_id" class="form-group row">
+        <label id="elh_npd_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
+<span id="el_npd_id">
+<input type="<?= $Page->id->getInputTextType() ?>" data-table="npd" data-field="x_id" data-page="1" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
+<?= $Page->id->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->tanggal_order->Visible) { // tanggal_order ?>
     <div id="r_tanggal_order" class="form-group row">
         <label id="elh_npd_tanggal_order" for="x_tanggal_order" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal_order->caption() ?><?= $Page->tanggal_order->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -298,26 +311,34 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
     <div id="r_idcustomer" class="form-group row">
-        <label id="elh_npd_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
 <span id="el_npd_idcustomer">
-<?php
-$onchange = $Page->idcustomer->EditAttrs->prepend("onchange", "");
-$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
-$Page->idcustomer->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_idcustomer" class="ew-auto-suggest">
-    <input type="<?= $Page->idcustomer->getInputTextType() ?>" class="form-control" name="sv_x_idcustomer" id="sv_x_idcustomer" value="<?= RemoveHtml($Page->idcustomer->EditValue) ?>" size="30" placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>" data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"<?= $Page->idcustomer->editAttributes() ?> aria-describedby="x_idcustomer_help">
-</span>
-<input type="hidden" is="selection-list" class="form-control" data-table="npd" data-field="x_idcustomer" data-input="sv_x_idcustomer" data-page="1" data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>" name="x_idcustomer" id="x_idcustomer" value="<?= HtmlEncode($Page->idcustomer->CurrentValue) ?>"<?= $onchange ?>>
-<?= $Page->idcustomer->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
+    <select
+        id="x_idcustomer"
+        name="x_idcustomer"
+        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
+        data-select2-id="npd_x_idcustomer"
+        data-table="npd"
+        data-field="x_idcustomer"
+        data-page="1"
+        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
+        <?= $Page->idcustomer->editAttributes() ?>>
+        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
+    </select>
+    <?= $Page->idcustomer->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
+<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
 <script>
-loadjs.ready(["fnpdadd"], function() {
-    fnpdadd.createAutoSuggest(Object.assign({"id":"x_idcustomer","forceSelect":false}, ew.vars.tables.npd.fields.idcustomer.autoSuggestOptions));
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_x_idcustomer']"),
+        options = { name: "x_idcustomer", selectId: "npd_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd.fields.idcustomer.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
 </span>
 </div></div>
     </div>

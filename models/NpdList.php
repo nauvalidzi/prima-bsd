@@ -438,9 +438,6 @@ class NpdList extends Npd
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -2851,7 +2848,6 @@ class NpdList extends Npd
             $this->idpegawai->ViewCustomAttributes = "";
 
             // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);

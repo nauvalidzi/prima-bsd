@@ -369,9 +369,6 @@ class NpdEdit extends Npd
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -1032,7 +1029,7 @@ class NpdEdit extends Npd
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
+                        $this->id->CurrentValue = $this->id->FormValue;
         $this->tanggal_order->CurrentValue = $this->tanggal_order->FormValue;
         $this->tanggal_order->CurrentValue = UnFormatDateTime($this->tanggal_order->CurrentValue, 0);
         $this->target_selesai->CurrentValue = $this->target_selesai->FormValue;
@@ -1352,7 +1349,6 @@ class NpdEdit extends Npd
             $this->idpegawai->ViewCustomAttributes = "";
 
             // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
@@ -2032,7 +2028,6 @@ class NpdEdit extends Npd
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->EditValue = $this->idcustomer->lookupCacheOption($curVal);
@@ -2964,7 +2959,7 @@ class NpdEdit extends Npd
             $this->kemasantutup->setDbValueDef($rsnew, $this->kemasantutup->CurrentValue, "", $this->kemasantutup->ReadOnly);
 
             // kemasancatatan
-            $this->kemasancatatan->setDbValueDef($rsnew, $this->kemasancatatan->CurrentValue, "", $this->kemasancatatan->ReadOnly);
+            $this->kemasancatatan->setDbValueDef($rsnew, $this->kemasancatatan->CurrentValue, null, $this->kemasancatatan->ReadOnly);
 
             // labelbahan
             $this->labelbahan->setDbValueDef($rsnew, $this->labelbahan->CurrentValue, "", $this->labelbahan->ReadOnly);
@@ -2976,13 +2971,26 @@ class NpdEdit extends Npd
             $this->labelposisi->setDbValueDef($rsnew, $this->labelposisi->CurrentValue, "", $this->labelposisi->ReadOnly);
 
             // labelcatatan
-            $this->labelcatatan->setDbValueDef($rsnew, $this->labelcatatan->CurrentValue, "", $this->labelcatatan->ReadOnly);
+            $this->labelcatatan->setDbValueDef($rsnew, $this->labelcatatan->CurrentValue, null, $this->labelcatatan->ReadOnly);
 
             // status
             $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", $this->status->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
+
+            // Check for duplicate key when key changed
+            if ($updateRow) {
+                $newKeyFilter = $this->getRecordFilter($rsnew);
+                if ($newKeyFilter != $oldKeyFilter) {
+                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
+                    if ($rsChk !== false) {
+                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
+                        $this->setFailureMessage($keyErrMsg);
+                        $updateRow = false;
+                    }
+                }
+            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
