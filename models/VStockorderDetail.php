@@ -72,17 +72,18 @@ class VStockorderDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idstockorder
-        $this->idstockorder = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 20, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idstockorder = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 21, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idstockorder->Nullable = false; // NOT NULL field
+        $this->idstockorder->Required = true; // Required field
         $this->idstockorder->Sortable = true; // Allow sort
         $this->idstockorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idstockorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idstockorder->Param, "CustomMsg");
         $this->Fields['idstockorder'] = &$this->idstockorder;
 
         // idstockorder_detail
-        $this->idstockorder_detail = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_idstockorder_detail', 'idstockorder_detail', '`idstockorder_detail`', '`idstockorder_detail`', 20, 20, -1, false, '`idstockorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idstockorder_detail = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_idstockorder_detail', 'idstockorder_detail', '`idstockorder_detail`', '`idstockorder_detail`', 20, 20, -1, false, '`idstockorder_detail`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idstockorder_detail->IsAutoIncrement = true; // Autoincrement field
         $this->idstockorder_detail->IsPrimaryKey = true; // Primary key field
-        $this->idstockorder_detail->Nullable = false; // NOT NULL field
         $this->idstockorder_detail->Sortable = true; // Allow sort
         $this->idstockorder_detail->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idstockorder_detail->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idstockorder_detail->Param, "CustomMsg");
@@ -123,8 +124,9 @@ class VStockorderDetail extends DbTable
         $this->Fields['sisa_order'] = &$this->sisa_order;
 
         // stok_akhir
-        $this->stok_akhir = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 20, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->stok_akhir = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 21, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->stok_akhir->Nullable = false; // NOT NULL field
+        $this->stok_akhir->Required = true; // Required field
         $this->stok_akhir->Sortable = true; // Allow sort
         $this->stok_akhir->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->stok_akhir->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->stok_akhir->Param, "CustomMsg");
@@ -455,6 +457,9 @@ class VStockorderDetail extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->idstockorder_detail->setDbValue($conn->lastInsertId());
+            $rs['idstockorder_detail'] = $this->idstockorder_detail->DbValue;
         }
         return $success;
     }
@@ -991,7 +996,7 @@ SORTHTML;
         $this->idstockorder_detail->EditAttrs["class"] = "form-control";
         $this->idstockorder_detail->EditCustomAttributes = "";
         $this->idstockorder_detail->EditValue = $this->idstockorder_detail->CurrentValue;
-        $this->idstockorder_detail->PlaceHolder = RemoveHtml($this->idstockorder_detail->caption());
+        $this->idstockorder_detail->ViewCustomAttributes = "";
 
         // kode_produk
         $this->kode_produk->EditAttrs["class"] = "form-control";

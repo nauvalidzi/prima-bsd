@@ -438,6 +438,9 @@ class StockList extends Stock
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -565,7 +568,7 @@ class StockList extends Stock
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idproduct->setVisibility();
         $this->idorder_detail->setVisibility();
         $this->jumlah->setVisibility();
@@ -809,7 +812,6 @@ class StockList extends Stock
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idproduct); // idproduct
             $this->updateSort($this->idorder_detail); // idorder_detail
             $this->updateSort($this->jumlah); // jumlah
@@ -1314,10 +1316,6 @@ class StockList extends Stock
 
         // aktif
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idproduct
             $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
             $this->idproduct->ViewValue = FormatNumber($this->idproduct->ViewValue, 0, -2, -2, -2);
@@ -1340,11 +1338,6 @@ class StockList extends Stock
                 $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
             }
             $this->aktif->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";

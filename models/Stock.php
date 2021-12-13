@@ -70,25 +70,27 @@ class Stock extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('stock', 'stock', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('stock', 'stock', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->Sortable = true; // Allow sort
+        $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idproduct
-        $this->idproduct = new DbField('stock', 'stock', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 20, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idproduct = new DbField('stock', 'stock', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 21, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idproduct->Nullable = false; // NOT NULL field
+        $this->idproduct->Required = true; // Required field
         $this->idproduct->Sortable = true; // Allow sort
         $this->idproduct->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idproduct->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idproduct->Param, "CustomMsg");
         $this->Fields['idproduct'] = &$this->idproduct;
 
         // idorder_detail
-        $this->idorder_detail = new DbField('stock', 'stock', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 20, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder_detail = new DbField('stock', 'stock', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 21, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder_detail->Nullable = false; // NOT NULL field
+        $this->idorder_detail->Required = true; // Required field
         $this->idorder_detail->Sortable = true; // Allow sort
         $this->idorder_detail->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder_detail->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder_detail->Param, "CustomMsg");
@@ -446,6 +448,9 @@ class Stock extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -953,7 +958,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // idproduct
         $this->idproduct->EditAttrs["class"] = "form-control";
@@ -1006,13 +1011,11 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idproduct);
                     $doc->exportCaption($this->idorder_detail);
                     $doc->exportCaption($this->jumlah);
                     $doc->exportCaption($this->aktif);
                 } else {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idproduct);
                     $doc->exportCaption($this->idorder_detail);
                     $doc->exportCaption($this->jumlah);
@@ -1046,13 +1049,11 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->idproduct);
                         $doc->exportField($this->idorder_detail);
                         $doc->exportField($this->jumlah);
                         $doc->exportField($this->aktif);
                     } else {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->idproduct);
                         $doc->exportField($this->idorder_detail);
                         $doc->exportField($this->jumlah);

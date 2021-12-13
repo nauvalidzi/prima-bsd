@@ -369,6 +369,9 @@ class IjinhakiAdd extends Ijinhaki
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -461,7 +464,7 @@ class IjinhakiAdd extends Ijinhaki
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
@@ -662,16 +665,6 @@ class IjinhakiAdd extends Ijinhaki
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'idpegawai' first before field var 'x_idpegawai'
         $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
         if (!$this->idpegawai->IsDetailKey) {
@@ -721,6 +714,9 @@ class IjinhakiAdd extends Ijinhaki
                 $this->created_by->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         $this->getUploadFiles(); // Get upload files
     }
 
@@ -728,7 +724,6 @@ class IjinhakiAdd extends Ijinhaki
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
@@ -981,11 +976,6 @@ class IjinhakiAdd extends Ijinhaki
             }
             $this->readonly->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
@@ -1017,12 +1007,6 @@ class IjinhakiAdd extends Ijinhaki
             $this->created_by->HrefValue = "";
             $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
             $this->idpegawai->EditCustomAttributes = "";
@@ -1133,10 +1117,6 @@ class IjinhakiAdd extends Ijinhaki
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
@@ -1180,14 +1160,6 @@ class IjinhakiAdd extends Ijinhaki
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idpegawai->Required) {
             if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
@@ -1268,17 +1240,14 @@ class IjinhakiAdd extends Ijinhaki
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // idpegawai
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, strval($this->idbrand->CurrentValue) == "");
+        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
 
         // aktaperusahaan
         if ($this->aktaperusahaan->Visible && !$this->aktaperusahaan->Upload->KeepFile) {
@@ -1339,23 +1308,6 @@ class IjinhakiAdd extends Ijinhaki
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

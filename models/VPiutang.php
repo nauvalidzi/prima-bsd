@@ -112,7 +112,7 @@ class VPiutang extends DbTable
         $this->Fields['pegawai'] = &$this->pegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_piutang', 'v_piutang', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_piutang', 'v_piutang', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = false; // Allow sort
@@ -151,7 +151,7 @@ class VPiutang extends DbTable
         $this->Fields['customer'] = &$this->customer;
 
         // totaltagihan
-        $this->totaltagihan = new DbField('v_piutang', 'v_piutang', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 131, 41, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totaltagihan = new DbField('v_piutang', 'v_piutang', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 131, 42, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totaltagihan->Sortable = true; // Allow sort
         $this->totaltagihan->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->totaltagihan->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -159,7 +159,7 @@ class VPiutang extends DbTable
         $this->Fields['totaltagihan'] = &$this->totaltagihan;
 
         // totalpiutang
-        $this->totalpiutang = new DbField('v_piutang', 'v_piutang', 'x_totalpiutang', 'totalpiutang', '`totalpiutang`', '`totalpiutang`', 131, 41, -1, false, '`totalpiutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totalpiutang = new DbField('v_piutang', 'v_piutang', 'x_totalpiutang', 'totalpiutang', '`totalpiutang`', '`totalpiutang`', 131, 42, -1, false, '`totalpiutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totalpiutang->Sortable = true; // Allow sort
         $this->totalpiutang->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->totalpiutang->DefaultErrorMessage = $Language->phrase("IncorrectFloat");

@@ -75,9 +75,10 @@ class VStock extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idorder_detail
-        $this->idorder_detail = new DbField('v_stock', 'v_stock', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 20, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder_detail = new DbField('v_stock', 'v_stock', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 21, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder_detail->IsPrimaryKey = true; // Primary key field
         $this->idorder_detail->Nullable = false; // NOT NULL field
+        $this->idorder_detail->Required = true; // Required field
         $this->idorder_detail->Sortable = true; // Allow sort
         $this->idorder_detail->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder_detail->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder_detail->Param, "CustomMsg");
@@ -126,8 +127,9 @@ class VStock extends DbTable
         $this->Fields['jumlah'] = &$this->jumlah;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_stock', 'v_stock', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_stock', 'v_stock', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -142,8 +144,9 @@ class VStock extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idorder
-        $this->idorder = new DbField('v_stock', 'v_stock', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder = new DbField('v_stock', 'v_stock', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 21, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder->Nullable = false; // NOT NULL field
+        $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");

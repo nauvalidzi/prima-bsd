@@ -141,8 +141,11 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->target_selesai->Visible) { // target_selesai ?>
         <th data-name="target_selesai" class="<?= $Page->target_selesai->headerCellClass() ?>"><div id="elh_npd_target_selesai" class="npd_target_selesai"><?= $Page->renderSort($Page->target_selesai) ?></div></th>
 <?php } ?>
-<?php if ($Page->status->Visible) { // status ?>
-        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_npd_status" class="npd_status"><?= $Page->renderSort($Page->status) ?></div></th>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_npd_idbrand" class="npd_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
+<?php } ?>
+<?php if ($Page->sifatorder->Visible) { // sifatorder ?>
+        <th data-name="sifatorder" class="<?= $Page->sifatorder->headerCellClass() ?>"><div id="elh_npd_sifatorder" class="npd_sifatorder"><?= $Page->renderSort($Page->sifatorder) ?></div></th>
 <?php } ?>
 <?php if ($Page->kodeorder->Visible) { // kodeorder ?>
         <th data-name="kodeorder" class="<?= $Page->kodeorder->headerCellClass() ?>"><div id="elh_npd_kodeorder" class="npd_kodeorder"><?= $Page->renderSort($Page->kodeorder) ?></div></th>
@@ -155,6 +158,9 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_npd_idcustomer" class="npd_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_npd_status" class="npd_status"><?= $Page->renderSort($Page->status) ?></div></th>
 <?php } ?>
 <?php if ($Page->updated_at->Visible) { // updated_at ?>
         <th data-name="updated_at" class="<?= $Page->updated_at->headerCellClass() ?>"><div id="elh_npd_updated_at" class="npd_updated_at"><?= $Page->renderSort($Page->updated_at) ?></div></th>
@@ -242,11 +248,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->status->Visible) { // status ?>
-        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_status">
-<span<?= $Page->status->viewAttributes() ?>>
-<?= $Page->status->getViewValue() ?></span>
+    <?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->sifatorder->Visible) { // sifatorder ?>
+        <td data-name="sifatorder" <?= $Page->sifatorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_sifatorder">
+<span<?= $Page->sifatorder->viewAttributes() ?>>
+<?= $Page->sifatorder->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -279,6 +293,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_idcustomer">
 <span<?= $Page->idcustomer->viewAttributes() ?>>
 <?= $Page->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -20,7 +20,6 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.invoice)
         ew.vars.tables.invoice = currentTable;
     finvoiceadd.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tglinvoice", [fields.tglinvoice.visible && fields.tglinvoice.required ? ew.Validators.required(fields.tglinvoice.caption) : null, ew.Validators.datetime(0)], fields.tglinvoice.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
@@ -140,26 +139,6 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id" class="form-group row">
-        <label id="elh_invoice_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
-<?php if ($Page->id->getSessionValue() != "") { ?>
-<span id="el_invoice_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x_id" name="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el_invoice_id">
-<input type="<?= $Page->id->getInputTextType() ?>" data-table="invoice" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
-<?= $Page->id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
     <div id="r_kode" class="form-group row">
         <label id="elh_invoice_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -388,6 +367,9 @@ loadjs.ready("head", function() {
     <input type="hidden" data-table="invoice" data-field="x_readonly" data-hidden="1" name="x_readonly" id="x_readonly" value="<?= HtmlEncode($Page->readonly->CurrentValue) ?>">
     </span>
 </div><!-- /page* -->
+    <?php if (strval($Page->id->getSessionValue()) != "") { ?>
+    <input type="hidden" name="x_id" id="x_id" value="<?= HtmlEncode(strval($Page->id->getSessionValue())) ?>">
+    <?php } ?>
 <?php
     if (in_array("invoice_detail", explode(",", $Page->getCurrentDetailTable())) && $invoice_detail->DetailAdd) {
 ?>

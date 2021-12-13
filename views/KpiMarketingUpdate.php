@@ -20,7 +20,6 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.kpi_marketing)
         ew.vars.tables.kpi_marketing = currentTable;
     fkpi_marketingupdate.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer, ew.Validators.selected], fields.id.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["bulan", [fields.bulan.visible && fields.bulan.required ? ew.Validators.required(fields.bulan.caption) : null], fields.bulan.isInvalid],
         ["target", [fields.target.visible && fields.target.required ? ew.Validators.required(fields.target.caption) : null, ew.Validators.integer, ew.Validators.selected], fields.target.isInvalid],
@@ -116,24 +115,6 @@ $Page->showMessage();
         <input type="checkbox" class="custom-control-input" name="u" id="u" onclick="ew.selectAll(this);"><label class="custom-control-label" for="u"><?= $Language->phrase("UpdateSelectAll") ?></label>
     </div>
     <?php } ?>
-<?php if ($Page->id->Visible && (!$Page->isConfirm() || $Page->id->multiUpdateSelected())) { // id ?>
-    <div id="r_id" class="form-group row">
-        <label for="x_id" class="<?= $Page->LeftColumnClass ?>">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" name="u_id" id="u_id" class="custom-control-input ew-multi-select" value="1"<?= $Page->id->multiUpdateSelected() ? " checked" : "" ?>>
-                <label class="custom-control-label" for="u_id"><?= $Page->id->caption() ?></label>
-            </div>
-        </label>
-        <div class="<?= $Page->RightColumnClass ?>">
-            <div <?= $Page->id->cellAttributes() ?>>
-                <input type="<?= $Page->id->getInputTextType() ?>" data-table="kpi_marketing" data-field="x_id" name="x_id" id="x_id" size="30" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
-                <?= $Page->id->getCustomMessage() ?>
-                <div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
-                <input type="hidden" data-table="kpi_marketing" data-field="x_id" data-hidden="1" name="o_id" id="o_id" value="<?= HtmlEncode($Page->id->OldValue ?? $Page->id->CurrentValue) ?>">
-            </div>
-        </div>
-    </div>
-<?php } ?>
 <?php if ($Page->bulan->Visible && (!$Page->isConfirm() || $Page->bulan->multiUpdateSelected())) { // bulan ?>
     <div id="r_bulan" class="form-group row">
         <label for="x_bulan" class="<?= $Page->LeftColumnClass ?>">

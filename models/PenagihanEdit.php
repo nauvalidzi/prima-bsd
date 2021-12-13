@@ -369,6 +369,9 @@ class PenagihanEdit extends Penagihan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -464,7 +467,7 @@ class PenagihanEdit extends Penagihan
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->messages->setVisibility();
         $this->tgl_order->setVisibility();
         $this->kode_order->setVisibility();
@@ -666,19 +669,6 @@ class PenagihanEdit extends Penagihan
     {
         // Load from form
         global $CurrentForm;
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_id")) {
-            $this->id->setOldValue($CurrentForm->getValue("o_id"));
-        }
 
         // Check field name 'messages' first before field var 'x_messages'
         $val = $CurrentForm->hasValue("messages") ? $CurrentForm->getValue("messages") : $CurrentForm->getValue("x_messages");
@@ -905,6 +895,12 @@ class PenagihanEdit extends Penagihan
                 $this->saldo->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
     }
 
     // Restore form values
@@ -1118,10 +1114,6 @@ class PenagihanEdit extends Penagihan
 
         // saldo
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // messages
             $this->messages->ViewValue = $this->messages->CurrentValue;
             $this->messages->ViewCustomAttributes = "";
@@ -1226,11 +1218,6 @@ class PenagihanEdit extends Penagihan
             $this->saldo->ViewValue = $this->saldo->CurrentValue;
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
             $this->saldo->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // messages
             $this->messages->LinkCustomAttributes = "";
@@ -1342,12 +1329,6 @@ class PenagihanEdit extends Penagihan
             $this->saldo->HrefValue = "";
             $this->saldo->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // messages
             $this->messages->EditAttrs["class"] = "form-control";
             $this->messages->EditCustomAttributes = "";
@@ -1499,10 +1480,6 @@ class PenagihanEdit extends Penagihan
 
             // Edit refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // messages
             $this->messages->LinkCustomAttributes = "";
             $this->messages->HrefValue = "";
@@ -1609,14 +1586,6 @@ class PenagihanEdit extends Penagihan
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->messages->Required) {
             if (!$this->messages->IsDetailKey && EmptyValue($this->messages->FormValue)) {
@@ -1799,9 +1768,6 @@ class PenagihanEdit extends Penagihan
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // id
-            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
-
             // messages
             $this->messages->setDbValueDef($rsnew, $this->messages->CurrentValue, "", $this->messages->ReadOnly);
 
@@ -1874,19 +1840,6 @@ class PenagihanEdit extends Penagihan
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

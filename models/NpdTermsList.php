@@ -438,6 +438,9 @@ class NpdTermsList extends NpdTerms
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -565,7 +568,7 @@ class NpdTermsList extends NpdTerms
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->status->setVisibility();
         $this->tglsubmit->setVisibility();
@@ -1555,7 +1558,6 @@ class NpdTermsList extends NpdTerms
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->status); // status
             $this->updateSort($this->tglsubmit); // tglsubmit
@@ -2322,10 +2324,6 @@ class NpdTermsList extends NpdTerms
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idnpd
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
@@ -2526,11 +2524,6 @@ class NpdTermsList extends NpdTerms
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";

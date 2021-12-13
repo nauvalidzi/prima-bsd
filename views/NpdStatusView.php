@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="npd_status">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el_npd_status_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
     <tr id="r_idnpd">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status_idnpd"><?= $Page->idnpd->caption() ?></span></td>

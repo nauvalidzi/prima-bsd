@@ -375,6 +375,9 @@ class AlamatCustomerGrid extends AlamatCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -1443,7 +1446,7 @@ class AlamatCustomerGrid extends AlamatCustomer
 
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
+        if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
             $this->id->setFormValue($val);
         }
     }
@@ -1452,7 +1455,9 @@ class AlamatCustomerGrid extends AlamatCustomer
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        if (!$this->isGridAdd() && !$this->isAdd()) {
+            $this->id->CurrentValue = $this->id->FormValue;
+        }
         $this->alias->CurrentValue = $this->alias->FormValue;
         $this->penerima->CurrentValue = $this->penerima->FormValue;
         $this->telepon->CurrentValue = $this->telepon->FormValue;
@@ -2293,32 +2298,19 @@ class AlamatCustomerGrid extends AlamatCustomer
             $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, $this->alamat->ReadOnly);
 
             // idprovinsi
-            $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, 0, $this->idprovinsi->ReadOnly);
+            $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, null, $this->idprovinsi->ReadOnly);
 
             // idkabupaten
-            $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, 0, $this->idkabupaten->ReadOnly);
+            $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, null, $this->idkabupaten->ReadOnly);
 
             // idkecamatan
-            $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, $this->idkecamatan->ReadOnly);
+            $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, null, $this->idkecamatan->ReadOnly);
 
             // idkelurahan
             $this->idkelurahan->setDbValueDef($rsnew, $this->idkelurahan->CurrentValue, null, $this->idkelurahan->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -2391,13 +2383,13 @@ class AlamatCustomerGrid extends AlamatCustomer
         $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, false);
 
         // idprovinsi
-        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, 0, strval($this->idprovinsi->CurrentValue) == "");
+        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, null, false);
 
         // idkabupaten
-        $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, 0, strval($this->idkabupaten->CurrentValue) == "");
+        $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, null, false);
 
         // idkecamatan
-        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, strval($this->idkecamatan->CurrentValue) == "");
+        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, null, false);
 
         // idkelurahan
         $this->idkelurahan->setDbValueDef($rsnew, $this->idkelurahan->CurrentValue, null, false);
@@ -2409,23 +2401,6 @@ class AlamatCustomerGrid extends AlamatCustomer
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

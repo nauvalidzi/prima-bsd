@@ -568,7 +568,7 @@ class TermpaymentList extends Termpayment
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->title->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -1098,7 +1098,6 @@ class TermpaymentList extends Termpayment
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->title); // title
             $this->updateSort($this->value); // value
             $this->setStartRecordNumber(1); // Reset start position
@@ -1618,11 +1617,6 @@ class TermpaymentList extends Termpayment
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewValue = FormatNumber($this->value->ViewValue, 0, -2, -2, -2);
             $this->value->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // title
             $this->title->LinkCustomAttributes = "";

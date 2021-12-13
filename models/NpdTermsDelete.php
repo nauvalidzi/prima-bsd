@@ -352,6 +352,9 @@ class NpdTermsDelete extends NpdTerms
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
@@ -371,7 +374,7 @@ class NpdTermsDelete extends NpdTerms
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->status->setVisibility();
         $this->tglsubmit->setVisibility();
@@ -782,10 +785,6 @@ class NpdTermsDelete extends NpdTerms
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idnpd
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
@@ -986,11 +985,6 @@ class NpdTermsDelete extends NpdTerms
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";

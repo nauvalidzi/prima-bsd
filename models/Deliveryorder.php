@@ -36,6 +36,7 @@ class Deliveryorder extends DbTable
     public $created_at;
     public $updated_at;
     public $readonly;
+    public $suratjalan;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -72,10 +73,10 @@ class Deliveryorder extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('deliveryorder', 'deliveryorder', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('deliveryorder', 'deliveryorder', 'x_id', 'id', '`id`', '`id`', 21, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -83,8 +84,6 @@ class Deliveryorder extends DbTable
 
         // kode
         $this->kode = new DbField('deliveryorder', 'deliveryorder', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode->Nullable = false; // NOT NULL field
-        $this->kode->Required = true; // Required field
         $this->kode->Sortable = true; // Allow sort
         $this->kode->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode->Param, "CustomMsg");
         $this->Fields['kode'] = &$this->kode;
@@ -134,6 +133,12 @@ class Deliveryorder extends DbTable
         $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
         $this->Fields['readonly'] = &$this->readonly;
+
+        // suratjalan
+        $this->suratjalan = new DbField('deliveryorder', 'deliveryorder', 'x_suratjalan', 'suratjalan', '`suratjalan`', '`suratjalan`', 200, 50, -1, false, '`suratjalan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->suratjalan->Sortable = true; // Allow sort
+        $this->suratjalan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->suratjalan->Param, "CustomMsg");
+        $this->Fields['suratjalan'] = &$this->suratjalan;
     }
 
     // Field Visibility
@@ -491,6 +496,9 @@ class Deliveryorder extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -583,6 +591,7 @@ class Deliveryorder extends DbTable
         $this->created_at->DbValue = $row['created_at'];
         $this->updated_at->DbValue = $row['updated_at'];
         $this->readonly->DbValue = $row['readonly'];
+        $this->suratjalan->DbValue = $row['suratjalan'];
     }
 
     // Delete uploaded files
@@ -926,6 +935,7 @@ SORTHTML;
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->suratjalan->setDbValue($row['suratjalan']);
     }
 
     // Render list row values
@@ -954,6 +964,8 @@ SORTHTML;
 
         // readonly
         $this->readonly->CellCssStyle = "white-space: nowrap;";
+
+        // suratjalan
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -994,6 +1006,10 @@ SORTHTML;
         // readonly
         $this->readonly->ViewValue = $this->readonly->CurrentValue;
         $this->readonly->ViewCustomAttributes = "";
+
+        // suratjalan
+        $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
+        $this->suratjalan->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1036,6 +1052,11 @@ SORTHTML;
         $this->readonly->HrefValue = "";
         $this->readonly->TooltipValue = "";
 
+        // suratjalan
+        $this->suratjalan->LinkCustomAttributes = "";
+        $this->suratjalan->HrefValue = "";
+        $this->suratjalan->TooltipValue = "";
+
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1055,7 +1076,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
@@ -1104,6 +1125,15 @@ SORTHTML;
         $this->readonly->EditAttrs["class"] = "form-control";
         $this->readonly->EditCustomAttributes = "";
 
+        // suratjalan
+        $this->suratjalan->EditAttrs["class"] = "form-control";
+        $this->suratjalan->EditCustomAttributes = "";
+        if (!$this->suratjalan->Raw) {
+            $this->suratjalan->CurrentValue = HtmlDecode($this->suratjalan->CurrentValue);
+        }
+        $this->suratjalan->EditValue = $this->suratjalan->CurrentValue;
+        $this->suratjalan->PlaceHolder = RemoveHtml($this->suratjalan->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1135,6 +1165,7 @@ SORTHTML;
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->tanggal);
                     $doc->exportCaption($this->lampiran);
+                    $doc->exportCaption($this->suratjalan);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
@@ -1143,6 +1174,7 @@ SORTHTML;
                     $doc->exportCaption($this->created_by);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
+                    $doc->exportCaption($this->suratjalan);
                 }
                 $doc->endExportRow();
             }
@@ -1175,6 +1207,7 @@ SORTHTML;
                         $doc->exportField($this->kode);
                         $doc->exportField($this->tanggal);
                         $doc->exportField($this->lampiran);
+                        $doc->exportField($this->suratjalan);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);
@@ -1183,6 +1216,7 @@ SORTHTML;
                         $doc->exportField($this->created_by);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
+                        $doc->exportField($this->suratjalan);
                     }
                     $doc->endExportRow($rowCnt);
                 }

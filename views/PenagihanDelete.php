@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_penagihan_id" class="penagihan_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->tgl_order->Visible) { // tgl_order ?>
         <th class="<?= $Page->tgl_order->headerCellClass() ?>"><span id="elh_penagihan_tgl_order" class="penagihan_tgl_order"><?= $Page->tgl_order->caption() ?></span></th>
 <?php } ?>
@@ -128,14 +125,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_penagihan_id" class="penagihan_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->tgl_order->Visible) { // tgl_order ?>
         <td <?= $Page->tgl_order->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_penagihan_tgl_order" class="penagihan_tgl_order">

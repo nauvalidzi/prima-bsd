@@ -369,6 +369,9 @@ class DeliveryorderAdd extends Deliveryorder
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -461,7 +464,7 @@ class DeliveryorderAdd extends Deliveryorder
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
@@ -469,6 +472,7 @@ class DeliveryorderAdd extends Deliveryorder
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
         $this->readonly->Visible = false;
+        $this->suratjalan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -646,6 +650,8 @@ class DeliveryorderAdd extends Deliveryorder
         $this->updated_at->CurrentValue = null;
         $this->updated_at->OldValue = $this->updated_at->CurrentValue;
         $this->readonly->CurrentValue = 0;
+        $this->suratjalan->CurrentValue = null;
+        $this->suratjalan->OldValue = $this->suratjalan->CurrentValue;
     }
 
     // Load form values
@@ -653,16 +659,6 @@ class DeliveryorderAdd extends Deliveryorder
     {
         // Load from form
         global $CurrentForm;
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
 
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
@@ -694,6 +690,19 @@ class DeliveryorderAdd extends Deliveryorder
                 $this->created_by->setFormValue($val);
             }
         }
+
+        // Check field name 'suratjalan' first before field var 'x_suratjalan'
+        $val = $CurrentForm->hasValue("suratjalan") ? $CurrentForm->getValue("suratjalan") : $CurrentForm->getValue("x_suratjalan");
+        if (!$this->suratjalan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->suratjalan->Visible = false; // Disable update for API request
+            } else {
+                $this->suratjalan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         $this->getUploadFiles(); // Get upload files
     }
 
@@ -701,11 +710,11 @@ class DeliveryorderAdd extends Deliveryorder
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
         $this->created_by->CurrentValue = $this->created_by->FormValue;
+        $this->suratjalan->CurrentValue = $this->suratjalan->FormValue;
     }
 
     /**
@@ -773,6 +782,7 @@ class DeliveryorderAdd extends Deliveryorder
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->suratjalan->setDbValue($row['suratjalan']);
     }
 
     // Return a row with default values
@@ -788,6 +798,7 @@ class DeliveryorderAdd extends Deliveryorder
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['updated_at'] = $this->updated_at->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
+        $row['suratjalan'] = $this->suratjalan->CurrentValue;
         return $row;
     }
 
@@ -834,6 +845,8 @@ class DeliveryorderAdd extends Deliveryorder
         // updated_at
 
         // readonly
+
+        // suratjalan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -871,10 +884,9 @@ class DeliveryorderAdd extends Deliveryorder
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // suratjalan
+            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
+            $this->suratjalan->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -896,13 +908,12 @@ class DeliveryorderAdd extends Deliveryorder
             $this->created_by->LinkCustomAttributes = "";
             $this->created_by->HrefValue = "";
             $this->created_by->TooltipValue = "";
-        } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
+            // suratjalan
+            $this->suratjalan->LinkCustomAttributes = "";
+            $this->suratjalan->HrefValue = "";
+            $this->suratjalan->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
             $this->kode->EditCustomAttributes = "";
@@ -938,11 +949,16 @@ class DeliveryorderAdd extends Deliveryorder
             $this->created_by->EditCustomAttributes = "";
             $this->created_by->CurrentValue = CurrentUserID();
 
-            // Add refer script
+            // suratjalan
+            $this->suratjalan->EditAttrs["class"] = "form-control";
+            $this->suratjalan->EditCustomAttributes = "";
+            if (!$this->suratjalan->Raw) {
+                $this->suratjalan->CurrentValue = HtmlDecode($this->suratjalan->CurrentValue);
+            }
+            $this->suratjalan->EditValue = HtmlEncode($this->suratjalan->CurrentValue);
+            $this->suratjalan->PlaceHolder = RemoveHtml($this->suratjalan->caption());
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
+            // Add refer script
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -960,6 +976,10 @@ class DeliveryorderAdd extends Deliveryorder
             // created_by
             $this->created_by->LinkCustomAttributes = "";
             $this->created_by->HrefValue = "";
+
+            // suratjalan
+            $this->suratjalan->LinkCustomAttributes = "";
+            $this->suratjalan->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -979,14 +999,6 @@ class DeliveryorderAdd extends Deliveryorder
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->kode->Required) {
             if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
@@ -1009,6 +1021,11 @@ class DeliveryorderAdd extends Deliveryorder
         if ($this->created_by->Required) {
             if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
                 $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
+            }
+        }
+        if ($this->suratjalan->Required) {
+            if (!$this->suratjalan->IsDetailKey && EmptyValue($this->suratjalan->FormValue)) {
+                $this->suratjalan->addErrorMessage(str_replace("%s", $this->suratjalan->caption(), $this->suratjalan->RequiredErrorMessage));
             }
         }
 
@@ -1060,11 +1077,8 @@ class DeliveryorderAdd extends Deliveryorder
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // tanggal
         $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), false);
@@ -1081,6 +1095,9 @@ class DeliveryorderAdd extends Deliveryorder
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
+
+        // suratjalan
+        $this->suratjalan->setDbValueDef($rsnew, $this->suratjalan->CurrentValue, null, false);
         if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
             $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
             if (!EmptyValue($this->lampiran->Upload->FileName)) {
@@ -1125,23 +1142,6 @@ class DeliveryorderAdd extends Deliveryorder
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

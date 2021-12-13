@@ -424,6 +424,9 @@ class PenagihanView extends Penagihan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -870,10 +873,6 @@ class PenagihanView extends Penagihan
 
         // saldo
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // messages
             $this->messages->ViewValue = $this->messages->CurrentValue;
             $this->messages->ViewCustomAttributes = "";
@@ -978,11 +977,6 @@ class PenagihanView extends Penagihan
             $this->saldo->ViewValue = $this->saldo->CurrentValue;
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
             $this->saldo->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // messages
             $this->messages->LinkCustomAttributes = "";

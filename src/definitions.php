@@ -155,6 +155,7 @@ return [
     "v_stockorder_detail" => \DI\create(VStockorderDetail::class),
     "v_stock_produk" => \DI\create(VStockProduk::class),
     "pengembangan_produk" => \DI\create(PengembanganProduk::class),
+    "npd_produk_master" => \DI\create(NpdProdukMaster::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

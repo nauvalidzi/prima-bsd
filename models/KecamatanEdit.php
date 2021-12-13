@@ -369,6 +369,9 @@ class KecamatanEdit extends Kecamatan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -464,7 +467,7 @@ class KecamatanEdit extends Kecamatan
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idkabupaten->setVisibility();
         $this->nama->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -648,19 +651,6 @@ class KecamatanEdit extends Kecamatan
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_id")) {
-            $this->id->setOldValue($CurrentForm->getValue("o_id"));
-        }
-
         // Check field name 'idkabupaten' first before field var 'x_idkabupaten'
         $val = $CurrentForm->hasValue("idkabupaten") ? $CurrentForm->getValue("idkabupaten") : $CurrentForm->getValue("x_idkabupaten");
         if (!$this->idkabupaten->IsDetailKey) {
@@ -679,6 +669,12 @@ class KecamatanEdit extends Kecamatan
             } else {
                 $this->nama->setFormValue($val);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -818,11 +814,6 @@ class KecamatanEdit extends Kecamatan
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idkabupaten
             $this->idkabupaten->LinkCustomAttributes = "";
             $this->idkabupaten->HrefValue = "";
@@ -833,12 +824,6 @@ class KecamatanEdit extends Kecamatan
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idkabupaten
             $this->idkabupaten->EditAttrs["class"] = "form-control";
             $this->idkabupaten->EditCustomAttributes = "";
@@ -874,10 +859,6 @@ class KecamatanEdit extends Kecamatan
 
             // Edit refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idkabupaten
             $this->idkabupaten->LinkCustomAttributes = "";
             $this->idkabupaten->HrefValue = "";
@@ -904,14 +885,6 @@ class KecamatanEdit extends Kecamatan
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idkabupaten->Required) {
             if (!$this->idkabupaten->IsDetailKey && EmptyValue($this->idkabupaten->FormValue)) {
@@ -958,9 +931,6 @@ class KecamatanEdit extends Kecamatan
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // id
-            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
-
             // idkabupaten
             $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, 0, $this->idkabupaten->ReadOnly);
 
@@ -969,19 +939,6 @@ class KecamatanEdit extends Kecamatan
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

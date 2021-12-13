@@ -375,6 +375,9 @@ class VPiutangDetailGrid extends VPiutangDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->idinvoice->Visible = false;
+        }
     }
 
     // Lookup data
@@ -1311,7 +1314,7 @@ class VPiutangDetailGrid extends VPiutangDetail
 
         // Check field name 'idinvoice' first before field var 'x_idinvoice'
         $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
-        if (!$this->idinvoice->IsDetailKey) {
+        if (!$this->idinvoice->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
             $this->idinvoice->setFormValue($val);
         }
     }
@@ -1320,7 +1323,9 @@ class VPiutangDetailGrid extends VPiutangDetail
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
+        if (!$this->isGridAdd() && !$this->isAdd()) {
+            $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
+        }
         $this->tglinvoice->CurrentValue = $this->tglinvoice->FormValue;
         $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
         $this->sisabayar->CurrentValue = $this->sisabayar->FormValue;
@@ -1772,19 +1777,6 @@ class VPiutangDetailGrid extends VPiutangDetail
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -1874,10 +1866,10 @@ class VPiutangDetailGrid extends VPiutangDetail
         $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), false);
 
         // sisabayar
-        $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, strval($this->sisabayar->CurrentValue) == "");
+        $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, false);
 
         // totaltagihan
-        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
+        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, false);
 
         // jatuhtempo
         $this->jatuhtempo->setDbValueDef($rsnew, UnFormatDateTime($this->jatuhtempo->CurrentValue, 0), null, false);
@@ -1889,23 +1881,6 @@ class VPiutangDetailGrid extends VPiutangDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['idinvoice']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

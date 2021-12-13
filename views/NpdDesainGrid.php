@@ -22,7 +22,6 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd_desain)
         ew.vars.tables.npd_desain = currentTable;
     fnpd_desaingrid.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null, ew.Validators.integer], fields.idnpd.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null, ew.Validators.integer], fields.idcustomer.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
@@ -92,8 +91,6 @@ loadjs.ready("head", function () {
     // Check empty row
     fnpd_desaingrid.emptyRow = function (rowIndex) {
         var fobj = this.getForm();
-        if (ew.valueChanged(fobj, rowIndex, "id", false))
-            return false;
         if (ew.valueChanged(fobj, rowIndex, "idnpd", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idcustomer", false))
@@ -163,9 +160,6 @@ $Grid->renderListOptions();
 // Render list options (header, left)
 $Grid->ListOptions->render("header", "left");
 ?>
-<?php if ($Grid->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Grid->id->headerCellClass() ?>"><div id="elh_npd_desain_id" class="npd_desain_id"><?= $Grid->renderSort($Grid->id) ?></div></th>
-<?php } ?>
 <?php if ($Grid->idnpd->Visible) { // idnpd ?>
         <th data-name="idnpd" class="<?= $Grid->idnpd->headerCellClass() ?>"><div id="elh_npd_desain_idnpd" class="npd_desain_idnpd"><?= $Grid->renderSort($Grid->idnpd) ?></div></th>
 <?php } ?>
@@ -327,34 +321,6 @@ while ($Grid->RecordCount < $Grid->StopRecord) {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 ?>
-    <?php if ($Grid->id->Visible) { // id ?>
-        <td data-name="id" <?= $Grid->id->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_desain_id" class="form-group">
-<input type="<?= $Grid->id->getInputTextType() ?>" data-table="npd_desain" data-field="x_id" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" size="30" placeholder="<?= HtmlEncode($Grid->id->getPlaceHolder()) ?>" value="<?= $Grid->id->EditValue ?>"<?= $Grid->id->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->id->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="npd_desain" data-field="x_id" data-hidden="1" name="o<?= $Grid->RowIndex ?>_id" id="o<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<input type="<?= $Grid->id->getInputTextType() ?>" data-table="npd_desain" data-field="x_id" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" size="30" placeholder="<?= HtmlEncode($Grid->id->getPlaceHolder()) ?>" value="<?= $Grid->id->EditValue ?>"<?= $Grid->id->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->id->getErrorMessage() ?></div>
-<input type="hidden" data-table="npd_desain" data-field="x_id" data-hidden="1" name="o<?= $Grid->RowIndex ?>_id" id="o<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->OldValue ?? $Grid->id->CurrentValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_desain_id">
-<span<?= $Grid->id->viewAttributes() ?>>
-<?= $Grid->id->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="npd_desain" data-field="x_id" data-hidden="1" name="fnpd_desaingrid$x<?= $Grid->RowIndex ?>_id" id="fnpd_desaingrid$x<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->FormValue) ?>">
-<input type="hidden" data-table="npd_desain" data-field="x_id" data-hidden="1" name="fnpd_desaingrid$o<?= $Grid->RowIndex ?>_id" id="fnpd_desaingrid$o<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } else { ?>
-            <input type="hidden" data-table="npd_desain" data-field="x_id" data-hidden="1" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->CurrentValue) ?>">
-    <?php } ?>
     <?php if ($Grid->idnpd->Visible) { // idnpd ?>
         <td data-name="idnpd" <?= $Grid->idnpd->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -889,23 +855,6 @@ loadjs.ready(["fnpd_desaingrid","load"], function () {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 ?>
-    <?php if ($Grid->id->Visible) { // id ?>
-        <td data-name="id">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_npd_desain_id" class="form-group npd_desain_id">
-<input type="<?= $Grid->id->getInputTextType() ?>" data-table="npd_desain" data-field="x_id" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" size="30" placeholder="<?= HtmlEncode($Grid->id->getPlaceHolder()) ?>" value="<?= $Grid->id->EditValue ?>"<?= $Grid->id->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->id->getErrorMessage() ?></div>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_npd_desain_id" class="form-group npd_desain_id">
-<span<?= $Grid->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->id->getDisplayValue($Grid->id->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd_desain" data-field="x_id" data-hidden="1" name="x<?= $Grid->RowIndex ?>_id" id="x<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="npd_desain" data-field="x_id" data-hidden="1" name="o<?= $Grid->RowIndex ?>_id" id="o<?= $Grid->RowIndex ?>_id" value="<?= HtmlEncode($Grid->id->OldValue) ?>">
-</td>
-    <?php } ?>
     <?php if ($Grid->idnpd->Visible) { // idnpd ?>
         <td data-name="idnpd">
 <?php if (!$Grid->isConfirm()) { ?>

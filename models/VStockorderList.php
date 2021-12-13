@@ -438,6 +438,9 @@ class VStockorderList extends VStockorder
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->idstockorder->Visible = false;
+        }
     }
 
     // Lookup data

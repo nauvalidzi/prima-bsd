@@ -438,6 +438,9 @@ class NpdMasterdataList extends NpdMasterdata
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -565,7 +568,7 @@ class NpdMasterdataList extends NpdMasterdata
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->parent->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -1096,7 +1099,6 @@ class NpdMasterdataList extends NpdMasterdata
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->parent); // parent
             $this->updateSort($this->value); // value
             $this->setStartRecordNumber(1); // Reset start position
@@ -1599,15 +1601,12 @@ class NpdMasterdataList extends NpdMasterdata
         // Common render codes for all row types
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // parent
 
         // value
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // parent
             $this->parent->ViewValue = $this->parent->CurrentValue;
             $this->parent->ViewCustomAttributes = "";
@@ -1615,11 +1614,6 @@ class NpdMasterdataList extends NpdMasterdata
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // parent
             $this->parent->LinkCustomAttributes = "";

@@ -369,6 +369,9 @@ class InvoiceDetailAdd extends InvoiceDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -461,7 +464,7 @@ class InvoiceDetailAdd extends InvoiceDetail
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idinvoice->Visible = false;
         $this->idorder_detail->setVisibility();
         $this->jumlahorder->setVisibility();
@@ -664,16 +667,6 @@ class InvoiceDetailAdd extends InvoiceDetail
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'idorder_detail' first before field var 'x_idorder_detail'
         $val = $CurrentForm->hasValue("idorder_detail") ? $CurrentForm->getValue("idorder_detail") : $CurrentForm->getValue("x_idorder_detail");
         if (!$this->idorder_detail->IsDetailKey) {
@@ -813,13 +806,15 @@ class InvoiceDetailAdd extends InvoiceDetail
                 $this->readonly->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->idorder_detail->CurrentValue = $this->idorder_detail->FormValue;
         $this->jumlahorder->CurrentValue = $this->jumlahorder->FormValue;
         $this->bonus->CurrentValue = $this->bonus->FormValue;
@@ -1111,11 +1106,6 @@ class InvoiceDetailAdd extends InvoiceDetail
             $this->readonly->ViewValue = $this->readonly->CurrentValue;
             $this->readonly->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idorder_detail
             $this->idorder_detail->LinkCustomAttributes = "";
             $this->idorder_detail->HrefValue = "";
@@ -1186,12 +1176,6 @@ class InvoiceDetailAdd extends InvoiceDetail
             $this->readonly->HrefValue = "";
             $this->readonly->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idorder_detail
             $this->idorder_detail->EditAttrs["class"] = "form-control";
             $this->idorder_detail->EditCustomAttributes = "";
@@ -1305,10 +1289,6 @@ class InvoiceDetailAdd extends InvoiceDetail
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idorder_detail
             $this->idorder_detail->LinkCustomAttributes = "";
             $this->idorder_detail->HrefValue = "";
@@ -1383,14 +1363,6 @@ class InvoiceDetailAdd extends InvoiceDetail
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idorder_detail->Required) {
             if (!$this->idorder_detail->IsDetailKey && EmptyValue($this->idorder_detail->FormValue)) {
@@ -1558,11 +1530,8 @@ class InvoiceDetailAdd extends InvoiceDetail
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // idorder_detail
-        $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, strval($this->idorder_detail->CurrentValue) == "");
+        $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, false);
 
         // jumlahorder
         $this->jumlahorder->setDbValueDef($rsnew, $this->jumlahorder->CurrentValue, 0, false);
@@ -1583,7 +1552,7 @@ class InvoiceDetailAdd extends InvoiceDetail
         $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, false);
 
         // totalnondiskon
-        $this->totalnondiskon->setDbValueDef($rsnew, $this->totalnondiskon->CurrentValue, 0, strval($this->totalnondiskon->CurrentValue) == "");
+        $this->totalnondiskon->setDbValueDef($rsnew, $this->totalnondiskon->CurrentValue, 0, false);
 
         // diskonpayment
         $this->diskonpayment->setDbValueDef($rsnew, $this->diskonpayment->CurrentValue, 0, strval($this->diskonpayment->CurrentValue) == "");
@@ -1592,10 +1561,10 @@ class InvoiceDetailAdd extends InvoiceDetail
         $this->bbpersen->setDbValueDef($rsnew, $this->bbpersen->CurrentValue, 0, strval($this->bbpersen->CurrentValue) == "");
 
         // totaltagihan
-        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
+        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, false);
 
         // blackbonus
-        $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, 0, strval($this->blackbonus->CurrentValue) == "");
+        $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, 0, false);
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
@@ -1610,23 +1579,6 @@ class InvoiceDetailAdd extends InvoiceDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

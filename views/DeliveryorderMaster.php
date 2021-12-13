@@ -43,6 +43,17 @@ $deliveryorder = Container("deliveryorder");
 </td>
         </tr>
 <?php } ?>
+<?php if ($deliveryorder->suratjalan->Visible) { // suratjalan ?>
+        <tr id="r_suratjalan">
+            <td class="<?= $deliveryorder->TableLeftColumnClass ?>"><?= $deliveryorder->suratjalan->caption() ?></td>
+            <td <?= $deliveryorder->suratjalan->cellAttributes() ?>>
+<span id="el_deliveryorder_suratjalan">
+<span<?= $deliveryorder->suratjalan->viewAttributes() ?>>
+<?= $deliveryorder->suratjalan->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
     </tbody>
 </table>
 </div>

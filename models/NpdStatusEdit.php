@@ -369,6 +369,9 @@ class NpdStatusEdit extends NpdStatus
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -464,7 +467,7 @@ class NpdStatusEdit extends NpdStatus
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->idpegawai->setVisibility();
         $this->status->setVisibility();
@@ -656,19 +659,6 @@ class NpdStatusEdit extends NpdStatus
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_id")) {
-            $this->id->setOldValue($CurrentForm->getValue("o_id"));
-        }
-
         // Check field name 'idnpd' first before field var 'x_idnpd'
         $val = $CurrentForm->hasValue("idnpd") ? $CurrentForm->getValue("idnpd") : $CurrentForm->getValue("x_idnpd");
         if (!$this->idnpd->IsDetailKey) {
@@ -782,6 +772,12 @@ class NpdStatusEdit extends NpdStatus
             } else {
                 $this->created_by->setFormValue($val);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -940,10 +936,6 @@ class NpdStatusEdit extends NpdStatus
 
         // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idnpd
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
@@ -995,11 +987,6 @@ class NpdStatusEdit extends NpdStatus
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
@@ -1056,12 +1043,6 @@ class NpdStatusEdit extends NpdStatus
             $this->created_by->HrefValue = "";
             $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
             $this->idnpd->EditCustomAttributes = "";
@@ -1139,10 +1120,6 @@ class NpdStatusEdit extends NpdStatus
 
             // Edit refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
@@ -1205,14 +1182,6 @@ class NpdStatusEdit extends NpdStatus
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idnpd->Required) {
             if (!$this->idnpd->IsDetailKey && EmptyValue($this->idnpd->FormValue)) {
@@ -1325,9 +1294,6 @@ class NpdStatusEdit extends NpdStatus
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // id
-            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
-
             // idnpd
             $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, $this->idnpd->ReadOnly);
 
@@ -1363,19 +1329,6 @@ class NpdStatusEdit extends NpdStatus
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

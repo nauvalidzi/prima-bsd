@@ -363,6 +363,9 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $Recordset;
     public $TotalRecords;
@@ -387,7 +390,7 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->pid->Visible = false;
         $this->idstockorder->setVisibility();
         $this->idstockorder_detail->setVisibility();
@@ -501,7 +504,6 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idstockorder); // idstockorder
             $this->updateSort($this->idstockorder_detail); // idstockorder_detail
             $this->updateSort($this->totalorder); // totalorder

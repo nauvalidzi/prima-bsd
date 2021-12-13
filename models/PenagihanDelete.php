@@ -352,6 +352,9 @@ class PenagihanDelete extends Penagihan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
@@ -371,7 +374,7 @@ class PenagihanDelete extends Penagihan
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->messages->Visible = false;
         $this->tgl_order->setVisibility();
         $this->kode_order->setVisibility();
@@ -669,10 +672,6 @@ class PenagihanDelete extends Penagihan
 
         // saldo
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // tgl_order
             $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
             $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 0);
@@ -769,11 +768,6 @@ class PenagihanDelete extends Penagihan
             $this->saldo->ViewValue = $this->saldo->CurrentValue;
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
             $this->saldo->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // tgl_order
             $this->tgl_order->LinkCustomAttributes = "";

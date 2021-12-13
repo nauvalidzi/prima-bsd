@@ -352,6 +352,9 @@ class StockDelete extends Stock
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
@@ -371,7 +374,7 @@ class StockDelete extends Stock
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idproduct->setVisibility();
         $this->idorder_detail->setVisibility();
         $this->jumlah->setVisibility();
@@ -579,10 +582,6 @@ class StockDelete extends Stock
 
         // aktif
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idproduct
             $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
             $this->idproduct->ViewValue = FormatNumber($this->idproduct->ViewValue, 0, -2, -2, -2);
@@ -605,11 +604,6 @@ class StockDelete extends Stock
                 $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
             }
             $this->aktif->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idproduct
             $this->idproduct->LinkCustomAttributes = "";

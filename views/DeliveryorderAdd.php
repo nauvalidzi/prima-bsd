@@ -20,11 +20,11 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.deliveryorder)
         ew.vars.tables.deliveryorder = currentTable;
     fdeliveryorderadd.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
         ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
+        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid],
+        ["suratjalan", [fields.suratjalan.visible && fields.suratjalan.required ? ew.Validators.required(fields.suratjalan.caption) : null], fields.suratjalan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -113,18 +113,6 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id" class="form-group row">
-        <label id="elh_deliveryorder_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
-<span id="el_deliveryorder_id">
-<input type="<?= $Page->id->getInputTextType() ?>" data-table="deliveryorder" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
-<?= $Page->id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
     <div id="r_kode" class="form-group row">
         <label id="elh_deliveryorder_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -184,6 +172,18 @@ loadjs.ready(["fdeliveryorderadd", "datetimepicker"], function() {
     <span id="el_deliveryorder_created_by">
     <input type="hidden" data-table="deliveryorder" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
     </span>
+<?php if ($Page->suratjalan->Visible) { // suratjalan ?>
+    <div id="r_suratjalan" class="form-group row">
+        <label id="elh_deliveryorder_suratjalan" for="x_suratjalan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->suratjalan->caption() ?><?= $Page->suratjalan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->suratjalan->cellAttributes() ?>>
+<span id="el_deliveryorder_suratjalan">
+<input type="<?= $Page->suratjalan->getInputTextType() ?>" data-table="deliveryorder" data-field="x_suratjalan" name="x_suratjalan" id="x_suratjalan" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->suratjalan->getPlaceHolder()) ?>" value="<?= $Page->suratjalan->EditValue ?>"<?= $Page->suratjalan->editAttributes() ?> aria-describedby="x_suratjalan_help">
+<?= $Page->suratjalan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->suratjalan->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
 <?php
     if (in_array("deliveryorder_detail", explode(",", $Page->getCurrentDetailTable())) && $deliveryorder_detail->DetailAdd) {

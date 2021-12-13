@@ -135,9 +135,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_termpayment_id" class="termpayment_id"><?= $Page->renderSort($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
         <th data-name="title" class="<?= $Page->title->headerCellClass() ?>"><div id="elh_termpayment_title" class="termpayment_title"><?= $Page->renderSort($Page->title) ?></div></th>
 <?php } ?>
@@ -211,14 +208,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_termpayment_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->title->Visible) { // title ?>
         <td data-name="title" <?= $Page->title->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_termpayment_title">

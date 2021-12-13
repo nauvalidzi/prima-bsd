@@ -93,10 +93,10 @@ class Customer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('customer', 'customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('customer', 'customer', 'x_id', 'id', '`id`', '`id`', 21, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -111,8 +111,9 @@ class Customer extends DbTable
         $this->Fields['kode'] = &$this->kode;
 
         // idtipecustomer
-        $this->idtipecustomer = new DbField('customer', 'customer', 'x_idtipecustomer', 'idtipecustomer', '`idtipecustomer`', '`idtipecustomer`', 3, 11, -1, false, '`idtipecustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idtipecustomer = new DbField('customer', 'customer', 'x_idtipecustomer', 'idtipecustomer', '`idtipecustomer`', '`idtipecustomer`', 19, 11, -1, false, '`idtipecustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idtipecustomer->Nullable = false; // NOT NULL field
+        $this->idtipecustomer->Required = true; // Required field
         $this->idtipecustomer->Sortable = true; // Allow sort
         $this->idtipecustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idtipecustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -129,7 +130,7 @@ class Customer extends DbTable
         $this->Fields['idtipecustomer'] = &$this->idtipecustomer;
 
         // idpegawai
-        $this->idpegawai = new DbField('customer', 'customer', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idpegawai = new DbField('customer', 'customer', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 19, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idpegawai->IsForeignKey = true; // Foreign key field
         $this->idpegawai->Nullable = false; // NOT NULL field
         $this->idpegawai->Required = true; // Required field
@@ -169,7 +170,7 @@ class Customer extends DbTable
         $this->Fields['jabatan'] = &$this->jabatan;
 
         // idprov
-        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 20, 20, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idprov = new DbField('customer', 'customer', 'x_idprov', 'idprov', '`idprov`', '`idprov`', 21, 20, -1, false, '`idprov`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idprov->Sortable = true; // Allow sort
         $this->idprov->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idprov->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -186,7 +187,7 @@ class Customer extends DbTable
         $this->Fields['idprov'] = &$this->idprov;
 
         // idkab
-        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 20, 20, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkab = new DbField('customer', 'customer', 'x_idkab', 'idkab', '`idkab`', '`idkab`', 21, 20, -1, false, '`idkab`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkab->Sortable = true; // Allow sort
         $this->idkab->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkab->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -203,7 +204,7 @@ class Customer extends DbTable
         $this->Fields['idkab'] = &$this->idkab;
 
         // idkec
-        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 20, 20, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkec = new DbField('customer', 'customer', 'x_idkec', 'idkec', '`idkec`', '`idkec`', 21, 20, -1, false, '`idkec`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkec->Sortable = true; // Allow sort
         $this->idkec->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkec->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -220,7 +221,7 @@ class Customer extends DbTable
         $this->Fields['idkec'] = &$this->idkec;
 
         // idkel
-        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 20, 20, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkel = new DbField('customer', 'customer', 'x_idkel', 'idkel', '`idkel`', '`idkel`', 21, 20, -1, false, '`idkel`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkel->Sortable = true; // Allow sort
         $this->idkel->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkel->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -256,8 +257,6 @@ class Customer extends DbTable
 
         // hp
         $this->hp = new DbField('customer', 'customer', 'x_hp', 'hp', '`hp`', '`hp`', 200, 20, -1, false, '`hp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->hp->Nullable = false; // NOT NULL field
-        $this->hp->Required = true; // Required field
         $this->hp->Sortable = true; // Allow sort
         $this->hp->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->hp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hp->Param, "CustomMsg");
@@ -792,6 +791,9 @@ class Customer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1873,7 +1875,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
@@ -2467,6 +2469,9 @@ SORTHTML;
         $rsnew['updated_at'] = date('Y-m-d H:i:s');
         $rsnew['aktif'] = 1;
         return true;
+
+        // validation server-side "/^(62)8[1-9][0-9]{7,11}$/"
+        // validation client-side "^(62)8[1-9][0-9]{7,11}$"
     }
 
     // Row Inserted event

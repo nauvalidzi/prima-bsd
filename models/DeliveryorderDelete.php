@@ -352,6 +352,9 @@ class DeliveryorderDelete extends Deliveryorder
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
@@ -379,6 +382,7 @@ class DeliveryorderDelete extends Deliveryorder
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
         $this->readonly->Visible = false;
+        $this->suratjalan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -569,6 +573,7 @@ class DeliveryorderDelete extends Deliveryorder
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->suratjalan->setDbValue($row['suratjalan']);
     }
 
     // Return a row with default values
@@ -583,6 +588,7 @@ class DeliveryorderDelete extends Deliveryorder
         $row['created_at'] = null;
         $row['updated_at'] = null;
         $row['readonly'] = null;
+        $row['suratjalan'] = null;
         return $row;
     }
 
@@ -614,6 +620,8 @@ class DeliveryorderDelete extends Deliveryorder
 
         // readonly
         $this->readonly->CellCssStyle = "white-space: nowrap;";
+
+        // suratjalan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -651,6 +659,10 @@ class DeliveryorderDelete extends Deliveryorder
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
+            // suratjalan
+            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
+            $this->suratjalan->ViewCustomAttributes = "";
+
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -666,6 +678,11 @@ class DeliveryorderDelete extends Deliveryorder
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
+
+            // suratjalan
+            $this->suratjalan->LinkCustomAttributes = "";
+            $this->suratjalan->HrefValue = "";
+            $this->suratjalan->TooltipValue = "";
         }
 
         // Call Row Rendered event

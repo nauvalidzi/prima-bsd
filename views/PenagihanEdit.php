@@ -20,7 +20,6 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.penagihan)
         ew.vars.tables.penagihan = currentTable;
     fpenagihanedit.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null, ew.Validators.integer], fields.id.isInvalid],
         ["messages", [fields.messages.visible && fields.messages.required ? ew.Validators.required(fields.messages.caption) : null], fields.messages.isInvalid],
         ["tgl_order", [fields.tgl_order.visible && fields.tgl_order.required ? ew.Validators.required(fields.tgl_order.caption) : null, ew.Validators.datetime(0)], fields.tgl_order.isInvalid],
         ["kode_order", [fields.kode_order.visible && fields.kode_order.required ? ew.Validators.required(fields.kode_order.caption) : null], fields.kode_order.isInvalid],
@@ -132,17 +131,6 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id" class="form-group row">
-        <label id="elh_penagihan_id" for="x_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
-<input type="<?= $Page->id->getInputTextType() ?>" data-table="penagihan" data-field="x_id" name="x_id" id="x_id" placeholder="<?= HtmlEncode($Page->id->getPlaceHolder()) ?>" value="<?= $Page->id->EditValue ?>"<?= $Page->id->editAttributes() ?> aria-describedby="x_id_help">
-<?= $Page->id->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->id->getErrorMessage() ?></div>
-<input type="hidden" data-table="penagihan" data-field="x_id" data-hidden="1" name="o_id" id="o_id" value="<?= HtmlEncode($Page->id->OldValue ?? $Page->id->CurrentValue) ?>">
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->messages->Visible) { // messages ?>
     <div id="r_messages" class="form-group row">
         <label id="elh_penagihan_messages" for="x_messages" class="<?= $Page->LeftColumnClass ?>"><?= $Page->messages->caption() ?><?= $Page->messages->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -302,8 +290,8 @@ loadjs.ready(["fpenagihanedit", "datetimepicker"], function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
 <span id="el_penagihan_status">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->status->isInvalidClass() ?>" data-table="penagihan" data-field="x_status" name="x_status[]" id="x_status_502246" value="1"<?= ConvertToBool($Page->status->CurrentValue) ? " checked" : "" ?><?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
-    <label class="custom-control-label" for="x_status_502246"></label>
+    <input type="checkbox" class="custom-control-input<?= $Page->status->isInvalidClass() ?>" data-table="penagihan" data-field="x_status" name="x_status[]" id="x_status_766977" value="1"<?= ConvertToBool($Page->status->CurrentValue) ? " checked" : "" ?><?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
+    <label class="custom-control-label" for="x_status_766977"></label>
 </div>
 <?= $Page->status->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
@@ -453,6 +441,7 @@ loadjs.ready(["fpenagihanedit", "datetimepicker"], function() {
     </div>
 <?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="penagihan" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

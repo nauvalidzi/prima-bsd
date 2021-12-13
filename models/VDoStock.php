@@ -69,7 +69,7 @@ class VDoStock extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idcustomer
-        $this->idcustomer = new DbField('v_do_stock', 'v_do_stock', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_do_stock', 'v_do_stock', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

@@ -438,6 +438,9 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -565,7 +568,7 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->pid->Visible = false;
         $this->idstockorder->setVisibility();
         $this->idstockorder_detail->setVisibility();
@@ -837,7 +840,6 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idstockorder); // idstockorder
             $this->updateSort($this->idstockorder_detail); // idstockorder_detail
             $this->updateSort($this->totalorder); // totalorder
@@ -1322,10 +1324,6 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
 
         // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idstockorder
             $curVal = trim(strval($this->idstockorder->CurrentValue));
             if ($curVal != "") {
@@ -1386,11 +1384,6 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
             $this->jumlah_kirim->ViewValue = $this->jumlah_kirim->CurrentValue;
             $this->jumlah_kirim->ViewValue = FormatNumber($this->jumlah_kirim->ViewValue, 0, -2, -2, -2);
             $this->jumlah_kirim->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idstockorder
             $this->idstockorder->LinkCustomAttributes = "";

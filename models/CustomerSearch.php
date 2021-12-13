@@ -369,6 +369,9 @@ class CustomerSearch extends Customer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -1589,9 +1592,6 @@ class CustomerSearch extends Customer
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if (!CheckByRegEx($this->hp->AdvancedSearch->SearchValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
-            $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
         }
         if (!CheckInteger($this->limit_kredit_order->AdvancedSearch->SearchValue)) {
             $this->limit_kredit_order->addErrorMessage($this->limit_kredit_order->getErrorMessage(false));

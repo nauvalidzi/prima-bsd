@@ -79,6 +79,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->suratjalan->Visible) { // suratjalan ?>
+    <tr id="r_suratjalan">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_deliveryorder_suratjalan"><?= $Page->suratjalan->caption() ?></span></td>
+        <td data-name="suratjalan" <?= $Page->suratjalan->cellAttributes() ?>>
+<span id="el_deliveryorder_suratjalan">
+<span<?= $Page->suratjalan->viewAttributes() ?>>
+<?= $Page->suratjalan->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 <?php
     if (in_array("deliveryorder_detail", explode(",", $Page->getCurrentDetailTable())) && $deliveryorder_detail->DetailView) {

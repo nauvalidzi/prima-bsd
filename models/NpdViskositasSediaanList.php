@@ -438,6 +438,9 @@ class NpdViskositasSediaanList extends NpdViskositasSediaan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data

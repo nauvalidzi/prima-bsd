@@ -363,6 +363,9 @@ class VPiutangDetailPreview extends VPiutangDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->idinvoice->Visible = false;
+        }
     }
     public $Recordset;
     public $TotalRecords;

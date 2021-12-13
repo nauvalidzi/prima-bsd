@@ -81,10 +81,10 @@ class Invoice extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('invoice', 'invoice', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('invoice', 'invoice', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -108,7 +108,7 @@ class Invoice extends DbTable
         $this->Fields['tglinvoice'] = &$this->tglinvoice;
 
         // idcustomer
-        $this->idcustomer = new DbField('invoice', 'invoice', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('invoice', 'invoice', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
@@ -128,7 +128,7 @@ class Invoice extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idorder
-        $this->idorder = new DbField('invoice', 'invoice', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idorder = new DbField('invoice', 'invoice', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 21, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort
@@ -147,8 +147,9 @@ class Invoice extends DbTable
         $this->Fields['idorder'] = &$this->idorder;
 
         // totalnonpajak
-        $this->totalnonpajak = new DbField('invoice', 'invoice', 'x_totalnonpajak', 'totalnonpajak', '`totalnonpajak`', '`totalnonpajak`', 20, 20, -1, false, '`totalnonpajak`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totalnonpajak = new DbField('invoice', 'invoice', 'x_totalnonpajak', 'totalnonpajak', '`totalnonpajak`', '`totalnonpajak`', 21, 20, -1, false, '`totalnonpajak`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totalnonpajak->Nullable = false; // NOT NULL field
+        $this->totalnonpajak->Required = true; // Required field
         $this->totalnonpajak->Sortable = true; // Allow sort
         $this->totalnonpajak->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->totalnonpajak->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totalnonpajak->Param, "CustomMsg");
@@ -164,16 +165,18 @@ class Invoice extends DbTable
         $this->Fields['pajak'] = &$this->pajak;
 
         // totaltagihan
-        $this->totaltagihan = new DbField('invoice', 'invoice', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 20, 20, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totaltagihan = new DbField('invoice', 'invoice', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 21, 20, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totaltagihan->Nullable = false; // NOT NULL field
+        $this->totaltagihan->Required = true; // Required field
         $this->totaltagihan->Sortable = true; // Allow sort
         $this->totaltagihan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->totaltagihan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totaltagihan->Param, "CustomMsg");
         $this->Fields['totaltagihan'] = &$this->totaltagihan;
 
         // sisabayar
-        $this->sisabayar = new DbField('invoice', 'invoice', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisabayar = new DbField('invoice', 'invoice', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 21, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisabayar->Nullable = false; // NOT NULL field
+        $this->sisabayar->Required = true; // Required field
         $this->sisabayar->Sortable = true; // Allow sort
         $this->sisabayar->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisabayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisabayar->Param, "CustomMsg");
@@ -738,6 +741,9 @@ class Invoice extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1514,7 +1520,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";

@@ -369,6 +369,9 @@ class IjinbpomDetailAdd extends IjinbpomDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -461,7 +464,7 @@ class IjinbpomDetailAdd extends IjinbpomDetail
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idijinbpom->Visible = false;
         $this->idnpd->setVisibility();
         $this->nama->setVisibility();
@@ -647,16 +650,6 @@ class IjinbpomDetailAdd extends IjinbpomDetail
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'idnpd' first before field var 'x_idnpd'
         $val = $CurrentForm->hasValue("idnpd") ? $CurrentForm->getValue("idnpd") : $CurrentForm->getValue("x_idnpd");
         if (!$this->idnpd->IsDetailKey) {
@@ -716,13 +709,15 @@ class IjinbpomDetailAdd extends IjinbpomDetail
                 $this->kodesample->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->idnpd->CurrentValue = $this->idnpd->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
         $this->namaalt->CurrentValue = $this->namaalt->FormValue;
@@ -936,11 +931,6 @@ class IjinbpomDetailAdd extends IjinbpomDetail
             }
             $this->selesai->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
@@ -971,12 +961,6 @@ class IjinbpomDetailAdd extends IjinbpomDetail
             $this->kodesample->HrefValue = "";
             $this->kodesample->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
             $this->idnpd->EditCustomAttributes = "";
@@ -1068,10 +1052,6 @@ class IjinbpomDetailAdd extends IjinbpomDetail
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
@@ -1114,14 +1094,6 @@ class IjinbpomDetailAdd extends IjinbpomDetail
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idnpd->Required) {
             if (!$this->idnpd->IsDetailKey && EmptyValue($this->idnpd->FormValue)) {
@@ -1207,11 +1179,8 @@ class IjinbpomDetailAdd extends IjinbpomDetail
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
 
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
@@ -1220,7 +1189,7 @@ class IjinbpomDetailAdd extends IjinbpomDetail
         $this->namaalt->setDbValueDef($rsnew, $this->namaalt->CurrentValue, null, false);
 
         // idproduct_acuan
-        $this->idproduct_acuan->setDbValueDef($rsnew, $this->idproduct_acuan->CurrentValue, 0, strval($this->idproduct_acuan->CurrentValue) == "");
+        $this->idproduct_acuan->setDbValueDef($rsnew, $this->idproduct_acuan->CurrentValue, 0, false);
 
         // ukuran
         $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, "", false);
@@ -1235,23 +1204,6 @@ class IjinbpomDetailAdd extends IjinbpomDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

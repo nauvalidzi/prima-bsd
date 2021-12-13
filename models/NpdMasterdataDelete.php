@@ -352,6 +352,9 @@ class NpdMasterdataDelete extends NpdMasterdata
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
@@ -371,7 +374,7 @@ class NpdMasterdataDelete extends NpdMasterdata
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->parent->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -564,15 +567,12 @@ class NpdMasterdataDelete extends NpdMasterdata
         // Common render codes for all row types
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // parent
 
         // value
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // parent
             $this->parent->ViewValue = $this->parent->CurrentValue;
             $this->parent->ViewCustomAttributes = "";
@@ -580,11 +580,6 @@ class NpdMasterdataDelete extends NpdMasterdata
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // parent
             $this->parent->LinkCustomAttributes = "";

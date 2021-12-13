@@ -89,9 +89,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_stock_id" class="stock_id"><?= $Page->renderSort($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <th data-name="idproduct" class="<?= $Page->idproduct->headerCellClass() ?>"><div id="elh_stock_idproduct" class="stock_idproduct"><?= $Page->renderSort($Page->idproduct) ?></div></th>
 <?php } ?>
@@ -171,14 +168,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <td data-name="idproduct" <?= $Page->idproduct->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_stock_idproduct">

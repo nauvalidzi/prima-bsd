@@ -424,6 +424,9 @@ class NpdView extends Npd
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -519,14 +522,15 @@ class NpdView extends Npd
         $this->id->setVisibility();
         $this->tanggal_order->setVisibility();
         $this->target_selesai->setVisibility();
-        $this->status->setVisibility();
+        $this->idbrand->setVisibility();
+        $this->sifatorder->setVisibility();
         $this->kodeorder->setVisibility();
         $this->nomororder->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idproduct_acuan->setVisibility();
-        $this->idjenisproduk->setVisibility();
         $this->idkategoriproduk->setVisibility();
+        $this->idjenisproduk->setVisibility();
         $this->fungsiproduk->setVisibility();
         $this->kualitasproduk->setVisibility();
         $this->bahan_campaign->setVisibility();
@@ -546,7 +550,7 @@ class NpdView extends Npd
         $this->labelkualitas->setVisibility();
         $this->labelposisi->setVisibility();
         $this->labelcatatan->setVisibility();
-        $this->statusdokumen->setVisibility();
+        $this->status->setVisibility();
         $this->readonly->setVisibility();
         $this->selesai->setVisibility();
         $this->created_at->setVisibility();
@@ -571,8 +575,8 @@ class NpdView extends Npd
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idproduct_acuan);
-        $this->setupLookupOptions($this->idjenisproduk);
         $this->setupLookupOptions($this->idkategoriproduk);
+        $this->setupLookupOptions($this->idjenisproduk);
         $this->setupLookupOptions($this->bentuk);
         $this->setupLookupOptions($this->viskositas);
         $this->setupLookupOptions($this->warna);
@@ -1046,14 +1050,15 @@ class NpdView extends Npd
         $this->id->setDbValue($row['id']);
         $this->tanggal_order->setDbValue($row['tanggal_order']);
         $this->target_selesai->setDbValue($row['target_selesai']);
-        $this->status->setDbValue($row['status']);
+        $this->idbrand->setDbValue($row['idbrand']);
+        $this->sifatorder->setDbValue($row['sifatorder']);
         $this->kodeorder->setDbValue($row['kodeorder']);
         $this->nomororder->setDbValue($row['nomororder']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
-        $this->idjenisproduk->setDbValue($row['idjenisproduk']);
         $this->idkategoriproduk->setDbValue($row['idkategoriproduk']);
+        $this->idjenisproduk->setDbValue($row['idjenisproduk']);
         $this->fungsiproduk->setDbValue($row['fungsiproduk']);
         $this->kualitasproduk->setDbValue($row['kualitasproduk']);
         $this->bahan_campaign->setDbValue($row['bahan_campaign']);
@@ -1073,7 +1078,7 @@ class NpdView extends Npd
         $this->labelkualitas->setDbValue($row['labelkualitas']);
         $this->labelposisi->setDbValue($row['labelposisi']);
         $this->labelcatatan->setDbValue($row['labelcatatan']);
-        $this->statusdokumen->setDbValue($row['statusdokumen']);
+        $this->status->setDbValue($row['status']);
         $this->readonly->setDbValue($row['readonly']);
         $this->selesai->setDbValue($row['selesai']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1123,14 +1128,15 @@ class NpdView extends Npd
         $row['id'] = null;
         $row['tanggal_order'] = null;
         $row['target_selesai'] = null;
-        $row['status'] = null;
+        $row['idbrand'] = null;
+        $row['sifatorder'] = null;
         $row['kodeorder'] = null;
         $row['nomororder'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
         $row['idproduct_acuan'] = null;
-        $row['idjenisproduk'] = null;
         $row['idkategoriproduk'] = null;
+        $row['idjenisproduk'] = null;
         $row['fungsiproduk'] = null;
         $row['kualitasproduk'] = null;
         $row['bahan_campaign'] = null;
@@ -1150,7 +1156,7 @@ class NpdView extends Npd
         $row['labelkualitas'] = null;
         $row['labelposisi'] = null;
         $row['labelcatatan'] = null;
-        $row['statusdokumen'] = null;
+        $row['status'] = null;
         $row['readonly'] = null;
         $row['selesai'] = null;
         $row['created_at'] = null;
@@ -1182,7 +1188,9 @@ class NpdView extends Npd
 
         // target_selesai
 
-        // status
+        // idbrand
+
+        // sifatorder
 
         // kodeorder
 
@@ -1194,9 +1202,9 @@ class NpdView extends Npd
 
         // idproduct_acuan
 
-        // idjenisproduk
-
         // idkategoriproduk
+
+        // idjenisproduk
 
         // fungsiproduk
 
@@ -1236,7 +1244,7 @@ class NpdView extends Npd
 
         // labelcatatan
 
-        // statusdokumen
+        // status
 
         // readonly
 
@@ -1260,9 +1268,18 @@ class NpdView extends Npd
             $this->target_selesai->ViewValue = FormatDateTime($this->target_selesai->ViewValue, 0);
             $this->target_selesai->ViewCustomAttributes = "";
 
-            // status
-            $this->status->ViewValue = $this->status->CurrentValue;
-            $this->status->ViewCustomAttributes = "";
+            // idbrand
+            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+            $this->idbrand->ViewValue = FormatNumber($this->idbrand->ViewValue, 0, -2, -2, -2);
+            $this->idbrand->ViewCustomAttributes = "";
+
+            // sifatorder
+            if (strval($this->sifatorder->CurrentValue) != "") {
+                $this->sifatorder->ViewValue = $this->sifatorder->optionCaption($this->sifatorder->CurrentValue);
+            } else {
+                $this->sifatorder->ViewValue = null;
+            }
+            $this->sifatorder->ViewCustomAttributes = "";
 
             // kodeorder
             $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
@@ -1315,30 +1332,26 @@ class NpdView extends Npd
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // idproduct_acuan
-            $curVal = trim(strval($this->idproduct_acuan->CurrentValue));
+            // idkategoriproduk
+            $curVal = trim(strval($this->idkategoriproduk->CurrentValue));
             if ($curVal != "") {
-                $this->idproduct_acuan->ViewValue = $this->idproduct_acuan->lookupCacheOption($curVal);
-                if ($this->idproduct_acuan->ViewValue === null) { // Lookup from database
+                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->lookupCacheOption($curVal);
+                if ($this->idkategoriproduk->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idbrand = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idproduct_acuan->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $sqlWrk = $this->idkategoriproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idproduct_acuan->Lookup->renderViewRow($rswrk[0]);
-                        $this->idproduct_acuan->ViewValue = $this->idproduct_acuan->displayValue($arwrk);
+                        $arwrk = $this->idkategoriproduk->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->displayValue($arwrk);
                     } else {
-                        $this->idproduct_acuan->ViewValue = $this->idproduct_acuan->CurrentValue;
+                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->CurrentValue;
                     }
                 }
             } else {
-                $this->idproduct_acuan->ViewValue = null;
+                $this->idkategoriproduk->ViewValue = null;
             }
-            $this->idproduct_acuan->ViewCustomAttributes = "";
+            $this->idkategoriproduk->ViewCustomAttributes = "";
 
             // idjenisproduk
             $curVal = trim(strval($this->idjenisproduk->CurrentValue));
@@ -1360,27 +1373,6 @@ class NpdView extends Npd
                 $this->idjenisproduk->ViewValue = null;
             }
             $this->idjenisproduk->ViewCustomAttributes = "";
-
-            // idkategoriproduk
-            $curVal = trim(strval($this->idkategoriproduk->CurrentValue));
-            if ($curVal != "") {
-                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->lookupCacheOption($curVal);
-                if ($this->idkategoriproduk->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idkategoriproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkategoriproduk->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->displayValue($arwrk);
-                    } else {
-                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idkategoriproduk->ViewValue = null;
-            }
-            $this->idkategoriproduk->ViewCustomAttributes = "";
 
             // fungsiproduk
             $this->fungsiproduk->ViewValue = $this->fungsiproduk->CurrentValue;
@@ -1755,9 +1747,9 @@ class NpdView extends Npd
             $this->labelcatatan->ViewValue = $this->labelcatatan->CurrentValue;
             $this->labelcatatan->ViewCustomAttributes = "";
 
-            // statusdokumen
-            $this->statusdokumen->ViewValue = $this->statusdokumen->CurrentValue;
-            $this->statusdokumen->ViewCustomAttributes = "";
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
 
             // readonly
             if (strval($this->readonly->CurrentValue) != "") {
@@ -1795,10 +1787,15 @@ class NpdView extends Npd
             $this->target_selesai->HrefValue = "";
             $this->target_selesai->TooltipValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+
+            // sifatorder
+            $this->sifatorder->LinkCustomAttributes = "";
+            $this->sifatorder->HrefValue = "";
+            $this->sifatorder->TooltipValue = "";
 
             // kodeorder
             $this->kodeorder->LinkCustomAttributes = "";
@@ -1820,20 +1817,15 @@ class NpdView extends Npd
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
-            // idproduct_acuan
-            $this->idproduct_acuan->LinkCustomAttributes = "";
-            $this->idproduct_acuan->HrefValue = "";
-            $this->idproduct_acuan->TooltipValue = "";
+            // idkategoriproduk
+            $this->idkategoriproduk->LinkCustomAttributes = "";
+            $this->idkategoriproduk->HrefValue = "";
+            $this->idkategoriproduk->TooltipValue = "";
 
             // idjenisproduk
             $this->idjenisproduk->LinkCustomAttributes = "";
             $this->idjenisproduk->HrefValue = "";
             $this->idjenisproduk->TooltipValue = "";
-
-            // idkategoriproduk
-            $this->idkategoriproduk->LinkCustomAttributes = "";
-            $this->idkategoriproduk->HrefValue = "";
-            $this->idkategoriproduk->TooltipValue = "";
 
             // fungsiproduk
             $this->fungsiproduk->LinkCustomAttributes = "";
@@ -1930,10 +1922,10 @@ class NpdView extends Npd
             $this->labelcatatan->HrefValue = "";
             $this->labelcatatan->TooltipValue = "";
 
-            // statusdokumen
-            $this->statusdokumen->LinkCustomAttributes = "";
-            $this->statusdokumen->HrefValue = "";
-            $this->statusdokumen->TooltipValue = "";
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
 
             // selesai
             $this->selesai->LinkCustomAttributes = "";
@@ -2089,6 +2081,8 @@ class NpdView extends Npd
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_sifatorder":
+                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
@@ -2099,9 +2093,9 @@ class NpdView extends Npd
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_idjenisproduk":
-                    break;
                 case "x_idkategoriproduk":
+                    break;
+                case "x_idjenisproduk":
                     break;
                 case "x_bentuk":
                     break;

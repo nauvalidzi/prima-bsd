@@ -110,16 +110,16 @@ class NpdTerms extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('npd_terms', 'npd_terms', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('npd_terms', 'npd_terms', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->Sortable = true; // Allow sort
+        $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idnpd
-        $this->idnpd = new DbField('npd_terms', 'npd_terms', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idnpd = new DbField('npd_terms', 'npd_terms', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 21, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
         $this->idnpd->Required = true; // Required field
@@ -802,6 +802,9 @@ class NpdTerms extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1855,7 +1858,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // idnpd
         $this->idnpd->EditAttrs["class"] = "form-control";
@@ -2206,7 +2209,6 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->tglsubmit);
@@ -2252,7 +2254,6 @@ SORTHTML;
                     $doc->exportCaption($this->dibuatdi);
                     $doc->exportCaption($this->created_at);
                 } else {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->tglsubmit);
@@ -2325,7 +2326,6 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
                         $doc->exportField($this->status);
                         $doc->exportField($this->tglsubmit);
@@ -2371,7 +2371,6 @@ SORTHTML;
                         $doc->exportField($this->dibuatdi);
                         $doc->exportField($this->created_at);
                     } else {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
                         $doc->exportField($this->status);
                         $doc->exportField($this->tglsubmit);

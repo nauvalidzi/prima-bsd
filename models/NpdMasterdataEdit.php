@@ -369,6 +369,9 @@ class NpdMasterdataEdit extends NpdMasterdata
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -464,7 +467,7 @@ class NpdMasterdataEdit extends NpdMasterdata
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->parent->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -647,19 +650,6 @@ class NpdMasterdataEdit extends NpdMasterdata
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_id")) {
-            $this->id->setOldValue($CurrentForm->getValue("o_id"));
-        }
-
         // Check field name 'parent' first before field var 'x_parent'
         $val = $CurrentForm->hasValue("parent") ? $CurrentForm->getValue("parent") : $CurrentForm->getValue("x_parent");
         if (!$this->parent->IsDetailKey) {
@@ -678,6 +668,12 @@ class NpdMasterdataEdit extends NpdMasterdata
             } else {
                 $this->value->setFormValue($val);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -786,10 +782,6 @@ class NpdMasterdataEdit extends NpdMasterdata
 
         // value
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // parent
             $this->parent->ViewValue = $this->parent->CurrentValue;
             $this->parent->ViewCustomAttributes = "";
@@ -797,11 +789,6 @@ class NpdMasterdataEdit extends NpdMasterdata
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // parent
             $this->parent->LinkCustomAttributes = "";
@@ -813,12 +800,6 @@ class NpdMasterdataEdit extends NpdMasterdata
             $this->value->HrefValue = "";
             $this->value->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // parent
             $this->parent->EditAttrs["class"] = "form-control";
             $this->parent->EditCustomAttributes = "";
@@ -838,10 +819,6 @@ class NpdMasterdataEdit extends NpdMasterdata
             $this->value->PlaceHolder = RemoveHtml($this->value->caption());
 
             // Edit refer script
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
 
             // parent
             $this->parent->LinkCustomAttributes = "";
@@ -869,14 +846,6 @@ class NpdMasterdataEdit extends NpdMasterdata
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->parent->Required) {
             if (!$this->parent->IsDetailKey && EmptyValue($this->parent->FormValue)) {
@@ -920,9 +889,6 @@ class NpdMasterdataEdit extends NpdMasterdata
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // id
-            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
-
             // parent
             $this->parent->setDbValueDef($rsnew, $this->parent->CurrentValue, "", $this->parent->ReadOnly);
 
@@ -931,19 +897,6 @@ class NpdMasterdataEdit extends NpdMasterdata
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

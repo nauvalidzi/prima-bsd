@@ -67,13 +67,24 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->status->Visible) { // status ?>
-    <tr id="r_status">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status"><?= $Page->status->caption() ?></span></td>
-        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
-<span id="el_npd_status">
-<span<?= $Page->status->viewAttributes() ?>>
-<?= $Page->status->getViewValue() ?></span>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+    <tr id="r_idbrand">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idbrand"><?= $Page->idbrand->caption() ?></span></td>
+        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el_npd_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->sifatorder->Visible) { // sifatorder ?>
+    <tr id="r_sifatorder">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_sifatorder"><?= $Page->sifatorder->caption() ?></span></td>
+        <td data-name="sifatorder" <?= $Page->sifatorder->cellAttributes() ?>>
+<span id="el_npd_sifatorder">
+<span<?= $Page->sifatorder->viewAttributes() ?>>
+<?= $Page->sifatorder->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -122,13 +133,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->idproduct_acuan->Visible) { // idproduct_acuan ?>
-    <tr id="r_idproduct_acuan">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idproduct_acuan"><?= $Page->idproduct_acuan->caption() ?></span></td>
-        <td data-name="idproduct_acuan" <?= $Page->idproduct_acuan->cellAttributes() ?>>
-<span id="el_npd_idproduct_acuan">
-<span<?= $Page->idproduct_acuan->viewAttributes() ?>>
-<?= $Page->idproduct_acuan->getViewValue() ?></span>
+<?php if ($Page->idkategoriproduk->Visible) { // idkategoriproduk ?>
+    <tr id="r_idkategoriproduk">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idkategoriproduk"><?= $Page->idkategoriproduk->caption() ?></span></td>
+        <td data-name="idkategoriproduk" <?= $Page->idkategoriproduk->cellAttributes() ?>>
+<span id="el_npd_idkategoriproduk">
+<span<?= $Page->idkategoriproduk->viewAttributes() ?>>
+<?= $Page->idkategoriproduk->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -140,17 +151,6 @@ $Page->showMessage();
 <span id="el_npd_idjenisproduk">
 <span<?= $Page->idjenisproduk->viewAttributes() ?>>
 <?= $Page->idjenisproduk->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->idkategoriproduk->Visible) { // idkategoriproduk ?>
-    <tr id="r_idkategoriproduk">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idkategoriproduk"><?= $Page->idkategoriproduk->caption() ?></span></td>
-        <td data-name="idkategoriproduk" <?= $Page->idkategoriproduk->cellAttributes() ?>>
-<span id="el_npd_idkategoriproduk">
-<span<?= $Page->idkategoriproduk->viewAttributes() ?>>
-<?= $Page->idkategoriproduk->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -364,13 +364,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->statusdokumen->Visible) { // statusdokumen ?>
-    <tr id="r_statusdokumen">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_statusdokumen"><?= $Page->statusdokumen->caption() ?></span></td>
-        <td data-name="statusdokumen" <?= $Page->statusdokumen->cellAttributes() ?>>
-<span id="el_npd_statusdokumen">
-<span<?= $Page->statusdokumen->viewAttributes() ?>>
-<?= $Page->statusdokumen->getViewValue() ?></span>
+<?php if ($Page->status->Visible) { // status ?>
+    <tr id="r_status">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_status"><?= $Page->status->caption() ?></span></td>
+        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
+<span id="el_npd_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
     </tr>

@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_npd_serahterima_id" class="npd_serahterima_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
         <th class="<?= $Page->idpegawai->headerCellClass() ?>"><span id="elh_npd_serahterima_idpegawai" class="npd_serahterima_idpegawai"><?= $Page->idpegawai->caption() ?></span></th>
 <?php } ?>
@@ -89,14 +86,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_id" class="npd_serahterima_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
         <td <?= $Page->idpegawai->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_serahterima_idpegawai" class="npd_serahterima_idpegawai">

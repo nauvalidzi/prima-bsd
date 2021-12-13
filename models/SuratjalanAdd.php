@@ -369,6 +369,9 @@ class SuratjalanAdd extends Suratjalan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -461,7 +464,7 @@ class SuratjalanAdd extends Suratjalan
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->tglsurat->setVisibility();
         $this->tglkirim->setVisibility();
@@ -656,16 +659,6 @@ class SuratjalanAdd extends Suratjalan
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
         if (!$this->kode->IsDetailKey) {
@@ -737,13 +730,15 @@ class SuratjalanAdd extends Suratjalan
                 $this->created_by->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tglsurat->CurrentValue = $this->tglsurat->FormValue;
         $this->tglsurat->CurrentValue = UnFormatDateTime($this->tglsurat->CurrentValue, 0);
@@ -963,11 +958,6 @@ class SuratjalanAdd extends Suratjalan
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1003,12 +993,6 @@ class SuratjalanAdd extends Suratjalan
             $this->created_by->HrefValue = "";
             $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
             $this->kode->EditCustomAttributes = "readonly";
@@ -1097,10 +1081,6 @@ class SuratjalanAdd extends Suratjalan
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1147,14 +1127,6 @@ class SuratjalanAdd extends Suratjalan
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->kode->Required) {
             if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
@@ -1246,9 +1218,6 @@ class SuratjalanAdd extends Suratjalan
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // kode
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
 
@@ -1259,10 +1228,10 @@ class SuratjalanAdd extends Suratjalan
         $this->tglkirim->setDbValueDef($rsnew, UnFormatDateTime($this->tglkirim->CurrentValue, 0), CurrentDate(), false);
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // idalamat_customer
-        $this->idalamat_customer->setDbValueDef($rsnew, $this->idalamat_customer->CurrentValue, 0, strval($this->idalamat_customer->CurrentValue) == "");
+        $this->idalamat_customer->setDbValueDef($rsnew, $this->idalamat_customer->CurrentValue, 0, false);
 
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
@@ -1272,23 +1241,6 @@ class SuratjalanAdd extends Suratjalan
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

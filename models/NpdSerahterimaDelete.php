@@ -352,6 +352,9 @@ class NpdSerahterimaDelete extends NpdSerahterima
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
@@ -371,7 +374,7 @@ class NpdSerahterimaDelete extends NpdSerahterima
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->tanggal_request->setVisibility();
@@ -594,10 +597,6 @@ class NpdSerahterimaDelete extends NpdSerahterima
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idpegawai
             $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
             $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
@@ -634,11 +633,6 @@ class NpdSerahterimaDelete extends NpdSerahterima
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";

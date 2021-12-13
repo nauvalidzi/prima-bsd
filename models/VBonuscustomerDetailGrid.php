@@ -375,6 +375,12 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAddOrEdit()) {
+            $this->idcustomer->Visible = false;
+        }
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->idinvoice->Visible = false;
+        }
     }
 
     // Lookup data
@@ -524,8 +530,6 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idinvoice);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -1292,7 +1296,7 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
 
         // Check field name 'idinvoice' first before field var 'x_idinvoice'
         $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
-        if (!$this->idinvoice->IsDetailKey) {
+        if (!$this->idinvoice->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
             $this->idinvoice->setFormValue($val);
         }
     }
@@ -1301,7 +1305,9 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
+        if (!$this->isGridAdd() && !$this->isAdd()) {
+            $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
+        }
         $this->nama_customer->CurrentValue = $this->nama_customer->FormValue;
         $this->kode_invoice->CurrentValue = $this->kode_invoice->FormValue;
         $this->blackbonus->CurrentValue = $this->blackbonus->FormValue;
@@ -1444,46 +1450,10 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
             $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-            $curVal = trim(strval($this->idinvoice->CurrentValue));
-            if ($curVal != "") {
-                $this->idinvoice->ViewValue = $this->idinvoice->lookupCacheOption($curVal);
-                if ($this->idinvoice->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                        $this->idinvoice->ViewValue = $this->idinvoice->displayValue($arwrk);
-                    } else {
-                        $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idinvoice->ViewValue = null;
-            }
             $this->idinvoice->ViewCustomAttributes = "";
 
             // nama_customer
@@ -1755,19 +1725,6 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -1869,23 +1826,6 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['idinvoice']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {
@@ -1952,10 +1892,6 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
-                case "x_idinvoice":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

@@ -144,6 +144,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->lampiran->Visible) { // lampiran ?>
         <th data-name="lampiran" class="<?= $Page->lampiran->headerCellClass() ?>"><div id="elh_deliveryorder_lampiran" class="deliveryorder_lampiran"><?= $Page->renderSort($Page->lampiran) ?></div></th>
 <?php } ?>
+<?php if ($Page->suratjalan->Visible) { // suratjalan ?>
+        <th data-name="suratjalan" class="<?= $Page->suratjalan->headerCellClass() ?>"><div id="elh_deliveryorder_suratjalan" class="deliveryorder_suratjalan"><?= $Page->renderSort($Page->suratjalan) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -233,6 +236,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span<?= $Page->lampiran->viewAttributes() ?>>
 <?= GetFileViewTag($Page->lampiran, $Page->lampiran->getViewValue(), false) ?>
 </span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->suratjalan->Visible) { // suratjalan ?>
+        <td data-name="suratjalan" <?= $Page->suratjalan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_deliveryorder_suratjalan">
+<span<?= $Page->suratjalan->viewAttributes() ?>>
+<?= $Page->suratjalan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

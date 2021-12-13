@@ -375,6 +375,9 @@ class CustomerGrid extends Customer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -1670,7 +1673,7 @@ class CustomerGrid extends Customer
 
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
+        if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
             $this->id->setFormValue($val);
         }
     }
@@ -1679,7 +1682,9 @@ class CustomerGrid extends Customer
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        if (!$this->isGridAdd() && !$this->isAdd()) {
+            $this->id->CurrentValue = $this->id->FormValue;
+        }
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->idtipecustomer->CurrentValue = $this->idtipecustomer->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
@@ -2536,9 +2541,6 @@ class CustomerGrid extends Customer
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
         }
-        if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
-            $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
-        }
         if ($this->klinik->Required) {
             if (!$this->klinik->IsDetailKey && EmptyValue($this->klinik->FormValue)) {
                 $this->klinik->addErrorMessage(str_replace("%s", $this->klinik->caption(), $this->klinik->RequiredErrorMessage));
@@ -2658,23 +2660,6 @@ class CustomerGrid extends Customer
                 return false;
             }
         }
-        if ($this->hp->CurrentValue != "") { // Check field with unique index
-            $filterChk = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
-            $filterChk .= " AND NOT (" . $filter . ")";
-            $this->CurrentFilter = $filterChk;
-            $sqlChk = $this->getCurrentSql();
-            $rsChk = $conn->executeQuery($sqlChk);
-            if (!$rsChk) {
-                return false;
-            }
-            if ($rsChk->fetch()) {
-                $idxErrMsg = str_replace("%f", $this->hp->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->hp->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                $rsChk->closeCursor();
-                return false;
-            }
-        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);
@@ -2703,26 +2688,13 @@ class CustomerGrid extends Customer
             $this->jenis_usaha->setDbValueDef($rsnew, $this->jenis_usaha->CurrentValue, null, $this->jenis_usaha->ReadOnly);
 
             // hp
-            $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", $this->hp->ReadOnly);
+            $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, null, $this->hp->ReadOnly);
 
             // klinik
             $this->klinik->setDbValueDef($rsnew, $this->klinik->CurrentValue, null, $this->klinik->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -2810,16 +2782,6 @@ class CustomerGrid extends Customer
                 return false;
             }
         }
-        if ($this->hp->CurrentValue != "") { // Check field with unique index
-            $filter = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $idxErrMsg = str_replace("%f", $this->hp->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->hp->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                return false;
-            }
-        }
         $conn = $this->getConnection();
 
         // Load db values from rsold
@@ -2832,7 +2794,7 @@ class CustomerGrid extends Customer
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
 
         // idtipecustomer
-        $this->idtipecustomer->setDbValueDef($rsnew, $this->idtipecustomer->CurrentValue, 0, strval($this->idtipecustomer->CurrentValue) == "");
+        $this->idtipecustomer->setDbValueDef($rsnew, $this->idtipecustomer->CurrentValue, 0, false);
 
         // idpegawai
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
@@ -2844,30 +2806,13 @@ class CustomerGrid extends Customer
         $this->jenis_usaha->setDbValueDef($rsnew, $this->jenis_usaha->CurrentValue, null, false);
 
         // hp
-        $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", false);
+        $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, null, strval($this->hp->CurrentValue) == "");
 
         // klinik
         $this->klinik->setDbValueDef($rsnew, $this->klinik->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

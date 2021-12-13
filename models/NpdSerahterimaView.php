@@ -424,6 +424,9 @@ class NpdSerahterimaView extends NpdSerahterima
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -795,10 +798,6 @@ class NpdSerahterimaView extends NpdSerahterima
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idpegawai
             $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
             $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
@@ -835,11 +834,6 @@ class NpdSerahterimaView extends NpdSerahterima
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";

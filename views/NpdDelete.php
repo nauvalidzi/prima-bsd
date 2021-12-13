@@ -50,8 +50,11 @@ $Page->showMessage();
 <?php if ($Page->target_selesai->Visible) { // target_selesai ?>
         <th class="<?= $Page->target_selesai->headerCellClass() ?>"><span id="elh_npd_target_selesai" class="npd_target_selesai"><?= $Page->target_selesai->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->status->Visible) { // status ?>
-        <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_npd_status" class="npd_status"><?= $Page->status->caption() ?></span></th>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <th class="<?= $Page->idbrand->headerCellClass() ?>"><span id="elh_npd_idbrand" class="npd_idbrand"><?= $Page->idbrand->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->sifatorder->Visible) { // sifatorder ?>
+        <th class="<?= $Page->sifatorder->headerCellClass() ?>"><span id="elh_npd_sifatorder" class="npd_sifatorder"><?= $Page->sifatorder->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->kodeorder->Visible) { // kodeorder ?>
         <th class="<?= $Page->kodeorder->headerCellClass() ?>"><span id="elh_npd_kodeorder" class="npd_kodeorder"><?= $Page->kodeorder->caption() ?></span></th>
@@ -64,6 +67,9 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th class="<?= $Page->idcustomer->headerCellClass() ?>"><span id="elh_npd_idcustomer" class="npd_idcustomer"><?= $Page->idcustomer->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_npd_status" class="npd_status"><?= $Page->status->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->updated_at->Visible) { // updated_at ?>
         <th class="<?= $Page->updated_at->headerCellClass() ?>"><span id="elh_npd_updated_at" class="npd_updated_at"><?= $Page->updated_at->caption() ?></span></th>
@@ -105,11 +111,19 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->status->Visible) { // status ?>
-        <td <?= $Page->status->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_status" class="npd_status">
-<span<?= $Page->status->viewAttributes() ?>>
-<?= $Page->status->getViewValue() ?></span>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <td <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_idbrand" class="npd_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->sifatorder->Visible) { // sifatorder ?>
+        <td <?= $Page->sifatorder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_sifatorder" class="npd_sifatorder">
+<span<?= $Page->sifatorder->viewAttributes() ?>>
+<?= $Page->sifatorder->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -142,6 +156,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_npd_idcustomer" class="npd_idcustomer">
 <span<?= $Page->idcustomer->viewAttributes() ?>>
 <?= $Page->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <td <?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status" class="npd_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

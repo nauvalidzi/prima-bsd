@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/12/8" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/12/13" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,6 +925,9 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2021 PT. Prima Visi Globalindo" />
+    <menu id="924">
+      <phrase id="menutext" value="npd produk master" />
+    </menu>
     <menu id="807">
       <phrase id="menutext" value="npd status" />
     </menu>
@@ -1801,10 +1804,19 @@
         <phrase id="fldcaption" value="Tgl Order" />
       </field>
       <field id="target_selesai">
-        <phrase id="fldcaption" value="Target" />
+        <phrase id="fldcaption" value="Target Selesai" />
       </field>
-      <field id="status">
-        <phrase id="fldcaption" value="Status" />
+      <field id="idbrand">
+        <phrase id="fldcaption" value="Brand" />
+      </field>
+      <field id="sifatorder">
+        <phrase id="fldcaption" value="Sifat Order" />
+        <phrase id="fldtagvalue1" value="Baru" />
+        <phrase id="fldtagcaption1" value="Baru" />
+        <phrase id="fldtagvalue2" value="Modifikasi" />
+        <phrase id="fldtagcaption2" value="Modifikasi" />
+        <phrase id="fldtagvalue3" value="Substitusi" />
+        <phrase id="fldtagcaption3" value="Substitusi" />
       </field>
       <field id="kodeorder">
         <phrase id="fldcaption" value="Kode Order" />
@@ -1821,11 +1833,11 @@
       <field id="idproduct_acuan">
         <phrase id="fldcaption" value="Produk Acuan" />
       </field>
-      <field id="idjenisproduk">
-        <phrase id="fldcaption" value="Jenis Produk" />
-      </field>
       <field id="idkategoriproduk">
         <phrase id="fldcaption" value="Kategori Produk" />
+      </field>
+      <field id="idjenisproduk">
+        <phrase id="fldcaption" value="Jenis Produk" />
       </field>
       <field id="fungsiproduk">
         <phrase id="fldcaption" value="Fungsi Produk" />
@@ -1884,8 +1896,8 @@
       <field id="labelcatatan">
         <phrase id="fldcaption" value="Label Catatan" />
       </field>
-      <field id="statusdokumen">
-        <phrase id="fldcaption" value="Status Dokumen" />
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
       </field>
       <field id="readonly">
         <phrase id="fldcaption" value="Lock NPD" />
@@ -2846,6 +2858,9 @@
         <phrase id="fldtagcaption1" value="Yes" />
         <phrase id="fldtagvalue2" value="0" />
         <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="suratjalan">
+        <phrase id="fldcaption" value="suratjalan" />
       </field>
     </table>
     <table id="deliveryorder_detail">
@@ -4311,6 +4326,51 @@
     </table>
     <table id="pengembangan_produk">
       <phrase id="tblcaption" value="Pengembangan Produk" />
+    </table>
+    <table id="npd_produk_master">
+      <phrase id="tblcaption" value="npd produk master" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="grup">
+        <phrase id="fldcaption" value="Grup" />
+      </field>
+      <field id="kategori">
+        <phrase id="fldcaption" value="Kategori" />
+      </field>
+      <field id="sediaan">
+        <phrase id="fldcaption" value="Sediaan" />
+      </field>
+      <field id="bentukan">
+        <phrase id="fldcaption" value="Bentukan" />
+      </field>
+      <field id="konsep">
+        <phrase id="fldcaption" value="Konsep" />
+      </field>
+      <field id="bahanaktif">
+        <phrase id="fldcaption" value="Bahanaktif" />
+      </field>
+      <field id="fragrance">
+        <phrase id="fldcaption" value="Fragrance" />
+      </field>
+      <field id="aroma">
+        <phrase id="fldcaption" value="Aroma" />
+      </field>
+      <field id="warna">
+        <phrase id="fldcaption" value="Warna" />
+      </field>
+      <field id="aplikasi_sediaan">
+        <phrase id="fldcaption" value="Aplikasi Sediaan" />
+      </field>
+      <field id="aksesoris">
+        <phrase id="fldcaption" value="Aksesoris" />
+      </field>
+      <field id="nour">
+        <phrase id="fldcaption" value="Nour" />
+      </field>
+      <field id="updated_at">
+        <phrase id="fldcaption" value="updated at" />
+      </field>
     </table>
   </project>
 </ew-language>

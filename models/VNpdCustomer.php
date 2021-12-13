@@ -86,9 +86,9 @@ class VNpdCustomer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('v_npd_customer', 'v_npd_customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('v_npd_customer', 'v_npd_customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -104,8 +104,9 @@ class VNpdCustomer extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_npd_customer', 'v_npd_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_npd_customer', 'v_npd_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
@@ -138,8 +139,9 @@ class VNpdCustomer extends DbTable
         $this->Fields['idjenisproduk'] = &$this->idjenisproduk;
 
         // idproduct_acuan
-        $this->idproduct_acuan = new DbField('v_npd_customer', 'v_npd_customer', 'x_idproduct_acuan', 'idproduct_acuan', '`idproduct_acuan`', '`idproduct_acuan`', 20, 20, -1, false, '`idproduct_acuan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idproduct_acuan = new DbField('v_npd_customer', 'v_npd_customer', 'x_idproduct_acuan', 'idproduct_acuan', '`idproduct_acuan`', '`idproduct_acuan`', 21, 20, -1, false, '`idproduct_acuan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idproduct_acuan->Nullable = false; // NOT NULL field
+        $this->idproduct_acuan->Required = true; // Required field
         $this->idproduct_acuan->Sortable = true; // Allow sort
         $this->idproduct_acuan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idproduct_acuan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idproduct_acuan->Param, "CustomMsg");
@@ -596,6 +598,9 @@ class VNpdCustomer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1319,7 +1324,8 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";

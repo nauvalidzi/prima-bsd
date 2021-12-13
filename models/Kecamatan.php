@@ -68,17 +68,18 @@ class Kecamatan extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('kecamatan', 'kecamatan', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('kecamatan', 'kecamatan', 'x_id', 'id', '`id`', '`id`', 21, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idkabupaten
-        $this->idkabupaten = new DbField('kecamatan', 'kecamatan', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 20, 20, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkabupaten = new DbField('kecamatan', 'kecamatan', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 21, 20, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idkabupaten->Nullable = false; // NOT NULL field
+        $this->idkabupaten->Required = true; // Required field
         $this->idkabupaten->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -425,6 +426,9 @@ class Kecamatan extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -918,7 +922,8 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
 
         // idkabupaten
         $this->idkabupaten->EditAttrs["class"] = "form-control";

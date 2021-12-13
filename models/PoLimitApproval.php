@@ -76,10 +76,10 @@ class PoLimitApproval extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('po_limit_approval', 'po_limit_approval', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('po_limit_approval', 'po_limit_approval', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -105,7 +105,7 @@ class PoLimitApproval extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('po_limit_approval', 'po_limit_approval', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('po_limit_approval', 'po_limit_approval', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -124,7 +124,7 @@ class PoLimitApproval extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // limit_kredit
-        $this->limit_kredit = new DbField('po_limit_approval', 'po_limit_approval', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 20, 20, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit = new DbField('po_limit_approval', 'po_limit_approval', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 21, 20, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->limit_kredit->Nullable = false; // NOT NULL field
         $this->limit_kredit->Required = true; // Required field
         $this->limit_kredit->Sortable = true; // Allow sort
@@ -535,6 +535,9 @@ class PoLimitApproval extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1182,7 +1185,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";

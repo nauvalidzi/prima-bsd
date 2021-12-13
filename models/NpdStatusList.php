@@ -438,6 +438,9 @@ class NpdStatusList extends NpdStatus
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -565,7 +568,7 @@ class NpdStatusList extends NpdStatus
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->idpegawai->setVisibility();
         $this->status->setVisibility();
@@ -1187,7 +1190,6 @@ class NpdStatusList extends NpdStatus
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->status); // status
@@ -1749,10 +1751,6 @@ class NpdStatusList extends NpdStatus
 
         // created_by
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idnpd
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
@@ -1804,11 +1802,6 @@ class NpdStatusList extends NpdStatus
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";

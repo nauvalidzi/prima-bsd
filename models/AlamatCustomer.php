@@ -75,18 +75,19 @@ class AlamatCustomer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('alamat_customer', 'alamat_customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('alamat_customer', 'alamat_customer', 'x_id', 'id', '`id`', '`id`', 21, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idcustomer
-        $this->idcustomer = new DbField('alamat_customer', 'alamat_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('alamat_customer', 'alamat_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
+        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -133,8 +134,7 @@ class AlamatCustomer extends DbTable
         $this->Fields['alamat'] = &$this->alamat;
 
         // idprovinsi
-        $this->idprovinsi = new DbField('alamat_customer', 'alamat_customer', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 20, 20, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idprovinsi->Nullable = false; // NOT NULL field
+        $this->idprovinsi = new DbField('alamat_customer', 'alamat_customer', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 21, 20, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idprovinsi->Sortable = true; // Allow sort
         $this->idprovinsi->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idprovinsi->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -151,8 +151,7 @@ class AlamatCustomer extends DbTable
         $this->Fields['idprovinsi'] = &$this->idprovinsi;
 
         // idkabupaten
-        $this->idkabupaten = new DbField('alamat_customer', 'alamat_customer', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 20, 20, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idkabupaten->Nullable = false; // NOT NULL field
+        $this->idkabupaten = new DbField('alamat_customer', 'alamat_customer', 'x_idkabupaten', 'idkabupaten', '`idkabupaten`', '`idkabupaten`', 21, 20, -1, false, '`idkabupaten`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkabupaten->Sortable = true; // Allow sort
         $this->idkabupaten->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkabupaten->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -169,8 +168,7 @@ class AlamatCustomer extends DbTable
         $this->Fields['idkabupaten'] = &$this->idkabupaten;
 
         // idkecamatan
-        $this->idkecamatan = new DbField('alamat_customer', 'alamat_customer', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 20, 20, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idkecamatan->Nullable = false; // NOT NULL field
+        $this->idkecamatan = new DbField('alamat_customer', 'alamat_customer', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 21, 20, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkecamatan->Sortable = true; // Allow sort
         $this->idkecamatan->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkecamatan->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -187,7 +185,7 @@ class AlamatCustomer extends DbTable
         $this->Fields['idkecamatan'] = &$this->idkecamatan;
 
         // idkelurahan
-        $this->idkelurahan = new DbField('alamat_customer', 'alamat_customer', 'x_idkelurahan', 'idkelurahan', '`idkelurahan`', '`idkelurahan`', 20, 20, -1, false, '`idkelurahan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idkelurahan = new DbField('alamat_customer', 'alamat_customer', 'x_idkelurahan', 'idkelurahan', '`idkelurahan`', '`idkelurahan`', 21, 20, -1, false, '`idkelurahan`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idkelurahan->Sortable = true; // Allow sort
         $this->idkelurahan->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkelurahan->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -580,6 +578,9 @@ class AlamatCustomer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1234,7 +1235,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";

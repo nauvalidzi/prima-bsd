@@ -75,16 +75,16 @@ class Stocks extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('stocks', 'stocks', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('stocks', 'stocks', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // prop_id
-        $this->prop_id = new DbField('stocks', 'stocks', 'x_prop_id', 'prop_id', '`prop_id`', '`prop_id`', 20, 20, -1, false, '`prop_id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->prop_id = new DbField('stocks', 'stocks', 'x_prop_id', 'prop_id', '`prop_id`', '`prop_id`', 21, 20, -1, false, '`prop_id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->prop_id->Nullable = false; // NOT NULL field
         $this->prop_id->Required = true; // Required field
         $this->prop_id->Sortable = true; // Allow sort
@@ -101,7 +101,7 @@ class Stocks extends DbTable
         $this->Fields['prop_code'] = &$this->prop_code;
 
         // idproduct
-        $this->idproduct = new DbField('stocks', 'stocks', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 20, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idproduct = new DbField('stocks', 'stocks', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 21, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idproduct->Nullable = false; // NOT NULL field
         $this->idproduct->Required = true; // Required field
         $this->idproduct->Sortable = true; // Allow sort
@@ -138,7 +138,7 @@ class Stocks extends DbTable
         $this->Fields['stok_keluar'] = &$this->stok_keluar;
 
         // stok_akhir
-        $this->stok_akhir = new DbField('stocks', 'stocks', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 20, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->stok_akhir = new DbField('stocks', 'stocks', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 21, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->stok_akhir->Nullable = false; // NOT NULL field
         $this->stok_akhir->Required = true; // Required field
         $this->stok_akhir->Sortable = true; // Allow sort
@@ -506,6 +506,9 @@ class Stocks extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1098,7 +1101,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // prop_id
         $this->prop_id->EditAttrs["class"] = "form-control";

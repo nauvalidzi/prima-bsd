@@ -424,6 +424,9 @@ class SerahterimaView extends Serahterima
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -946,11 +949,6 @@ class SerahterimaView extends Serahterima
                 $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
             }
             $this->readonly->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";

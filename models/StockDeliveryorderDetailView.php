@@ -424,6 +424,9 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -771,10 +774,6 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
 
         // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idstockorder
             $curVal = trim(strval($this->idstockorder->CurrentValue));
             if ($curVal != "") {
@@ -839,11 +838,6 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // idstockorder
             $this->idstockorder->LinkCustomAttributes = "";

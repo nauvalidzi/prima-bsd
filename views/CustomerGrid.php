@@ -27,7 +27,7 @@ loadjs.ready("head", function () {
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["jenis_usaha", [fields.jenis_usaha.visible && fields.jenis_usaha.required ? ew.Validators.required(fields.jenis_usaha.caption) : null], fields.jenis_usaha.isInvalid],
-        ["hp", [fields.hp.visible && fields.hp.required ? ew.Validators.required(fields.hp.caption) : null, ew.Validators.regex("^(62)8[1-9][0-9]{7,11}$")], fields.hp.isInvalid],
+        ["hp", [fields.hp.visible && fields.hp.required ? ew.Validators.required(fields.hp.caption) : null], fields.hp.isInvalid],
         ["klinik", [fields.klinik.visible && fields.klinik.required ? ew.Validators.required(fields.klinik.caption) : null], fields.klinik.isInvalid]
     ]);
 

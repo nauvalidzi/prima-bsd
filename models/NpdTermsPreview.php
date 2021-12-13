@@ -363,6 +363,9 @@ class NpdTermsPreview extends NpdTerms
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $Recordset;
     public $TotalRecords;
@@ -387,7 +390,7 @@ class NpdTermsPreview extends NpdTerms
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->status->setVisibility();
         $this->tglsubmit->setVisibility();
@@ -573,7 +576,6 @@ class NpdTermsPreview extends NpdTerms
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->status); // status
             $this->updateSort($this->tglsubmit); // tglsubmit

@@ -369,6 +369,9 @@ class CustomerAdd extends Customer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -462,7 +465,7 @@ class CustomerAdd extends Customer
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
@@ -726,16 +729,6 @@ class CustomerAdd extends Customer
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'kode' first before field var 'x_kode'
         $val = $CurrentForm->hasValue("kode") ? $CurrentForm->getValue("kode") : $CurrentForm->getValue("x_kode");
         if (!$this->kode->IsDetailKey) {
@@ -965,6 +958,9 @@ class CustomerAdd extends Customer
                 $this->keterangan->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         $this->getUploadFiles(); // Get upload files
     }
 
@@ -972,7 +968,6 @@ class CustomerAdd extends Customer
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->idtipecustomer->CurrentValue = $this->idtipecustomer->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
@@ -1439,11 +1434,6 @@ class CustomerAdd extends Customer
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1596,12 +1586,6 @@ class CustomerAdd extends Customer
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
             $this->kode->EditCustomAttributes = "readonly";
@@ -1953,10 +1937,6 @@ class CustomerAdd extends Customer
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -2097,14 +2077,6 @@ class CustomerAdd extends Customer
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
-        }
         if ($this->kode->Required) {
             if (!$this->kode->IsDetailKey && EmptyValue($this->kode->FormValue)) {
                 $this->kode->addErrorMessage(str_replace("%s", $this->kode->caption(), $this->kode->RequiredErrorMessage));
@@ -2174,9 +2146,6 @@ class CustomerAdd extends Customer
             if (!$this->hp->IsDetailKey && EmptyValue($this->hp->FormValue)) {
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
-        }
-        if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
-            $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
         }
         if ($this->_email->Required) {
             if (!$this->_email->IsDetailKey && EmptyValue($this->_email->FormValue)) {
@@ -2306,26 +2275,6 @@ class CustomerAdd extends Customer
                 return false;
             }
         }
-        if ($this->telpon->CurrentValue != "") { // Check field with unique index
-            $filter = "(`telpon` = '" . AdjustSql($this->telpon->CurrentValue, $this->Dbid) . "')";
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $idxErrMsg = str_replace("%f", $this->telpon->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->telpon->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                return false;
-            }
-        }
-        if ($this->hp->CurrentValue != "") { // Check field with unique index
-            $filter = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $idxErrMsg = str_replace("%f", $this->hp->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->hp->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                return false;
-            }
-        }
         $conn = $this->getConnection();
 
         // Begin transaction
@@ -2339,14 +2288,11 @@ class CustomerAdd extends Customer
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // kode
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
 
         // idtipecustomer
-        $this->idtipecustomer->setDbValueDef($rsnew, $this->idtipecustomer->CurrentValue, 0, strval($this->idtipecustomer->CurrentValue) == "");
+        $this->idtipecustomer->setDbValueDef($rsnew, $this->idtipecustomer->CurrentValue, 0, false);
 
         // idpegawai
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
@@ -2382,7 +2328,7 @@ class CustomerAdd extends Customer
         $this->telpon->setDbValueDef($rsnew, $this->telpon->CurrentValue, null, false);
 
         // hp
-        $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", false);
+        $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, null, strval($this->hp->CurrentValue) == "");
 
         // email
         $this->_email->setDbValueDef($rsnew, $this->_email->CurrentValue, null, false);
@@ -2464,23 +2410,6 @@ class CustomerAdd extends Customer
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

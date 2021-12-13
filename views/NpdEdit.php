@@ -22,14 +22,14 @@ loadjs.ready("head", function () {
     fnpdedit.addFields([
         ["tanggal_order", [fields.tanggal_order.visible && fields.tanggal_order.required ? ew.Validators.required(fields.tanggal_order.caption) : null, ew.Validators.datetime(0)], fields.tanggal_order.isInvalid],
         ["target_selesai", [fields.target_selesai.visible && fields.target_selesai.required ? ew.Validators.required(fields.target_selesai.caption) : null, ew.Validators.datetime(0)], fields.target_selesai.isInvalid],
-        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
+        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null, ew.Validators.integer], fields.idbrand.isInvalid],
+        ["sifatorder", [fields.sifatorder.visible && fields.sifatorder.required ? ew.Validators.required(fields.sifatorder.caption) : null], fields.sifatorder.isInvalid],
         ["kodeorder", [fields.kodeorder.visible && fields.kodeorder.required ? ew.Validators.required(fields.kodeorder.caption) : null], fields.kodeorder.isInvalid],
         ["nomororder", [fields.nomororder.visible && fields.nomororder.required ? ew.Validators.required(fields.nomororder.caption) : null], fields.nomororder.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
-        ["idproduct_acuan", [fields.idproduct_acuan.visible && fields.idproduct_acuan.required ? ew.Validators.required(fields.idproduct_acuan.caption) : null], fields.idproduct_acuan.isInvalid],
-        ["idjenisproduk", [fields.idjenisproduk.visible && fields.idjenisproduk.required ? ew.Validators.required(fields.idjenisproduk.caption) : null], fields.idjenisproduk.isInvalid],
         ["idkategoriproduk", [fields.idkategoriproduk.visible && fields.idkategoriproduk.required ? ew.Validators.required(fields.idkategoriproduk.caption) : null], fields.idkategoriproduk.isInvalid],
+        ["idjenisproduk", [fields.idjenisproduk.visible && fields.idjenisproduk.required ? ew.Validators.required(fields.idjenisproduk.caption) : null], fields.idjenisproduk.isInvalid],
         ["fungsiproduk", [fields.fungsiproduk.visible && fields.fungsiproduk.required ? ew.Validators.required(fields.fungsiproduk.caption) : null], fields.fungsiproduk.isInvalid],
         ["kualitasproduk", [fields.kualitasproduk.visible && fields.kualitasproduk.required ? ew.Validators.required(fields.kualitasproduk.caption) : null], fields.kualitasproduk.isInvalid],
         ["bahan_campaign", [fields.bahan_campaign.visible && fields.bahan_campaign.required ? ew.Validators.required(fields.bahan_campaign.caption) : null], fields.bahan_campaign.isInvalid],
@@ -49,7 +49,7 @@ loadjs.ready("head", function () {
         ["labelkualitas", [fields.labelkualitas.visible && fields.labelkualitas.required ? ew.Validators.required(fields.labelkualitas.caption) : null], fields.labelkualitas.isInvalid],
         ["labelposisi", [fields.labelposisi.visible && fields.labelposisi.required ? ew.Validators.required(fields.labelposisi.caption) : null], fields.labelposisi.isInvalid],
         ["labelcatatan", [fields.labelcatatan.visible && fields.labelcatatan.required ? ew.Validators.required(fields.labelcatatan.caption) : null], fields.labelcatatan.isInvalid],
-        ["statusdokumen", [fields.statusdokumen.visible && fields.statusdokumen.required ? ew.Validators.required(fields.statusdokumen.caption) : null], fields.statusdokumen.isInvalid]
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid]
     ]);
 
     // Set invalid fields
@@ -116,9 +116,9 @@ loadjs.ready("head", function () {
     fnpdedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fnpdedit.lists.idproduct_acuan = <?= $Page->idproduct_acuan->toClientList($Page) ?>;
-    fnpdedit.lists.idjenisproduk = <?= $Page->idjenisproduk->toClientList($Page) ?>;
+    fnpdedit.lists.sifatorder = <?= $Page->sifatorder->toClientList($Page) ?>;
     fnpdedit.lists.idkategoriproduk = <?= $Page->idkategoriproduk->toClientList($Page) ?>;
+    fnpdedit.lists.idjenisproduk = <?= $Page->idjenisproduk->toClientList($Page) ?>;
     fnpdedit.lists.bentuk = <?= $Page->bentuk->toClientList($Page) ?>;
     fnpdedit.lists.viskositas = <?= $Page->viskositas->toClientList($Page) ?>;
     fnpdedit.lists.warna = <?= $Page->warna->toClientList($Page) ?>;
@@ -190,14 +190,46 @@ loadjs.ready(["fnpdedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->status->Visible) { // status ?>
-    <div id="r_status" class="form-group row">
-        <label id="elh_npd_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
-<span id="el_npd_status">
-<input type="<?= $Page->status->getInputTextType() ?>" data-table="npd" data-field="x_status" name="x_status" id="x_status" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>" value="<?= $Page->status->EditValue ?>"<?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
-<?= $Page->status->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+    <div id="r_idbrand" class="form-group row">
+        <label id="elh_npd_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el_npd_idbrand">
+<input type="<?= $Page->idbrand->getInputTextType() ?>" data-table="npd" data-field="x_idbrand" name="x_idbrand" id="x_idbrand" size="30" placeholder="<?= HtmlEncode($Page->idbrand->getPlaceHolder()) ?>" value="<?= $Page->idbrand->EditValue ?>"<?= $Page->idbrand->editAttributes() ?> aria-describedby="x_idbrand_help">
+<?= $Page->idbrand->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idbrand->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->sifatorder->Visible) { // sifatorder ?>
+    <div id="r_sifatorder" class="form-group row">
+        <label id="elh_npd_sifatorder" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sifatorder->caption() ?><?= $Page->sifatorder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sifatorder->cellAttributes() ?>>
+<span id="el_npd_sifatorder">
+<template id="tp_x_sifatorder">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_sifatorder" name="x_sifatorder" id="x_sifatorder"<?= $Page->sifatorder->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_sifatorder" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_sifatorder"
+    name="x_sifatorder"
+    value="<?= HtmlEncode($Page->sifatorder->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_sifatorder"
+    data-target="dsl_x_sifatorder"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->sifatorder->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_sifatorder"
+    data-value-separator="<?= $Page->sifatorder->displayValueSeparatorAttribute() ?>"
+    <?= $Page->sifatorder->editAttributes() ?>>
+<?= $Page->sifatorder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->sifatorder->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -250,32 +282,32 @@ loadjs.ready(["fnpdedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->idproduct_acuan->Visible) { // idproduct_acuan ?>
-    <div id="r_idproduct_acuan" class="form-group row">
-        <label id="elh_npd_idproduct_acuan" for="x_idproduct_acuan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idproduct_acuan->caption() ?><?= $Page->idproduct_acuan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idproduct_acuan->cellAttributes() ?>>
-<span id="el_npd_idproduct_acuan">
+<?php if ($Page->idkategoriproduk->Visible) { // idkategoriproduk ?>
+    <div id="r_idkategoriproduk" class="form-group row">
+        <label id="elh_npd_idkategoriproduk" for="x_idkategoriproduk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkategoriproduk->caption() ?><?= $Page->idkategoriproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkategoriproduk->cellAttributes() ?>>
+<span id="el_npd_idkategoriproduk">
     <select
-        id="x_idproduct_acuan"
-        name="x_idproduct_acuan"
-        class="form-control ew-select<?= $Page->idproduct_acuan->isInvalidClass() ?>"
-        data-select2-id="npd_x_idproduct_acuan"
+        id="x_idkategoriproduk"
+        name="x_idkategoriproduk"
+        class="form-control ew-select<?= $Page->idkategoriproduk->isInvalidClass() ?>"
+        data-select2-id="npd_x_idkategoriproduk"
         data-table="npd"
-        data-field="x_idproduct_acuan"
-        data-value-separator="<?= $Page->idproduct_acuan->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idproduct_acuan->getPlaceHolder()) ?>"
-        <?= $Page->idproduct_acuan->editAttributes() ?>>
-        <?= $Page->idproduct_acuan->selectOptionListHtml("x_idproduct_acuan") ?>
+        data-field="x_idkategoriproduk"
+        data-value-separator="<?= $Page->idkategoriproduk->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idkategoriproduk->getPlaceHolder()) ?>"
+        <?= $Page->idkategoriproduk->editAttributes() ?>>
+        <?= $Page->idkategoriproduk->selectOptionListHtml("x_idkategoriproduk") ?>
     </select>
-    <?= $Page->idproduct_acuan->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idproduct_acuan->getErrorMessage() ?></div>
-<?= $Page->idproduct_acuan->Lookup->getParamTag($Page, "p_x_idproduct_acuan") ?>
+    <?= $Page->idkategoriproduk->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idkategoriproduk->getErrorMessage() ?></div>
+<?= $Page->idkategoriproduk->Lookup->getParamTag($Page, "p_x_idkategoriproduk") ?>
 <script>
 loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_idproduct_acuan']"),
-        options = { name: "x_idproduct_acuan", selectId: "npd_x_idproduct_acuan", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    var el = document.querySelector("select[data-select2-id='npd_x_idkategoriproduk']"),
+        options = { name: "x_idkategoriproduk", selectId: "npd_x_idkategoriproduk", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
     options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.idproduct_acuan.selectOptions);
+    Object.assign(options, ew.vars.tables.npd.fields.idkategoriproduk.selectOptions);
     ew.createSelect(options);
 });
 </script>
@@ -309,39 +341,6 @@ loadjs.ready("head", function() {
         options = { name: "x_idjenisproduk", selectId: "npd_x_idjenisproduk", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
     options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
     Object.assign(options, ew.vars.tables.npd.fields.idjenisproduk.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->idkategoriproduk->Visible) { // idkategoriproduk ?>
-    <div id="r_idkategoriproduk" class="form-group row">
-        <label id="elh_npd_idkategoriproduk" for="x_idkategoriproduk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkategoriproduk->caption() ?><?= $Page->idkategoriproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkategoriproduk->cellAttributes() ?>>
-<span id="el_npd_idkategoriproduk">
-    <select
-        id="x_idkategoriproduk"
-        name="x_idkategoriproduk"
-        class="form-control ew-select<?= $Page->idkategoriproduk->isInvalidClass() ?>"
-        data-select2-id="npd_x_idkategoriproduk"
-        data-table="npd"
-        data-field="x_idkategoriproduk"
-        data-value-separator="<?= $Page->idkategoriproduk->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkategoriproduk->getPlaceHolder()) ?>"
-        <?= $Page->idkategoriproduk->editAttributes() ?>>
-        <?= $Page->idkategoriproduk->selectOptionListHtml("x_idkategoriproduk") ?>
-    </select>
-    <?= $Page->idkategoriproduk->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idkategoriproduk->getErrorMessage() ?></div>
-<?= $Page->idkategoriproduk->Lookup->getParamTag($Page, "p_x_idkategoriproduk") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_idkategoriproduk']"),
-        options = { name: "x_idkategoriproduk", selectId: "npd_x_idkategoriproduk", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.idkategoriproduk.selectOptions);
     ew.createSelect(options);
 });
 </script>
@@ -808,14 +807,14 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->statusdokumen->Visible) { // statusdokumen ?>
-    <div id="r_statusdokumen" class="form-group row">
-        <label id="elh_npd_statusdokumen" for="x_statusdokumen" class="<?= $Page->LeftColumnClass ?>"><?= $Page->statusdokumen->caption() ?><?= $Page->statusdokumen->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->statusdokumen->cellAttributes() ?>>
-<span id="el_npd_statusdokumen">
-<input type="<?= $Page->statusdokumen->getInputTextType() ?>" data-table="npd" data-field="x_statusdokumen" name="x_statusdokumen" id="x_statusdokumen" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->statusdokumen->getPlaceHolder()) ?>" value="<?= $Page->statusdokumen->EditValue ?>"<?= $Page->statusdokumen->editAttributes() ?> aria-describedby="x_statusdokumen_help">
-<?= $Page->statusdokumen->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->statusdokumen->getErrorMessage() ?></div>
+<?php if ($Page->status->Visible) { // status ?>
+    <div id="r_status" class="form-group row">
+        <label id="elh_npd_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
+<span id="el_npd_status">
+<input type="<?= $Page->status->getInputTextType() ?>" data-table="npd" data-field="x_status" name="x_status" id="x_status" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>" value="<?= $Page->status->EditValue ?>"<?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
+<?= $Page->status->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

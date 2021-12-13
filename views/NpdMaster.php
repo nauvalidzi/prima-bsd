@@ -31,13 +31,24 @@ $npd = Container("npd");
 </td>
         </tr>
 <?php } ?>
-<?php if ($npd->status->Visible) { // status ?>
-        <tr id="r_status">
-            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->status->caption() ?></td>
-            <td <?= $npd->status->cellAttributes() ?>>
-<span id="el_npd_status">
-<span<?= $npd->status->viewAttributes() ?>>
-<?= $npd->status->getViewValue() ?></span>
+<?php if ($npd->idbrand->Visible) { // idbrand ?>
+        <tr id="r_idbrand">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idbrand->caption() ?></td>
+            <td <?= $npd->idbrand->cellAttributes() ?>>
+<span id="el_npd_idbrand">
+<span<?= $npd->idbrand->viewAttributes() ?>>
+<?= $npd->idbrand->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->sifatorder->Visible) { // sifatorder ?>
+        <tr id="r_sifatorder">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->sifatorder->caption() ?></td>
+            <td <?= $npd->sifatorder->cellAttributes() ?>>
+<span id="el_npd_sifatorder">
+<span<?= $npd->sifatorder->viewAttributes() ?>>
+<?= $npd->sifatorder->getViewValue() ?></span>
 </span>
 </td>
         </tr>
@@ -82,6 +93,17 @@ $npd = Container("npd");
 <span id="el_npd_idcustomer">
 <span<?= $npd->idcustomer->viewAttributes() ?>>
 <?= $npd->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->status->Visible) { // status ?>
+        <tr id="r_status">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->status->caption() ?></td>
+            <td <?= $npd->status->cellAttributes() ?>>
+<span id="el_npd_status">
+<span<?= $npd->status->viewAttributes() ?>>
+<?= $npd->status->getViewValue() ?></span>
 </span>
 </td>
         </tr>

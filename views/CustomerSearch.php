@@ -35,7 +35,7 @@ loadjs.ready("head", function () {
         ["kodepos", [], fields.kodepos.isInvalid],
         ["alamat", [], fields.alamat.isInvalid],
         ["telpon", [], fields.telpon.isInvalid],
-        ["hp", [ew.Validators.regex("^(62)8[1-9][0-9]{7,11}$")], fields.hp.isInvalid],
+        ["hp", [], fields.hp.isInvalid],
         ["_email", [], fields._email.isInvalid],
         ["website", [], fields.website.isInvalid],
         ["foto", [], fields.foto.isInvalid],

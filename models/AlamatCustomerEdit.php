@@ -369,6 +369,9 @@ class AlamatCustomerEdit extends AlamatCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -753,7 +756,7 @@ class AlamatCustomerEdit extends AlamatCustomer
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->alias->CurrentValue = $this->alias->FormValue;
         $this->penerima->CurrentValue = $this->penerima->FormValue;
         $this->telepon->CurrentValue = $this->telepon->FormValue;
@@ -1324,32 +1327,19 @@ class AlamatCustomerEdit extends AlamatCustomer
             $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, $this->alamat->ReadOnly);
 
             // idprovinsi
-            $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, 0, $this->idprovinsi->ReadOnly);
+            $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, null, $this->idprovinsi->ReadOnly);
 
             // idkabupaten
-            $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, 0, $this->idkabupaten->ReadOnly);
+            $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, null, $this->idkabupaten->ReadOnly);
 
             // idkecamatan
-            $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, $this->idkecamatan->ReadOnly);
+            $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, null, $this->idkecamatan->ReadOnly);
 
             // idkelurahan
             $this->idkelurahan->setDbValueDef($rsnew, $this->idkelurahan->CurrentValue, null, $this->idkelurahan->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

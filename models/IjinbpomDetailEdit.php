@@ -369,6 +369,9 @@ class IjinbpomDetailEdit extends IjinbpomDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -719,7 +722,7 @@ class IjinbpomDetailEdit extends IjinbpomDetail
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
         $this->namaalt->CurrentValue = $this->namaalt->FormValue;
         $this->idproduct_acuan->CurrentValue = $this->idproduct_acuan->FormValue;
@@ -1134,19 +1137,6 @@ class IjinbpomDetailEdit extends IjinbpomDetail
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

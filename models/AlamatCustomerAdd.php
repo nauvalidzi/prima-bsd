@@ -369,6 +369,9 @@ class AlamatCustomerAdd extends AlamatCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -461,7 +464,7 @@ class AlamatCustomerAdd extends AlamatCustomer
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idcustomer->setVisibility();
         $this->alias->setVisibility();
         $this->penerima->setVisibility();
@@ -654,16 +657,6 @@ class AlamatCustomerAdd extends AlamatCustomer
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-
         // Check field name 'idcustomer' first before field var 'x_idcustomer'
         $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
         if (!$this->idcustomer->IsDetailKey) {
@@ -753,13 +746,15 @@ class AlamatCustomerAdd extends AlamatCustomer
                 $this->idkelurahan->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->alias->CurrentValue = $this->alias->FormValue;
         $this->penerima->CurrentValue = $this->penerima->FormValue;
@@ -1021,11 +1016,6 @@ class AlamatCustomerAdd extends AlamatCustomer
             }
             $this->idkelurahan->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
@@ -1071,12 +1061,6 @@ class AlamatCustomerAdd extends AlamatCustomer
             $this->idkelurahan->HrefValue = "";
             $this->idkelurahan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
@@ -1260,10 +1244,6 @@ class AlamatCustomerAdd extends AlamatCustomer
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
@@ -1318,14 +1298,6 @@ class AlamatCustomerAdd extends AlamatCustomer
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idcustomer->Required) {
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
@@ -1397,11 +1369,8 @@ class AlamatCustomerAdd extends AlamatCustomer
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // alias
         $this->alias->setDbValueDef($rsnew, $this->alias->CurrentValue, "", false);
@@ -1416,36 +1385,19 @@ class AlamatCustomerAdd extends AlamatCustomer
         $this->alamat->setDbValueDef($rsnew, $this->alamat->CurrentValue, null, false);
 
         // idprovinsi
-        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, 0, strval($this->idprovinsi->CurrentValue) == "");
+        $this->idprovinsi->setDbValueDef($rsnew, $this->idprovinsi->CurrentValue, null, false);
 
         // idkabupaten
-        $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, 0, strval($this->idkabupaten->CurrentValue) == "");
+        $this->idkabupaten->setDbValueDef($rsnew, $this->idkabupaten->CurrentValue, null, false);
 
         // idkecamatan
-        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, strval($this->idkecamatan->CurrentValue) == "");
+        $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, null, false);
 
         // idkelurahan
         $this->idkelurahan->setDbValueDef($rsnew, $this->idkelurahan->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

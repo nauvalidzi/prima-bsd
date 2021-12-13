@@ -22,15 +22,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-    <?php if ($Page->SortUrl($Page->id) == "") { ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><?= $Page->id->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->id->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->id->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->id->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->id->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->id->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
     <?php if ($Page->SortUrl($Page->idnpd) == "") { ?>
         <th class="<?= $Page->idnpd->headerCellClass() ?>"><?= $Page->idnpd->caption() ?></th>
@@ -205,13 +196,6 @@ while ($Page->Recordset && !$Page->Recordset->EOF) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <!-- id -->
-        <td<?= $Page->id->cellAttributes() ?>>
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</td>
-<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <!-- idnpd -->
         <td<?= $Page->idnpd->cellAttributes() ?>>

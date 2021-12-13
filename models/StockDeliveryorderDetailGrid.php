@@ -375,6 +375,9 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -502,7 +505,7 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->pid->Visible = false;
         $this->idstockorder->setVisibility();
         $this->idstockorder_detail->setVisibility();
@@ -934,9 +937,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
     public function emptyRow()
     {
         global $CurrentForm;
-        if ($CurrentForm->hasValue("x_id") && $CurrentForm->hasValue("o_id") && $this->id->CurrentValue != $this->id->OldValue) {
-            return false;
-        }
         if ($CurrentForm->hasValue("x_idstockorder") && $CurrentForm->hasValue("o_idstockorder") && $this->idstockorder->CurrentValue != $this->idstockorder->OldValue) {
             return false;
         }
@@ -1033,7 +1033,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
     // Reset form status
     public function resetFormError()
     {
-        $this->id->clearErrorMessage();
         $this->idstockorder->clearErrorMessage();
         $this->idstockorder_detail->clearErrorMessage();
         $this->totalorder->clearErrorMessage();
@@ -1287,19 +1286,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
         global $CurrentForm;
         $CurrentForm->FormName = $this->FormName;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_id")) {
-            $this->id->setOldValue($CurrentForm->getValue("o_id"));
-        }
-
         // Check field name 'idstockorder' first before field var 'x_idstockorder'
         $val = $CurrentForm->hasValue("idstockorder") ? $CurrentForm->getValue("idstockorder") : $CurrentForm->getValue("x_idstockorder");
         if (!$this->idstockorder->IsDetailKey) {
@@ -1364,13 +1350,21 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
         if ($CurrentForm->hasValue("o_jumlah_kirim")) {
             $this->jumlah_kirim->setOldValue($CurrentForm->getValue("o_jumlah_kirim"));
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
+            $this->id->setFormValue($val);
+        }
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
-        $this->id->CurrentValue = $this->id->FormValue;
+        if (!$this->isGridAdd() && !$this->isAdd()) {
+            $this->id->CurrentValue = $this->id->FormValue;
+        }
         $this->idstockorder->CurrentValue = $this->idstockorder->FormValue;
         $this->idstockorder_detail->CurrentValue = $this->idstockorder_detail->FormValue;
         $this->totalorder->CurrentValue = $this->totalorder->FormValue;
@@ -1520,10 +1514,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
 
         // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idstockorder
             $curVal = trim(strval($this->idstockorder->CurrentValue));
             if ($curVal != "") {
@@ -1585,11 +1575,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
             $this->jumlah_kirim->ViewValue = FormatNumber($this->jumlah_kirim->ViewValue, 0, -2, -2, -2);
             $this->jumlah_kirim->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idstockorder
             $this->idstockorder->LinkCustomAttributes = "";
             $this->idstockorder->HrefValue = "";
@@ -1615,12 +1600,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
             $this->jumlah_kirim->HrefValue = "";
             $this->jumlah_kirim->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idstockorder
             $this->idstockorder->EditAttrs["class"] = "form-control";
             $this->idstockorder->EditCustomAttributes = "";
@@ -1697,10 +1676,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
 
             // Add refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idstockorder
             $this->idstockorder->LinkCustomAttributes = "";
             $this->idstockorder->HrefValue = "";
@@ -1721,12 +1696,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
             $this->jumlah_kirim->LinkCustomAttributes = "";
             $this->jumlah_kirim->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idstockorder
             $this->idstockorder->EditAttrs["class"] = "form-control";
             $this->idstockorder->EditCustomAttributes = "";
@@ -1804,10 +1773,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
 
             // Edit refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idstockorder
             $this->idstockorder->LinkCustomAttributes = "";
             $this->idstockorder->HrefValue = "";
@@ -1847,14 +1812,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idstockorder->Required) {
             if (!$this->idstockorder->IsDetailKey && EmptyValue($this->idstockorder->FormValue)) {
@@ -1996,9 +1953,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // id
-            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
-
             // idstockorder
             $this->idstockorder->setDbValueDef($rsnew, $this->idstockorder->CurrentValue, 0, $this->idstockorder->ReadOnly);
 
@@ -2032,19 +1986,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -2122,14 +2063,11 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
         }
         $rsnew = [];
 
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
-
         // idstockorder
-        $this->idstockorder->setDbValueDef($rsnew, $this->idstockorder->CurrentValue, 0, strval($this->idstockorder->CurrentValue) == "");
+        $this->idstockorder->setDbValueDef($rsnew, $this->idstockorder->CurrentValue, 0, false);
 
         // idstockorder_detail
-        $this->idstockorder_detail->setDbValueDef($rsnew, $this->idstockorder_detail->CurrentValue, 0, strval($this->idstockorder_detail->CurrentValue) == "");
+        $this->idstockorder_detail->setDbValueDef($rsnew, $this->idstockorder_detail->CurrentValue, 0, false);
 
         // totalorder
         $this->totalorder->setDbValueDef($rsnew, $this->totalorder->CurrentValue, 0, false);
@@ -2147,23 +2085,6 @@ class StockDeliveryorderDetailGrid extends StockDeliveryorderDetail
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
         $addRow = false;
         if ($insertRow) {
             try {

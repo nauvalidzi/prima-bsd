@@ -53,6 +53,9 @@ $Page->showMessage();
 <?php if ($Page->lampiran->Visible) { // lampiran ?>
         <th class="<?= $Page->lampiran->headerCellClass() ?>"><span id="elh_deliveryorder_lampiran" class="deliveryorder_lampiran"><?= $Page->lampiran->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->suratjalan->Visible) { // suratjalan ?>
+        <th class="<?= $Page->suratjalan->headerCellClass() ?>"><span id="elh_deliveryorder_suratjalan" class="deliveryorder_suratjalan"><?= $Page->suratjalan->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -96,6 +99,14 @@ while (!$Page->Recordset->EOF) {
 <span<?= $Page->lampiran->viewAttributes() ?>>
 <?= GetFileViewTag($Page->lampiran, $Page->lampiran->getViewValue(), false) ?>
 </span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->suratjalan->Visible) { // suratjalan ?>
+        <td <?= $Page->suratjalan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_deliveryorder_suratjalan" class="deliveryorder_suratjalan">
+<span<?= $Page->suratjalan->viewAttributes() ?>>
+<?= $Page->suratjalan->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

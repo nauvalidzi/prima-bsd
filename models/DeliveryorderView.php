@@ -424,6 +424,9 @@ class DeliveryorderView extends Deliveryorder
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -523,6 +526,7 @@ class DeliveryorderView extends Deliveryorder
         $this->created_at->setVisibility();
         $this->updated_at->setVisibility();
         $this->readonly->setVisibility();
+        $this->suratjalan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -814,6 +818,7 @@ class DeliveryorderView extends Deliveryorder
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->suratjalan->setDbValue($row['suratjalan']);
     }
 
     // Return a row with default values
@@ -828,6 +833,7 @@ class DeliveryorderView extends Deliveryorder
         $row['created_at'] = null;
         $row['updated_at'] = null;
         $row['readonly'] = null;
+        $row['suratjalan'] = null;
         return $row;
     }
 
@@ -864,6 +870,8 @@ class DeliveryorderView extends Deliveryorder
         // updated_at
 
         // readonly
+
+        // suratjalan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -901,6 +909,10 @@ class DeliveryorderView extends Deliveryorder
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
+            // suratjalan
+            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
+            $this->suratjalan->ViewCustomAttributes = "";
+
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -916,6 +928,11 @@ class DeliveryorderView extends Deliveryorder
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
+
+            // suratjalan
+            $this->suratjalan->LinkCustomAttributes = "";
+            $this->suratjalan->HrefValue = "";
+            $this->suratjalan->TooltipValue = "";
         }
 
         // Call Row Rendered event

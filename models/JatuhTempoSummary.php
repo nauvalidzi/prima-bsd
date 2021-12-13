@@ -1179,10 +1179,6 @@ class JatuhTempoSummary extends JatuhTempo
             switch ($fld->FieldVar) {
                 case "x_idpegawai":
                     break;
-                case "x_idcustomer":
-                    break;
-                case "x_idinvoice":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

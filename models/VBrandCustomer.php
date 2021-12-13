@@ -68,9 +68,9 @@ class VBrandCustomer extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idbrand
-        $this->idbrand = new DbField('v_brand_customer', 'v_brand_customer', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idbrand = new DbField('v_brand_customer', 'v_brand_customer', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idbrand->IsAutoIncrement = true; // Autoincrement field
         $this->idbrand->IsPrimaryKey = true; // Primary key field
-        $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Sortable = true; // Allow sort
         $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
@@ -85,9 +85,9 @@ class VBrandCustomer extends DbTable
         $this->Fields['brand'] = &$this->brand;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_brand_customer', 'v_brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_brand_customer', 'v_brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
-        $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
@@ -418,6 +418,13 @@ class VBrandCustomer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->idbrand->setDbValue($conn->lastInsertId());
+            $rs['idbrand'] = $this->idbrand->DbValue;
+
+            // Get insert id if necessary
+            $this->idcustomer->setDbValue($conn->lastInsertId());
+            $rs['idcustomer'] = $this->idcustomer->DbValue;
         }
         return $success;
     }
@@ -949,7 +956,7 @@ SORTHTML;
         $this->idbrand->EditAttrs["class"] = "form-control";
         $this->idbrand->EditCustomAttributes = "";
         $this->idbrand->EditValue = $this->idbrand->CurrentValue;
-        $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+        $this->idbrand->ViewCustomAttributes = "";
 
         // brand
         $this->brand->EditAttrs["class"] = "form-control";
@@ -964,7 +971,7 @@ SORTHTML;
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        $this->idcustomer->ViewCustomAttributes = "";
 
         // Call Row Rendered event
         $this->rowRendered();

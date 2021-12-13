@@ -77,26 +77,28 @@ class OrderDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('order_detail', 'order_detail', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('order_detail', 'order_detail', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idorder
-        $this->idorder = new DbField('order_detail', 'order_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder = new DbField('order_detail', 'order_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 21, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder->IsForeignKey = true; // Foreign key field
         $this->idorder->Nullable = false; // NOT NULL field
+        $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
         $this->Fields['idorder'] = &$this->idorder;
 
         // idproduct
-        $this->idproduct = new DbField('order_detail', 'order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 20, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idproduct = new DbField('order_detail', 'order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 21, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idproduct->Nullable = false; // NOT NULL field
+        $this->idproduct->Required = true; // Required field
         $this->idproduct->Sortable = true; // Allow sort
         $this->idproduct->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idproduct->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -584,6 +586,9 @@ class OrderDetail extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1226,7 +1231,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // idorder
         $this->idorder->EditAttrs["class"] = "form-control";

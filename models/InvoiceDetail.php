@@ -81,26 +81,28 @@ class InvoiceDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('invoice_detail', 'invoice_detail', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('invoice_detail', 'invoice_detail', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
         // idinvoice
-        $this->idinvoice = new DbField('invoice_detail', 'invoice_detail', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idinvoice = new DbField('invoice_detail', 'invoice_detail', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 21, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idinvoice->IsForeignKey = true; // Foreign key field
         $this->idinvoice->Nullable = false; // NOT NULL field
+        $this->idinvoice->Required = true; // Required field
         $this->idinvoice->Sortable = true; // Allow sort
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idinvoice->Param, "CustomMsg");
         $this->Fields['idinvoice'] = &$this->idinvoice;
 
         // idorder_detail
-        $this->idorder_detail = new DbField('invoice_detail', 'invoice_detail', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 20, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idorder_detail = new DbField('invoice_detail', 'invoice_detail', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 21, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idorder_detail->Nullable = false; // NOT NULL field
+        $this->idorder_detail->Required = true; // Required field
         $this->idorder_detail->Sortable = true; // Allow sort
         $this->idorder_detail->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idorder_detail->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -168,8 +170,9 @@ class InvoiceDetail extends DbTable
         $this->Fields['harga'] = &$this->harga;
 
         // totalnondiskon
-        $this->totalnondiskon = new DbField('invoice_detail', 'invoice_detail', 'x_totalnondiskon', 'totalnondiskon', '`totalnondiskon`', '`totalnondiskon`', 20, 20, -1, false, '`totalnondiskon`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totalnondiskon = new DbField('invoice_detail', 'invoice_detail', 'x_totalnondiskon', 'totalnondiskon', '`totalnondiskon`', '`totalnondiskon`', 21, 20, -1, false, '`totalnondiskon`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totalnondiskon->Nullable = false; // NOT NULL field
+        $this->totalnondiskon->Required = true; // Required field
         $this->totalnondiskon->Sortable = true; // Allow sort
         $this->totalnondiskon->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->totalnondiskon->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totalnondiskon->Param, "CustomMsg");
@@ -194,16 +197,18 @@ class InvoiceDetail extends DbTable
         $this->Fields['bbpersen'] = &$this->bbpersen;
 
         // totaltagihan
-        $this->totaltagihan = new DbField('invoice_detail', 'invoice_detail', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 20, 20, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totaltagihan = new DbField('invoice_detail', 'invoice_detail', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 21, 20, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totaltagihan->Nullable = false; // NOT NULL field
+        $this->totaltagihan->Required = true; // Required field
         $this->totaltagihan->Sortable = true; // Allow sort
         $this->totaltagihan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->totaltagihan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totaltagihan->Param, "CustomMsg");
         $this->Fields['totaltagihan'] = &$this->totaltagihan;
 
         // blackbonus
-        $this->blackbonus = new DbField('invoice_detail', 'invoice_detail', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 20, 20, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->blackbonus = new DbField('invoice_detail', 'invoice_detail', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 21, 20, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->blackbonus->Nullable = false; // NOT NULL field
+        $this->blackbonus->Required = true; // Required field
         $this->blackbonus->Sortable = true; // Allow sort
         $this->blackbonus->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->blackbonus->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->blackbonus->Param, "CustomMsg");
@@ -613,6 +618,9 @@ class InvoiceDetail extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1309,7 +1317,7 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->ViewCustomAttributes = "";
 
         // idinvoice
         $this->idinvoice->EditAttrs["class"] = "form-control";

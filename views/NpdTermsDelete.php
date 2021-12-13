@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_npd_terms_id" class="npd_terms_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <th class="<?= $Page->idnpd->headerCellClass() ?>"><span id="elh_npd_terms_idnpd" class="npd_terms_idnpd"><?= $Page->idnpd->caption() ?></span></th>
 <?php } ?>
@@ -197,14 +194,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_terms_id" class="npd_terms_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <td <?= $Page->idnpd->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_terms_idnpd" class="npd_terms_idnpd">

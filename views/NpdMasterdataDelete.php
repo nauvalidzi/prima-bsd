@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_npd_masterdata_id" class="npd_masterdata_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->parent->Visible) { // parent ?>
         <th class="<?= $Page->parent->headerCellClass() ?>"><span id="elh_npd_masterdata_parent" class="npd_masterdata_parent"><?= $Page->parent->caption() ?></span></th>
 <?php } ?>
@@ -74,14 +71,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_masterdata_id" class="npd_masterdata_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->parent->Visible) { // parent ?>
         <td <?= $Page->parent->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_masterdata_parent" class="npd_masterdata_parent">

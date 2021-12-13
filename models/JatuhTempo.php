@@ -100,24 +100,16 @@ class JatuhTempo extends ReportTable
         $this->Fields['namapegawai'] = &$this->namapegawai;
 
         // idcustomer
-        $this->idcustomer = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->GroupingFieldId = 2;
         $this->idcustomer->ShowGroupHeaderAsRow = $this->ShowGroupHeaderAsRow;
         $this->idcustomer->ShowCompactSummaryFooter = $this->ShowCompactSummaryFooter;
         $this->idcustomer->GroupByType = "";
         $this->idcustomer->GroupInterval = "0";
         $this->idcustomer->GroupSql = "";
+        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
-        $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->idcustomer->SourceTableVar = 'd_jatuhtempo';
@@ -131,26 +123,19 @@ class JatuhTempo extends ReportTable
         $this->Fields['namacustomer'] = &$this->namacustomer;
 
         // idinvoice
-        $this->idinvoice = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idinvoice = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idinvoice->IsAutoIncrement = true; // Autoincrement field
         $this->idinvoice->IsPrimaryKey = true; // Primary key field
-        $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Sortable = true; // Allow sort
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idinvoice->Param, "CustomMsg");
         $this->idinvoice->SourceTableVar = 'd_jatuhtempo';
         $this->Fields['idinvoice'] = &$this->idinvoice;
 
         // sisabayar
-        $this->sisabayar = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisabayar = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 21, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisabayar->Nullable = false; // NOT NULL field
+        $this->sisabayar->Required = true; // Required field
         $this->sisabayar->Sortable = true; // Allow sort
         $this->sisabayar->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisabayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisabayar->Param, "CustomMsg");

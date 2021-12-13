@@ -467,7 +467,7 @@ class TipecustomerEdit extends Tipecustomer
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->tipe->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -649,12 +649,6 @@ class TipecustomerEdit extends Tipecustomer
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'tipe' first before field var 'x_tipe'
         $val = $CurrentForm->hasValue("tipe") ? $CurrentForm->getValue("tipe") : $CurrentForm->getValue("x_tipe");
         if (!$this->tipe->IsDetailKey) {
@@ -663,6 +657,12 @@ class TipecustomerEdit extends Tipecustomer
             } else {
                 $this->tipe->setFormValue($val);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -774,22 +774,11 @@ class TipecustomerEdit extends Tipecustomer
             $this->tipe->ViewValue = $this->tipe->CurrentValue;
             $this->tipe->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // tipe
             $this->tipe->LinkCustomAttributes = "";
             $this->tipe->HrefValue = "";
             $this->tipe->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // tipe
             $this->tipe->EditAttrs["class"] = "form-control";
             $this->tipe->EditCustomAttributes = "";
@@ -800,10 +789,6 @@ class TipecustomerEdit extends Tipecustomer
             $this->tipe->PlaceHolder = RemoveHtml($this->tipe->caption());
 
             // Edit refer script
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
 
             // tipe
             $this->tipe->LinkCustomAttributes = "";
@@ -827,11 +812,6 @@ class TipecustomerEdit extends Tipecustomer
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
         }
         if ($this->tipe->Required) {
             if (!$this->tipe->IsDetailKey && EmptyValue($this->tipe->FormValue)) {

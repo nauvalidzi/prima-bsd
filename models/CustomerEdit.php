@@ -369,6 +369,9 @@ class CustomerEdit extends Customer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -951,7 +954,7 @@ class CustomerEdit extends Customer
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->idtipecustomer->CurrentValue = $this->idtipecustomer->FormValue;
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
@@ -2143,9 +2146,6 @@ class CustomerEdit extends Customer
                 $this->hp->addErrorMessage(str_replace("%s", $this->hp->caption(), $this->hp->RequiredErrorMessage));
             }
         }
-        if (!CheckByRegEx($this->hp->FormValue, "/^(62)8[1-9][0-9]{7,11}$/")) {
-            $this->hp->addErrorMessage($this->hp->getErrorMessage(false));
-        }
         if ($this->_email->Required) {
             if (!$this->_email->IsDetailKey && EmptyValue($this->_email->FormValue)) {
                 $this->_email->addErrorMessage(str_replace("%s", $this->_email->caption(), $this->_email->RequiredErrorMessage));
@@ -2263,40 +2263,6 @@ class CustomerEdit extends Customer
                 return false;
             }
         }
-        if ($this->telpon->CurrentValue != "") { // Check field with unique index
-            $filterChk = "(`telpon` = '" . AdjustSql($this->telpon->CurrentValue, $this->Dbid) . "')";
-            $filterChk .= " AND NOT (" . $filter . ")";
-            $this->CurrentFilter = $filterChk;
-            $sqlChk = $this->getCurrentSql();
-            $rsChk = $conn->executeQuery($sqlChk);
-            if (!$rsChk) {
-                return false;
-            }
-            if ($rsChk->fetch()) {
-                $idxErrMsg = str_replace("%f", $this->telpon->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->telpon->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                $rsChk->closeCursor();
-                return false;
-            }
-        }
-        if ($this->hp->CurrentValue != "") { // Check field with unique index
-            $filterChk = "(`hp` = '" . AdjustSql($this->hp->CurrentValue, $this->Dbid) . "')";
-            $filterChk .= " AND NOT (" . $filter . ")";
-            $this->CurrentFilter = $filterChk;
-            $sqlChk = $this->getCurrentSql();
-            $rsChk = $conn->executeQuery($sqlChk);
-            if (!$rsChk) {
-                return false;
-            }
-            if ($rsChk->fetch()) {
-                $idxErrMsg = str_replace("%f", $this->hp->caption(), $Language->phrase("DupIndex"));
-                $idxErrMsg = str_replace("%v", $this->hp->CurrentValue, $idxErrMsg);
-                $this->setFailureMessage($idxErrMsg);
-                $rsChk->closeCursor();
-                return false;
-            }
-        }
         $this->CurrentFilter = $filter;
         $sql = $this->getCurrentSql();
         $rsold = $conn->fetchAssoc($sql);
@@ -2354,7 +2320,7 @@ class CustomerEdit extends Customer
             $this->telpon->setDbValueDef($rsnew, $this->telpon->CurrentValue, null, $this->telpon->ReadOnly);
 
             // hp
-            $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, "", $this->hp->ReadOnly);
+            $this->hp->setDbValueDef($rsnew, $this->hp->CurrentValue, null, $this->hp->ReadOnly);
 
             // email
             $this->_email->setDbValueDef($rsnew, $this->_email->CurrentValue, null, $this->_email->ReadOnly);
@@ -2439,19 +2405,6 @@ class CustomerEdit extends Customer
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

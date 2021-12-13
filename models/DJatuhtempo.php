@@ -89,9 +89,9 @@ class DJatuhtempo extends DbTable
         $this->Fields['namapegawai'] = &$this->namapegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
-        $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
@@ -104,9 +104,9 @@ class DJatuhtempo extends DbTable
         $this->Fields['namacustomer'] = &$this->namacustomer;
 
         // idinvoice
-        $this->idinvoice = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idinvoice = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idinvoice->IsAutoIncrement = true; // Autoincrement field
         $this->idinvoice->IsPrimaryKey = true; // Primary key field
-        $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Sortable = true; // Allow sort
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idinvoice->Param, "CustomMsg");
@@ -121,8 +121,9 @@ class DJatuhtempo extends DbTable
         $this->Fields['kodeinvoice'] = &$this->kodeinvoice;
 
         // sisabayar
-        $this->sisabayar = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisabayar = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 21, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisabayar->Nullable = false; // NOT NULL field
+        $this->sisabayar->Required = true; // Required field
         $this->sisabayar->Sortable = true; // Allow sort
         $this->sisabayar->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisabayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisabayar->Param, "CustomMsg");
@@ -470,6 +471,14 @@ class DJatuhtempo extends DbTable
             // Get insert id if necessary
             $this->idpegawai->setDbValue($conn->lastInsertId());
             $rs['idpegawai'] = $this->idpegawai->DbValue;
+
+            // Get insert id if necessary
+            $this->idcustomer->setDbValue($conn->lastInsertId());
+            $rs['idcustomer'] = $this->idcustomer->DbValue;
+
+            // Get insert id if necessary
+            $this->idinvoice->setDbValue($conn->lastInsertId());
+            $rs['idinvoice'] = $this->idinvoice->DbValue;
         }
         return $success;
     }
@@ -1148,7 +1157,7 @@ SORTHTML;
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        $this->idcustomer->ViewCustomAttributes = "";
 
         // namacustomer
         $this->namacustomer->EditAttrs["class"] = "form-control";
@@ -1163,7 +1172,7 @@ SORTHTML;
         $this->idinvoice->EditAttrs["class"] = "form-control";
         $this->idinvoice->EditCustomAttributes = "";
         $this->idinvoice->EditValue = $this->idinvoice->CurrentValue;
-        $this->idinvoice->PlaceHolder = RemoveHtml($this->idinvoice->caption());
+        $this->idinvoice->ViewCustomAttributes = "";
 
         // kodeinvoice
         $this->kodeinvoice->EditAttrs["class"] = "form-control";

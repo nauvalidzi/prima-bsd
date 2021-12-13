@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_stock_id" class="stock_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <th class="<?= $Page->idproduct->headerCellClass() ?>"><span id="elh_stock_idproduct" class="stock_idproduct"><?= $Page->idproduct->caption() ?></span></th>
 <?php } ?>
@@ -80,14 +77,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_id" class="stock_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->idproduct->Visible) { // idproduct ?>
         <td <?= $Page->idproduct->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_stock_idproduct" class="stock_idproduct">

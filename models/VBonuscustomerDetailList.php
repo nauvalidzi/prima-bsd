@@ -438,6 +438,12 @@ class VBonuscustomerDetailList extends VBonuscustomerDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAddOrEdit()) {
+            $this->idcustomer->Visible = false;
+        }
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->idinvoice->Visible = false;
+        }
     }
 
     // Lookup data
@@ -600,8 +606,6 @@ class VBonuscustomerDetailList extends VBonuscustomerDetail
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idinvoice);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -1616,46 +1620,10 @@ class VBonuscustomerDetailList extends VBonuscustomerDetail
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
             $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-            $curVal = trim(strval($this->idinvoice->CurrentValue));
-            if ($curVal != "") {
-                $this->idinvoice->ViewValue = $this->idinvoice->lookupCacheOption($curVal);
-                if ($this->idinvoice->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idinvoice->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idinvoice->Lookup->renderViewRow($rswrk[0]);
-                        $this->idinvoice->ViewValue = $this->idinvoice->displayValue($arwrk);
-                    } else {
-                        $this->idinvoice->ViewValue = $this->idinvoice->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idinvoice->ViewValue = null;
-            }
             $this->idinvoice->ViewCustomAttributes = "";
 
             // nama_customer
@@ -1830,10 +1798,6 @@ class VBonuscustomerDetailList extends VBonuscustomerDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
-                case "x_idinvoice":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

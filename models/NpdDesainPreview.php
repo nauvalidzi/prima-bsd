@@ -363,6 +363,9 @@ class NpdDesainPreview extends NpdDesain
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $Recordset;
     public $TotalRecords;
@@ -387,7 +390,7 @@ class NpdDesainPreview extends NpdDesain
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
         $this->idcustomer->setVisibility();
         $this->status->setVisibility();
@@ -519,7 +522,6 @@ class NpdDesainPreview extends NpdDesain
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->status); // status

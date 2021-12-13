@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="stock_deliveryorder_detail">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_deliveryorder_detail_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el_stock_deliveryorder_detail_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idstockorder->Visible) { // idstockorder ?>
     <tr id="r_idstockorder">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_deliveryorder_detail_idstockorder"><?= $Page->idstockorder->caption() ?></span></td>

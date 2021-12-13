@@ -369,6 +369,9 @@ class KelurahanEdit extends Kelurahan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -464,7 +467,7 @@ class KelurahanEdit extends Kelurahan
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idkecamatan->setVisibility();
         $this->nama->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -648,19 +651,6 @@ class KelurahanEdit extends Kelurahan
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_id")) {
-            $this->id->setOldValue($CurrentForm->getValue("o_id"));
-        }
-
         // Check field name 'idkecamatan' first before field var 'x_idkecamatan'
         $val = $CurrentForm->hasValue("idkecamatan") ? $CurrentForm->getValue("idkecamatan") : $CurrentForm->getValue("x_idkecamatan");
         if (!$this->idkecamatan->IsDetailKey) {
@@ -679,6 +669,12 @@ class KelurahanEdit extends Kelurahan
             } else {
                 $this->nama->setFormValue($val);
             }
+        }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -818,11 +814,6 @@ class KelurahanEdit extends Kelurahan
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idkecamatan
             $this->idkecamatan->LinkCustomAttributes = "";
             $this->idkecamatan->HrefValue = "";
@@ -833,12 +824,6 @@ class KelurahanEdit extends Kelurahan
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = HtmlEncode($this->id->CurrentValue);
-            $this->id->PlaceHolder = RemoveHtml($this->id->caption());
-
             // idkecamatan
             $this->idkecamatan->EditAttrs["class"] = "form-control";
             $this->idkecamatan->EditCustomAttributes = "";
@@ -874,10 +859,6 @@ class KelurahanEdit extends Kelurahan
 
             // Edit refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idkecamatan
             $this->idkecamatan->LinkCustomAttributes = "";
             $this->idkecamatan->HrefValue = "";
@@ -904,14 +885,6 @@ class KelurahanEdit extends Kelurahan
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->id->FormValue)) {
-            $this->id->addErrorMessage($this->id->getErrorMessage(false));
         }
         if ($this->idkecamatan->Required) {
             if (!$this->idkecamatan->IsDetailKey && EmptyValue($this->idkecamatan->FormValue)) {
@@ -958,9 +931,6 @@ class KelurahanEdit extends Kelurahan
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // id
-            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
-
             // idkecamatan
             $this->idkecamatan->setDbValueDef($rsnew, $this->idkecamatan->CurrentValue, 0, $this->idkecamatan->ReadOnly);
 
@@ -969,19 +939,6 @@ class KelurahanEdit extends Kelurahan
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {

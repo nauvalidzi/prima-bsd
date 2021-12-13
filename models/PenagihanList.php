@@ -438,6 +438,9 @@ class PenagihanList extends Penagihan
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -565,7 +568,7 @@ class PenagihanList extends Penagihan
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->messages->Visible = false;
         $this->tgl_order->setVisibility();
         $this->kode_order->setVisibility();
@@ -1302,7 +1305,6 @@ class PenagihanList extends Penagihan
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->tgl_order); // tgl_order
             $this->updateSort($this->kode_order); // kode_order
             $this->updateSort($this->nama_customer); // nama_customer
@@ -1928,10 +1930,6 @@ class PenagihanList extends Penagihan
 
         // saldo
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // tgl_order
             $this->tgl_order->ViewValue = $this->tgl_order->CurrentValue;
             $this->tgl_order->ViewValue = FormatDateTime($this->tgl_order->ViewValue, 0);
@@ -2028,11 +2026,6 @@ class PenagihanList extends Penagihan
             $this->saldo->ViewValue = $this->saldo->CurrentValue;
             $this->saldo->ViewValue = FormatNumber($this->saldo->ViewValue, 0, -2, -2, -2);
             $this->saldo->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // tgl_order
             $this->tgl_order->LinkCustomAttributes = "";

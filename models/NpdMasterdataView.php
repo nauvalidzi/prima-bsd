@@ -424,6 +424,9 @@ class NpdMasterdataView extends NpdMasterdata
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -770,10 +773,6 @@ class NpdMasterdataView extends NpdMasterdata
 
         // value
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // parent
             $this->parent->ViewValue = $this->parent->CurrentValue;
             $this->parent->ViewCustomAttributes = "";
@@ -781,11 +780,6 @@ class NpdMasterdataView extends NpdMasterdata
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // parent
             $this->parent->LinkCustomAttributes = "";

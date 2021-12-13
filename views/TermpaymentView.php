@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="termpayment">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_termpayment_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el_termpayment_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->title->Visible) { // title ?>
     <tr id="r_title">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_termpayment_title"><?= $Page->title->caption() ?></span></td>

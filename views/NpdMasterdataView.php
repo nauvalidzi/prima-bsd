@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="npd_masterdata">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->id->Visible) { // id ?>
-    <tr id="r_id">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_masterdata_id"><?= $Page->id->caption() ?></span></td>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el_npd_masterdata_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->parent->Visible) { // parent ?>
     <tr id="r_parent">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_masterdata_parent"><?= $Page->parent->caption() ?></span></td>

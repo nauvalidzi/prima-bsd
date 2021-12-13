@@ -363,6 +363,12 @@ class VBonuscustomerDetailPreview extends VBonuscustomerDetail
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAddOrEdit()) {
+            $this->idcustomer->Visible = false;
+        }
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->idinvoice->Visible = false;
+        }
     }
     public $Recordset;
     public $TotalRecords;
@@ -409,8 +415,6 @@ class VBonuscustomerDetailPreview extends VBonuscustomerDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idinvoice);
 
         // Load filter
         $filter = Get("f", "");
@@ -640,10 +644,6 @@ class VBonuscustomerDetailPreview extends VBonuscustomerDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    break;
-                case "x_idinvoice":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;
