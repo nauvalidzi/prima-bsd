@@ -2126,25 +2126,6 @@ class OrderDetailGrid extends OrderDetail
             // keterangan
             $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", $this->keterangan->ReadOnly);
 
-            // Check referential integrity for master table 'order'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_order();
-            $keyValue = $rsnew['idorder'] ?? $rsold['idorder'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("order")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "order", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
-
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2235,24 +2216,6 @@ class OrderDetailGrid extends OrderDetail
         // Set up foreign key field value from Session
         if ($this->getCurrentMasterTable() == "order") {
             $this->idorder->CurrentValue = $this->idorder->getSessionValue();
-        }
-
-        // Check referential integrity for master table 'order_detail'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_order();
-        if ($this->idorder->getSessionValue() != "") {
-        $masterFilter = str_replace("@id@", AdjustSql($this->idorder->getSessionValue(), "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("order")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "order", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
         }
         $conn = $this->getConnection();
 

@@ -1200,6 +1200,14 @@ class InvoiceGrid extends Invoice
         $item->Visible = $Security->canDelete();
         $item->OnLeft = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1256,6 +1264,10 @@ class InvoiceGrid extends Invoice
                 }
             }
         }
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         if ($this->CurrentMode == "view") {
             // "view"
             $opt = $this->ListOptions["view"];
@@ -2542,7 +2554,7 @@ class InvoiceGrid extends Invoice
         $rsnew = [];
 
         // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // tglinvoice
         $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), false);
@@ -2554,10 +2566,10 @@ class InvoiceGrid extends Invoice
         $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, false);
 
         // totaltagihan
-        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, false);
+        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // sisabayar
-        $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, false);
+        $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, strval($this->sisabayar->CurrentValue) == "");
 
         // id
         if ($this->id->getSessionValue() != "") {

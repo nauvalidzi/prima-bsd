@@ -91,7 +91,7 @@ class NpdSerahterima extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('npd_serahterima', 'npd_serahterima', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('npd_serahterima', 'npd_serahterima', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort

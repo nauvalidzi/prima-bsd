@@ -85,10 +85,9 @@ class IjinbpomStatus extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idijinbpom
-        $this->idijinbpom = new DbField('ijinbpom_status', 'ijinbpom_status', 'x_idijinbpom', 'idijinbpom', '`idijinbpom`', '`idijinbpom`', 21, 20, -1, false, '`idijinbpom`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idijinbpom = new DbField('ijinbpom_status', 'ijinbpom_status', 'x_idijinbpom', 'idijinbpom', '`idijinbpom`', '`idijinbpom`', 20, 20, -1, false, '`idijinbpom`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idijinbpom->IsForeignKey = true; // Foreign key field
         $this->idijinbpom->Nullable = false; // NOT NULL field
-        $this->idijinbpom->Required = true; // Required field
         $this->idijinbpom->Sortable = true; // Allow sort
         $this->idijinbpom->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idijinbpom->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idijinbpom->Param, "CustomMsg");

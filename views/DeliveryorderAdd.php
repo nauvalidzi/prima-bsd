@@ -23,8 +23,8 @@ loadjs.ready("head", function () {
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
         ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid],
-        ["suratjalan", [fields.suratjalan.visible && fields.suratjalan.required ? ew.Validators.required(fields.suratjalan.caption) : null], fields.suratjalan.isInvalid]
+        ["suratjalan", [fields.suratjalan.visible && fields.suratjalan.required ? ew.Validators.required(fields.suratjalan.caption) : null], fields.suratjalan.isInvalid],
+        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -169,9 +169,6 @@ loadjs.ready(["fdeliveryorderadd", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_deliveryorder_created_by">
-    <input type="hidden" data-table="deliveryorder" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
-    </span>
 <?php if ($Page->suratjalan->Visible) { // suratjalan ?>
     <div id="r_suratjalan" class="form-group row">
         <label id="elh_deliveryorder_suratjalan" for="x_suratjalan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->suratjalan->caption() ?><?= $Page->suratjalan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -184,6 +181,9 @@ loadjs.ready(["fdeliveryorderadd", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
+    <span id="el_deliveryorder_created_by">
+    <input type="hidden" data-table="deliveryorder" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
+    </span>
 </div><!-- /page* -->
 <?php
     if (in_array("deliveryorder_detail", explode(",", $Page->getCurrentDetailTable())) && $deliveryorder_detail->DetailAdd) {

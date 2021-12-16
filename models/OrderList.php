@@ -573,9 +573,9 @@ class OrderList extends Order
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idbrand->setVisibility();
-        $this->dokumen->setVisibility();
-        $this->keterangan->setVisibility();
+        $this->idbrand->Visible = false;
+        $this->dokumen->Visible = false;
+        $this->keterangan->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -1220,9 +1220,6 @@ class OrderList extends Order
             $this->updateSort($this->tanggal); // tanggal
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->idbrand); // idbrand
-            $this->updateSort($this->dokumen); // dokumen
-            $this->updateSort($this->keterangan); // keterangan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1360,6 +1357,14 @@ class OrderList extends Order
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1385,6 +1390,10 @@ class OrderList extends Order
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -2081,22 +2090,6 @@ class OrderList extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
-
-            // dokumen
-            $this->dokumen->LinkCustomAttributes = "";
-            $this->dokumen->HrefValue = "";
-            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
-            $this->dokumen->TooltipValue = "";
-
-            // keterangan
-            $this->keterangan->LinkCustomAttributes = "";
-            $this->keterangan->HrefValue = "";
-            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event

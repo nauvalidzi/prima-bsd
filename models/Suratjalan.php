@@ -84,8 +84,6 @@ class Suratjalan extends DbTable
 
         // kode
         $this->kode = new DbField('suratjalan', 'suratjalan', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode->Nullable = false; // NOT NULL field
-        $this->kode->Required = true; // Required field
         $this->kode->Sortable = true; // Allow sort
         $this->kode->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode->Param, "CustomMsg");
         $this->Fields['kode'] = &$this->kode;
@@ -109,7 +107,7 @@ class Suratjalan extends DbTable
         $this->Fields['tglkirim'] = &$this->tglkirim;
 
         // idcustomer
-        $this->idcustomer = new DbField('suratjalan', 'suratjalan', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('suratjalan', 'suratjalan', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -128,7 +126,7 @@ class Suratjalan extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idalamat_customer
-        $this->idalamat_customer = new DbField('suratjalan', 'suratjalan', 'x_idalamat_customer', 'idalamat_customer', '`idalamat_customer`', '`idalamat_customer`', 21, 20, -1, false, '`idalamat_customer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idalamat_customer = new DbField('suratjalan', 'suratjalan', 'x_idalamat_customer', 'idalamat_customer', '`idalamat_customer`', '`idalamat_customer`', 20, 20, -1, false, '`idalamat_customer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idalamat_customer->Nullable = false; // NOT NULL field
         $this->idalamat_customer->Required = true; // Required field
         $this->idalamat_customer->Sortable = true; // Allow sort

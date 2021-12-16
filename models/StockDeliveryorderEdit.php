@@ -1021,7 +1021,7 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             $rsnew = [];
 
             // kode
-            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", $this->kode->ReadOnly);
+            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, $this->kode->ReadOnly);
 
             // tanggal
             $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 7), CurrentDate(), $this->tanggal->ReadOnly);
@@ -1037,7 +1037,7 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             }
 
             // keterangan
-            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", $this->keterangan->ReadOnly);
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
             if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
                 $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
                 if (!EmptyValue($this->lampiran->Upload->FileName)) {
@@ -1076,7 +1076,7 @@ class StockDeliveryorderEdit extends StockDeliveryorder
                     }
                     $this->lampiran->Upload->DbValue = empty($oldFiles) ? "" : implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $oldFiles);
                     $this->lampiran->Upload->FileName = implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $newFiles);
-                    $this->lampiran->setDbValueDef($rsnew, $this->lampiran->Upload->FileName, "", $this->lampiran->ReadOnly);
+                    $this->lampiran->setDbValueDef($rsnew, $this->lampiran->Upload->FileName, null, $this->lampiran->ReadOnly);
                 }
             }
 

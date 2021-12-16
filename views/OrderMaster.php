@@ -53,40 +53,6 @@ $order = Container("order");
 </td>
         </tr>
 <?php } ?>
-<?php if ($order->idbrand->Visible) { // idbrand ?>
-        <tr id="r_idbrand">
-            <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->idbrand->caption() ?></td>
-            <td <?= $order->idbrand->cellAttributes() ?>>
-<span id="el_order_idbrand">
-<span<?= $order->idbrand->viewAttributes() ?>>
-<?= $order->idbrand->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($order->dokumen->Visible) { // dokumen ?>
-        <tr id="r_dokumen">
-            <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->dokumen->caption() ?></td>
-            <td <?= $order->dokumen->cellAttributes() ?>>
-<span id="el_order_dokumen">
-<span<?= $order->dokumen->viewAttributes() ?>>
-<?= GetFileViewTag($order->dokumen, $order->dokumen->getViewValue(), false) ?>
-</span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($order->keterangan->Visible) { // keterangan ?>
-        <tr id="r_keterangan">
-            <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->keterangan->caption() ?></td>
-            <td <?= $order->keterangan->cellAttributes() ?>>
-<span id="el_order_keterangan">
-<span<?= $order->keterangan->viewAttributes() ?>>
-<?= $order->keterangan->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
     </tbody>
 </table>
 </div>

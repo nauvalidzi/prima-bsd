@@ -105,7 +105,7 @@ class PoLimitApproval extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('po_limit_approval', 'po_limit_approval', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('po_limit_approval', 'po_limit_approval', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -124,7 +124,7 @@ class PoLimitApproval extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // limit_kredit
-        $this->limit_kredit = new DbField('po_limit_approval', 'po_limit_approval', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 21, 20, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->limit_kredit = new DbField('po_limit_approval', 'po_limit_approval', 'x_limit_kredit', 'limit_kredit', '`limit_kredit`', '`limit_kredit`', 20, 20, -1, false, '`limit_kredit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->limit_kredit->Nullable = false; // NOT NULL field
         $this->limit_kredit->Required = true; // Required field
         $this->limit_kredit->Sortable = true; // Allow sort

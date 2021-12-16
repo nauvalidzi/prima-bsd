@@ -87,7 +87,7 @@ class NpdConfirm extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idnpd
-        $this->idnpd = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 21, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idnpd = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
         $this->idnpd->Required = true; // Required field
@@ -106,7 +106,7 @@ class NpdConfirm extends DbTable
         $this->Fields['tglkonfirmasi'] = &$this->tglkonfirmasi;
 
         // idnpd_sample
-        $this->idnpd_sample = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd_sample', 'idnpd_sample', '`idnpd_sample`', '`idnpd_sample`', 21, 20, -1, false, '`idnpd_sample`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idnpd_sample = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd_sample', 'idnpd_sample', '`idnpd_sample`', '`idnpd_sample`', 20, 20, -1, false, '`idnpd_sample`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd_sample->Nullable = false; // NOT NULL field
         $this->idnpd_sample->Required = true; // Required field
         $this->idnpd_sample->Sortable = true; // Allow sort
@@ -156,16 +156,12 @@ class NpdConfirm extends DbTable
 
         // jabatan
         $this->jabatan = new DbField('npd_confirm', 'npd_confirm', 'x_jabatan', 'jabatan', '`jabatan`', '`jabatan`', 200, 255, -1, false, '`jabatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jabatan->Nullable = false; // NOT NULL field
-        $this->jabatan->Required = true; // Required field
         $this->jabatan->Sortable = true; // Allow sort
         $this->jabatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jabatan->Param, "CustomMsg");
         $this->Fields['jabatan'] = &$this->jabatan;
 
         // notelp
         $this->notelp = new DbField('npd_confirm', 'npd_confirm', 'x_notelp', 'notelp', '`notelp`', '`notelp`', 200, 16, -1, false, '`notelp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->notelp->Nullable = false; // NOT NULL field
-        $this->notelp->Required = true; // Required field
         $this->notelp->Sortable = true; // Allow sort
         $this->notelp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->notelp->Param, "CustomMsg");
         $this->Fields['notelp'] = &$this->notelp;

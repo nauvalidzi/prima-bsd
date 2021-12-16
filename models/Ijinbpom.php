@@ -125,9 +125,8 @@ class Ijinbpom extends DbTable
         $this->Fields['idpegawai'] = &$this->idpegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('ijinbpom', 'ijinbpom', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('ijinbpom', 'ijinbpom', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
-        $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
         $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -144,9 +143,8 @@ class Ijinbpom extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idbrand
-        $this->idbrand = new DbField('ijinbpom', 'ijinbpom', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 21, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idbrand = new DbField('ijinbpom', 'ijinbpom', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idbrand->Nullable = false; // NOT NULL field
-        $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
         $this->idbrand->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text

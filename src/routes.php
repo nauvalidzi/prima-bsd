@@ -407,17 +407,11 @@ return function (App $app) {
     // npd
     $app->any('/NpdList[/{id}]', NpdController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdList-npd-list'); // list
     $app->any('/NpdAdd[/{id}]', NpdController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdAdd-npd-add'); // add
-    $app->any('/NpdView[/{id}]', NpdController::class . ':view')->add(PermissionMiddleware::class)->setName('NpdView-npd-view'); // view
-    $app->any('/NpdEdit[/{id}]', NpdController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdEdit-npd-edit'); // edit
-    $app->any('/NpdDelete[/{id}]', NpdController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdDelete-npd-delete'); // delete
     $app->group(
         '/npd',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdController::class . ':list')->add(PermissionMiddleware::class)->setName('npd/list-npd-list-2'); // list
             $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdController::class . ':add')->add(PermissionMiddleware::class)->setName('npd/add-npd-add-2'); // add
-            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', NpdController::class . ':view')->add(PermissionMiddleware::class)->setName('npd/view-npd-view-2'); // view
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd/edit-npd-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd/delete-npd-delete-2'); // delete
         }
     );
 
@@ -1359,6 +1353,40 @@ return function (App $app) {
 
     // pengembangan_produk
     $app->any('/PengembanganProduk[/{params:.*}]', PengembanganProdukController::class)->add(PermissionMiddleware::class)->setName('PengembanganProduk-pengembangan_produk-custom'); // custom
+
+    // npd_master_spesifikasi
+    $app->any('/NpdMasterSpesifikasiList[/{id}]', NpdMasterSpesifikasiController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdMasterSpesifikasiList-npd_master_spesifikasi-list'); // list
+    $app->any('/NpdMasterSpesifikasiAdd[/{id}]', NpdMasterSpesifikasiController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdMasterSpesifikasiAdd-npd_master_spesifikasi-add'); // add
+    $app->any('/NpdMasterSpesifikasiView[/{id}]', NpdMasterSpesifikasiController::class . ':view')->add(PermissionMiddleware::class)->setName('NpdMasterSpesifikasiView-npd_master_spesifikasi-view'); // view
+    $app->any('/NpdMasterSpesifikasiEdit[/{id}]', NpdMasterSpesifikasiController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdMasterSpesifikasiEdit-npd_master_spesifikasi-edit'); // edit
+    $app->any('/NpdMasterSpesifikasiDelete[/{id}]', NpdMasterSpesifikasiController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdMasterSpesifikasiDelete-npd_master_spesifikasi-delete'); // delete
+    $app->group(
+        '/npd_master_spesifikasi',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdMasterSpesifikasiController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_master_spesifikasi/list-npd_master_spesifikasi-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdMasterSpesifikasiController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_master_spesifikasi/add-npd_master_spesifikasi-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', NpdMasterSpesifikasiController::class . ':view')->add(PermissionMiddleware::class)->setName('npd_master_spesifikasi/view-npd_master_spesifikasi-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdMasterSpesifikasiController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_master_spesifikasi/edit-npd_master_spesifikasi-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdMasterSpesifikasiController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_master_spesifikasi/delete-npd_master_spesifikasi-delete-2'); // delete
+        }
+    );
+
+    // npd_master_kemasan
+    $app->any('/NpdMasterKemasanList[/{id}]', NpdMasterKemasanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdMasterKemasanList-npd_master_kemasan-list'); // list
+    $app->any('/NpdMasterKemasanAdd[/{id}]', NpdMasterKemasanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdMasterKemasanAdd-npd_master_kemasan-add'); // add
+    $app->any('/NpdMasterKemasanView[/{id}]', NpdMasterKemasanController::class . ':view')->add(PermissionMiddleware::class)->setName('NpdMasterKemasanView-npd_master_kemasan-view'); // view
+    $app->any('/NpdMasterKemasanEdit[/{id}]', NpdMasterKemasanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdMasterKemasanEdit-npd_master_kemasan-edit'); // edit
+    $app->any('/NpdMasterKemasanDelete[/{id}]', NpdMasterKemasanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdMasterKemasanDelete-npd_master_kemasan-delete'); // delete
+    $app->group(
+        '/npd_master_kemasan',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdMasterKemasanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_master_kemasan/list-npd_master_kemasan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdMasterKemasanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_master_kemasan/add-npd_master_kemasan-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', NpdMasterKemasanController::class . ':view')->add(PermissionMiddleware::class)->setName('npd_master_kemasan/view-npd_master_kemasan-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdMasterKemasanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_master_kemasan/edit-npd_master_kemasan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdMasterKemasanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_master_kemasan/delete-npd_master_kemasan-delete-2'); // delete
+        }
+    );
 
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');

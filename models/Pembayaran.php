@@ -102,7 +102,7 @@ class Pembayaran extends DbTable
         $this->Fields['tanggal'] = &$this->tanggal;
 
         // idcustomer
-        $this->idcustomer = new DbField('pembayaran', 'pembayaran', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('pembayaran', 'pembayaran', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -121,7 +121,7 @@ class Pembayaran extends DbTable
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idinvoice
-        $this->idinvoice = new DbField('pembayaran', 'pembayaran', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 21, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idinvoice = new DbField('pembayaran', 'pembayaran', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idinvoice->IsForeignKey = true; // Foreign key field
         $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Required = true; // Required field

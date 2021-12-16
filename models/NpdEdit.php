@@ -369,6 +369,9 @@ class NpdEdit extends Npd
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -466,17 +469,17 @@ class NpdEdit extends Npd
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
+        $this->idpegawai->setVisibility();
+        $this->idcustomer->setVisibility();
+        $this->idbrand->setVisibility();
         $this->tanggal_order->setVisibility();
         $this->target_selesai->setVisibility();
-        $this->idbrand->setVisibility();
         $this->sifatorder->setVisibility();
         $this->kodeorder->setVisibility();
         $this->nomororder->setVisibility();
-        $this->idpegawai->setVisibility();
-        $this->idcustomer->setVisibility();
         $this->idproduct_acuan->Visible = false;
-        $this->idkategoriproduk->setVisibility();
-        $this->idjenisproduk->setVisibility();
+        $this->kategoriproduk->setVisibility();
+        $this->jenisproduk->setVisibility();
         $this->fungsiproduk->setVisibility();
         $this->kualitasproduk->setVisibility();
         $this->bahan_campaign->setVisibility();
@@ -486,7 +489,6 @@ class NpdEdit extends Npd
         $this->warna->setVisibility();
         $this->parfum->setVisibility();
         $this->aplikasi->setVisibility();
-        $this->estetika->setVisibility();
         $this->tambahan->setVisibility();
         $this->ukurankemasan->setVisibility();
         $this->kemasanbentuk->setVisibility();
@@ -501,10 +503,11 @@ class NpdEdit extends Npd
         $this->selesai->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
+        $this->estetika->setVisibility();
         $this->hideFieldsForAddEdit();
-        $this->kodeorder->Required = false;
         $this->idpegawai->Required = false;
         $this->idcustomer->Required = false;
+        $this->kodeorder->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -523,15 +526,13 @@ class NpdEdit extends Npd
         // Set up lookup cache
         $this->setupLookupOptions($this->idpegawai);
         $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->idbrand);
         $this->setupLookupOptions($this->idproduct_acuan);
-        $this->setupLookupOptions($this->idkategoriproduk);
-        $this->setupLookupOptions($this->idjenisproduk);
+        $this->setupLookupOptions($this->kategoriproduk);
+        $this->setupLookupOptions($this->jenisproduk);
         $this->setupLookupOptions($this->bentuk);
-        $this->setupLookupOptions($this->viskositas);
-        $this->setupLookupOptions($this->warna);
         $this->setupLookupOptions($this->parfum);
         $this->setupLookupOptions($this->aplikasi);
-        $this->setupLookupOptions($this->estetika);
         $this->setupLookupOptions($this->kemasanbentuk);
         $this->setupLookupOptions($this->kemasantutup);
         $this->setupLookupOptions($this->labelbahan);
@@ -716,6 +717,36 @@ class NpdEdit extends Npd
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'idpegawai' first before field var 'x_idpegawai'
+        $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
+        if (!$this->idpegawai->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idpegawai->Visible = false; // Disable update for API request
+            } else {
+                $this->idpegawai->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idcustomer' first before field var 'x_idcustomer'
+        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
+        if (!$this->idcustomer->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idcustomer->Visible = false; // Disable update for API request
+            } else {
+                $this->idcustomer->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idbrand' first before field var 'x_idbrand'
+        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
+        if (!$this->idbrand->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idbrand->Visible = false; // Disable update for API request
+            } else {
+                $this->idbrand->setFormValue($val);
+            }
+        }
+
         // Check field name 'tanggal_order' first before field var 'x_tanggal_order'
         $val = $CurrentForm->hasValue("tanggal_order") ? $CurrentForm->getValue("tanggal_order") : $CurrentForm->getValue("x_tanggal_order");
         if (!$this->tanggal_order->IsDetailKey) {
@@ -736,16 +767,6 @@ class NpdEdit extends Npd
                 $this->target_selesai->setFormValue($val);
             }
             $this->target_selesai->CurrentValue = UnFormatDateTime($this->target_selesai->CurrentValue, 0);
-        }
-
-        // Check field name 'idbrand' first before field var 'x_idbrand'
-        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
-        if (!$this->idbrand->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idbrand->Visible = false; // Disable update for API request
-            } else {
-                $this->idbrand->setFormValue($val);
-            }
         }
 
         // Check field name 'sifatorder' first before field var 'x_sifatorder'
@@ -778,43 +799,23 @@ class NpdEdit extends Npd
             }
         }
 
-        // Check field name 'idpegawai' first before field var 'x_idpegawai'
-        $val = $CurrentForm->hasValue("idpegawai") ? $CurrentForm->getValue("idpegawai") : $CurrentForm->getValue("x_idpegawai");
-        if (!$this->idpegawai->IsDetailKey) {
+        // Check field name 'kategoriproduk' first before field var 'x_kategoriproduk'
+        $val = $CurrentForm->hasValue("kategoriproduk") ? $CurrentForm->getValue("kategoriproduk") : $CurrentForm->getValue("x_kategoriproduk");
+        if (!$this->kategoriproduk->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->idpegawai->Visible = false; // Disable update for API request
+                $this->kategoriproduk->Visible = false; // Disable update for API request
             } else {
-                $this->idpegawai->setFormValue($val);
+                $this->kategoriproduk->setFormValue($val);
             }
         }
 
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
+        // Check field name 'jenisproduk' first before field var 'x_jenisproduk'
+        $val = $CurrentForm->hasValue("jenisproduk") ? $CurrentForm->getValue("jenisproduk") : $CurrentForm->getValue("x_jenisproduk");
+        if (!$this->jenisproduk->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
+                $this->jenisproduk->Visible = false; // Disable update for API request
             } else {
-                $this->idcustomer->setFormValue($val);
-            }
-        }
-
-        // Check field name 'idkategoriproduk' first before field var 'x_idkategoriproduk'
-        $val = $CurrentForm->hasValue("idkategoriproduk") ? $CurrentForm->getValue("idkategoriproduk") : $CurrentForm->getValue("x_idkategoriproduk");
-        if (!$this->idkategoriproduk->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idkategoriproduk->Visible = false; // Disable update for API request
-            } else {
-                $this->idkategoriproduk->setFormValue($val);
-            }
-        }
-
-        // Check field name 'idjenisproduk' first before field var 'x_idjenisproduk'
-        $val = $CurrentForm->hasValue("idjenisproduk") ? $CurrentForm->getValue("idjenisproduk") : $CurrentForm->getValue("x_idjenisproduk");
-        if (!$this->idjenisproduk->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idjenisproduk->Visible = false; // Disable update for API request
-            } else {
-                $this->idjenisproduk->setFormValue($val);
+                $this->jenisproduk->setFormValue($val);
             }
         }
 
@@ -905,16 +906,6 @@ class NpdEdit extends Npd
                 $this->aplikasi->Visible = false; // Disable update for API request
             } else {
                 $this->aplikasi->setFormValue($val);
-            }
-        }
-
-        // Check field name 'estetika' first before field var 'x_estetika'
-        $val = $CurrentForm->hasValue("estetika") ? $CurrentForm->getValue("estetika") : $CurrentForm->getValue("x_estetika");
-        if (!$this->estetika->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->estetika->Visible = false; // Disable update for API request
-            } else {
-                $this->estetika->setFormValue($val);
             }
         }
 
@@ -1018,6 +1009,16 @@ class NpdEdit extends Npd
             }
         }
 
+        // Check field name 'estetika' first before field var 'x_estetika'
+        $val = $CurrentForm->hasValue("estetika") ? $CurrentForm->getValue("estetika") : $CurrentForm->getValue("x_estetika");
+        if (!$this->estetika->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->estetika->Visible = false; // Disable update for API request
+            } else {
+                $this->estetika->setFormValue($val);
+            }
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
@@ -1029,19 +1030,19 @@ class NpdEdit extends Npd
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
+        $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
+        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->tanggal_order->CurrentValue = $this->tanggal_order->FormValue;
         $this->tanggal_order->CurrentValue = UnFormatDateTime($this->tanggal_order->CurrentValue, 0);
         $this->target_selesai->CurrentValue = $this->target_selesai->FormValue;
         $this->target_selesai->CurrentValue = UnFormatDateTime($this->target_selesai->CurrentValue, 0);
-        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->sifatorder->CurrentValue = $this->sifatorder->FormValue;
         $this->kodeorder->CurrentValue = $this->kodeorder->FormValue;
         $this->nomororder->CurrentValue = $this->nomororder->FormValue;
-        $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->idkategoriproduk->CurrentValue = $this->idkategoriproduk->FormValue;
-        $this->idjenisproduk->CurrentValue = $this->idjenisproduk->FormValue;
+        $this->kategoriproduk->CurrentValue = $this->kategoriproduk->FormValue;
+        $this->jenisproduk->CurrentValue = $this->jenisproduk->FormValue;
         $this->fungsiproduk->CurrentValue = $this->fungsiproduk->FormValue;
         $this->kualitasproduk->CurrentValue = $this->kualitasproduk->FormValue;
         $this->bahan_campaign->CurrentValue = $this->bahan_campaign->FormValue;
@@ -1051,7 +1052,6 @@ class NpdEdit extends Npd
         $this->warna->CurrentValue = $this->warna->FormValue;
         $this->parfum->CurrentValue = $this->parfum->FormValue;
         $this->aplikasi->CurrentValue = $this->aplikasi->FormValue;
-        $this->estetika->CurrentValue = $this->estetika->FormValue;
         $this->tambahan->CurrentValue = $this->tambahan->FormValue;
         $this->ukurankemasan->CurrentValue = $this->ukurankemasan->FormValue;
         $this->kemasanbentuk->CurrentValue = $this->kemasanbentuk->FormValue;
@@ -1062,6 +1062,7 @@ class NpdEdit extends Npd
         $this->labelposisi->CurrentValue = $this->labelposisi->FormValue;
         $this->labelcatatan->CurrentValue = $this->labelcatatan->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
+        $this->estetika->CurrentValue = $this->estetika->FormValue;
     }
 
     /**
@@ -1112,17 +1113,17 @@ class NpdEdit extends Npd
             return;
         }
         $this->id->setDbValue($row['id']);
+        $this->idpegawai->setDbValue($row['idpegawai']);
+        $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->idbrand->setDbValue($row['idbrand']);
         $this->tanggal_order->setDbValue($row['tanggal_order']);
         $this->target_selesai->setDbValue($row['target_selesai']);
-        $this->idbrand->setDbValue($row['idbrand']);
         $this->sifatorder->setDbValue($row['sifatorder']);
         $this->kodeorder->setDbValue($row['kodeorder']);
         $this->nomororder->setDbValue($row['nomororder']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
-        $this->idkategoriproduk->setDbValue($row['idkategoriproduk']);
-        $this->idjenisproduk->setDbValue($row['idjenisproduk']);
+        $this->kategoriproduk->setDbValue($row['kategoriproduk']);
+        $this->jenisproduk->setDbValue($row['jenisproduk']);
         $this->fungsiproduk->setDbValue($row['fungsiproduk']);
         $this->kualitasproduk->setDbValue($row['kualitasproduk']);
         $this->bahan_campaign->setDbValue($row['bahan_campaign']);
@@ -1132,7 +1133,6 @@ class NpdEdit extends Npd
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
         $this->aplikasi->setDbValue($row['aplikasi']);
-        $this->estetika->setDbValue($row['estetika']);
         $this->tambahan->setDbValue($row['tambahan']);
         $this->ukurankemasan->setDbValue($row['ukurankemasan']);
         $this->kemasanbentuk->setDbValue($row['kemasanbentuk']);
@@ -1147,6 +1147,7 @@ class NpdEdit extends Npd
         $this->selesai->setDbValue($row['selesai']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
+        $this->estetika->setDbValue($row['estetika']);
     }
 
     // Return a row with default values
@@ -1154,17 +1155,17 @@ class NpdEdit extends Npd
     {
         $row = [];
         $row['id'] = null;
+        $row['idpegawai'] = null;
+        $row['idcustomer'] = null;
+        $row['idbrand'] = null;
         $row['tanggal_order'] = null;
         $row['target_selesai'] = null;
-        $row['idbrand'] = null;
         $row['sifatorder'] = null;
         $row['kodeorder'] = null;
         $row['nomororder'] = null;
-        $row['idpegawai'] = null;
-        $row['idcustomer'] = null;
         $row['idproduct_acuan'] = null;
-        $row['idkategoriproduk'] = null;
-        $row['idjenisproduk'] = null;
+        $row['kategoriproduk'] = null;
+        $row['jenisproduk'] = null;
         $row['fungsiproduk'] = null;
         $row['kualitasproduk'] = null;
         $row['bahan_campaign'] = null;
@@ -1174,7 +1175,6 @@ class NpdEdit extends Npd
         $row['warna'] = null;
         $row['parfum'] = null;
         $row['aplikasi'] = null;
-        $row['estetika'] = null;
         $row['tambahan'] = null;
         $row['ukurankemasan'] = null;
         $row['kemasanbentuk'] = null;
@@ -1189,6 +1189,7 @@ class NpdEdit extends Npd
         $row['selesai'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
+        $row['estetika'] = null;
         return $row;
     }
 
@@ -1222,11 +1223,15 @@ class NpdEdit extends Npd
 
         // id
 
+        // idpegawai
+
+        // idcustomer
+
+        // idbrand
+
         // tanggal_order
 
         // target_selesai
-
-        // idbrand
 
         // sifatorder
 
@@ -1234,15 +1239,11 @@ class NpdEdit extends Npd
 
         // nomororder
 
-        // idpegawai
-
-        // idcustomer
-
         // idproduct_acuan
 
-        // idkategoriproduk
+        // kategoriproduk
 
-        // idjenisproduk
+        // jenisproduk
 
         // fungsiproduk
 
@@ -1261,8 +1262,6 @@ class NpdEdit extends Npd
         // parfum
 
         // aplikasi
-
-        // estetika
 
         // tambahan
 
@@ -1291,41 +1290,12 @@ class NpdEdit extends Npd
         // created_at
 
         // updated_at
+
+        // estetika
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
-
-            // tanggal_order
-            $this->tanggal_order->ViewValue = $this->tanggal_order->CurrentValue;
-            $this->tanggal_order->ViewValue = FormatDateTime($this->tanggal_order->ViewValue, 0);
-            $this->tanggal_order->ViewCustomAttributes = "";
-
-            // target_selesai
-            $this->target_selesai->ViewValue = $this->target_selesai->CurrentValue;
-            $this->target_selesai->ViewValue = FormatDateTime($this->target_selesai->ViewValue, 0);
-            $this->target_selesai->ViewCustomAttributes = "";
-
-            // idbrand
-            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-            $this->idbrand->ViewValue = FormatNumber($this->idbrand->ViewValue, 0, -2, -2, -2);
-            $this->idbrand->ViewCustomAttributes = "";
-
-            // sifatorder
-            if (strval($this->sifatorder->CurrentValue) != "") {
-                $this->sifatorder->ViewValue = $this->sifatorder->optionCaption($this->sifatorder->CurrentValue);
-            } else {
-                $this->sifatorder->ViewValue = null;
-            }
-            $this->sifatorder->ViewCustomAttributes = "";
-
-            // kodeorder
-            $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
-            $this->kodeorder->ViewCustomAttributes = "";
-
-            // nomororder
-            $this->nomororder->ViewValue = $this->nomororder->CurrentValue;
-            $this->nomororder->ViewCustomAttributes = "";
 
             // idpegawai
             $curVal = trim(strval($this->idpegawai->CurrentValue));
@@ -1369,47 +1339,94 @@ class NpdEdit extends Npd
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // idkategoriproduk
-            $curVal = trim(strval($this->idkategoriproduk->CurrentValue));
+            // idbrand
+            $curVal = trim(strval($this->idbrand->CurrentValue));
             if ($curVal != "") {
-                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->lookupCacheOption($curVal);
-                if ($this->idkategoriproduk->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idkategoriproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idbrand`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkategoriproduk->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->displayValue($arwrk);
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
                     } else {
-                        $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->CurrentValue;
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
                     }
                 }
             } else {
-                $this->idkategoriproduk->ViewValue = null;
+                $this->idbrand->ViewValue = null;
             }
-            $this->idkategoriproduk->ViewCustomAttributes = "";
+            $this->idbrand->ViewCustomAttributes = "";
 
-            // idjenisproduk
-            $curVal = trim(strval($this->idjenisproduk->CurrentValue));
+            // tanggal_order
+            $this->tanggal_order->ViewValue = $this->tanggal_order->CurrentValue;
+            $this->tanggal_order->ViewValue = FormatDateTime($this->tanggal_order->ViewValue, 0);
+            $this->tanggal_order->ViewCustomAttributes = "";
+
+            // target_selesai
+            $this->target_selesai->ViewValue = $this->target_selesai->CurrentValue;
+            $this->target_selesai->ViewValue = FormatDateTime($this->target_selesai->ViewValue, 0);
+            $this->target_selesai->ViewCustomAttributes = "";
+
+            // sifatorder
+            if (strval($this->sifatorder->CurrentValue) != "") {
+                $this->sifatorder->ViewValue = $this->sifatorder->optionCaption($this->sifatorder->CurrentValue);
+            } else {
+                $this->sifatorder->ViewValue = null;
+            }
+            $this->sifatorder->ViewCustomAttributes = "";
+
+            // kodeorder
+            $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
+            $this->kodeorder->ViewCustomAttributes = "";
+
+            // nomororder
+            $this->nomororder->ViewValue = $this->nomororder->CurrentValue;
+            $this->nomororder->ViewCustomAttributes = "";
+
+            // kategoriproduk
+            $curVal = trim(strval($this->kategoriproduk->CurrentValue));
             if ($curVal != "") {
-                $this->idjenisproduk->ViewValue = $this->idjenisproduk->lookupCacheOption($curVal);
-                if ($this->idjenisproduk->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idjenisproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $this->kategoriproduk->ViewValue = $this->kategoriproduk->lookupCacheOption($curVal);
+                if ($this->kategoriproduk->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`grup`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->kategoriproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idjenisproduk->Lookup->renderViewRow($rswrk[0]);
-                        $this->idjenisproduk->ViewValue = $this->idjenisproduk->displayValue($arwrk);
+                        $arwrk = $this->kategoriproduk->Lookup->renderViewRow($rswrk[0]);
+                        $this->kategoriproduk->ViewValue = $this->kategoriproduk->displayValue($arwrk);
                     } else {
-                        $this->idjenisproduk->ViewValue = $this->idjenisproduk->CurrentValue;
+                        $this->kategoriproduk->ViewValue = $this->kategoriproduk->CurrentValue;
                     }
                 }
             } else {
-                $this->idjenisproduk->ViewValue = null;
+                $this->kategoriproduk->ViewValue = null;
             }
-            $this->idjenisproduk->ViewCustomAttributes = "";
+            $this->kategoriproduk->ViewCustomAttributes = "";
+
+            // jenisproduk
+            $curVal = trim(strval($this->jenisproduk->CurrentValue));
+            if ($curVal != "") {
+                $this->jenisproduk->ViewValue = $this->jenisproduk->lookupCacheOption($curVal);
+                if ($this->jenisproduk->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`kategori`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->jenisproduk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->jenisproduk->Lookup->renderViewRow($rswrk[0]);
+                        $this->jenisproduk->ViewValue = $this->jenisproduk->displayValue($arwrk);
+                    } else {
+                        $this->jenisproduk->ViewValue = $this->jenisproduk->CurrentValue;
+                    }
+                }
+            } else {
+                $this->jenisproduk->ViewValue = null;
+            }
+            $this->jenisproduk->ViewCustomAttributes = "";
 
             // fungsiproduk
             $this->fungsiproduk->ViewValue = $this->fungsiproduk->CurrentValue;
@@ -1432,23 +1449,13 @@ class NpdEdit extends Npd
             if ($curVal != "") {
                 $this->bentuk->ViewValue = $this->bentuk->lookupCacheOption($curVal);
                 if ($this->bentuk->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`sediaan`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $sqlWrk = $this->bentuk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $this->bentuk->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->bentuk->Lookup->renderViewRow($row);
-                            $this->bentuk->ViewValue->add($this->bentuk->displayValue($arwrk));
-                        }
+                        $arwrk = $this->bentuk->Lookup->renderViewRow($rswrk[0]);
+                        $this->bentuk->ViewValue = $this->bentuk->displayValue($arwrk);
                     } else {
                         $this->bentuk->ViewValue = $this->bentuk->CurrentValue;
                     }
@@ -1459,65 +1466,11 @@ class NpdEdit extends Npd
             $this->bentuk->ViewCustomAttributes = "";
 
             // viskositas
-            $curVal = trim(strval($this->viskositas->CurrentValue));
-            if ($curVal != "") {
-                $this->viskositas->ViewValue = $this->viskositas->lookupCacheOption($curVal);
-                if ($this->viskositas->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                    $sqlWrk = $this->viskositas->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $this->viskositas->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->viskositas->Lookup->renderViewRow($row);
-                            $this->viskositas->ViewValue->add($this->viskositas->displayValue($arwrk));
-                        }
-                    } else {
-                        $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
-                    }
-                }
-            } else {
-                $this->viskositas->ViewValue = null;
-            }
+            $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
             $this->viskositas->ViewCustomAttributes = "";
 
             // warna
-            $curVal = trim(strval($this->warna->CurrentValue));
-            if ($curVal != "") {
-                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
-                if ($this->warna->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                    $sqlWrk = $this->warna->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $this->warna->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->warna->Lookup->renderViewRow($row);
-                            $this->warna->ViewValue->add($this->warna->displayValue($arwrk));
-                        }
-                    } else {
-                        $this->warna->ViewValue = $this->warna->CurrentValue;
-                    }
-                }
-            } else {
-                $this->warna->ViewValue = null;
-            }
+            $this->warna->ViewValue = $this->warna->CurrentValue;
             $this->warna->ViewCustomAttributes = "";
 
             // parfum
@@ -1525,23 +1478,13 @@ class NpdEdit extends Npd
             if ($curVal != "") {
                 $this->parfum->ViewValue = $this->parfum->lookupCacheOption($curVal);
                 if ($this->parfum->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`fragrance`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $sqlWrk = $this->parfum->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $this->parfum->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->parfum->Lookup->renderViewRow($row);
-                            $this->parfum->ViewValue->add($this->parfum->displayValue($arwrk));
-                        }
+                        $arwrk = $this->parfum->Lookup->renderViewRow($rswrk[0]);
+                        $this->parfum->ViewValue = $this->parfum->displayValue($arwrk);
                     } else {
                         $this->parfum->ViewValue = $this->parfum->CurrentValue;
                     }
@@ -1556,23 +1499,13 @@ class NpdEdit extends Npd
             if ($curVal != "") {
                 $this->aplikasi->ViewValue = $this->aplikasi->lookupCacheOption($curVal);
                 if ($this->aplikasi->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`aplikasi_sediaan`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $sqlWrk = $this->aplikasi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $this->aplikasi->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->aplikasi->Lookup->renderViewRow($row);
-                            $this->aplikasi->ViewValue->add($this->aplikasi->displayValue($arwrk));
-                        }
+                        $arwrk = $this->aplikasi->Lookup->renderViewRow($rswrk[0]);
+                        $this->aplikasi->ViewValue = $this->aplikasi->displayValue($arwrk);
                     } else {
                         $this->aplikasi->ViewValue = $this->aplikasi->CurrentValue;
                     }
@@ -1581,37 +1514,6 @@ class NpdEdit extends Npd
                 $this->aplikasi->ViewValue = null;
             }
             $this->aplikasi->ViewCustomAttributes = "";
-
-            // estetika
-            $curVal = trim(strval($this->estetika->CurrentValue));
-            if ($curVal != "") {
-                $this->estetika->ViewValue = $this->estetika->lookupCacheOption($curVal);
-                if ($this->estetika->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                    $sqlWrk = $this->estetika->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $this->estetika->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->estetika->Lookup->renderViewRow($row);
-                            $this->estetika->ViewValue->add($this->estetika->displayValue($arwrk));
-                        }
-                    } else {
-                        $this->estetika->ViewValue = $this->estetika->CurrentValue;
-                    }
-                }
-            } else {
-                $this->estetika->ViewValue = null;
-            }
-            $this->estetika->ViewCustomAttributes = "";
 
             // tambahan
             $this->tambahan->ViewValue = $this->tambahan->CurrentValue;
@@ -1632,7 +1534,7 @@ class NpdEdit extends Npd
                         if ($filterWrk != "") {
                             $filterWrk .= " OR ";
                         }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                        $filterWrk .= "`nama`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
                     }
                     $sqlWrk = $this->kemasanbentuk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1663,7 +1565,7 @@ class NpdEdit extends Npd
                         if ($filterWrk != "") {
                             $filterWrk .= " OR ";
                         }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                        $filterWrk .= "`nama`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
                     }
                     $sqlWrk = $this->kemasantutup->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1692,23 +1594,13 @@ class NpdEdit extends Npd
             if ($curVal != "") {
                 $this->labelbahan->ViewValue = $this->labelbahan->lookupCacheOption($curVal);
                 if ($this->labelbahan->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`nama`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $sqlWrk = $this->labelbahan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $this->labelbahan->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->labelbahan->Lookup->renderViewRow($row);
-                            $this->labelbahan->ViewValue->add($this->labelbahan->displayValue($arwrk));
-                        }
+                        $arwrk = $this->labelbahan->Lookup->renderViewRow($rswrk[0]);
+                        $this->labelbahan->ViewValue = $this->labelbahan->displayValue($arwrk);
                     } else {
                         $this->labelbahan->ViewValue = $this->labelbahan->CurrentValue;
                     }
@@ -1723,23 +1615,13 @@ class NpdEdit extends Npd
             if ($curVal != "") {
                 $this->labelkualitas->ViewValue = $this->labelkualitas->lookupCacheOption($curVal);
                 if ($this->labelkualitas->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`nama`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $sqlWrk = $this->labelkualitas->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $this->labelkualitas->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->labelkualitas->Lookup->renderViewRow($row);
-                            $this->labelkualitas->ViewValue->add($this->labelkualitas->displayValue($arwrk));
-                        }
+                        $arwrk = $this->labelkualitas->Lookup->renderViewRow($rswrk[0]);
+                        $this->labelkualitas->ViewValue = $this->labelkualitas->displayValue($arwrk);
                     } else {
                         $this->labelkualitas->ViewValue = $this->labelkualitas->CurrentValue;
                     }
@@ -1754,23 +1636,13 @@ class NpdEdit extends Npd
             if ($curVal != "") {
                 $this->labelposisi->ViewValue = $this->labelposisi->lookupCacheOption($curVal);
                 if ($this->labelposisi->ViewValue === null) { // Lookup from database
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`nama`" . SearchString("=", $curVal, DATATYPE_STRING, "");
                     $sqlWrk = $this->labelposisi->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $this->labelposisi->ViewValue = new OptionValues();
-                        foreach ($rswrk as $row) {
-                            $arwrk = $this->labelposisi->Lookup->renderViewRow($row);
-                            $this->labelposisi->ViewValue->add($this->labelposisi->displayValue($arwrk));
-                        }
+                        $arwrk = $this->labelposisi->Lookup->renderViewRow($rswrk[0]);
+                        $this->labelposisi->ViewValue = $this->labelposisi->displayValue($arwrk);
                     } else {
                         $this->labelposisi->ViewValue = $this->labelposisi->CurrentValue;
                     }
@@ -1814,6 +1686,25 @@ class NpdEdit extends Npd
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
             $this->updated_at->ViewCustomAttributes = "";
 
+            // estetika
+            $this->estetika->ViewValue = $this->estetika->CurrentValue;
+            $this->estetika->ViewCustomAttributes = "";
+
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
+            $this->idpegawai->TooltipValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+
             // tanggal_order
             $this->tanggal_order->LinkCustomAttributes = "";
             $this->tanggal_order->HrefValue = "";
@@ -1823,11 +1714,6 @@ class NpdEdit extends Npd
             $this->target_selesai->LinkCustomAttributes = "";
             $this->target_selesai->HrefValue = "";
             $this->target_selesai->TooltipValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
 
             // sifatorder
             $this->sifatorder->LinkCustomAttributes = "";
@@ -1844,25 +1730,15 @@ class NpdEdit extends Npd
             $this->nomororder->HrefValue = "";
             $this->nomororder->TooltipValue = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
+            // kategoriproduk
+            $this->kategoriproduk->LinkCustomAttributes = "";
+            $this->kategoriproduk->HrefValue = "";
+            $this->kategoriproduk->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // idkategoriproduk
-            $this->idkategoriproduk->LinkCustomAttributes = "";
-            $this->idkategoriproduk->HrefValue = "";
-            $this->idkategoriproduk->TooltipValue = "";
-
-            // idjenisproduk
-            $this->idjenisproduk->LinkCustomAttributes = "";
-            $this->idjenisproduk->HrefValue = "";
-            $this->idjenisproduk->TooltipValue = "";
+            // jenisproduk
+            $this->jenisproduk->LinkCustomAttributes = "";
+            $this->jenisproduk->HrefValue = "";
+            $this->jenisproduk->TooltipValue = "";
 
             // fungsiproduk
             $this->fungsiproduk->LinkCustomAttributes = "";
@@ -1908,11 +1784,6 @@ class NpdEdit extends Npd
             $this->aplikasi->LinkCustomAttributes = "";
             $this->aplikasi->HrefValue = "";
             $this->aplikasi->TooltipValue = "";
-
-            // estetika
-            $this->estetika->LinkCustomAttributes = "";
-            $this->estetika->HrefValue = "";
-            $this->estetika->TooltipValue = "";
 
             // tambahan
             $this->tambahan->LinkCustomAttributes = "";
@@ -1963,45 +1834,12 @@ class NpdEdit extends Npd
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // estetika
+            $this->estetika->LinkCustomAttributes = "";
+            $this->estetika->HrefValue = "";
+            $this->estetika->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // tanggal_order
-            $this->tanggal_order->EditAttrs["class"] = "form-control";
-            $this->tanggal_order->EditCustomAttributes = "";
-            $this->tanggal_order->EditValue = HtmlEncode(FormatDateTime($this->tanggal_order->CurrentValue, 8));
-            $this->tanggal_order->PlaceHolder = RemoveHtml($this->tanggal_order->caption());
-
-            // target_selesai
-            $this->target_selesai->EditAttrs["class"] = "form-control";
-            $this->target_selesai->EditCustomAttributes = "";
-            $this->target_selesai->EditValue = HtmlEncode(FormatDateTime($this->target_selesai->CurrentValue, 8));
-            $this->target_selesai->PlaceHolder = RemoveHtml($this->target_selesai->caption());
-
-            // idbrand
-            $this->idbrand->EditAttrs["class"] = "form-control";
-            $this->idbrand->EditCustomAttributes = "";
-            $this->idbrand->EditValue = HtmlEncode($this->idbrand->CurrentValue);
-            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-
-            // sifatorder
-            $this->sifatorder->EditCustomAttributes = "";
-            $this->sifatorder->EditValue = $this->sifatorder->options(false);
-            $this->sifatorder->PlaceHolder = RemoveHtml($this->sifatorder->caption());
-
-            // kodeorder
-            $this->kodeorder->EditAttrs["class"] = "form-control";
-            $this->kodeorder->EditCustomAttributes = "";
-            $this->kodeorder->EditValue = $this->kodeorder->CurrentValue;
-            $this->kodeorder->ViewCustomAttributes = "";
-
-            // nomororder
-            $this->nomororder->EditAttrs["class"] = "form-control";
-            $this->nomororder->EditCustomAttributes = "";
-            if (!$this->nomororder->Raw) {
-                $this->nomororder->CurrentValue = HtmlDecode($this->nomororder->CurrentValue);
-            }
-            $this->nomororder->EditValue = HtmlEncode($this->nomororder->CurrentValue);
-            $this->nomororder->PlaceHolder = RemoveHtml($this->nomororder->caption());
-
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
             $this->idpegawai->EditCustomAttributes = "";
@@ -2048,55 +1886,112 @@ class NpdEdit extends Npd
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // idkategoriproduk
-            $this->idkategoriproduk->EditAttrs["class"] = "form-control";
-            $this->idkategoriproduk->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idkategoriproduk->CurrentValue));
+            // idbrand
+            $this->idbrand->EditAttrs["class"] = "form-control";
+            $this->idbrand->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idbrand->CurrentValue));
             if ($curVal != "") {
-                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->lookupCacheOption($curVal);
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
             } else {
-                $this->idkategoriproduk->ViewValue = $this->idkategoriproduk->Lookup !== null && is_array($this->idkategoriproduk->Lookup->Options) ? $curVal : null;
+                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
             }
-            if ($this->idkategoriproduk->ViewValue !== null) { // Load from cache
-                $this->idkategoriproduk->EditValue = array_values($this->idkategoriproduk->Lookup->Options);
+            if ($this->idbrand->ViewValue !== null) { // Load from cache
+                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idkategoriproduk->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idbrand`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $sqlWrk = $this->idkategoriproduk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                $this->idkategoriproduk->EditValue = $arwrk;
+                $this->idbrand->EditValue = $arwrk;
             }
-            $this->idkategoriproduk->PlaceHolder = RemoveHtml($this->idkategoriproduk->caption());
+            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
-            // idjenisproduk
-            $this->idjenisproduk->EditAttrs["class"] = "form-control";
-            $this->idjenisproduk->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idjenisproduk->CurrentValue));
-            if ($curVal != "") {
-                $this->idjenisproduk->ViewValue = $this->idjenisproduk->lookupCacheOption($curVal);
-            } else {
-                $this->idjenisproduk->ViewValue = $this->idjenisproduk->Lookup !== null && is_array($this->idjenisproduk->Lookup->Options) ? $curVal : null;
+            // tanggal_order
+            $this->tanggal_order->EditAttrs["class"] = "form-control";
+            $this->tanggal_order->EditCustomAttributes = "";
+            $this->tanggal_order->EditValue = HtmlEncode(FormatDateTime($this->tanggal_order->CurrentValue, 8));
+            $this->tanggal_order->PlaceHolder = RemoveHtml($this->tanggal_order->caption());
+
+            // target_selesai
+            $this->target_selesai->EditAttrs["class"] = "form-control";
+            $this->target_selesai->EditCustomAttributes = "";
+            $this->target_selesai->EditValue = HtmlEncode(FormatDateTime($this->target_selesai->CurrentValue, 8));
+            $this->target_selesai->PlaceHolder = RemoveHtml($this->target_selesai->caption());
+
+            // sifatorder
+            $this->sifatorder->EditCustomAttributes = "";
+            $this->sifatorder->EditValue = $this->sifatorder->options(false);
+            $this->sifatorder->PlaceHolder = RemoveHtml($this->sifatorder->caption());
+
+            // kodeorder
+            $this->kodeorder->EditAttrs["class"] = "form-control";
+            $this->kodeorder->EditCustomAttributes = "";
+            $this->kodeorder->EditValue = $this->kodeorder->CurrentValue;
+            $this->kodeorder->ViewCustomAttributes = "";
+
+            // nomororder
+            $this->nomororder->EditAttrs["class"] = "form-control";
+            $this->nomororder->EditCustomAttributes = "";
+            if (!$this->nomororder->Raw) {
+                $this->nomororder->CurrentValue = HtmlDecode($this->nomororder->CurrentValue);
             }
-            if ($this->idjenisproduk->ViewValue !== null) { // Load from cache
-                $this->idjenisproduk->EditValue = array_values($this->idjenisproduk->Lookup->Options);
+            $this->nomororder->EditValue = HtmlEncode($this->nomororder->CurrentValue);
+            $this->nomororder->PlaceHolder = RemoveHtml($this->nomororder->caption());
+
+            // kategoriproduk
+            $this->kategoriproduk->EditAttrs["class"] = "form-control";
+            $this->kategoriproduk->EditCustomAttributes = "";
+            $curVal = trim(strval($this->kategoriproduk->CurrentValue));
+            if ($curVal != "") {
+                $this->kategoriproduk->ViewValue = $this->kategoriproduk->lookupCacheOption($curVal);
+            } else {
+                $this->kategoriproduk->ViewValue = $this->kategoriproduk->Lookup !== null && is_array($this->kategoriproduk->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->kategoriproduk->ViewValue !== null) { // Load from cache
+                $this->kategoriproduk->EditValue = array_values($this->kategoriproduk->Lookup->Options);
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idjenisproduk->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`grup`" . SearchString("=", $this->kategoriproduk->CurrentValue, DATATYPE_STRING, "");
                 }
-                $sqlWrk = $this->idjenisproduk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $sqlWrk = $this->kategoriproduk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                $this->idjenisproduk->EditValue = $arwrk;
+                $this->kategoriproduk->EditValue = $arwrk;
             }
-            $this->idjenisproduk->PlaceHolder = RemoveHtml($this->idjenisproduk->caption());
+            $this->kategoriproduk->PlaceHolder = RemoveHtml($this->kategoriproduk->caption());
+
+            // jenisproduk
+            $this->jenisproduk->EditAttrs["class"] = "form-control";
+            $this->jenisproduk->EditCustomAttributes = "";
+            $curVal = trim(strval($this->jenisproduk->CurrentValue));
+            if ($curVal != "") {
+                $this->jenisproduk->ViewValue = $this->jenisproduk->lookupCacheOption($curVal);
+            } else {
+                $this->jenisproduk->ViewValue = $this->jenisproduk->Lookup !== null && is_array($this->jenisproduk->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->jenisproduk->ViewValue !== null) { // Load from cache
+                $this->jenisproduk->EditValue = array_values($this->jenisproduk->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`kategori`" . SearchString("=", $this->jenisproduk->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->jenisproduk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->jenisproduk->EditValue = $arwrk;
+            }
+            $this->jenisproduk->PlaceHolder = RemoveHtml($this->jenisproduk->caption());
 
             // fungsiproduk
             $this->fungsiproduk->EditAttrs["class"] = "form-control";
@@ -2119,9 +2014,6 @@ class NpdEdit extends Npd
             // bahan_campaign
             $this->bahan_campaign->EditAttrs["class"] = "form-control";
             $this->bahan_campaign->EditCustomAttributes = "";
-            if (!$this->bahan_campaign->Raw) {
-                $this->bahan_campaign->CurrentValue = HtmlDecode($this->bahan_campaign->CurrentValue);
-            }
             $this->bahan_campaign->EditValue = HtmlEncode($this->bahan_campaign->CurrentValue);
             $this->bahan_campaign->PlaceHolder = RemoveHtml($this->bahan_campaign->caption());
 
@@ -2148,14 +2040,7 @@ class NpdEdit extends Npd
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`sediaan`" . SearchString("=", $this->bentuk->CurrentValue, DATATYPE_STRING, "");
                 }
                 $sqlWrk = $this->bentuk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -2166,68 +2051,25 @@ class NpdEdit extends Npd
             $this->bentuk->PlaceHolder = RemoveHtml($this->bentuk->caption());
 
             // viskositas
+            $this->viskositas->EditAttrs["class"] = "form-control";
             $this->viskositas->EditCustomAttributes = "";
-            $curVal = trim(strval($this->viskositas->CurrentValue));
-            if ($curVal != "") {
-                $this->viskositas->ViewValue = $this->viskositas->lookupCacheOption($curVal);
-            } else {
-                $this->viskositas->ViewValue = $this->viskositas->Lookup !== null && is_array($this->viskositas->Lookup->Options) ? $curVal : null;
+            if (!$this->viskositas->Raw) {
+                $this->viskositas->CurrentValue = HtmlDecode($this->viskositas->CurrentValue);
             }
-            if ($this->viskositas->ViewValue !== null) { // Load from cache
-                $this->viskositas->EditValue = array_values($this->viskositas->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                }
-                $sqlWrk = $this->viskositas->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->viskositas->EditValue = $arwrk;
-            }
+            $this->viskositas->EditValue = HtmlEncode($this->viskositas->CurrentValue);
             $this->viskositas->PlaceHolder = RemoveHtml($this->viskositas->caption());
 
             // warna
+            $this->warna->EditAttrs["class"] = "form-control";
             $this->warna->EditCustomAttributes = "";
-            $curVal = trim(strval($this->warna->CurrentValue));
-            if ($curVal != "") {
-                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
-            } else {
-                $this->warna->ViewValue = $this->warna->Lookup !== null && is_array($this->warna->Lookup->Options) ? $curVal : null;
+            if (!$this->warna->Raw) {
+                $this->warna->CurrentValue = HtmlDecode($this->warna->CurrentValue);
             }
-            if ($this->warna->ViewValue !== null) { // Load from cache
-                $this->warna->EditValue = array_values($this->warna->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                }
-                $sqlWrk = $this->warna->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->warna->EditValue = $arwrk;
-            }
+            $this->warna->EditValue = HtmlEncode($this->warna->CurrentValue);
             $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
 
             // parfum
+            $this->parfum->EditAttrs["class"] = "form-control";
             $this->parfum->EditCustomAttributes = "";
             $curVal = trim(strval($this->parfum->CurrentValue));
             if ($curVal != "") {
@@ -2241,14 +2083,7 @@ class NpdEdit extends Npd
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`fragrance`" . SearchString("=", $this->parfum->CurrentValue, DATATYPE_STRING, "");
                 }
                 $sqlWrk = $this->parfum->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -2259,6 +2094,7 @@ class NpdEdit extends Npd
             $this->parfum->PlaceHolder = RemoveHtml($this->parfum->caption());
 
             // aplikasi
+            $this->aplikasi->EditAttrs["class"] = "form-control";
             $this->aplikasi->EditCustomAttributes = "";
             $curVal = trim(strval($this->aplikasi->CurrentValue));
             if ($curVal != "") {
@@ -2272,14 +2108,7 @@ class NpdEdit extends Npd
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`aplikasi_sediaan`" . SearchString("=", $this->aplikasi->CurrentValue, DATATYPE_STRING, "");
                 }
                 $sqlWrk = $this->aplikasi->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -2288,37 +2117,6 @@ class NpdEdit extends Npd
                 $this->aplikasi->EditValue = $arwrk;
             }
             $this->aplikasi->PlaceHolder = RemoveHtml($this->aplikasi->caption());
-
-            // estetika
-            $this->estetika->EditCustomAttributes = "";
-            $curVal = trim(strval($this->estetika->CurrentValue));
-            if ($curVal != "") {
-                $this->estetika->ViewValue = $this->estetika->lookupCacheOption($curVal);
-            } else {
-                $this->estetika->ViewValue = $this->estetika->Lookup !== null && is_array($this->estetika->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->estetika->ViewValue !== null) { // Load from cache
-                $this->estetika->EditValue = array_values($this->estetika->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
-                }
-                $sqlWrk = $this->estetika->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->estetika->EditValue = $arwrk;
-            }
-            $this->estetika->PlaceHolder = RemoveHtml($this->estetika->caption());
 
             // tambahan
             $this->tambahan->EditAttrs["class"] = "form-control";
@@ -2355,7 +2153,7 @@ class NpdEdit extends Npd
                         if ($filterWrk != "") {
                             $filterWrk .= " OR ";
                         }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                        $filterWrk .= "`nama`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
                     }
                 }
                 $sqlWrk = $this->kemasanbentuk->Lookup->getSql(true, $filterWrk, '', $this, false, true);
@@ -2386,7 +2184,7 @@ class NpdEdit extends Npd
                         if ($filterWrk != "") {
                             $filterWrk .= " OR ";
                         }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                        $filterWrk .= "`nama`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
                     }
                 }
                 $sqlWrk = $this->kemasantutup->Lookup->getSql(true, $filterWrk, '', $this, false, true);
@@ -2417,14 +2215,7 @@ class NpdEdit extends Npd
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`nama`" . SearchString("=", $this->labelbahan->CurrentValue, DATATYPE_STRING, "");
                 }
                 $sqlWrk = $this->labelbahan->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -2448,14 +2239,7 @@ class NpdEdit extends Npd
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`nama`" . SearchString("=", $this->labelkualitas->CurrentValue, DATATYPE_STRING, "");
                 }
                 $sqlWrk = $this->labelkualitas->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -2479,14 +2263,7 @@ class NpdEdit extends Npd
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $arwrk = explode(",", $curVal);
-                    $filterWrk = "";
-                    foreach ($arwrk as $wrk) {
-                        if ($filterWrk != "") {
-                            $filterWrk .= " OR ";
-                        }
-                        $filterWrk .= "`value`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
-                    }
+                    $filterWrk = "`nama`" . SearchString("=", $this->labelposisi->CurrentValue, DATATYPE_STRING, "");
                 }
                 $sqlWrk = $this->labelposisi->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -2511,7 +2288,30 @@ class NpdEdit extends Npd
             $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
+            // estetika
+            $this->estetika->EditAttrs["class"] = "form-control";
+            $this->estetika->EditCustomAttributes = "";
+            if (!$this->estetika->Raw) {
+                $this->estetika->CurrentValue = HtmlDecode($this->estetika->CurrentValue);
+            }
+            $this->estetika->EditValue = HtmlEncode($this->estetika->CurrentValue);
+            $this->estetika->PlaceHolder = RemoveHtml($this->estetika->caption());
+
             // Edit refer script
+
+            // idpegawai
+            $this->idpegawai->LinkCustomAttributes = "";
+            $this->idpegawai->HrefValue = "";
+            $this->idpegawai->TooltipValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
 
             // tanggal_order
             $this->tanggal_order->LinkCustomAttributes = "";
@@ -2520,10 +2320,6 @@ class NpdEdit extends Npd
             // target_selesai
             $this->target_selesai->LinkCustomAttributes = "";
             $this->target_selesai->HrefValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
 
             // sifatorder
             $this->sifatorder->LinkCustomAttributes = "";
@@ -2538,23 +2334,13 @@ class NpdEdit extends Npd
             $this->nomororder->LinkCustomAttributes = "";
             $this->nomororder->HrefValue = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
+            // kategoriproduk
+            $this->kategoriproduk->LinkCustomAttributes = "";
+            $this->kategoriproduk->HrefValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // idkategoriproduk
-            $this->idkategoriproduk->LinkCustomAttributes = "";
-            $this->idkategoriproduk->HrefValue = "";
-
-            // idjenisproduk
-            $this->idjenisproduk->LinkCustomAttributes = "";
-            $this->idjenisproduk->HrefValue = "";
+            // jenisproduk
+            $this->jenisproduk->LinkCustomAttributes = "";
+            $this->jenisproduk->HrefValue = "";
 
             // fungsiproduk
             $this->fungsiproduk->LinkCustomAttributes = "";
@@ -2591,10 +2377,6 @@ class NpdEdit extends Npd
             // aplikasi
             $this->aplikasi->LinkCustomAttributes = "";
             $this->aplikasi->HrefValue = "";
-
-            // estetika
-            $this->estetika->LinkCustomAttributes = "";
-            $this->estetika->HrefValue = "";
 
             // tambahan
             $this->tambahan->LinkCustomAttributes = "";
@@ -2635,6 +2417,10 @@ class NpdEdit extends Npd
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
+
+            // estetika
+            $this->estetika->LinkCustomAttributes = "";
+            $this->estetika->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2655,6 +2441,21 @@ class NpdEdit extends Npd
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
+        if ($this->idpegawai->Required) {
+            if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
+                $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
+            }
+        }
+        if ($this->idcustomer->Required) {
+            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
+                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
+        }
+        if ($this->idbrand->Required) {
+            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
+                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
+            }
+        }
         if ($this->tanggal_order->Required) {
             if (!$this->tanggal_order->IsDetailKey && EmptyValue($this->tanggal_order->FormValue)) {
                 $this->tanggal_order->addErrorMessage(str_replace("%s", $this->tanggal_order->caption(), $this->tanggal_order->RequiredErrorMessage));
@@ -2671,14 +2472,6 @@ class NpdEdit extends Npd
         if (!CheckDate($this->target_selesai->FormValue)) {
             $this->target_selesai->addErrorMessage($this->target_selesai->getErrorMessage(false));
         }
-        if ($this->idbrand->Required) {
-            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
-                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->idbrand->FormValue)) {
-            $this->idbrand->addErrorMessage($this->idbrand->getErrorMessage(false));
-        }
         if ($this->sifatorder->Required) {
             if ($this->sifatorder->FormValue == "") {
                 $this->sifatorder->addErrorMessage(str_replace("%s", $this->sifatorder->caption(), $this->sifatorder->RequiredErrorMessage));
@@ -2694,24 +2487,14 @@ class NpdEdit extends Npd
                 $this->nomororder->addErrorMessage(str_replace("%s", $this->nomororder->caption(), $this->nomororder->RequiredErrorMessage));
             }
         }
-        if ($this->idpegawai->Required) {
-            if (!$this->idpegawai->IsDetailKey && EmptyValue($this->idpegawai->FormValue)) {
-                $this->idpegawai->addErrorMessage(str_replace("%s", $this->idpegawai->caption(), $this->idpegawai->RequiredErrorMessage));
+        if ($this->kategoriproduk->Required) {
+            if (!$this->kategoriproduk->IsDetailKey && EmptyValue($this->kategoriproduk->FormValue)) {
+                $this->kategoriproduk->addErrorMessage(str_replace("%s", $this->kategoriproduk->caption(), $this->kategoriproduk->RequiredErrorMessage));
             }
         }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
-            }
-        }
-        if ($this->idkategoriproduk->Required) {
-            if (!$this->idkategoriproduk->IsDetailKey && EmptyValue($this->idkategoriproduk->FormValue)) {
-                $this->idkategoriproduk->addErrorMessage(str_replace("%s", $this->idkategoriproduk->caption(), $this->idkategoriproduk->RequiredErrorMessage));
-            }
-        }
-        if ($this->idjenisproduk->Required) {
-            if (!$this->idjenisproduk->IsDetailKey && EmptyValue($this->idjenisproduk->FormValue)) {
-                $this->idjenisproduk->addErrorMessage(str_replace("%s", $this->idjenisproduk->caption(), $this->idjenisproduk->RequiredErrorMessage));
+        if ($this->jenisproduk->Required) {
+            if (!$this->jenisproduk->IsDetailKey && EmptyValue($this->jenisproduk->FormValue)) {
+                $this->jenisproduk->addErrorMessage(str_replace("%s", $this->jenisproduk->caption(), $this->jenisproduk->RequiredErrorMessage));
             }
         }
         if ($this->fungsiproduk->Required) {
@@ -2740,28 +2523,23 @@ class NpdEdit extends Npd
             }
         }
         if ($this->viskositas->Required) {
-            if ($this->viskositas->FormValue == "") {
+            if (!$this->viskositas->IsDetailKey && EmptyValue($this->viskositas->FormValue)) {
                 $this->viskositas->addErrorMessage(str_replace("%s", $this->viskositas->caption(), $this->viskositas->RequiredErrorMessage));
             }
         }
         if ($this->warna->Required) {
-            if ($this->warna->FormValue == "") {
+            if (!$this->warna->IsDetailKey && EmptyValue($this->warna->FormValue)) {
                 $this->warna->addErrorMessage(str_replace("%s", $this->warna->caption(), $this->warna->RequiredErrorMessage));
             }
         }
         if ($this->parfum->Required) {
-            if ($this->parfum->FormValue == "") {
+            if (!$this->parfum->IsDetailKey && EmptyValue($this->parfum->FormValue)) {
                 $this->parfum->addErrorMessage(str_replace("%s", $this->parfum->caption(), $this->parfum->RequiredErrorMessage));
             }
         }
         if ($this->aplikasi->Required) {
-            if ($this->aplikasi->FormValue == "") {
+            if (!$this->aplikasi->IsDetailKey && EmptyValue($this->aplikasi->FormValue)) {
                 $this->aplikasi->addErrorMessage(str_replace("%s", $this->aplikasi->caption(), $this->aplikasi->RequiredErrorMessage));
-            }
-        }
-        if ($this->estetika->Required) {
-            if ($this->estetika->FormValue == "") {
-                $this->estetika->addErrorMessage(str_replace("%s", $this->estetika->caption(), $this->estetika->RequiredErrorMessage));
             }
         }
         if ($this->tambahan->Required) {
@@ -2812,6 +2590,11 @@ class NpdEdit extends Npd
         if ($this->status->Required) {
             if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
+            }
+        }
+        if ($this->estetika->Required) {
+            if (!$this->estetika->IsDetailKey && EmptyValue($this->estetika->FormValue)) {
+                $this->estetika->addErrorMessage(str_replace("%s", $this->estetika->caption(), $this->estetika->RequiredErrorMessage));
             }
         }
 
@@ -2895,26 +2678,26 @@ class NpdEdit extends Npd
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // idbrand
+            $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, null, $this->idbrand->ReadOnly);
+
             // tanggal_order
             $this->tanggal_order->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_order->CurrentValue, 0), null, $this->tanggal_order->ReadOnly);
 
             // target_selesai
             $this->target_selesai->setDbValueDef($rsnew, UnFormatDateTime($this->target_selesai->CurrentValue, 0), null, $this->target_selesai->ReadOnly);
 
-            // idbrand
-            $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
-
             // sifatorder
             $this->sifatorder->setDbValueDef($rsnew, $this->sifatorder->CurrentValue, "", $this->sifatorder->ReadOnly);
 
             // nomororder
-            $this->nomororder->setDbValueDef($rsnew, $this->nomororder->CurrentValue, "", $this->nomororder->ReadOnly);
+            $this->nomororder->setDbValueDef($rsnew, $this->nomororder->CurrentValue, null, $this->nomororder->ReadOnly);
 
-            // idkategoriproduk
-            $this->idkategoriproduk->setDbValueDef($rsnew, $this->idkategoriproduk->CurrentValue, 0, $this->idkategoriproduk->ReadOnly);
+            // kategoriproduk
+            $this->kategoriproduk->setDbValueDef($rsnew, $this->kategoriproduk->CurrentValue, null, $this->kategoriproduk->ReadOnly);
 
-            // idjenisproduk
-            $this->idjenisproduk->setDbValueDef($rsnew, $this->idjenisproduk->CurrentValue, null, $this->idjenisproduk->ReadOnly);
+            // jenisproduk
+            $this->jenisproduk->setDbValueDef($rsnew, $this->jenisproduk->CurrentValue, null, $this->jenisproduk->ReadOnly);
 
             // fungsiproduk
             $this->fungsiproduk->setDbValueDef($rsnew, $this->fungsiproduk->CurrentValue, null, $this->fungsiproduk->ReadOnly);
@@ -2926,49 +2709,46 @@ class NpdEdit extends Npd
             $this->bahan_campaign->setDbValueDef($rsnew, $this->bahan_campaign->CurrentValue, null, $this->bahan_campaign->ReadOnly);
 
             // ukuran_sediaan
-            $this->ukuran_sediaan->setDbValueDef($rsnew, $this->ukuran_sediaan->CurrentValue, "", $this->ukuran_sediaan->ReadOnly);
+            $this->ukuran_sediaan->setDbValueDef($rsnew, $this->ukuran_sediaan->CurrentValue, null, $this->ukuran_sediaan->ReadOnly);
 
             // bentuk
-            $this->bentuk->setDbValueDef($rsnew, $this->bentuk->CurrentValue, "", $this->bentuk->ReadOnly);
+            $this->bentuk->setDbValueDef($rsnew, $this->bentuk->CurrentValue, null, $this->bentuk->ReadOnly);
 
             // viskositas
-            $this->viskositas->setDbValueDef($rsnew, $this->viskositas->CurrentValue, "", $this->viskositas->ReadOnly);
+            $this->viskositas->setDbValueDef($rsnew, $this->viskositas->CurrentValue, null, $this->viskositas->ReadOnly);
 
             // warna
-            $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, "", $this->warna->ReadOnly);
+            $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, null, $this->warna->ReadOnly);
 
             // parfum
-            $this->parfum->setDbValueDef($rsnew, $this->parfum->CurrentValue, "", $this->parfum->ReadOnly);
+            $this->parfum->setDbValueDef($rsnew, $this->parfum->CurrentValue, null, $this->parfum->ReadOnly);
 
             // aplikasi
-            $this->aplikasi->setDbValueDef($rsnew, $this->aplikasi->CurrentValue, "", $this->aplikasi->ReadOnly);
-
-            // estetika
-            $this->estetika->setDbValueDef($rsnew, $this->estetika->CurrentValue, "", $this->estetika->ReadOnly);
+            $this->aplikasi->setDbValueDef($rsnew, $this->aplikasi->CurrentValue, null, $this->aplikasi->ReadOnly);
 
             // tambahan
             $this->tambahan->setDbValueDef($rsnew, $this->tambahan->CurrentValue, null, $this->tambahan->ReadOnly);
 
             // ukurankemasan
-            $this->ukurankemasan->setDbValueDef($rsnew, $this->ukurankemasan->CurrentValue, "", $this->ukurankemasan->ReadOnly);
+            $this->ukurankemasan->setDbValueDef($rsnew, $this->ukurankemasan->CurrentValue, null, $this->ukurankemasan->ReadOnly);
 
             // kemasanbentuk
-            $this->kemasanbentuk->setDbValueDef($rsnew, $this->kemasanbentuk->CurrentValue, "", $this->kemasanbentuk->ReadOnly);
+            $this->kemasanbentuk->setDbValueDef($rsnew, $this->kemasanbentuk->CurrentValue, null, $this->kemasanbentuk->ReadOnly);
 
             // kemasantutup
-            $this->kemasantutup->setDbValueDef($rsnew, $this->kemasantutup->CurrentValue, "", $this->kemasantutup->ReadOnly);
+            $this->kemasantutup->setDbValueDef($rsnew, $this->kemasantutup->CurrentValue, null, $this->kemasantutup->ReadOnly);
 
             // kemasancatatan
             $this->kemasancatatan->setDbValueDef($rsnew, $this->kemasancatatan->CurrentValue, null, $this->kemasancatatan->ReadOnly);
 
             // labelbahan
-            $this->labelbahan->setDbValueDef($rsnew, $this->labelbahan->CurrentValue, "", $this->labelbahan->ReadOnly);
+            $this->labelbahan->setDbValueDef($rsnew, $this->labelbahan->CurrentValue, null, $this->labelbahan->ReadOnly);
 
             // labelkualitas
-            $this->labelkualitas->setDbValueDef($rsnew, $this->labelkualitas->CurrentValue, "", $this->labelkualitas->ReadOnly);
+            $this->labelkualitas->setDbValueDef($rsnew, $this->labelkualitas->CurrentValue, null, $this->labelkualitas->ReadOnly);
 
             // labelposisi
-            $this->labelposisi->setDbValueDef($rsnew, $this->labelposisi->CurrentValue, "", $this->labelposisi->ReadOnly);
+            $this->labelposisi->setDbValueDef($rsnew, $this->labelposisi->CurrentValue, null, $this->labelposisi->ReadOnly);
 
             // labelcatatan
             $this->labelcatatan->setDbValueDef($rsnew, $this->labelcatatan->CurrentValue, null, $this->labelcatatan->ReadOnly);
@@ -2976,21 +2756,11 @@ class NpdEdit extends Npd
             // status
             $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", $this->status->ReadOnly);
 
+            // estetika
+            $this->estetika->setDbValueDef($rsnew, $this->estetika->CurrentValue, null, $this->estetika->ReadOnly);
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -3231,11 +3001,13 @@ class NpdEdit extends Npd
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_sifatorder":
-                    break;
                 case "x_idpegawai":
                     break;
                 case "x_idcustomer":
+                    break;
+                case "x_idbrand":
+                    break;
+                case "x_sifatorder":
                     break;
                 case "x_idproduct_acuan":
                     $lookupFilter = function () {
@@ -3243,21 +3015,15 @@ class NpdEdit extends Npd
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_idkategoriproduk":
+                case "x_kategoriproduk":
                     break;
-                case "x_idjenisproduk":
+                case "x_jenisproduk":
                     break;
                 case "x_bentuk":
-                    break;
-                case "x_viskositas":
-                    break;
-                case "x_warna":
                     break;
                 case "x_parfum":
                     break;
                 case "x_aplikasi":
-                    break;
-                case "x_estetika":
                     break;
                 case "x_kemasanbentuk":
                     break;

@@ -468,11 +468,11 @@ class DeliveryorderAdd extends Deliveryorder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
+        $this->suratjalan->setVisibility();
         $this->created_by->setVisibility();
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
         $this->readonly->Visible = false;
-        $this->suratjalan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -644,14 +644,14 @@ class DeliveryorderAdd extends Deliveryorder
         $this->lampiran->Upload->DbValue = null;
         $this->lampiran->OldValue = $this->lampiran->Upload->DbValue;
         $this->lampiran->CurrentValue = null; // Clear file related field
+        $this->suratjalan->CurrentValue = null;
+        $this->suratjalan->OldValue = $this->suratjalan->CurrentValue;
         $this->created_by->CurrentValue = CurrentUserID();
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->updated_at->CurrentValue = null;
         $this->updated_at->OldValue = $this->updated_at->CurrentValue;
         $this->readonly->CurrentValue = 0;
-        $this->suratjalan->CurrentValue = null;
-        $this->suratjalan->OldValue = $this->suratjalan->CurrentValue;
     }
 
     // Load form values
@@ -681,16 +681,6 @@ class DeliveryorderAdd extends Deliveryorder
             $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
         }
 
-        // Check field name 'created_by' first before field var 'x_created_by'
-        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
-        if (!$this->created_by->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->created_by->Visible = false; // Disable update for API request
-            } else {
-                $this->created_by->setFormValue($val);
-            }
-        }
-
         // Check field name 'suratjalan' first before field var 'x_suratjalan'
         $val = $CurrentForm->hasValue("suratjalan") ? $CurrentForm->getValue("suratjalan") : $CurrentForm->getValue("x_suratjalan");
         if (!$this->suratjalan->IsDetailKey) {
@@ -698,6 +688,16 @@ class DeliveryorderAdd extends Deliveryorder
                 $this->suratjalan->Visible = false; // Disable update for API request
             } else {
                 $this->suratjalan->setFormValue($val);
+            }
+        }
+
+        // Check field name 'created_by' first before field var 'x_created_by'
+        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
+        if (!$this->created_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->created_by->Visible = false; // Disable update for API request
+            } else {
+                $this->created_by->setFormValue($val);
             }
         }
 
@@ -713,8 +713,8 @@ class DeliveryorderAdd extends Deliveryorder
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
-        $this->created_by->CurrentValue = $this->created_by->FormValue;
         $this->suratjalan->CurrentValue = $this->suratjalan->FormValue;
+        $this->created_by->CurrentValue = $this->created_by->FormValue;
     }
 
     /**
@@ -778,11 +778,11 @@ class DeliveryorderAdd extends Deliveryorder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
+        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->suratjalan->setDbValue($row['suratjalan']);
     }
 
     // Return a row with default values
@@ -794,11 +794,11 @@ class DeliveryorderAdd extends Deliveryorder
         $row['kode'] = $this->kode->CurrentValue;
         $row['tanggal'] = $this->tanggal->CurrentValue;
         $row['lampiran'] = $this->lampiran->Upload->DbValue;
+        $row['suratjalan'] = $this->suratjalan->CurrentValue;
         $row['created_by'] = $this->created_by->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['updated_at'] = $this->updated_at->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
-        $row['suratjalan'] = $this->suratjalan->CurrentValue;
         return $row;
     }
 
@@ -838,6 +838,8 @@ class DeliveryorderAdd extends Deliveryorder
 
         // lampiran
 
+        // suratjalan
+
         // created_by
 
         // created_at
@@ -845,8 +847,6 @@ class DeliveryorderAdd extends Deliveryorder
         // updated_at
 
         // readonly
-
-        // suratjalan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -869,6 +869,10 @@ class DeliveryorderAdd extends Deliveryorder
             }
             $this->lampiran->ViewCustomAttributes = "";
 
+            // suratjalan
+            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
+            $this->suratjalan->ViewCustomAttributes = "";
+
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
@@ -883,10 +887,6 @@ class DeliveryorderAdd extends Deliveryorder
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
-
-            // suratjalan
-            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-            $this->suratjalan->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -904,15 +904,15 @@ class DeliveryorderAdd extends Deliveryorder
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
-
             // suratjalan
             $this->suratjalan->LinkCustomAttributes = "";
             $this->suratjalan->HrefValue = "";
             $this->suratjalan->TooltipValue = "";
+
+            // created_by
+            $this->created_by->LinkCustomAttributes = "";
+            $this->created_by->HrefValue = "";
+            $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -944,11 +944,6 @@ class DeliveryorderAdd extends Deliveryorder
                 RenderUploadField($this->lampiran);
             }
 
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
-
             // suratjalan
             $this->suratjalan->EditAttrs["class"] = "form-control";
             $this->suratjalan->EditCustomAttributes = "";
@@ -957,6 +952,11 @@ class DeliveryorderAdd extends Deliveryorder
             }
             $this->suratjalan->EditValue = HtmlEncode($this->suratjalan->CurrentValue);
             $this->suratjalan->PlaceHolder = RemoveHtml($this->suratjalan->caption());
+
+            // created_by
+            $this->created_by->EditAttrs["class"] = "form-control";
+            $this->created_by->EditCustomAttributes = "";
+            $this->created_by->CurrentValue = CurrentUserID();
 
             // Add refer script
 
@@ -973,13 +973,13 @@ class DeliveryorderAdd extends Deliveryorder
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-
             // suratjalan
             $this->suratjalan->LinkCustomAttributes = "";
             $this->suratjalan->HrefValue = "";
+
+            // created_by
+            $this->created_by->LinkCustomAttributes = "";
+            $this->created_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1018,14 +1018,14 @@ class DeliveryorderAdd extends Deliveryorder
                 $this->lampiran->addErrorMessage(str_replace("%s", $this->lampiran->caption(), $this->lampiran->RequiredErrorMessage));
             }
         }
-        if ($this->created_by->Required) {
-            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
-                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
-            }
-        }
         if ($this->suratjalan->Required) {
             if (!$this->suratjalan->IsDetailKey && EmptyValue($this->suratjalan->FormValue)) {
                 $this->suratjalan->addErrorMessage(str_replace("%s", $this->suratjalan->caption(), $this->suratjalan->RequiredErrorMessage));
+            }
+        }
+        if ($this->created_by->Required) {
+            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
+                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
             }
         }
 
@@ -1093,11 +1093,11 @@ class DeliveryorderAdd extends Deliveryorder
             }
         }
 
-        // created_by
-        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
-
         // suratjalan
         $this->suratjalan->setDbValueDef($rsnew, $this->suratjalan->CurrentValue, null, false);
+
+        // created_by
+        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
         if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
             $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
             if (!EmptyValue($this->lampiran->Upload->FileName)) {

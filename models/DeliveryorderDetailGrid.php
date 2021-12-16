@@ -2149,13 +2149,13 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         $this->idorder_detail->setDbValueDef($rsnew, $this->idorder_detail->CurrentValue, 0, false);
 
         // totalorder
-        $this->totalorder->setDbValueDef($rsnew, $this->totalorder->CurrentValue, 0, false);
+        $this->totalorder->setDbValueDef($rsnew, $this->totalorder->CurrentValue, 0, strval($this->totalorder->CurrentValue) == "");
 
         // sisa
-        $this->sisa->setDbValueDef($rsnew, $this->sisa->CurrentValue, 0, false);
+        $this->sisa->setDbValueDef($rsnew, $this->sisa->CurrentValue, 0, strval($this->sisa->CurrentValue) == "");
 
         // jumlahkirim
-        $this->jumlahkirim->setDbValueDef($rsnew, $this->jumlahkirim->CurrentValue, 0, false);
+        $this->jumlahkirim->setDbValueDef($rsnew, $this->jumlahkirim->CurrentValue, 0, strval($this->jumlahkirim->CurrentValue) == "");
 
         // iddeliveryorder
         if ($this->iddeliveryorder->getSessionValue() != "") {

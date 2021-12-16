@@ -1219,7 +1219,7 @@ class SuratjalanAdd extends Suratjalan
         $rsnew = [];
 
         // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // tglsurat
         $this->tglsurat->setDbValueDef($rsnew, UnFormatDateTime($this->tglsurat->CurrentValue, 0), CurrentDate(), false);

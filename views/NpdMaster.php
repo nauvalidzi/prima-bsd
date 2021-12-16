@@ -9,6 +9,39 @@ $npd = Container("npd");
 <div class="ew-master-div">
 <table id="tbl_npdmaster" class="table ew-view-table ew-master-table ew-vertical">
     <tbody>
+<?php if ($npd->idpegawai->Visible) { // idpegawai ?>
+        <tr id="r_idpegawai">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idpegawai->caption() ?></td>
+            <td <?= $npd->idpegawai->cellAttributes() ?>>
+<span id="el_npd_idpegawai">
+<span<?= $npd->idpegawai->viewAttributes() ?>>
+<?= $npd->idpegawai->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->idcustomer->Visible) { // idcustomer ?>
+        <tr id="r_idcustomer">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idcustomer->caption() ?></td>
+            <td <?= $npd->idcustomer->cellAttributes() ?>>
+<span id="el_npd_idcustomer">
+<span<?= $npd->idcustomer->viewAttributes() ?>>
+<?= $npd->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->idbrand->Visible) { // idbrand ?>
+        <tr id="r_idbrand">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idbrand->caption() ?></td>
+            <td <?= $npd->idbrand->cellAttributes() ?>>
+<span id="el_npd_idbrand">
+<span<?= $npd->idbrand->viewAttributes() ?>>
+<?= $npd->idbrand->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
 <?php if ($npd->tanggal_order->Visible) { // tanggal_order ?>
         <tr id="r_tanggal_order">
             <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->tanggal_order->caption() ?></td>
@@ -27,17 +60,6 @@ $npd = Container("npd");
 <span id="el_npd_target_selesai">
 <span<?= $npd->target_selesai->viewAttributes() ?>>
 <?= $npd->target_selesai->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($npd->idbrand->Visible) { // idbrand ?>
-        <tr id="r_idbrand">
-            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idbrand->caption() ?></td>
-            <td <?= $npd->idbrand->cellAttributes() ?>>
-<span id="el_npd_idbrand">
-<span<?= $npd->idbrand->viewAttributes() ?>>
-<?= $npd->idbrand->getViewValue() ?></span>
 </span>
 </td>
         </tr>
@@ -75,46 +97,35 @@ $npd = Container("npd");
 </td>
         </tr>
 <?php } ?>
-<?php if ($npd->idpegawai->Visible) { // idpegawai ?>
-        <tr id="r_idpegawai">
-            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idpegawai->caption() ?></td>
-            <td <?= $npd->idpegawai->cellAttributes() ?>>
-<span id="el_npd_idpegawai">
-<span<?= $npd->idpegawai->viewAttributes() ?>>
-<?= $npd->idpegawai->getViewValue() ?></span>
+<?php if ($npd->idproduct_acuan->Visible) { // idproduct_acuan ?>
+        <tr id="r_idproduct_acuan">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idproduct_acuan->caption() ?></td>
+            <td <?= $npd->idproduct_acuan->cellAttributes() ?>>
+<span id="el_npd_idproduct_acuan">
+<span<?= $npd->idproduct_acuan->viewAttributes() ?>>
+<?= $npd->idproduct_acuan->getViewValue() ?></span>
 </span>
 </td>
         </tr>
 <?php } ?>
-<?php if ($npd->idcustomer->Visible) { // idcustomer ?>
-        <tr id="r_idcustomer">
-            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idcustomer->caption() ?></td>
-            <td <?= $npd->idcustomer->cellAttributes() ?>>
-<span id="el_npd_idcustomer">
-<span<?= $npd->idcustomer->viewAttributes() ?>>
-<?= $npd->idcustomer->getViewValue() ?></span>
+<?php if ($npd->kategoriproduk->Visible) { // kategoriproduk ?>
+        <tr id="r_kategoriproduk">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->kategoriproduk->caption() ?></td>
+            <td <?= $npd->kategoriproduk->cellAttributes() ?>>
+<span id="el_npd_kategoriproduk">
+<span<?= $npd->kategoriproduk->viewAttributes() ?>>
+<?= $npd->kategoriproduk->getViewValue() ?></span>
 </span>
 </td>
         </tr>
 <?php } ?>
-<?php if ($npd->status->Visible) { // status ?>
-        <tr id="r_status">
-            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->status->caption() ?></td>
-            <td <?= $npd->status->cellAttributes() ?>>
-<span id="el_npd_status">
-<span<?= $npd->status->viewAttributes() ?>>
-<?= $npd->status->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($npd->updated_at->Visible) { // updated_at ?>
-        <tr id="r_updated_at">
-            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->updated_at->caption() ?></td>
-            <td <?= $npd->updated_at->cellAttributes() ?>>
-<span id="el_npd_updated_at">
-<span<?= $npd->updated_at->viewAttributes() ?>>
-<?= $npd->updated_at->getViewValue() ?></span>
+<?php if ($npd->jenisproduk->Visible) { // jenisproduk ?>
+        <tr id="r_jenisproduk">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->jenisproduk->caption() ?></td>
+            <td <?= $npd->jenisproduk->cellAttributes() ?>>
+<span id="el_npd_jenisproduk">
+<span<?= $npd->jenisproduk->viewAttributes() ?>>
+<?= $npd->jenisproduk->getViewValue() ?></span>
 </span>
 </td>
         </tr>

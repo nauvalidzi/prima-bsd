@@ -93,7 +93,7 @@ class VPenagihan extends DbTable
         $this->Fields['nama_customer'] = &$this->nama_customer;
 
         // nilai_po
-        $this->nilai_po = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 131, 32, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nilai_po = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_po', 'nilai_po', '`nilai_po`', '`nilai_po`', 131, 41, -1, false, '`nilai_po`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nilai_po->Sortable = true; // Allow sort
         $this->nilai_po->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->nilai_po->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -101,7 +101,7 @@ class VPenagihan extends DbTable
         $this->Fields['nilai_po'] = &$this->nilai_po;
 
         // nilai_faktur
-        $this->nilai_faktur = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_faktur', 'nilai_faktur', '`nilai_faktur`', '`nilai_faktur`', 131, 42, -1, false, '`nilai_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nilai_faktur = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_faktur', 'nilai_faktur', '`nilai_faktur`', '`nilai_faktur`', 131, 41, -1, false, '`nilai_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nilai_faktur->Sortable = true; // Allow sort
         $this->nilai_faktur->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->nilai_faktur->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -109,7 +109,7 @@ class VPenagihan extends DbTable
         $this->Fields['nilai_faktur'] = &$this->nilai_faktur;
 
         // piutang
-        $this->piutang = new DbField('v_penagihan', 'v_penagihan', 'x_piutang', 'piutang', '`piutang`', '`piutang`', 131, 42, -1, false, '`piutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->piutang = new DbField('v_penagihan', 'v_penagihan', 'x_piutang', 'piutang', '`piutang`', '`piutang`', 131, 41, -1, false, '`piutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->piutang->Sortable = true; // Allow sort
         $this->piutang->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->piutang->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
@@ -118,16 +118,12 @@ class VPenagihan extends DbTable
 
         // nomor_handphone
         $this->nomor_handphone = new DbField('v_penagihan', 'v_penagihan', 'x_nomor_handphone', 'nomor_handphone', '`nomor_handphone`', '`nomor_handphone`', 200, 20, -1, false, '`nomor_handphone`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nomor_handphone->Nullable = false; // NOT NULL field
-        $this->nomor_handphone->Required = true; // Required field
         $this->nomor_handphone->Sortable = true; // Allow sort
         $this->nomor_handphone->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nomor_handphone->Param, "CustomMsg");
         $this->Fields['nomor_handphone'] = &$this->nomor_handphone;
 
         // kode_order
         $this->kode_order = new DbField('v_penagihan', 'v_penagihan', 'x_kode_order', 'kode_order', '`kode_order`', '`kode_order`', 200, 50, -1, false, '`kode_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode_order->Nullable = false; // NOT NULL field
-        $this->kode_order->Required = true; // Required field
         $this->kode_order->Sortable = true; // Allow sort
         $this->kode_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_order->Param, "CustomMsg");
         $this->Fields['kode_order'] = &$this->kode_order;

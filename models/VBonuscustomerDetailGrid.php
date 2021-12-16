@@ -1718,7 +1718,7 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
             $this->nama_customer->setDbValueDef($rsnew, $this->nama_customer->CurrentValue, "", $this->nama_customer->ReadOnly);
 
             // kode_invoice
-            $this->kode_invoice->setDbValueDef($rsnew, $this->kode_invoice->CurrentValue, "", $this->kode_invoice->ReadOnly);
+            $this->kode_invoice->setDbValueDef($rsnew, $this->kode_invoice->CurrentValue, null, $this->kode_invoice->ReadOnly);
 
             // blackbonus
             $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, null, $this->blackbonus->ReadOnly);
@@ -1814,7 +1814,7 @@ class VBonuscustomerDetailGrid extends VBonuscustomerDetail
         $this->nama_customer->setDbValueDef($rsnew, $this->nama_customer->CurrentValue, "", false);
 
         // kode_invoice
-        $this->kode_invoice->setDbValueDef($rsnew, $this->kode_invoice->CurrentValue, "", false);
+        $this->kode_invoice->setDbValueDef($rsnew, $this->kode_invoice->CurrentValue, null, false);
 
         // blackbonus
         $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, null, false);

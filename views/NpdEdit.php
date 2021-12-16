@@ -20,16 +20,16 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd)
         ew.vars.tables.npd = currentTable;
     fnpdedit.addFields([
+        ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
+        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
         ["tanggal_order", [fields.tanggal_order.visible && fields.tanggal_order.required ? ew.Validators.required(fields.tanggal_order.caption) : null, ew.Validators.datetime(0)], fields.tanggal_order.isInvalid],
         ["target_selesai", [fields.target_selesai.visible && fields.target_selesai.required ? ew.Validators.required(fields.target_selesai.caption) : null, ew.Validators.datetime(0)], fields.target_selesai.isInvalid],
-        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null, ew.Validators.integer], fields.idbrand.isInvalid],
         ["sifatorder", [fields.sifatorder.visible && fields.sifatorder.required ? ew.Validators.required(fields.sifatorder.caption) : null], fields.sifatorder.isInvalid],
         ["kodeorder", [fields.kodeorder.visible && fields.kodeorder.required ? ew.Validators.required(fields.kodeorder.caption) : null], fields.kodeorder.isInvalid],
         ["nomororder", [fields.nomororder.visible && fields.nomororder.required ? ew.Validators.required(fields.nomororder.caption) : null], fields.nomororder.isInvalid],
-        ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
-        ["idkategoriproduk", [fields.idkategoriproduk.visible && fields.idkategoriproduk.required ? ew.Validators.required(fields.idkategoriproduk.caption) : null], fields.idkategoriproduk.isInvalid],
-        ["idjenisproduk", [fields.idjenisproduk.visible && fields.idjenisproduk.required ? ew.Validators.required(fields.idjenisproduk.caption) : null], fields.idjenisproduk.isInvalid],
+        ["kategoriproduk", [fields.kategoriproduk.visible && fields.kategoriproduk.required ? ew.Validators.required(fields.kategoriproduk.caption) : null], fields.kategoriproduk.isInvalid],
+        ["jenisproduk", [fields.jenisproduk.visible && fields.jenisproduk.required ? ew.Validators.required(fields.jenisproduk.caption) : null], fields.jenisproduk.isInvalid],
         ["fungsiproduk", [fields.fungsiproduk.visible && fields.fungsiproduk.required ? ew.Validators.required(fields.fungsiproduk.caption) : null], fields.fungsiproduk.isInvalid],
         ["kualitasproduk", [fields.kualitasproduk.visible && fields.kualitasproduk.required ? ew.Validators.required(fields.kualitasproduk.caption) : null], fields.kualitasproduk.isInvalid],
         ["bahan_campaign", [fields.bahan_campaign.visible && fields.bahan_campaign.required ? ew.Validators.required(fields.bahan_campaign.caption) : null], fields.bahan_campaign.isInvalid],
@@ -39,7 +39,6 @@ loadjs.ready("head", function () {
         ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
         ["parfum", [fields.parfum.visible && fields.parfum.required ? ew.Validators.required(fields.parfum.caption) : null], fields.parfum.isInvalid],
         ["aplikasi", [fields.aplikasi.visible && fields.aplikasi.required ? ew.Validators.required(fields.aplikasi.caption) : null], fields.aplikasi.isInvalid],
-        ["estetika", [fields.estetika.visible && fields.estetika.required ? ew.Validators.required(fields.estetika.caption) : null], fields.estetika.isInvalid],
         ["tambahan", [fields.tambahan.visible && fields.tambahan.required ? ew.Validators.required(fields.tambahan.caption) : null], fields.tambahan.isInvalid],
         ["ukurankemasan", [fields.ukurankemasan.visible && fields.ukurankemasan.required ? ew.Validators.required(fields.ukurankemasan.caption) : null], fields.ukurankemasan.isInvalid],
         ["kemasanbentuk", [fields.kemasanbentuk.visible && fields.kemasanbentuk.required ? ew.Validators.required(fields.kemasanbentuk.caption) : null], fields.kemasanbentuk.isInvalid],
@@ -49,7 +48,8 @@ loadjs.ready("head", function () {
         ["labelkualitas", [fields.labelkualitas.visible && fields.labelkualitas.required ? ew.Validators.required(fields.labelkualitas.caption) : null], fields.labelkualitas.isInvalid],
         ["labelposisi", [fields.labelposisi.visible && fields.labelposisi.required ? ew.Validators.required(fields.labelposisi.caption) : null], fields.labelposisi.isInvalid],
         ["labelcatatan", [fields.labelcatatan.visible && fields.labelcatatan.required ? ew.Validators.required(fields.labelcatatan.caption) : null], fields.labelcatatan.isInvalid],
-        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid]
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
+        ["estetika", [fields.estetika.visible && fields.estetika.required ? ew.Validators.required(fields.estetika.caption) : null], fields.estetika.isInvalid]
     ]);
 
     // Set invalid fields
@@ -116,15 +116,13 @@ loadjs.ready("head", function () {
     fnpdedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    fnpdedit.lists.idbrand = <?= $Page->idbrand->toClientList($Page) ?>;
     fnpdedit.lists.sifatorder = <?= $Page->sifatorder->toClientList($Page) ?>;
-    fnpdedit.lists.idkategoriproduk = <?= $Page->idkategoriproduk->toClientList($Page) ?>;
-    fnpdedit.lists.idjenisproduk = <?= $Page->idjenisproduk->toClientList($Page) ?>;
+    fnpdedit.lists.kategoriproduk = <?= $Page->kategoriproduk->toClientList($Page) ?>;
+    fnpdedit.lists.jenisproduk = <?= $Page->jenisproduk->toClientList($Page) ?>;
     fnpdedit.lists.bentuk = <?= $Page->bentuk->toClientList($Page) ?>;
-    fnpdedit.lists.viskositas = <?= $Page->viskositas->toClientList($Page) ?>;
-    fnpdedit.lists.warna = <?= $Page->warna->toClientList($Page) ?>;
     fnpdedit.lists.parfum = <?= $Page->parfum->toClientList($Page) ?>;
     fnpdedit.lists.aplikasi = <?= $Page->aplikasi->toClientList($Page) ?>;
-    fnpdedit.lists.estetika = <?= $Page->estetika->toClientList($Page) ?>;
     fnpdedit.lists.kemasanbentuk = <?= $Page->kemasanbentuk->toClientList($Page) ?>;
     fnpdedit.lists.kemasantutup = <?= $Page->kemasantutup->toClientList($Page) ?>;
     fnpdedit.lists.labelbahan = <?= $Page->labelbahan->toClientList($Page) ?>;
@@ -152,6 +150,63 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
+<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
+    <div id="r_idpegawai" class="form-group row">
+        <label id="elh_npd_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idpegawai->cellAttributes() ?>>
+<span id="el_npd_idpegawai">
+<span<?= $Page->idpegawai->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->idpegawai->getDisplayValue($Page->idpegawai->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd" data-field="x_idpegawai" data-hidden="1" name="x_idpegawai" id="x_idpegawai" value="<?= HtmlEncode($Page->idpegawai->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
+    <div id="r_idcustomer" class="form-group row">
+        <label id="elh_npd_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
+<span id="el_npd_idcustomer">
+<span<?= $Page->idcustomer->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->idcustomer->getDisplayValue($Page->idcustomer->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd" data-field="x_idcustomer" data-hidden="1" name="x_idcustomer" id="x_idcustomer" value="<?= HtmlEncode($Page->idcustomer->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+    <div id="r_idbrand" class="form-group row">
+        <label id="elh_npd_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el_npd_idbrand">
+    <select
+        id="x_idbrand"
+        name="x_idbrand"
+        class="form-control ew-select<?= $Page->idbrand->isInvalidClass() ?>"
+        data-select2-id="npd_x_idbrand"
+        data-table="npd"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Page->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idbrand->getPlaceHolder()) ?>"
+        <?= $Page->idbrand->editAttributes() ?>>
+        <?= $Page->idbrand->selectOptionListHtml("x_idbrand") ?>
+    </select>
+    <?= $Page->idbrand->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idbrand->getErrorMessage() ?></div>
+<?= $Page->idbrand->Lookup->getParamTag($Page, "p_x_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_x_idbrand']"),
+        options = { name: "x_idbrand", selectId: "npd_x_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->tanggal_order->Visible) { // tanggal_order ?>
     <div id="r_tanggal_order" class="form-group row">
         <label id="elh_npd_tanggal_order" for="x_tanggal_order" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal_order->caption() ?><?= $Page->tanggal_order->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -186,18 +241,6 @@ loadjs.ready(["fnpdedit", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-    <div id="r_idbrand" class="form-group row">
-        <label id="elh_npd_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el_npd_idbrand">
-<input type="<?= $Page->idbrand->getInputTextType() ?>" data-table="npd" data-field="x_idbrand" name="x_idbrand" id="x_idbrand" size="30" placeholder="<?= HtmlEncode($Page->idbrand->getPlaceHolder()) ?>" value="<?= $Page->idbrand->EditValue ?>"<?= $Page->idbrand->editAttributes() ?> aria-describedby="x_idbrand_help">
-<?= $Page->idbrand->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idbrand->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -258,56 +301,33 @@ loadjs.ready(["fnpdedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-    <div id="r_idpegawai" class="form-group row">
-        <label id="elh_npd_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el_npd_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->idpegawai->getDisplayValue($Page->idpegawai->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd" data-field="x_idpegawai" data-hidden="1" name="x_idpegawai" id="x_idpegawai" value="<?= HtmlEncode($Page->idpegawai->CurrentValue) ?>">
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-    <div id="r_idcustomer" class="form-group row">
-        <label id="elh_npd_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el_npd_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->idcustomer->getDisplayValue($Page->idcustomer->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd" data-field="x_idcustomer" data-hidden="1" name="x_idcustomer" id="x_idcustomer" value="<?= HtmlEncode($Page->idcustomer->CurrentValue) ?>">
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->idkategoriproduk->Visible) { // idkategoriproduk ?>
-    <div id="r_idkategoriproduk" class="form-group row">
-        <label id="elh_npd_idkategoriproduk" for="x_idkategoriproduk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkategoriproduk->caption() ?><?= $Page->idkategoriproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkategoriproduk->cellAttributes() ?>>
-<span id="el_npd_idkategoriproduk">
+<?php if ($Page->kategoriproduk->Visible) { // kategoriproduk ?>
+    <div id="r_kategoriproduk" class="form-group row">
+        <label id="elh_npd_kategoriproduk" for="x_kategoriproduk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kategoriproduk->caption() ?><?= $Page->kategoriproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kategoriproduk->cellAttributes() ?>>
+<span id="el_npd_kategoriproduk">
+<?php $Page->kategoriproduk->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
-        id="x_idkategoriproduk"
-        name="x_idkategoriproduk"
-        class="form-control ew-select<?= $Page->idkategoriproduk->isInvalidClass() ?>"
-        data-select2-id="npd_x_idkategoriproduk"
+        id="x_kategoriproduk"
+        name="x_kategoriproduk"
+        class="form-control ew-select<?= $Page->kategoriproduk->isInvalidClass() ?>"
+        data-select2-id="npd_x_kategoriproduk"
         data-table="npd"
-        data-field="x_idkategoriproduk"
-        data-value-separator="<?= $Page->idkategoriproduk->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkategoriproduk->getPlaceHolder()) ?>"
-        <?= $Page->idkategoriproduk->editAttributes() ?>>
-        <?= $Page->idkategoriproduk->selectOptionListHtml("x_idkategoriproduk") ?>
+        data-field="x_kategoriproduk"
+        data-value-separator="<?= $Page->kategoriproduk->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->kategoriproduk->getPlaceHolder()) ?>"
+        <?= $Page->kategoriproduk->editAttributes() ?>>
+        <?= $Page->kategoriproduk->selectOptionListHtml("x_kategoriproduk") ?>
     </select>
-    <?= $Page->idkategoriproduk->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idkategoriproduk->getErrorMessage() ?></div>
-<?= $Page->idkategoriproduk->Lookup->getParamTag($Page, "p_x_idkategoriproduk") ?>
+    <?= $Page->kategoriproduk->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->kategoriproduk->getErrorMessage() ?></div>
+<?= $Page->kategoriproduk->Lookup->getParamTag($Page, "p_x_kategoriproduk") ?>
 <script>
 loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_idkategoriproduk']"),
-        options = { name: "x_idkategoriproduk", selectId: "npd_x_idkategoriproduk", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    var el = document.querySelector("select[data-select2-id='npd_x_kategoriproduk']"),
+        options = { name: "x_kategoriproduk", selectId: "npd_x_kategoriproduk", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
     options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.idkategoriproduk.selectOptions);
+    Object.assign(options, ew.vars.tables.npd.fields.kategoriproduk.selectOptions);
     ew.createSelect(options);
 });
 </script>
@@ -315,32 +335,33 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->idjenisproduk->Visible) { // idjenisproduk ?>
-    <div id="r_idjenisproduk" class="form-group row">
-        <label id="elh_npd_idjenisproduk" for="x_idjenisproduk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idjenisproduk->caption() ?><?= $Page->idjenisproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idjenisproduk->cellAttributes() ?>>
-<span id="el_npd_idjenisproduk">
+<?php if ($Page->jenisproduk->Visible) { // jenisproduk ?>
+    <div id="r_jenisproduk" class="form-group row">
+        <label id="elh_npd_jenisproduk" for="x_jenisproduk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jenisproduk->caption() ?><?= $Page->jenisproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jenisproduk->cellAttributes() ?>>
+<span id="el_npd_jenisproduk">
+<?php $Page->jenisproduk->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
-        id="x_idjenisproduk"
-        name="x_idjenisproduk"
-        class="form-control ew-select<?= $Page->idjenisproduk->isInvalidClass() ?>"
-        data-select2-id="npd_x_idjenisproduk"
+        id="x_jenisproduk"
+        name="x_jenisproduk"
+        class="form-control ew-select<?= $Page->jenisproduk->isInvalidClass() ?>"
+        data-select2-id="npd_x_jenisproduk"
         data-table="npd"
-        data-field="x_idjenisproduk"
-        data-value-separator="<?= $Page->idjenisproduk->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idjenisproduk->getPlaceHolder()) ?>"
-        <?= $Page->idjenisproduk->editAttributes() ?>>
-        <?= $Page->idjenisproduk->selectOptionListHtml("x_idjenisproduk") ?>
+        data-field="x_jenisproduk"
+        data-value-separator="<?= $Page->jenisproduk->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->jenisproduk->getPlaceHolder()) ?>"
+        <?= $Page->jenisproduk->editAttributes() ?>>
+        <?= $Page->jenisproduk->selectOptionListHtml("x_jenisproduk") ?>
     </select>
-    <?= $Page->idjenisproduk->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idjenisproduk->getErrorMessage() ?></div>
-<?= $Page->idjenisproduk->Lookup->getParamTag($Page, "p_x_idjenisproduk") ?>
+    <?= $Page->jenisproduk->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->jenisproduk->getErrorMessage() ?></div>
+<?= $Page->jenisproduk->Lookup->getParamTag($Page, "p_x_jenisproduk") ?>
 <script>
 loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_idjenisproduk']"),
-        options = { name: "x_idjenisproduk", selectId: "npd_x_idjenisproduk", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    var el = document.querySelector("select[data-select2-id='npd_x_jenisproduk']"),
+        options = { name: "x_jenisproduk", selectId: "npd_x_jenisproduk", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
     options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.idjenisproduk.selectOptions);
+    Object.assign(options, ew.vars.tables.npd.fields.jenisproduk.selectOptions);
     ew.createSelect(options);
 });
 </script>
@@ -377,7 +398,7 @@ loadjs.ready("head", function() {
         <label id="elh_npd_bahan_campaign" for="x_bahan_campaign" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bahan_campaign->caption() ?><?= $Page->bahan_campaign->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bahan_campaign->cellAttributes() ?>>
 <span id="el_npd_bahan_campaign">
-<input type="<?= $Page->bahan_campaign->getInputTextType() ?>" data-table="npd" data-field="x_bahan_campaign" name="x_bahan_campaign" id="x_bahan_campaign" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->bahan_campaign->getPlaceHolder()) ?>" value="<?= $Page->bahan_campaign->EditValue ?>"<?= $Page->bahan_campaign->editAttributes() ?> aria-describedby="x_bahan_campaign_help">
+<textarea data-table="npd" data-field="x_bahan_campaign" name="x_bahan_campaign" id="x_bahan_campaign" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->bahan_campaign->getPlaceHolder()) ?>"<?= $Page->bahan_campaign->editAttributes() ?> aria-describedby="x_bahan_campaign_help"><?= $Page->bahan_campaign->EditValue ?></textarea>
 <?= $Page->bahan_campaign->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->bahan_campaign->getErrorMessage() ?></div>
 </span>
@@ -402,18 +423,18 @@ loadjs.ready("head", function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bentuk->cellAttributes() ?>>
 <span id="el_npd_bentuk">
 <template id="tp_x_bentuk">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_bentuk" name="x_bentuk" id="x_bentuk"<?= $Page->bentuk->editAttributes() ?>>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_bentuk" name="x_bentuk" id="x_bentuk"<?= $Page->bentuk->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
 <div id="dsl_x_bentuk" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_bentuk[]"
-    name="x_bentuk[]"
+    id="x_bentuk"
+    name="x_bentuk"
     value="<?= HtmlEncode($Page->bentuk->CurrentValue) ?>"
-    data-type="select-multiple"
+    data-type="select-one"
     data-template="tp_x_bentuk"
     data-target="dsl_x_bentuk"
     data-repeatcolumn="5"
@@ -431,165 +452,90 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->viskositas->Visible) { // viskositas ?>
     <div id="r_viskositas" class="form-group row">
-        <label id="elh_npd_viskositas" class="<?= $Page->LeftColumnClass ?>"><?= $Page->viskositas->caption() ?><?= $Page->viskositas->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_viskositas" for="x_viskositas" class="<?= $Page->LeftColumnClass ?>"><?= $Page->viskositas->caption() ?><?= $Page->viskositas->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->viskositas->cellAttributes() ?>>
 <span id="el_npd_viskositas">
-<template id="tp_x_viskositas">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_viskositas" name="x_viskositas" id="x_viskositas"<?= $Page->viskositas->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_viskositas" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_viskositas[]"
-    name="x_viskositas[]"
-    value="<?= HtmlEncode($Page->viskositas->CurrentValue) ?>"
-    data-type="select-multiple"
-    data-template="tp_x_viskositas"
-    data-target="dsl_x_viskositas"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->viskositas->isInvalidClass() ?>"
-    data-table="npd"
-    data-field="x_viskositas"
-    data-value-separator="<?= $Page->viskositas->displayValueSeparatorAttribute() ?>"
-    <?= $Page->viskositas->editAttributes() ?>>
+<input type="<?= $Page->viskositas->getInputTextType() ?>" data-table="npd" data-field="x_viskositas" name="x_viskositas" id="x_viskositas" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->viskositas->getPlaceHolder()) ?>" value="<?= $Page->viskositas->EditValue ?>"<?= $Page->viskositas->editAttributes() ?> aria-describedby="x_viskositas_help">
 <?= $Page->viskositas->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->viskositas->getErrorMessage() ?></div>
-<?= $Page->viskositas->Lookup->getParamTag($Page, "p_x_viskositas") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->warna->Visible) { // warna ?>
     <div id="r_warna" class="form-group row">
-        <label id="elh_npd_warna" class="<?= $Page->LeftColumnClass ?>"><?= $Page->warna->caption() ?><?= $Page->warna->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_warna" for="x_warna" class="<?= $Page->LeftColumnClass ?>"><?= $Page->warna->caption() ?><?= $Page->warna->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->warna->cellAttributes() ?>>
 <span id="el_npd_warna">
-<template id="tp_x_warna">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_warna" name="x_warna" id="x_warna"<?= $Page->warna->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_warna" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_warna[]"
-    name="x_warna[]"
-    value="<?= HtmlEncode($Page->warna->CurrentValue) ?>"
-    data-type="select-multiple"
-    data-template="tp_x_warna"
-    data-target="dsl_x_warna"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->warna->isInvalidClass() ?>"
-    data-table="npd"
-    data-field="x_warna"
-    data-value-separator="<?= $Page->warna->displayValueSeparatorAttribute() ?>"
-    <?= $Page->warna->editAttributes() ?>>
+<input type="<?= $Page->warna->getInputTextType() ?>" data-table="npd" data-field="x_warna" name="x_warna" id="x_warna" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->warna->getPlaceHolder()) ?>" value="<?= $Page->warna->EditValue ?>"<?= $Page->warna->editAttributes() ?> aria-describedby="x_warna_help">
 <?= $Page->warna->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->warna->getErrorMessage() ?></div>
-<?= $Page->warna->Lookup->getParamTag($Page, "p_x_warna") ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->parfum->Visible) { // parfum ?>
     <div id="r_parfum" class="form-group row">
-        <label id="elh_npd_parfum" class="<?= $Page->LeftColumnClass ?>"><?= $Page->parfum->caption() ?><?= $Page->parfum->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_parfum" for="x_parfum" class="<?= $Page->LeftColumnClass ?>"><?= $Page->parfum->caption() ?><?= $Page->parfum->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->parfum->cellAttributes() ?>>
 <span id="el_npd_parfum">
-<template id="tp_x_parfum">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_parfum" name="x_parfum" id="x_parfum"<?= $Page->parfum->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_parfum" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_parfum[]"
-    name="x_parfum[]"
-    value="<?= HtmlEncode($Page->parfum->CurrentValue) ?>"
-    data-type="select-multiple"
-    data-template="tp_x_parfum"
-    data-target="dsl_x_parfum"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->parfum->isInvalidClass() ?>"
-    data-table="npd"
-    data-field="x_parfum"
-    data-value-separator="<?= $Page->parfum->displayValueSeparatorAttribute() ?>"
-    <?= $Page->parfum->editAttributes() ?>>
-<?= $Page->parfum->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->parfum->getErrorMessage() ?></div>
+    <select
+        id="x_parfum"
+        name="x_parfum"
+        class="form-control ew-select<?= $Page->parfum->isInvalidClass() ?>"
+        data-select2-id="npd_x_parfum"
+        data-table="npd"
+        data-field="x_parfum"
+        data-value-separator="<?= $Page->parfum->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->parfum->getPlaceHolder()) ?>"
+        <?= $Page->parfum->editAttributes() ?>>
+        <?= $Page->parfum->selectOptionListHtml("x_parfum") ?>
+    </select>
+    <?= $Page->parfum->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->parfum->getErrorMessage() ?></div>
 <?= $Page->parfum->Lookup->getParamTag($Page, "p_x_parfum") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_x_parfum']"),
+        options = { name: "x_parfum", selectId: "npd_x_parfum", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd.fields.parfum.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->aplikasi->Visible) { // aplikasi ?>
     <div id="r_aplikasi" class="form-group row">
-        <label id="elh_npd_aplikasi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasi->caption() ?><?= $Page->aplikasi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_npd_aplikasi" for="x_aplikasi" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aplikasi->caption() ?><?= $Page->aplikasi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasi->cellAttributes() ?>>
 <span id="el_npd_aplikasi">
-<template id="tp_x_aplikasi">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_aplikasi" name="x_aplikasi" id="x_aplikasi"<?= $Page->aplikasi->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_aplikasi" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_aplikasi[]"
-    name="x_aplikasi[]"
-    value="<?= HtmlEncode($Page->aplikasi->CurrentValue) ?>"
-    data-type="select-multiple"
-    data-template="tp_x_aplikasi"
-    data-target="dsl_x_aplikasi"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->aplikasi->isInvalidClass() ?>"
-    data-table="npd"
-    data-field="x_aplikasi"
-    data-value-separator="<?= $Page->aplikasi->displayValueSeparatorAttribute() ?>"
-    <?= $Page->aplikasi->editAttributes() ?>>
-<?= $Page->aplikasi->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aplikasi->getErrorMessage() ?></div>
+    <select
+        id="x_aplikasi"
+        name="x_aplikasi"
+        class="form-control ew-select<?= $Page->aplikasi->isInvalidClass() ?>"
+        data-select2-id="npd_x_aplikasi"
+        data-table="npd"
+        data-field="x_aplikasi"
+        data-value-separator="<?= $Page->aplikasi->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->aplikasi->getPlaceHolder()) ?>"
+        <?= $Page->aplikasi->editAttributes() ?>>
+        <?= $Page->aplikasi->selectOptionListHtml("x_aplikasi") ?>
+    </select>
+    <?= $Page->aplikasi->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->aplikasi->getErrorMessage() ?></div>
 <?= $Page->aplikasi->Lookup->getParamTag($Page, "p_x_aplikasi") ?>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->estetika->Visible) { // estetika ?>
-    <div id="r_estetika" class="form-group row">
-        <label id="elh_npd_estetika" class="<?= $Page->LeftColumnClass ?>"><?= $Page->estetika->caption() ?><?= $Page->estetika->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->estetika->cellAttributes() ?>>
-<span id="el_npd_estetika">
-<template id="tp_x_estetika">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_estetika" name="x_estetika" id="x_estetika"<?= $Page->estetika->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_estetika" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_estetika[]"
-    name="x_estetika[]"
-    value="<?= HtmlEncode($Page->estetika->CurrentValue) ?>"
-    data-type="select-multiple"
-    data-template="tp_x_estetika"
-    data-target="dsl_x_estetika"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->estetika->isInvalidClass() ?>"
-    data-table="npd"
-    data-field="x_estetika"
-    data-value-separator="<?= $Page->estetika->displayValueSeparatorAttribute() ?>"
-    <?= $Page->estetika->editAttributes() ?>>
-<?= $Page->estetika->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->estetika->getErrorMessage() ?></div>
-<?= $Page->estetika->Lookup->getParamTag($Page, "p_x_estetika") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_x_aplikasi']"),
+        options = { name: "x_aplikasi", selectId: "npd_x_aplikasi", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd.fields.aplikasi.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -702,18 +648,18 @@ loadjs.ready("head", function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labelbahan->cellAttributes() ?>>
 <span id="el_npd_labelbahan">
 <template id="tp_x_labelbahan">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_labelbahan" name="x_labelbahan" id="x_labelbahan"<?= $Page->labelbahan->editAttributes() ?>>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_labelbahan" name="x_labelbahan" id="x_labelbahan"<?= $Page->labelbahan->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
 <div id="dsl_x_labelbahan" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_labelbahan[]"
-    name="x_labelbahan[]"
+    id="x_labelbahan"
+    name="x_labelbahan"
     value="<?= HtmlEncode($Page->labelbahan->CurrentValue) ?>"
-    data-type="select-multiple"
+    data-type="select-one"
     data-template="tp_x_labelbahan"
     data-target="dsl_x_labelbahan"
     data-repeatcolumn="5"
@@ -735,18 +681,18 @@ loadjs.ready("head", function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labelkualitas->cellAttributes() ?>>
 <span id="el_npd_labelkualitas">
 <template id="tp_x_labelkualitas">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_labelkualitas" name="x_labelkualitas" id="x_labelkualitas"<?= $Page->labelkualitas->editAttributes() ?>>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_labelkualitas" name="x_labelkualitas" id="x_labelkualitas"<?= $Page->labelkualitas->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
 <div id="dsl_x_labelkualitas" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_labelkualitas[]"
-    name="x_labelkualitas[]"
+    id="x_labelkualitas"
+    name="x_labelkualitas"
     value="<?= HtmlEncode($Page->labelkualitas->CurrentValue) ?>"
-    data-type="select-multiple"
+    data-type="select-one"
     data-template="tp_x_labelkualitas"
     data-target="dsl_x_labelkualitas"
     data-repeatcolumn="5"
@@ -768,18 +714,18 @@ loadjs.ready("head", function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labelposisi->cellAttributes() ?>>
 <span id="el_npd_labelposisi">
 <template id="tp_x_labelposisi">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_labelposisi" name="x_labelposisi" id="x_labelposisi"<?= $Page->labelposisi->editAttributes() ?>>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_labelposisi" name="x_labelposisi" id="x_labelposisi"<?= $Page->labelposisi->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
 <div id="dsl_x_labelposisi" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_labelposisi[]"
-    name="x_labelposisi[]"
+    id="x_labelposisi"
+    name="x_labelposisi"
     value="<?= HtmlEncode($Page->labelposisi->CurrentValue) ?>"
-    data-type="select-multiple"
+    data-type="select-one"
     data-template="tp_x_labelposisi"
     data-target="dsl_x_labelposisi"
     data-repeatcolumn="5"
@@ -815,6 +761,18 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->status->getInputTextType() ?>" data-table="npd" data-field="x_status" name="x_status" id="x_status" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>" value="<?= $Page->status->EditValue ?>"<?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
 <?= $Page->status->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->estetika->Visible) { // estetika ?>
+    <div id="r_estetika" class="form-group row">
+        <label id="elh_npd_estetika" for="x_estetika" class="<?= $Page->LeftColumnClass ?>"><?= $Page->estetika->caption() ?><?= $Page->estetika->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->estetika->cellAttributes() ?>>
+<span id="el_npd_estetika">
+<input type="<?= $Page->estetika->getInputTextType() ?>" data-table="npd" data-field="x_estetika" name="x_estetika" id="x_estetika" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->estetika->getPlaceHolder()) ?>" value="<?= $Page->estetika->EditValue ?>"<?= $Page->estetika->editAttributes() ?> aria-describedby="x_estetika_help">
+<?= $Page->estetika->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->estetika->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

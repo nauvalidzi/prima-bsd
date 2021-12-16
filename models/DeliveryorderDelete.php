@@ -378,11 +378,11 @@ class DeliveryorderDelete extends Deliveryorder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
+        $this->suratjalan->setVisibility();
         $this->created_by->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
         $this->readonly->Visible = false;
-        $this->suratjalan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -569,11 +569,11 @@ class DeliveryorderDelete extends Deliveryorder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
+        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->suratjalan->setDbValue($row['suratjalan']);
     }
 
     // Return a row with default values
@@ -584,11 +584,11 @@ class DeliveryorderDelete extends Deliveryorder
         $row['kode'] = null;
         $row['tanggal'] = null;
         $row['lampiran'] = null;
+        $row['suratjalan'] = null;
         $row['created_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
         $row['readonly'] = null;
-        $row['suratjalan'] = null;
         return $row;
     }
 
@@ -612,6 +612,8 @@ class DeliveryorderDelete extends Deliveryorder
 
         // lampiran
 
+        // suratjalan
+
         // created_by
 
         // created_at
@@ -620,8 +622,6 @@ class DeliveryorderDelete extends Deliveryorder
 
         // readonly
         $this->readonly->CellCssStyle = "white-space: nowrap;";
-
-        // suratjalan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -644,6 +644,10 @@ class DeliveryorderDelete extends Deliveryorder
             }
             $this->lampiran->ViewCustomAttributes = "";
 
+            // suratjalan
+            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
+            $this->suratjalan->ViewCustomAttributes = "";
+
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
@@ -658,10 +662,6 @@ class DeliveryorderDelete extends Deliveryorder
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
-
-            // suratjalan
-            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-            $this->suratjalan->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";

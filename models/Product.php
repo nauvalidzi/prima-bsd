@@ -98,7 +98,7 @@ class Product extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idbrand
-        $this->idbrand = new DbField('product', 'product', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 21, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idbrand = new DbField('product', 'product', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idbrand->IsForeignKey = true; // Foreign key field
         $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Required = true; // Required field

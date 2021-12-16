@@ -45,6 +45,39 @@ $Page->showMessage();
 <input type="hidden" name="t" value="npd">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
+<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
+    <tr id="r_idpegawai">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idpegawai"><?= $Page->idpegawai->caption() ?></span></td>
+        <td data-name="idpegawai" <?= $Page->idpegawai->cellAttributes() ?>>
+<span id="el_npd_idpegawai">
+<span<?= $Page->idpegawai->viewAttributes() ?>>
+<?= $Page->idpegawai->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
+    <tr id="r_idcustomer">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idcustomer"><?= $Page->idcustomer->caption() ?></span></td>
+        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
+<span id="el_npd_idcustomer">
+<span<?= $Page->idcustomer->viewAttributes() ?>>
+<?= $Page->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+    <tr id="r_idbrand">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idbrand"><?= $Page->idbrand->caption() ?></span></td>
+        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el_npd_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->tanggal_order->Visible) { // tanggal_order ?>
     <tr id="r_tanggal_order">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_tanggal_order"><?= $Page->tanggal_order->caption() ?></span></td>
@@ -63,17 +96,6 @@ $Page->showMessage();
 <span id="el_npd_target_selesai">
 <span<?= $Page->target_selesai->viewAttributes() ?>>
 <?= $Page->target_selesai->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-    <tr id="r_idbrand">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idbrand"><?= $Page->idbrand->caption() ?></span></td>
-        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el_npd_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -111,46 +133,24 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-    <tr id="r_idpegawai">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idpegawai"><?= $Page->idpegawai->caption() ?></span></td>
-        <td data-name="idpegawai" <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el_npd_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<?= $Page->idpegawai->getViewValue() ?></span>
+<?php if ($Page->kategoriproduk->Visible) { // kategoriproduk ?>
+    <tr id="r_kategoriproduk">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_kategoriproduk"><?= $Page->kategoriproduk->caption() ?></span></td>
+        <td data-name="kategoriproduk" <?= $Page->kategoriproduk->cellAttributes() ?>>
+<span id="el_npd_kategoriproduk">
+<span<?= $Page->kategoriproduk->viewAttributes() ?>>
+<?= $Page->kategoriproduk->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-    <tr id="r_idcustomer">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idcustomer"><?= $Page->idcustomer->caption() ?></span></td>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el_npd_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->idkategoriproduk->Visible) { // idkategoriproduk ?>
-    <tr id="r_idkategoriproduk">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idkategoriproduk"><?= $Page->idkategoriproduk->caption() ?></span></td>
-        <td data-name="idkategoriproduk" <?= $Page->idkategoriproduk->cellAttributes() ?>>
-<span id="el_npd_idkategoriproduk">
-<span<?= $Page->idkategoriproduk->viewAttributes() ?>>
-<?= $Page->idkategoriproduk->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->idjenisproduk->Visible) { // idjenisproduk ?>
-    <tr id="r_idjenisproduk">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_idjenisproduk"><?= $Page->idjenisproduk->caption() ?></span></td>
-        <td data-name="idjenisproduk" <?= $Page->idjenisproduk->cellAttributes() ?>>
-<span id="el_npd_idjenisproduk">
-<span<?= $Page->idjenisproduk->viewAttributes() ?>>
-<?= $Page->idjenisproduk->getViewValue() ?></span>
+<?php if ($Page->jenisproduk->Visible) { // jenisproduk ?>
+    <tr id="r_jenisproduk">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_jenisproduk"><?= $Page->jenisproduk->caption() ?></span></td>
+        <td data-name="jenisproduk" <?= $Page->jenisproduk->cellAttributes() ?>>
+<span id="el_npd_jenisproduk">
+<span<?= $Page->jenisproduk->viewAttributes() ?>>
+<?= $Page->jenisproduk->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -250,17 +250,6 @@ $Page->showMessage();
 <span id="el_npd_aplikasi">
 <span<?= $Page->aplikasi->viewAttributes() ?>>
 <?= $Page->aplikasi->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->estetika->Visible) { // estetika ?>
-    <tr id="r_estetika">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_estetika"><?= $Page->estetika->caption() ?></span></td>
-        <td data-name="estetika" <?= $Page->estetika->cellAttributes() ?>>
-<span id="el_npd_estetika">
-<span<?= $Page->estetika->viewAttributes() ?>>
-<?= $Page->estetika->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -404,6 +393,17 @@ $Page->showMessage();
 <span id="el_npd_updated_at">
 <span<?= $Page->updated_at->viewAttributes() ?>>
 <?= $Page->updated_at->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->estetika->Visible) { // estetika ?>
+    <tr id="r_estetika">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_estetika"><?= $Page->estetika->caption() ?></span></td>
+        <td data-name="estetika" <?= $Page->estetika->cellAttributes() ?>>
+<span id="el_npd_estetika">
+<span<?= $Page->estetika->viewAttributes() ?>>
+<?= $Page->estetika->getViewValue() ?></span>
 </span>
 </td>
     </tr>

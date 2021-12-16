@@ -480,7 +480,6 @@ class OrderEdit extends Order
         $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
-        $this->kode->Required = false;
         $this->tanggal->Required = false;
         $this->idpegawai->Required = false;
         $this->idcustomer->Required = false;
@@ -1310,25 +1309,6 @@ class OrderEdit extends Order
 
             // keterangan
             $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
-
-            // Check referential integrity for master table 'customer'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_customer();
-            $keyValue = $rsnew['idcustomer'] ?? $rsold['idcustomer'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("customer")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "customer", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
             if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
                 $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
                 if (!EmptyValue($this->dokumen->Upload->FileName)) {

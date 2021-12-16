@@ -95,7 +95,7 @@ class VStockProduk extends DbTable
         $this->Fields['nama_produk'] = &$this->nama_produk;
 
         // stok_akhir
-        $this->stok_akhir = new DbField('v_stock_produk', 'v_stock_produk', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 21, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->stok_akhir = new DbField('v_stock_produk', 'v_stock_produk', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 20, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->stok_akhir->Nullable = false; // NOT NULL field
         $this->stok_akhir->Required = true; // Required field
         $this->stok_akhir->Sortable = true; // Allow sort
@@ -104,7 +104,7 @@ class VStockProduk extends DbTable
         $this->Fields['stok_akhir'] = &$this->stok_akhir;
 
         // idbrand
-        $this->idbrand = new DbField('v_stock_produk', 'v_stock_produk', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 21, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idbrand = new DbField('v_stock_produk', 'v_stock_produk', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort

@@ -572,11 +572,11 @@ class DeliveryorderList extends Deliveryorder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
+        $this->suratjalan->setVisibility();
         $this->created_by->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
         $this->readonly->Visible = false;
-        $this->suratjalan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -871,11 +871,11 @@ class DeliveryorderList extends Deliveryorder
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
         $filterList = Concat($filterList, $this->tanggal->AdvancedSearch->toJson(), ","); // Field tanggal
         $filterList = Concat($filterList, $this->lampiran->AdvancedSearch->toJson(), ","); // Field lampiran
+        $filterList = Concat($filterList, $this->suratjalan->AdvancedSearch->toJson(), ","); // Field suratjalan
         $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
-        $filterList = Concat($filterList, $this->suratjalan->AdvancedSearch->toJson(), ","); // Field suratjalan
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -948,6 +948,14 @@ class DeliveryorderList extends Deliveryorder
         $this->lampiran->AdvancedSearch->SearchOperator2 = @$filter["w_lampiran"];
         $this->lampiran->AdvancedSearch->save();
 
+        // Field suratjalan
+        $this->suratjalan->AdvancedSearch->SearchValue = @$filter["x_suratjalan"];
+        $this->suratjalan->AdvancedSearch->SearchOperator = @$filter["z_suratjalan"];
+        $this->suratjalan->AdvancedSearch->SearchCondition = @$filter["v_suratjalan"];
+        $this->suratjalan->AdvancedSearch->SearchValue2 = @$filter["y_suratjalan"];
+        $this->suratjalan->AdvancedSearch->SearchOperator2 = @$filter["w_suratjalan"];
+        $this->suratjalan->AdvancedSearch->save();
+
         // Field created_by
         $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
         $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
@@ -979,14 +987,6 @@ class DeliveryorderList extends Deliveryorder
         $this->readonly->AdvancedSearch->SearchValue2 = @$filter["y_readonly"];
         $this->readonly->AdvancedSearch->SearchOperator2 = @$filter["w_readonly"];
         $this->readonly->AdvancedSearch->save();
-
-        // Field suratjalan
-        $this->suratjalan->AdvancedSearch->SearchValue = @$filter["x_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchOperator = @$filter["z_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchCondition = @$filter["v_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchValue2 = @$filter["y_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchOperator2 = @$filter["w_suratjalan"];
-        $this->suratjalan->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1211,11 +1211,11 @@ class DeliveryorderList extends Deliveryorder
                 $this->kode->setSort("");
                 $this->tanggal->setSort("");
                 $this->lampiran->setSort("");
+                $this->suratjalan->setSort("");
                 $this->created_by->setSort("");
                 $this->created_at->setSort("");
                 $this->updated_at->setSort("");
                 $this->readonly->setSort("");
-                $this->suratjalan->setSort("");
             }
 
             // Reset start position
@@ -1290,6 +1290,14 @@ class DeliveryorderList extends Deliveryorder
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1315,6 +1323,10 @@ class DeliveryorderList extends Deliveryorder
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1794,11 +1806,11 @@ class DeliveryorderList extends Deliveryorder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
+        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->suratjalan->setDbValue($row['suratjalan']);
     }
 
     // Return a row with default values
@@ -1809,11 +1821,11 @@ class DeliveryorderList extends Deliveryorder
         $row['kode'] = null;
         $row['tanggal'] = null;
         $row['lampiran'] = null;
+        $row['suratjalan'] = null;
         $row['created_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
         $row['readonly'] = null;
-        $row['suratjalan'] = null;
         return $row;
     }
 
@@ -1859,6 +1871,8 @@ class DeliveryorderList extends Deliveryorder
 
         // lampiran
 
+        // suratjalan
+
         // created_by
 
         // created_at
@@ -1867,8 +1881,6 @@ class DeliveryorderList extends Deliveryorder
 
         // readonly
         $this->readonly->CellCssStyle = "white-space: nowrap;";
-
-        // suratjalan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1891,6 +1903,10 @@ class DeliveryorderList extends Deliveryorder
             }
             $this->lampiran->ViewCustomAttributes = "";
 
+            // suratjalan
+            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
+            $this->suratjalan->ViewCustomAttributes = "";
+
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
@@ -1905,10 +1921,6 @@ class DeliveryorderList extends Deliveryorder
             $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
-
-            // suratjalan
-            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-            $this->suratjalan->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";

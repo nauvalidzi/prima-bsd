@@ -379,9 +379,9 @@ class OrderDelete extends Order
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idbrand->setVisibility();
-        $this->dokumen->setVisibility();
-        $this->keterangan->setVisibility();
+        $this->idbrand->Visible = false;
+        $this->dokumen->Visible = false;
+        $this->keterangan->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -773,22 +773,6 @@ class OrderDelete extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
-
-            // dokumen
-            $this->dokumen->LinkCustomAttributes = "";
-            $this->dokumen->HrefValue = "";
-            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
-            $this->dokumen->TooltipValue = "";
-
-            // keterangan
-            $this->keterangan->LinkCustomAttributes = "";
-            $this->keterangan->HrefValue = "";
-            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event

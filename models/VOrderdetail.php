@@ -89,7 +89,7 @@ class VOrderdetail extends DbTable
         $this->Fields['nama'] = &$this->nama;
 
         // idorder
-        $this->idorder = new DbField('v_orderdetail', 'v_orderdetail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 21, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder = new DbField('v_orderdetail', 'v_orderdetail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort

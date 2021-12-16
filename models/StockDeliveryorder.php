@@ -82,7 +82,6 @@ class StockDeliveryorder extends DbTable
 
         // kode
         $this->kode = new DbField('stock_deliveryorder', 'stock_deliveryorder', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode->Nullable = false; // NOT NULL field
         $this->kode->Required = true; // Required field
         $this->kode->Sortable = true; // Allow sort
         $this->kode->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode->Param, "CustomMsg");
@@ -99,16 +98,12 @@ class StockDeliveryorder extends DbTable
 
         // lampiran
         $this->lampiran = new DbField('stock_deliveryorder', 'stock_deliveryorder', 'x_lampiran', 'lampiran', '`lampiran`', '`lampiran`', 200, 255, -1, true, '`lampiran`', false, false, false, 'FORMATTED TEXT', 'FILE');
-        $this->lampiran->Nullable = false; // NOT NULL field
-        $this->lampiran->Required = true; // Required field
         $this->lampiran->Sortable = true; // Allow sort
         $this->lampiran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->lampiran->Param, "CustomMsg");
         $this->Fields['lampiran'] = &$this->lampiran;
 
         // keterangan
         $this->keterangan = new DbField('stock_deliveryorder', 'stock_deliveryorder', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keterangan->Nullable = false; // NOT NULL field
-        $this->keterangan->Required = true; // Required field
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;

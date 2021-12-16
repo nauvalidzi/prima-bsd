@@ -100,7 +100,7 @@ class JatuhTempo extends ReportTable
         $this->Fields['namapegawai'] = &$this->namapegawai;
 
         // idcustomer
-        $this->idcustomer = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->GroupingFieldId = 2;
         $this->idcustomer->ShowGroupHeaderAsRow = $this->ShowGroupHeaderAsRow;
         $this->idcustomer->ShowCompactSummaryFooter = $this->ShowCompactSummaryFooter;
@@ -133,9 +133,8 @@ class JatuhTempo extends ReportTable
         $this->Fields['idinvoice'] = &$this->idinvoice;
 
         // sisabayar
-        $this->sisabayar = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 21, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisabayar = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisabayar->Nullable = false; // NOT NULL field
-        $this->sisabayar->Required = true; // Required field
         $this->sisabayar->Sortable = true; // Allow sort
         $this->sisabayar->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisabayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisabayar->Param, "CustomMsg");
@@ -160,8 +159,6 @@ class JatuhTempo extends ReportTable
 
         // kodeinvoice
         $this->kodeinvoice = new ReportField('Jatuh_Tempo', 'Jatuh Tempo', 'x_kodeinvoice', 'kodeinvoice', '`kodeinvoice`', '`kodeinvoice`', 200, 50, -1, false, '`kodeinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kodeinvoice->Nullable = false; // NOT NULL field
-        $this->kodeinvoice->Required = true; // Required field
         $this->kodeinvoice->Sortable = true; // Allow sort
         $this->kodeinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeinvoice->Param, "CustomMsg");
         $this->kodeinvoice->SourceTableVar = 'd_jatuhtempo';

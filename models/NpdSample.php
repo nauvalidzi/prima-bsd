@@ -88,10 +88,9 @@ class NpdSample extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idnpd
-        $this->idnpd = new DbField('npd_sample', 'npd_sample', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 21, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idnpd = new DbField('npd_sample', 'npd_sample', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
-        $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort
         $this->idnpd->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -108,10 +107,9 @@ class NpdSample extends DbTable
         $this->Fields['idnpd'] = &$this->idnpd;
 
         // idserahterima
-        $this->idserahterima = new DbField('npd_sample', 'npd_sample', 'x_idserahterima', 'idserahterima', '`idserahterima`', '`idserahterima`', 21, 20, -1, false, '`idserahterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idserahterima = new DbField('npd_sample', 'npd_sample', 'x_idserahterima', 'idserahterima', '`idserahterima`', '`idserahterima`', 20, 20, -1, false, '`idserahterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idserahterima->IsForeignKey = true; // Foreign key field
         $this->idserahterima->Nullable = false; // NOT NULL field
-        $this->idserahterima->Required = true; // Required field
         $this->idserahterima->Sortable = true; // Allow sort
         $this->idserahterima->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idserahterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idserahterima->Param, "CustomMsg");

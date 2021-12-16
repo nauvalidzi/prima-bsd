@@ -1866,10 +1866,10 @@ class VPiutangDetailGrid extends VPiutangDetail
         $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), false);
 
         // sisabayar
-        $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, false);
+        $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, strval($this->sisabayar->CurrentValue) == "");
 
         // totaltagihan
-        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, false);
+        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // jatuhtempo
         $this->jatuhtempo->setDbValueDef($rsnew, UnFormatDateTime($this->jatuhtempo->CurrentValue, 0), null, false);

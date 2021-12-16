@@ -485,7 +485,6 @@ class InvoiceEdit extends Invoice
         $this->readonly->setVisibility();
         $this->sent->Visible = false;
         $this->hideFieldsForAddEdit();
-        $this->kode->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);

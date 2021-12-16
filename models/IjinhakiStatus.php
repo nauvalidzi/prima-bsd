@@ -85,7 +85,7 @@ class IjinhakiStatus extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idijinhaki
-        $this->idijinhaki = new DbField('ijinhaki_status', 'ijinhaki_status', 'x_idijinhaki', 'idijinhaki', '`idijinhaki`', '`idijinhaki`', 21, 20, -1, false, '`idijinhaki`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idijinhaki = new DbField('ijinhaki_status', 'ijinhaki_status', 'x_idijinhaki', 'idijinhaki', '`idijinhaki`', '`idijinhaki`', 20, 20, -1, false, '`idijinhaki`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idijinhaki->IsForeignKey = true; // Foreign key field
         $this->idijinhaki->Nullable = false; // NOT NULL field
         $this->idijinhaki->Required = true; // Required field

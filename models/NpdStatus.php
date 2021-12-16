@@ -86,7 +86,7 @@ class NpdStatus extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idnpd
-        $this->idnpd = new DbField('npd_status', 'npd_status', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 21, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idnpd = new DbField('npd_status', 'npd_status', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idnpd->Nullable = false; // NOT NULL field
         $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort

@@ -477,7 +477,6 @@ class SuratjalanEdit extends Suratjalan
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
-        $this->kode->Required = false;
         $this->idcustomer->Required = false;
 
         // Do not use lookup cache

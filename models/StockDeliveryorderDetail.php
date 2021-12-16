@@ -82,7 +82,7 @@ class StockDeliveryorderDetail extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // pid
-        $this->pid = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_pid', 'pid', '`pid`', '`pid`', 21, 20, -1, false, '`pid`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->pid = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_pid', 'pid', '`pid`', '`pid`', 20, 20, -1, false, '`pid`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->pid->IsForeignKey = true; // Foreign key field
         $this->pid->Nullable = false; // NOT NULL field
         $this->pid->Required = true; // Required field
@@ -92,7 +92,7 @@ class StockDeliveryorderDetail extends DbTable
         $this->Fields['pid'] = &$this->pid;
 
         // idstockorder
-        $this->idstockorder = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 21, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idstockorder = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 20, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idstockorder->Nullable = false; // NOT NULL field
         $this->idstockorder->Required = true; // Required field
         $this->idstockorder->Sortable = true; // Allow sort
@@ -111,7 +111,7 @@ class StockDeliveryorderDetail extends DbTable
         $this->Fields['idstockorder'] = &$this->idstockorder;
 
         // idstockorder_detail
-        $this->idstockorder_detail = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_idstockorder_detail', 'idstockorder_detail', '`idstockorder_detail`', '`idstockorder_detail`', 21, 20, -1, false, '`idstockorder_detail`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idstockorder_detail = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_idstockorder_detail', 'idstockorder_detail', '`idstockorder_detail`', '`idstockorder_detail`', 20, 20, -1, false, '`idstockorder_detail`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idstockorder_detail->Nullable = false; // NOT NULL field
         $this->idstockorder_detail->Required = true; // Required field
         $this->idstockorder_detail->Sortable = true; // Allow sort

@@ -1280,7 +1280,7 @@ class NpdStatusAdd extends NpdStatus
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // idpegawai
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);

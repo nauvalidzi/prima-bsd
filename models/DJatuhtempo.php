@@ -89,7 +89,7 @@ class DJatuhtempo extends DbTable
         $this->Fields['namapegawai'] = &$this->namapegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -114,16 +114,13 @@ class DJatuhtempo extends DbTable
 
         // kodeinvoice
         $this->kodeinvoice = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_kodeinvoice', 'kodeinvoice', '`kodeinvoice`', '`kodeinvoice`', 200, 50, -1, false, '`kodeinvoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kodeinvoice->Nullable = false; // NOT NULL field
-        $this->kodeinvoice->Required = true; // Required field
         $this->kodeinvoice->Sortable = true; // Allow sort
         $this->kodeinvoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeinvoice->Param, "CustomMsg");
         $this->Fields['kodeinvoice'] = &$this->kodeinvoice;
 
         // sisabayar
-        $this->sisabayar = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 21, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisabayar = new DbField('d_jatuhtempo', 'd_jatuhtempo', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisabayar->Nullable = false; // NOT NULL field
-        $this->sisabayar->Required = true; // Required field
         $this->sisabayar->Sortable = true; // Allow sort
         $this->sisabayar->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisabayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisabayar->Param, "CustomMsg");

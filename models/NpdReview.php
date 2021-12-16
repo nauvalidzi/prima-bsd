@@ -107,10 +107,9 @@ class NpdReview extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idnpd
-        $this->idnpd = new DbField('npd_review', 'npd_review', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 21, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idnpd = new DbField('npd_review', 'npd_review', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
-        $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort
         $this->idnpd->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -127,9 +126,8 @@ class NpdReview extends DbTable
         $this->Fields['idnpd'] = &$this->idnpd;
 
         // idnpd_sample
-        $this->idnpd_sample = new DbField('npd_review', 'npd_review', 'x_idnpd_sample', 'idnpd_sample', '`idnpd_sample`', '`idnpd_sample`', 21, 20, -1, false, '`idnpd_sample`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idnpd_sample = new DbField('npd_review', 'npd_review', 'x_idnpd_sample', 'idnpd_sample', '`idnpd_sample`', '`idnpd_sample`', 20, 20, -1, false, '`idnpd_sample`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd_sample->Nullable = false; // NOT NULL field
-        $this->idnpd_sample->Required = true; // Required field
         $this->idnpd_sample->Sortable = true; // Allow sort
         $this->idnpd_sample->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd_sample->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text

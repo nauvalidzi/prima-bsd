@@ -2782,7 +2782,7 @@ class NpdTermsAdd extends NpdTerms
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);

@@ -1455,10 +1455,10 @@ class NpdSampleAdd extends NpdSample
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // idserahterima
-        $this->idserahterima->setDbValueDef($rsnew, $this->idserahterima->CurrentValue, 0, false);
+        $this->idserahterima->setDbValueDef($rsnew, $this->idserahterima->CurrentValue, 0, strval($this->idserahterima->CurrentValue) == "");
 
         // kode
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);

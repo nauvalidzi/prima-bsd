@@ -1037,7 +1037,7 @@ class StockOrderAdd extends StockOrder
         $rsnew = [];
 
         // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // tanggal
         $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 7), CurrentDate(), false);
@@ -1046,7 +1046,7 @@ class StockOrderAdd extends StockOrder
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
 
         // keterangan
-        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", false);
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

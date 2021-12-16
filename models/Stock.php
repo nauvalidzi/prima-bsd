@@ -79,7 +79,7 @@ class Stock extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idproduct
-        $this->idproduct = new DbField('stock', 'stock', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 21, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idproduct = new DbField('stock', 'stock', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 20, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idproduct->Nullable = false; // NOT NULL field
         $this->idproduct->Required = true; // Required field
         $this->idproduct->Sortable = true; // Allow sort
@@ -88,7 +88,7 @@ class Stock extends DbTable
         $this->Fields['idproduct'] = &$this->idproduct;
 
         // idorder_detail
-        $this->idorder_detail = new DbField('stock', 'stock', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 21, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder_detail = new DbField('stock', 'stock', 'x_idorder_detail', 'idorder_detail', '`idorder_detail`', '`idorder_detail`', 20, 20, -1, false, '`idorder_detail`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder_detail->Nullable = false; // NOT NULL field
         $this->idorder_detail->Required = true; // Required field
         $this->idorder_detail->Sortable = true; // Allow sort

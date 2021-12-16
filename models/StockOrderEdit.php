@@ -478,7 +478,6 @@ class StockOrderEdit extends StockOrder
         $this->kode->Required = false;
         $this->tanggal->Required = false;
         $this->idpegawai->Required = false;
-        $this->keterangan->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);

@@ -111,7 +111,7 @@ class VBonuscustomer extends DbTable
         $this->Fields['nama_pegawai'] = &$this->nama_pegawai;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Sortable = false; // Allow sort
@@ -150,7 +150,7 @@ class VBonuscustomer extends DbTable
         $this->Fields['customer'] = &$this->customer;
 
         // blackbonus
-        $this->blackbonus = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 131, 43, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->blackbonus = new DbField('v_bonuscustomer', 'v_bonuscustomer', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 131, 42, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->blackbonus->Nullable = false; // NOT NULL field
         $this->blackbonus->Sortable = true; // Allow sort
         $this->blackbonus->DefaultDecimalPrecision = 2; // Default decimal precision

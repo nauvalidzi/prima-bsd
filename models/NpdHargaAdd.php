@@ -2691,13 +2691,13 @@ class NpdHargaAdd extends NpdHarga
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // tglpengajuan
         $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), CurrentDate(), false);
 
         // idnpd_sample
-        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, false);
+        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, strval($this->idnpd_sample->CurrentValue) == "");
 
         // bentuk
         $this->bentuk->setDbValueDef($rsnew, $this->bentuk->CurrentValue, "", false);

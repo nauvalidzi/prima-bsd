@@ -79,7 +79,7 @@ class SuratjalanDetail extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idsuratjalan
-        $this->idsuratjalan = new DbField('suratjalan_detail', 'suratjalan_detail', 'x_idsuratjalan', 'idsuratjalan', '`idsuratjalan`', '`idsuratjalan`', 21, 20, -1, false, '`idsuratjalan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idsuratjalan = new DbField('suratjalan_detail', 'suratjalan_detail', 'x_idsuratjalan', 'idsuratjalan', '`idsuratjalan`', '`idsuratjalan`', 20, 20, -1, false, '`idsuratjalan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idsuratjalan->IsForeignKey = true; // Foreign key field
         $this->idsuratjalan->Nullable = false; // NOT NULL field
         $this->idsuratjalan->Required = true; // Required field
@@ -89,7 +89,7 @@ class SuratjalanDetail extends DbTable
         $this->Fields['idsuratjalan'] = &$this->idsuratjalan;
 
         // idinvoice
-        $this->idinvoice = new DbField('suratjalan_detail', 'suratjalan_detail', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 21, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idinvoice = new DbField('suratjalan_detail', 'suratjalan_detail', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idinvoice->IsForeignKey = true; // Foreign key field
         $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Required = true; // Required field

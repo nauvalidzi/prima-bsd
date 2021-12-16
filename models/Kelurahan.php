@@ -68,7 +68,7 @@ class Kelurahan extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('kelurahan', 'kelurahan', 'x_id', 'id', '`id`', '`id`', 21, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id = new DbField('kelurahan', 'kelurahan', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Sortable = true; // Allow sort
@@ -77,7 +77,7 @@ class Kelurahan extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idkecamatan
-        $this->idkecamatan = new DbField('kelurahan', 'kelurahan', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 21, 20, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkecamatan = new DbField('kelurahan', 'kelurahan', 'x_idkecamatan', 'idkecamatan', '`idkecamatan`', '`idkecamatan`', 20, 20, -1, false, '`idkecamatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idkecamatan->Nullable = false; // NOT NULL field
         $this->idkecamatan->Required = true; // Required field
         $this->idkecamatan->Sortable = true; // Allow sort

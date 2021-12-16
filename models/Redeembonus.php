@@ -79,7 +79,7 @@ class Redeembonus extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idcustomer
-        $this->idcustomer = new DbField('redeembonus', 'redeembonus', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('redeembonus', 'redeembonus', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field

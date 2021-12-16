@@ -85,7 +85,7 @@ class VBrandCustomer extends DbTable
         $this->Fields['brand'] = &$this->brand;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_brand_customer', 'v_brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer = new DbField('v_brand_customer', 'v_brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
         $this->idcustomer->Sortable = true; // Allow sort

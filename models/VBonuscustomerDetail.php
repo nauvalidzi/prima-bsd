@@ -70,7 +70,7 @@ class VBonuscustomerDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idcustomer
-        $this->idcustomer = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -97,14 +97,12 @@ class VBonuscustomerDetail extends DbTable
 
         // kode_invoice
         $this->kode_invoice = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_kode_invoice', 'kode_invoice', '`kode_invoice`', '`kode_invoice`', 200, 50, -1, false, '`kode_invoice`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode_invoice->Nullable = false; // NOT NULL field
-        $this->kode_invoice->Required = true; // Required field
         $this->kode_invoice->Sortable = true; // Allow sort
         $this->kode_invoice->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_invoice->Param, "CustomMsg");
         $this->Fields['kode_invoice'] = &$this->kode_invoice;
 
         // blackbonus
-        $this->blackbonus = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 131, 42, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->blackbonus = new DbField('v_bonuscustomer_detail', 'v_bonuscustomer_detail', 'x_blackbonus', 'blackbonus', '`blackbonus`', '`blackbonus`', 131, 41, -1, false, '`blackbonus`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->blackbonus->Sortable = true; // Allow sort
         $this->blackbonus->DefaultDecimalPrecision = 2; // Default decimal precision
         $this->blackbonus->DefaultErrorMessage = $Language->phrase("IncorrectFloat");

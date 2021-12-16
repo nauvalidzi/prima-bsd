@@ -1257,24 +1257,6 @@ class OrderDetailAdd extends OrderDetail
                 }
             }
         }
-
-        // Check referential integrity for master table 'order_detail'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_order();
-        if ($this->idorder->getSessionValue() != "") {
-        $masterFilter = str_replace("@id@", AdjustSql($this->idorder->getSessionValue(), "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("order")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "order", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
-        }
         $conn = $this->getConnection();
 
         // Load db values from rsold

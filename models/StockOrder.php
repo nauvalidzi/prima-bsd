@@ -83,7 +83,6 @@ class StockOrder extends DbTable
 
         // kode
         $this->kode = new DbField('stock_order', 'stock_order', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode->Nullable = false; // NOT NULL field
         $this->kode->Required = true; // Required field
         $this->kode->Sortable = true; // Allow sort
         $this->kode->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode->Param, "CustomMsg");
@@ -119,8 +118,6 @@ class StockOrder extends DbTable
 
         // keterangan
         $this->keterangan = new DbField('stock_order', 'stock_order', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keterangan->Nullable = false; // NOT NULL field
-        $this->keterangan->Required = true; // Required field
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;

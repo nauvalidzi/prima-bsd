@@ -1180,7 +1180,7 @@ class IjinbpomDetailAdd extends IjinbpomDetail
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
@@ -1189,7 +1189,7 @@ class IjinbpomDetailAdd extends IjinbpomDetail
         $this->namaalt->setDbValueDef($rsnew, $this->namaalt->CurrentValue, null, false);
 
         // idproduct_acuan
-        $this->idproduct_acuan->setDbValueDef($rsnew, $this->idproduct_acuan->CurrentValue, 0, false);
+        $this->idproduct_acuan->setDbValueDef($rsnew, $this->idproduct_acuan->CurrentValue, 0, strval($this->idproduct_acuan->CurrentValue) == "");
 
         // ukuran
         $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, "", false);

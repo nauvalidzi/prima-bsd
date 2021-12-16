@@ -72,7 +72,7 @@ class VStockorderDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idstockorder
-        $this->idstockorder = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 21, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idstockorder = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 20, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idstockorder->Nullable = false; // NOT NULL field
         $this->idstockorder->Required = true; // Required field
         $this->idstockorder->Sortable = true; // Allow sort
@@ -124,9 +124,8 @@ class VStockorderDetail extends DbTable
         $this->Fields['sisa_order'] = &$this->sisa_order;
 
         // stok_akhir
-        $this->stok_akhir = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 21, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->stok_akhir = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 20, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->stok_akhir->Nullable = false; // NOT NULL field
-        $this->stok_akhir->Required = true; // Required field
         $this->stok_akhir->Sortable = true; // Allow sort
         $this->stok_akhir->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->stok_akhir->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->stok_akhir->Param, "CustomMsg");

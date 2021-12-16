@@ -1453,10 +1453,10 @@ class IjinbpomAdd extends Ijinbpom
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
 
         // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
+        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, strval($this->idbrand->CurrentValue) == "");
 
         // kontrakkerjasama
         if ($this->kontrakkerjasama->Visible && !$this->kontrakkerjasama->Upload->KeepFile) {

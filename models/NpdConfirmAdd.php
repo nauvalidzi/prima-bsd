@@ -1352,10 +1352,10 @@ class NpdConfirmAdd extends NpdConfirm
         $this->personincharge->setDbValueDef($rsnew, $this->personincharge->CurrentValue, "", false);
 
         // jabatan
-        $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, "", false);
+        $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, null, false);
 
         // notelp
-        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, "", false);
+        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, null, false);
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);

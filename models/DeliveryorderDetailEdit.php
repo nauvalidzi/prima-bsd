@@ -478,7 +478,6 @@ class DeliveryorderDetailEdit extends DeliveryorderDetail
         $this->created_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
-        $this->totalorder->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);

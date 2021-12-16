@@ -86,7 +86,7 @@ class OrderDetail extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idorder
-        $this->idorder = new DbField('order_detail', 'order_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 21, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder = new DbField('order_detail', 'order_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idorder->IsForeignKey = true; // Foreign key field
         $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Required = true; // Required field
@@ -96,7 +96,7 @@ class OrderDetail extends DbTable
         $this->Fields['idorder'] = &$this->idorder;
 
         // idproduct
-        $this->idproduct = new DbField('order_detail', 'order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 21, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idproduct = new DbField('order_detail', 'order_detail', 'x_idproduct', 'idproduct', '`idproduct`', '`idproduct`', 20, 20, -1, false, '`idproduct`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idproduct->Nullable = false; // NOT NULL field
         $this->idproduct->Required = true; // Required field
         $this->idproduct->Sortable = true; // Allow sort
@@ -148,7 +148,7 @@ class OrderDetail extends DbTable
         $this->Fields['harga'] = &$this->harga;
 
         // total
-        $this->total = new DbField('order_detail', 'order_detail', 'x_total', 'total', '`total`', '`total`', 3, 11, -1, false, '`total`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->total = new DbField('order_detail', 'order_detail', 'x_total', 'total', '`total`', '`total`', 20, 20, -1, false, '`total`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->total->Nullable = false; // NOT NULL field
         $this->total->Sortable = true; // Allow sort
         $this->total->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

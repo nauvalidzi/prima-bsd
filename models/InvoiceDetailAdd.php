@@ -1552,7 +1552,7 @@ class InvoiceDetailAdd extends InvoiceDetail
         $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, false);
 
         // totalnondiskon
-        $this->totalnondiskon->setDbValueDef($rsnew, $this->totalnondiskon->CurrentValue, 0, false);
+        $this->totalnondiskon->setDbValueDef($rsnew, $this->totalnondiskon->CurrentValue, 0, strval($this->totalnondiskon->CurrentValue) == "");
 
         // diskonpayment
         $this->diskonpayment->setDbValueDef($rsnew, $this->diskonpayment->CurrentValue, 0, strval($this->diskonpayment->CurrentValue) == "");
@@ -1561,10 +1561,10 @@ class InvoiceDetailAdd extends InvoiceDetail
         $this->bbpersen->setDbValueDef($rsnew, $this->bbpersen->CurrentValue, 0, strval($this->bbpersen->CurrentValue) == "");
 
         // totaltagihan
-        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, false);
+        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // blackbonus
-        $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, 0, false);
+        $this->blackbonus->setDbValueDef($rsnew, $this->blackbonus->CurrentValue, 0, strval($this->blackbonus->CurrentValue) == "");
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);

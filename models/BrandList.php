@@ -1207,14 +1207,18 @@ class BrandList extends Brand
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`id` ASC";
+            $this->DefaultSort = "`id` ASC,`kode` ASC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
                 if ($this->id->getSort() != "") {
                     $useDefaultSort = false;
                 }
+                if ($this->kode->getSort() != "") {
+                    $useDefaultSort = false;
+                }
                 if ($useDefaultSort) {
                     $this->id->setSort("ASC");
+                    $this->kode->setSort("ASC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {

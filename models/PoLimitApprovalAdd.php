@@ -1172,10 +1172,10 @@ class PoLimitApprovalAdd extends PoLimitApproval
         $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, false);
 
         // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
 
         // limit_kredit
-        $this->limit_kredit->setDbValueDef($rsnew, $this->limit_kredit->CurrentValue, 0, false);
+        $this->limit_kredit->setDbValueDef($rsnew, $this->limit_kredit->CurrentValue, 0, strval($this->limit_kredit->CurrentValue) == "");
 
         // limit_po_aktif
         $this->limit_po_aktif->setDbValueDef($rsnew, $this->limit_po_aktif->CurrentValue, 0, false);

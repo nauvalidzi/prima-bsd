@@ -81,8 +81,6 @@ class VStockorder extends DbTable
 
         // kode_stockorder
         $this->kode_stockorder = new DbField('v_stockorder', 'v_stockorder', 'x_kode_stockorder', 'kode_stockorder', '`kode_stockorder`', '`kode_stockorder`', 200, 50, -1, false, '`kode_stockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode_stockorder->Nullable = false; // NOT NULL field
-        $this->kode_stockorder->Required = true; // Required field
         $this->kode_stockorder->Sortable = true; // Allow sort
         $this->kode_stockorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_stockorder->Param, "CustomMsg");
         $this->Fields['kode_stockorder'] = &$this->kode_stockorder;

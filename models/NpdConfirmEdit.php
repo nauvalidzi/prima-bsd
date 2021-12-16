@@ -1217,10 +1217,10 @@ class NpdConfirmEdit extends NpdConfirm
             $this->personincharge->setDbValueDef($rsnew, $this->personincharge->CurrentValue, "", $this->personincharge->ReadOnly);
 
             // jabatan
-            $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, "", $this->jabatan->ReadOnly);
+            $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, null, $this->jabatan->ReadOnly);
 
             // notelp
-            $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, "", $this->notelp->ReadOnly);
+            $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, null, $this->notelp->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;

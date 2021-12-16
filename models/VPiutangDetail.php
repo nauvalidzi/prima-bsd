@@ -71,7 +71,7 @@ class VPiutangDetail extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // idcustomer
-        $this->idcustomer = new DbField('v_piutang_detail', 'v_piutang_detail', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('v_piutang_detail', 'v_piutang_detail', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
@@ -99,18 +99,16 @@ class VPiutangDetail extends DbTable
         $this->Fields['tglinvoice'] = &$this->tglinvoice;
 
         // sisabayar
-        $this->sisabayar = new DbField('v_piutang_detail', 'v_piutang_detail', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 21, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sisabayar = new DbField('v_piutang_detail', 'v_piutang_detail', 'x_sisabayar', 'sisabayar', '`sisabayar`', '`sisabayar`', 20, 20, -1, false, '`sisabayar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sisabayar->Nullable = false; // NOT NULL field
-        $this->sisabayar->Required = true; // Required field
         $this->sisabayar->Sortable = true; // Allow sort
         $this->sisabayar->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisabayar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisabayar->Param, "CustomMsg");
         $this->Fields['sisabayar'] = &$this->sisabayar;
 
         // totaltagihan
-        $this->totaltagihan = new DbField('v_piutang_detail', 'v_piutang_detail', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 21, 20, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totaltagihan = new DbField('v_piutang_detail', 'v_piutang_detail', 'x_totaltagihan', 'totaltagihan', '`totaltagihan`', '`totaltagihan`', 20, 20, -1, false, '`totaltagihan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->totaltagihan->Nullable = false; // NOT NULL field
-        $this->totaltagihan->Required = true; // Required field
         $this->totaltagihan->Sortable = true; // Allow sort
         $this->totaltagihan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->totaltagihan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totaltagihan->Param, "CustomMsg");

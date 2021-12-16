@@ -19,22 +19,4 @@ class NpdController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdAdd");
     }
-
-    // view
-    public function view(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "NpdView");
-    }
-
-    // edit
-    public function edit(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "NpdEdit");
-    }
-
-    // delete
-    public function delete(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "NpdDelete");
-    }
 }

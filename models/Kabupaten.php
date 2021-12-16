@@ -68,7 +68,7 @@ class Kabupaten extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('kabupaten', 'kabupaten', 'x_id', 'id', '`id`', '`id`', 21, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id = new DbField('kabupaten', 'kabupaten', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Sortable = true; // Allow sort
@@ -77,7 +77,7 @@ class Kabupaten extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idprovinsi
-        $this->idprovinsi = new DbField('kabupaten', 'kabupaten', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 21, 20, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idprovinsi = new DbField('kabupaten', 'kabupaten', 'x_idprovinsi', 'idprovinsi', '`idprovinsi`', '`idprovinsi`', 20, 20, -1, false, '`idprovinsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idprovinsi->Nullable = false; // NOT NULL field
         $this->idprovinsi->Required = true; // Required field
         $this->idprovinsi->Sortable = true; // Allow sort

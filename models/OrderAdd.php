@@ -1339,24 +1339,6 @@ class OrderAdd extends Order
                 return false;
             }
         }
-
-        // Check referential integrity for master table 'order'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_customer();
-        if (strval($this->idcustomer->CurrentValue) != "") {
-            $masterFilter = str_replace("@id@", AdjustSql($this->idcustomer->CurrentValue, "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("customer")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "customer", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
-        }
         $conn = $this->getConnection();
 
         // Begin transaction
@@ -1371,7 +1353,7 @@ class OrderAdd extends Order
         $rsnew = [];
 
         // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // tanggal
         $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 7), CurrentDate(), false);

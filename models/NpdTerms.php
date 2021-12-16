@@ -119,7 +119,7 @@ class NpdTerms extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // idnpd
-        $this->idnpd = new DbField('npd_terms', 'npd_terms', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 21, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idnpd = new DbField('npd_terms', 'npd_terms', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
         $this->idnpd->Required = true; // Required field

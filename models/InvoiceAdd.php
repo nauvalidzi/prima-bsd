@@ -1648,7 +1648,7 @@ class InvoiceAdd extends Invoice
         $rsnew = [];
 
         // kode
-        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
+        $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, false);
 
         // tglinvoice
         $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), false);
@@ -1660,13 +1660,13 @@ class InvoiceAdd extends Invoice
         $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, false);
 
         // totalnonpajak
-        $this->totalnonpajak->setDbValueDef($rsnew, $this->totalnonpajak->CurrentValue, 0, false);
+        $this->totalnonpajak->setDbValueDef($rsnew, $this->totalnonpajak->CurrentValue, 0, strval($this->totalnonpajak->CurrentValue) == "");
 
         // pajak
         $this->pajak->setDbValueDef($rsnew, $this->pajak->CurrentValue, 0, strval($this->pajak->CurrentValue) == "");
 
         // totaltagihan
-        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, false);
+        $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // idtermpayment
         $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, false);

@@ -82,8 +82,6 @@ class VOrderCustomer extends DbTable
 
         // kodeorder
         $this->kodeorder = new DbField('v_order_customer', 'v_order_customer', 'x_kodeorder', 'kodeorder', '`kodeorder`', '`kodeorder`', 200, 50, -1, false, '`kodeorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kodeorder->Nullable = false; // NOT NULL field
-        $this->kodeorder->Required = true; // Required field
         $this->kodeorder->Sortable = true; // Allow sort
         $this->kodeorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeorder->Param, "CustomMsg");
         $this->Fields['kodeorder'] = &$this->kodeorder;
@@ -98,7 +96,7 @@ class VOrderCustomer extends DbTable
         $this->Fields['tanggalorder'] = &$this->tanggalorder;
 
         // idcustomer
-        $this->idcustomer = new DbField('v_order_customer', 'v_order_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 21, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idcustomer = new DbField('v_order_customer', 'v_order_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
         $this->idcustomer->IsPrimaryKey = true; // Primary key field
         $this->idcustomer->Sortable = true; // Allow sort
