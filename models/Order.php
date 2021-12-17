@@ -1825,11 +1825,10 @@ SORTHTML;
         }
 
         // INTEGRASI SIP (PABRIK)
-        $url_integrasi = "http://3.141.200.40/sinergi/api/";
         $brand = ExecuteRow("SELECT kode_sip FROM brand WHERE id = {$rsnew['idbrand']}")['kode_sip'];
-        $query = curl_get($url_integrasi . "?action=getKodeKonsumen&kode={$brand}");
+        $query = curl_get(url_integrasi() . "?action=getKodeKonsumen&kode={$brand}");
         $konsumen = json_decode($query, true)['data'];
-        $url_auth = $url_integrasi . "?action=login&username=bsd&password=bsdabc";
+        $url_auth = url_integrasi() . "?action=login&username=bsd&password=bsdabc";
         $orders = [
             'no_penjualan' => $rsnew['kode'],
             'tgl' => date('Y-m-d', strtotime($rsnew['tanggal'])),
@@ -1838,13 +1837,14 @@ SORTHTML;
             'idpegawai' => 76, // idpegawai user bsd di SIP
             'keterangan' => $rsnew['keterangan']
         ];
-        $penjualan = curl_post($url_integrasi . "?action=add&object=penjualan", json_encode($orders), $url_auth);
+        $penjualan = curl_post(url_integrasi() . "?action=add&object=penjualan", json_encode($orders), $url_auth);
         $sip_penjualan = json_decode($penjualan, true)['penjualan'];
+        $details = [];
         foreach ($GLOBALS["order_detail"]->GetGridFormValues() as $key => $row) {
             $produk = ExecuteRow("SELECT kode FROM product WHERE id = {$row['idproduct']}")['kode'];
-            $query = curl_get($url_integrasi . "?action=getKodeBarang&kode={$produk}");
+            $query = curl_get(url_integrasi() . "?action=getKodeBarang&kode={$produk}");
             $barang = json_decode($query, true)['data'];
-            $order_detail = ['penjualan_detil' => [
+            $details[$key] = [
                     'pid' => $sip_penjualan['id'], // key dbpabrik table penjualan
                     'noitem' => $key+1,
                     'idproduk' => $barang['id'], // get from pabrik
@@ -1855,10 +1855,10 @@ SORTHTML;
                     'status' => 'Send',
                     'keterangan' => $row['keterangan'],
                     'sales_jns' => 'Eksis'
-                ]
             ];
-            curl_post($url_integrasi . "?action=force-database", json_encode($order_detail), $url_auth);
         }
+        $order_detail = ['penjualan_detil' => $details];
+        curl_post(url_integrasi() . "?action=bulk-insert", json_encode($order_detail), $url_auth);
         // END INTEGRASI SIP (PABRIK)
     }
 

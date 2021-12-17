@@ -292,6 +292,10 @@ function get_approval($cust_id) {
 	return ExecuteRow("SELECT * FROM po_limit_approval WHERE aktif = 1 AND idcustomer = {$cust_id} ORDER BY id DESC");
 }
 
+function url_integrasi() {
+    return "http://3.141.200.40/sinergi/api/";
+}
+
 function status_delivery($iddeliveryorder, $detail = "undetail") {
     $conditions = ($detail != "detail") ? " AND dd.iddeliveryorder = '{$iddeliveryorder}'" : " AND dd.id = '{$iddeliveryorder}'";
     $row = ExecuteRow("SELECT SUM(od.sisa) AS totalsisa FROM deliveryorder_detail dd JOIN order_detail od ON od.id = dd.idorder_detail WHERE 1=1 {$conditions}");
