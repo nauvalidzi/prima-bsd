@@ -5,3 +5,4 @@ src/config.production.php
 files/*
 api/db.php
 api/kirimdata.php
+vendor/composer/platform_check.php
