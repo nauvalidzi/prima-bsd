@@ -179,8 +179,19 @@ class Ijinbpom extends DbTable
         $this->Fields['suratpembagian'] = &$this->suratpembagian;
 
         // status
-        $this->status = new DbField('ijinbpom', 'ijinbpom', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->status = new DbField('ijinbpom', 'ijinbpom', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->status->Sortable = true; // Allow sort
+        $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->status->Lookup = new Lookup('status', 'ijinbpom', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'ijinbpom', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->status->OptionCount = 3;
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
 
@@ -1205,7 +1216,11 @@ SORTHTML;
         $this->suratpembagian->ViewCustomAttributes = "";
 
         // status
-        $this->status->ViewValue = $this->status->CurrentValue;
+        if (strval($this->status->CurrentValue) != "") {
+            $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+        } else {
+            $this->status->ViewValue = null;
+        }
         $this->status->ViewCustomAttributes = "";
 
         // selesai
@@ -1394,10 +1409,7 @@ SORTHTML;
         // status
         $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
-        if (!$this->status->Raw) {
-            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-        }
-        $this->status->EditValue = $this->status->CurrentValue;
+        $this->status->EditValue = $this->status->options(true);
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // selesai

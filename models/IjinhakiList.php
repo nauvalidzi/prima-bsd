@@ -438,6 +438,9 @@ class IjinhakiList extends Ijinhaki
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -1972,7 +1975,11 @@ class IjinhakiList extends Ijinhaki
             $this->aktaperusahaan->ViewCustomAttributes = "";
 
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
             $this->status->ViewCustomAttributes = "";
 
             // selesai
@@ -2109,6 +2116,8 @@ class IjinhakiList extends Ijinhaki
                         return (CurrentPageID() == "add") ? "`ijinhaki` = 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_status":
                     break;
                 case "x_selesai":
                     break;

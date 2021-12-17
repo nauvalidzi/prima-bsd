@@ -1000,7 +1000,11 @@ class IjinbpomEdit extends Ijinbpom
             $this->suratpembagian->ViewCustomAttributes = "";
 
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
             $this->status->ViewCustomAttributes = "";
 
             // selesai
@@ -1122,10 +1126,7 @@ class IjinbpomEdit extends Ijinbpom
             // status
             $this->status->EditAttrs["class"] = "form-control";
             $this->status->EditCustomAttributes = "";
-            if (!$this->status->Raw) {
-                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-            }
-            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
+            $this->status->EditValue = $this->status->options(true);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
             // Edit refer script
@@ -1691,6 +1692,8 @@ class IjinbpomEdit extends Ijinbpom
                         return (CurrentPageID() == "add") ? "`ijinbpom` = 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_status":
                     break;
                 case "x_selesai":
                     break;

@@ -89,6 +89,7 @@ loadjs.ready("head", function () {
     fijinhakiedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    fijinhakiedit.lists.status = <?= $Page->status->toClientList($Page) ?>;
     fijinhakiedit.lists.selesai = <?= $Page->selesai->toClientList($Page) ?>;
     loadjs.done("fijinhakiedit");
 });
@@ -142,9 +143,30 @@ $Page->showMessage();
         <label id="elh_ijinhaki_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
 <span id="el_ijinhaki_status">
-<input type="<?= $Page->status->getInputTextType() ?>" data-table="ijinhaki" data-field="x_status" name="x_status" id="x_status" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>" value="<?= $Page->status->EditValue ?>"<?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
-<?= $Page->status->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+    <select
+        id="x_status"
+        name="x_status"
+        class="form-control ew-select<?= $Page->status->isInvalidClass() ?>"
+        data-select2-id="ijinhaki_x_status"
+        data-table="ijinhaki"
+        data-field="x_status"
+        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+        <?= $Page->status->editAttributes() ?>>
+        <?= $Page->status->selectOptionListHtml("x_status") ?>
+    </select>
+    <?= $Page->status->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='ijinhaki_x_status']"),
+        options = { name: "x_status", selectId: "ijinhaki_x_status", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.data = ew.vars.tables.ijinhaki.fields.status.lookupOptions;
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.ijinhaki.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>

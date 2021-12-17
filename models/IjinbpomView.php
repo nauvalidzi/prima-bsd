@@ -1064,7 +1064,11 @@ class IjinbpomView extends Ijinbpom
             $this->suratpembagian->ViewCustomAttributes = "";
 
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
             $this->status->ViewCustomAttributes = "";
 
             // selesai
@@ -1247,6 +1251,8 @@ class IjinbpomView extends Ijinbpom
                         return (CurrentPageID() == "add") ? "`ijinbpom` = 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_status":
                     break;
                 case "x_selesai":
                     break;

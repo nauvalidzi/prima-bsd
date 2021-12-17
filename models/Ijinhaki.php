@@ -74,10 +74,10 @@ class Ijinhaki extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('ijinhaki', 'ijinhaki', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('ijinhaki', 'ijinhaki', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->IsForeignKey = true; // Foreign key field
-        $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
@@ -145,10 +145,21 @@ class Ijinhaki extends DbTable
         $this->Fields['aktaperusahaan'] = &$this->aktaperusahaan;
 
         // status
-        $this->status = new DbField('ijinhaki', 'ijinhaki', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->status = new DbField('ijinhaki', 'ijinhaki', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->status->Nullable = false; // NOT NULL field
         $this->status->Required = true; // Required field
         $this->status->Sortable = true; // Allow sort
+        $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->status->Lookup = new Lookup('status', 'ijinhaki', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'ijinhaki', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->status->OptionCount = 3;
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
 
@@ -559,6 +570,9 @@ class Ijinhaki extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
+            // Get insert id if necessary
+            $this->id->setDbValue($conn->lastInsertId());
+            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -1162,7 +1176,11 @@ SORTHTML;
         $this->aktaperusahaan->ViewCustomAttributes = "";
 
         // status
-        $this->status->ViewValue = $this->status->CurrentValue;
+        if (strval($this->status->CurrentValue) != "") {
+            $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+        } else {
+            $this->status->ViewValue = null;
+        }
         $this->status->ViewCustomAttributes = "";
 
         // selesai
@@ -1261,7 +1279,8 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -1293,10 +1312,7 @@ SORTHTML;
         // status
         $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
-        if (!$this->status->Raw) {
-            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-        }
-        $this->status->EditValue = $this->status->CurrentValue;
+        $this->status->EditValue = $this->status->options(true);
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // selesai

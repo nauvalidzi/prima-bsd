@@ -1076,7 +1076,7 @@
       <phrase id="menutext" value="Pembayaran" />
     </menu>
     <menu id="49">
-      <phrase id="menutext" value="Akuntansi" />
+      <phrase id="menutext" value="Bonus &amp; Piutang" />
     </menu>
     <menu id="348">
       <phrase id="menutext" value="Bonus Customer" />
@@ -1111,17 +1111,17 @@
     <menu id="593">
       <phrase id="menutext" value="KPI Marketing Detail" />
     </menu>
-    <menu id="808">
-      <phrase id="menutext" value="Stok" />
-    </menu>
     <menu id="918">
-      <phrase id="menutext" value="Stocks (new)" />
+      <phrase id="menutext" value="Pembelian" />
+    </menu>
+    <menu id="342">
+      <phrase id="menutext" value="Stok" />
     </menu>
     <menu id="922">
       <phrase id="menutext" value="v stock produk" />
     </menu>
     <menu id="809">
-      <phrase id="menutext" value="Stock Order" />
+      <phrase id="menutext" value="Stock Purchase" />
     </menu>
     <menu id="920">
       <phrase id="menutext" value="v stockorder" />
@@ -1133,16 +1133,16 @@
       <phrase id="menutext" value="v stockorder detail" />
     </menu>
     <menu id="811">
-      <phrase id="menutext" value="Stock Delivery Order" />
+      <phrase id="menutext" value="Stock Delivery" />
     </menu>
     <menu id="919">
       <phrase id="menutext" value="Stock Delivery Order Detail" />
     </menu>
-    <menu id="342">
-      <phrase id="menutext" value="Stok old" />
+    <menu id="808">
+      <phrase id="menutext" value="Stok" />
     </menu>
     <menu id="344">
-      <phrase id="menutext" value="Stok view" />
+      <phrase id="menutext" value="Stok" />
     </menu>
     <menu id="602">
       <phrase id="menutext" value="Penagihan Customer" />
@@ -2462,7 +2462,7 @@
       </field>
     </table>
     <table id="ijinhaki">
-      <phrase id="tblcaption" value="Ijin HKI" />
+      <phrase id="tblcaption" value="Perizinan HAKI" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -2480,6 +2480,12 @@
       </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />
+        <phrase id="fldtagvalue1" value="Baru" />
+        <phrase id="fldtagcaption1" value="Baru" />
+        <phrase id="fldtagvalue2" value="Diproses" />
+        <phrase id="fldtagcaption2" value="Diproses" />
+        <phrase id="fldtagvalue3" value="Selesai" />
+        <phrase id="fldtagcaption3" value="Selesai" />
       </field>
       <field id="selesai">
         <phrase id="fldcaption" value="Selesai" />
@@ -2542,7 +2548,7 @@
       </field>
     </table>
     <table id="ijinbpom">
-      <phrase id="tblcaption" value="Titip Merk BPOM" />
+      <phrase id="tblcaption" value="Perizinan BPOM" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -2572,6 +2578,12 @@
       </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />
+        <phrase id="fldtagvalue1" value="Baru" />
+        <phrase id="fldtagcaption1" value="Baru" />
+        <phrase id="fldtagvalue2" value="Diproses" />
+        <phrase id="fldtagcaption2" value="Diproses" />
+        <phrase id="fldtagvalue3" value="Selesai" />
+        <phrase id="fldtagcaption3" value="Selesai" />
       </field>
       <field id="selesai">
         <phrase id="fldcaption" value="Selesai" />
@@ -3624,15 +3636,15 @@
       <phrase id="tblcaption" value="Penagihan Customer" />
     </table>
     <table id="termpayment">
-      <phrase id="tblcaption" value="termpayment" />
+      <phrase id="tblcaption" value="Term Payment" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="title">
-        <phrase id="fldcaption" value="title" />
+        <phrase id="fldcaption" value="Nama" />
       </field>
       <field id="value">
-        <phrase id="fldcaption" value="value" />
+        <phrase id="fldcaption" value="Value" />
       </field>
     </table>
     <table id="penagihan">
@@ -4126,7 +4138,7 @@
       </field>
     </table>
     <table id="stock_order">
-      <phrase id="tblcaption" value="Stock Order" />
+      <phrase id="tblcaption" value="Stock Purchase" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -4229,7 +4241,7 @@
       </field>
     </table>
     <table id="stock_deliveryorder">
-      <phrase id="tblcaption" value="Stock Delivery Order" />
+      <phrase id="tblcaption" value="Stock Delivery" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>

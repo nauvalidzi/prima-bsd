@@ -369,6 +369,9 @@ class IjinhakiEdit extends Ijinhaki
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -705,7 +708,7 @@ class IjinhakiEdit extends Ijinhaki
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
         $this->selesai->CurrentValue = $this->selesai->FormValue;
     }
@@ -925,7 +928,11 @@ class IjinhakiEdit extends Ijinhaki
             $this->aktaperusahaan->ViewCustomAttributes = "";
 
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (strval($this->status->CurrentValue) != "") {
+                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
+            } else {
+                $this->status->ViewValue = null;
+            }
             $this->status->ViewCustomAttributes = "";
 
             // selesai
@@ -988,10 +995,7 @@ class IjinhakiEdit extends Ijinhaki
             // status
             $this->status->EditAttrs["class"] = "form-control";
             $this->status->EditCustomAttributes = "";
-            if (!$this->status->Raw) {
-                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-            }
-            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
+            $this->status->EditValue = $this->status->options(true);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
             // selesai
@@ -1151,19 +1155,6 @@ class IjinhakiEdit extends Ijinhaki
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
-
-            // Check for duplicate key when key changed
-            if ($updateRow) {
-                $newKeyFilter = $this->getRecordFilter($rsnew);
-                if ($newKeyFilter != $oldKeyFilter) {
-                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
-                    if ($rsChk !== false) {
-                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
-                        $this->setFailureMessage($keyErrMsg);
-                        $updateRow = false;
-                    }
-                }
-            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -1331,6 +1322,8 @@ class IjinhakiEdit extends Ijinhaki
                         return (CurrentPageID() == "add") ? "`ijinhaki` = 0" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_status":
                     break;
                 case "x_selesai":
                     break;
