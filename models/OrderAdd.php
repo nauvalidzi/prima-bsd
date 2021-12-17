@@ -1751,7 +1751,7 @@ class OrderAdd extends Order
     public function formCustomValidate(&$customError)
     {
     	// INTEGRASI CEK KONSUMEN/MERK DI S.I.P
-        $url_integrasi = url_intergasi();
+        $url_integrasi = "http://3.141.200.40/sinergi/api/";
         $brand = ExecuteRow("SELECT kode, kode_sip, title FROM brand WHERE id = {$this->idbrand->FormValue}");
         $query = curl_get($url_integrasi . "?action=getKodeKonsumen&kode={$brand['kode_sip']}");
         $konsumen = json_decode($query, true)['success'];

@@ -313,10 +313,6 @@ function status_orders($idorder) {
     return 'Proses DO Sebagian';
 }
 
-function url_integrasi() {
-	return "http://3.141.200.40/sinergi/api/";
-}
-
 function status_pembayaran($idinvoice) {
     $row = ExecuteRow("SELECT SUM(sisabayar) AS sisabayar, totaltagihan FROM invoice WHERE id = '{$idinvoice}' GROUP BY id");
     if ($row['sisabayar'] < 1) {
