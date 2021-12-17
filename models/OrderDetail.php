@@ -157,8 +157,6 @@ class OrderDetail extends DbTable
 
         // keterangan
         $this->keterangan = new DbField('order_detail', 'order_detail', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keterangan->Nullable = false; // NOT NULL field
-        $this->keterangan->Required = true; // Required field
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;

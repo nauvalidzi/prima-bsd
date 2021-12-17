@@ -1825,7 +1825,7 @@ SORTHTML;
         }
 
         // INTEGRASI SIP (PABRIK)
-        $url_integrasi = "http://3.141.200.40/sinergi/api/";
+        $url_integrasi = url_integrasi();
         $brand = ExecuteRow("SELECT kode_sip FROM brand WHERE id = {$rsnew['idbrand']}")['kode_sip'];
         $query = curl_get($url_integrasi . "?action=getKodeKonsumen&kode={$brand}");
         $konsumen = json_decode($query, true)['data'];

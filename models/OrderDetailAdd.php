@@ -1284,7 +1284,7 @@ class OrderDetailAdd extends OrderDetail
         $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, strval($this->total->CurrentValue) == "");
 
         // keterangan
-        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", false);
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);

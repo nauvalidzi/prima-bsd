@@ -2124,7 +2124,7 @@ class OrderDetailGrid extends OrderDetail
             $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, $this->total->ReadOnly);
 
             // keterangan
-            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", $this->keterangan->ReadOnly);
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -2244,7 +2244,7 @@ class OrderDetailGrid extends OrderDetail
         $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, strval($this->total->CurrentValue) == "");
 
         // keterangan
-        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", false);
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // idorder
         if ($this->idorder->getSessionValue() != "") {
