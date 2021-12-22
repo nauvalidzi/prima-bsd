@@ -33,8 +33,8 @@ $LaporanDeliveryOrder = &$Page;
 				JOIN deliveryorder_detail dd ON dd.iddeliveryorder = d.id
 				JOIN order_detail od ON od.id = dd.idorder_detail
 				JOIN `order` o ON o.id = od.idorder
-				JOIN brand b ON b.id = od.idbrand
 				JOIN product p ON od.idproduct = p.id
+				JOIN brand b ON b.id = p.idbrand
 				WHERE d.tanggal BETWEEN '{$dateFrom}' AND '{$dateTo}' {$status}
 				ORDER BY d.kode, d.tanggal ASC";
 
