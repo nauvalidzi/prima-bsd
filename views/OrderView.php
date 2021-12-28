@@ -112,17 +112,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->keterangan->Visible) { // keterangan ?>
-    <tr id="r_keterangan">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_keterangan"><?= $Page->keterangan->caption() ?></span></td>
-        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
-<span id="el_order_keterangan">
-<span<?= $Page->keterangan->viewAttributes() ?>>
-<?= $Page->keterangan->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->catatan->Visible) { // catatan ?>
     <tr id="r_catatan">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_catatan"><?= $Page->catatan->caption() ?></span></td>

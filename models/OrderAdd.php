@@ -471,7 +471,6 @@ class OrderAdd extends Order
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->dokumen->setVisibility();
-        $this->keterangan->setVisibility();
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
         $this->status->Visible = false;
@@ -661,8 +660,6 @@ class OrderAdd extends Order
         $this->dokumen->Upload->DbValue = null;
         $this->dokumen->OldValue = $this->dokumen->Upload->DbValue;
         $this->dokumen->CurrentValue = null; // Clear file related field
-        $this->keterangan->CurrentValue = null;
-        $this->keterangan->OldValue = $this->keterangan->CurrentValue;
         $this->catatan->CurrentValue = null;
         $this->catatan->OldValue = $this->catatan->CurrentValue;
         $this->aktif->CurrentValue = 1;
@@ -731,16 +728,6 @@ class OrderAdd extends Order
             }
         }
 
-        // Check field name 'keterangan' first before field var 'x_keterangan'
-        $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
-        if (!$this->keterangan->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->keterangan->Visible = false; // Disable update for API request
-            } else {
-                $this->keterangan->setFormValue($val);
-            }
-        }
-
         // Check field name 'created_by' first before field var 'x_created_by'
         $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
         if (!$this->created_by->IsDetailKey) {
@@ -766,7 +753,6 @@ class OrderAdd extends Order
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
-        $this->keterangan->CurrentValue = $this->keterangan->FormValue;
         $this->created_by->CurrentValue = $this->created_by->FormValue;
     }
 
@@ -834,7 +820,6 @@ class OrderAdd extends Order
         $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
-        $this->keterangan->setDbValue($row['keterangan']);
         $this->catatan->setDbValue($row['catatan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->status->setDbValue($row['status']);
@@ -855,7 +840,6 @@ class OrderAdd extends Order
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['dokumen'] = $this->dokumen->Upload->DbValue;
-        $row['keterangan'] = $this->keterangan->CurrentValue;
         $row['catatan'] = $this->catatan->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['status'] = $this->status->CurrentValue;
@@ -906,8 +890,6 @@ class OrderAdd extends Order
         // idbrand
 
         // dokumen
-
-        // keterangan
 
         // catatan
 
@@ -1009,10 +991,6 @@ class OrderAdd extends Order
             }
             $this->dokumen->ViewCustomAttributes = "";
 
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-            $this->keterangan->ViewCustomAttributes = "";
-
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {
                 $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
@@ -1073,11 +1051,6 @@ class OrderAdd extends Order
             $this->dokumen->HrefValue = "";
             $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
             $this->dokumen->TooltipValue = "";
-
-            // keterangan
-            $this->keterangan->LinkCustomAttributes = "";
-            $this->keterangan->HrefValue = "";
-            $this->keterangan->TooltipValue = "";
 
             // created_by
             $this->created_by->LinkCustomAttributes = "";
@@ -1220,12 +1193,6 @@ class OrderAdd extends Order
                 RenderUploadField($this->dokumen);
             }
 
-            // keterangan
-            $this->keterangan->EditAttrs["class"] = "form-control";
-            $this->keterangan->EditCustomAttributes = "";
-            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
-            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
-
             // created_by
             $this->created_by->EditAttrs["class"] = "form-control";
             $this->created_by->EditCustomAttributes = "";
@@ -1257,10 +1224,6 @@ class OrderAdd extends Order
             $this->dokumen->LinkCustomAttributes = "";
             $this->dokumen->HrefValue = "";
             $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
-
-            // keterangan
-            $this->keterangan->LinkCustomAttributes = "";
-            $this->keterangan->HrefValue = "";
 
             // created_by
             $this->created_by->LinkCustomAttributes = "";
@@ -1316,11 +1279,6 @@ class OrderAdd extends Order
         if ($this->dokumen->Required) {
             if ($this->dokumen->Upload->FileName == "" && !$this->dokumen->Upload->KeepFile) {
                 $this->dokumen->addErrorMessage(str_replace("%s", $this->dokumen->caption(), $this->dokumen->RequiredErrorMessage));
-            }
-        }
-        if ($this->keterangan->Required) {
-            if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
-                $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
             }
         }
         if ($this->created_by->Required) {
@@ -1401,9 +1359,6 @@ class OrderAdd extends Order
                 $rsnew['dokumen'] = $this->dokumen->Upload->FileName;
             }
         }
-
-        // keterangan
-        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // created_by
         $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);

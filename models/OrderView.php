@@ -525,7 +525,6 @@ class OrderView extends Order
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->dokumen->setVisibility();
-        $this->keterangan->setVisibility();
         $this->catatan->setVisibility();
         $this->aktif->setVisibility();
         $this->status->setVisibility();
@@ -811,7 +810,6 @@ class OrderView extends Order
         $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
-        $this->keterangan->setDbValue($row['keterangan']);
         $this->catatan->setDbValue($row['catatan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->status->setDbValue($row['status']);
@@ -831,7 +829,6 @@ class OrderView extends Order
         $row['idcustomer'] = null;
         $row['idbrand'] = null;
         $row['dokumen'] = null;
-        $row['keterangan'] = null;
         $row['catatan'] = null;
         $row['aktif'] = null;
         $row['status'] = null;
@@ -872,8 +869,6 @@ class OrderView extends Order
         // idbrand
 
         // dokumen
-
-        // keterangan
 
         // catatan
 
@@ -975,10 +970,6 @@ class OrderView extends Order
             }
             $this->dokumen->ViewCustomAttributes = "";
 
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-            $this->keterangan->ViewCustomAttributes = "";
-
             // catatan
             $this->catatan->ViewValue = $this->catatan->CurrentValue;
             $this->catatan->ViewCustomAttributes = "";
@@ -1043,11 +1034,6 @@ class OrderView extends Order
             $this->dokumen->HrefValue = "";
             $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
             $this->dokumen->TooltipValue = "";
-
-            // keterangan
-            $this->keterangan->LinkCustomAttributes = "";
-            $this->keterangan->HrefValue = "";
-            $this->keterangan->TooltipValue = "";
 
             // catatan
             $this->catatan->LinkCustomAttributes = "";

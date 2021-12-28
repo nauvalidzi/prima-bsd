@@ -381,7 +381,6 @@ class OrderDelete extends Order
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
-        $this->keterangan->Visible = false;
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
         $this->status->Visible = false;
@@ -583,7 +582,6 @@ class OrderDelete extends Order
         $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
-        $this->keterangan->setDbValue($row['keterangan']);
         $this->catatan->setDbValue($row['catatan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->status->setDbValue($row['status']);
@@ -603,7 +601,6 @@ class OrderDelete extends Order
         $row['idcustomer'] = null;
         $row['idbrand'] = null;
         $row['dokumen'] = null;
-        $row['keterangan'] = null;
         $row['catatan'] = null;
         $row['aktif'] = null;
         $row['status'] = null;
@@ -638,8 +635,6 @@ class OrderDelete extends Order
         // idbrand
 
         // dokumen
-
-        // keterangan
 
         // catatan
 
@@ -740,10 +735,6 @@ class OrderDelete extends Order
                 $this->dokumen->ViewValue = "";
             }
             $this->dokumen->ViewCustomAttributes = "";
-
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-            $this->keterangan->ViewCustomAttributes = "";
 
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {

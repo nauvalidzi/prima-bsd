@@ -397,7 +397,6 @@ class OrderPreview extends Order
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
-        $this->keterangan->Visible = false;
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
         $this->status->Visible = false;
@@ -499,7 +498,6 @@ class OrderPreview extends Order
             $this->idcustomer->setSort("");
             $this->idbrand->setSort("");
             $this->dokumen->setSort("");
-            $this->keterangan->setSort("");
             $this->catatan->setSort("");
             $this->aktif->setSort("");
             $this->status->setSort("");

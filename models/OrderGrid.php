@@ -512,7 +512,6 @@ class OrderGrid extends Order
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
-        $this->keterangan->Visible = false;
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
         $this->status->Visible = false;
@@ -1376,8 +1375,6 @@ class OrderGrid extends Order
         $this->dokumen->Upload->DbValue = null;
         $this->dokumen->OldValue = $this->dokumen->Upload->DbValue;
         $this->dokumen->Upload->Index = $this->RowIndex;
-        $this->keterangan->CurrentValue = null;
-        $this->keterangan->OldValue = $this->keterangan->CurrentValue;
         $this->catatan->CurrentValue = null;
         $this->catatan->OldValue = $this->catatan->CurrentValue;
         $this->aktif->CurrentValue = 1;
@@ -1564,7 +1561,6 @@ class OrderGrid extends Order
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
         $this->dokumen->Upload->Index = $this->RowIndex;
-        $this->keterangan->setDbValue($row['keterangan']);
         $this->catatan->setDbValue($row['catatan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->status->setDbValue($row['status']);
@@ -1585,7 +1581,6 @@ class OrderGrid extends Order
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['dokumen'] = $this->dokumen->Upload->DbValue;
-        $row['keterangan'] = $this->keterangan->CurrentValue;
         $row['catatan'] = $this->catatan->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['status'] = $this->status->CurrentValue;
@@ -1640,8 +1635,6 @@ class OrderGrid extends Order
         // idbrand
 
         // dokumen
-
-        // keterangan
 
         // catatan
 
@@ -1742,10 +1735,6 @@ class OrderGrid extends Order
                 $this->dokumen->ViewValue = "";
             }
             $this->dokumen->ViewCustomAttributes = "";
-
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-            $this->keterangan->ViewCustomAttributes = "";
 
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {

@@ -575,7 +575,6 @@ class OrderList extends Order
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
-        $this->keterangan->Visible = false;
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
         $this->status->Visible = false;
@@ -905,7 +904,6 @@ class OrderList extends Order
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
         $filterList = Concat($filterList, $this->idbrand->AdvancedSearch->toJson(), ","); // Field idbrand
         $filterList = Concat($filterList, $this->dokumen->AdvancedSearch->toJson(), ","); // Field dokumen
-        $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
         $filterList = Concat($filterList, $this->catatan->AdvancedSearch->toJson(), ","); // Field catatan
         $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
@@ -1008,14 +1006,6 @@ class OrderList extends Order
         $this->dokumen->AdvancedSearch->SearchOperator2 = @$filter["w_dokumen"];
         $this->dokumen->AdvancedSearch->save();
 
-        // Field keterangan
-        $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
-        $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
-        $this->keterangan->AdvancedSearch->save();
-
         // Field catatan
         $this->catatan->AdvancedSearch->SearchValue = @$filter["x_catatan"];
         $this->catatan->AdvancedSearch->SearchOperator = @$filter["z_catatan"];
@@ -1073,7 +1063,6 @@ class OrderList extends Order
         $where = "";
         $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->dokumen, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->keterangan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->catatan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->status, $arKeywords, $type);
         return $where;
@@ -1301,7 +1290,6 @@ class OrderList extends Order
                 $this->idcustomer->setSort("");
                 $this->idbrand->setSort("");
                 $this->dokumen->setSort("");
-                $this->keterangan->setSort("");
                 $this->catatan->setSort("");
                 $this->aktif->setSort("");
                 $this->status->setSort("");
@@ -1872,7 +1860,6 @@ class OrderList extends Order
         $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
-        $this->keterangan->setDbValue($row['keterangan']);
         $this->catatan->setDbValue($row['catatan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->status->setDbValue($row['status']);
@@ -1892,7 +1879,6 @@ class OrderList extends Order
         $row['idcustomer'] = null;
         $row['idbrand'] = null;
         $row['dokumen'] = null;
-        $row['keterangan'] = null;
         $row['catatan'] = null;
         $row['aktif'] = null;
         $row['status'] = null;
@@ -1949,8 +1935,6 @@ class OrderList extends Order
         // idbrand
 
         // dokumen
-
-        // keterangan
 
         // catatan
 
@@ -2051,10 +2035,6 @@ class OrderList extends Order
                 $this->dokumen->ViewValue = "";
             }
             $this->dokumen->ViewCustomAttributes = "";
-
-            // keterangan
-            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-            $this->keterangan->ViewCustomAttributes = "";
 
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {

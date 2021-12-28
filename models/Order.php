@@ -35,7 +35,6 @@ class Order extends DbTable
     public $idcustomer;
     public $idbrand;
     public $dokumen;
-    public $keterangan;
     public $catatan;
     public $aktif;
     public $status;
@@ -165,12 +164,6 @@ class Order extends DbTable
         $this->dokumen->Sortable = true; // Allow sort
         $this->dokumen->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->dokumen->Param, "CustomMsg");
         $this->Fields['dokumen'] = &$this->dokumen;
-
-        // keterangan
-        $this->keterangan = new DbField('order', 'order', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keterangan->Sortable = true; // Allow sort
-        $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
-        $this->Fields['keterangan'] = &$this->keterangan;
 
         // catatan
         $this->catatan = new DbField('order', 'order', 'x_catatan', 'catatan', '`catatan`', '`catatan`', 201, 65535, -1, false, '`catatan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
@@ -785,7 +778,6 @@ class Order extends DbTable
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->idbrand->DbValue = $row['idbrand'];
         $this->dokumen->Upload->DbValue = $row['dokumen'];
-        $this->keterangan->DbValue = $row['keterangan'];
         $this->catatan->DbValue = $row['catatan'];
         $this->aktif->DbValue = $row['aktif'];
         $this->status->DbValue = $row['status'];
@@ -1138,7 +1130,6 @@ SORTHTML;
         $this->idbrand->setDbValue($row['idbrand']);
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
-        $this->keterangan->setDbValue($row['keterangan']);
         $this->catatan->setDbValue($row['catatan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->status->setDbValue($row['status']);
@@ -1170,8 +1161,6 @@ SORTHTML;
         // idbrand
 
         // dokumen
-
-        // keterangan
 
         // catatan
 
@@ -1273,10 +1262,6 @@ SORTHTML;
         }
         $this->dokumen->ViewCustomAttributes = "";
 
-        // keterangan
-        $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
-        $this->keterangan->ViewCustomAttributes = "";
-
         // catatan
         $this->catatan->ViewValue = $this->catatan->CurrentValue;
         $this->catatan->ViewCustomAttributes = "";
@@ -1346,11 +1331,6 @@ SORTHTML;
         $this->dokumen->HrefValue = "";
         $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
         $this->dokumen->TooltipValue = "";
-
-        // keterangan
-        $this->keterangan->LinkCustomAttributes = "";
-        $this->keterangan->HrefValue = "";
-        $this->keterangan->TooltipValue = "";
 
         // catatan
         $this->catatan->LinkCustomAttributes = "";
@@ -1501,12 +1481,6 @@ SORTHTML;
             $this->dokumen->Upload->FileName = $this->dokumen->CurrentValue;
         }
 
-        // keterangan
-        $this->keterangan->EditAttrs["class"] = "form-control";
-        $this->keterangan->EditCustomAttributes = "";
-        $this->keterangan->EditValue = $this->keterangan->CurrentValue;
-        $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
-
         // catatan
         $this->catatan->EditAttrs["class"] = "form-control";
         $this->catatan->EditCustomAttributes = "";
@@ -1576,7 +1550,6 @@ SORTHTML;
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->dokumen);
-                    $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->catatan);
                     $doc->exportCaption($this->status);
                 } else {
@@ -1587,7 +1560,6 @@ SORTHTML;
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->dokumen);
-                    $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->created_at);
@@ -1628,7 +1600,6 @@ SORTHTML;
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->idbrand);
                         $doc->exportField($this->dokumen);
-                        $doc->exportField($this->keterangan);
                         $doc->exportField($this->catatan);
                         $doc->exportField($this->status);
                     } else {
@@ -1639,7 +1610,6 @@ SORTHTML;
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->idbrand);
                         $doc->exportField($this->dokumen);
-                        $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->status);
                         $doc->exportField($this->created_at);
