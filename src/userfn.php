@@ -332,6 +332,10 @@ function get_kodeorder($idorder) {
     return ExecuteRow("SELECT kode FROM `order` WHERE id = '{$idorder}'")['kode'];
 }
 
+function getCustomerByOrder($idorder) {
+	return ExecuteRow("SELECT idcustomer FROM `order` WHERE id = {$idorder}")['idcustomer'];
+}
+
 //-- FUNGSI TERBILANG --//
 function penyebut($nilai) {
 	$nilai = abs($nilai);
@@ -914,9 +918,9 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
     $status = true;
     $check = [];
     foreach($data['data'] as $row) {
-        $exists = ExecuteRow("SELECT COUNT(*) FROM deliveryorder ded JOIN deliveryorder_detail dedd ON dedd.iddeliveryorder = ded.id JOIN `order` o ON o.id = dedd.idorder JOIN order_detail od ON od.id = dedd.idorder_detail JOIN product p ON p.id = od.idproduct WHERE ded.kode = '{$row['no_suratjalan']}' AND ded.tanggal = '{$row['tgl_kirim']}' AND p.kode = '{$row['kode_barang']}' AND o.kode = '{$row['kode_penjualan']}'");
+    	$exists = ExecuteRow("SELECT COUNT(*) as jumlah FROM deliveryorder ded JOIN deliveryorder_detail dedd ON dedd.iddeliveryorder = ded.id JOIN `order` o ON o.id = dedd.idorder JOIN order_detail od ON od.id = dedd.idorder_detail JOIN product p ON p.id = od.idproduct WHERE ded.kode = '{$row['no_suratjalan']}' AND ded.tanggal = '{$row['tgl_kirim']}' AND p.kode = '{$row['kode_barang']}' AND o.kode = '{$row['kode_penjualan']}'");
         $order = ExecuteRow("SELECT od.id as idorderdetail, idorder, jumlah + bonus as totalorder FROM order_detail od JOIN `order` o ON o.id = od.idorder JOIN product p ON p.id = od.idproduct WHERE o.kode = '{$row['kode_penjualan']}' AND p.kode = '{$row['kode_barang']}'");
-        if ($exists > 0 && $order) {
+        if ($exists['jumlah'] < 1 && $order) {
             $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
             if (!$delivery) {
                 $do = Execute("INSERT INTO deliveryorder (kode, tanggal, created_at, readonly) VALUES ('{$row['no_suratjalan']}', '{$row['tgl_kirim']}', '".date('Y-m-d H:i:s')."', 1)");

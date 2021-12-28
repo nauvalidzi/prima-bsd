@@ -22,7 +22,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.deliveryorder_detail)
         ew.vars.tables.deliveryorder_detail = currentTable;
     fdeliveryorder_detailgrid.addFields([
-        ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null, ew.Validators.integer], fields.idorder.isInvalid],
+        ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
         ["idorder_detail", [fields.idorder_detail.visible && fields.idorder_detail.required ? ew.Validators.required(fields.idorder_detail.caption) : null], fields.idorder_detail.isInvalid],
         ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null], fields.totalorder.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
@@ -103,6 +103,7 @@ loadjs.ready("head", function () {
     fdeliveryorder_detailgrid.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    fdeliveryorder_detailgrid.lists.idorder = <?= $Grid->idorder->toClientList($Grid) ?>;
     fdeliveryorder_detailgrid.lists.idorder_detail = <?= $Grid->idorder_detail->toClientList($Grid) ?>;
     loadjs.done("fdeliveryorder_detailgrid");
 });
@@ -260,15 +261,59 @@ $Grid->ListOptions->render("body", "left", $Grid->RowCount);
         <td data-name="idorder" <?= $Grid->idorder->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_deliveryorder_detail_idorder" class="form-group">
-<input type="<?= $Grid->idorder->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_idorder" name="x<?= $Grid->RowIndex ?>_idorder" id="x<?= $Grid->RowIndex ?>_idorder" size="30" placeholder="<?= HtmlEncode($Grid->idorder->getPlaceHolder()) ?>" value="<?= $Grid->idorder->EditValue ?>"<?= $Grid->idorder->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->idorder->getErrorMessage() ?></div>
+<?php $Grid->idorder->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idorder"
+        name="x<?= $Grid->RowIndex ?>_idorder"
+        class="form-control ew-select<?= $Grid->idorder->isInvalidClass() ?>"
+        data-select2-id="deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder"
+        data-table="deliveryorder_detail"
+        data-field="x_idorder"
+        data-value-separator="<?= $Grid->idorder->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idorder->getPlaceHolder()) ?>"
+        <?= $Grid->idorder->editAttributes() ?>>
+        <?= $Grid->idorder->selectOptionListHtml("x{$Grid->RowIndex}_idorder") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idorder->getErrorMessage() ?></div>
+<?= $Grid->idorder->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idorder") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idorder", selectId: "deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.deliveryorder_detail.fields.idorder.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <input type="hidden" data-table="deliveryorder_detail" data-field="x_idorder" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idorder" id="o<?= $Grid->RowIndex ?>_idorder" value="<?= HtmlEncode($Grid->idorder->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_deliveryorder_detail_idorder" class="form-group">
-<input type="<?= $Grid->idorder->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_idorder" name="x<?= $Grid->RowIndex ?>_idorder" id="x<?= $Grid->RowIndex ?>_idorder" size="30" placeholder="<?= HtmlEncode($Grid->idorder->getPlaceHolder()) ?>" value="<?= $Grid->idorder->EditValue ?>"<?= $Grid->idorder->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->idorder->getErrorMessage() ?></div>
+<?php $Grid->idorder->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idorder"
+        name="x<?= $Grid->RowIndex ?>_idorder"
+        class="form-control ew-select<?= $Grid->idorder->isInvalidClass() ?>"
+        data-select2-id="deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder"
+        data-table="deliveryorder_detail"
+        data-field="x_idorder"
+        data-value-separator="<?= $Grid->idorder->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idorder->getPlaceHolder()) ?>"
+        <?= $Grid->idorder->editAttributes() ?>>
+        <?= $Grid->idorder->selectOptionListHtml("x{$Grid->RowIndex}_idorder") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idorder->getErrorMessage() ?></div>
+<?= $Grid->idorder->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idorder") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idorder", selectId: "deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.deliveryorder_detail.fields.idorder.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
@@ -484,8 +529,30 @@ $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
         <td data-name="idorder">
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_deliveryorder_detail_idorder" class="form-group deliveryorder_detail_idorder">
-<input type="<?= $Grid->idorder->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_idorder" name="x<?= $Grid->RowIndex ?>_idorder" id="x<?= $Grid->RowIndex ?>_idorder" size="30" placeholder="<?= HtmlEncode($Grid->idorder->getPlaceHolder()) ?>" value="<?= $Grid->idorder->EditValue ?>"<?= $Grid->idorder->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->idorder->getErrorMessage() ?></div>
+<?php $Grid->idorder->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idorder"
+        name="x<?= $Grid->RowIndex ?>_idorder"
+        class="form-control ew-select<?= $Grid->idorder->isInvalidClass() ?>"
+        data-select2-id="deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder"
+        data-table="deliveryorder_detail"
+        data-field="x_idorder"
+        data-value-separator="<?= $Grid->idorder->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idorder->getPlaceHolder()) ?>"
+        <?= $Grid->idorder->editAttributes() ?>>
+        <?= $Grid->idorder->selectOptionListHtml("x{$Grid->RowIndex}_idorder") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idorder->getErrorMessage() ?></div>
+<?= $Grid->idorder->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idorder") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idorder", selectId: "deliveryorder_detail_x<?= $Grid->RowIndex ?>_idorder", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.deliveryorder_detail.fields.idorder.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_deliveryorder_detail_idorder" class="form-group deliveryorder_detail_idorder">

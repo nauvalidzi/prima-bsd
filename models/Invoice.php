@@ -1894,6 +1894,7 @@ SORTHTML;
         // To cancel, set return value to false
         $rsnew['sisabayar'] = $rsnew['totaltagihan'];
         $rsnew['kode'] = getNextKodeInvoice($rsnew['idorder']);
+        $rsnew['idcustomer'] = getCustomerByOrder($rsnew['idorder']);
         return true;
     }
 

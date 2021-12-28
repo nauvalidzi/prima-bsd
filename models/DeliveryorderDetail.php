@@ -95,10 +95,20 @@ class DeliveryorderDetail extends DbTable
         $this->Fields['iddeliveryorder'] = &$this->iddeliveryorder;
 
         // idorder
-        $this->idorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idorder = new DbField('deliveryorder_detail', 'deliveryorder_detail', 'x_idorder', 'idorder', '`idorder`', '`idorder`', 20, 20, -1, false, '`idorder`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idorder->Nullable = false; // NOT NULL field
         $this->idorder->Required = true; // Required field
         $this->idorder->Sortable = true; // Allow sort
+        $this->idorder->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idorder->Lookup = new Lookup('idorder', 'v_order_customer', false, 'idorder', ["kodeorder","tanggalorder","",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idorder->Lookup = new Lookup('idorder', 'v_order_customer', false, 'idorder', ["kodeorder","tanggalorder","",""], [], ["deliveryorder_detail x_idorder_detail"], [], [], [], [], '', '');
+                break;
+        }
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idorder->Param, "CustomMsg");
         $this->Fields['idorder'] = &$this->idorder;
@@ -1025,8 +1035,28 @@ SORTHTML;
         $this->iddeliveryorder->ViewCustomAttributes = "";
 
         // idorder
-        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-        $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->idorder->CurrentValue));
+        if ($curVal != "") {
+            $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
+            if ($this->idorder->ViewValue === null) { // Lookup from database
+                $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
+                    $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
+                } else {
+                    $this->idorder->ViewValue = $this->idorder->CurrentValue;
+                }
+            }
+        } else {
+            $this->idorder->ViewValue = null;
+        }
         $this->idorder->ViewCustomAttributes = "";
 
         // idorder_detail
@@ -1169,7 +1199,6 @@ SORTHTML;
         // idorder
         $this->idorder->EditAttrs["class"] = "form-control";
         $this->idorder->EditCustomAttributes = "";
-        $this->idorder->EditValue = $this->idorder->CurrentValue;
         $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
         // idorder_detail

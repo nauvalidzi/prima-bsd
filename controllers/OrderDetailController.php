@@ -26,18 +26,6 @@ class OrderDetailController extends ControllerBase
         return $this->runPage($request, $response, $args, "OrderDetailView");
     }
 
-    // edit
-    public function edit(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "OrderDetailEdit");
-    }
-
-    // delete
-    public function delete(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "OrderDetailDelete");
-    }
-
     // preview
     public function preview(Request $request, Response $response, array $args): Response
     {
