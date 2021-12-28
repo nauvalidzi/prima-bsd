@@ -1778,7 +1778,7 @@ class InvoiceGrid extends Invoice
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
                         return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                     };
@@ -1970,7 +1970,7 @@ class InvoiceGrid extends Invoice
                 if ($curVal != "") {
                     $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                     if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                         $lookupFilter = function() {
                             return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                         };
@@ -2002,7 +2002,7 @@ class InvoiceGrid extends Invoice
                     if ($curVal == "") {
                         $filterWrk = "0=1";
                     } else {
-                        $filterWrk = "`idcustomer`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
                     }
                     $lookupFilter = function() {
                         return (CurrentPageID() == "add") ? "jumlah > 0" : "";
@@ -2116,7 +2116,7 @@ class InvoiceGrid extends Invoice
                 if ($curVal != "") {
                     $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                     if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                         $lookupFilter = function() {
                             return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                         };
@@ -2148,7 +2148,7 @@ class InvoiceGrid extends Invoice
                     if ($curVal == "") {
                         $filterWrk = "0=1";
                     } else {
-                        $filterWrk = "`idcustomer`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
                     }
                     $lookupFilter = function() {
                         return (CurrentPageID() == "add") ? "jumlah > 0" : "";
@@ -2651,6 +2651,7 @@ class InvoiceGrid extends Invoice
         }
         if ($masterTblVar == "customer") {
             $masterTbl = Container("customer");
+            $this->idcustomer->Visible = false;
             if ($masterTbl->EventCancelled) {
                 $this->EventCancelled = true;
             }

@@ -343,7 +343,6 @@ loadjs.ready(["finvoicegrid", "datetimepicker"], function() {
 <input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
 <?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_invoice_idcustomer" class="form-group">
-<?php $Grid->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
         name="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -380,7 +379,6 @@ loadjs.ready("head", function() {
 <input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
 <?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_invoice_idcustomer" class="form-group">
-<?php $Grid->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
         name="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -645,7 +643,6 @@ loadjs.ready(["finvoicegrid", "datetimepicker"], function() {
 <input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
 <?php } else { ?>
 <span id="el$rowindex$_invoice_idcustomer" class="form-group invoice_idcustomer">
-<?php $Grid->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
         name="x<?= $Grid->RowIndex ?>_idcustomer"

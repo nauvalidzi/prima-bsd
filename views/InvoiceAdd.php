@@ -22,7 +22,6 @@ loadjs.ready("head", function () {
     finvoiceadd.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tglinvoice", [fields.tglinvoice.visible && fields.tglinvoice.required ? ew.Validators.required(fields.tglinvoice.caption) : null, ew.Validators.datetime(0)], fields.tglinvoice.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
         ["totalnonpajak", [fields.totalnonpajak.visible && fields.totalnonpajak.required ? ew.Validators.required(fields.totalnonpajak.caption) : null, ew.Validators.integer], fields.totalnonpajak.isInvalid],
         ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null, ew.Validators.float], fields.pajak.isInvalid],
@@ -100,7 +99,6 @@ loadjs.ready("head", function () {
     finvoiceadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    finvoiceadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     finvoiceadd.lists.idorder = <?= $Page->idorder->toClientList($Page) ?>;
     finvoiceadd.lists.idtermpayment = <?= $Page->idtermpayment->toClientList($Page) ?>;
     finvoiceadd.lists.idtipepayment = <?= $Page->idtipepayment->toClientList($Page) ?>;
@@ -167,48 +165,6 @@ loadjs.ready(["finvoiceadd", "datetimepicker"], function() {
 </script>
 <?php } ?>
 </span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-    <div id="r_idcustomer" class="form-group row">
-        <label id="elh_invoice_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
-<?php if ($Page->idcustomer->getSessionValue() != "") { ?>
-<span id="el_invoice_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->idcustomer->getDisplayValue($Page->idcustomer->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x_idcustomer" name="x_idcustomer" value="<?= HtmlEncode($Page->idcustomer->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el_invoice_idcustomer">
-<?php $Page->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idcustomer"
-        name="x_idcustomer"
-        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
-        data-select2-id="invoice_x_idcustomer"
-        data-table="invoice"
-        data-field="x_idcustomer"
-        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
-        <?= $Page->idcustomer->editAttributes() ?>>
-        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
-    </select>
-    <?= $Page->idcustomer->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
-<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='invoice_x_idcustomer']"),
-        options = { name: "x_idcustomer", selectId: "invoice_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.invoice.fields.idcustomer.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } ?>
 </div></div>
     </div>
 <?php } ?>
@@ -369,6 +325,9 @@ loadjs.ready("head", function() {
 </div><!-- /page* -->
     <?php if (strval($Page->id->getSessionValue()) != "") { ?>
     <input type="hidden" name="x_id" id="x_id" value="<?= HtmlEncode(strval($Page->id->getSessionValue())) ?>">
+    <?php } ?>
+    <?php if (strval($Page->idcustomer->getSessionValue()) != "") { ?>
+    <input type="hidden" name="x_idcustomer" id="x_idcustomer" value="<?= HtmlEncode(strval($Page->idcustomer->getSessionValue())) ?>">
     <?php } ?>
 <?php
     if (in_array("invoice_detail", explode(",", $Page->getCurrentDetailTable())) && $invoice_detail->DetailAdd) {

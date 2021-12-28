@@ -467,7 +467,7 @@ class InvoiceAdd extends Invoice
         $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->tglinvoice->setVisibility();
-        $this->idcustomer->setVisibility();
+        $this->idcustomer->Visible = false;
         $this->idorder->setVisibility();
         $this->totalnonpajak->setVisibility();
         $this->pajak->setVisibility();
@@ -703,16 +703,6 @@ class InvoiceAdd extends Invoice
             $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
         }
 
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
-            } else {
-                $this->idcustomer->setFormValue($val);
-            }
-        }
-
         // Check field name 'idorder' first before field var 'x_idorder'
         $val = $CurrentForm->hasValue("idorder") ? $CurrentForm->getValue("idorder") : $CurrentForm->getValue("x_idorder");
         if (!$this->idorder->IsDetailKey) {
@@ -814,7 +804,6 @@ class InvoiceAdd extends Invoice
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tglinvoice->CurrentValue = $this->tglinvoice->FormValue;
         $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idorder->CurrentValue = $this->idorder->FormValue;
         $this->totalnonpajak->CurrentValue = $this->totalnonpajak->FormValue;
         $this->pajak->CurrentValue = $this->pajak->FormValue;
@@ -1011,7 +1000,7 @@ class InvoiceAdd extends Invoice
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
                         return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                     };
@@ -1154,11 +1143,6 @@ class InvoiceAdd extends Invoice
             $this->tglinvoice->HrefValue = "";
             $this->tglinvoice->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
             // idorder
             $this->idorder->LinkCustomAttributes = "";
             if (!EmptyValue($this->idorder->CurrentValue)) {
@@ -1226,62 +1210,6 @@ class InvoiceAdd extends Invoice
             $this->tglinvoice->EditCustomAttributes = "";
             $this->tglinvoice->EditValue = HtmlEncode(FormatDateTime($this->tglinvoice->CurrentValue, 8));
             $this->tglinvoice->PlaceHolder = RemoveHtml($this->tglinvoice->caption());
-
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $lookupFilter = function() {
-                            return (CurrentPageID() == "add") ? "jumlah > 0" : "";
-                        };
-                        $lookupFilter = $lookupFilter->bindTo($this);
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
-            } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`idcustomer`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "jumlah > 0" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
-            }
 
             // idorder
             $this->idorder->EditAttrs["class"] = "form-control";
@@ -1411,10 +1339,6 @@ class InvoiceAdd extends Invoice
             $this->tglinvoice->LinkCustomAttributes = "";
             $this->tglinvoice->HrefValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-
             // idorder
             $this->idorder->LinkCustomAttributes = "";
             if (!EmptyValue($this->idorder->CurrentValue)) {
@@ -1490,11 +1414,6 @@ class InvoiceAdd extends Invoice
         }
         if (!CheckDate($this->tglinvoice->FormValue)) {
             $this->tglinvoice->addErrorMessage($this->tglinvoice->getErrorMessage(false));
-        }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
-            }
         }
         if ($this->idorder->Required) {
             if (!$this->idorder->IsDetailKey && EmptyValue($this->idorder->FormValue)) {
@@ -1653,9 +1572,6 @@ class InvoiceAdd extends Invoice
         // tglinvoice
         $this->tglinvoice->setDbValueDef($rsnew, UnFormatDateTime($this->tglinvoice->CurrentValue, 0), CurrentDate(), false);
 
-        // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
-
         // idorder
         $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, false);
 
@@ -1686,6 +1602,11 @@ class InvoiceAdd extends Invoice
         // id
         if ($this->id->getSessionValue() != "") {
             $rsnew['id'] = $this->id->getSessionValue();
+        }
+
+        // idcustomer
+        if ($this->idcustomer->getSessionValue() != "") {
+            $rsnew['idcustomer'] = $this->idcustomer->getSessionValue();
         }
 
         // Call Row Inserting event

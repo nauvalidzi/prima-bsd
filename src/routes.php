@@ -567,8 +567,6 @@ return function (App $app) {
     $app->any('/OrderDetailList[/{id}]', OrderDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('OrderDetailList-order_detail-list'); // list
     $app->any('/OrderDetailAdd[/{id}]', OrderDetailController::class . ':add')->add(PermissionMiddleware::class)->setName('OrderDetailAdd-order_detail-add'); // add
     $app->any('/OrderDetailView[/{id}]', OrderDetailController::class . ':view')->add(PermissionMiddleware::class)->setName('OrderDetailView-order_detail-view'); // view
-    $app->any('/OrderDetailEdit[/{id}]', OrderDetailController::class . ':edit')->add(PermissionMiddleware::class)->setName('OrderDetailEdit-order_detail-edit'); // edit
-    $app->any('/OrderDetailDelete[/{id}]', OrderDetailController::class . ':delete')->add(PermissionMiddleware::class)->setName('OrderDetailDelete-order_detail-delete'); // delete
     $app->any('/OrderDetailPreview', OrderDetailController::class . ':preview')->add(PermissionMiddleware::class)->setName('OrderDetailPreview-order_detail-preview'); // preview
     $app->group(
         '/order_detail',
@@ -576,8 +574,6 @@ return function (App $app) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', OrderDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('order_detail/list-order_detail-list-2'); // list
             $group->any('/' . Config("ADD_ACTION") . '[/{id}]', OrderDetailController::class . ':add')->add(PermissionMiddleware::class)->setName('order_detail/add-order_detail-add-2'); // add
             $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', OrderDetailController::class . ':view')->add(PermissionMiddleware::class)->setName('order_detail/view-order_detail-view-2'); // view
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', OrderDetailController::class . ':edit')->add(PermissionMiddleware::class)->setName('order_detail/edit-order_detail-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', OrderDetailController::class . ':delete')->add(PermissionMiddleware::class)->setName('order_detail/delete-order_detail-delete-2'); // delete
             $group->any('/' . Config("PREVIEW_ACTION") . '', OrderDetailController::class . ':preview')->add(PermissionMiddleware::class)->setName('order_detail/preview-order_detail-preview-2'); // preview
         }
     );

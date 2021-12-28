@@ -115,10 +115,10 @@ class Invoice extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_do_stock', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_do_stock', false, 'idcustomer', ["kodecustomer","namacustomer","",""], [], ["x_idorder"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -134,10 +134,10 @@ class Invoice extends DbTable
         $this->idorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","tanggalpo","",""], ["x_idcustomer"], ["invoice_detail x_idorder_detail"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","tanggalpo","",""], [], ["invoice_detail x_idorder_detail"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","tanggalpo","",""], ["x_idcustomer"], ["invoice_detail x_idorder_detail"], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idorder->Lookup = new Lookup('idorder', 'v_stock', true, 'idorder', ["kodepo","tanggalpo","",""], [], ["invoice_detail x_idorder_detail"], [], [], [], [], '', '');
                 break;
         }
         $this->idorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1262,7 +1262,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
                     return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                 };
@@ -1538,7 +1538,7 @@ SORTHTML;
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
                         return (CurrentPageID() == "add") ? "jumlah > 0" : "";
                     };
