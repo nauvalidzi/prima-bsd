@@ -318,7 +318,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Pembayaran");
+    $(".ew-add-edit").html("Add Pembayaran");
 });
 </script>
 <?php } ?>
