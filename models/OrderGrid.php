@@ -510,12 +510,14 @@ class OrderGrid extends Order
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idbrand->Visible = false;
+        $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
         $this->keterangan->Visible = false;
+        $this->catatan->Visible = false;
+        $this->aktif->Visible = false;
+        $this->status->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
-        $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -954,6 +956,9 @@ class OrderGrid extends Order
         if ($CurrentForm->hasValue("x_idcustomer") && $CurrentForm->hasValue("o_idcustomer") && $this->idcustomer->CurrentValue != $this->idcustomer->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_idbrand") && $CurrentForm->hasValue("o_idbrand") && $this->idbrand->CurrentValue != $this->idbrand->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1039,6 +1044,7 @@ class OrderGrid extends Order
         $this->tanggal->clearErrorMessage();
         $this->idpegawai->clearErrorMessage();
         $this->idcustomer->clearErrorMessage();
+        $this->idbrand->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1127,12 +1133,6 @@ class OrderGrid extends Order
         $item->Visible = $Security->canView();
         $item->OnLeft = false;
 
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
-
         // "delete"
         $item = &$this->ListOptions->add("delete");
         $item->CssClass = "text-nowrap";
@@ -1213,15 +1213,6 @@ class OrderGrid extends Order
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView() && $this->showOptionLink("view")) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "edit"
-            $opt = $this->ListOptions["edit"];
-            $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
@@ -1319,11 +1310,6 @@ class OrderGrid extends Order
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'order')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
             $btngrp .= "</div>";
             if ($link != "") {
                 $btngrps .= $btngrp;
@@ -1392,13 +1378,17 @@ class OrderGrid extends Order
         $this->dokumen->Upload->Index = $this->RowIndex;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
+        $this->catatan->CurrentValue = null;
+        $this->catatan->OldValue = $this->catatan->CurrentValue;
+        $this->aktif->CurrentValue = 1;
+        $this->aktif->OldValue = $this->aktif->CurrentValue;
+        $this->status->CurrentValue = null;
+        $this->status->OldValue = $this->status->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->created_by->CurrentValue = CurrentUserID();
         $this->created_by->OldValue = $this->created_by->CurrentValue;
-        $this->aktif->CurrentValue = 1;
-        $this->aktif->OldValue = $this->aktif->CurrentValue;
-        $this->readonly->CurrentValue = null;
+        $this->readonly->CurrentValue = 0;
         $this->readonly->OldValue = $this->readonly->CurrentValue;
     }
 
@@ -1462,6 +1452,19 @@ class OrderGrid extends Order
             $this->idcustomer->setOldValue($CurrentForm->getValue("o_idcustomer"));
         }
 
+        // Check field name 'idbrand' first before field var 'x_idbrand'
+        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
+        if (!$this->idbrand->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idbrand->Visible = false; // Disable update for API request
+            } else {
+                $this->idbrand->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_idbrand")) {
+            $this->idbrand->setOldValue($CurrentForm->getValue("o_idbrand"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1481,6 +1484,7 @@ class OrderGrid extends Order
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 7);
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
     }
 
     // Load recordset
@@ -1561,9 +1565,11 @@ class OrderGrid extends Order
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
         $this->dokumen->Upload->Index = $this->RowIndex;
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->catatan->setDbValue($row['catatan']);
+        $this->aktif->setDbValue($row['aktif']);
+        $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1580,9 +1586,11 @@ class OrderGrid extends Order
         $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['dokumen'] = $this->dokumen->Upload->DbValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
+        $row['catatan'] = $this->catatan->CurrentValue;
+        $row['aktif'] = $this->aktif->CurrentValue;
+        $row['status'] = $this->status->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['created_by'] = $this->created_by->CurrentValue;
-        $row['aktif'] = $this->aktif->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
         return $row;
     }
@@ -1635,14 +1643,17 @@ class OrderGrid extends Order
 
         // keterangan
 
+        // catatan
+
+        // aktif
+
+        // status
+
         // created_at
 
         // created_by
 
-        // aktif
-
         // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1736,6 +1747,18 @@ class OrderGrid extends Order
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
@@ -1746,13 +1769,13 @@ class OrderGrid extends Order
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -1773,6 +1796,11 @@ class OrderGrid extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -1871,6 +1899,31 @@ class OrderGrid extends Order
                 $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
             }
 
+            // idbrand
+            $this->idbrand->EditAttrs["class"] = "form-control";
+            $this->idbrand->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+            } else {
+                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idbrand->ViewValue !== null) { // Load from cache
+                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`idbrand`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idbrand->EditValue = $arwrk;
+            }
+            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+
             // Add refer script
 
             // kode
@@ -1888,6 +1941,10 @@ class OrderGrid extends Order
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -1952,6 +2009,29 @@ class OrderGrid extends Order
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
+            // idbrand
+            $this->idbrand->EditAttrs["class"] = "form-control";
+            $this->idbrand->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->EditValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->EditValue === null) { // Lookup from database
+                    $filterWrk = "`idbrand`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->EditValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->EditValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->EditValue = null;
+            }
+            $this->idbrand->ViewCustomAttributes = "";
+
             // Edit refer script
 
             // kode
@@ -1973,6 +2053,11 @@ class OrderGrid extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2011,6 +2096,11 @@ class OrderGrid extends Order
         if ($this->idcustomer->Required) {
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
+        }
+        if ($this->idbrand->Required) {
+            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
+                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
             }
         }
 
@@ -2207,6 +2297,9 @@ class OrderGrid extends Order
         // idcustomer
         $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
+        // idbrand
+        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
+
         // created_by
         if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
             $rsnew['created_by'] = CurrentUserID();
@@ -2268,7 +2361,6 @@ class OrderGrid extends Order
         $masterTblVar = $this->getCurrentMasterTable();
         if ($masterTblVar == "customer") {
             $masterTbl = Container("customer");
-            $this->idcustomer->Visible = false;
             if ($masterTbl->EventCancelled) {
                 $this->EventCancelled = true;
             }
@@ -2301,6 +2393,8 @@ class OrderGrid extends Order
                 case "x_idbrand":
                     break;
                 case "x_aktif":
+                    break;
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";

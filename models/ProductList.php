@@ -576,7 +576,6 @@ class ProductList extends Product
         $this->idjenisbarang->Visible = false;
         $this->idkualitasbarang->Visible = false;
         $this->idproduct_acuan->Visible = false;
-        $this->idkemasanbarang->Visible = false;
         $this->ukuran->setVisibility();
         $this->netto->Visible = false;
         $this->kemasanbarang->setVisibility();
@@ -623,11 +622,7 @@ class ProductList extends Product
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idbrand);
-        $this->setupLookupOptions($this->idkategoribarang);
-        $this->setupLookupOptions($this->idjenisbarang);
-        $this->setupLookupOptions($this->idkualitasbarang);
         $this->setupLookupOptions($this->idproduct_acuan);
-        $this->setupLookupOptions($this->idkemasanbarang);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -1675,7 +1670,6 @@ class ProductList extends Product
                 $this->idjenisbarang->setSort("");
                 $this->idkualitasbarang->setSort("");
                 $this->idproduct_acuan->setSort("");
-                $this->idkemasanbarang->setSort("");
                 $this->ukuran->setSort("");
                 $this->netto->setSort("");
                 $this->kemasanbarang->setSort("");
@@ -2296,7 +2290,6 @@ class ProductList extends Product
         $this->idjenisbarang->setDbValue($row['idjenisbarang']);
         $this->idkualitasbarang->setDbValue($row['idkualitasbarang']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
-        $this->idkemasanbarang->setDbValue($row['idkemasanbarang']);
         $this->ukuran->setDbValue($row['ukuran']);
         $this->netto->setDbValue($row['netto']);
         $this->kemasanbarang->setDbValue($row['kemasanbarang']);
@@ -2327,7 +2320,6 @@ class ProductList extends Product
         $row['idjenisbarang'] = null;
         $row['idkualitasbarang'] = null;
         $row['idproduct_acuan'] = null;
-        $row['idkemasanbarang'] = null;
         $row['ukuran'] = null;
         $row['netto'] = null;
         $row['kemasanbarang'] = null;
@@ -2396,9 +2388,6 @@ class ProductList extends Product
 
         // idproduct_acuan
 
-        // idkemasanbarang
-        $this->idkemasanbarang->CellCssStyle = "white-space: nowrap;";
-
         // ukuran
 
         // netto
@@ -2465,66 +2454,17 @@ class ProductList extends Product
             $this->nama->ViewCustomAttributes = "";
 
             // idkategoribarang
-            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
-            if ($curVal != "") {
-                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
-                if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
-                    } else {
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idkategoribarang->ViewValue = null;
-            }
+            $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
             $this->idkategoribarang->ViewCustomAttributes = "";
 
             // idjenisbarang
-            $curVal = trim(strval($this->idjenisbarang->CurrentValue));
-            if ($curVal != "") {
-                $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
-                if ($this->idjenisbarang->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idjenisbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idjenisbarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idjenisbarang->ViewValue = $this->idjenisbarang->displayValue($arwrk);
-                    } else {
-                        $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idjenisbarang->ViewValue = null;
-            }
+            $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
+            $this->idjenisbarang->ViewValue = FormatNumber($this->idjenisbarang->ViewValue, 0, -2, -2, -2);
             $this->idjenisbarang->ViewCustomAttributes = "";
 
             // idkualitasbarang
-            $curVal = trim(strval($this->idkualitasbarang->CurrentValue));
-            if ($curVal != "") {
-                $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->lookupCacheOption($curVal);
-                if ($this->idkualitasbarang->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idkualitasbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkualitasbarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->displayValue($arwrk);
-                    } else {
-                        $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idkualitasbarang->ViewValue = null;
-            }
+            $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->CurrentValue;
+            $this->idkualitasbarang->ViewValue = FormatNumber($this->idkualitasbarang->ViewValue, 0, -2, -2, -2);
             $this->idkualitasbarang->ViewCustomAttributes = "";
 
             // idproduct_acuan
@@ -2857,19 +2797,11 @@ class ProductList extends Product
             switch ($fld->FieldVar) {
                 case "x_idbrand":
                     break;
-                case "x_idkategoribarang":
-                    break;
-                case "x_idjenisbarang":
-                    break;
-                case "x_idkualitasbarang":
-                    break;
                 case "x_idproduct_acuan":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add") ? "idbrand = 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idkemasanbarang":
                     break;
                 case "x_ijinbpom":
                     break;

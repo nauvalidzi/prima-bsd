@@ -467,7 +467,7 @@ class AplikasibarangEdit extends Aplikasibarang
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -649,6 +649,12 @@ class AplikasibarangEdit extends Aplikasibarang
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
+
         // Check field name 'value' first before field var 'x_value'
         $val = $CurrentForm->hasValue("value") ? $CurrentForm->getValue("value") : $CurrentForm->getValue("x_value");
         if (!$this->value->IsDetailKey) {
@@ -657,12 +663,6 @@ class AplikasibarangEdit extends Aplikasibarang
             } else {
                 $this->value->setFormValue($val);
             }
-        }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
         }
     }
 
@@ -774,11 +774,22 @@ class AplikasibarangEdit extends Aplikasibarang
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // value
             $this->value->LinkCustomAttributes = "";
             $this->value->HrefValue = "";
             $this->value->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
             // value
             $this->value->EditAttrs["class"] = "form-control";
             $this->value->EditCustomAttributes = "";
@@ -789,6 +800,10 @@ class AplikasibarangEdit extends Aplikasibarang
             $this->value->PlaceHolder = RemoveHtml($this->value->caption());
 
             // Edit refer script
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
 
             // value
             $this->value->LinkCustomAttributes = "";
@@ -812,6 +827,11 @@ class AplikasibarangEdit extends Aplikasibarang
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
         }
         if ($this->value->Required) {
             if (!$this->value->IsDetailKey && EmptyValue($this->value->FormValue)) {

@@ -600,8 +600,8 @@ loadjs.ready(["fnpd_termsgrid", "datetimepicker"], function() {
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_terms_sifat_order" class="form-group">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_914054" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
-    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_914054"></label>
+    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_806318" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
+    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_806318"></label>
 </div>
 <div class="invalid-feedback"><?= $Grid->sifat_order->getErrorMessage() ?></div>
 </span>
@@ -610,8 +610,8 @@ loadjs.ready(["fnpd_termsgrid", "datetimepicker"], function() {
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_terms_sifat_order" class="form-group">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_738776" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
-    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_738776"></label>
+    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_463878" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
+    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_463878"></label>
 </div>
 <div class="invalid-feedback"><?= $Grid->sifat_order->getErrorMessage() ?></div>
 </span>
@@ -1813,8 +1813,8 @@ loadjs.ready(["fnpd_termsgrid", "datetimepicker"], function() {
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_npd_terms_sifat_order" class="form-group npd_terms_sifat_order">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_609731" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
-    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_609731"></label>
+    <input type="checkbox" class="custom-control-input<?= $Grid->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x<?= $Grid->RowIndex ?>_sifat_order[]" id="x<?= $Grid->RowIndex ?>_sifat_order_130900" value="1"<?= ConvertToBool($Grid->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Grid->sifat_order->editAttributes() ?>>
+    <label class="custom-control-label" for="x<?= $Grid->RowIndex ?>_sifat_order_130900"></label>
 </div>
 <div class="invalid-feedback"><?= $Grid->sifat_order->getErrorMessage() ?></div>
 </span>

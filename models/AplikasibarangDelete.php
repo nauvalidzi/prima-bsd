@@ -374,7 +374,7 @@ class AplikasibarangDelete extends Aplikasibarang
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -574,6 +574,11 @@ class AplikasibarangDelete extends Aplikasibarang
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // value
             $this->value->LinkCustomAttributes = "";

@@ -44,6 +44,9 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
+<?php if ($Page->id->Visible) { // id ?>
+        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_aplikasibarang_id" class="aplikasibarang_id"><?= $Page->id->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->value->Visible) { // value ?>
         <th class="<?= $Page->value->headerCellClass() ?>"><span id="elh_aplikasibarang_value" class="aplikasibarang_value"><?= $Page->value->caption() ?></span></th>
 <?php } ?>
@@ -68,6 +71,14 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
+<?php if ($Page->id->Visible) { // id ?>
+        <td <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_aplikasibarang_id" class="aplikasibarang_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->value->Visible) { // value ?>
         <td <?= $Page->value->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_aplikasibarang_value" class="aplikasibarang_value">

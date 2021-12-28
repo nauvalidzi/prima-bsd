@@ -386,8 +386,10 @@ function addStock($idorderdetail, $jumlah) {
 function checkCloseOrder($idOrderDetail) {
 	$data = ExecuteRow("SELECT idorder, sisa FROM order_detail WHERE id=".$idOrderDetail);
 	$update = ExecuteUpdate("UPDATE order_detail SET aktif=".($data['sisa'] > 0 ? 1 : 0)." WHERE id=".$idOrderDetail);
-	$orderAktif = ExecuteScalar("SELECT COUNT(id) FROM order_detail WHERE aktif=1 and idorder=".$data['idorder']);
-	$update = ExecuteUpdate("UPDATE `order` SET aktif=".($orderAktif > 0 ? 1 : 0)." WHERE id=".$data['idorder']);
+
+	//$orderAktif = ExecuteScalar("SELECT COUNT(id) FROM order_detail WHERE aktif=1 and idorder=".$data['idorder']);
+
+	//$update = ExecuteUpdate("UPDATE `order` SET aktif=".($orderAktif > 0 ? 1 : 0)." WHERE id=".$data['idorder']);
 }
 
 // dipanggil di invoice_detail, redeem_bonus
@@ -906,20 +908,64 @@ $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$respons
     }
     ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
 };
-$API_ACTIONS['force-database'] = function(Request $request, Response &$response) {
-    $json = file_get_contents('php://input');
-    $data = json_decode($json, true);
-    $conn = mysqli_connect('localhost', 'root', '', 'tes');
-    if (!$conn) {
-        die('Connection failed: ' . $conn->connect_error);
-    }
-    $status = true;
-    foreach ($data as $table => $contents) {
-        $query = mysqli_query($conn, "INSERT INTO {$table} (".implode(',',array_keys($contents)).") VALUES ('".implode("','", array_values($contents))."')");
-        if (!$query) $status = false;
-    }
-    WriteJson(['status' => $status]);
-};
 $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
-    WriteJson(['status' => true]);
+    $json = curl_get("http://3.141.200.40/sinergi/api/?action=sync-delivery-order");
+    $data = json_decode($json, true);
+    $status = true;
+    $check = [];
+    foreach($data['data'] as $row) {
+        $exists = ExecuteRow("SELECT COUNT(*) FROM deliveryorder ded JOIN deliveryorder_detail dedd ON dedd.iddeliveryorder = ded.id JOIN `order` o ON o.id = dedd.idorder JOIN order_detail od ON od.id = dedd.idorder_detail JOIN product p ON p.id = od.idproduct WHERE ded.kode = '{$row['no_suratjalan']}' AND ded.tanggal = '{$row['tgl_kirim']}' AND p.kode = '{$row['kode_barang']}' AND o.kode = '{$row['kode_penjualan']}'");
+        $order = ExecuteRow("SELECT od.id as idorderdetail, idorder, jumlah + bonus as totalorder FROM order_detail od JOIN `order` o ON o.id = od.idorder JOIN product p ON p.id = od.idproduct WHERE o.kode = '{$row['kode_penjualan']}' AND p.kode = '{$row['kode_barang']}'");
+        if ($exists > 0 && $order) {
+            $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
+            if (!$delivery) {
+                $do = Execute("INSERT INTO deliveryorder (kode, tanggal, created_at, readonly) VALUES ('{$row['no_suratjalan']}', '{$row['tgl_kirim']}', '".date('Y-m-d H:i:s')."', 1)");
+                $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
+            }
+            $sisa = $order['totalorder'] - $row['jumlah_kirim'];
+            $delivery_detail = Execute("INSERT INTO deliveryorder_detail (iddeliveryorder, idorder, idorder_detail, totalorder, jumlahkirim, sisa) VALUES ({$delivery}, {$order['idorder']}, {$order['idorderdetail']}, {$order['totalorder']}, {$row['jumlah_kirim']}, {$sisa})");
+            if (!$delivery || !$delivery_detail) {
+                $check[] = false;
+            }
+        }
+    }
+    if (in_array(false, $check)) {
+        $status = false;
+    }
+    WriteJson(['status' => $status, 'rows' => count($check) . ' row(s) updated!']);
 };
+$API_ACTIONS['sync-order-sip'] = function(Request $request, Response &$response) {
+    $json = curl_get("http://3.141.200.40/sinergi/api/?action=sync-bsd-order");
+    $data = json_decode($json, true);
+    $status = true;
+    $check = [];
+    foreach($data['data'] as $row) {
+        $order = ExecuteRow("SELECT id, status FROM `order` WHERE kode = '{$row['no_penjualan']}'");
+        if ($order && $order['status'] != $row['status']) {
+            $update = ExecuteUpdate("UPDATE `order` SET `status` = '{$row['status']}', catatan = '{$row['catatan']}' WHERE id = {$order['id']}");
+            if (!$update) {
+                $check[] = false;
+            }
+        }
+    }
+    if (in_array(false, $check)) {
+        $status = false;
+    }
+    WriteJson(['status' => $status, 'rows' => count($check) . ' row(s) updated!']);
+};
+
+// OPSI 1 (URL DENGAN CALLBACK)
+// $API_ACTIONS['delivery_order'] = function(Request $request, Response &$response) {
+//     $json = file_get_contents('php://input');
+//     $data = json_decode($json, true);
+
+//     $status = true;
+//     $query = Execute("INSERT INTO deliveryorder (kode, tanggal, created_at) VALUES ('{$data['data'][0]['nomor']}', '{$data['data'][0]['tanggal']}', '".date('Y-m-d H:i:s')."')");
+//     $do = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$data['data'][0]['nomor']}'");
+
+//     foreach ($data['data'][0]['details'] as $row) {
+//         $order = ExecuteRow("SELECT od.id as idorderdetail, idorder, jumlah + bonus as totalorder FROM order_detail od JOIN `order` o ON o.id = od.idorder JOIN product p ON p.id = od.idproduct WHERE o.kode = '{$row['kode_penjualan']}' AND p.kode = '{$row['kode_produk']}'");
+//         $query = Execute("INSERT INTO deliveryorder_detail (iddeliveryorder, idorder, idorder_detail, totalorder, sisa, jumlahkirim) VALUES ({$do['id']}, {$order['idorder']}, {$order['idorderdetail']}, {$order['totalorder']}, {$row['jumlah_kirim']}, {$order['totalorder']} - {$row['jumlah_kirim']})");
+//     }
+//     WriteJson(['status' => $status]);
+// };

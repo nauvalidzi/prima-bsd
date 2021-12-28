@@ -45,13 +45,13 @@ $Page->showMessage();
 <input type="hidden" name="t" value="jenisbarang">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-    <tr id="r_idkategoribarang">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jenisbarang_idkategoribarang"><?= $Page->idkategoribarang->caption() ?></span></td>
-        <td data-name="idkategoribarang" <?= $Page->idkategoribarang->cellAttributes() ?>>
-<span id="el_jenisbarang_idkategoribarang">
-<span<?= $Page->idkategoribarang->viewAttributes() ?>>
-<?= $Page->idkategoribarang->getViewValue() ?></span>
+<?php if ($Page->id->Visible) { // id ?>
+    <tr id="r_id">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jenisbarang_id"><?= $Page->id->caption() ?></span></td>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el_jenisbarang_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -63,6 +63,17 @@ $Page->showMessage();
 <span id="el_jenisbarang_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
+    <tr id="r_idkategoribarang">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jenisbarang_idkategoribarang"><?= $Page->idkategoribarang->caption() ?></span></td>
+        <td data-name="idkategoribarang" <?= $Page->idkategoribarang->cellAttributes() ?>>
+<span id="el_jenisbarang_idkategoribarang">
+<span<?= $Page->idkategoribarang->viewAttributes() ?>>
+<?= $Page->idkategoribarang->getViewValue() ?></span>
 </span>
 </td>
     </tr>

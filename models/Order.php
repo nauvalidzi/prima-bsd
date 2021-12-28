@@ -36,9 +36,11 @@ class Order extends DbTable
     public $idbrand;
     public $dokumen;
     public $keterangan;
+    public $catatan;
+    public $aktif;
+    public $status;
     public $created_at;
     public $created_by;
-    public $aktif;
     public $readonly;
 
     // Page ID
@@ -170,19 +172,11 @@ class Order extends DbTable
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;
 
-        // created_at
-        $this->created_at = new DbField('order', 'order', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->created_at->Sortable = true; // Allow sort
-        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
-        $this->Fields['created_at'] = &$this->created_at;
-
-        // created_by
-        $this->created_by = new DbField('order', 'order', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
+        // catatan
+        $this->catatan = new DbField('order', 'order', 'x_catatan', 'catatan', '`catatan`', '`catatan`', 201, 65535, -1, false, '`catatan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->catatan->Sortable = true; // Allow sort
+        $this->catatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->catatan->Param, "CustomMsg");
+        $this->Fields['catatan'] = &$this->catatan;
 
         // aktif
         $this->aktif = new DbField('order', 'order', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'RADIO');
@@ -201,10 +195,39 @@ class Order extends DbTable
         $this->aktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktif->Param, "CustomMsg");
         $this->Fields['aktif'] = &$this->aktif;
 
+        // status
+        $this->status = new DbField('order', 'order', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->status->Sortable = true; // Allow sort
+        $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
+        $this->Fields['status'] = &$this->status;
+
+        // created_at
+        $this->created_at = new DbField('order', 'order', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at->Sortable = true; // Allow sort
+        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
+        $this->Fields['created_at'] = &$this->created_at;
+
+        // created_by
+        $this->created_by = new DbField('order', 'order', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
+        $this->created_by->Sortable = true; // Allow sort
+        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
+        $this->Fields['created_by'] = &$this->created_by;
+
         // readonly
-        $this->readonly = new DbField('order', 'order', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
+        $this->readonly = new DbField('order', 'order', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'RADIO');
         $this->readonly->Nullable = false; // NOT NULL field
-        $this->readonly->Sortable = false; // Allow sort
+        $this->readonly->Sortable = true; // Allow sort
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->readonly->Lookup = new Lookup('readonly', 'order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->readonly->Lookup = new Lookup('readonly', 'order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->readonly->OptionCount = 2;
         $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
         $this->Fields['readonly'] = &$this->readonly;
@@ -763,9 +786,11 @@ class Order extends DbTable
         $this->idbrand->DbValue = $row['idbrand'];
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->keterangan->DbValue = $row['keterangan'];
+        $this->catatan->DbValue = $row['catatan'];
+        $this->aktif->DbValue = $row['aktif'];
+        $this->status->DbValue = $row['status'];
         $this->created_at->DbValue = $row['created_at'];
         $this->created_by->DbValue = $row['created_by'];
-        $this->aktif->DbValue = $row['aktif'];
         $this->readonly->DbValue = $row['readonly'];
     }
 
@@ -1114,9 +1139,11 @@ SORTHTML;
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->catatan->setDbValue($row['catatan']);
+        $this->aktif->setDbValue($row['aktif']);
+        $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1146,14 +1173,17 @@ SORTHTML;
 
         // keterangan
 
+        // catatan
+
+        // aktif
+
+        // status
+
         // created_at
 
         // created_by
 
-        // aktif
-
         // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1247,6 +1277,22 @@ SORTHTML;
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
         $this->keterangan->ViewCustomAttributes = "";
 
+        // catatan
+        $this->catatan->ViewValue = $this->catatan->CurrentValue;
+        $this->catatan->ViewCustomAttributes = "";
+
+        // aktif
+        if (strval($this->aktif->CurrentValue) != "") {
+            $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+        } else {
+            $this->aktif->ViewValue = null;
+        }
+        $this->aktif->ViewCustomAttributes = "";
+
+        // status
+        $this->status->ViewValue = $this->status->CurrentValue;
+        $this->status->ViewCustomAttributes = "";
+
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
@@ -1257,16 +1303,12 @@ SORTHTML;
         $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
         $this->created_by->ViewCustomAttributes = "";
 
-        // aktif
-        if (strval($this->aktif->CurrentValue) != "") {
-            $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
-        } else {
-            $this->aktif->ViewValue = null;
-        }
-        $this->aktif->ViewCustomAttributes = "";
-
         // readonly
-        $this->readonly->ViewValue = $this->readonly->CurrentValue;
+        if (strval($this->readonly->CurrentValue) != "") {
+            $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
+        } else {
+            $this->readonly->ViewValue = null;
+        }
         $this->readonly->ViewCustomAttributes = "";
 
         // id
@@ -1310,6 +1352,21 @@ SORTHTML;
         $this->keterangan->HrefValue = "";
         $this->keterangan->TooltipValue = "";
 
+        // catatan
+        $this->catatan->LinkCustomAttributes = "";
+        $this->catatan->HrefValue = "";
+        $this->catatan->TooltipValue = "";
+
+        // aktif
+        $this->aktif->LinkCustomAttributes = "";
+        $this->aktif->HrefValue = "";
+        $this->aktif->TooltipValue = "";
+
+        // status
+        $this->status->LinkCustomAttributes = "";
+        $this->status->HrefValue = "";
+        $this->status->TooltipValue = "";
+
         // created_at
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
@@ -1319,11 +1376,6 @@ SORTHTML;
         $this->created_by->LinkCustomAttributes = "";
         $this->created_by->HrefValue = "";
         $this->created_by->TooltipValue = "";
-
-        // aktif
-        $this->aktif->LinkCustomAttributes = "";
-        $this->aktif->HrefValue = "";
-        $this->aktif->TooltipValue = "";
 
         // readonly
         $this->readonly->LinkCustomAttributes = "";
@@ -1455,6 +1507,26 @@ SORTHTML;
         $this->keterangan->EditValue = $this->keterangan->CurrentValue;
         $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
+        // catatan
+        $this->catatan->EditAttrs["class"] = "form-control";
+        $this->catatan->EditCustomAttributes = "";
+        $this->catatan->EditValue = $this->catatan->CurrentValue;
+        $this->catatan->PlaceHolder = RemoveHtml($this->catatan->caption());
+
+        // aktif
+        $this->aktif->EditCustomAttributes = "readonly";
+        $this->aktif->EditValue = $this->aktif->options(false);
+        $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
+
+        // status
+        $this->status->EditAttrs["class"] = "form-control";
+        $this->status->EditCustomAttributes = "";
+        if (!$this->status->Raw) {
+            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+        }
+        $this->status->EditValue = $this->status->CurrentValue;
+        $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
@@ -1465,14 +1537,10 @@ SORTHTML;
         $this->created_by->EditAttrs["class"] = "form-control";
         $this->created_by->EditCustomAttributes = "";
 
-        // aktif
-        $this->aktif->EditCustomAttributes = "readonly";
-        $this->aktif->EditValue = $this->aktif->options(false);
-        $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
-
         // readonly
-        $this->readonly->EditAttrs["class"] = "form-control";
-        $this->readonly->EditCustomAttributes = "";
+        $this->readonly->EditCustomAttributes = "readonly";
+        $this->readonly->EditValue = $this->readonly->options(false);
+        $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1509,6 +1577,8 @@ SORTHTML;
                     $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->dokumen);
                     $doc->exportCaption($this->keterangan);
+                    $doc->exportCaption($this->catatan);
+                    $doc->exportCaption($this->status);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
@@ -1518,9 +1588,11 @@ SORTHTML;
                     $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->dokumen);
                     $doc->exportCaption($this->keterangan);
+                    $doc->exportCaption($this->aktif);
+                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->created_by);
-                    $doc->exportCaption($this->aktif);
+                    $doc->exportCaption($this->readonly);
                 }
                 $doc->endExportRow();
             }
@@ -1557,6 +1629,8 @@ SORTHTML;
                         $doc->exportField($this->idbrand);
                         $doc->exportField($this->dokumen);
                         $doc->exportField($this->keterangan);
+                        $doc->exportField($this->catatan);
+                        $doc->exportField($this->status);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);
@@ -1566,9 +1640,11 @@ SORTHTML;
                         $doc->exportField($this->idbrand);
                         $doc->exportField($this->dokumen);
                         $doc->exportField($this->keterangan);
+                        $doc->exportField($this->aktif);
+                        $doc->exportField($this->status);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->created_by);
-                        $doc->exportField($this->aktif);
+                        $doc->exportField($this->readonly);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1835,7 +1911,7 @@ SORTHTML;
             'status' => 'Send',
             'idkonsumen' => $konsumen['id'], // get from pabrik,
             'idpegawai' => 76, // idpegawai user bsd di SIP
-            'keterangan' => $rsnew['keterangan']
+            //'keterangan' => $rsnew['keterangan']
         ];
         $penjualan = curl_post(url_integrasi() . "?action=add&object=penjualan", json_encode($orders), $url_auth);
         $sip_penjualan = json_decode($penjualan, true)['penjualan'];

@@ -176,20 +176,10 @@ class NpdHarga extends DbTable
         $this->Fields['viskositasbarang'] = &$this->viskositasbarang;
 
         // idaplikasibarang
-        $this->idaplikasibarang = new DbField('npd_harga', 'npd_harga', 'x_idaplikasibarang', 'idaplikasibarang', '`idaplikasibarang`', '`idaplikasibarang`', 3, 11, -1, false, '`idaplikasibarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idaplikasibarang = new DbField('npd_harga', 'npd_harga', 'x_idaplikasibarang', 'idaplikasibarang', '`idaplikasibarang`', '`idaplikasibarang`', 3, 11, -1, false, '`idaplikasibarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idaplikasibarang->Nullable = false; // NOT NULL field
         $this->idaplikasibarang->Required = true; // Required field
         $this->idaplikasibarang->Sortable = true; // Allow sort
-        $this->idaplikasibarang->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idaplikasibarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idaplikasibarang->Lookup = new Lookup('idaplikasibarang', 'aplikasibarang', false, 'id', ["value","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idaplikasibarang->Lookup = new Lookup('idaplikasibarang', 'aplikasibarang', false, 'id', ["value","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->idaplikasibarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idaplikasibarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idaplikasibarang->Param, "CustomMsg");
         $this->Fields['idaplikasibarang'] = &$this->idaplikasibarang;
@@ -1517,24 +1507,8 @@ SORTHTML;
         $this->viskositasbarang->ViewCustomAttributes = "";
 
         // idaplikasibarang
-        $curVal = trim(strval($this->idaplikasibarang->CurrentValue));
-        if ($curVal != "") {
-            $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->lookupCacheOption($curVal);
-            if ($this->idaplikasibarang->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idaplikasibarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idaplikasibarang->Lookup->renderViewRow($rswrk[0]);
-                    $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->displayValue($arwrk);
-                } else {
-                    $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->CurrentValue;
-                }
-            }
-        } else {
-            $this->idaplikasibarang->ViewValue = null;
-        }
+        $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->CurrentValue;
+        $this->idaplikasibarang->ViewValue = FormatNumber($this->idaplikasibarang->ViewValue, 0, -2, -2, -2);
         $this->idaplikasibarang->ViewCustomAttributes = "";
 
         // ukuranwadah
@@ -1989,6 +1963,7 @@ SORTHTML;
         // idaplikasibarang
         $this->idaplikasibarang->EditAttrs["class"] = "form-control";
         $this->idaplikasibarang->EditCustomAttributes = "";
+        $this->idaplikasibarang->EditValue = $this->idaplikasibarang->CurrentValue;
         $this->idaplikasibarang->PlaceHolder = RemoveHtml($this->idaplikasibarang->caption());
 
         // ukuranwadah

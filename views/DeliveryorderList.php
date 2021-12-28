@@ -144,9 +144,6 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->lampiran->Visible) { // lampiran ?>
         <th data-name="lampiran" class="<?= $Page->lampiran->headerCellClass() ?>"><div id="elh_deliveryorder_lampiran" class="deliveryorder_lampiran"><?= $Page->renderSort($Page->lampiran) ?></div></th>
 <?php } ?>
-<?php if ($Page->suratjalan->Visible) { // suratjalan ?>
-        <th data-name="suratjalan" class="<?= $Page->suratjalan->headerCellClass() ?>"><div id="elh_deliveryorder_suratjalan" class="deliveryorder_suratjalan"><?= $Page->renderSort($Page->suratjalan) ?></div></th>
-<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -239,14 +236,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->suratjalan->Visible) { // suratjalan ?>
-        <td data-name="suratjalan" <?= $Page->suratjalan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_deliveryorder_suratjalan">
-<span<?= $Page->suratjalan->viewAttributes() ?>>
-<?= $Page->suratjalan->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
 <?php
 // Render list options (body, right)
 $Page->ListOptions->render("body", "right", $Page->RowCount);
@@ -308,7 +297,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Delivery Order"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-delivery-order" title="Synchronize Delivery Order">Sync Delivery Order</button></div>'),$(".sync-delivery-order").click((function(){$.get("api/sync-do-sip",(function(e){!1!==e.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
+    $(".ew-detail-add-group").html("Add Delivery Order"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-delivery-order" title="Synchronize Data Delivery Orders"><i class="fas fa-sync-alt"></i></button></div>'),$(".sync-delivery-order").click((function(){$.get("api/sync-do-sip",(function(t){!1!==t.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

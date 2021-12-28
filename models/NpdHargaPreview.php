@@ -450,7 +450,6 @@ class NpdHargaPreview extends NpdHarga
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
-        $this->setupLookupOptions($this->idaplikasibarang);
 
         // Load filter
         $filter = Get("f", "");
@@ -823,8 +822,6 @@ class NpdHargaPreview extends NpdHarga
                         return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idaplikasibarang":
                     break;
                 case "x_segel":
                     break;

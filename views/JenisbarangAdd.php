@@ -20,8 +20,8 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.jenisbarang)
         ew.vars.tables.jenisbarang = currentTable;
     fjenisbarangadd.addFields([
-        ["idkategoribarang", [fields.idkategoribarang.visible && fields.idkategoribarang.required ? ew.Validators.required(fields.idkategoribarang.caption) : null], fields.idkategoribarang.isInvalid],
-        ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid]
+        ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
+        ["idkategoribarang", [fields.idkategoribarang.visible && fields.idkategoribarang.required ? ew.Validators.required(fields.idkategoribarang.caption) : null, ew.Validators.integer], fields.idkategoribarang.isInvalid]
     ]);
 
     // Set invalid fields
@@ -88,7 +88,6 @@ loadjs.ready("head", function () {
     fjenisbarangadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fjenisbarangadd.lists.idkategoribarang = <?= $Page->idkategoribarang->toClientList($Page) ?>;
     loadjs.done("fjenisbarangadd");
 });
 </script>
@@ -111,39 +110,6 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-add-div"><!-- page* -->
-<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-    <div id="r_idkategoribarang" class="form-group row">
-        <label id="elh_jenisbarang_idkategoribarang" for="x_idkategoribarang" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkategoribarang->caption() ?><?= $Page->idkategoribarang->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkategoribarang->cellAttributes() ?>>
-<span id="el_jenisbarang_idkategoribarang">
-    <select
-        id="x_idkategoribarang"
-        name="x_idkategoribarang"
-        class="form-control ew-select<?= $Page->idkategoribarang->isInvalidClass() ?>"
-        data-select2-id="jenisbarang_x_idkategoribarang"
-        data-table="jenisbarang"
-        data-field="x_idkategoribarang"
-        data-value-separator="<?= $Page->idkategoribarang->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idkategoribarang->getPlaceHolder()) ?>"
-        <?= $Page->idkategoribarang->editAttributes() ?>>
-        <?= $Page->idkategoribarang->selectOptionListHtml("x_idkategoribarang") ?>
-    </select>
-    <?= $Page->idkategoribarang->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idkategoribarang->getErrorMessage() ?></div>
-<?= $Page->idkategoribarang->Lookup->getParamTag($Page, "p_x_idkategoribarang") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='jenisbarang_x_idkategoribarang']"),
-        options = { name: "x_idkategoribarang", selectId: "jenisbarang_x_idkategoribarang", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.jenisbarang.fields.idkategoribarang.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
     <div id="r_nama" class="form-group row">
         <label id="elh_jenisbarang_nama" for="x_nama" class="<?= $Page->LeftColumnClass ?>"><?= $Page->nama->caption() ?><?= $Page->nama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -152,6 +118,18 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->nama->getInputTextType() ?>" data-table="jenisbarang" data-field="x_nama" name="x_nama" id="x_nama" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->nama->getPlaceHolder()) ?>" value="<?= $Page->nama->EditValue ?>"<?= $Page->nama->editAttributes() ?> aria-describedby="x_nama_help">
 <?= $Page->nama->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->nama->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
+    <div id="r_idkategoribarang" class="form-group row">
+        <label id="elh_jenisbarang_idkategoribarang" for="x_idkategoribarang" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkategoribarang->caption() ?><?= $Page->idkategoribarang->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkategoribarang->cellAttributes() ?>>
+<span id="el_jenisbarang_idkategoribarang">
+<input type="<?= $Page->idkategoribarang->getInputTextType() ?>" data-table="jenisbarang" data-field="x_idkategoribarang" name="x_idkategoribarang" id="x_idkategoribarang" size="30" placeholder="<?= HtmlEncode($Page->idkategoribarang->getPlaceHolder()) ?>" value="<?= $Page->idkategoribarang->EditValue ?>"<?= $Page->idkategoribarang->editAttributes() ?> aria-describedby="x_idkategoribarang_help">
+<?= $Page->idkategoribarang->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idkategoribarang->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

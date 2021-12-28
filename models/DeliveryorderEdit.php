@@ -471,7 +471,6 @@ class DeliveryorderEdit extends Deliveryorder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
-        $this->suratjalan->setVisibility();
         $this->created_by->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
@@ -693,16 +692,6 @@ class DeliveryorderEdit extends Deliveryorder
             $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
         }
 
-        // Check field name 'suratjalan' first before field var 'x_suratjalan'
-        $val = $CurrentForm->hasValue("suratjalan") ? $CurrentForm->getValue("suratjalan") : $CurrentForm->getValue("x_suratjalan");
-        if (!$this->suratjalan->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->suratjalan->Visible = false; // Disable update for API request
-            } else {
-                $this->suratjalan->setFormValue($val);
-            }
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
@@ -719,7 +708,6 @@ class DeliveryorderEdit extends Deliveryorder
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
-        $this->suratjalan->CurrentValue = $this->suratjalan->FormValue;
     }
 
     /**
@@ -783,7 +771,6 @@ class DeliveryorderEdit extends Deliveryorder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -798,7 +785,6 @@ class DeliveryorderEdit extends Deliveryorder
         $row['kode'] = null;
         $row['tanggal'] = null;
         $row['lampiran'] = null;
-        $row['suratjalan'] = null;
         $row['created_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -842,8 +828,6 @@ class DeliveryorderEdit extends Deliveryorder
 
         // lampiran
 
-        // suratjalan
-
         // created_by
 
         // created_at
@@ -872,10 +856,6 @@ class DeliveryorderEdit extends Deliveryorder
                 $this->lampiran->ViewValue = "";
             }
             $this->lampiran->ViewCustomAttributes = "";
-
-            // suratjalan
-            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-            $this->suratjalan->ViewCustomAttributes = "";
 
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
@@ -907,11 +887,6 @@ class DeliveryorderEdit extends Deliveryorder
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
-
-            // suratjalan
-            $this->suratjalan->LinkCustomAttributes = "";
-            $this->suratjalan->HrefValue = "";
-            $this->suratjalan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -943,15 +918,6 @@ class DeliveryorderEdit extends Deliveryorder
                 RenderUploadField($this->lampiran);
             }
 
-            // suratjalan
-            $this->suratjalan->EditAttrs["class"] = "form-control";
-            $this->suratjalan->EditCustomAttributes = "";
-            if (!$this->suratjalan->Raw) {
-                $this->suratjalan->CurrentValue = HtmlDecode($this->suratjalan->CurrentValue);
-            }
-            $this->suratjalan->EditValue = HtmlEncode($this->suratjalan->CurrentValue);
-            $this->suratjalan->PlaceHolder = RemoveHtml($this->suratjalan->caption());
-
             // Edit refer script
 
             // kode
@@ -966,10 +932,6 @@ class DeliveryorderEdit extends Deliveryorder
             $this->lampiran->LinkCustomAttributes = "";
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
-
-            // suratjalan
-            $this->suratjalan->LinkCustomAttributes = "";
-            $this->suratjalan->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1006,11 +968,6 @@ class DeliveryorderEdit extends Deliveryorder
         if ($this->lampiran->Required) {
             if ($this->lampiran->Upload->FileName == "" && !$this->lampiran->Upload->KeepFile) {
                 $this->lampiran->addErrorMessage(str_replace("%s", $this->lampiran->caption(), $this->lampiran->RequiredErrorMessage));
-            }
-        }
-        if ($this->suratjalan->Required) {
-            if (!$this->suratjalan->IsDetailKey && EmptyValue($this->suratjalan->FormValue)) {
-                $this->suratjalan->addErrorMessage(str_replace("%s", $this->suratjalan->caption(), $this->suratjalan->RequiredErrorMessage));
             }
         }
 
@@ -1072,9 +1029,6 @@ class DeliveryorderEdit extends Deliveryorder
                     $rsnew['lampiran'] = $this->lampiran->Upload->FileName;
                 }
             }
-
-            // suratjalan
-            $this->suratjalan->setDbValueDef($rsnew, $this->suratjalan->CurrentValue, null, $this->suratjalan->ReadOnly);
             if ($this->lampiran->Visible && !$this->lampiran->Upload->KeepFile) {
                 $oldFiles = EmptyValue($this->lampiran->Upload->DbValue) ? [] : [$this->lampiran->htmlDecode($this->lampiran->Upload->DbValue)];
                 if (!EmptyValue($this->lampiran->Upload->FileName)) {

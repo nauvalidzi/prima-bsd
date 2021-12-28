@@ -532,7 +532,6 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
         $this->setupOtherOptions();
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idorder_detail);
 
         // Search filters
@@ -1575,28 +1574,8 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             $this->iddeliveryorder->ViewCustomAttributes = "";
 
             // idorder
-            $curVal = trim(strval($this->idorder->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-                if ($this->idorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                    } else {
-                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idorder->ViewValue = null;
-            }
+            $this->idorder->ViewValue = $this->idorder->CurrentValue;
+            $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
 
             // idorder_detail
@@ -1677,30 +1656,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             // idorder
             $this->idorder->EditAttrs["class"] = "form-control";
             $this->idorder->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idorder->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-            } else {
-                $this->idorder->ViewValue = $this->idorder->Lookup !== null && is_array($this->idorder->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idorder->ViewValue !== null) { // Load from cache
-                $this->idorder->EditValue = array_values($this->idorder->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`idorder`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idorder->EditValue = $arwrk;
-            }
+            $this->idorder->EditValue = HtmlEncode($this->idorder->CurrentValue);
             $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
             // idorder_detail
@@ -1775,30 +1731,7 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             // idorder
             $this->idorder->EditAttrs["class"] = "form-control";
             $this->idorder->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idorder->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-            } else {
-                $this->idorder->ViewValue = $this->idorder->Lookup !== null && is_array($this->idorder->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idorder->ViewValue !== null) { // Load from cache
-                $this->idorder->EditValue = array_values($this->idorder->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`idorder`" . SearchString("=", $this->idorder->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idorder->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idorder->EditValue = $arwrk;
-            }
+            $this->idorder->EditValue = HtmlEncode($this->idorder->CurrentValue);
             $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
             // idorder_detail
@@ -1895,6 +1828,9 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
             if (!$this->idorder->IsDetailKey && EmptyValue($this->idorder->FormValue)) {
                 $this->idorder->addErrorMessage(str_replace("%s", $this->idorder->caption(), $this->idorder->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->idorder->FormValue)) {
+            $this->idorder->addErrorMessage($this->idorder->getErrorMessage(false));
         }
         if ($this->idorder_detail->Required) {
             if (!$this->idorder_detail->IsDetailKey && EmptyValue($this->idorder_detail->FormValue)) {
@@ -2245,12 +2181,6 @@ class DeliveryorderDetailGrid extends DeliveryorderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idorder":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
                 case "x_idorder_detail":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" ) ? "aktif = 1" : "";

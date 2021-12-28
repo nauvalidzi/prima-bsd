@@ -472,9 +472,11 @@ class OrderAdd extends Order
         $this->idbrand->setVisibility();
         $this->dokumen->setVisibility();
         $this->keterangan->setVisibility();
+        $this->catatan->Visible = false;
+        $this->aktif->Visible = false;
+        $this->status->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->setVisibility();
-        $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -661,12 +663,15 @@ class OrderAdd extends Order
         $this->dokumen->CurrentValue = null; // Clear file related field
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
+        $this->catatan->CurrentValue = null;
+        $this->catatan->OldValue = $this->catatan->CurrentValue;
+        $this->aktif->CurrentValue = 1;
+        $this->status->CurrentValue = null;
+        $this->status->OldValue = $this->status->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->created_by->CurrentValue = CurrentUserID();
-        $this->aktif->CurrentValue = 1;
-        $this->readonly->CurrentValue = null;
-        $this->readonly->OldValue = $this->readonly->CurrentValue;
+        $this->readonly->CurrentValue = 0;
     }
 
     // Load form values
@@ -830,9 +835,11 @@ class OrderAdd extends Order
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->catatan->setDbValue($row['catatan']);
+        $this->aktif->setDbValue($row['aktif']);
+        $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -849,9 +856,11 @@ class OrderAdd extends Order
         $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['dokumen'] = $this->dokumen->Upload->DbValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
+        $row['catatan'] = $this->catatan->CurrentValue;
+        $row['aktif'] = $this->aktif->CurrentValue;
+        $row['status'] = $this->status->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['created_by'] = $this->created_by->CurrentValue;
-        $row['aktif'] = $this->aktif->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
         return $row;
     }
@@ -900,11 +909,15 @@ class OrderAdd extends Order
 
         // keterangan
 
+        // catatan
+
+        // aktif
+
+        // status
+
         // created_at
 
         // created_by
-
-        // aktif
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1000,6 +1013,18 @@ class OrderAdd extends Order
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
@@ -1010,13 +1035,13 @@ class OrderAdd extends Order
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -1667,6 +1692,8 @@ class OrderAdd extends Order
                 case "x_idbrand":
                     break;
                 case "x_aktif":
+                    break;
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";

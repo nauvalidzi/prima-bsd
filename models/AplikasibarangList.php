@@ -568,7 +568,7 @@ class AplikasibarangList extends Aplikasibarang
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -1088,6 +1088,7 @@ class AplikasibarangList extends Aplikasibarang
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->id); // id
             $this->updateSort($this->value); // value
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1596,6 +1597,11 @@ class AplikasibarangList extends Aplikasibarang
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // value
             $this->value->LinkCustomAttributes = "";

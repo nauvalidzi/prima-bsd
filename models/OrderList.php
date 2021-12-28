@@ -573,12 +573,14 @@ class OrderList extends Order
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idbrand->Visible = false;
+        $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
         $this->keterangan->Visible = false;
+        $this->catatan->Visible = false;
+        $this->aktif->Visible = false;
+        $this->status->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
-        $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -904,9 +906,11 @@ class OrderList extends Order
         $filterList = Concat($filterList, $this->idbrand->AdvancedSearch->toJson(), ","); // Field idbrand
         $filterList = Concat($filterList, $this->dokumen->AdvancedSearch->toJson(), ","); // Field dokumen
         $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
+        $filterList = Concat($filterList, $this->catatan->AdvancedSearch->toJson(), ","); // Field catatan
+        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
+        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
-        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1012,6 +1016,30 @@ class OrderList extends Order
         $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
         $this->keterangan->AdvancedSearch->save();
 
+        // Field catatan
+        $this->catatan->AdvancedSearch->SearchValue = @$filter["x_catatan"];
+        $this->catatan->AdvancedSearch->SearchOperator = @$filter["z_catatan"];
+        $this->catatan->AdvancedSearch->SearchCondition = @$filter["v_catatan"];
+        $this->catatan->AdvancedSearch->SearchValue2 = @$filter["y_catatan"];
+        $this->catatan->AdvancedSearch->SearchOperator2 = @$filter["w_catatan"];
+        $this->catatan->AdvancedSearch->save();
+
+        // Field aktif
+        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
+        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
+        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
+        $this->aktif->AdvancedSearch->save();
+
+        // Field status
+        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
+        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
+        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
+        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
+        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
+        $this->status->AdvancedSearch->save();
+
         // Field created_at
         $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
@@ -1027,14 +1055,6 @@ class OrderList extends Order
         $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
         $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
         $this->created_by->AdvancedSearch->save();
-
-        // Field aktif
-        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
-        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
-        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
-        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
-        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
-        $this->aktif->AdvancedSearch->save();
 
         // Field readonly
         $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
@@ -1054,6 +1074,8 @@ class OrderList extends Order
         $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->dokumen, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->keterangan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->catatan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->status, $arKeywords, $type);
         return $where;
     }
 
@@ -1220,6 +1242,7 @@ class OrderList extends Order
             $this->updateSort($this->tanggal); // tanggal
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->idbrand); // idbrand
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1279,9 +1302,11 @@ class OrderList extends Order
                 $this->idbrand->setSort("");
                 $this->dokumen->setSort("");
                 $this->keterangan->setSort("");
+                $this->catatan->setSort("");
+                $this->aktif->setSort("");
+                $this->status->setSort("");
                 $this->created_at->setSort("");
                 $this->created_by->setSort("");
-                $this->aktif->setSort("");
                 $this->readonly->setSort("");
             }
 
@@ -1306,12 +1331,6 @@ class OrderList extends Order
         $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
         $item->OnLeft = false;
 
         // "delete"
@@ -1405,15 +1424,6 @@ class OrderList extends Order
                 $opt->Body = "";
             }
 
-            // "edit"
-            $opt = $this->ListOptions["edit"];
-            $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
             // "delete"
             $opt = $this->ListOptions["delete"];
             if ($Security->canDelete() && $this->showOptionLink("delete")) {
@@ -1472,15 +1482,6 @@ class OrderList extends Order
                     $detailViewTblVar .= ",";
                 }
                 $detailViewTblVar .= "order_detail";
-            }
-            if ($detailPage->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'order')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
-                if ($detailEditTblVar != "") {
-                    $detailEditTblVar .= ",";
-                }
-                $detailEditTblVar .= "order_detail";
             }
             if ($links != "") {
                 $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -1743,11 +1744,6 @@ class OrderList extends Order
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'order')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
             $btngrp .= "</div>";
             if ($link != "") {
                 $btngrps .= $btngrp;
@@ -1877,9 +1873,11 @@ class OrderList extends Order
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->catatan->setDbValue($row['catatan']);
+        $this->aktif->setDbValue($row['aktif']);
+        $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1895,9 +1893,11 @@ class OrderList extends Order
         $row['idbrand'] = null;
         $row['dokumen'] = null;
         $row['keterangan'] = null;
+        $row['catatan'] = null;
+        $row['aktif'] = null;
+        $row['status'] = null;
         $row['created_at'] = null;
         $row['created_by'] = null;
-        $row['aktif'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -1952,14 +1952,17 @@ class OrderList extends Order
 
         // keterangan
 
+        // catatan
+
+        // aktif
+
+        // status
+
         // created_at
 
         // created_by
 
-        // aktif
-
         // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -2053,6 +2056,18 @@ class OrderList extends Order
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
@@ -2063,13 +2078,13 @@ class OrderList extends Order
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -2090,6 +2105,11 @@ class OrderList extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2257,6 +2277,8 @@ class OrderList extends Order
                     break;
                 case "x_aktif":
                     break;
+                case "x_readonly":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -2416,10 +2438,11 @@ class OrderList extends Order
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
         if ($this->readonly->CurrentValue == 1) {
-        	$this->ListOptions->Items["edit"]->Body = "";
+        	//$this->ListOptions->Items["edit"]->Body = "";
         	$this->ListOptions->Items["delete"]->Body = "";
         }
-        $this->ListOptions->Items["status"]->Body = status_orders($this->id->CurrentValue);
+        //$this->ListOptions->Items["status"]->Body = status_orders($this->id->CurrentValue);
+        $this->ListOptions->Items["status"]->Body = $this->status->CurrentValue == 'DO' ? 'Proses DO': $this->status->CurrentValue;
     }
 
     // Row Custom Action event

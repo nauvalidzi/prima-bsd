@@ -32,7 +32,6 @@ class Deliveryorder extends DbTable
     public $kode;
     public $tanggal;
     public $lampiran;
-    public $suratjalan;
     public $created_by;
     public $created_at;
     public $updated_at;
@@ -102,12 +101,6 @@ class Deliveryorder extends DbTable
         $this->lampiran->Sortable = true; // Allow sort
         $this->lampiran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->lampiran->Param, "CustomMsg");
         $this->Fields['lampiran'] = &$this->lampiran;
-
-        // suratjalan
-        $this->suratjalan = new DbField('deliveryorder', 'deliveryorder', 'x_suratjalan', 'suratjalan', '`suratjalan`', '`suratjalan`', 200, 50, -1, false, '`suratjalan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->suratjalan->Sortable = true; // Allow sort
-        $this->suratjalan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->suratjalan->Param, "CustomMsg");
-        $this->Fields['suratjalan'] = &$this->suratjalan;
 
         // created_by
         $this->created_by = new DbField('deliveryorder', 'deliveryorder', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
@@ -587,7 +580,6 @@ class Deliveryorder extends DbTable
         $this->kode->DbValue = $row['kode'];
         $this->tanggal->DbValue = $row['tanggal'];
         $this->lampiran->Upload->DbValue = $row['lampiran'];
-        $this->suratjalan->DbValue = $row['suratjalan'];
         $this->created_by->DbValue = $row['created_by'];
         $this->created_at->DbValue = $row['created_at'];
         $this->updated_at->DbValue = $row['updated_at'];
@@ -931,7 +923,6 @@ SORTHTML;
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -955,8 +946,6 @@ SORTHTML;
         // tanggal
 
         // lampiran
-
-        // suratjalan
 
         // created_by
 
@@ -987,10 +976,6 @@ SORTHTML;
             $this->lampiran->ViewValue = "";
         }
         $this->lampiran->ViewCustomAttributes = "";
-
-        // suratjalan
-        $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-        $this->suratjalan->ViewCustomAttributes = "";
 
         // created_by
         $this->created_by->ViewValue = $this->created_by->CurrentValue;
@@ -1031,11 +1016,6 @@ SORTHTML;
         $this->lampiran->HrefValue = "";
         $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
         $this->lampiran->TooltipValue = "";
-
-        // suratjalan
-        $this->suratjalan->LinkCustomAttributes = "";
-        $this->suratjalan->HrefValue = "";
-        $this->suratjalan->TooltipValue = "";
 
         // created_by
         $this->created_by->LinkCustomAttributes = "";
@@ -1105,15 +1085,6 @@ SORTHTML;
             $this->lampiran->Upload->FileName = $this->lampiran->CurrentValue;
         }
 
-        // suratjalan
-        $this->suratjalan->EditAttrs["class"] = "form-control";
-        $this->suratjalan->EditCustomAttributes = "";
-        if (!$this->suratjalan->Raw) {
-            $this->suratjalan->CurrentValue = HtmlDecode($this->suratjalan->CurrentValue);
-        }
-        $this->suratjalan->EditValue = $this->suratjalan->CurrentValue;
-        $this->suratjalan->PlaceHolder = RemoveHtml($this->suratjalan->caption());
-
         // created_by
         $this->created_by->EditAttrs["class"] = "form-control";
         $this->created_by->EditCustomAttributes = "";
@@ -1165,13 +1136,11 @@ SORTHTML;
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->tanggal);
                     $doc->exportCaption($this->lampiran);
-                    $doc->exportCaption($this->suratjalan);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->tanggal);
                     $doc->exportCaption($this->lampiran);
-                    $doc->exportCaption($this->suratjalan);
                     $doc->exportCaption($this->created_by);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
@@ -1207,13 +1176,11 @@ SORTHTML;
                         $doc->exportField($this->kode);
                         $doc->exportField($this->tanggal);
                         $doc->exportField($this->lampiran);
-                        $doc->exportField($this->suratjalan);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->tanggal);
                         $doc->exportField($this->lampiran);
-                        $doc->exportField($this->suratjalan);
                         $doc->exportField($this->created_by);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);

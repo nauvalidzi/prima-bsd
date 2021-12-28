@@ -26,7 +26,7 @@ loadjs.ready("head", function () {
         ["tglpengajuan", [fields.tglpengajuan.visible && fields.tglpengajuan.required ? ew.Validators.required(fields.tglpengajuan.caption) : null, ew.Validators.datetime(0)], fields.tglpengajuan.isInvalid],
         ["idnpd_sample", [fields.idnpd_sample.visible && fields.idnpd_sample.required ? ew.Validators.required(fields.idnpd_sample.caption) : null], fields.idnpd_sample.isInvalid],
         ["viskositasbarang", [fields.viskositasbarang.visible && fields.viskositasbarang.required ? ew.Validators.required(fields.viskositasbarang.caption) : null], fields.viskositasbarang.isInvalid],
-        ["idaplikasibarang", [fields.idaplikasibarang.visible && fields.idaplikasibarang.required ? ew.Validators.required(fields.idaplikasibarang.caption) : null], fields.idaplikasibarang.isInvalid],
+        ["idaplikasibarang", [fields.idaplikasibarang.visible && fields.idaplikasibarang.required ? ew.Validators.required(fields.idaplikasibarang.caption) : null, ew.Validators.integer], fields.idaplikasibarang.isInvalid],
         ["hargapcs", [fields.hargapcs.visible && fields.hargapcs.required ? ew.Validators.required(fields.hargapcs.caption) : null, ew.Validators.integer], fields.hargapcs.isInvalid],
         ["disetujui", [fields.disetujui.visible && fields.disetujui.required ? ew.Validators.required(fields.disetujui.caption) : null], fields.disetujui.isInvalid]
     ]);
@@ -111,7 +111,6 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     fnpd_hargagrid.lists.idnpd = <?= $Grid->idnpd->toClientList($Grid) ?>;
     fnpd_hargagrid.lists.idnpd_sample = <?= $Grid->idnpd_sample->toClientList($Grid) ?>;
-    fnpd_hargagrid.lists.idaplikasibarang = <?= $Grid->idaplikasibarang->toClientList($Grid) ?>;
     fnpd_hargagrid.lists.disetujui = <?= $Grid->disetujui->toClientList($Grid) ?>;
     loadjs.done("fnpd_hargagrid");
 });
@@ -499,57 +498,15 @@ loadjs.ready("head", function() {
         <td data-name="idaplikasibarang" <?= $Grid->idaplikasibarang->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_harga_idaplikasibarang" class="form-group">
-    <select
-        id="x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        name="x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        class="form-control ew-select<?= $Grid->idaplikasibarang->isInvalidClass() ?>"
-        data-select2-id="npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        data-table="npd_harga"
-        data-field="x_idaplikasibarang"
-        data-value-separator="<?= $Grid->idaplikasibarang->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idaplikasibarang->getPlaceHolder()) ?>"
-        <?= $Grid->idaplikasibarang->editAttributes() ?>>
-        <?= $Grid->idaplikasibarang->selectOptionListHtml("x{$Grid->RowIndex}_idaplikasibarang") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idaplikasibarang->getErrorMessage() ?></div>
-<?= $Grid->idaplikasibarang->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idaplikasibarang") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idaplikasibarang", selectId: "npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_harga.fields.idaplikasibarang.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Grid->idaplikasibarang->getInputTextType() ?>" data-table="npd_harga" data-field="x_idaplikasibarang" name="x<?= $Grid->RowIndex ?>_idaplikasibarang" id="x<?= $Grid->RowIndex ?>_idaplikasibarang" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->idaplikasibarang->getPlaceHolder()) ?>" value="<?= $Grid->idaplikasibarang->EditValue ?>"<?= $Grid->idaplikasibarang->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->idaplikasibarang->getErrorMessage() ?></div>
 </span>
 <input type="hidden" data-table="npd_harga" data-field="x_idaplikasibarang" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idaplikasibarang" id="o<?= $Grid->RowIndex ?>_idaplikasibarang" value="<?= HtmlEncode($Grid->idaplikasibarang->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_harga_idaplikasibarang" class="form-group">
-    <select
-        id="x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        name="x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        class="form-control ew-select<?= $Grid->idaplikasibarang->isInvalidClass() ?>"
-        data-select2-id="npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        data-table="npd_harga"
-        data-field="x_idaplikasibarang"
-        data-value-separator="<?= $Grid->idaplikasibarang->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idaplikasibarang->getPlaceHolder()) ?>"
-        <?= $Grid->idaplikasibarang->editAttributes() ?>>
-        <?= $Grid->idaplikasibarang->selectOptionListHtml("x{$Grid->RowIndex}_idaplikasibarang") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idaplikasibarang->getErrorMessage() ?></div>
-<?= $Grid->idaplikasibarang->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idaplikasibarang") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idaplikasibarang", selectId: "npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_harga.fields.idaplikasibarang.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Grid->idaplikasibarang->getInputTextType() ?>" data-table="npd_harga" data-field="x_idaplikasibarang" name="x<?= $Grid->RowIndex ?>_idaplikasibarang" id="x<?= $Grid->RowIndex ?>_idaplikasibarang" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->idaplikasibarang->getPlaceHolder()) ?>" value="<?= $Grid->idaplikasibarang->EditValue ?>"<?= $Grid->idaplikasibarang->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->idaplikasibarang->getErrorMessage() ?></div>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
@@ -832,29 +789,8 @@ loadjs.ready("head", function() {
         <td data-name="idaplikasibarang">
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_npd_harga_idaplikasibarang" class="form-group npd_harga_idaplikasibarang">
-    <select
-        id="x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        name="x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        class="form-control ew-select<?= $Grid->idaplikasibarang->isInvalidClass() ?>"
-        data-select2-id="npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang"
-        data-table="npd_harga"
-        data-field="x_idaplikasibarang"
-        data-value-separator="<?= $Grid->idaplikasibarang->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idaplikasibarang->getPlaceHolder()) ?>"
-        <?= $Grid->idaplikasibarang->editAttributes() ?>>
-        <?= $Grid->idaplikasibarang->selectOptionListHtml("x{$Grid->RowIndex}_idaplikasibarang") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idaplikasibarang->getErrorMessage() ?></div>
-<?= $Grid->idaplikasibarang->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idaplikasibarang") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idaplikasibarang", selectId: "npd_harga_x<?= $Grid->RowIndex ?>_idaplikasibarang", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_harga.fields.idaplikasibarang.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Grid->idaplikasibarang->getInputTextType() ?>" data-table="npd_harga" data-field="x_idaplikasibarang" name="x<?= $Grid->RowIndex ?>_idaplikasibarang" id="x<?= $Grid->RowIndex ?>_idaplikasibarang" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->idaplikasibarang->getPlaceHolder()) ?>" value="<?= $Grid->idaplikasibarang->EditValue ?>"<?= $Grid->idaplikasibarang->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->idaplikasibarang->getErrorMessage() ?></div>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_npd_harga_idaplikasibarang" class="form-group npd_harga_idaplikasibarang">

@@ -568,9 +568,9 @@ class JenisbarangList extends Jenisbarang
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->Visible = false;
-        $this->idkategoribarang->setVisibility();
+        $this->id->setVisibility();
         $this->nama->setVisibility();
+        $this->idkategoribarang->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -598,7 +598,6 @@ class JenisbarangList extends Jenisbarang
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idkategoribarang);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -863,8 +862,8 @@ class JenisbarangList extends Jenisbarang
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->idkategoribarang->AdvancedSearch->toJson(), ","); // Field idkategoribarang
         $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
+        $filterList = Concat($filterList, $this->idkategoribarang->AdvancedSearch->toJson(), ","); // Field idkategoribarang
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -913,14 +912,6 @@ class JenisbarangList extends Jenisbarang
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
 
-        // Field idkategoribarang
-        $this->idkategoribarang->AdvancedSearch->SearchValue = @$filter["x_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchOperator = @$filter["z_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchCondition = @$filter["v_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchValue2 = @$filter["y_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchOperator2 = @$filter["w_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->save();
-
         // Field nama
         $this->nama->AdvancedSearch->SearchValue = @$filter["x_nama"];
         $this->nama->AdvancedSearch->SearchOperator = @$filter["z_nama"];
@@ -928,6 +919,14 @@ class JenisbarangList extends Jenisbarang
         $this->nama->AdvancedSearch->SearchValue2 = @$filter["y_nama"];
         $this->nama->AdvancedSearch->SearchOperator2 = @$filter["w_nama"];
         $this->nama->AdvancedSearch->save();
+
+        // Field idkategoribarang
+        $this->idkategoribarang->AdvancedSearch->SearchValue = @$filter["x_idkategoribarang"];
+        $this->idkategoribarang->AdvancedSearch->SearchOperator = @$filter["z_idkategoribarang"];
+        $this->idkategoribarang->AdvancedSearch->SearchCondition = @$filter["v_idkategoribarang"];
+        $this->idkategoribarang->AdvancedSearch->SearchValue2 = @$filter["y_idkategoribarang"];
+        $this->idkategoribarang->AdvancedSearch->SearchOperator2 = @$filter["w_idkategoribarang"];
+        $this->idkategoribarang->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1099,8 +1098,9 @@ class JenisbarangList extends Jenisbarang
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idkategoribarang); // idkategoribarang
+            $this->updateSort($this->id); // id
             $this->updateSort($this->nama); // nama
+            $this->updateSort($this->idkategoribarang); // idkategoribarang
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1141,8 +1141,8 @@ class JenisbarangList extends Jenisbarang
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->idkategoribarang->setSort("");
                 $this->nama->setSort("");
+                $this->idkategoribarang->setSort("");
             }
 
             // Reset start position
@@ -1552,8 +1552,8 @@ class JenisbarangList extends Jenisbarang
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
         $this->nama->setDbValue($row['nama']);
+        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
     }
 
     // Return a row with default values
@@ -1561,8 +1561,8 @@ class JenisbarangList extends Jenisbarang
     {
         $row = [];
         $row['id'] = null;
-        $row['idkategoribarang'] = null;
         $row['nama'] = null;
+        $row['idkategoribarang'] = null;
         return $row;
     }
 
@@ -1602,48 +1602,37 @@ class JenisbarangList extends Jenisbarang
 
         // id
 
-        // idkategoribarang
-
         // nama
+
+        // idkategoribarang
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
-
-            // idkategoribarang
-            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
-            if ($curVal != "") {
-                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
-                if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
-                    } else {
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idkategoribarang->ViewValue = null;
-            }
-            $this->idkategoribarang->ViewCustomAttributes = "";
 
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
             // idkategoribarang
-            $this->idkategoribarang->LinkCustomAttributes = "";
-            $this->idkategoribarang->HrefValue = "";
-            $this->idkategoribarang->TooltipValue = "";
+            $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+            $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
+            $this->idkategoribarang->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
+
+            // idkategoribarang
+            $this->idkategoribarang->LinkCustomAttributes = "";
+            $this->idkategoribarang->HrefValue = "";
+            $this->idkategoribarang->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1714,8 +1703,6 @@ class JenisbarangList extends Jenisbarang
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idkategoribarang":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

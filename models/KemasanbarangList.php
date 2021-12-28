@@ -568,7 +568,7 @@ class KemasanbarangList extends Kemasanbarang
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->nama->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -1088,6 +1088,7 @@ class KemasanbarangList extends Kemasanbarang
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->id); // id
             $this->updateSort($this->nama); // nama
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1596,6 +1597,11 @@ class KemasanbarangList extends Kemasanbarang
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

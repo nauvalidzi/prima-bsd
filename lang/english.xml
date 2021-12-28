@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2021/12/22" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2021/12/28" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1186,26 +1186,26 @@
     <menu id="101">
       <phrase id="menutext" value="Metode Payment" />
     </menu>
-    <menu id="10">
-      <phrase id="menutext" value="Jenis Barang" />
+    <menu id="926">
+      <phrase id="menutext" value="Aplikasi Product" />
     </menu>
-    <menu id="11">
-      <phrase id="menutext" value="Kategori Barang" />
+    <menu id="927">
+      <phrase id="menutext" value="Kategori Product" />
     </menu>
-    <menu id="113">
-      <phrase id="menutext" value="Kualitas Produk" />
+    <menu id="928">
+      <phrase id="menutext" value="Kualitas Product" />
     </menu>
-    <menu id="314">
-      <phrase id="menutext" value="Kemasan Barang" />
-    </menu>
-    <menu id="472">
-      <phrase id="menutext" value="Viskositas Barang" />
-    </menu>
-    <menu id="471">
-      <phrase id="menutext" value="Aplikasi Barang" />
+    <menu id="929">
+      <phrase id="menutext" value="Viskositas Product" />
     </menu>
     <menu id="32">
       <phrase id="menutext" value="Tipe Customer" />
+    </menu>
+    <menu id="930">
+      <phrase id="menutext" value="Kemasan Product" />
+    </menu>
+    <menu id="931">
+      <phrase id="menutext" value="Jenis Product" />
     </menu>
     <menu id="12">
       <phrase id="menutext" value="Satuan Produk" />
@@ -1634,9 +1634,6 @@
       <field id="idproduct_acuan">
         <phrase id="fldcaption" value="Acuan" />
       </field>
-      <field id="idkemasanbarang">
-        <phrase id="fldcaption" value="Kemasan" />
-      </field>
       <field id="ukuran">
         <phrase id="fldcaption" value="Ukuran" />
       </field>
@@ -1700,63 +1697,6 @@
       </field>
       <field id="idcustomer">
         <phrase id="fldcaption" value="Customer" />
-      </field>
-    </table>
-    <table id="jenisbarang">
-      <phrase id="tblcaption" value="Jenis Product" />
-      <field id="id">
-        <phrase id="fldcaption" value="ID" />
-      </field>
-      <field id="idkategoribarang">
-        <phrase id="fldcaption" value="Kategori" />
-      </field>
-      <field id="nama">
-        <phrase id="fldcaption" value="Jenis" />
-      </field>
-    </table>
-    <table id="kategoribarang">
-      <phrase id="tblcaption" value="Kategori Product" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="nama">
-        <phrase id="fldcaption" value="Kemasan" />
-      </field>
-    </table>
-    <table id="kualitasbarang">
-      <phrase id="tblcaption" value="Kualitas Product" />
-      <field id="id">
-        <phrase id="fldcaption" value="ID" />
-      </field>
-      <field id="nama">
-        <phrase id="fldcaption" value="Nama" />
-      </field>
-    </table>
-    <table id="kemasanbarang">
-      <phrase id="tblcaption" value="Kemasan Product" />
-      <field id="id">
-        <phrase id="fldcaption" value="ID" />
-      </field>
-      <field id="nama">
-        <phrase id="fldcaption" value="Kualitas" />
-      </field>
-    </table>
-    <table id="aplikasibarang">
-      <phrase id="tblcaption" value="Aplikasi Product" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="value">
-        <phrase id="fldcaption" value="ID" />
-      </field>
-    </table>
-    <table id="viskositasbarang">
-      <phrase id="tblcaption" value="Viskositas Product" />
-      <field id="id">
-        <phrase id="fldcaption" value="ID" />
-      </field>
-      <field id="value">
-        <phrase id="fldcaption" value="Viskositas" />
       </field>
     </table>
     <table id="satuan">
@@ -2730,8 +2670,18 @@
       <field id="dokumen">
         <phrase id="fldcaption" value="Lampiran" />
       </field>
-      <field id="keterangan">
-        <phrase id="fldcaption" value="Keterangan" />
+      <field id="catatan">
+        <phrase id="fldcaption" value="Catatan" />
+      </field>
+      <field id="aktif">
+        <phrase id="fldcaption" value="Aktif" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
       </field>
       <field id="created_at">
         <phrase id="fldcaption" value="Created at" />
@@ -2739,15 +2689,8 @@
       <field id="created_by">
         <phrase id="fldcaption" value="Created by" />
       </field>
-      <field id="aktif">
-        <phrase id="fldcaption" value="Aktif" />
-        <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Ya" />
-        <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="Tidak" />
-      </field>
       <field id="readonly">
-        <phrase id="fldcaption" value="Readonly" />
+        <phrase id="fldcaption" value="readonly" />
         <phrase id="fldtagvalue1" value="1" />
         <phrase id="fldtagcaption1" value="Yes" />
         <phrase id="fldtagvalue2" value="0" />
@@ -2944,9 +2887,6 @@
       </field>
       <field id="lampiran">
         <phrase id="fldcaption" value="Lampiran" />
-      </field>
-      <field id="suratjalan">
-        <phrase id="fldcaption" value="Surat Jalan" />
       </field>
       <field id="created_by">
         <phrase id="fldcaption" value="Created by" />
@@ -3338,6 +3278,13 @@
       <field id="tanggalorder">
         <phrase id="fldcaption" value="tanggalorder" />
       </field>
+      <field id="aktif">
+        <phrase id="fldcaption" value="aktif" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
       <field id="idcustomer">
         <phrase id="fldcaption" value="idcustomer" />
       </field>
@@ -3346,13 +3293,6 @@
       </field>
       <field id="namacustomer">
         <phrase id="fldcaption" value="namacustomer" />
-      </field>
-      <field id="aktif">
-        <phrase id="fldcaption" value="aktif" />
-        <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Yes" />
-        <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="No" />
       </field>
     </table>
     <table id="laporan_delivery_order">
@@ -4431,6 +4371,63 @@
       </field>
       <field id="updated_at">
         <phrase id="fldcaption" value="updated at" />
+      </field>
+    </table>
+    <table id="aplikasibarang">
+      <phrase id="tblcaption" value="Aplikasi Product" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="value">
+        <phrase id="fldcaption" value="value" />
+      </field>
+    </table>
+    <table id="jenisbarang">
+      <phrase id="tblcaption" value="Jenis Product" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="nama" />
+      </field>
+      <field id="idkategoribarang">
+        <phrase id="fldcaption" value="idkategoribarang" />
+      </field>
+    </table>
+    <table id="kategoribarang">
+      <phrase id="tblcaption" value="Kategori Product" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="nama" />
+      </field>
+    </table>
+    <table id="kemasanbarang">
+      <phrase id="tblcaption" value="Kemasan Product" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="nama" />
+      </field>
+    </table>
+    <table id="kualitasbarang">
+      <phrase id="tblcaption" value="Kualitas Product" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="nama" />
+      </field>
+    </table>
+    <table id="viskositasbarang">
+      <phrase id="tblcaption" value="Viskositas Product" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="value">
+        <phrase id="fldcaption" value="value" />
       </field>
     </table>
   </project>

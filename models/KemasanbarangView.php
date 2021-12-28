@@ -776,6 +776,11 @@ class KemasanbarangView extends Kemasanbarang
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // nama
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";

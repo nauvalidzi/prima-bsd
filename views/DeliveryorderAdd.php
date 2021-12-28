@@ -23,7 +23,6 @@ loadjs.ready("head", function () {
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
         ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
-        ["suratjalan", [fields.suratjalan.visible && fields.suratjalan.required ? ew.Validators.required(fields.suratjalan.caption) : null], fields.suratjalan.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
     ]);
 
@@ -165,18 +164,6 @@ loadjs.ready(["fdeliveryorderadd", "datetimepicker"], function() {
 <input type="hidden" name="fm_x_lampiran" id= "fm_x_lampiran" value="<?= $Page->lampiran->UploadMaxFileSize ?>">
 </div>
 <table id="ft_x_lampiran" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->suratjalan->Visible) { // suratjalan ?>
-    <div id="r_suratjalan" class="form-group row">
-        <label id="elh_deliveryorder_suratjalan" for="x_suratjalan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->suratjalan->caption() ?><?= $Page->suratjalan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->suratjalan->cellAttributes() ?>>
-<span id="el_deliveryorder_suratjalan">
-<input type="<?= $Page->suratjalan->getInputTextType() ?>" data-table="deliveryorder" data-field="x_suratjalan" name="x_suratjalan" id="x_suratjalan" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->suratjalan->getPlaceHolder()) ?>" value="<?= $Page->suratjalan->EditValue ?>"<?= $Page->suratjalan->editAttributes() ?> aria-describedby="x_suratjalan_help">
-<?= $Page->suratjalan->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->suratjalan->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

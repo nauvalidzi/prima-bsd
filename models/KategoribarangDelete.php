@@ -374,7 +374,7 @@ class KategoribarangDelete extends Kategoribarang
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->nama->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -574,6 +574,11 @@ class KategoribarangDelete extends Kategoribarang
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

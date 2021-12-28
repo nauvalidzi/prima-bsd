@@ -379,12 +379,14 @@ class OrderDelete extends Order
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idbrand->Visible = false;
+        $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
         $this->keterangan->Visible = false;
+        $this->catatan->Visible = false;
+        $this->aktif->Visible = false;
+        $this->status->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
-        $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -582,9 +584,11 @@ class OrderDelete extends Order
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->catatan->setDbValue($row['catatan']);
+        $this->aktif->setDbValue($row['aktif']);
+        $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -600,9 +604,11 @@ class OrderDelete extends Order
         $row['idbrand'] = null;
         $row['dokumen'] = null;
         $row['keterangan'] = null;
+        $row['catatan'] = null;
+        $row['aktif'] = null;
+        $row['status'] = null;
         $row['created_at'] = null;
         $row['created_by'] = null;
-        $row['aktif'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -635,14 +641,17 @@ class OrderDelete extends Order
 
         // keterangan
 
+        // catatan
+
+        // aktif
+
+        // status
+
         // created_at
 
         // created_by
 
-        // aktif
-
         // readonly
-        $this->readonly->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -736,6 +745,18 @@ class OrderDelete extends Order
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
@@ -746,13 +767,13 @@ class OrderDelete extends Order
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -773,6 +794,11 @@ class OrderDelete extends Order
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -978,6 +1004,8 @@ class OrderDelete extends Order
                 case "x_idbrand":
                     break;
                 case "x_aktif":
+                    break;
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";

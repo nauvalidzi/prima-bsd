@@ -608,7 +608,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idorder);
         $this->setupLookupOptions($this->idorder_detail);
 
         // Search filters
@@ -1383,28 +1382,8 @@ class DeliveryorderDetailList extends DeliveryorderDetail
             $this->iddeliveryorder->ViewCustomAttributes = "";
 
             // idorder
-            $curVal = trim(strval($this->idorder->CurrentValue));
-            if ($curVal != "") {
-                $this->idorder->ViewValue = $this->idorder->lookupCacheOption($curVal);
-                if ($this->idorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idorder->Lookup->renderViewRow($rswrk[0]);
-                        $this->idorder->ViewValue = $this->idorder->displayValue($arwrk);
-                    } else {
-                        $this->idorder->ViewValue = $this->idorder->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idorder->ViewValue = null;
-            }
+            $this->idorder->ViewValue = $this->idorder->CurrentValue;
+            $this->idorder->ViewValue = FormatNumber($this->idorder->ViewValue, 0, -2, -2, -2);
             $this->idorder->ViewCustomAttributes = "";
 
             // idorder_detail
@@ -1625,12 +1604,6 @@ class DeliveryorderDetailList extends DeliveryorderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idorder":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
                 case "x_idorder_detail":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add" ) ? "aktif = 1" : "";

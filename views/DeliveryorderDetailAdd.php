@@ -20,7 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.deliveryorder_detail)
         ew.vars.tables.deliveryorder_detail = currentTable;
     fdeliveryorder_detailadd.addFields([
-        ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
+        ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null, ew.Validators.integer], fields.idorder.isInvalid],
         ["idorder_detail", [fields.idorder_detail.visible && fields.idorder_detail.required ? ew.Validators.required(fields.idorder_detail.caption) : null], fields.idorder_detail.isInvalid],
         ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null, ew.Validators.integer], fields.totalorder.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
@@ -92,7 +92,6 @@ loadjs.ready("head", function () {
     fdeliveryorder_detailadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fdeliveryorder_detailadd.lists.idorder = <?= $Page->idorder->toClientList($Page) ?>;
     fdeliveryorder_detailadd.lists.idorder_detail = <?= $Page->idorder_detail->toClientList($Page) ?>;
     loadjs.done("fdeliveryorder_detailadd");
 });
@@ -125,31 +124,9 @@ $Page->showMessage();
         <label id="elh_deliveryorder_detail_idorder" for="x_idorder" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idorder->caption() ?><?= $Page->idorder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idorder->cellAttributes() ?>>
 <span id="el_deliveryorder_detail_idorder">
-<?php $Page->idorder->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idorder"
-        name="x_idorder"
-        class="form-control ew-select<?= $Page->idorder->isInvalidClass() ?>"
-        data-select2-id="deliveryorder_detail_x_idorder"
-        data-table="deliveryorder_detail"
-        data-field="x_idorder"
-        data-value-separator="<?= $Page->idorder->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idorder->getPlaceHolder()) ?>"
-        <?= $Page->idorder->editAttributes() ?>>
-        <?= $Page->idorder->selectOptionListHtml("x_idorder") ?>
-    </select>
-    <?= $Page->idorder->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idorder->getErrorMessage() ?></div>
-<?= $Page->idorder->Lookup->getParamTag($Page, "p_x_idorder") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='deliveryorder_detail_x_idorder']"),
-        options = { name: "x_idorder", selectId: "deliveryorder_detail_x_idorder", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.deliveryorder_detail.fields.idorder.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Page->idorder->getInputTextType() ?>" data-table="deliveryorder_detail" data-field="x_idorder" name="x_idorder" id="x_idorder" size="30" placeholder="<?= HtmlEncode($Page->idorder->getPlaceHolder()) ?>" value="<?= $Page->idorder->EditValue ?>"<?= $Page->idorder->editAttributes() ?> aria-describedby="x_idorder_help">
+<?= $Page->idorder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idorder->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

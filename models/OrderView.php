@@ -526,9 +526,11 @@ class OrderView extends Order
         $this->idbrand->setVisibility();
         $this->dokumen->setVisibility();
         $this->keterangan->setVisibility();
+        $this->catatan->setVisibility();
+        $this->aktif->setVisibility();
+        $this->status->setVisibility();
         $this->created_at->setVisibility();
         $this->created_by->setVisibility();
-        $this->aktif->setVisibility();
         $this->readonly->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -666,16 +668,6 @@ class OrderView extends Order
         }
         $item->Visible = ($this->AddUrl != "" && $Security->canAdd());
 
-        // Edit
-        $item = &$option->add("edit");
-        $editcaption = HtmlTitle($Language->phrase("ViewPageEditLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode(GetUrl($this->EditUrl)) . "'});\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
-        }
-        $item->Visible = ($this->EditUrl != "" && $Security->canEdit() && $this->showOptionLink("edit"));
-
         // Delete
         $item = &$option->add("delete");
         if ($this->IsModal) { // Handle as inline delete
@@ -702,13 +694,6 @@ class OrderView extends Order
                 $detailViewTblVar .= ",";
             }
             $detailViewTblVar .= "order_detail";
-        }
-        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'order')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=order_detail"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            if ($detailEditTblVar != "") {
-                $detailEditTblVar .= ",";
-            }
-            $detailEditTblVar .= "order_detail";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -827,9 +812,11 @@ class OrderView extends Order
         $this->dokumen->Upload->DbValue = $row['dokumen'];
         $this->dokumen->setDbValue($this->dokumen->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->catatan->setDbValue($row['catatan']);
+        $this->aktif->setDbValue($row['aktif']);
+        $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->created_by->setDbValue($row['created_by']);
-        $this->aktif->setDbValue($row['aktif']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -845,9 +832,11 @@ class OrderView extends Order
         $row['idbrand'] = null;
         $row['dokumen'] = null;
         $row['keterangan'] = null;
+        $row['catatan'] = null;
+        $row['aktif'] = null;
+        $row['status'] = null;
         $row['created_at'] = null;
         $row['created_by'] = null;
-        $row['aktif'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -886,11 +875,15 @@ class OrderView extends Order
 
         // keterangan
 
+        // catatan
+
+        // aktif
+
+        // status
+
         // created_at
 
         // created_by
-
-        // aktif
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -986,6 +979,22 @@ class OrderView extends Order
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
+            // catatan
+            $this->catatan->ViewValue = $this->catatan->CurrentValue;
+            $this->catatan->ViewCustomAttributes = "";
+
+            // aktif
+            if (strval($this->aktif->CurrentValue) != "") {
+                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            } else {
+                $this->aktif->ViewValue = null;
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
+            // status
+            $this->status->ViewValue = $this->status->CurrentValue;
+            $this->status->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
@@ -996,13 +1005,13 @@ class OrderView extends Order
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
             $this->created_by->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // kode
             $this->kode->LinkCustomAttributes = "";
@@ -1039,6 +1048,16 @@ class OrderView extends Order
             $this->keterangan->LinkCustomAttributes = "";
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
+
+            // catatan
+            $this->catatan->LinkCustomAttributes = "";
+            $this->catatan->HrefValue = "";
+            $this->catatan->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1191,6 +1210,8 @@ class OrderView extends Order
                     break;
                 case "x_aktif":
                     break;
+                case "x_readonly":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -1295,7 +1316,7 @@ class OrderView extends Order
         //Log("Page Render");
         $this->OtherOptions["action"]->Items["add"]->Visible = false;
         if ($this->readonly->CurrentValue) {
-        	$this->OtherOptions["action"]->Items["edit"]->Visible = false;
+        	//$this->OtherOptions["action"]->Items["edit"]->Visible = false;
         	$this->OtherOptions["action"]->Items["delete"]->Visible = false;
         }
     }

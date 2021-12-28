@@ -378,7 +378,6 @@ class DeliveryorderDelete extends Deliveryorder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
-        $this->suratjalan->setVisibility();
         $this->created_by->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
@@ -569,7 +568,6 @@ class DeliveryorderDelete extends Deliveryorder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -584,7 +582,6 @@ class DeliveryorderDelete extends Deliveryorder
         $row['kode'] = null;
         $row['tanggal'] = null;
         $row['lampiran'] = null;
-        $row['suratjalan'] = null;
         $row['created_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -611,8 +608,6 @@ class DeliveryorderDelete extends Deliveryorder
         // tanggal
 
         // lampiran
-
-        // suratjalan
 
         // created_by
 
@@ -644,10 +639,6 @@ class DeliveryorderDelete extends Deliveryorder
             }
             $this->lampiran->ViewCustomAttributes = "";
 
-            // suratjalan
-            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-            $this->suratjalan->ViewCustomAttributes = "";
-
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
             $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
@@ -678,11 +669,6 @@ class DeliveryorderDelete extends Deliveryorder
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
-
-            // suratjalan
-            $this->suratjalan->LinkCustomAttributes = "";
-            $this->suratjalan->HrefValue = "";
-            $this->suratjalan->TooltipValue = "";
         }
 
         // Call Row Rendered event

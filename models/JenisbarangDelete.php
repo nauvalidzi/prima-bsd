@@ -374,9 +374,9 @@ class JenisbarangDelete extends Jenisbarang
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
-        $this->idkategoribarang->setVisibility();
+        $this->id->setVisibility();
         $this->nama->setVisibility();
+        $this->idkategoribarang->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -391,7 +391,6 @@ class JenisbarangDelete extends Jenisbarang
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idkategoribarang);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -541,8 +540,8 @@ class JenisbarangDelete extends Jenisbarang
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
         $this->nama->setDbValue($row['nama']);
+        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
     }
 
     // Return a row with default values
@@ -550,8 +549,8 @@ class JenisbarangDelete extends Jenisbarang
     {
         $row = [];
         $row['id'] = null;
-        $row['idkategoribarang'] = null;
         $row['nama'] = null;
+        $row['idkategoribarang'] = null;
         return $row;
     }
 
@@ -569,48 +568,37 @@ class JenisbarangDelete extends Jenisbarang
 
         // id
 
-        // idkategoribarang
-
         // nama
+
+        // idkategoribarang
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
-
-            // idkategoribarang
-            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
-            if ($curVal != "") {
-                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
-                if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
-                    } else {
-                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idkategoribarang->ViewValue = null;
-            }
-            $this->idkategoribarang->ViewCustomAttributes = "";
 
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
 
             // idkategoribarang
-            $this->idkategoribarang->LinkCustomAttributes = "";
-            $this->idkategoribarang->HrefValue = "";
-            $this->idkategoribarang->TooltipValue = "";
+            $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+            $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
+            $this->idkategoribarang->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
+
+            // idkategoribarang
+            $this->idkategoribarang->LinkCustomAttributes = "";
+            $this->idkategoribarang->HrefValue = "";
+            $this->idkategoribarang->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -726,8 +714,6 @@ class JenisbarangDelete extends Jenisbarang
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idkategoribarang":
-                    break;
                 default:
                     $lookupFilter = "";
                     break;

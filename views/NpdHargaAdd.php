@@ -25,7 +25,7 @@ loadjs.ready("head", function () {
         ["idnpd_sample", [fields.idnpd_sample.visible && fields.idnpd_sample.required ? ew.Validators.required(fields.idnpd_sample.caption) : null], fields.idnpd_sample.isInvalid],
         ["bentuk", [fields.bentuk.visible && fields.bentuk.required ? ew.Validators.required(fields.bentuk.caption) : null], fields.bentuk.isInvalid],
         ["viskositasbarang", [fields.viskositasbarang.visible && fields.viskositasbarang.required ? ew.Validators.required(fields.viskositasbarang.caption) : null], fields.viskositasbarang.isInvalid],
-        ["idaplikasibarang", [fields.idaplikasibarang.visible && fields.idaplikasibarang.required ? ew.Validators.required(fields.idaplikasibarang.caption) : null], fields.idaplikasibarang.isInvalid],
+        ["idaplikasibarang", [fields.idaplikasibarang.visible && fields.idaplikasibarang.required ? ew.Validators.required(fields.idaplikasibarang.caption) : null, ew.Validators.integer], fields.idaplikasibarang.isInvalid],
         ["ukuranwadah", [fields.ukuranwadah.visible && fields.ukuranwadah.required ? ew.Validators.required(fields.ukuranwadah.caption) : null], fields.ukuranwadah.isInvalid],
         ["bahanwadah", [fields.bahanwadah.visible && fields.bahanwadah.required ? ew.Validators.required(fields.bahanwadah.caption) : null], fields.bahanwadah.isInvalid],
         ["warnawadah", [fields.warnawadah.visible && fields.warnawadah.required ? ew.Validators.required(fields.warnawadah.caption) : null], fields.warnawadah.isInvalid],
@@ -126,7 +126,6 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     fnpd_hargaadd.lists.idnpd = <?= $Page->idnpd->toClientList($Page) ?>;
     fnpd_hargaadd.lists.idnpd_sample = <?= $Page->idnpd_sample->toClientList($Page) ?>;
-    fnpd_hargaadd.lists.idaplikasibarang = <?= $Page->idaplikasibarang->toClientList($Page) ?>;
     fnpd_hargaadd.lists.segel = <?= $Page->segel->toClientList($Page) ?>;
     fnpd_hargaadd.lists.disetujui = <?= $Page->disetujui->toClientList($Page) ?>;
     loadjs.done("fnpd_hargaadd");
@@ -279,30 +278,9 @@ loadjs.ready("head", function() {
         <label id="elh_npd_harga_idaplikasibarang" for="x_idaplikasibarang" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idaplikasibarang->caption() ?><?= $Page->idaplikasibarang->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idaplikasibarang->cellAttributes() ?>>
 <span id="el_npd_harga_idaplikasibarang">
-    <select
-        id="x_idaplikasibarang"
-        name="x_idaplikasibarang"
-        class="form-control ew-select<?= $Page->idaplikasibarang->isInvalidClass() ?>"
-        data-select2-id="npd_harga_x_idaplikasibarang"
-        data-table="npd_harga"
-        data-field="x_idaplikasibarang"
-        data-value-separator="<?= $Page->idaplikasibarang->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idaplikasibarang->getPlaceHolder()) ?>"
-        <?= $Page->idaplikasibarang->editAttributes() ?>>
-        <?= $Page->idaplikasibarang->selectOptionListHtml("x_idaplikasibarang") ?>
-    </select>
-    <?= $Page->idaplikasibarang->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idaplikasibarang->getErrorMessage() ?></div>
-<?= $Page->idaplikasibarang->Lookup->getParamTag($Page, "p_x_idaplikasibarang") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_harga_x_idaplikasibarang']"),
-        options = { name: "x_idaplikasibarang", selectId: "npd_harga_x_idaplikasibarang", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_harga.fields.idaplikasibarang.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Page->idaplikasibarang->getInputTextType() ?>" data-table="npd_harga" data-field="x_idaplikasibarang" name="x_idaplikasibarang" id="x_idaplikasibarang" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->idaplikasibarang->getPlaceHolder()) ?>" value="<?= $Page->idaplikasibarang->EditValue ?>"<?= $Page->idaplikasibarang->editAttributes() ?> aria-describedby="x_idaplikasibarang_help">
+<?= $Page->idaplikasibarang->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idaplikasibarang->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

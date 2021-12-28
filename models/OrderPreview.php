@@ -395,12 +395,14 @@ class OrderPreview extends Order
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->idbrand->Visible = false;
+        $this->idbrand->setVisibility();
         $this->dokumen->Visible = false;
         $this->keterangan->Visible = false;
+        $this->catatan->Visible = false;
+        $this->aktif->Visible = false;
+        $this->status->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
-        $this->aktif->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -498,9 +500,11 @@ class OrderPreview extends Order
             $this->idbrand->setSort("");
             $this->dokumen->setSort("");
             $this->keterangan->setSort("");
+            $this->catatan->setSort("");
+            $this->aktif->setSort("");
+            $this->status->setSort("");
             $this->created_at->setSort("");
             $this->created_by->setSort("");
-            $this->aktif->setSort("");
             $this->readonly->setSort("");
 
             // Save sort to session
@@ -517,6 +521,7 @@ class OrderPreview extends Order
             $this->updateSort($this->tanggal); // tanggal
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->idbrand); // idbrand
         }
     }
 
@@ -561,12 +566,6 @@ class OrderPreview extends Order
         $item->Visible = $Security->canView();
         $item->OnLeft = false;
 
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
-
         // "delete"
         $item = &$this->ListOptions->add("delete");
         $item->CssClass = "text-nowrap";
@@ -605,21 +604,6 @@ class OrderPreview extends Order
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($viewUrl) . "',btn:null});\">" . $viewCaption . "</a>";
             } else {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"" . HtmlEncode($viewUrl) . "\">" . $viewCaption . "</a>";
-            }
-        } else {
-            $opt->Body = "";
-        }
-
-        // "edit"
-        $opt = $this->ListOptions["edit"];
-        if ($Security->canEdit()) {
-            $editCaption = $Language->phrase("EditLink");
-            $editTitle = HtmlTitle($editCaption);
-            $editUrl = $this->getEditUrl($masterKeyUrl);
-            if ($this->UseModalLinks && !IsMobile()) {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,btn:'SaveBtn',url:'" . HtmlEncode($editUrl) . "'});\">" . $editCaption . "</a>";
-            } else {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" href=\"" . HtmlEncode($editUrl) . "\">" . $editCaption . "</a>";
             }
         } else {
             $opt->Body = "";
@@ -763,6 +747,8 @@ class OrderPreview extends Order
                     break;
                 case "x_aktif":
                     break;
+                case "x_readonly":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -869,7 +855,7 @@ class OrderPreview extends Order
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
         if ($this->readonly->CurrentValue == 1) {
-        	$this->ListOptions->Items["edit"]->Body = "";
+        	//$this->ListOptions->Items["edit"]->Body = "";
         	$this->ListOptions->Items["delete"]->Body = "";
         }
         $this->ListOptions->Items["status"]->Body = status_orders($this->id->CurrentValue);

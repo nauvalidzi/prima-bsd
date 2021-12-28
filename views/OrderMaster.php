@@ -53,6 +53,17 @@ $order = Container("order");
 </td>
         </tr>
 <?php } ?>
+<?php if ($order->idbrand->Visible) { // idbrand ?>
+        <tr id="r_idbrand">
+            <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->idbrand->caption() ?></td>
+            <td <?= $order->idbrand->cellAttributes() ?>>
+<span id="el_order_idbrand">
+<span<?= $order->idbrand->viewAttributes() ?>>
+<?= $order->idbrand->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
     </tbody>
 </table>
 </div>

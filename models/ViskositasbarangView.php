@@ -776,6 +776,11 @@ class ViskositasbarangView extends Viskositasbarang
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // value
             $this->value->LinkCustomAttributes = "";
             $this->value->HrefValue = "";

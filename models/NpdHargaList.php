@@ -641,7 +641,6 @@ class NpdHargaList extends NpdHarga
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
-        $this->setupLookupOptions($this->idaplikasibarang);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -2292,24 +2291,8 @@ class NpdHargaList extends NpdHarga
             $this->viskositasbarang->ViewCustomAttributes = "";
 
             // idaplikasibarang
-            $curVal = trim(strval($this->idaplikasibarang->CurrentValue));
-            if ($curVal != "") {
-                $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->lookupCacheOption($curVal);
-                if ($this->idaplikasibarang->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idaplikasibarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idaplikasibarang->Lookup->renderViewRow($rswrk[0]);
-                        $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->displayValue($arwrk);
-                    } else {
-                        $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idaplikasibarang->ViewValue = null;
-            }
+            $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->CurrentValue;
+            $this->idaplikasibarang->ViewValue = FormatNumber($this->idaplikasibarang->ViewValue, 0, -2, -2, -2);
             $this->idaplikasibarang->ViewCustomAttributes = "";
 
             // ukuranwadah
@@ -2673,8 +2656,6 @@ class NpdHargaList extends NpdHarga
                         return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idaplikasibarang":
                     break;
                 case "x_segel":
                     break;

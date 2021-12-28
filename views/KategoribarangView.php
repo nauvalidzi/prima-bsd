@@ -45,6 +45,17 @@ $Page->showMessage();
 <input type="hidden" name="t" value="kategoribarang">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
+<?php if ($Page->id->Visible) { // id ?>
+    <tr id="r_id">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_kategoribarang_id"><?= $Page->id->caption() ?></span></td>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el_kategoribarang_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
     <tr id="r_nama">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_kategoribarang_nama"><?= $Page->nama->caption() ?></span></td>

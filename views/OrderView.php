@@ -123,6 +123,28 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->catatan->Visible) { // catatan ?>
+    <tr id="r_catatan">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_catatan"><?= $Page->catatan->caption() ?></span></td>
+        <td data-name="catatan" <?= $Page->catatan->cellAttributes() ?>>
+<span id="el_order_catatan">
+<span<?= $Page->catatan->viewAttributes() ?>>
+<?= $Page->catatan->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+    <tr id="r_status">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_status"><?= $Page->status->caption() ?></span></td>
+        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
+<span id="el_order_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
 <?php
     if (in_array("order_detail", explode(",", $Page->getCurrentDetailTable())) && $order_detail->DetailView) {

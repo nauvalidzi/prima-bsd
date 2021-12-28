@@ -31,10 +31,10 @@ class VOrderCustomer extends DbTable
     public $idorder;
     public $kodeorder;
     public $tanggalorder;
+    public $aktif;
     public $idcustomer;
     public $kodecustomer;
     public $namacustomer;
-    public $aktif;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -95,6 +95,24 @@ class VOrderCustomer extends DbTable
         $this->tanggalorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggalorder->Param, "CustomMsg");
         $this->Fields['tanggalorder'] = &$this->tanggalorder;
 
+        // aktif
+        $this->aktif = new DbField('v_order_customer', 'v_order_customer', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
+        $this->aktif->Nullable = false; // NOT NULL field
+        $this->aktif->Sortable = true; // Allow sort
+        $this->aktif->DataType = DATATYPE_BOOLEAN;
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->aktif->Lookup = new Lookup('aktif', 'v_order_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->aktif->Lookup = new Lookup('aktif', 'v_order_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->aktif->OptionCount = 2;
+        $this->aktif->DefaultErrorMessage = $Language->phrase("IncorrectField");
+        $this->aktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktif->Param, "CustomMsg");
+        $this->Fields['aktif'] = &$this->aktif;
+
         // idcustomer
         $this->idcustomer = new DbField('v_order_customer', 'v_order_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->idcustomer->IsAutoIncrement = true; // Autoincrement field
@@ -119,24 +137,6 @@ class VOrderCustomer extends DbTable
         $this->namacustomer->Sortable = true; // Allow sort
         $this->namacustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namacustomer->Param, "CustomMsg");
         $this->Fields['namacustomer'] = &$this->namacustomer;
-
-        // aktif
-        $this->aktif = new DbField('v_order_customer', 'v_order_customer', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
-        $this->aktif->Nullable = false; // NOT NULL field
-        $this->aktif->Sortable = true; // Allow sort
-        $this->aktif->DataType = DATATYPE_BOOLEAN;
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->aktif->Lookup = new Lookup('aktif', 'v_order_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->aktif->Lookup = new Lookup('aktif', 'v_order_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->aktif->OptionCount = 2;
-        $this->aktif->DefaultErrorMessage = $Language->phrase("IncorrectField");
-        $this->aktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktif->Param, "CustomMsg");
-        $this->Fields['aktif'] = &$this->aktif;
     }
 
     // Field Visibility
@@ -560,10 +560,10 @@ class VOrderCustomer extends DbTable
         $this->idorder->DbValue = $row['idorder'];
         $this->kodeorder->DbValue = $row['kodeorder'];
         $this->tanggalorder->DbValue = $row['tanggalorder'];
+        $this->aktif->DbValue = $row['aktif'];
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->kodecustomer->DbValue = $row['kodecustomer'];
         $this->namacustomer->DbValue = $row['namacustomer'];
-        $this->aktif->DbValue = $row['aktif'];
     }
 
     // Delete uploaded files
@@ -941,10 +941,10 @@ SORTHTML;
         $this->idorder->setDbValue($row['idorder']);
         $this->kodeorder->setDbValue($row['kodeorder']);
         $this->tanggalorder->setDbValue($row['tanggalorder']);
+        $this->aktif->setDbValue($row['aktif']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kodecustomer->setDbValue($row['kodecustomer']);
         $this->namacustomer->setDbValue($row['namacustomer']);
-        $this->aktif->setDbValue($row['aktif']);
     }
 
     // Render list row values
@@ -963,13 +963,13 @@ SORTHTML;
 
         // tanggalorder
 
+        // aktif
+
         // idcustomer
 
         // kodecustomer
 
         // namacustomer
-
-        // aktif
 
         // idorder
         $this->idorder->ViewValue = $this->idorder->CurrentValue;
@@ -984,6 +984,14 @@ SORTHTML;
         $this->tanggalorder->ViewValue = FormatDateTime($this->tanggalorder->ViewValue, 0);
         $this->tanggalorder->ViewCustomAttributes = "";
 
+        // aktif
+        if (ConvertToBool($this->aktif->CurrentValue)) {
+            $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
+        } else {
+            $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
+        }
+        $this->aktif->ViewCustomAttributes = "";
+
         // idcustomer
         $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->ViewCustomAttributes = "";
@@ -995,14 +1003,6 @@ SORTHTML;
         // namacustomer
         $this->namacustomer->ViewValue = $this->namacustomer->CurrentValue;
         $this->namacustomer->ViewCustomAttributes = "";
-
-        // aktif
-        if (ConvertToBool($this->aktif->CurrentValue)) {
-            $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
-        } else {
-            $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
-        }
-        $this->aktif->ViewCustomAttributes = "";
 
         // idorder
         $this->idorder->LinkCustomAttributes = "";
@@ -1019,6 +1019,11 @@ SORTHTML;
         $this->tanggalorder->HrefValue = "";
         $this->tanggalorder->TooltipValue = "";
 
+        // aktif
+        $this->aktif->LinkCustomAttributes = "";
+        $this->aktif->HrefValue = "";
+        $this->aktif->TooltipValue = "";
+
         // idcustomer
         $this->idcustomer->LinkCustomAttributes = "";
         $this->idcustomer->HrefValue = "";
@@ -1033,11 +1038,6 @@ SORTHTML;
         $this->namacustomer->LinkCustomAttributes = "";
         $this->namacustomer->HrefValue = "";
         $this->namacustomer->TooltipValue = "";
-
-        // aktif
-        $this->aktif->LinkCustomAttributes = "";
-        $this->aktif->HrefValue = "";
-        $this->aktif->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1075,6 +1075,11 @@ SORTHTML;
         $this->tanggalorder->EditValue = FormatDateTime($this->tanggalorder->CurrentValue, 8);
         $this->tanggalorder->PlaceHolder = RemoveHtml($this->tanggalorder->caption());
 
+        // aktif
+        $this->aktif->EditCustomAttributes = "";
+        $this->aktif->EditValue = $this->aktif->options(false);
+        $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
+
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
@@ -1098,11 +1103,6 @@ SORTHTML;
         }
         $this->namacustomer->EditValue = $this->namacustomer->CurrentValue;
         $this->namacustomer->PlaceHolder = RemoveHtml($this->namacustomer->caption());
-
-        // aktif
-        $this->aktif->EditCustomAttributes = "";
-        $this->aktif->EditValue = $this->aktif->options(false);
-        $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1135,18 +1135,18 @@ SORTHTML;
                     $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->kodeorder);
                     $doc->exportCaption($this->tanggalorder);
+                    $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kodecustomer);
                     $doc->exportCaption($this->namacustomer);
-                    $doc->exportCaption($this->aktif);
                 } else {
                     $doc->exportCaption($this->idorder);
                     $doc->exportCaption($this->kodeorder);
                     $doc->exportCaption($this->tanggalorder);
+                    $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kodecustomer);
                     $doc->exportCaption($this->namacustomer);
-                    $doc->exportCaption($this->aktif);
                 }
                 $doc->endExportRow();
             }
@@ -1179,18 +1179,18 @@ SORTHTML;
                         $doc->exportField($this->idorder);
                         $doc->exportField($this->kodeorder);
                         $doc->exportField($this->tanggalorder);
+                        $doc->exportField($this->aktif);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kodecustomer);
                         $doc->exportField($this->namacustomer);
-                        $doc->exportField($this->aktif);
                     } else {
                         $doc->exportField($this->idorder);
                         $doc->exportField($this->kodeorder);
                         $doc->exportField($this->tanggalorder);
+                        $doc->exportField($this->aktif);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kodecustomer);
                         $doc->exportField($this->namacustomer);
-                        $doc->exportField($this->aktif);
                     }
                     $doc->endExportRow($rowCnt);
                 }

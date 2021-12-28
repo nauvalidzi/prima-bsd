@@ -29,8 +29,8 @@ class Jenisbarang extends DbTable
 
     // Fields
     public $id;
-    public $idkategoribarang;
     public $nama;
+    public $idkategoribarang;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -76,28 +76,18 @@ class Jenisbarang extends DbTable
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
-        // idkategoribarang
-        $this->idkategoribarang = new DbField('jenisbarang', 'jenisbarang', 'x_idkategoribarang', 'idkategoribarang', '`idkategoribarang`', '`idkategoribarang`', 3, 11, -1, false, '`idkategoribarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idkategoribarang->Sortable = true; // Allow sort
-        $this->idkategoribarang->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idkategoribarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoribarang', false, 'id', ["nama","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoribarang', false, 'id', ["nama","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->idkategoribarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idkategoribarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkategoribarang->Param, "CustomMsg");
-        $this->Fields['idkategoribarang'] = &$this->idkategoribarang;
-
         // nama
         $this->nama = new DbField('jenisbarang', 'jenisbarang', 'x_nama', 'nama', '`nama`', '`nama`', 200, 255, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nama->Sortable = true; // Allow sort
         $this->nama->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama->Param, "CustomMsg");
         $this->Fields['nama'] = &$this->nama;
+
+        // idkategoribarang
+        $this->idkategoribarang = new DbField('jenisbarang', 'jenisbarang', 'x_idkategoribarang', 'idkategoribarang', '`idkategoribarang`', '`idkategoribarang`', 3, 11, -1, false, '`idkategoribarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idkategoribarang->Sortable = true; // Allow sort
+        $this->idkategoribarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idkategoribarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkategoribarang->Param, "CustomMsg");
+        $this->Fields['idkategoribarang'] = &$this->idkategoribarang;
     }
 
     // Field Visibility
@@ -512,8 +502,8 @@ class Jenisbarang extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->idkategoribarang->DbValue = $row['idkategoribarang'];
         $this->nama->DbValue = $row['nama'];
+        $this->idkategoribarang->DbValue = $row['idkategoribarang'];
     }
 
     // Delete uploaded files
@@ -835,8 +825,8 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
         $this->nama->setDbValue($row['nama']);
+        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
     }
 
     // Render list row values
@@ -851,53 +841,37 @@ SORTHTML;
 
         // id
 
-        // idkategoribarang
-
         // nama
+
+        // idkategoribarang
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // idkategoribarang
-        $curVal = trim(strval($this->idkategoribarang->CurrentValue));
-        if ($curVal != "") {
-            $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
-            if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
-                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
-                } else {
-                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
-                }
-            }
-        } else {
-            $this->idkategoribarang->ViewValue = null;
-        }
-        $this->idkategoribarang->ViewCustomAttributes = "";
-
         // nama
         $this->nama->ViewValue = $this->nama->CurrentValue;
         $this->nama->ViewCustomAttributes = "";
+
+        // idkategoribarang
+        $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+        $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
+        $this->idkategoribarang->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
-        // idkategoribarang
-        $this->idkategoribarang->LinkCustomAttributes = "";
-        $this->idkategoribarang->HrefValue = "";
-        $this->idkategoribarang->TooltipValue = "";
-
         // nama
         $this->nama->LinkCustomAttributes = "";
         $this->nama->HrefValue = "";
         $this->nama->TooltipValue = "";
+
+        // idkategoribarang
+        $this->idkategoribarang->LinkCustomAttributes = "";
+        $this->idkategoribarang->HrefValue = "";
+        $this->idkategoribarang->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -920,11 +894,6 @@ SORTHTML;
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // idkategoribarang
-        $this->idkategoribarang->EditAttrs["class"] = "form-control";
-        $this->idkategoribarang->EditCustomAttributes = "";
-        $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
-
         // nama
         $this->nama->EditAttrs["class"] = "form-control";
         $this->nama->EditCustomAttributes = "";
@@ -933,6 +902,12 @@ SORTHTML;
         }
         $this->nama->EditValue = $this->nama->CurrentValue;
         $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
+
+        // idkategoribarang
+        $this->idkategoribarang->EditAttrs["class"] = "form-control";
+        $this->idkategoribarang->EditCustomAttributes = "";
+        $this->idkategoribarang->EditValue = $this->idkategoribarang->CurrentValue;
+        $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -962,12 +937,13 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idkategoribarang);
+                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->nama);
+                    $doc->exportCaption($this->idkategoribarang);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->idkategoribarang);
                     $doc->exportCaption($this->nama);
+                    $doc->exportCaption($this->idkategoribarang);
                 }
                 $doc->endExportRow();
             }
@@ -997,12 +973,13 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idkategoribarang);
+                        $doc->exportField($this->id);
                         $doc->exportField($this->nama);
+                        $doc->exportField($this->idkategoribarang);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->idkategoribarang);
                         $doc->exportField($this->nama);
+                        $doc->exportField($this->idkategoribarang);
                     }
                     $doc->endExportRow($rowCnt);
                 }

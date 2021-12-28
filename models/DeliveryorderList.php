@@ -572,7 +572,6 @@ class DeliveryorderList extends Deliveryorder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
-        $this->suratjalan->setVisibility();
         $this->created_by->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
@@ -871,7 +870,6 @@ class DeliveryorderList extends Deliveryorder
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
         $filterList = Concat($filterList, $this->tanggal->AdvancedSearch->toJson(), ","); // Field tanggal
         $filterList = Concat($filterList, $this->lampiran->AdvancedSearch->toJson(), ","); // Field lampiran
-        $filterList = Concat($filterList, $this->suratjalan->AdvancedSearch->toJson(), ","); // Field suratjalan
         $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
@@ -948,14 +946,6 @@ class DeliveryorderList extends Deliveryorder
         $this->lampiran->AdvancedSearch->SearchOperator2 = @$filter["w_lampiran"];
         $this->lampiran->AdvancedSearch->save();
 
-        // Field suratjalan
-        $this->suratjalan->AdvancedSearch->SearchValue = @$filter["x_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchOperator = @$filter["z_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchCondition = @$filter["v_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchValue2 = @$filter["y_suratjalan"];
-        $this->suratjalan->AdvancedSearch->SearchOperator2 = @$filter["w_suratjalan"];
-        $this->suratjalan->AdvancedSearch->save();
-
         // Field created_by
         $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
         $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
@@ -997,7 +987,6 @@ class DeliveryorderList extends Deliveryorder
         $where = "";
         $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->lampiran, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->suratjalan, $arKeywords, $type);
         return $where;
     }
 
@@ -1163,7 +1152,6 @@ class DeliveryorderList extends Deliveryorder
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->tanggal); // tanggal
             $this->updateSort($this->lampiran); // lampiran
-            $this->updateSort($this->suratjalan); // suratjalan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1211,7 +1199,6 @@ class DeliveryorderList extends Deliveryorder
                 $this->kode->setSort("");
                 $this->tanggal->setSort("");
                 $this->lampiran->setSort("");
-                $this->suratjalan->setSort("");
                 $this->created_by->setSort("");
                 $this->created_at->setSort("");
                 $this->updated_at->setSort("");
@@ -1806,7 +1793,6 @@ class DeliveryorderList extends Deliveryorder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -1821,7 +1807,6 @@ class DeliveryorderList extends Deliveryorder
         $row['kode'] = null;
         $row['tanggal'] = null;
         $row['lampiran'] = null;
-        $row['suratjalan'] = null;
         $row['created_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -1871,8 +1856,6 @@ class DeliveryorderList extends Deliveryorder
 
         // lampiran
 
-        // suratjalan
-
         // created_by
 
         // created_at
@@ -1902,10 +1885,6 @@ class DeliveryorderList extends Deliveryorder
                 $this->lampiran->ViewValue = "";
             }
             $this->lampiran->ViewCustomAttributes = "";
-
-            // suratjalan
-            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-            $this->suratjalan->ViewCustomAttributes = "";
 
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
@@ -1937,11 +1916,6 @@ class DeliveryorderList extends Deliveryorder
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
-
-            // suratjalan
-            $this->suratjalan->LinkCustomAttributes = "";
-            $this->suratjalan->HrefValue = "";
-            $this->suratjalan->TooltipValue = "";
         }
 
         // Call Row Rendered event

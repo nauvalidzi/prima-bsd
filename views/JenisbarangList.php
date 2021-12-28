@@ -135,11 +135,14 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-        <th data-name="idkategoribarang" class="<?= $Page->idkategoribarang->headerCellClass() ?>"><div id="elh_jenisbarang_idkategoribarang" class="jenisbarang_idkategoribarang"><?= $Page->renderSort($Page->idkategoribarang) ?></div></th>
+<?php if ($Page->id->Visible) { // id ?>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_jenisbarang_id" class="jenisbarang_id"><?= $Page->renderSort($Page->id) ?></div></th>
 <?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_jenisbarang_nama" class="jenisbarang_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
+<?php } ?>
+<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
+        <th data-name="idkategoribarang" class="<?= $Page->idkategoribarang->headerCellClass() ?>"><div id="elh_jenisbarang_idkategoribarang" class="jenisbarang_idkategoribarang"><?= $Page->renderSort($Page->idkategoribarang) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -208,11 +211,11 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-        <td data-name="idkategoribarang" <?= $Page->idkategoribarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_jenisbarang_idkategoribarang">
-<span<?= $Page->idkategoribarang->viewAttributes() ?>>
-<?= $Page->idkategoribarang->getViewValue() ?></span>
+    <?php if ($Page->id->Visible) { // id ?>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_jenisbarang_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -221,6 +224,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_jenisbarang_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
+        <td data-name="idkategoribarang" <?= $Page->idkategoribarang->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_jenisbarang_idkategoribarang">
+<span<?= $Page->idkategoribarang->viewAttributes() ?>>
+<?= $Page->idkategoribarang->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -398,7 +398,6 @@ class ProductPreview extends Product
         $this->idjenisbarang->Visible = false;
         $this->idkualitasbarang->Visible = false;
         $this->idproduct_acuan->Visible = false;
-        $this->idkemasanbarang->Visible = false;
         $this->ukuran->setVisibility();
         $this->netto->Visible = false;
         $this->kemasanbarang->setVisibility();
@@ -432,11 +431,7 @@ class ProductPreview extends Product
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idbrand);
-        $this->setupLookupOptions($this->idkategoribarang);
-        $this->setupLookupOptions($this->idjenisbarang);
-        $this->setupLookupOptions($this->idkualitasbarang);
         $this->setupLookupOptions($this->idproduct_acuan);
-        $this->setupLookupOptions($this->idkemasanbarang);
 
         // Load filter
         $filter = Get("f", "");
@@ -513,7 +508,6 @@ class ProductPreview extends Product
             $this->idjenisbarang->setSort("");
             $this->idkualitasbarang->setSort("");
             $this->idproduct_acuan->setSort("");
-            $this->idkemasanbarang->setSort("");
             $this->ukuran->setSort("");
             $this->netto->setSort("");
             $this->kemasanbarang->setSort("");
@@ -783,19 +777,11 @@ class ProductPreview extends Product
             switch ($fld->FieldVar) {
                 case "x_idbrand":
                     break;
-                case "x_idkategoribarang":
-                    break;
-                case "x_idjenisbarang":
-                    break;
-                case "x_idkualitasbarang":
-                    break;
                 case "x_idproduct_acuan":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add") ? "idbrand = 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
-                case "x_idkemasanbarang":
                     break;
                 case "x_ijinbpom":
                     break;

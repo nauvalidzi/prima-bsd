@@ -522,7 +522,6 @@ class DeliveryorderView extends Deliveryorder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->lampiran->setVisibility();
-        $this->suratjalan->setVisibility();
         $this->created_by->setVisibility();
         $this->created_at->setVisibility();
         $this->updated_at->setVisibility();
@@ -814,7 +813,6 @@ class DeliveryorderView extends Deliveryorder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->suratjalan->setDbValue($row['suratjalan']);
         $this->created_by->setDbValue($row['created_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -829,7 +827,6 @@ class DeliveryorderView extends Deliveryorder
         $row['kode'] = null;
         $row['tanggal'] = null;
         $row['lampiran'] = null;
-        $row['suratjalan'] = null;
         $row['created_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -863,8 +860,6 @@ class DeliveryorderView extends Deliveryorder
 
         // lampiran
 
-        // suratjalan
-
         // created_by
 
         // created_at
@@ -893,10 +888,6 @@ class DeliveryorderView extends Deliveryorder
                 $this->lampiran->ViewValue = "";
             }
             $this->lampiran->ViewCustomAttributes = "";
-
-            // suratjalan
-            $this->suratjalan->ViewValue = $this->suratjalan->CurrentValue;
-            $this->suratjalan->ViewCustomAttributes = "";
 
             // created_by
             $this->created_by->ViewValue = $this->created_by->CurrentValue;
@@ -928,11 +919,6 @@ class DeliveryorderView extends Deliveryorder
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
-
-            // suratjalan
-            $this->suratjalan->LinkCustomAttributes = "";
-            $this->suratjalan->HrefValue = "";
-            $this->suratjalan->TooltipValue = "";
         }
 
         // Call Row Rendered event
