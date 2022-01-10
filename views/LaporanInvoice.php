@@ -27,7 +27,7 @@ $LaporanInvoice = &$Page;
 		$tipepayment = null;
 		if ($_GET['option'] != "all") {
 			$payment_id = ExecuteRow("SELECT id FROM tipepayment WHERE payment like '{$_GET['option']}'")['id'];
-			$tipepayment = " AND idtipepayment = {$payment_id}";
+			$tipepayment = " AND i.idtipepayment = {$payment_id}";
 		}
 
 		$query = "SELECT i.tglinvoice, i.kode AS kode_invoice, o.kode AS kode_po, 
