@@ -568,7 +568,7 @@ class ViskositasbarangList extends Viskositasbarang
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -1088,7 +1088,6 @@ class ViskositasbarangList extends Viskositasbarang
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->value); // value
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1190,6 +1189,14 @@ class ViskositasbarangList extends Viskositasbarang
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1215,6 +1222,10 @@ class ViskositasbarangList extends Viskositasbarang
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1597,11 +1608,6 @@ class ViskositasbarangList extends Viskositasbarang
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // value
             $this->value->LinkCustomAttributes = "";

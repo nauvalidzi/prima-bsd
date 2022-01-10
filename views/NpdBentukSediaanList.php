@@ -135,6 +135,9 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->parent->Visible) { // parent ?>
+        <th data-name="parent" class="<?= $Page->parent->headerCellClass() ?>"><div id="elh_npd_bentuk_sediaan_parent" class="npd_bentuk_sediaan_parent"><?= $Page->renderSort($Page->parent) ?></div></th>
+<?php } ?>
 <?php if ($Page->value->Visible) { // value ?>
         <th data-name="value" class="<?= $Page->value->headerCellClass() ?>"><div id="elh_npd_bentuk_sediaan_value" class="npd_bentuk_sediaan_value"><?= $Page->renderSort($Page->value) ?></div></th>
 <?php } ?>
@@ -205,6 +208,14 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->parent->Visible) { // parent ?>
+        <td data-name="parent" <?= $Page->parent->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_bentuk_sediaan_parent">
+<span<?= $Page->parent->viewAttributes() ?>>
+<?= $Page->parent->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->value->Visible) { // value ?>
         <td data-name="value" <?= $Page->value->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_bentuk_sediaan_value">

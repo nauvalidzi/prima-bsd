@@ -268,23 +268,6 @@ return function (App $app) {
         }
     );
 
-    // rekening
-    $app->any('/RekeningList[/{id}]', RekeningController::class . ':list')->add(PermissionMiddleware::class)->setName('RekeningList-rekening-list'); // list
-    $app->any('/RekeningAdd[/{id}]', RekeningController::class . ':add')->add(PermissionMiddleware::class)->setName('RekeningAdd-rekening-add'); // add
-    $app->any('/RekeningView[/{id}]', RekeningController::class . ':view')->add(PermissionMiddleware::class)->setName('RekeningView-rekening-view'); // view
-    $app->any('/RekeningEdit[/{id}]', RekeningController::class . ':edit')->add(PermissionMiddleware::class)->setName('RekeningEdit-rekening-edit'); // edit
-    $app->any('/RekeningDelete[/{id}]', RekeningController::class . ':delete')->add(PermissionMiddleware::class)->setName('RekeningDelete-rekening-delete'); // delete
-    $app->group(
-        '/rekening',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', RekeningController::class . ':list')->add(PermissionMiddleware::class)->setName('rekening/list-rekening-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', RekeningController::class . ':add')->add(PermissionMiddleware::class)->setName('rekening/add-rekening-add-2'); // add
-            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', RekeningController::class . ':view')->add(PermissionMiddleware::class)->setName('rekening/view-rekening-view-2'); // view
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', RekeningController::class . ':edit')->add(PermissionMiddleware::class)->setName('rekening/edit-rekening-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', RekeningController::class . ':delete')->add(PermissionMiddleware::class)->setName('rekening/delete-rekening-delete-2'); // delete
-        }
-    );
-
     // tipepayment
     $app->any('/TipepaymentList[/{id}]', TipepaymentController::class . ':list')->add(PermissionMiddleware::class)->setName('TipepaymentList-tipepayment-list'); // list
     $app->any('/TipepaymentAdd[/{id}]', TipepaymentController::class . ':add')->add(PermissionMiddleware::class)->setName('TipepaymentAdd-tipepayment-add'); // add
@@ -518,7 +501,6 @@ return function (App $app) {
     $app->any('/OrderList[/{id}]', OrderController::class . ':list')->add(PermissionMiddleware::class)->setName('OrderList-order-list'); // list
     $app->any('/OrderAdd[/{id}]', OrderController::class . ':add')->add(PermissionMiddleware::class)->setName('OrderAdd-order-add'); // add
     $app->any('/OrderView[/{id}]', OrderController::class . ':view')->add(PermissionMiddleware::class)->setName('OrderView-order-view'); // view
-    $app->any('/OrderDelete[/{id}]', OrderController::class . ':delete')->add(PermissionMiddleware::class)->setName('OrderDelete-order-delete'); // delete
     $app->any('/OrderPreview', OrderController::class . ':preview')->add(PermissionMiddleware::class)->setName('OrderPreview-order-preview'); // preview
     $app->group(
         '/order',
@@ -526,7 +508,6 @@ return function (App $app) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', OrderController::class . ':list')->add(PermissionMiddleware::class)->setName('order/list-order-list-2'); // list
             $group->any('/' . Config("ADD_ACTION") . '[/{id}]', OrderController::class . ':add')->add(PermissionMiddleware::class)->setName('order/add-order-add-2'); // add
             $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', OrderController::class . ':view')->add(PermissionMiddleware::class)->setName('order/view-order-view-2'); // view
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', OrderController::class . ':delete')->add(PermissionMiddleware::class)->setName('order/delete-order-delete-2'); // delete
             $group->any('/' . Config("PREVIEW_ACTION") . '', OrderController::class . ':preview')->add(PermissionMiddleware::class)->setName('order/preview-order-preview-2'); // preview
         }
     );
@@ -1044,6 +1025,33 @@ return function (App $app) {
         }
     );
 
+    // v_stockorder
+    $app->any('/VStockorderList[/{idstockorder}]', VStockorderController::class . ':list')->add(PermissionMiddleware::class)->setName('VStockorderList-v_stockorder-list'); // list
+    $app->group(
+        '/v_stockorder',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{idstockorder}]', VStockorderController::class . ':list')->add(PermissionMiddleware::class)->setName('v_stockorder/list-v_stockorder-list-2'); // list
+        }
+    );
+
+    // v_stockorder_detail
+    $app->any('/VStockorderDetailList[/{idstockorder_detail}]', VStockorderDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('VStockorderDetailList-v_stockorder_detail-list'); // list
+    $app->group(
+        '/v_stockorder_detail',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{idstockorder_detail}]', VStockorderDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('v_stockorder_detail/list-v_stockorder_detail-list-2'); // list
+        }
+    );
+
+    // v_stock_produk
+    $app->any('/VStockProdukList[/{idproduk}]', VStockProdukController::class . ':list')->add(PermissionMiddleware::class)->setName('VStockProdukList-v_stock_produk-list'); // list
+    $app->group(
+        '/v_stock_produk',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{idproduk}]', VStockProdukController::class . ':list')->add(PermissionMiddleware::class)->setName('v_stock_produk/list-v_stock_produk-list-2'); // list
+        }
+    );
+
     // npd_aplikasi_sediaan
     $app->any('/NpdAplikasiSediaanList[/{id}]', NpdAplikasiSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdAplikasiSediaanList-npd_aplikasi_sediaan-list'); // list
     $app->group(
@@ -1080,6 +1088,23 @@ return function (App $app) {
         }
     );
 
+    // stock_order
+    $app->any('/StockOrderList[/{id}]', StockOrderController::class . ':list')->add(PermissionMiddleware::class)->setName('StockOrderList-stock_order-list'); // list
+    $app->any('/StockOrderAdd[/{id}]', StockOrderController::class . ':add')->add(PermissionMiddleware::class)->setName('StockOrderAdd-stock_order-add'); // add
+    $app->any('/StockOrderView[/{id}]', StockOrderController::class . ':view')->add(PermissionMiddleware::class)->setName('StockOrderView-stock_order-view'); // view
+    $app->any('/StockOrderEdit[/{id}]', StockOrderController::class . ':edit')->add(PermissionMiddleware::class)->setName('StockOrderEdit-stock_order-edit'); // edit
+    $app->any('/StockOrderDelete[/{id}]', StockOrderController::class . ':delete')->add(PermissionMiddleware::class)->setName('StockOrderDelete-stock_order-delete'); // delete
+    $app->group(
+        '/stock_order',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', StockOrderController::class . ':list')->add(PermissionMiddleware::class)->setName('stock_order/list-stock_order-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', StockOrderController::class . ':add')->add(PermissionMiddleware::class)->setName('stock_order/add-stock_order-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', StockOrderController::class . ':view')->add(PermissionMiddleware::class)->setName('stock_order/view-stock_order-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', StockOrderController::class . ':edit')->add(PermissionMiddleware::class)->setName('stock_order/edit-stock_order-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', StockOrderController::class . ':delete')->add(PermissionMiddleware::class)->setName('stock_order/delete-stock_order-delete-2'); // delete
+        }
+    );
+
     // npd_kemasan_wadah
     $app->any('/NpdKemasanWadahList[/{id}]', NpdKemasanWadahController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdKemasanWadahList-npd_kemasan_wadah-list'); // list
     $app->group(
@@ -1107,56 +1132,12 @@ return function (App $app) {
         }
     );
 
-    // stock_order
-    $app->any('/StockOrderList[/{id}]', StockOrderController::class . ':list')->add(PermissionMiddleware::class)->setName('StockOrderList-stock_order-list'); // list
-    $app->any('/StockOrderAdd[/{id}]', StockOrderController::class . ':add')->add(PermissionMiddleware::class)->setName('StockOrderAdd-stock_order-add'); // add
-    $app->any('/StockOrderView[/{id}]', StockOrderController::class . ':view')->add(PermissionMiddleware::class)->setName('StockOrderView-stock_order-view'); // view
-    $app->any('/StockOrderEdit[/{id}]', StockOrderController::class . ':edit')->add(PermissionMiddleware::class)->setName('StockOrderEdit-stock_order-edit'); // edit
-    $app->any('/StockOrderDelete[/{id}]', StockOrderController::class . ':delete')->add(PermissionMiddleware::class)->setName('StockOrderDelete-stock_order-delete'); // delete
-    $app->group(
-        '/stock_order',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', StockOrderController::class . ':list')->add(PermissionMiddleware::class)->setName('stock_order/list-stock_order-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', StockOrderController::class . ':add')->add(PermissionMiddleware::class)->setName('stock_order/add-stock_order-add-2'); // add
-            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', StockOrderController::class . ':view')->add(PermissionMiddleware::class)->setName('stock_order/view-stock_order-view-2'); // view
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', StockOrderController::class . ':edit')->add(PermissionMiddleware::class)->setName('stock_order/edit-stock_order-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', StockOrderController::class . ':delete')->add(PermissionMiddleware::class)->setName('stock_order/delete-stock_order-delete-2'); // delete
-        }
-    );
-
     // npd_parfum_sediaan
     $app->any('/NpdParfumSediaanList[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanList-npd_parfum_sediaan-list'); // list
     $app->group(
         '/npd_parfum_sediaan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/list-npd_parfum_sediaan-list-2'); // list
-        }
-    );
-
-    // npd_label_kualitas
-    $app->any('/NpdLabelKualitasList[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasList-npd_label_kualitas-list'); // list
-    $app->group(
-        '/npd_label_kualitas',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/list-npd_label_kualitas-list-2'); // list
-        }
-    );
-
-    // npd_viskositas_sediaan
-    $app->any('/NpdViskositasSediaanList[/{id}]', NpdViskositasSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdViskositasSediaanList-npd_viskositas_sediaan-list'); // list
-    $app->group(
-        '/npd_viskositas_sediaan',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdViskositasSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_viskositas_sediaan/list-npd_viskositas_sediaan-list-2'); // list
-        }
-    );
-
-    // npd_warna_sediaan
-    $app->any('/NpdWarnaSediaanList[/{id}]', NpdWarnaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdWarnaSediaanList-npd_warna_sediaan-list'); // list
-    $app->group(
-        '/npd_warna_sediaan',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdWarnaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_warna_sediaan/list-npd_warna_sediaan-list-2'); // list
         }
     );
 
@@ -1207,30 +1188,30 @@ return function (App $app) {
         }
     );
 
-    // v_stockorder
-    $app->any('/VStockorderList[/{idstockorder}]', VStockorderController::class . ':list')->add(PermissionMiddleware::class)->setName('VStockorderList-v_stockorder-list'); // list
+    // npd_label_kualitas
+    $app->any('/NpdLabelKualitasList[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasList-npd_label_kualitas-list'); // list
     $app->group(
-        '/v_stockorder',
+        '/npd_label_kualitas',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idstockorder}]', VStockorderController::class . ':list')->add(PermissionMiddleware::class)->setName('v_stockorder/list-v_stockorder-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/list-npd_label_kualitas-list-2'); // list
         }
     );
 
-    // v_stockorder_detail
-    $app->any('/VStockorderDetailList[/{idstockorder_detail}]', VStockorderDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('VStockorderDetailList-v_stockorder_detail-list'); // list
+    // npd_viskositas_sediaan
+    $app->any('/NpdViskositasSediaanList[/{id}]', NpdViskositasSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdViskositasSediaanList-npd_viskositas_sediaan-list'); // list
     $app->group(
-        '/v_stockorder_detail',
+        '/npd_viskositas_sediaan',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idstockorder_detail}]', VStockorderDetailController::class . ':list')->add(PermissionMiddleware::class)->setName('v_stockorder_detail/list-v_stockorder_detail-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdViskositasSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_viskositas_sediaan/list-npd_viskositas_sediaan-list-2'); // list
         }
     );
 
-    // v_stock_produk
-    $app->any('/VStockProdukList[/{idproduk}]', VStockProdukController::class . ':list')->add(PermissionMiddleware::class)->setName('VStockProdukList-v_stock_produk-list'); // list
+    // npd_warna_sediaan
+    $app->any('/NpdWarnaSediaanList[/{id}]', NpdWarnaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdWarnaSediaanList-npd_warna_sediaan-list'); // list
     $app->group(
-        '/v_stock_produk',
+        '/npd_warna_sediaan',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idproduk}]', VStockProdukController::class . ':list')->add(PermissionMiddleware::class)->setName('v_stock_produk/list-v_stock_produk-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdWarnaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_warna_sediaan/list-npd_warna_sediaan-list-2'); // list
         }
     );
 

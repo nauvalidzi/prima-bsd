@@ -1161,14 +1161,14 @@ class DeliveryorderList extends Deliveryorder
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`id` ASC";
+            $this->DefaultSort = "`id` DESC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
                 if ($this->id->getSort() != "") {
                     $useDefaultSort = false;
                 }
                 if ($useDefaultSort) {
-                    $this->id->setSort("ASC");
+                    $this->id->setSort("DESC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -2159,6 +2159,7 @@ class DeliveryorderList extends Deliveryorder
         	$this->ListOptions->Items["delete"]->Body = "";
         }
         $this->ListOptions->Items["status"]->Body = status_delivery($this->id->CurrentValue);
+        $this->ListOptions->Items["view"]->Body = "<a class=\"ew-row-link ew-view\" title=\"\" data-caption=\"View\" href=\"DeliveryorderDetailList?showmaster=deliveryorder&fk_id={$this->id->CurrentValue}\" data-original-title=\"View\"><i data-phrase=\"ViewLink\" class=\"icon-view ew-icon\" data-caption=\"View\"></i></a>";
     }
 
     // Row Custom Action event

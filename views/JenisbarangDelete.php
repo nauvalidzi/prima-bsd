@@ -44,14 +44,11 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_jenisbarang_id" class="jenisbarang_id"><?= $Page->id->caption() ?></span></th>
+<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
+        <th class="<?= $Page->idkategoribarang->headerCellClass() ?>"><span id="elh_jenisbarang_idkategoribarang" class="jenisbarang_idkategoribarang"><?= $Page->idkategoribarang->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
         <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_jenisbarang_nama" class="jenisbarang_nama"><?= $Page->nama->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-        <th class="<?= $Page->idkategoribarang->headerCellClass() ?>"><span id="elh_jenisbarang_idkategoribarang" class="jenisbarang_idkategoribarang"><?= $Page->idkategoribarang->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -74,11 +71,11 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_jenisbarang_id" class="jenisbarang_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
+<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
+        <td <?= $Page->idkategoribarang->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_jenisbarang_idkategoribarang" class="jenisbarang_idkategoribarang">
+<span<?= $Page->idkategoribarang->viewAttributes() ?>>
+<?= $Page->idkategoribarang->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -87,14 +84,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_jenisbarang_nama" class="jenisbarang_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-        <td <?= $Page->idkategoribarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_jenisbarang_idkategoribarang" class="jenisbarang_idkategoribarang">
-<span<?= $Page->idkategoribarang->viewAttributes() ?>>
-<?= $Page->idkategoribarang->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

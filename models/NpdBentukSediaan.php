@@ -80,7 +80,7 @@ class NpdBentukSediaan extends DbTable
         $this->parent = new DbField('npd_bentuk_sediaan', 'npd_bentuk_sediaan', 'x_parent', 'parent', '`parent`', '`parent`', 200, 50, -1, false, '`parent`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->parent->Nullable = false; // NOT NULL field
         $this->parent->Required = true; // Required field
-        $this->parent->Sortable = false; // Allow sort
+        $this->parent->Sortable = true; // Allow sort
         $this->parent->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->parent->Param, "CustomMsg");
         $this->Fields['parent'] = &$this->parent;
 
@@ -843,7 +843,6 @@ SORTHTML;
         $this->id->CellCssStyle = "white-space: nowrap;";
 
         // parent
-        $this->parent->CellCssStyle = "white-space: nowrap;";
 
         // value
 
@@ -942,8 +941,10 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->parent);
                     $doc->exportCaption($this->value);
                 } else {
+                    $doc->exportCaption($this->parent);
                     $doc->exportCaption($this->value);
                 }
                 $doc->endExportRow();
@@ -975,8 +976,10 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
+                        $doc->exportField($this->parent);
                         $doc->exportField($this->value);
                     } else {
+                        $doc->exportField($this->parent);
                         $doc->exportField($this->value);
                     }
                     $doc->endExportRow($rowCnt);

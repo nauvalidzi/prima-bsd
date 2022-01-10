@@ -568,7 +568,7 @@ class KategoribarangList extends Kategoribarang
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->nama->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -1088,7 +1088,6 @@ class KategoribarangList extends Kategoribarang
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->nama); // nama
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1190,6 +1189,14 @@ class KategoribarangList extends Kategoribarang
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1215,6 +1222,10 @@ class KategoribarangList extends Kategoribarang
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1597,11 +1608,6 @@ class KategoribarangList extends Kategoribarang
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

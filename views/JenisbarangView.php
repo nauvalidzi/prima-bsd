@@ -56,17 +56,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-    <tr id="r_nama">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jenisbarang_nama"><?= $Page->nama->caption() ?></span></td>
-        <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
-<span id="el_jenisbarang_nama">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
     <tr id="r_idkategoribarang">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jenisbarang_idkategoribarang"><?= $Page->idkategoribarang->caption() ?></span></td>
@@ -74,6 +63,17 @@ $Page->showMessage();
 <span id="el_jenisbarang_idkategoribarang">
 <span<?= $Page->idkategoribarang->viewAttributes() ?>>
 <?= $Page->idkategoribarang->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->nama->Visible) { // nama ?>
+    <tr id="r_nama">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_jenisbarang_nama"><?= $Page->nama->caption() ?></span></td>
+        <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
+<span id="el_jenisbarang_nama">
+<span<?= $Page->nama->viewAttributes() ?>>
+<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
     </tr>

@@ -804,6 +804,7 @@ class AplikasibarangEdit extends Aplikasibarang
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // value
             $this->value->LinkCustomAttributes = "";

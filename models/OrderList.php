@@ -577,7 +577,7 @@ class OrderList extends Order
         $this->dokumen->Visible = false;
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
-        $this->status->Visible = false;
+        $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->readonly->Visible = false;
@@ -1232,6 +1232,7 @@ class OrderList extends Order
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->status); // status
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1241,14 +1242,14 @@ class OrderList extends Order
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`id` ASC";
+            $this->DefaultSort = "`id` DESC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
                 if ($this->id->getSort() != "") {
                     $useDefaultSort = false;
                 }
                 if ($useDefaultSort) {
-                    $this->id->setSort("ASC");
+                    $this->id->setSort("DESC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -1319,12 +1320,6 @@ class OrderList extends Order
         $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
         $item->OnLeft = false;
 
         // "detail_order_detail"
@@ -1408,14 +1403,6 @@ class OrderList extends Order
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView() && $this->showOptionLink("view")) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "delete"
-            $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
-            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
@@ -2090,6 +2077,11 @@ class OrderList extends Order
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2399,9 +2391,6 @@ class OrderList extends Order
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
-        $opt = &$this->ListOptions->Add("status");
-        $opt->Header = "Status";
-        $opt->MoveTo(1);
     }
 
     // ListOptions Rendering event
@@ -2417,12 +2406,7 @@ class OrderList extends Order
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        if ($this->readonly->CurrentValue == 1) {
-        	//$this->ListOptions->Items["edit"]->Body = "";
-        	$this->ListOptions->Items["delete"]->Body = "";
-        }
-        //$this->ListOptions->Items["status"]->Body = status_orders($this->id->CurrentValue);
-        $this->ListOptions->Items["status"]->Body = $this->status->CurrentValue == 'DO' ? 'Proses DO': $this->status->CurrentValue;
+        $this->ListOptions->Items["view"]->Body = "<a class=\"ew-row-link ew-view\" title=\"\" data-caption=\"View\" href=\"OrderDetailList?showmaster=order&fk_id={$this->id->CurrentValue}\" data-original-title=\"View\"><i data-phrase=\"ViewLink\" class=\"icon-view ew-icon\" data-caption=\"View\"></i></a>";
     }
 
     // Row Custom Action event

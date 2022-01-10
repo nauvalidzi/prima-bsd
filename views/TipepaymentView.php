@@ -45,6 +45,17 @@ $Page->showMessage();
 <input type="hidden" name="t" value="tipepayment">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
+<?php if ($Page->id->Visible) { // id ?>
+    <tr id="r_id">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_tipepayment_id"><?= $Page->id->caption() ?></span></td>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el_tipepayment_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->payment->Visible) { // payment ?>
     <tr id="r_payment">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_tipepayment_payment"><?= $Page->payment->caption() ?></span></td>

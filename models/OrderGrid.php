@@ -514,7 +514,7 @@ class OrderGrid extends Order
         $this->dokumen->Visible = false;
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
-        $this->status->Visible = false;
+        $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->readonly->Visible = false;
@@ -958,6 +958,9 @@ class OrderGrid extends Order
         if ($CurrentForm->hasValue("x_idbrand") && $CurrentForm->hasValue("o_idbrand") && $this->idbrand->CurrentValue != $this->idbrand->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_status") && $CurrentForm->hasValue("o_status") && $this->status->CurrentValue != $this->status->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1044,6 +1047,7 @@ class OrderGrid extends Order
         $this->idpegawai->clearErrorMessage();
         $this->idcustomer->clearErrorMessage();
         $this->idbrand->clearErrorMessage();
+        $this->status->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1062,14 +1066,14 @@ class OrderGrid extends Order
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`id` ASC";
+            $this->DefaultSort = "`id` DESC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
                 if ($this->id->getSort() != "") {
                     $useDefaultSort = false;
                 }
                 if ($useDefaultSort) {
-                    $this->id->setSort("ASC");
+                    $this->id->setSort("DESC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -1132,12 +1136,6 @@ class OrderGrid extends Order
         $item->Visible = $Security->canView();
         $item->OnLeft = false;
 
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
-        $item->OnLeft = false;
-
         // "sequence"
         $item = &$this->ListOptions->add("sequence");
         $item->CssClass = "text-nowrap";
@@ -1195,7 +1193,7 @@ class OrderGrid extends Order
                 $options = &$this->ListOptions;
                 $options->UseButtonGroup = true; // Use button group for grid delete button
                 $opt = $options["griddelete"];
-                if (!$Security->canDelete() && is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
+                if (is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
                     $opt->Body = "&nbsp;";
                 } else {
                     $opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
@@ -1212,14 +1210,6 @@ class OrderGrid extends Order
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView() && $this->showOptionLink("view")) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "delete"
-            $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
-            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
@@ -1462,6 +1452,19 @@ class OrderGrid extends Order
             $this->idbrand->setOldValue($CurrentForm->getValue("o_idbrand"));
         }
 
+        // Check field name 'status' first before field var 'x_status'
+        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
+        if (!$this->status->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->status->Visible = false; // Disable update for API request
+            } else {
+                $this->status->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_status")) {
+            $this->status->setOldValue($CurrentForm->getValue("o_status"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1482,6 +1485,7 @@ class OrderGrid extends Order
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
+        $this->status->CurrentValue = $this->status->FormValue;
     }
 
     // Load recordset
@@ -1790,6 +1794,11 @@ class OrderGrid extends Order
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -1913,6 +1922,15 @@ class OrderGrid extends Order
             }
             $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
+            // status
+            $this->status->EditAttrs["class"] = "form-control";
+            $this->status->EditCustomAttributes = "";
+            if (!$this->status->Raw) {
+                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+            }
+            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
+            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
             // Add refer script
 
             // kode
@@ -1934,6 +1952,10 @@ class OrderGrid extends Order
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -2021,6 +2043,15 @@ class OrderGrid extends Order
             }
             $this->idbrand->ViewCustomAttributes = "";
 
+            // status
+            $this->status->EditAttrs["class"] = "form-control";
+            $this->status->EditCustomAttributes = "";
+            if (!$this->status->Raw) {
+                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+            }
+            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
+            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
+
             // Edit refer script
 
             // kode
@@ -2047,6 +2078,10 @@ class OrderGrid extends Order
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2090,6 +2125,11 @@ class OrderGrid extends Order
         if ($this->idbrand->Required) {
             if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
                 $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
+            }
+        }
+        if ($this->status->Required) {
+            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
+                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
 
@@ -2201,6 +2241,9 @@ class OrderGrid extends Order
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // status
+            $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2288,6 +2331,9 @@ class OrderGrid extends Order
 
         // idbrand
         $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
+
+        // status
+        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);
 
         // created_by
         if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
@@ -2486,9 +2532,6 @@ class OrderGrid extends Order
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
-        $opt = &$this->ListOptions->Add("status");
-        $opt->Header = "Status";
-        $opt->MoveTo(1);
     }
 
     // ListOptions Rendering event
@@ -2504,6 +2547,5 @@ class OrderGrid extends Order
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        $this->ListOptions->Items["status"]->Body = status_orders($this->id->CurrentValue);
     }
 }

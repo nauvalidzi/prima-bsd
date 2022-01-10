@@ -374,7 +374,7 @@ class SatuanDelete extends Satuan
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->nama->setVisibility();
         $this->konversi->setVisibility();
         $this->unit_konversi->setVisibility();
@@ -593,11 +593,6 @@ class SatuanDelete extends Satuan
             // unit_konversi
             $this->unit_konversi->ViewValue = $this->unit_konversi->CurrentValue;
             $this->unit_konversi->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

@@ -305,18 +305,6 @@ function status_delivery($iddeliveryorder, $detail = "undetail") {
     return 'Lengkap';
 }
 
-function status_orders($idorder) {
-    $row = ExecuteRow("SELECT SUM(od.jumlah) AS jumlah, SUM(od.bonus) AS bonus, SUM(od.sisa) AS sisa FROM `order` o JOIN order_detail od ON o.id = od.idorder WHERE o.id = '{$idorder}'");
-    $totalorder = $row['jumlah'] + $row['bonus'];
-    if ($row['sisa'] < 1) {
-        return 'Sudah Proses DO';
-    }
-    if ($row['sisa'] == $totalorder) {
-        return 'Belum Proses DO';
-    }
-    return 'Proses DO Sebagian';
-}
-
 function status_pembayaran($idinvoice) {
     $row = ExecuteRow("SELECT SUM(sisabayar) AS sisabayar, totaltagihan FROM invoice WHERE id = '{$idinvoice}' GROUP BY id");
     if ($row['sisabayar'] < 1) {

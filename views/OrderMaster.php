@@ -64,6 +64,17 @@ $order = Container("order");
 </td>
         </tr>
 <?php } ?>
+<?php if ($order->status->Visible) { // status ?>
+        <tr id="r_status">
+            <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->status->caption() ?></td>
+            <td <?= $order->status->cellAttributes() ?>>
+<span id="el_order_status">
+<span<?= $order->status->viewAttributes() ?>>
+<?= $order->status->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
     </tbody>
 </table>
 </div>

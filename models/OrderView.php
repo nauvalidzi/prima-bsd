@@ -666,15 +666,6 @@ class OrderView extends Order
             $item->Body = "<a class=\"ew-action ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("ViewPageAddLink") . "</a>";
         }
         $item->Visible = ($this->AddUrl != "" && $Security->canAdd());
-
-        // Delete
-        $item = &$option->add("delete");
-        if ($this->IsModal) { // Handle as inline delete
-            $item->Body = "<a onclick=\"return ew.confirmDelete(this);\" class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(UrlAddQuery(GetUrl($this->DeleteUrl), "action=1")) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
-        }
-        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete() && $this->showOptionLink("delete"));
         $option = $options["detail"];
         $detailTableLink = "";
         $detailViewTblVar = "";
@@ -1300,10 +1291,9 @@ class OrderView extends Order
     public function pageRender()
     {
         //Log("Page Render");
-        $this->OtherOptions["action"]->Items["add"]->Visible = false;
-        if ($this->readonly->CurrentValue) {
-        	//$this->OtherOptions["action"]->Items["edit"]->Visible = false;
-        	$this->OtherOptions["action"]->Items["delete"]->Visible = false;
+        $this->status->ViewValue = $this->status->CurrentValue == 'DO' ? 'Proses DO': $this->status->CurrentValue;
+        if ($this->catatan->CurrentValue == null) {
+            $this->catatan->Visible = false;
         }
     }
 

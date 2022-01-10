@@ -776,6 +776,11 @@ class TipepaymentView extends Tipepayment
             $this->payment->ViewValue = $this->payment->CurrentValue;
             $this->payment->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // payment
             $this->payment->LinkCustomAttributes = "";
             $this->payment->HrefValue = "";

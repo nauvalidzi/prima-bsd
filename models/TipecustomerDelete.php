@@ -374,7 +374,7 @@ class TipecustomerDelete extends Tipecustomer
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->tipe->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -574,11 +574,6 @@ class TipecustomerDelete extends Tipecustomer
             // tipe
             $this->tipe->ViewValue = $this->tipe->CurrentValue;
             $this->tipe->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // tipe
             $this->tipe->LinkCustomAttributes = "";

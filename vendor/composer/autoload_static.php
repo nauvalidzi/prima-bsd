@@ -10,8 +10,8 @@ class ComposerStaticInit3acb208da661379e60dffde541147e56
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         'f9e61f18f0291090ecf3f67a829046de' => __DIR__ . '/..' . '/athari/yalinqo/YaLinqo/Linq.php',
-        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         'b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -30,6 +30,7 @@ class ComposerStaticInit3acb208da661379e60dffde541147e56
             'Slim\\Csrf\\' => 10,
             'Slim\\' => 5,
             'Selective\\SameSiteCookie\\' => 25,
+            'Sabberworm\\CSS\\' => 15,
         ),
         'P' => 
         array (
@@ -123,6 +124,10 @@ class ComposerStaticInit3acb208da661379e60dffde541147e56
         'Selective\\SameSiteCookie\\' => 
         array (
             0 => __DIR__ . '/..' . '/selective/samesite-cookie/src',
+        ),
+        'Sabberworm\\CSS\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
         ),
         'Psr\\Log\\' => 
         array (
@@ -235,13 +240,6 @@ class ComposerStaticInit3acb208da661379e60dffde541147e56
     );
 
     public static $prefixesPsr0 = array (
-        'S' => 
-        array (
-            'Sabberworm\\CSS' => 
-            array (
-                0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/lib',
-            ),
-        ),
         'P' => 
         array (
             'PHPThumb' => 

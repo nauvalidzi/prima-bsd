@@ -67,6 +67,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+    <?php if ($Page->SortUrl($Page->status) == "") { ?>
+        <th class="<?= $Page->status->headerCellClass() ?>"><?= $Page->status->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->status->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->status->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->status->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->status->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->status->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->status->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -130,6 +139,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->idbrand->cellAttributes() ?>>
 <span<?= $Page->idbrand->viewAttributes() ?>>
 <?= $Page->idbrand->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <!-- status -->
+        <td<?= $Page->status->cellAttributes() ?>>
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

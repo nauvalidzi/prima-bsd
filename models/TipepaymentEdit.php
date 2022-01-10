@@ -467,7 +467,7 @@ class TipepaymentEdit extends Tipepayment
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->payment->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -649,6 +649,12 @@ class TipepaymentEdit extends Tipepayment
         // Load from form
         global $CurrentForm;
 
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
+
         // Check field name 'payment' first before field var 'x_payment'
         $val = $CurrentForm->hasValue("payment") ? $CurrentForm->getValue("payment") : $CurrentForm->getValue("x_payment");
         if (!$this->payment->IsDetailKey) {
@@ -657,12 +663,6 @@ class TipepaymentEdit extends Tipepayment
             } else {
                 $this->payment->setFormValue($val);
             }
-        }
-
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
         }
     }
 
@@ -774,11 +774,22 @@ class TipepaymentEdit extends Tipepayment
             $this->payment->ViewValue = $this->payment->CurrentValue;
             $this->payment->ViewCustomAttributes = "";
 
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
+
             // payment
             $this->payment->LinkCustomAttributes = "";
             $this->payment->HrefValue = "";
             $this->payment->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+            $this->id->EditValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
             // payment
             $this->payment->EditAttrs["class"] = "form-control";
             $this->payment->EditCustomAttributes = "";
@@ -789,6 +800,11 @@ class TipepaymentEdit extends Tipepayment
             $this->payment->PlaceHolder = RemoveHtml($this->payment->caption());
 
             // Edit refer script
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // payment
             $this->payment->LinkCustomAttributes = "";
@@ -812,6 +828,11 @@ class TipepaymentEdit extends Tipepayment
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
+            }
         }
         if ($this->payment->Required) {
             if (!$this->payment->IsDetailKey && EmptyValue($this->payment->FormValue)) {

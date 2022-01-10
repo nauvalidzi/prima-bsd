@@ -1739,10 +1739,10 @@ class OrderDetailList extends OrderDetail
     {
         // Example:
         //$header = "your header";
-        $readonly = ExecuteRow("SELECT readonly FROM `order` WHERE id={$this->idorder->CurrentValue}");
-        if($readonly) {
-        	$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
-        }
+        //$readonly = ExecuteRow("SELECT readonly FROM `order` WHERE id={$this->idorder->CurrentValue}");
+        //if ($readonly) {
+          	$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
+        //}
     }
 
     // Page Data Rendered event

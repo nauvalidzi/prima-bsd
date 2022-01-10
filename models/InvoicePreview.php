@@ -543,7 +543,7 @@ class InvoicePreview extends Invoice
     {
         $sort = $this->getSessionOrderBy();
         if (!$sort) {
-            $sort = "`id` ASC";
+            $sort = "`id` DESC";
         }
         return $this->buildSelectSql(
             $this->getSqlSelect(),
@@ -927,5 +927,6 @@ class InvoicePreview extends Invoice
         } else {
         	$this->ListOptions["suratjalan"]->Body = 'Unsent';
         }
+        $this->ListOptions->Items["view"]->Body = "<a class=\"ew-row-link ew-view\" title=\"\" data-caption=\"View\" href=\"InvoiceDetailList?showmaster=invoice&fk_id={$this->id->CurrentValue}\" data-original-title=\"View\"><i data-phrase=\"ViewLink\" class=\"icon-view ew-icon\" data-caption=\"View\"></i></a>";
     }
 }

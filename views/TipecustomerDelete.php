@@ -44,9 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_tipecustomer_id" class="tipecustomer_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->tipe->Visible) { // tipe ?>
         <th class="<?= $Page->tipe->headerCellClass() ?>"><span id="elh_tipecustomer_tipe" class="tipecustomer_tipe"><?= $Page->tipe->caption() ?></span></th>
 <?php } ?>
@@ -71,14 +68,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_tipecustomer_id" class="tipecustomer_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->tipe->Visible) { // tipe ?>
         <td <?= $Page->tipe->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_tipecustomer_tipe" class="tipecustomer_tipe">

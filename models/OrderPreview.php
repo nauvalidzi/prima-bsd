@@ -399,7 +399,7 @@ class OrderPreview extends Order
         $this->dokumen->Visible = false;
         $this->catatan->Visible = false;
         $this->aktif->Visible = false;
-        $this->status->Visible = false;
+        $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->readonly->Visible = false;
@@ -520,6 +520,7 @@ class OrderPreview extends Order
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->status); // status
         }
     }
 
@@ -533,7 +534,7 @@ class OrderPreview extends Order
     {
         $sort = $this->getSessionOrderBy();
         if (!$sort) {
-            $sort = "`id` ASC";
+            $sort = "`id` DESC";
         }
         return $this->buildSelectSql(
             $this->getSqlSelect(),
@@ -562,12 +563,6 @@ class OrderPreview extends Order
         $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
         $item->OnLeft = false;
 
         // Drop down button for ListOptions
@@ -602,22 +597,6 @@ class OrderPreview extends Order
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($viewUrl) . "',btn:null});\">" . $viewCaption . "</a>";
             } else {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"" . HtmlEncode($viewUrl) . "\">" . $viewCaption . "</a>";
-            }
-        } else {
-            $opt->Body = "";
-        }
-
-        // "delete"
-        $opt = $this->ListOptions["delete"];
-        if ($Security->canDelete()) {
-            $deleteCaption = $Language->phrase("DeleteLink");
-            $deleteTitle = HtmlTitle($deleteCaption);
-            $deleteUrl = $this->getDeleteUrl();
-            if ($this->UseModalLinks && !IsMobile()) {
-                $deleteUrl .= (ContainsString($deleteUrl, "?") ? "&" : "?") . "action=1";
-                $opt->Body = "<a class=\"ew-row-link ew-delete\" onclick=\"return ew.confirmDelete(this);\" title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
-            } else {
-                $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
             }
         } else {
             $opt->Body = "";
@@ -810,6 +789,7 @@ class OrderPreview extends Order
     public function pageRender()
     {
         //Log("Page Render");
+        $this->status->ViewValue = $this->status->CurrentValue == 'DO' ? 'Proses DO': $this->status->CurrentValue;
     }
 
     // Page Data Rendering event
@@ -834,9 +814,6 @@ class OrderPreview extends Order
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
-        $opt = &$this->ListOptions->Add("status");
-        $opt->Header = "Status";
-        $opt->MoveTo(1);
     }
 
     // ListOptions Rendering event
@@ -852,10 +829,6 @@ class OrderPreview extends Order
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        if ($this->readonly->CurrentValue == 1) {
-        	//$this->ListOptions->Items["edit"]->Body = "";
-        	$this->ListOptions->Items["delete"]->Body = "";
-        }
-        $this->ListOptions->Items["status"]->Body = status_orders($this->id->CurrentValue);
+        $this->ListOptions->Items["view"]->Body = "<a class=\"ew-row-link ew-view\" title=\"\" data-caption=\"View\" href=\"OrderDetailList?showmaster=order&fk_id={$this->id->CurrentValue}\" data-original-title=\"View\"><i data-phrase=\"ViewLink\" class=\"icon-view ew-icon\" data-caption=\"View\"></i></a>";
     }
 }

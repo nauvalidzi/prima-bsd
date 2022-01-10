@@ -163,6 +163,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
         <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_order_idbrand" class="order_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
 <?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_order_status" class="order_status"><?= $Page->renderSort($Page->status) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -270,6 +273,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Page->ListOptions->render("body", "right", $Page->RowCount);
@@ -331,7 +342,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Purchase Order"),$("ul.pagination").addClass("pagination-sm"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-orders" title="Synchronize Data Orders"><i class="fas fa-sync-alt"></i></button></div>'),$(".sync-orders").click((function(){$.get("api/sync-order-sip",(function(t){!1!==t.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
+    $(".ew-detail-add-group").html("Add Purchase Order"),$("ul.pagination").addClass("pagination-sm"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-orders" title="Synchronize Data Orders" data-toggle="modal" data-target="#modal-default" data-backdrop="static" data-keyboard="false"><i class="fas fa-sync-alt"></i></button></div>'),$(".sync-orders").on("click",(function(){$("#modal-default .modal-header").hide(),$("#modal-default .modal-dialog").addClass("modal-dialog-centered"),$("#modal-default .modal-body").addClass("my-4"),$("#modal-default .modal-body").html('<center><i class="fas fa-3x fa-sync fa-spin"></i></center>'),$("#modal-default .modal-footer").hide(),$.get("api/sync-order-sip",(function(a){$("#modal-default").modal("hide"),!1!==a.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

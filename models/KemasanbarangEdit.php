@@ -804,6 +804,7 @@ class KemasanbarangEdit extends Kemasanbarang
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

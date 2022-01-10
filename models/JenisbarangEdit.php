@@ -468,8 +468,8 @@ class JenisbarangEdit extends Jenisbarang
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->nama->setVisibility();
         $this->idkategoribarang->setVisibility();
+        $this->nama->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -484,6 +484,7 @@ class JenisbarangEdit extends Jenisbarang
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idkategoribarang);
 
         // Check modal
         if ($this->IsModal) {
@@ -656,16 +657,6 @@ class JenisbarangEdit extends Jenisbarang
             $this->id->setFormValue($val);
         }
 
-        // Check field name 'nama' first before field var 'x_nama'
-        $val = $CurrentForm->hasValue("nama") ? $CurrentForm->getValue("nama") : $CurrentForm->getValue("x_nama");
-        if (!$this->nama->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->nama->Visible = false; // Disable update for API request
-            } else {
-                $this->nama->setFormValue($val);
-            }
-        }
-
         // Check field name 'idkategoribarang' first before field var 'x_idkategoribarang'
         $val = $CurrentForm->hasValue("idkategoribarang") ? $CurrentForm->getValue("idkategoribarang") : $CurrentForm->getValue("x_idkategoribarang");
         if (!$this->idkategoribarang->IsDetailKey) {
@@ -675,6 +666,16 @@ class JenisbarangEdit extends Jenisbarang
                 $this->idkategoribarang->setFormValue($val);
             }
         }
+
+        // Check field name 'nama' first before field var 'x_nama'
+        $val = $CurrentForm->hasValue("nama") ? $CurrentForm->getValue("nama") : $CurrentForm->getValue("x_nama");
+        if (!$this->nama->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->nama->Visible = false; // Disable update for API request
+            } else {
+                $this->nama->setFormValue($val);
+            }
+        }
     }
 
     // Restore form values
@@ -682,8 +683,8 @@ class JenisbarangEdit extends Jenisbarang
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
-        $this->nama->CurrentValue = $this->nama->FormValue;
         $this->idkategoribarang->CurrentValue = $this->idkategoribarang->FormValue;
+        $this->nama->CurrentValue = $this->nama->FormValue;
     }
 
     /**
@@ -734,8 +735,8 @@ class JenisbarangEdit extends Jenisbarang
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->nama->setDbValue($row['nama']);
         $this->idkategoribarang->setDbValue($row['idkategoribarang']);
+        $this->nama->setDbValue($row['nama']);
     }
 
     // Return a row with default values
@@ -743,8 +744,8 @@ class JenisbarangEdit extends Jenisbarang
     {
         $row = [];
         $row['id'] = null;
-        $row['nama'] = null;
         $row['idkategoribarang'] = null;
+        $row['nama'] = null;
         return $row;
     }
 
@@ -778,43 +779,84 @@ class JenisbarangEdit extends Jenisbarang
 
         // id
 
-        // nama
-
         // idkategoribarang
+
+        // nama
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
+            // idkategoribarang
+            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+            if ($curVal != "") {
+                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
+                if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
+                    } else {
+                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idkategoribarang->ViewValue = null;
+            }
+            $this->idkategoribarang->ViewCustomAttributes = "";
+
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
-
-            // idkategoribarang
-            $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
-            $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
-            $this->idkategoribarang->ViewCustomAttributes = "";
 
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
             $this->id->TooltipValue = "";
 
-            // nama
-            $this->nama->LinkCustomAttributes = "";
-            $this->nama->HrefValue = "";
-            $this->nama->TooltipValue = "";
-
             // idkategoribarang
             $this->idkategoribarang->LinkCustomAttributes = "";
             $this->idkategoribarang->HrefValue = "";
             $this->idkategoribarang->TooltipValue = "";
+
+            // nama
+            $this->nama->LinkCustomAttributes = "";
+            $this->nama->HrefValue = "";
+            $this->nama->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // id
             $this->id->EditAttrs["class"] = "form-control";
             $this->id->EditCustomAttributes = "";
             $this->id->EditValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
+
+            // idkategoribarang
+            $this->idkategoribarang->EditAttrs["class"] = "form-control";
+            $this->idkategoribarang->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+            if ($curVal != "") {
+                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
+            } else {
+                $this->idkategoribarang->ViewValue = $this->idkategoribarang->Lookup !== null && is_array($this->idkategoribarang->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkategoribarang->ViewValue !== null) { // Load from cache
+                $this->idkategoribarang->EditValue = array_values($this->idkategoribarang->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkategoribarang->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idkategoribarang->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkategoribarang->EditValue = $arwrk;
+            }
+            $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
 
             // nama
             $this->nama->EditAttrs["class"] = "form-control";
@@ -825,25 +867,20 @@ class JenisbarangEdit extends Jenisbarang
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
-            // idkategoribarang
-            $this->idkategoribarang->EditAttrs["class"] = "form-control";
-            $this->idkategoribarang->EditCustomAttributes = "";
-            $this->idkategoribarang->EditValue = HtmlEncode($this->idkategoribarang->CurrentValue);
-            $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
-
             // Edit refer script
 
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
-
-            // nama
-            $this->nama->LinkCustomAttributes = "";
-            $this->nama->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // idkategoribarang
             $this->idkategoribarang->LinkCustomAttributes = "";
             $this->idkategoribarang->HrefValue = "";
+
+            // nama
+            $this->nama->LinkCustomAttributes = "";
+            $this->nama->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -869,18 +906,15 @@ class JenisbarangEdit extends Jenisbarang
                 $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
-        if ($this->nama->Required) {
-            if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
-                $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
-            }
-        }
         if ($this->idkategoribarang->Required) {
             if (!$this->idkategoribarang->IsDetailKey && EmptyValue($this->idkategoribarang->FormValue)) {
                 $this->idkategoribarang->addErrorMessage(str_replace("%s", $this->idkategoribarang->caption(), $this->idkategoribarang->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idkategoribarang->FormValue)) {
-            $this->idkategoribarang->addErrorMessage($this->idkategoribarang->getErrorMessage(false));
+        if ($this->nama->Required) {
+            if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
+                $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -914,11 +948,11 @@ class JenisbarangEdit extends Jenisbarang
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // nama
-            $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, null, $this->nama->ReadOnly);
-
             // idkategoribarang
             $this->idkategoribarang->setDbValueDef($rsnew, $this->idkategoribarang->CurrentValue, null, $this->idkategoribarang->ReadOnly);
+
+            // nama
+            $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, null, $this->nama->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -988,6 +1022,8 @@ class JenisbarangEdit extends Jenisbarang
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idkategoribarang":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

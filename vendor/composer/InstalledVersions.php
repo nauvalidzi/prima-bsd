@@ -91,12 +91,12 @@ private static $installed = array (
     ),
     'doctrine/dbal' => 
     array (
-      'pretty_version' => '2.13.4',
-      'version' => '2.13.4.0',
+      'pretty_version' => '2.13.7',
+      'version' => '2.13.7.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2411a55a2a628e6d8dd598388ab13474802c7b6e',
+      'reference' => '6e22f6012b42d7932674857989fcf184e9e9b1c3',
     ),
     'doctrine/deprecations' => 
     array (
@@ -118,21 +118,21 @@ private static $installed = array (
     ),
     'ezyang/htmlpurifier' => 
     array (
-      'pretty_version' => 'v4.13.0',
-      'version' => '4.13.0.0',
+      'pretty_version' => 'v4.14.0',
+      'version' => '4.14.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '08e27c97e4c6ed02f37c5b2b20488046c8d90d75',
+      'reference' => '12ab42bd6e742c70c0a52f7b82477fcd44e64b75',
     ),
     'firebase/php-jwt' => 
     array (
-      'pretty_version' => 'v5.4.0',
-      'version' => '5.4.0.0',
+      'pretty_version' => 'v5.5.1',
+      'version' => '5.5.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd2113d9b2e0e349796e72d2a63cf9319100382d2',
+      'reference' => '83b609028194aa042ea33b5af2d41a7427de80e6',
     ),
     'hkvstore/dompdf' => 
     array (
@@ -226,12 +226,12 @@ private static $installed = array (
     ),
     'phenx/php-font-lib' => 
     array (
-      'pretty_version' => '0.5.2',
-      'version' => '0.5.2.0',
+      'pretty_version' => '0.5.4',
+      'version' => '0.5.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ca6ad461f032145fff5971b5985e5af9e7fa88d8',
+      'reference' => 'dd448ad1ce34c63d09baccd05415e361300c35b4',
     ),
     'phenx/php-svg-lib' => 
     array (
@@ -244,12 +244,12 @@ private static $installed = array (
     ),
     'php-di/invoker' => 
     array (
-      'pretty_version' => '2.3.2',
-      'version' => '2.3.2.0',
+      'pretty_version' => '2.3.3',
+      'version' => '2.3.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '5214cbe5aad066022cd845dbf313f0e47aed928f',
+      'reference' => 'cd6d9f267d1a3474bdddf1be1da079f01b942786',
     ),
     'php-di/php-di' => 
     array (
@@ -280,12 +280,12 @@ private static $installed = array (
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.5.1',
-      'version' => '6.5.1.0',
+      'pretty_version' => 'v6.5.3',
+      'version' => '6.5.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dd803df5ad7492e1b40637f7ebd258fee5ca7355',
+      'reference' => 'baeb7cde6b60b1286912690ab0693c7789a31e71',
     ),
     'psr/container' => 
     array (
@@ -371,12 +371,12 @@ private static $installed = array (
     ),
     'sabberworm/php-css-parser' => 
     array (
-      'pretty_version' => '8.3.1',
-      'version' => '8.3.1.0',
+      'pretty_version' => '8.4.0',
+      'version' => '8.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd217848e1396ef962fb1997cf3e2421acba7f796',
+      'reference' => 'e41d2140031d533348b2192a83f02d8dd8a71d30',
     ),
     'selective/samesite-cookie' => 
     array (

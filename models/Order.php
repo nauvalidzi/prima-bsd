@@ -2010,6 +2010,7 @@ SORTHTML;
     		$this->idpegawai->CurrentValue = CurrentUserID();
     		$this->idpegawai->ReadOnly = TRUE; 
     	}
+    	$this->status->ViewValue = $this->status->CurrentValue == 'DO' ? 'Proses DO': $this->status->CurrentValue;
     }
 
     // User ID Filtering event

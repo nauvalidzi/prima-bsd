@@ -1116,14 +1116,14 @@ class InvoiceGrid extends Invoice
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "`id` ASC";
+            $this->DefaultSort = "`id` DESC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
                 if ($this->id->getSort() != "") {
                     $useDefaultSort = false;
                 }
                 if ($useDefaultSort) {
-                    $this->id->setSort("ASC");
+                    $this->id->setSort("DESC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {

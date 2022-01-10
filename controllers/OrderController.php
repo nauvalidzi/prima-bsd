@@ -26,12 +26,6 @@ class OrderController extends ControllerBase
         return $this->runPage($request, $response, $args, "OrderView");
     }
 
-    // delete
-    public function delete(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "OrderDelete");
-    }
-
     // preview
     public function preview(Request $request, Response $response, array $args): Response
     {

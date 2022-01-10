@@ -568,7 +568,7 @@ class SatuanList extends Satuan
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->nama->setVisibility();
         $this->konversi->setVisibility();
         $this->unit_konversi->setVisibility();
@@ -1109,7 +1109,6 @@ class SatuanList extends Satuan
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->konversi); // konversi
             $this->updateSort($this->unit_konversi); // unit_konversi
@@ -1215,6 +1214,14 @@ class SatuanList extends Satuan
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1240,6 +1247,10 @@ class SatuanList extends Satuan
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1639,11 +1650,6 @@ class SatuanList extends Satuan
             // unit_konversi
             $this->unit_konversi->ViewValue = $this->unit_konversi->CurrentValue;
             $this->unit_konversi->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

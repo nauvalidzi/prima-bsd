@@ -804,6 +804,7 @@ class KualitasbarangEdit extends Kualitasbarang
             // id
             $this->id->LinkCustomAttributes = "";
             $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

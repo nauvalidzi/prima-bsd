@@ -20,6 +20,7 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.tipepayment)
         ew.vars.tables.tipepayment = currentTable;
     ftipepaymentedit.addFields([
+        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
         ["payment", [fields.payment.visible && fields.payment.required ? ew.Validators.required(fields.payment.caption) : null], fields.payment.isInvalid]
     ]);
 
@@ -109,6 +110,18 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
+<?php if ($Page->id->Visible) { // id ?>
+    <div id="r_id" class="form-group row">
+        <label id="elh_tipepayment_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
+<span id="el_tipepayment_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="tipepayment" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->payment->Visible) { // payment ?>
     <div id="r_payment" class="form-group row">
         <label id="elh_tipepayment_payment" for="x_payment" class="<?= $Page->LeftColumnClass ?>"><?= $Page->payment->caption() ?><?= $Page->payment->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -122,7 +135,6 @@ $Page->showMessage();
     </div>
 <?php } ?>
 </div><!-- /page* -->
-    <input type="hidden" data-table="tipepayment" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

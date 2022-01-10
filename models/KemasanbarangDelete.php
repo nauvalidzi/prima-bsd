@@ -374,7 +374,7 @@ class KemasanbarangDelete extends Kemasanbarang
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->nama->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -574,11 +574,6 @@ class KemasanbarangDelete extends Kemasanbarang
             // nama
             $this->nama->ViewValue = $this->nama->CurrentValue;
             $this->nama->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
 
             // nama
             $this->nama->LinkCustomAttributes = "";

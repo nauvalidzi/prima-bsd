@@ -566,7 +566,7 @@ class NpdBentukSediaanList extends NpdBentukSediaan
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->parent->Visible = false;
+        $this->parent->setVisibility();
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -858,6 +858,7 @@ class NpdBentukSediaanList extends NpdBentukSediaan
         // Initialize
         $filterList = "";
         $savedFilterList = "";
+        $filterList = Concat($filterList, $this->parent->AdvancedSearch->toJson(), ","); // Field parent
         $filterList = Concat($filterList, $this->value->AdvancedSearch->toJson(), ","); // Field value
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -899,6 +900,14 @@ class NpdBentukSediaanList extends NpdBentukSediaan
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
+        // Field parent
+        $this->parent->AdvancedSearch->SearchValue = @$filter["x_parent"];
+        $this->parent->AdvancedSearch->SearchOperator = @$filter["z_parent"];
+        $this->parent->AdvancedSearch->SearchCondition = @$filter["v_parent"];
+        $this->parent->AdvancedSearch->SearchValue2 = @$filter["y_parent"];
+        $this->parent->AdvancedSearch->SearchOperator2 = @$filter["w_parent"];
+        $this->parent->AdvancedSearch->save();
+
         // Field value
         $this->value->AdvancedSearch->SearchValue = @$filter["x_value"];
         $this->value->AdvancedSearch->SearchOperator = @$filter["z_value"];
@@ -914,6 +923,7 @@ class NpdBentukSediaanList extends NpdBentukSediaan
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
+        $this->buildBasicSearchSql($where, $this->parent, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->value, $arKeywords, $type);
         return $where;
     }
@@ -1077,6 +1087,7 @@ class NpdBentukSediaanList extends NpdBentukSediaan
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->parent); // parent
             $this->updateSort($this->value); // value
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1528,13 +1539,21 @@ class NpdBentukSediaanList extends NpdBentukSediaan
         $this->id->CellCssStyle = "white-space: nowrap;";
 
         // parent
-        $this->parent->CellCssStyle = "white-space: nowrap;";
 
         // value
         if ($this->RowType == ROWTYPE_VIEW) {
+            // parent
+            $this->parent->ViewValue = $this->parent->CurrentValue;
+            $this->parent->ViewCustomAttributes = "";
+
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
+
+            // parent
+            $this->parent->LinkCustomAttributes = "";
+            $this->parent->HrefValue = "";
+            $this->parent->TooltipValue = "";
 
             // value
             $this->value->LinkCustomAttributes = "";

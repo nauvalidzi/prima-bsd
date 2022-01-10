@@ -26,7 +26,8 @@ loadjs.ready("head", function () {
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null], fields.tanggal.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
-        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid]
+        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid]
     ]);
 
     // Set invalid fields
@@ -90,6 +91,8 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idbrand", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "status", false))
+            return false;
         return true;
     }
 
@@ -144,6 +147,9 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->idbrand->Visible) { // idbrand ?>
         <th data-name="idbrand" class="<?= $Grid->idbrand->headerCellClass() ?>"><div id="elh_order_idbrand" class="order_idbrand"><?= $Grid->renderSort($Grid->idbrand) ?></div></th>
+<?php } ?>
+<?php if ($Grid->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Grid->status->headerCellClass() ?>"><div id="elh_order_status" class="order_status"><?= $Grid->renderSort($Grid->status) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -472,6 +478,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->status->Visible) { // status ?>
+        <td data-name="status" <?= $Grid->status->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_order_status" class="form-group">
+<input type="<?= $Grid->status->getInputTextType() ?>" data-table="order" data-field="x_status" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->status->getPlaceHolder()) ?>" value="<?= $Grid->status->EditValue ?>"<?= $Grid->status->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="order" data-field="x_status" data-hidden="1" name="o<?= $Grid->RowIndex ?>_status" id="o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_status" class="form-group">
+<input type="<?= $Grid->status->getInputTextType() ?>" data-table="order" data-field="x_status" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->status->getPlaceHolder()) ?>" value="<?= $Grid->status->EditValue ?>"<?= $Grid->status->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_status">
+<span<?= $Grid->status->viewAttributes() ?>>
+<?= $Grid->status->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="order" data-field="x_status" data-hidden="1" name="fordergrid$x<?= $Grid->RowIndex ?>_status" id="fordergrid$x<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->FormValue) ?>">
+<input type="hidden" data-table="order" data-field="x_status" data-hidden="1" name="fordergrid$o<?= $Grid->RowIndex ?>_status" id="fordergrid$o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -675,6 +708,23 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
 </td>
     <?php } ?>
+    <?php if ($Grid->status->Visible) { // status ?>
+        <td data-name="status">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_order_status" class="form-group order_status">
+<input type="<?= $Grid->status->getInputTextType() ?>" data-table="order" data-field="x_status" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->status->getPlaceHolder()) ?>" value="<?= $Grid->status->EditValue ?>"<?= $Grid->status->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_order_status" class="form-group order_status">
+<span<?= $Grid->status->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->status->getDisplayValue($Grid->status->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="order" data-field="x_status" data-hidden="1" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="order" data-field="x_status" data-hidden="1" name="o<?= $Grid->RowIndex ?>_status" id="o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowIndex);
@@ -734,7 +784,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Purchase Order"),$("ul.pagination").addClass("pagination-sm"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-orders" title="Synchronize Data Orders"><i class="fas fa-sync-alt"></i></button></div>'),$(".sync-orders").click((function(){$.get("api/sync-order-sip",(function(t){!1!==t.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
+    $(".ew-detail-add-group").html("Add Purchase Order"),$("ul.pagination").addClass("pagination-sm"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-orders" title="Synchronize Data Orders" data-toggle="modal" data-target="#modal-default" data-backdrop="static" data-keyboard="false"><i class="fas fa-sync-alt"></i></button></div>'),$(".sync-orders").on("click",(function(){$("#modal-default .modal-header").hide(),$("#modal-default .modal-dialog").addClass("modal-dialog-centered"),$("#modal-default .modal-body").addClass("my-4"),$("#modal-default .modal-body").html('<center><i class="fas fa-3x fa-sync fa-spin"></i></center>'),$("#modal-default .modal-footer").hide(),$.get("api/sync-order-sip",(function(a){$("#modal-default").modal("hide"),!1!==a.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
 });
 </script>
 <?php if (!$Grid->isExport()) { ?>
