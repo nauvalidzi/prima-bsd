@@ -1156,6 +1156,7 @@ class OrderDetailAdd extends OrderDetail
             $this->total->PlaceHolder = RemoveHtml($this->total->caption());
 
             // tipe_sla
+            $this->tipe_sla->EditAttrs["class"] = "form-control";
             $this->tipe_sla->EditCustomAttributes = "";
             $curVal = trim(strval($this->tipe_sla->CurrentValue));
             if ($curVal != "") {
@@ -1165,9 +1166,6 @@ class OrderDetailAdd extends OrderDetail
             }
             if ($this->tipe_sla->ViewValue !== null) { // Load from cache
                 $this->tipe_sla->EditValue = array_values($this->tipe_sla->Lookup->Options);
-                if ($this->tipe_sla->ViewValue == "") {
-                    $this->tipe_sla->ViewValue = $Language->phrase("PleaseSelect");
-                }
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
@@ -1177,12 +1175,6 @@ class OrderDetailAdd extends OrderDetail
                 $sqlWrk = $this->tipe_sla->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->tipe_sla->Lookup->renderViewRow($rswrk[0]);
-                    $this->tipe_sla->ViewValue = $this->tipe_sla->displayValue($arwrk);
-                } else {
-                    $this->tipe_sla->ViewValue = $Language->phrase("PleaseSelect");
-                }
                 $arwrk = $rswrk;
                 $this->tipe_sla->EditValue = $arwrk;
             }

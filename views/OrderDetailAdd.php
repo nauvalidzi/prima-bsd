@@ -224,16 +224,30 @@ loadjs.ready("head", function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tipe_sla->cellAttributes() ?>>
 <span id="el_order_detail_tipe_sla">
 <?php $Page->tipe_sla->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
-<div class="input-group ew-lookup-list" aria-describedby="x_tipe_sla_help">
-    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_tipe_sla"><?= EmptyValue(strval($Page->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Page->tipe_sla->ViewValue ?></div>
-    <div class="input-group-append">
-        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Page->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Page->tipe_sla->ReadOnly || $Page->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
-    </div>
-</div>
-<div class="invalid-feedback"><?= $Page->tipe_sla->getErrorMessage() ?></div>
-<?= $Page->tipe_sla->getCustomMessage() ?>
+    <select
+        id="x_tipe_sla"
+        name="x_tipe_sla"
+        class="form-control ew-select<?= $Page->tipe_sla->isInvalidClass() ?>"
+        data-select2-id="order_detail_x_tipe_sla"
+        data-table="order_detail"
+        data-field="x_tipe_sla"
+        data-value-separator="<?= $Page->tipe_sla->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->tipe_sla->getPlaceHolder()) ?>"
+        <?= $Page->tipe_sla->editAttributes() ?>>
+        <?= $Page->tipe_sla->selectOptionListHtml("x_tipe_sla") ?>
+    </select>
+    <?= $Page->tipe_sla->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->tipe_sla->getErrorMessage() ?></div>
 <?= $Page->tipe_sla->Lookup->getParamTag($Page, "p_x_tipe_sla") ?>
-<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Page->tipe_sla->displayValueSeparatorAttribute() ?>" name="x_tipe_sla" id="x_tipe_sla" value="<?= $Page->tipe_sla->CurrentValue ?>"<?= $Page->tipe_sla->editAttributes() ?>>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='order_detail_x_tipe_sla']"),
+        options = { name: "x_tipe_sla", selectId: "order_detail_x_tipe_sla", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.order_detail.fields.tipe_sla.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>

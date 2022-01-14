@@ -492,29 +492,57 @@ loadjs.ready("head", function() {
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_tipe_sla" class="form-group">
 <?php $Grid->tipe_sla->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
-<div class="input-group ew-lookup-list">
-    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?= $Grid->RowIndex ?>_tipe_sla"><?= EmptyValue(strval($Grid->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Grid->tipe_sla->ViewValue ?></div>
-    <div class="input-group-append">
-        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Grid->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Grid->tipe_sla->ReadOnly || $Grid->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?= $Grid->RowIndex ?>_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
-    </div>
-</div>
-<div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
+    <select
+        id="x<?= $Grid->RowIndex ?>_tipe_sla"
+        name="x<?= $Grid->RowIndex ?>_tipe_sla"
+        class="form-control ew-select<?= $Grid->tipe_sla->isInvalidClass() ?>"
+        data-select2-id="order_detail_x<?= $Grid->RowIndex ?>_tipe_sla"
+        data-table="order_detail"
+        data-field="x_tipe_sla"
+        data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->tipe_sla->getPlaceHolder()) ?>"
+        <?= $Grid->tipe_sla->editAttributes() ?>>
+        <?= $Grid->tipe_sla->selectOptionListHtml("x{$Grid->RowIndex}_tipe_sla") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
 <?= $Grid->tipe_sla->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_tipe_sla") ?>
-<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_tipe_sla" id="x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= $Grid->tipe_sla->CurrentValue ?>"<?= $Grid->tipe_sla->editAttributes() ?>>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='order_detail_x<?= $Grid->RowIndex ?>_tipe_sla']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_tipe_sla", selectId: "order_detail_x<?= $Grid->RowIndex ?>_tipe_sla", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.order_detail.fields.tipe_sla.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <input type="hidden" data-table="order_detail" data-field="x_tipe_sla" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tipe_sla" id="o<?= $Grid->RowIndex ?>_tipe_sla" value="<?= HtmlEncode($Grid->tipe_sla->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_order_detail_tipe_sla" class="form-group">
-<div class="input-group ew-lookup-list">
-    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?= $Grid->RowIndex ?>_tipe_sla"><?= EmptyValue(strval($Grid->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Grid->tipe_sla->ViewValue ?></div>
-    <div class="input-group-append">
-        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Grid->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Grid->tipe_sla->ReadOnly || $Grid->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?= $Grid->RowIndex ?>_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
-    </div>
-</div>
-<div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
+    <select
+        id="x<?= $Grid->RowIndex ?>_tipe_sla"
+        name="x<?= $Grid->RowIndex ?>_tipe_sla"
+        class="form-control ew-select<?= $Grid->tipe_sla->isInvalidClass() ?>"
+        data-select2-id="order_detail_x<?= $Grid->RowIndex ?>_tipe_sla"
+        data-table="order_detail"
+        data-field="x_tipe_sla"
+        data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->tipe_sla->getPlaceHolder()) ?>"
+        <?= $Grid->tipe_sla->editAttributes() ?>>
+        <?= $Grid->tipe_sla->selectOptionListHtml("x{$Grid->RowIndex}_tipe_sla") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
 <?= $Grid->tipe_sla->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_tipe_sla") ?>
-<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_tipe_sla" id="x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= $Grid->tipe_sla->CurrentValue ?>"<?= $Grid->tipe_sla->editAttributes() ?>>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='order_detail_x<?= $Grid->RowIndex ?>_tipe_sla']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_tipe_sla", selectId: "order_detail_x<?= $Grid->RowIndex ?>_tipe_sla", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.order_detail.fields.tipe_sla.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
@@ -757,15 +785,29 @@ loadjs.ready("head", function() {
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_order_detail_tipe_sla" class="form-group order_detail_tipe_sla">
 <?php $Grid->tipe_sla->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
-<div class="input-group ew-lookup-list">
-    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?= $Grid->RowIndex ?>_tipe_sla"><?= EmptyValue(strval($Grid->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Grid->tipe_sla->ViewValue ?></div>
-    <div class="input-group-append">
-        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Grid->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Grid->tipe_sla->ReadOnly || $Grid->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?= $Grid->RowIndex ?>_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
-    </div>
-</div>
-<div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
+    <select
+        id="x<?= $Grid->RowIndex ?>_tipe_sla"
+        name="x<?= $Grid->RowIndex ?>_tipe_sla"
+        class="form-control ew-select<?= $Grid->tipe_sla->isInvalidClass() ?>"
+        data-select2-id="order_detail_x<?= $Grid->RowIndex ?>_tipe_sla"
+        data-table="order_detail"
+        data-field="x_tipe_sla"
+        data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->tipe_sla->getPlaceHolder()) ?>"
+        <?= $Grid->tipe_sla->editAttributes() ?>>
+        <?= $Grid->tipe_sla->selectOptionListHtml("x{$Grid->RowIndex}_tipe_sla") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
 <?= $Grid->tipe_sla->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_tipe_sla") ?>
-<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_tipe_sla" id="x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= $Grid->tipe_sla->CurrentValue ?>"<?= $Grid->tipe_sla->editAttributes() ?>>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='order_detail_x<?= $Grid->RowIndex ?>_tipe_sla']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_tipe_sla", selectId: "order_detail_x<?= $Grid->RowIndex ?>_tipe_sla", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.order_detail.fields.tipe_sla.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_order_detail_tipe_sla" class="form-group order_detail_tipe_sla">

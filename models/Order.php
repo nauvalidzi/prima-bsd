@@ -1900,7 +1900,7 @@ SORTHTML;
                     'harga_satuan' => 0,
                     'status' => 'Send',
                     'keterangan' => $row['keterangan'],
-                    'sales_jns' => 'Eksis'
+                    'sales_jns' => 'Eksis',
             ];
         }
         $order_detail = ['penjualan_detil' => $details];

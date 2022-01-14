@@ -916,6 +916,19 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
             }
             $sisa = $order['totalorder'] - $row['jumlah_kirim'];
             $delivery_detail = Execute("INSERT INTO deliveryorder_detail (iddeliveryorder, idorder, idorder_detail, totalorder, jumlahkirim, sisa) VALUES ({$delivery}, {$order['idorder']}, {$order['idorderdetail']}, {$order['totalorder']}, {$row['jumlah_kirim']}, {$sisa})");
+
+            // update sisa order detail
+            ExecuteUpdate("UPDATE order_detail SET sisa = sisa-({$row['jumlah_kirim']}) WHERE id = {$order['idorderdetail']}");
+
+            // tambah stock
+            addStock($order['idorderdetail'], $row['jumlah_kirim']);
+
+            // check untuk close order
+            checkCloseOrder($order['idorderdetail']);
+
+            // check readonly
+            checkReadOnly("order_detail", $order['idorderdetail']);
+            checkReadOnly("order", $order['idorder']);
             if (!$delivery || !$delivery_detail) {
                 $check[] = false;
             }
