@@ -76,6 +76,24 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->tipe_sla->Visible) { // tipe_sla ?>
+    <?php if ($Page->SortUrl($Page->tipe_sla) == "") { ?>
+        <th class="<?= $Page->tipe_sla->headerCellClass() ?>"><?= $Page->tipe_sla->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->tipe_sla->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->tipe_sla->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->tipe_sla->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->tipe_sla->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->tipe_sla->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->tipe_sla->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->sla->Visible) { // sla ?>
+    <?php if ($Page->SortUrl($Page->sla) == "") { ?>
+        <th class="<?= $Page->sla->headerCellClass() ?>"><?= $Page->sla->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->sla->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->sla->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->sla->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->sla->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->sla->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->sla->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->keterangan->Visible) { // keterangan ?>
     <?php if ($Page->SortUrl($Page->keterangan) == "") { ?>
         <th class="<?= $Page->keterangan->headerCellClass() ?>"><?= $Page->keterangan->caption() ?></th>
@@ -155,6 +173,20 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->total->cellAttributes() ?>>
 <span<?= $Page->total->viewAttributes() ?>>
 <?= $Page->total->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->tipe_sla->Visible) { // tipe_sla ?>
+        <!-- tipe_sla -->
+        <td<?= $Page->tipe_sla->cellAttributes() ?>>
+<span<?= $Page->tipe_sla->viewAttributes() ?>>
+<?= $Page->tipe_sla->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->sla->Visible) { // sla ?>
+        <!-- sla -->
+        <td<?= $Page->sla->cellAttributes() ?>>
+<span<?= $Page->sla->viewAttributes() ?>>
+<?= $Page->sla->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->keterangan->Visible) { // keterangan ?>

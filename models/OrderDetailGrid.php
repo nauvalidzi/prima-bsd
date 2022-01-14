@@ -513,6 +513,8 @@ class OrderDetailGrid extends OrderDetail
         $this->sisa->setVisibility();
         $this->harga->setVisibility();
         $this->total->setVisibility();
+        $this->tipe_sla->setVisibility();
+        $this->sla->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
@@ -536,6 +538,7 @@ class OrderDetailGrid extends OrderDetail
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idproduct);
+        $this->setupLookupOptions($this->tipe_sla);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -966,6 +969,12 @@ class OrderDetailGrid extends OrderDetail
         if ($CurrentForm->hasValue("x_total") && $CurrentForm->hasValue("o_total") && $this->total->CurrentValue != $this->total->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_tipe_sla") && $CurrentForm->hasValue("o_tipe_sla") && $this->tipe_sla->CurrentValue != $this->tipe_sla->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_sla") && $CurrentForm->hasValue("o_sla") && $this->sla->CurrentValue != $this->sla->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_keterangan") && $CurrentForm->hasValue("o_keterangan") && $this->keterangan->CurrentValue != $this->keterangan->OldValue) {
             return false;
         }
@@ -1056,6 +1065,8 @@ class OrderDetailGrid extends OrderDetail
         $this->sisa->clearErrorMessage();
         $this->harga->clearErrorMessage();
         $this->total->clearErrorMessage();
+        $this->tipe_sla->clearErrorMessage();
+        $this->sla->clearErrorMessage();
         $this->keterangan->clearErrorMessage();
     }
 
@@ -1296,6 +1307,10 @@ class OrderDetailGrid extends OrderDetail
         $this->harga->OldValue = $this->harga->CurrentValue;
         $this->total->CurrentValue = null;
         $this->total->OldValue = $this->total->CurrentValue;
+        $this->tipe_sla->CurrentValue = null;
+        $this->tipe_sla->OldValue = $this->tipe_sla->CurrentValue;
+        $this->sla->CurrentValue = null;
+        $this->sla->OldValue = $this->sla->CurrentValue;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
         $this->aktif->CurrentValue = 1;
@@ -1393,6 +1408,32 @@ class OrderDetailGrid extends OrderDetail
             $this->total->setOldValue($CurrentForm->getValue("o_total"));
         }
 
+        // Check field name 'tipe_sla' first before field var 'x_tipe_sla'
+        $val = $CurrentForm->hasValue("tipe_sla") ? $CurrentForm->getValue("tipe_sla") : $CurrentForm->getValue("x_tipe_sla");
+        if (!$this->tipe_sla->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->tipe_sla->Visible = false; // Disable update for API request
+            } else {
+                $this->tipe_sla->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_tipe_sla")) {
+            $this->tipe_sla->setOldValue($CurrentForm->getValue("o_tipe_sla"));
+        }
+
+        // Check field name 'sla' first before field var 'x_sla'
+        $val = $CurrentForm->hasValue("sla") ? $CurrentForm->getValue("sla") : $CurrentForm->getValue("x_sla");
+        if (!$this->sla->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->sla->Visible = false; // Disable update for API request
+            } else {
+                $this->sla->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_sla")) {
+            $this->sla->setOldValue($CurrentForm->getValue("o_sla"));
+        }
+
         // Check field name 'keterangan' first before field var 'x_keterangan'
         $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
         if (!$this->keterangan->IsDetailKey) {
@@ -1426,6 +1467,8 @@ class OrderDetailGrid extends OrderDetail
         $this->sisa->CurrentValue = $this->sisa->FormValue;
         $this->harga->CurrentValue = $this->harga->FormValue;
         $this->total->CurrentValue = $this->total->FormValue;
+        $this->tipe_sla->CurrentValue = $this->tipe_sla->FormValue;
+        $this->sla->CurrentValue = $this->sla->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
 
@@ -1505,6 +1548,8 @@ class OrderDetailGrid extends OrderDetail
         $this->sisa->setDbValue($row['sisa']);
         $this->harga->setDbValue($row['harga']);
         $this->total->setDbValue($row['total']);
+        $this->tipe_sla->setDbValue($row['tipe_sla']);
+        $this->sla->setDbValue($row['sla']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1525,6 +1570,8 @@ class OrderDetailGrid extends OrderDetail
         $row['sisa'] = $this->sisa->CurrentValue;
         $row['harga'] = $this->harga->CurrentValue;
         $row['total'] = $this->total->CurrentValue;
+        $row['tipe_sla'] = $this->tipe_sla->CurrentValue;
+        $row['sla'] = $this->sla->CurrentValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
         $row['aktif'] = $this->aktif->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
@@ -1580,6 +1627,10 @@ class OrderDetailGrid extends OrderDetail
         // harga
 
         // total
+
+        // tipe_sla
+
+        // sla
 
         // keterangan
 
@@ -1651,6 +1702,31 @@ class OrderDetailGrid extends OrderDetail
             $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
             $this->total->ViewCustomAttributes = "";
 
+            // tipe_sla
+            $curVal = trim(strval($this->tipe_sla->CurrentValue));
+            if ($curVal != "") {
+                $this->tipe_sla->ViewValue = $this->tipe_sla->lookupCacheOption($curVal);
+                if ($this->tipe_sla->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->tipe_sla->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->tipe_sla->Lookup->renderViewRow($rswrk[0]);
+                        $this->tipe_sla->ViewValue = $this->tipe_sla->displayValue($arwrk);
+                    } else {
+                        $this->tipe_sla->ViewValue = $this->tipe_sla->CurrentValue;
+                    }
+                }
+            } else {
+                $this->tipe_sla->ViewValue = null;
+            }
+            $this->tipe_sla->ViewCustomAttributes = "";
+
+            // sla
+            $this->sla->ViewValue = $this->sla->CurrentValue;
+            $this->sla->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -1702,6 +1778,16 @@ class OrderDetailGrid extends OrderDetail
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
             $this->total->TooltipValue = "";
+
+            // tipe_sla
+            $this->tipe_sla->LinkCustomAttributes = "";
+            $this->tipe_sla->HrefValue = "";
+            $this->tipe_sla->TooltipValue = "";
+
+            // sla
+            $this->sla->LinkCustomAttributes = "";
+            $this->sla->HrefValue = "";
+            $this->sla->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1767,6 +1853,48 @@ class OrderDetailGrid extends OrderDetail
             $this->total->EditValue = HtmlEncode($this->total->CurrentValue);
             $this->total->PlaceHolder = RemoveHtml($this->total->caption());
 
+            // tipe_sla
+            $this->tipe_sla->EditCustomAttributes = "";
+            $curVal = trim(strval($this->tipe_sla->CurrentValue));
+            if ($curVal != "") {
+                $this->tipe_sla->ViewValue = $this->tipe_sla->lookupCacheOption($curVal);
+            } else {
+                $this->tipe_sla->ViewValue = $this->tipe_sla->Lookup !== null && is_array($this->tipe_sla->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->tipe_sla->ViewValue !== null) { // Load from cache
+                $this->tipe_sla->EditValue = array_values($this->tipe_sla->Lookup->Options);
+                if ($this->tipe_sla->ViewValue == "") {
+                    $this->tipe_sla->ViewValue = $Language->phrase("PleaseSelect");
+                }
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->tipe_sla->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->tipe_sla->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->tipe_sla->Lookup->renderViewRow($rswrk[0]);
+                    $this->tipe_sla->ViewValue = $this->tipe_sla->displayValue($arwrk);
+                } else {
+                    $this->tipe_sla->ViewValue = $Language->phrase("PleaseSelect");
+                }
+                $arwrk = $rswrk;
+                $this->tipe_sla->EditValue = $arwrk;
+            }
+            $this->tipe_sla->PlaceHolder = RemoveHtml($this->tipe_sla->caption());
+
+            // sla
+            $this->sla->EditAttrs["class"] = "form-control";
+            $this->sla->EditCustomAttributes = "readonly";
+            if (!$this->sla->Raw) {
+                $this->sla->CurrentValue = HtmlDecode($this->sla->CurrentValue);
+            }
+            $this->sla->EditValue = HtmlEncode($this->sla->CurrentValue);
+            $this->sla->PlaceHolder = RemoveHtml($this->sla->caption());
+
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
             $this->keterangan->EditCustomAttributes = "";
@@ -1798,6 +1926,14 @@ class OrderDetailGrid extends OrderDetail
             // total
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
+
+            // tipe_sla
+            $this->tipe_sla->LinkCustomAttributes = "";
+            $this->tipe_sla->HrefValue = "";
+
+            // sla
+            $this->sla->LinkCustomAttributes = "";
+            $this->sla->HrefValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1862,6 +1998,45 @@ class OrderDetailGrid extends OrderDetail
             $this->total->EditValue = HtmlEncode($this->total->CurrentValue);
             $this->total->PlaceHolder = RemoveHtml($this->total->caption());
 
+            // tipe_sla
+            $this->tipe_sla->EditCustomAttributes = "";
+            $curVal = trim(strval($this->tipe_sla->CurrentValue));
+            if ($curVal != "") {
+                $this->tipe_sla->ViewValue = $this->tipe_sla->lookupCacheOption($curVal);
+            } else {
+                $this->tipe_sla->ViewValue = $this->tipe_sla->Lookup !== null && is_array($this->tipe_sla->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->tipe_sla->ViewValue !== null) { // Load from cache
+                $this->tipe_sla->EditValue = array_values($this->tipe_sla->Lookup->Options);
+                if ($this->tipe_sla->ViewValue == "") {
+                    $this->tipe_sla->ViewValue = $Language->phrase("PleaseSelect");
+                }
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->tipe_sla->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->tipe_sla->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->tipe_sla->Lookup->renderViewRow($rswrk[0]);
+                    $this->tipe_sla->ViewValue = $this->tipe_sla->displayValue($arwrk);
+                } else {
+                    $this->tipe_sla->ViewValue = $Language->phrase("PleaseSelect");
+                }
+                $arwrk = $rswrk;
+                $this->tipe_sla->EditValue = $arwrk;
+            }
+            $this->tipe_sla->PlaceHolder = RemoveHtml($this->tipe_sla->caption());
+
+            // sla
+            $this->sla->EditAttrs["class"] = "form-control";
+            $this->sla->EditCustomAttributes = "readonly";
+            $this->sla->EditValue = $this->sla->CurrentValue;
+            $this->sla->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
             $this->keterangan->EditCustomAttributes = "";
@@ -1893,6 +2068,15 @@ class OrderDetailGrid extends OrderDetail
             // total
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
+
+            // tipe_sla
+            $this->tipe_sla->LinkCustomAttributes = "";
+            $this->tipe_sla->HrefValue = "";
+
+            // sla
+            $this->sla->LinkCustomAttributes = "";
+            $this->sla->HrefValue = "";
+            $this->sla->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1961,6 +2145,16 @@ class OrderDetailGrid extends OrderDetail
         }
         if (!CheckInteger($this->total->FormValue)) {
             $this->total->addErrorMessage($this->total->getErrorMessage(false));
+        }
+        if ($this->tipe_sla->Required) {
+            if (!$this->tipe_sla->IsDetailKey && EmptyValue($this->tipe_sla->FormValue)) {
+                $this->tipe_sla->addErrorMessage(str_replace("%s", $this->tipe_sla->caption(), $this->tipe_sla->RequiredErrorMessage));
+            }
+        }
+        if ($this->sla->Required) {
+            if (!$this->sla->IsDetailKey && EmptyValue($this->sla->FormValue)) {
+                $this->sla->addErrorMessage(str_replace("%s", $this->sla->caption(), $this->sla->RequiredErrorMessage));
+            }
         }
         if ($this->keterangan->Required) {
             if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
@@ -2094,6 +2288,9 @@ class OrderDetailGrid extends OrderDetail
             // total
             $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, $this->total->ReadOnly);
 
+            // tipe_sla
+            $this->tipe_sla->setDbValueDef($rsnew, $this->tipe_sla->CurrentValue, null, $this->tipe_sla->ReadOnly);
+
             // keterangan
             $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
 
@@ -2214,6 +2411,12 @@ class OrderDetailGrid extends OrderDetail
         // total
         $this->total->setDbValueDef($rsnew, $this->total->CurrentValue, 0, strval($this->total->CurrentValue) == "");
 
+        // tipe_sla
+        $this->tipe_sla->setDbValueDef($rsnew, $this->tipe_sla->CurrentValue, null, false);
+
+        // sla
+        $this->sla->setDbValueDef($rsnew, $this->sla->CurrentValue, null, false);
+
         // keterangan
         $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
@@ -2310,6 +2513,8 @@ class OrderDetailGrid extends OrderDetail
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_tipe_sla":
                     break;
                 case "x_aktif":
                     break;

@@ -67,6 +67,7 @@ $sideMenu->addMenuItem(929, "mi_viskositasbarang", $MenuLanguage->MenuPhrase("92
 $sideMenu->addMenuItem(32, "mi_tipecustomer", $MenuLanguage->MenuPhrase("32", "MenuText"), $MenuRelativePath . "TipecustomerList", 403, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipecustomer'), false, false, "far fa-circle", "", false);
 $sideMenu->addMenuItem(101, "mi_tipepayment", $MenuLanguage->MenuPhrase("101", "MenuText"), $MenuRelativePath . "TipepaymentList", 403, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipepayment'), false, false, "far fa-circle", "", false);
 $sideMenu->addMenuItem(12, "mi_satuan", $MenuLanguage->MenuPhrase("12", "MenuText"), $MenuRelativePath . "SatuanList", 403, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}satuan'), false, false, "far fa-circle", "", false);
+$sideMenu->addMenuItem(1053, "mi_tipe_sla", $MenuLanguage->MenuPhrase("1053", "MenuText"), $MenuRelativePath . "TipeSlaList", 403, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla'), false, false, "far fa-circle", "", false);
 $sideMenu->addMenuItem(325, "mi_ekspedisi", $MenuLanguage->MenuPhrase("325", "MenuText"), $MenuRelativePath . "EkspedisiList", 403, "", AllowListMenu('{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}ekspedisi'), false, false, "far fa-circle", "", false);
 $sideMenu->addMenuItem(1052, "mci_NPD_Master_Spesifikasi", $MenuLanguage->MenuPhrase("1052", "MenuText"), "", 403, "", IsLoggedIn(), false, true, "far fa-check-square", "", false);
 echo $sideMenu->toScript();

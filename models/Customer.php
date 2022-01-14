@@ -2571,11 +2571,11 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
-        //$user_level = CurrentUserLevel();
-    	//if($user_level != -1){
-    	//	$this->idpegawai->CurrentValue = CurrentUserID();
-    	//	$this->idpegawai->ReadOnly = TRUE; 
-    	//}
+        $user_level = CurrentUserLevel();
+    	if($user_level != -1){
+    		$this->idpegawai->CurrentValue = CurrentUserID();
+    		$this->idpegawai->ReadOnly = TRUE; 
+    	}
     }
 
     // User ID Filtering event

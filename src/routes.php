@@ -1354,6 +1354,21 @@ return function (App $app) {
         }
     );
 
+    // tipe_sla
+    $app->any('/TipeSlaList[/{id}]', TipeSlaController::class . ':list')->add(PermissionMiddleware::class)->setName('TipeSlaList-tipe_sla-list'); // list
+    $app->any('/TipeSlaAdd[/{id}]', TipeSlaController::class . ':add')->add(PermissionMiddleware::class)->setName('TipeSlaAdd-tipe_sla-add'); // add
+    $app->any('/TipeSlaView[/{id}]', TipeSlaController::class . ':view')->add(PermissionMiddleware::class)->setName('TipeSlaView-tipe_sla-view'); // view
+    $app->any('/TipeSlaEdit[/{id}]', TipeSlaController::class . ':edit')->add(PermissionMiddleware::class)->setName('TipeSlaEdit-tipe_sla-edit'); // edit
+    $app->group(
+        '/tipe_sla',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', TipeSlaController::class . ':list')->add(PermissionMiddleware::class)->setName('tipe_sla/list-tipe_sla-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', TipeSlaController::class . ':add')->add(PermissionMiddleware::class)->setName('tipe_sla/add-tipe_sla-add-2'); // add
+            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', TipeSlaController::class . ':view')->add(PermissionMiddleware::class)->setName('tipe_sla/view-tipe_sla-view-2'); // view
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', TipeSlaController::class . ':edit')->add(PermissionMiddleware::class)->setName('tipe_sla/edit-tipe_sla-edit-2'); // edit
+        }
+    );
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

@@ -36,6 +36,8 @@ class OrderDetail extends DbTable
     public $sisa;
     public $harga;
     public $total;
+    public $tipe_sla;
+    public $sla;
     public $keterangan;
     public $aktif;
     public $created_at;
@@ -154,6 +156,29 @@ class OrderDetail extends DbTable
         $this->total->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->total->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->total->Param, "CustomMsg");
         $this->Fields['total'] = &$this->total;
+
+        // tipe_sla
+        $this->tipe_sla = new DbField('order_detail', 'order_detail', 'x_tipe_sla', 'tipe_sla', '`tipe_sla`', '`tipe_sla`', 3, 11, -1, false, '`tipe_sla`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->tipe_sla->Sortable = true; // Allow sort
+        $this->tipe_sla->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->tipe_sla->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->tipe_sla->Lookup = new Lookup('tipe_sla', 'tipe_sla', false, 'id', ["kriteria","target","keterangan",""], [], [], [], [], ["target"], ["x_sla"], '', '');
+                break;
+            default:
+                $this->tipe_sla->Lookup = new Lookup('tipe_sla', 'tipe_sla', false, 'id', ["kriteria","target","keterangan",""], [], [], [], [], ["target"], ["x_sla"], '', '');
+                break;
+        }
+        $this->tipe_sla->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->tipe_sla->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tipe_sla->Param, "CustomMsg");
+        $this->Fields['tipe_sla'] = &$this->tipe_sla;
+
+        // sla
+        $this->sla = new DbField('order_detail', 'order_detail', 'x_sla', 'sla', '`sla`', '`sla`', 200, 50, -1, false, '`sla`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sla->Sortable = true; // Allow sort
+        $this->sla->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sla->Param, "CustomMsg");
+        $this->Fields['sla'] = &$this->sla;
 
         // keterangan
         $this->keterangan = new DbField('order_detail', 'order_detail', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
@@ -679,6 +704,8 @@ class OrderDetail extends DbTable
         $this->sisa->DbValue = $row['sisa'];
         $this->harga->DbValue = $row['harga'];
         $this->total->DbValue = $row['total'];
+        $this->tipe_sla->DbValue = $row['tipe_sla'];
+        $this->sla->DbValue = $row['sla'];
         $this->keterangan->DbValue = $row['keterangan'];
         $this->aktif->DbValue = $row['aktif'];
         $this->created_at->DbValue = $row['created_at'];
@@ -1016,6 +1043,8 @@ SORTHTML;
         $this->sisa->setDbValue($row['sisa']);
         $this->harga->setDbValue($row['harga']);
         $this->total->setDbValue($row['total']);
+        $this->tipe_sla->setDbValue($row['tipe_sla']);
+        $this->sla->setDbValue($row['sla']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1048,6 +1077,10 @@ SORTHTML;
         // harga
 
         // total
+
+        // tipe_sla
+
+        // sla
 
         // keterangan
 
@@ -1119,6 +1152,31 @@ SORTHTML;
         $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
         $this->total->ViewCustomAttributes = "";
 
+        // tipe_sla
+        $curVal = trim(strval($this->tipe_sla->CurrentValue));
+        if ($curVal != "") {
+            $this->tipe_sla->ViewValue = $this->tipe_sla->lookupCacheOption($curVal);
+            if ($this->tipe_sla->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->tipe_sla->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->tipe_sla->Lookup->renderViewRow($rswrk[0]);
+                    $this->tipe_sla->ViewValue = $this->tipe_sla->displayValue($arwrk);
+                } else {
+                    $this->tipe_sla->ViewValue = $this->tipe_sla->CurrentValue;
+                }
+            }
+        } else {
+            $this->tipe_sla->ViewValue = null;
+        }
+        $this->tipe_sla->ViewCustomAttributes = "";
+
+        // sla
+        $this->sla->ViewValue = $this->sla->CurrentValue;
+        $this->sla->ViewCustomAttributes = "";
+
         // keterangan
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
         $this->keterangan->ViewCustomAttributes = "";
@@ -1184,6 +1242,16 @@ SORTHTML;
         $this->total->LinkCustomAttributes = "";
         $this->total->HrefValue = "";
         $this->total->TooltipValue = "";
+
+        // tipe_sla
+        $this->tipe_sla->LinkCustomAttributes = "";
+        $this->tipe_sla->HrefValue = "";
+        $this->tipe_sla->TooltipValue = "";
+
+        // sla
+        $this->sla->LinkCustomAttributes = "";
+        $this->sla->HrefValue = "";
+        $this->sla->TooltipValue = "";
 
         // keterangan
         $this->keterangan->LinkCustomAttributes = "";
@@ -1279,6 +1347,17 @@ SORTHTML;
         $this->total->EditValue = $this->total->CurrentValue;
         $this->total->PlaceHolder = RemoveHtml($this->total->caption());
 
+        // tipe_sla
+        $this->tipe_sla->EditAttrs["class"] = "form-control";
+        $this->tipe_sla->EditCustomAttributes = "";
+        $this->tipe_sla->PlaceHolder = RemoveHtml($this->tipe_sla->caption());
+
+        // sla
+        $this->sla->EditAttrs["class"] = "form-control";
+        $this->sla->EditCustomAttributes = "readonly";
+        $this->sla->EditValue = $this->sla->CurrentValue;
+        $this->sla->ViewCustomAttributes = "";
+
         // keterangan
         $this->keterangan->EditAttrs["class"] = "form-control";
         $this->keterangan->EditCustomAttributes = "";
@@ -1338,6 +1417,8 @@ SORTHTML;
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->harga);
                     $doc->exportCaption($this->total);
+                    $doc->exportCaption($this->tipe_sla);
+                    $doc->exportCaption($this->sla);
                     $doc->exportCaption($this->keterangan);
                 } else {
                     $doc->exportCaption($this->id);
@@ -1348,6 +1429,8 @@ SORTHTML;
                     $doc->exportCaption($this->sisa);
                     $doc->exportCaption($this->harga);
                     $doc->exportCaption($this->total);
+                    $doc->exportCaption($this->tipe_sla);
+                    $doc->exportCaption($this->sla);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->aktif);
                     $doc->exportCaption($this->created_at);
@@ -1387,6 +1470,8 @@ SORTHTML;
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->harga);
                         $doc->exportField($this->total);
+                        $doc->exportField($this->tipe_sla);
+                        $doc->exportField($this->sla);
                         $doc->exportField($this->keterangan);
                     } else {
                         $doc->exportField($this->id);
@@ -1397,6 +1482,8 @@ SORTHTML;
                         $doc->exportField($this->sisa);
                         $doc->exportField($this->harga);
                         $doc->exportField($this->total);
+                        $doc->exportField($this->tipe_sla);
+                        $doc->exportField($this->sla);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->aktif);
                         $doc->exportField($this->created_at);

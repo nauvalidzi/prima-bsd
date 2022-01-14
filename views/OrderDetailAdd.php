@@ -26,6 +26,8 @@ loadjs.ready("head", function () {
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
         ["harga", [fields.harga.visible && fields.harga.required ? ew.Validators.required(fields.harga.caption) : null, ew.Validators.integer], fields.harga.isInvalid],
         ["total", [fields.total.visible && fields.total.required ? ew.Validators.required(fields.total.caption) : null, ew.Validators.integer], fields.total.isInvalid],
+        ["tipe_sla", [fields.tipe_sla.visible && fields.tipe_sla.required ? ew.Validators.required(fields.tipe_sla.caption) : null], fields.tipe_sla.isInvalid],
+        ["sla", [fields.sla.visible && fields.sla.required ? ew.Validators.required(fields.sla.caption) : null], fields.sla.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
         ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
     ]);
@@ -95,6 +97,7 @@ loadjs.ready("head", function () {
 
     // Dynamic selection lists
     forder_detailadd.lists.idproduct = <?= $Page->idproduct->toClientList($Page) ?>;
+    forder_detailadd.lists.tipe_sla = <?= $Page->tipe_sla->toClientList($Page) ?>;
     loadjs.done("forder_detailadd");
 });
 </script>
@@ -211,6 +214,38 @@ loadjs.ready("head", function() {
 <input type="<?= $Page->total->getInputTextType() ?>" data-table="order_detail" data-field="x_total" name="x_total" id="x_total" size="30" placeholder="<?= HtmlEncode($Page->total->getPlaceHolder()) ?>" value="<?= $Page->total->EditValue ?>"<?= $Page->total->editAttributes() ?> aria-describedby="x_total_help">
 <?= $Page->total->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->total->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->tipe_sla->Visible) { // tipe_sla ?>
+    <div id="r_tipe_sla" class="form-group row">
+        <label id="elh_order_detail_tipe_sla" for="x_tipe_sla" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tipe_sla->caption() ?><?= $Page->tipe_sla->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tipe_sla->cellAttributes() ?>>
+<span id="el_order_detail_tipe_sla">
+<?php $Page->tipe_sla->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+<div class="input-group ew-lookup-list" aria-describedby="x_tipe_sla_help">
+    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_tipe_sla"><?= EmptyValue(strval($Page->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Page->tipe_sla->ViewValue ?></div>
+    <div class="input-group-append">
+        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Page->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Page->tipe_sla->ReadOnly || $Page->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Page->tipe_sla->getErrorMessage() ?></div>
+<?= $Page->tipe_sla->getCustomMessage() ?>
+<?= $Page->tipe_sla->Lookup->getParamTag($Page, "p_x_tipe_sla") ?>
+<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Page->tipe_sla->displayValueSeparatorAttribute() ?>" name="x_tipe_sla" id="x_tipe_sla" value="<?= $Page->tipe_sla->CurrentValue ?>"<?= $Page->tipe_sla->editAttributes() ?>>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->sla->Visible) { // sla ?>
+    <div id="r_sla" class="form-group row">
+        <label id="elh_order_detail_sla" for="x_sla" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sla->caption() ?><?= $Page->sla->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sla->cellAttributes() ?>>
+<span id="el_order_detail_sla">
+<input type="<?= $Page->sla->getInputTextType() ?>" data-table="order_detail" data-field="x_sla" name="x_sla" id="x_sla" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->sla->getPlaceHolder()) ?>" value="<?= $Page->sla->EditValue ?>"<?= $Page->sla->editAttributes() ?> aria-describedby="x_sla_help">
+<?= $Page->sla->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->sla->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

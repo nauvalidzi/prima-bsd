@@ -158,6 +158,7 @@ return [
     "viskositasbarang" => \DI\create(Viskositasbarang::class),
     "npd_jenis_product" => \DI\create(NpdJenisProduct::class),
     "npd_kategori_product" => \DI\create(NpdKategoriProduct::class),
+    "tipe_sla" => \DI\create(TipeSla::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

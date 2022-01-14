@@ -323,7 +323,10 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}kualitasbarang","1","288"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}viskositasbarang","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}viskositasbarang","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}viskositasbarang","1","288"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}viskositasbarang","1","288"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla","1","288"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Manajemen User",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -429,4 +432,5 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["kategoribarang","kategoribarang","Kategori Product",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","KategoribarangList"],
     ["kemasanbarang","kemasanbarang","Kemasan Product",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","KemasanbarangList"],
     ["kualitasbarang","kualitasbarang","Kualitas Product",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","KualitasbarangList"],
-    ["viskositasbarang","viskositasbarang","Viskositas Product",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","ViskositasbarangList"]];
+    ["viskositasbarang","viskositasbarang","Viskositas Product",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","ViskositasbarangList"],
+    ["tipe_sla","tipe_sla","Tipe SLA",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","TipeSlaList"]];

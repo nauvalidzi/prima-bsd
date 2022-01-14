@@ -28,6 +28,8 @@ loadjs.ready("head", function () {
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
         ["harga", [fields.harga.visible && fields.harga.required ? ew.Validators.required(fields.harga.caption) : null, ew.Validators.integer], fields.harga.isInvalid],
         ["total", [fields.total.visible && fields.total.required ? ew.Validators.required(fields.total.caption) : null, ew.Validators.integer], fields.total.isInvalid],
+        ["tipe_sla", [fields.tipe_sla.visible && fields.tipe_sla.required ? ew.Validators.required(fields.tipe_sla.caption) : null], fields.tipe_sla.isInvalid],
+        ["sla", [fields.sla.visible && fields.sla.required ? ew.Validators.required(fields.sla.caption) : null], fields.sla.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
@@ -94,6 +96,10 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "total", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "tipe_sla", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "sla", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "keterangan", false))
             return false;
         return true;
@@ -110,6 +116,7 @@ loadjs.ready("head", function () {
 
     // Dynamic selection lists
     forder_detailgrid.lists.idproduct = <?= $Grid->idproduct->toClientList($Grid) ?>;
+    forder_detailgrid.lists.tipe_sla = <?= $Grid->tipe_sla->toClientList($Grid) ?>;
     loadjs.done("forder_detailgrid");
 });
 </script>
@@ -151,6 +158,12 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->total->Visible) { // total ?>
         <th data-name="total" class="<?= $Grid->total->headerCellClass() ?>"><div id="elh_order_detail_total" class="order_detail_total"><?= $Grid->renderSort($Grid->total) ?></div></th>
+<?php } ?>
+<?php if ($Grid->tipe_sla->Visible) { // tipe_sla ?>
+        <th data-name="tipe_sla" class="<?= $Grid->tipe_sla->headerCellClass() ?>"><div id="elh_order_detail_tipe_sla" class="order_detail_tipe_sla"><?= $Grid->renderSort($Grid->tipe_sla) ?></div></th>
+<?php } ?>
+<?php if ($Grid->sla->Visible) { // sla ?>
+        <th data-name="sla" class="<?= $Grid->sla->headerCellClass() ?>"><div id="elh_order_detail_sla" class="order_detail_sla"><?= $Grid->renderSort($Grid->sla) ?></div></th>
 <?php } ?>
 <?php if ($Grid->keterangan->Visible) { // keterangan ?>
         <th data-name="keterangan" class="<?= $Grid->keterangan->headerCellClass() ?>"><div id="elh_order_detail_keterangan" class="order_detail_keterangan"><?= $Grid->renderSort($Grid->keterangan) ?></div></th>
@@ -474,6 +487,76 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->tipe_sla->Visible) { // tipe_sla ?>
+        <td data-name="tipe_sla" <?= $Grid->tipe_sla->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_tipe_sla" class="form-group">
+<?php $Grid->tipe_sla->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+<div class="input-group ew-lookup-list">
+    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?= $Grid->RowIndex ?>_tipe_sla"><?= EmptyValue(strval($Grid->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Grid->tipe_sla->ViewValue ?></div>
+    <div class="input-group-append">
+        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Grid->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Grid->tipe_sla->ReadOnly || $Grid->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?= $Grid->RowIndex ?>_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
+<?= $Grid->tipe_sla->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_tipe_sla") ?>
+<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_tipe_sla" id="x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= $Grid->tipe_sla->CurrentValue ?>"<?= $Grid->tipe_sla->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="order_detail" data-field="x_tipe_sla" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tipe_sla" id="o<?= $Grid->RowIndex ?>_tipe_sla" value="<?= HtmlEncode($Grid->tipe_sla->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_tipe_sla" class="form-group">
+<div class="input-group ew-lookup-list">
+    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?= $Grid->RowIndex ?>_tipe_sla"><?= EmptyValue(strval($Grid->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Grid->tipe_sla->ViewValue ?></div>
+    <div class="input-group-append">
+        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Grid->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Grid->tipe_sla->ReadOnly || $Grid->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?= $Grid->RowIndex ?>_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
+<?= $Grid->tipe_sla->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_tipe_sla") ?>
+<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_tipe_sla" id="x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= $Grid->tipe_sla->CurrentValue ?>"<?= $Grid->tipe_sla->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_tipe_sla">
+<span<?= $Grid->tipe_sla->viewAttributes() ?>>
+<?= $Grid->tipe_sla->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="order_detail" data-field="x_tipe_sla" data-hidden="1" name="forder_detailgrid$x<?= $Grid->RowIndex ?>_tipe_sla" id="forder_detailgrid$x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= HtmlEncode($Grid->tipe_sla->FormValue) ?>">
+<input type="hidden" data-table="order_detail" data-field="x_tipe_sla" data-hidden="1" name="forder_detailgrid$o<?= $Grid->RowIndex ?>_tipe_sla" id="forder_detailgrid$o<?= $Grid->RowIndex ?>_tipe_sla" value="<?= HtmlEncode($Grid->tipe_sla->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->sla->Visible) { // sla ?>
+        <td data-name="sla" <?= $Grid->sla->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_sla" class="form-group">
+<input type="<?= $Grid->sla->getInputTextType() ?>" data-table="order_detail" data-field="x_sla" name="x<?= $Grid->RowIndex ?>_sla" id="x<?= $Grid->RowIndex ?>_sla" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->sla->getPlaceHolder()) ?>" value="<?= $Grid->sla->EditValue ?>"<?= $Grid->sla->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->sla->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="order_detail" data-field="x_sla" data-hidden="1" name="o<?= $Grid->RowIndex ?>_sla" id="o<?= $Grid->RowIndex ?>_sla" value="<?= HtmlEncode($Grid->sla->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_sla" class="form-group">
+<span<?= $Grid->sla->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->sla->getDisplayValue($Grid->sla->EditValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="order_detail" data-field="x_sla" data-hidden="1" name="x<?= $Grid->RowIndex ?>_sla" id="x<?= $Grid->RowIndex ?>_sla" value="<?= HtmlEncode($Grid->sla->CurrentValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_detail_sla">
+<span<?= $Grid->sla->viewAttributes() ?>>
+<?= $Grid->sla->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="order_detail" data-field="x_sla" data-hidden="1" name="forder_detailgrid$x<?= $Grid->RowIndex ?>_sla" id="forder_detailgrid$x<?= $Grid->RowIndex ?>_sla" value="<?= HtmlEncode($Grid->sla->FormValue) ?>">
+<input type="hidden" data-table="order_detail" data-field="x_sla" data-hidden="1" name="forder_detailgrid$o<?= $Grid->RowIndex ?>_sla" id="forder_detailgrid$o<?= $Grid->RowIndex ?>_sla" value="<?= HtmlEncode($Grid->sla->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
     <?php if ($Grid->keterangan->Visible) { // keterangan ?>
         <td data-name="keterangan" <?= $Grid->keterangan->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -667,6 +750,48 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="order_detail" data-field="x_total" data-hidden="1" name="x<?= $Grid->RowIndex ?>_total" id="x<?= $Grid->RowIndex ?>_total" value="<?= HtmlEncode($Grid->total->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="order_detail" data-field="x_total" data-hidden="1" name="o<?= $Grid->RowIndex ?>_total" id="o<?= $Grid->RowIndex ?>_total" value="<?= HtmlEncode($Grid->total->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->tipe_sla->Visible) { // tipe_sla ?>
+        <td data-name="tipe_sla">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_order_detail_tipe_sla" class="form-group order_detail_tipe_sla">
+<?php $Grid->tipe_sla->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+<div class="input-group ew-lookup-list">
+    <div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?= $Grid->RowIndex ?>_tipe_sla"><?= EmptyValue(strval($Grid->tipe_sla->ViewValue)) ? $Language->phrase("PleaseSelect") : $Grid->tipe_sla->ViewValue ?></div>
+    <div class="input-group-append">
+        <button type="button" title="<?= HtmlEncode(str_replace("%s", RemoveHtml($Grid->tipe_sla->caption()), $Language->phrase("LookupLink", true))) ?>" class="ew-lookup-btn btn btn-default"<?= ($Grid->tipe_sla->ReadOnly || $Grid->tipe_sla->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?= $Grid->RowIndex ?>_tipe_sla',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->tipe_sla->getErrorMessage() ?></div>
+<?= $Grid->tipe_sla->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_tipe_sla") ?>
+<input type="hidden" is="selection-list" data-table="order_detail" data-field="x_tipe_sla" data-type="text" data-multiple="0" data-lookup="1" data-value-separator="<?= $Grid->tipe_sla->displayValueSeparatorAttribute() ?>" name="x<?= $Grid->RowIndex ?>_tipe_sla" id="x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= $Grid->tipe_sla->CurrentValue ?>"<?= $Grid->tipe_sla->editAttributes() ?>>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_order_detail_tipe_sla" class="form-group order_detail_tipe_sla">
+<span<?= $Grid->tipe_sla->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->tipe_sla->getDisplayValue($Grid->tipe_sla->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="order_detail" data-field="x_tipe_sla" data-hidden="1" name="x<?= $Grid->RowIndex ?>_tipe_sla" id="x<?= $Grid->RowIndex ?>_tipe_sla" value="<?= HtmlEncode($Grid->tipe_sla->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="order_detail" data-field="x_tipe_sla" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tipe_sla" id="o<?= $Grid->RowIndex ?>_tipe_sla" value="<?= HtmlEncode($Grid->tipe_sla->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->sla->Visible) { // sla ?>
+        <td data-name="sla">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_order_detail_sla" class="form-group order_detail_sla">
+<input type="<?= $Grid->sla->getInputTextType() ?>" data-table="order_detail" data-field="x_sla" name="x<?= $Grid->RowIndex ?>_sla" id="x<?= $Grid->RowIndex ?>_sla" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->sla->getPlaceHolder()) ?>" value="<?= $Grid->sla->EditValue ?>"<?= $Grid->sla->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->sla->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_order_detail_sla" class="form-group order_detail_sla">
+<span<?= $Grid->sla->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->sla->getDisplayValue($Grid->sla->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="order_detail" data-field="x_sla" data-hidden="1" name="x<?= $Grid->RowIndex ?>_sla" id="x<?= $Grid->RowIndex ?>_sla" value="<?= HtmlEncode($Grid->sla->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="order_detail" data-field="x_sla" data-hidden="1" name="o<?= $Grid->RowIndex ?>_sla" id="o<?= $Grid->RowIndex ?>_sla" value="<?= HtmlEncode($Grid->sla->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->keterangan->Visible) { // keterangan ?>

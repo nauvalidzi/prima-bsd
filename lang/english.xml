@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/1/10" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/1/14" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1206,6 +1206,9 @@
     </menu>
     <menu id="12">
       <phrase id="menutext" value="Satuan Produk" />
+    </menu>
+    <menu id="1053">
+      <phrase id="menutext" value="Tipe SLA" />
     </menu>
     <menu id="325">
       <phrase id="menutext" value="Ekspedisi" />
@@ -2804,6 +2807,12 @@
       </field>
       <field id="total">
         <phrase id="fldcaption" value="Total Harga" />
+      </field>
+      <field id="tipe_sla">
+        <phrase id="fldcaption" value="Tipe SLA" />
+      </field>
+      <field id="sla">
+        <phrase id="fldcaption" value="SLA" />
       </field>
       <field id="keterangan">
         <phrase id="fldcaption" value="Keterangan" />
@@ -4413,6 +4422,24 @@
       </field>
       <field id="value">
         <phrase id="fldcaption" value="Viskositas" />
+      </field>
+    </table>
+    <table id="tipe_sla">
+      <phrase id="tblcaption" value="Tipe SLA" />
+      <field id="id">
+        <phrase id="fldcaption" value="ID" />
+      </field>
+      <field id="kriteria">
+        <phrase id="fldcaption" value="Kriteria" />
+      </field>
+      <field id="target">
+        <phrase id="fldcaption" value="Target" />
+      </field>
+      <field id="keterangan">
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="updated_at">
+        <phrase id="fldcaption" value="Updated" />
       </field>
     </table>
   </project>

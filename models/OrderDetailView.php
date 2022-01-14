@@ -526,6 +526,8 @@ class OrderDetailView extends OrderDetail
         $this->sisa->setVisibility();
         $this->harga->setVisibility();
         $this->total->setVisibility();
+        $this->tipe_sla->setVisibility();
+        $this->sla->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->setVisibility();
         $this->created_at->setVisibility();
@@ -546,6 +548,7 @@ class OrderDetailView extends OrderDetail
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idproduct);
+        $this->setupLookupOptions($this->tipe_sla);
 
         // Check modal
         if ($this->IsModal) {
@@ -727,6 +730,8 @@ class OrderDetailView extends OrderDetail
         $this->sisa->setDbValue($row['sisa']);
         $this->harga->setDbValue($row['harga']);
         $this->total->setDbValue($row['total']);
+        $this->tipe_sla->setDbValue($row['tipe_sla']);
+        $this->sla->setDbValue($row['sla']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
@@ -746,6 +751,8 @@ class OrderDetailView extends OrderDetail
         $row['sisa'] = null;
         $row['harga'] = null;
         $row['total'] = null;
+        $row['tipe_sla'] = null;
+        $row['sla'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
@@ -787,6 +794,10 @@ class OrderDetailView extends OrderDetail
         // harga
 
         // total
+
+        // tipe_sla
+
+        // sla
 
         // keterangan
 
@@ -857,6 +868,31 @@ class OrderDetailView extends OrderDetail
             $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
             $this->total->ViewCustomAttributes = "";
 
+            // tipe_sla
+            $curVal = trim(strval($this->tipe_sla->CurrentValue));
+            if ($curVal != "") {
+                $this->tipe_sla->ViewValue = $this->tipe_sla->lookupCacheOption($curVal);
+                if ($this->tipe_sla->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->tipe_sla->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->tipe_sla->Lookup->renderViewRow($rswrk[0]);
+                        $this->tipe_sla->ViewValue = $this->tipe_sla->displayValue($arwrk);
+                    } else {
+                        $this->tipe_sla->ViewValue = $this->tipe_sla->CurrentValue;
+                    }
+                }
+            } else {
+                $this->tipe_sla->ViewValue = null;
+            }
+            $this->tipe_sla->ViewCustomAttributes = "";
+
+            // sla
+            $this->sla->ViewValue = $this->sla->CurrentValue;
+            $this->sla->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -908,6 +944,16 @@ class OrderDetailView extends OrderDetail
             $this->total->LinkCustomAttributes = "";
             $this->total->HrefValue = "";
             $this->total->TooltipValue = "";
+
+            // tipe_sla
+            $this->tipe_sla->LinkCustomAttributes = "";
+            $this->tipe_sla->HrefValue = "";
+            $this->tipe_sla->TooltipValue = "";
+
+            // sla
+            $this->sla->LinkCustomAttributes = "";
+            $this->sla->HrefValue = "";
+            $this->sla->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1030,6 +1076,8 @@ class OrderDetailView extends OrderDetail
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_tipe_sla":
                     break;
                 case "x_aktif":
                     break;

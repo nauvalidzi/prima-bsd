@@ -398,6 +398,8 @@ class OrderDetailPreview extends OrderDetail
         $this->sisa->setVisibility();
         $this->harga->setVisibility();
         $this->total->setVisibility();
+        $this->tipe_sla->setVisibility();
+        $this->sla->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
@@ -421,6 +423,7 @@ class OrderDetailPreview extends OrderDetail
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idproduct);
+        $this->setupLookupOptions($this->tipe_sla);
 
         // Load filter
         $filter = Get("f", "");
@@ -497,6 +500,8 @@ class OrderDetailPreview extends OrderDetail
             $this->sisa->setSort("");
             $this->harga->setSort("");
             $this->total->setSort("");
+            $this->tipe_sla->setSort("");
+            $this->sla->setSort("");
             $this->keterangan->setSort("");
             $this->aktif->setSort("");
             $this->created_at->setSort("");
@@ -519,6 +524,8 @@ class OrderDetailPreview extends OrderDetail
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->harga); // harga
             $this->updateSort($this->total); // total
+            $this->updateSort($this->tipe_sla); // tipe_sla
+            $this->updateSort($this->sla); // sla
             $this->updateSort($this->keterangan); // keterangan
         }
     }
@@ -716,6 +723,8 @@ class OrderDetailPreview extends OrderDetail
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_tipe_sla":
                     break;
                 case "x_aktif":
                     break;

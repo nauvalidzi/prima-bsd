@@ -576,6 +576,8 @@ class OrderDetailList extends OrderDetail
         $this->sisa->setVisibility();
         $this->harga->setVisibility();
         $this->total->setVisibility();
+        $this->tipe_sla->setVisibility();
+        $this->sla->setVisibility();
         $this->keterangan->setVisibility();
         $this->aktif->Visible = false;
         $this->created_at->Visible = false;
@@ -612,6 +614,7 @@ class OrderDetailList extends OrderDetail
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idproduct);
+        $this->setupLookupOptions($this->tipe_sla);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -661,8 +664,33 @@ class OrderDetailList extends OrderDetail
                 $this->OtherOptions->hideAllOptions();
             }
 
+            // Get default search criteria
+            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+            // Get basic search values
+            $this->loadBasicSearchValues();
+
+            // Process filter list
+            if ($this->processFilterList()) {
+                $this->terminate();
+                return;
+            }
+
+            // Restore search parms from Session if not searching / reset / export
+            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+                $this->restoreSearchParms();
+            }
+
+            // Call Recordset SearchValidated event
+            $this->recordsetSearchValidated();
+
             // Set up sorting order
             $this->setupSortOrder();
+
+            // Get basic search criteria
+            if (!$this->hasInvalidFields()) {
+                $srchBasic = $this->basicSearchWhere();
+            }
         }
 
         // Restore display records
@@ -676,6 +704,31 @@ class OrderDetailList extends OrderDetail
         // Load Sorting Order
         if ($this->Command != "json") {
             $this->loadSortOrder();
+        }
+
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms()) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere();
+            }
+        }
+
+        // Build search criteria
+        AddFilter($this->SearchWhere, $srchAdvanced);
+        AddFilter($this->SearchWhere, $srchBasic);
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json") {
+            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -844,6 +897,352 @@ class OrderDetailList extends OrderDetail
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        global $UserProfile;
+
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
+        $filterList = Concat($filterList, $this->idproduct->AdvancedSearch->toJson(), ","); // Field idproduct
+        $filterList = Concat($filterList, $this->jumlah->AdvancedSearch->toJson(), ","); // Field jumlah
+        $filterList = Concat($filterList, $this->bonus->AdvancedSearch->toJson(), ","); // Field bonus
+        $filterList = Concat($filterList, $this->sisa->AdvancedSearch->toJson(), ","); // Field sisa
+        $filterList = Concat($filterList, $this->harga->AdvancedSearch->toJson(), ","); // Field harga
+        $filterList = Concat($filterList, $this->total->AdvancedSearch->toJson(), ","); // Field total
+        $filterList = Concat($filterList, $this->tipe_sla->AdvancedSearch->toJson(), ","); // Field tipe_sla
+        $filterList = Concat($filterList, $this->sla->AdvancedSearch->toJson(), ","); // Field sla
+        $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
+        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
+        $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
+        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
+        $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        global $UserProfile;
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            $UserProfile->setSearchFilters(CurrentUserName(), "forder_detaillistsrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
+
+        // Field idorder
+        $this->idorder->AdvancedSearch->SearchValue = @$filter["x_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator = @$filter["z_idorder"];
+        $this->idorder->AdvancedSearch->SearchCondition = @$filter["v_idorder"];
+        $this->idorder->AdvancedSearch->SearchValue2 = @$filter["y_idorder"];
+        $this->idorder->AdvancedSearch->SearchOperator2 = @$filter["w_idorder"];
+        $this->idorder->AdvancedSearch->save();
+
+        // Field idproduct
+        $this->idproduct->AdvancedSearch->SearchValue = @$filter["x_idproduct"];
+        $this->idproduct->AdvancedSearch->SearchOperator = @$filter["z_idproduct"];
+        $this->idproduct->AdvancedSearch->SearchCondition = @$filter["v_idproduct"];
+        $this->idproduct->AdvancedSearch->SearchValue2 = @$filter["y_idproduct"];
+        $this->idproduct->AdvancedSearch->SearchOperator2 = @$filter["w_idproduct"];
+        $this->idproduct->AdvancedSearch->save();
+
+        // Field jumlah
+        $this->jumlah->AdvancedSearch->SearchValue = @$filter["x_jumlah"];
+        $this->jumlah->AdvancedSearch->SearchOperator = @$filter["z_jumlah"];
+        $this->jumlah->AdvancedSearch->SearchCondition = @$filter["v_jumlah"];
+        $this->jumlah->AdvancedSearch->SearchValue2 = @$filter["y_jumlah"];
+        $this->jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_jumlah"];
+        $this->jumlah->AdvancedSearch->save();
+
+        // Field bonus
+        $this->bonus->AdvancedSearch->SearchValue = @$filter["x_bonus"];
+        $this->bonus->AdvancedSearch->SearchOperator = @$filter["z_bonus"];
+        $this->bonus->AdvancedSearch->SearchCondition = @$filter["v_bonus"];
+        $this->bonus->AdvancedSearch->SearchValue2 = @$filter["y_bonus"];
+        $this->bonus->AdvancedSearch->SearchOperator2 = @$filter["w_bonus"];
+        $this->bonus->AdvancedSearch->save();
+
+        // Field sisa
+        $this->sisa->AdvancedSearch->SearchValue = @$filter["x_sisa"];
+        $this->sisa->AdvancedSearch->SearchOperator = @$filter["z_sisa"];
+        $this->sisa->AdvancedSearch->SearchCondition = @$filter["v_sisa"];
+        $this->sisa->AdvancedSearch->SearchValue2 = @$filter["y_sisa"];
+        $this->sisa->AdvancedSearch->SearchOperator2 = @$filter["w_sisa"];
+        $this->sisa->AdvancedSearch->save();
+
+        // Field harga
+        $this->harga->AdvancedSearch->SearchValue = @$filter["x_harga"];
+        $this->harga->AdvancedSearch->SearchOperator = @$filter["z_harga"];
+        $this->harga->AdvancedSearch->SearchCondition = @$filter["v_harga"];
+        $this->harga->AdvancedSearch->SearchValue2 = @$filter["y_harga"];
+        $this->harga->AdvancedSearch->SearchOperator2 = @$filter["w_harga"];
+        $this->harga->AdvancedSearch->save();
+
+        // Field total
+        $this->total->AdvancedSearch->SearchValue = @$filter["x_total"];
+        $this->total->AdvancedSearch->SearchOperator = @$filter["z_total"];
+        $this->total->AdvancedSearch->SearchCondition = @$filter["v_total"];
+        $this->total->AdvancedSearch->SearchValue2 = @$filter["y_total"];
+        $this->total->AdvancedSearch->SearchOperator2 = @$filter["w_total"];
+        $this->total->AdvancedSearch->save();
+
+        // Field tipe_sla
+        $this->tipe_sla->AdvancedSearch->SearchValue = @$filter["x_tipe_sla"];
+        $this->tipe_sla->AdvancedSearch->SearchOperator = @$filter["z_tipe_sla"];
+        $this->tipe_sla->AdvancedSearch->SearchCondition = @$filter["v_tipe_sla"];
+        $this->tipe_sla->AdvancedSearch->SearchValue2 = @$filter["y_tipe_sla"];
+        $this->tipe_sla->AdvancedSearch->SearchOperator2 = @$filter["w_tipe_sla"];
+        $this->tipe_sla->AdvancedSearch->save();
+
+        // Field sla
+        $this->sla->AdvancedSearch->SearchValue = @$filter["x_sla"];
+        $this->sla->AdvancedSearch->SearchOperator = @$filter["z_sla"];
+        $this->sla->AdvancedSearch->SearchCondition = @$filter["v_sla"];
+        $this->sla->AdvancedSearch->SearchValue2 = @$filter["y_sla"];
+        $this->sla->AdvancedSearch->SearchOperator2 = @$filter["w_sla"];
+        $this->sla->AdvancedSearch->save();
+
+        // Field keterangan
+        $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
+        $this->keterangan->AdvancedSearch->save();
+
+        // Field aktif
+        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
+        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
+        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
+        $this->aktif->AdvancedSearch->save();
+
+        // Field created_at
+        $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
+        $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
+        $this->created_at->AdvancedSearch->SearchCondition = @$filter["v_created_at"];
+        $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
+        $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
+        $this->created_at->AdvancedSearch->save();
+
+        // Field created_by
+        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
+        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
+        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
+        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
+        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
+        $this->created_by->AdvancedSearch->save();
+
+        // Field readonly
+        $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
+        $this->readonly->AdvancedSearch->SearchOperator = @$filter["z_readonly"];
+        $this->readonly->AdvancedSearch->SearchCondition = @$filter["v_readonly"];
+        $this->readonly->AdvancedSearch->SearchValue2 = @$filter["y_readonly"];
+        $this->readonly->AdvancedSearch->SearchOperator2 = @$filter["w_readonly"];
+        $this->readonly->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Return basic search SQL
+    protected function basicSearchSql($arKeywords, $type)
+    {
+        $where = "";
+        $this->buildBasicSearchSql($where, $this->sla, $arKeywords, $type);
+        return $where;
+    }
+
+    // Build basic search SQL
+    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
+    {
+        $defCond = ($type == "OR") ? "OR" : "AND";
+        $arSql = []; // Array for SQL parts
+        $arCond = []; // Array for search conditions
+        $cnt = count($arKeywords);
+        $j = 0; // Number of SQL parts
+        for ($i = 0; $i < $cnt; $i++) {
+            $keyword = $arKeywords[$i];
+            $keyword = trim($keyword);
+            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
+                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
+                $ar = explode("\\", $keyword);
+            } else {
+                $ar = [$keyword];
+            }
+            foreach ($ar as $keyword) {
+                if ($keyword != "") {
+                    $wrk = "";
+                    if ($keyword == "OR" && $type == "") {
+                        if ($j > 0) {
+                            $arCond[$j - 1] = "OR";
+                        }
+                    } elseif ($keyword == Config("NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NULL";
+                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NOT NULL";
+                    } elseif ($fld->IsVirtual && $fld->Visible) {
+                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
+                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    }
+                    if ($wrk != "") {
+                        $arSql[$j] = $wrk;
+                        $arCond[$j] = $defCond;
+                        $j += 1;
+                    }
+                }
+            }
+        }
+        $cnt = count($arSql);
+        $quoted = false;
+        $sql = "";
+        if ($cnt > 0) {
+            for ($i = 0; $i < $cnt - 1; $i++) {
+                if ($arCond[$i] == "OR") {
+                    if (!$quoted) {
+                        $sql .= "(";
+                    }
+                    $quoted = true;
+                }
+                $sql .= $arSql[$i];
+                if ($quoted && $arCond[$i] != "OR") {
+                    $sql .= ")";
+                    $quoted = false;
+                }
+                $sql .= " " . $arCond[$i] . " ";
+            }
+            $sql .= $arSql[$cnt - 1];
+            if ($quoted) {
+                $sql .= ")";
+            }
+        }
+        if ($sql != "") {
+            if ($where != "") {
+                $where .= " OR ";
+            }
+            $where .= "(" . $sql . ")";
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    protected function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            // Search keyword in any fields
+            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
+                foreach ($ar as $keyword) {
+                    if ($keyword != "") {
+                        if ($searchStr != "") {
+                            $searchStr .= " " . $searchType . " ";
+                        }
+                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
+                    }
+                }
+            } else {
+                $searchStr = $this->basicSearchSql($ar, $searchType);
+            }
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -857,6 +1256,8 @@ class OrderDetailList extends OrderDetail
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->harga); // harga
             $this->updateSort($this->total); // total
+            $this->updateSort($this->tipe_sla); // tipe_sla
+            $this->updateSort($this->sla); // sla
             $this->updateSort($this->keterangan); // keterangan
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -888,6 +1289,11 @@ class OrderDetailList extends OrderDetail
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
+            }
+
             // Reset master/detail keys
             if ($this->Command == "resetall") {
                 $this->setCurrentMasterTable(""); // Clear master table
@@ -908,6 +1314,8 @@ class OrderDetailList extends OrderDetail
                 $this->sisa->setSort("");
                 $this->harga->setSort("");
                 $this->total->setSort("");
+                $this->tipe_sla->setSort("");
+                $this->sla->setSort("");
                 $this->keterangan->setSort("");
                 $this->aktif->setSort("");
                 $this->created_at->setSort("");
@@ -1061,10 +1469,10 @@ class OrderDetailList extends OrderDetail
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
         $item->Body = "<a class=\"ew-save-filter\" data-form=\"forder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
         $item->Body = "<a class=\"ew-delete-filter\" data-form=\"forder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1199,6 +1607,16 @@ class OrderDetailList extends OrderDetail
         global $Security, $Language;
     }
 
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1275,6 +1693,8 @@ class OrderDetailList extends OrderDetail
         $this->sisa->setDbValue($row['sisa']);
         $this->harga->setDbValue($row['harga']);
         $this->total->setDbValue($row['total']);
+        $this->tipe_sla->setDbValue($row['tipe_sla']);
+        $this->sla->setDbValue($row['sla']);
         $this->keterangan->setDbValue($row['keterangan']);
         $this->aktif->setDbValue($row['aktif']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1294,6 +1714,8 @@ class OrderDetailList extends OrderDetail
         $row['sisa'] = null;
         $row['harga'] = null;
         $row['total'] = null;
+        $row['tipe_sla'] = null;
+        $row['sla'] = null;
         $row['keterangan'] = null;
         $row['aktif'] = null;
         $row['created_at'] = null;
@@ -1351,6 +1773,10 @@ class OrderDetailList extends OrderDetail
         // harga
 
         // total
+
+        // tipe_sla
+
+        // sla
 
         // keterangan
 
@@ -1422,6 +1848,31 @@ class OrderDetailList extends OrderDetail
             $this->total->ViewValue = FormatCurrency($this->total->ViewValue, 2, -2, -2, -2);
             $this->total->ViewCustomAttributes = "";
 
+            // tipe_sla
+            $curVal = trim(strval($this->tipe_sla->CurrentValue));
+            if ($curVal != "") {
+                $this->tipe_sla->ViewValue = $this->tipe_sla->lookupCacheOption($curVal);
+                if ($this->tipe_sla->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->tipe_sla->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->tipe_sla->Lookup->renderViewRow($rswrk[0]);
+                        $this->tipe_sla->ViewValue = $this->tipe_sla->displayValue($arwrk);
+                    } else {
+                        $this->tipe_sla->ViewValue = $this->tipe_sla->CurrentValue;
+                    }
+                }
+            } else {
+                $this->tipe_sla->ViewValue = null;
+            }
+            $this->tipe_sla->ViewCustomAttributes = "";
+
+            // sla
+            $this->sla->ViewValue = $this->sla->CurrentValue;
+            $this->sla->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
@@ -1474,6 +1925,16 @@ class OrderDetailList extends OrderDetail
             $this->total->HrefValue = "";
             $this->total->TooltipValue = "";
 
+            // tipe_sla
+            $this->tipe_sla->LinkCustomAttributes = "";
+            $this->tipe_sla->HrefValue = "";
+            $this->tipe_sla->TooltipValue = "";
+
+            // sla
+            $this->sla->LinkCustomAttributes = "";
+            $this->sla->HrefValue = "";
+            $this->sla->TooltipValue = "";
+
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
             $this->keterangan->HrefValue = "";
@@ -1493,6 +1954,17 @@ class OrderDetailList extends OrderDetail
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
+
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"forder_detaillistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1627,6 +2099,8 @@ class OrderDetailList extends OrderDetail
                         return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "aktif = 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
+                    break;
+                case "x_tipe_sla":
                     break;
                 case "x_aktif":
                     break;

@@ -111,6 +111,28 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->tipe_sla->Visible) { // tipe_sla ?>
+    <tr id="r_tipe_sla">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_detail_tipe_sla"><?= $Page->tipe_sla->caption() ?></span></td>
+        <td data-name="tipe_sla" <?= $Page->tipe_sla->cellAttributes() ?>>
+<span id="el_order_detail_tipe_sla">
+<span<?= $Page->tipe_sla->viewAttributes() ?>>
+<?= $Page->tipe_sla->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->sla->Visible) { // sla ?>
+    <tr id="r_sla">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_detail_sla"><?= $Page->sla->caption() ?></span></td>
+        <td data-name="sla" <?= $Page->sla->cellAttributes() ?>>
+<span id="el_order_detail_sla">
+<span<?= $Page->sla->viewAttributes() ?>>
+<?= $Page->sla->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->keterangan->Visible) { // keterangan ?>
     <tr id="r_keterangan">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_order_detail_keterangan"><?= $Page->keterangan->caption() ?></span></td>
