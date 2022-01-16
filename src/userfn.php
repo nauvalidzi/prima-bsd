@@ -293,7 +293,7 @@ function get_approval($cust_id) {
 }
 
 function url_integrasi() {
-    return "http://3.141.200.40/sinergi/api/";
+    return "http://13.213.61.244/sinergi/api/";
 }
 
 function status_delivery($iddeliveryorder, $detail = "undetail") {
