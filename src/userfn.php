@@ -901,7 +901,7 @@ $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$respons
     ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
 };
 $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
-    $json = curl_get("http://3.141.200.40/sinergi/api/?action=sync-delivery-order");
+    $json = curl_get(url_integrasi() . "?action=sync-delivery-order");
     $data = json_decode($json, true);
     $status = true;
     $check = [];
@@ -940,7 +940,7 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
     WriteJson(['status' => $status, 'rows' => count($check) . ' row(s) updated!']);
 };
 $API_ACTIONS['sync-order-sip'] = function(Request $request, Response &$response) {
-    $json = curl_get("http://3.141.200.40/sinergi/api/?action=sync-bsd-order");
+    $json = curl_get(url_integrasi() . "?action=sync-bsd-order");
     $data = json_decode($json, true);
     $status = true;
     $check = [];
