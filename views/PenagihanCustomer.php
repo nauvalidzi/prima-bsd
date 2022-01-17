@@ -52,8 +52,8 @@ $PenagihanCustomer = &$Page;
 					DATE_FORMAT(i.tglinvoice + INTERVAL `t`.`value` DAY, '%Y-%m-%d') AS jatuhtempo, 
 					TIMESTAMPDIFF(DAY, i.tglinvoice + INTERVAL `t`.`value` DAY, '{$jatuhtempo}') as umur_faktur,
 					`t`.`value` AS term_payment, 
-					SUM(i.totaltagihan) AS nilai_faktur, 
-					SUM(i.sisabayar) AS piutang, 
+					i.totaltagihan AS nilai_faktur, 
+					i.sisabayar AS piutang, 
 					IFNULL(DATE_FORMAT(MAX(b.created_at), '%Y-%m-%d %H:%i:%s'),'') AS tgl_penagihan
 				FROM `order` o
 				JOIN order_detail od ON od.idorder = o.id
