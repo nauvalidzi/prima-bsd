@@ -1093,22 +1093,6 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     }
     WriteJson(['status' => $status]);
 };
-$API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$response) {
-    $faktur = urldecode(Param("faktur", Route(1)));
-    $status = 0;
-    if (empty($faktur)) {
-        echo json_encode([]); die;
-    }
-    $row = ExecuteRow("SELECT i.kode as no_faktur, c.nama as nama_customer, c.hp as nomor_handphone FROM invoice i JOIN customer c ON c.id = i.idcustomer WHERE i.kode = '{$faktur}'");
-    if (!empty($row['nomor_handphone']) or strlen($row['nomor_handphone']) <= 10) {
-        $send = json_encode([
-            'to' => $row['nomor_handphone'],
-            'message' => "Selamat siang {$row['nama_customer']}. Pembayaran Faktur No. {$row['no_faktur']} sudah kami terima. Terima kasih atas kerjasamanya. Semoga {$row['nama_customer']} sehat selalu.",
-        ]);
-        $status = 1;
-    }
-    ExecuteUpdate("INSERT INTO bot_history (tanggal, prop_code, prop_name, status, created_by) VALUES ('".date('Y-m-d H:i:s')."', '{$row['kodeorder']}', 'Notifikasi Pembayaran Faktur {$row['nomor_handphone']}', {$status}, ".CurrentUserID().")");
-};
 $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
     $json = curl_get(url_integrasi() . "?action=sync-delivery-order");
     $data = json_decode($json, true);
