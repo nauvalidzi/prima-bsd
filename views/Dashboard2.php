@@ -47,7 +47,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fa fa-cart-arrow-down"></i>
         </div>
-        <a href="#" class="small-box-footer preview-popup" data-view="order-unprocess">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="order-unprocess">Pratinjau <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -59,7 +59,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fas fa-dolly"></i>
         </div>
-        <a href="#" class="small-box-footer preview-popup" data-view="do-uncomplete">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="do-uncomplete">Pratinjau <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -71,7 +71,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fa fa-file-invoice"></i>
         </div>
-        <a href="#" class="small-box-footer preview-popup" data-view="invoice-unpaid">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="invoice-unpaid">Pratinjau <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -83,7 +83,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fa fa-truck-loading"></i>
         </div>
-        <a href="#" class="small-box-footer preview-popup" data-view="invoice-unsent">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="invoice-unsent">Pratinjau <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
 </div>
