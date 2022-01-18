@@ -467,7 +467,7 @@ class PembayaranAdd extends Pembayaran
         $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
-        $this->idcustomer->setVisibility();
+        $this->idcustomer->Visible = false;
         $this->idinvoice->setVisibility();
         $this->totaltagihan->setVisibility();
         $this->sisatagihan->setVisibility();
@@ -694,16 +694,6 @@ class PembayaranAdd extends Pembayaran
             $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
         }
 
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
-            } else {
-                $this->idcustomer->setFormValue($val);
-            }
-        }
-
         // Check field name 'idinvoice' first before field var 'x_idinvoice'
         $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
         if (!$this->idinvoice->IsDetailKey) {
@@ -776,7 +766,6 @@ class PembayaranAdd extends Pembayaran
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
         $this->totaltagihan->CurrentValue = $this->totaltagihan->FormValue;
         $this->sisatagihan->CurrentValue = $this->sisatagihan->FormValue;
@@ -1056,11 +1045,6 @@ class PembayaranAdd extends Pembayaran
             $this->tanggal->HrefValue = "";
             $this->tanggal->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
             // idinvoice
             $this->idinvoice->LinkCustomAttributes = "";
             $this->idinvoice->HrefValue = "";
@@ -1111,35 +1095,6 @@ class PembayaranAdd extends Pembayaran
             $this->tanggal->EditCustomAttributes = "";
             $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 8));
             $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
-
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            } else {
-                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idcustomer->EditValue = $arwrk;
-            }
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // idinvoice
             $this->idinvoice->EditAttrs["class"] = "form-control";
@@ -1245,10 +1200,6 @@ class PembayaranAdd extends Pembayaran
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-
             // idinvoice
             $this->idinvoice->LinkCustomAttributes = "";
             $this->idinvoice->HrefValue = "";
@@ -1309,11 +1260,6 @@ class PembayaranAdd extends Pembayaran
         }
         if (!CheckDate($this->tanggal->FormValue)) {
             $this->tanggal->addErrorMessage($this->tanggal->getErrorMessage(false));
-        }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
-            }
         }
         if ($this->idinvoice->Required) {
             if (!$this->idinvoice->IsDetailKey && EmptyValue($this->idinvoice->FormValue)) {
@@ -1413,9 +1359,6 @@ class PembayaranAdd extends Pembayaran
 
         // tanggal
         $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), false);
-
-        // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, false);
 
         // idinvoice
         $this->idinvoice->setDbValueDef($rsnew, $this->idinvoice->CurrentValue, 0, false);

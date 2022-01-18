@@ -1272,16 +1272,6 @@ class VPenagihanList extends VPenagihan
             $this->nilai_po->CurrentValue = ConvertToFloatString($this->nilai_po->CurrentValue);
         }
 
-        // Convert decimal values if posted back
-        if ($this->nilai_faktur->FormValue == $this->nilai_faktur->CurrentValue && is_numeric(ConvertToFloatString($this->nilai_faktur->CurrentValue))) {
-            $this->nilai_faktur->CurrentValue = ConvertToFloatString($this->nilai_faktur->CurrentValue);
-        }
-
-        // Convert decimal values if posted back
-        if ($this->piutang->FormValue == $this->piutang->CurrentValue && is_numeric(ConvertToFloatString($this->piutang->CurrentValue))) {
-            $this->piutang->CurrentValue = ConvertToFloatString($this->piutang->CurrentValue);
-        }
-
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -1330,12 +1320,12 @@ class VPenagihanList extends VPenagihan
 
             // nilai_faktur
             $this->nilai_faktur->ViewValue = $this->nilai_faktur->CurrentValue;
-            $this->nilai_faktur->ViewValue = FormatNumber($this->nilai_faktur->ViewValue, 2, -2, -2, -2);
+            $this->nilai_faktur->ViewValue = FormatNumber($this->nilai_faktur->ViewValue, 0, -2, -2, -2);
             $this->nilai_faktur->ViewCustomAttributes = "";
 
             // piutang
             $this->piutang->ViewValue = $this->piutang->CurrentValue;
-            $this->piutang->ViewValue = FormatNumber($this->piutang->ViewValue, 2, -2, -2, -2);
+            $this->piutang->ViewValue = FormatNumber($this->piutang->ViewValue, 0, -2, -2, -2);
             $this->piutang->ViewCustomAttributes = "";
 
             // nomor_handphone

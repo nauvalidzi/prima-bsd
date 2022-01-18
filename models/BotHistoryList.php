@@ -1904,8 +1904,6 @@ class BotHistoryList extends BotHistory
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
-        $item = &$this->ListOptions->add("action");
-        $item->Header = "Action";
     }
 
     // ListOptions Rendering event
@@ -1921,15 +1919,6 @@ class BotHistoryList extends BotHistory
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        if ($this->status->CurrentValue < 0) {
-        	$this->ListOptions->Items["action"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-primary btn-sm action-reminder\" data-type=\"activate\">Activate Reminder</button>";
-        }
-        if ($this->status->CurrentValue == 0) {
-        	$this->ListOptions->Items["action"]->Body = "<button type=\"button\" data-value=\"{$this->id->CurrentValue}\" class=\"btn btn-warning btn-sm action-reminder\" data-type=\"cancel\">Cancel Reminder</button>";
-        }
-        if ($this->status->CurrentValue > 0) {
-        	$this->ListOptions->Items["action"]->Body = "Delivered";
-        }
     }
 
     // Row Custom Action event

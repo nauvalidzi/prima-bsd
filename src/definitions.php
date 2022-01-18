@@ -157,6 +157,7 @@ return [
     "kualitasbarang" => \DI\create(Kualitasbarang::class),
     "viskositasbarang" => \DI\create(Viskositasbarang::class),
     "tipe_sla" => \DI\create(TipeSla::class),
+    "antrian_bot" => \DI\create(AntrianBot::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

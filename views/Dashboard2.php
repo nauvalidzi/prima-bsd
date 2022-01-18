@@ -6,13 +6,6 @@ namespace PHPMaker2021\distributor;
 $Dashboard2 = &$Page;
 ?>
 <?php
-
-namespace PHPMaker2021\distributor;
-
-// Page object
-$Dashboard2 = &$Page;
-?>
-<?php
 $curr_year = date('Y');
 $curr_month = date('m');
 $query_kpi = "SELECT p.id as idpegawai, p.nama AS namapegawai, 
@@ -54,7 +47,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fa fa-cart-arrow-down"></i>
         </div>
-        <a href="OrderList" class="small-box-footer">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="order-unprocess">Selengkapnya <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -66,7 +59,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fas fa-dolly"></i>
         </div>
-        <a href="DeliveryorderList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="do-uncomplete">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -78,7 +71,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fa fa-file-invoice"></i>
         </div>
-        <a href="InvoiceList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="invoice-unpaid">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     <div class="col-lg-3 col-xs-6">
@@ -90,7 +83,7 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
         <div class="icon">
           <i class="fa fa-truck-loading"></i>
         </div>
-        <a href="InvoiceList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer preview-popup" data-view="invoice-unsent">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
 </div>
@@ -124,7 +117,49 @@ $invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent <
     </tbody>
 </table>
 
-<?= GetDebugMessage() ?>
+<script>
+loadjs.ready("load", function () {
+  $(".preview-popup").on('click', function() {
+    const attr = $(this).attr('data-view');
 
+    $('#modal-default').modal();
+    $('#modal-default .modal-title').html(attr.replace('-', ' ').toUpperCase());
+
+    switch(attr) {
+      case 'order-unprocess':
+        $.get('api/dashboard-order', function(result){
+          $('#modal-default .modal-body').append(result);
+        });
+        break;
+
+      case 'do-uncomplete':
+        $.get('api/dashboard-delivery', function(result){
+          $('#modal-default .modal-body').append(result);
+        });
+        break;
+
+      case 'invoice-unpaid':
+        $.get('api/dashboard-invoice-unpaid', function(result){
+          $('#modal-default .modal-body').append(result);
+        });
+        break;
+
+      case 'invoice-unsent':
+        $.get('api/dashboard-invoice-unsent', function(result){
+          $('#modal-default .modal-body').append(result);
+        });
+        break;
+
+      default:
+        // code block
+    }
+
+    //$('#modal-default .modal-dialog').addClass('modal-lg');    
+    $('#modal-default .modal-dialog').css({'width': 'auto', 'max-width': '80%'});
+    $('#modal-default .modal-body').empty();
+    $('#modal-default .modal-footer').hide();
+  });
+});
+</script>
 
 <?= GetDebugMessage() ?>

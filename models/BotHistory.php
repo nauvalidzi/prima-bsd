@@ -1305,16 +1305,6 @@ SORTHTML;
     {
         // To view properties of field class, use:
         //var_dump($this-><FieldName>);
-        if ($this->status->CurrentValue == -1) {
-            $this->status->ViewValue = 'Canceled';
-        }
-        if ($this->status->CurrentValue == 0) {
-            $this->status->ViewValue = 'Pending';
-            $this->canceled_at->ViewValue = '-';
-        }
-        if ($this->status->CurrentValue == 1) {
-            $this->status->ViewValue = 'Delivered';
-        }
     }
 
     // User ID Filtering event

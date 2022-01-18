@@ -342,7 +342,40 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Purchase Order"),$("ul.pagination").addClass("pagination-sm"),$(".ew-detail-option").append('<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-orders" title="Synchronize Data Orders" data-toggle="modal" data-target="#modal-default" data-backdrop="static" data-keyboard="false"><i class="fas fa-sync-alt"></i></button></div>'),$(".sync-orders").on("click",(function(){$("#modal-default .modal-header").hide(),$("#modal-default .modal-dialog").addClass("modal-dialog-centered"),$("#modal-default .modal-body").addClass("my-4"),$("#modal-default .modal-body").html('<center><i class="fas fa-3x fa-sync fa-spin"></i></center>'),$("#modal-default .modal-footer").hide(),$.get("api/sync-order-sip",(function(a){$("#modal-default").modal("hide"),!1!==a.status?Swal.fire({icon:"success",title:"Success",text:"Data has been synchronized!"}).then((function(){location.reload()})):Swal.fire({icon:"error",title:"Error",text:"Error synchronizing from S.I.P!"})}))}));
+    // Write your table-specific startup script here, no need to add script tags.
+    //loadjs.ready('jquery', function() {
+    //	$('.ew-add-edit-option').hide();
+    //});
+    $('.ew-detail-add-group').html('Add Purchase Order');
+    $('ul.pagination').addClass('pagination-sm');
+    $(".ew-detail-option").append(`<div class="btn-group btn-group-sm ew-btn-group ml-1"><button type="button" class="btn btn-default btn-sm sync-orders" title="Synchronize Data Orders" data-toggle="modal" data-target="#modal-default" data-backdrop="static" data-keyboard="false"><i class="fas fa-sync-alt"></i></button></div>`);
+        $('#modal-default .modal-header').hide();
+        $('#modal-default .modal-dialog').addClass('modal-dialog-centered');
+        $('#modal-default .modal-body').addClass('my-4');
+        $('#modal-default .modal-body').html('<center><i class="fas fa-3x fa-sync fa-spin"></i></center>');
+        $('#modal-default .modal-footer').hide();
+
+        // setTimeout(
+            $.get("api/sync-order-sip",(function(e){
+                $('#modal-default').modal('hide');
+                if (e.status !== false) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data has been synchronized!',
+                    }).then(function() { 
+                       location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error synchronizing from S.I.P!'
+                    });
+                }
+            }))
+        // , 1000);
+    });
 });
 </script>
 <?php if (!$Page->isExport()) { ?>

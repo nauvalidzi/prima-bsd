@@ -1183,11 +1183,11 @@ class OrderDetailView extends OrderDetail
     public function pageRender()
     {
         //Log("Page Render");
-        $this->OtherOptions["action"]->Items["add"]->Visible = false;
-        if ($this->readonly->CurrentValue) {
-        	$this->OtherOptions["action"]->Items["edit"]->Visible = false;
-        	$this->OtherOptions["action"]->Items["delete"]->Visible = false;
-        }
+        //$this->OtherOptions["action"]->Items["add"]->Visible = false;
+        //if ($this->readonly->CurrentValue) {
+        //	$this->OtherOptions["action"]->Items["edit"]->Visible = false;
+        //	$this->OtherOptions["action"]->Items["delete"]->Visible = false;
+        //}
     }
 
     // Page Data Rendering event

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/1/16" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/1/18" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1157,6 +1157,9 @@
       <phrase id="menutext" value="Pengaturan" />
     </menu>
     <menu id="598">
+      <phrase id="menutext" value="Antrian Bot" />
+    </menu>
+    <menu id="1054">
       <phrase id="menutext" value="Antrian Bot" />
     </menu>
     <menu id="591">
@@ -3260,6 +3263,67 @@
     </table>
     <table id="v_npd_customer">
       <phrase id="tblcaption" value="v npd customer" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="idpegawai">
+        <phrase id="fldcaption" value="idpegawai" />
+      </field>
+      <field id="idcustomer">
+        <phrase id="fldcaption" value="idcustomer" />
+      </field>
+      <field id="kodeorder">
+        <phrase id="fldcaption" value="kodeorder" />
+      </field>
+      <field id="kategoriproduk">
+        <phrase id="fldcaption" value="kategoriproduk" />
+      </field>
+      <field id="jenisproduk">
+        <phrase id="fldcaption" value="jenisproduk" />
+      </field>
+      <field id="idproduct_acuan">
+        <phrase id="fldcaption" value="idproduct acuan" />
+      </field>
+      <field id="kualitasproduk">
+        <phrase id="fldcaption" value="kualitasproduk" />
+      </field>
+      <field id="bahan_campaign">
+        <phrase id="fldcaption" value="bahan campaign" />
+      </field>
+      <field id="warna">
+        <phrase id="fldcaption" value="warna" />
+      </field>
+      <field id="parfum">
+        <phrase id="fldcaption" value="parfum" />
+      </field>
+      <field id="tambahan">
+        <phrase id="fldcaption" value="tambahan" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="status" />
+      </field>
+      <field id="created_at">
+        <phrase id="fldcaption" value="created at" />
+      </field>
+      <field id="readonly">
+        <phrase id="fldcaption" value="readonly" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="nama_pemesan">
+        <phrase id="fldcaption" value="nama pemesan" />
+      </field>
+      <field id="alamat_pemesan">
+        <phrase id="fldcaption" value="alamat pemesan" />
+      </field>
+      <field id="jabatan_pemesan">
+        <phrase id="fldcaption" value="jabatan pemesan" />
+      </field>
+      <field id="hp_pemesan">
+        <phrase id="fldcaption" value="hp pemesan" />
+      </field>
     </table>
     <table id="v_order_customer">
       <phrase id="tblcaption" value="v order customer" />
@@ -4441,6 +4505,9 @@
       <field id="updated_at">
         <phrase id="fldcaption" value="Updated" />
       </field>
+    </table>
+    <table id="antrian_bot">
+      <phrase id="tblcaption" value="Antrian Bot" />
     </table>
   </project>
 </ew-language>

@@ -100,10 +100,10 @@ class StockOrderDetail extends DbTable
         $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], ["x_idproduct"], [], [], [], [], '', '');
+                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], ["stock_order_detail x_idproduct"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], ["x_idproduct"], [], [], [], [], '', '');
+                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], ["stock_order_detail x_idproduct"], [], [], [], [], '', '');
                 break;
         }
         $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

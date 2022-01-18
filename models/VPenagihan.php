@@ -101,18 +101,16 @@ class VPenagihan extends DbTable
         $this->Fields['nilai_po'] = &$this->nilai_po;
 
         // nilai_faktur
-        $this->nilai_faktur = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_faktur', 'nilai_faktur', '`nilai_faktur`', '`nilai_faktur`', 131, 41, -1, false, '`nilai_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nilai_faktur = new DbField('v_penagihan', 'v_penagihan', 'x_nilai_faktur', 'nilai_faktur', '`nilai_faktur`', '`nilai_faktur`', 20, 20, -1, false, '`nilai_faktur`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nilai_faktur->Sortable = true; // Allow sort
-        $this->nilai_faktur->DefaultDecimalPrecision = 2; // Default decimal precision
-        $this->nilai_faktur->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
+        $this->nilai_faktur->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->nilai_faktur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nilai_faktur->Param, "CustomMsg");
         $this->Fields['nilai_faktur'] = &$this->nilai_faktur;
 
         // piutang
-        $this->piutang = new DbField('v_penagihan', 'v_penagihan', 'x_piutang', 'piutang', '`piutang`', '`piutang`', 131, 41, -1, false, '`piutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->piutang = new DbField('v_penagihan', 'v_penagihan', 'x_piutang', 'piutang', '`piutang`', '`piutang`', 20, 20, -1, false, '`piutang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->piutang->Sortable = true; // Allow sort
-        $this->piutang->DefaultDecimalPrecision = 2; // Default decimal precision
-        $this->piutang->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
+        $this->piutang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->piutang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->piutang->Param, "CustomMsg");
         $this->Fields['piutang'] = &$this->piutang;
 
@@ -939,12 +937,12 @@ SORTHTML;
 
         // nilai_faktur
         $this->nilai_faktur->ViewValue = $this->nilai_faktur->CurrentValue;
-        $this->nilai_faktur->ViewValue = FormatNumber($this->nilai_faktur->ViewValue, 2, -2, -2, -2);
+        $this->nilai_faktur->ViewValue = FormatNumber($this->nilai_faktur->ViewValue, 0, -2, -2, -2);
         $this->nilai_faktur->ViewCustomAttributes = "";
 
         // piutang
         $this->piutang->ViewValue = $this->piutang->CurrentValue;
-        $this->piutang->ViewValue = FormatNumber($this->piutang->ViewValue, 2, -2, -2, -2);
+        $this->piutang->ViewValue = FormatNumber($this->piutang->ViewValue, 0, -2, -2, -2);
         $this->piutang->ViewCustomAttributes = "";
 
         // nomor_handphone
@@ -1103,18 +1101,12 @@ SORTHTML;
         $this->nilai_faktur->EditCustomAttributes = "";
         $this->nilai_faktur->EditValue = $this->nilai_faktur->CurrentValue;
         $this->nilai_faktur->PlaceHolder = RemoveHtml($this->nilai_faktur->caption());
-        if (strval($this->nilai_faktur->EditValue) != "" && is_numeric($this->nilai_faktur->EditValue)) {
-            $this->nilai_faktur->EditValue = FormatNumber($this->nilai_faktur->EditValue, -2, -2, -2, -2);
-        }
 
         // piutang
         $this->piutang->EditAttrs["class"] = "form-control";
         $this->piutang->EditCustomAttributes = "";
         $this->piutang->EditValue = $this->piutang->CurrentValue;
         $this->piutang->PlaceHolder = RemoveHtml($this->piutang->caption());
-        if (strval($this->piutang->EditValue) != "" && is_numeric($this->piutang->EditValue)) {
-            $this->piutang->EditValue = FormatNumber($this->piutang->EditValue, -2, -2, -2, -2);
-        }
 
         // nomor_handphone
         $this->nomor_handphone->EditAttrs["class"] = "form-control";

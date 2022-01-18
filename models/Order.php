@@ -1844,6 +1844,7 @@ SORTHTML;
         // To cancel, set return value to false
         $rsnew['kode'] = getNextKodeOrder($rsnew['idbrand']);
         $rsnew['tanggal'] = date('Y-m-d');
+        $rsnew['status'] = 'Dikirim';
         return true;
     }
 

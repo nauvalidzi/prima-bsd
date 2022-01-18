@@ -1369,6 +1369,9 @@ return function (App $app) {
         }
     );
 
+    // antrian_bot
+    $app->any('/AntrianBot[/{params:.*}]', AntrianBotController::class)->add(PermissionMiddleware::class)->setName('AntrianBot-antrian_bot-custom'); // custom
+
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');
 

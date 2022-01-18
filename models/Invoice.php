@@ -1894,7 +1894,7 @@ SORTHTML;
         // To cancel, set return value to false
         $rsnew['sisabayar'] = $rsnew['totaltagihan'];
         $rsnew['kode'] = getNextKodeInvoice($rsnew['idorder']);
-        $rsnew['idcustomer'] = getCustomerByOrder($rsnew['idorder']);
+        $rsnew['idcustomer'] = getCustomer($rsnew['idorder'], "order");
         return true;
     }
 
@@ -1902,6 +1902,7 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
+        update_status_order($rsnew['id'], 'invoice');
     }
 
     // Row Updating event

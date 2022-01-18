@@ -110,10 +110,10 @@ class Pembayaran extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], ["x_idinvoice"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], ["x_idinvoice"], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -130,10 +130,10 @@ class Pembayaran extends DbTable
         $this->idinvoice->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
+                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], [], [], [], [], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
                 break;
             default:
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], ["x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
+                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], [], [], [], [], ["totaltagihan","sisabayar"], ["x_totaltagihan","x_sisatagihan"], '', '');
                 break;
         }
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -1640,7 +1640,8 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        //$rsnew['kode'] = getNextKode('pembayaran', 0);
+        $rsnew['kode'] = getNextKode('pembayaran', 0);
+        $rsnew['idcustomer'] = getCustomer($rsnew['idinvoice'], "invoice");
         $updateSisaBayar = ExecuteUpdate("UPDATE invoice SET sisabayar=sisabayar-(".$rsnew['jumlahbayar'].") WHERE id=".$rsnew['idinvoice']);
         checkCloseInvoice($rsnew['idinvoice']);
         return true;
@@ -1651,6 +1652,13 @@ SORTHTML;
     {
         //Log("Row Inserted");
         checkReadOnly("invoice", $rsnew['idinvoice']);
+
+        // UPDATE STATUS ORDER
+        if (status_pembayaran($rsnew['idinvoice']) == 'Lunas') {
+            update_status_order($rsnew['idinvoice'], "bayar-lunas");
+        } else {
+            update_status_order($rsnew['idinvoice'], "bayar-sebagian");
+        }
 
         // START NOTIF BOT WASAP //
         $status = 0;

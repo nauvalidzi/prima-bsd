@@ -2256,10 +2256,10 @@ class OrderDetailList extends OrderDetail
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
-        if ($this->readonly->CurrentValue == 1) {
-        	$this->ListOptions->Items["edit"]->Body = "";
-        	$this->ListOptions->Items["delete"]->Body = "";
-        }
+        //if ($this->readonly->CurrentValue == 1) {
+        //	$this->ListOptions->Items["edit"]->Body = "";
+        //	$this->ListOptions->Items["delete"]->Body = "";
+        //}
     }
 
     // Row Custom Action event

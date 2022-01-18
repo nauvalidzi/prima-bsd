@@ -229,6 +229,176 @@ function Api_Action($app)
     	updateStatus("npd", $id);
     	return $response->withJson(1);
     });
+    $app->get('/dashboard-order', function ($request, $response, $args) {
+        $query = "SELECT o.kode AS kode_order, 
+                        DATE_FORMAT(o.tanggal, '%d-%m-%Y') AS tgl_order, 
+                        p.kode AS kode_marketing, 
+                        p.nama AS nama_marketing, 
+                        c.kode AS kode_customer, 
+                        c.nama AS nama_customer,
+                        b.title AS brand
+                    FROM `order` o  
+                    JOIN pegawai p ON p.id = o.idpegawai
+                    JOIN customer c ON c.id = o.idcustomer
+                    JOIN brand b ON b.id = o.idbrand
+                    JOIN order_detail od ON o.id = od.idorder
+                    WHERE od.sisa > 0
+                    GROUP BY o.id";
+        $result = ExecuteQuery($query)->fetchAll();
+        $html = "<div class=\"table-responsive\">";
+        $html .= "<table class=\"table table-bordered\">";
+        $html .= "<tr>
+                    <th width=\"5%\">No.</th>
+                    <th>Kode Order</th>
+                    <th>Tanggal Order</th>
+                    <th>Marketing</th>
+                    <th>Customer</th>
+                    <th>Brand</th>
+                </tr>";
+        if (count($result) > 0) {
+            $no=1;
+            foreach ($result as $row) {
+                $html .= "<tr>
+                        <td>{$no}</td>
+                        <td>{$row['kode_order']}</td>
+                        <td>{$row['tgl_order']}</td>
+                        <td>{$row['kode_marketing']}, {$row['nama_marketing']}</td>
+                        <td>{$row['kode_customer']}, {$row['nama_customer']}</td>
+                        <td>{$row['brand']}</td>
+                    </tr>";
+                $no++;
+            }
+        } else {
+            $html .= "<tr><td class=\"text-center\" colspan=\"10\">Tidak ada data.</td></tr>";
+        }
+        $html .= "</table>";
+        $html .= "</div>";
+        return $response->withJson($html);
+    });
+    $app->get('/dashboard-delivery', function ($request, $response, $args) {
+        $query = "SELECT d.kode as kode_delivery, 
+                        DATE_FORMAT(d.tanggal, '%d-%m-%Y') AS tgl_delivery, 
+                        COUNT(dd.idorder) AS jumlah_order
+                    FROM deliveryorder d
+                    JOIN deliveryorder_detail dd ON dd.iddeliveryorder = d.id
+                    JOIN order_detail od ON od.id = dd.idorder_detail
+                    WHERE od.sisa > 0
+                    GROUP BY d.id";
+        $result = ExecuteQuery($query)->fetchAll();
+        $html = "<div class=\"table-responsive\">";
+        $html .= "<table class=\"table table-bordered\">";
+        $html .= "<tr>
+                    <th width=\"5%\">No.</th>
+                    <th>Kode</th>
+                    <th>Tanggal</th>
+                    <th>Jumlah</th>
+                </tr>";
+        if (count($result) > 0) {
+            $no=1;
+            foreach ($result as $row) {
+                $html .= "<tr>
+                        <td>{$no}</td>
+                        <td>{$row['kode_delivery']}</td>
+                        <td>{$row['tgl_delivery']}</td>
+                        <td>{$row['jumlah_order']}</td>
+                    </tr>";
+                $no++;
+            }
+        } else {
+            $html .= "<tr><td class=\"text-center\" colspan=\"10\">Tidak ada data.</td></tr>";
+        }
+        $html .= "</table>";
+        $html .= "</div>";
+        return $response->withJson($html);
+    });
+    $app->get('/dashboard-invoice-unpaid', function ($request, $response, $args) {
+        $query = "SELECT i.kode AS kode_invoice,
+                    DATE_FORMAT(i.tglinvoice, '%d-%m-%Y') AS tgl_invoice, 
+                    o.kode AS kode_order,
+                    DATE_FORMAT(o.tanggal, '%d-%m-%Y') AS tgl_order, 
+                    c.kode AS kode_customer,
+                    c.nama AS nama_customer,
+                    i.totaltagihan,
+                    i.sisabayar
+                FROM invoice i
+                JOIN `order` o ON o.id = i.idorder
+                JOIN customer c ON c.id = i.idcustomer
+                WHERE i.sisabayar > 0";
+        $result = ExecuteQuery($query)->fetchAll();
+        $html = "<div class=\"table-responsive\">";
+        $html .= "<table class=\"table table-bordered\">";
+        $html .= "<tr>
+                    <th width=\"5%\">No.</th>
+                    <th>Kode Invoice</th>
+                    <th>Kode Order</th>
+                    <th>Customer</th>
+                    <th>Total Tagihan</th>
+                    <th>Sisa Bayar</th>
+                </tr>";
+        if (count($result) > 0) {
+            $no=1;
+            foreach ($result as $row) {
+                $html .= "<tr>
+                        <td>{$no}</td>
+                        <td>{$row['kode_invoice']}, {$row['tgl_invoice']}</td>
+                        <td>{$row['kode_order']}, {$row['tgl_order']}</td>
+                        <td>{$row['kode_customer']}, {$row['nama_customer']}</td>
+                        <td>Rp. ".rupiah($row['totaltagihan'])."</td>
+                        <td>Rp. ".rupiah($row['sisabayar'])."</td>
+                    </tr>";
+                $no++;
+            }
+        } else {
+            $html .= "<tr><td class=\"text-center\" colspan=\"10\">Tidak ada data.</td></tr>";
+        }
+        $html .= "</table>";
+        $html .= "</div>";
+        return $response->withJson($html);
+    });
+    $app->get('/dashboard-invoice-unsent', function ($request, $response, $args) {
+        $query = "SELECT i.kode AS kode_invoice,
+                    DATE_FORMAT(i.tglinvoice, '%d-%m-%Y') AS tgl_invoice, 
+                    o.kode AS kode_order,
+                    DATE_FORMAT(o.tanggal, '%d-%m-%Y') AS tgl_order, 
+                    c.kode AS kode_customer,
+                    c.nama AS nama_customer,
+                    i.totaltagihan,
+                    i.sisabayar
+                FROM invoice i
+                JOIN `order` o ON o.id = i.idorder
+                JOIN customer c ON c.id = i.idcustomer
+                WHERE i.sent < 1";
+        $result = ExecuteQuery($query)->fetchAll();
+        $html = "<div class=\"table-responsive\">";
+        $html .= "<table class=\"table table-bordered\">";
+        $html .= "<tr>
+                    <th width=\"5%\">No.</th>
+                    <th>Kode Invoice</th>
+                    <th>Kode Order</th>
+                    <th>Customer</th>
+                    <th>Total Tagihan</th>
+                    <th>Sisa Bayar</th>
+                </tr>";
+        if (count($result) > 0) {
+            $no=1;
+            foreach ($result as $row) {
+                $html .= "<tr>
+                        <td>{$no}</td>
+                        <td>{$row['kode_invoice']}, {$row['tgl_invoice']}</td>
+                        <td>{$row['kode_order']}, {$row['tgl_order']}</td>
+                        <td>{$row['kode_customer']}, {$row['nama_customer']}</td>
+                        <td>Rp. ".rupiah($row['totaltagihan'])."</td>
+                        <td>Rp. ".rupiah($row['sisabayar'])."</td>
+                    </tr>";
+                $no++;
+            }
+        } else {
+            $html .= "<tr><td class=\"text-center\" colspan=\"10\">Tidak ada data.</td></tr>";
+        }
+        $html .= "</table>";
+        $html .= "</div>";
+        return $response->withJson($html);
+    });
 }
 
 // Container Build event
@@ -320,8 +490,29 @@ function get_kodeorder($idorder) {
     return ExecuteRow("SELECT kode FROM `order` WHERE id = '{$idorder}'")['kode'];
 }
 
-function getCustomerByOrder($idorder) {
-	return ExecuteRow("SELECT idcustomer FROM `order` WHERE id = {$idorder}")['idcustomer'];
+function getCustomer($id, $table="order") {
+    $row = [];
+    if ($table == 'order') {
+        $row = ExecuteRow("SELECT idcustomer FROM `order` WHERE id = {$id}");
+    }
+    if ($table == 'invoice') {
+        $row = ExecuteRow("SELECT idcustomer FROM `invoice` WHERE id = {$id}");
+    }
+	return $row['idcustomer'];
+}
+
+function update_status_order($idinvoice, $attr="") {
+    $idorder = ExecuteRow("SELECT idorder FROM invoice WHERE id = {$idinvoice}")['idorder'];
+    if (!empty($attr) && $attr == 'invoice') {
+        return ExecuteUpdate("UPDATE `order` SET `status` = 'Proses Invoice' WHERE id = {$idorder}");
+    }
+    if (!empty($attr) && $attr == 'bayar-sebagian') {
+        return ExecuteUpdate("UPDATE `order` SET `status` = 'Bayar Sebagian' WHERE id = {$idorder}");
+    }
+    if (!empty($attr) && $attr == 'bayar-lunas') {
+        return ExecuteUpdate("UPDATE `order` SET `status` = 'Pembayaran Lunas' WHERE id = {$idorder}");
+    }
+    return true;
 }
 
 //-- FUNGSI TERBILANG --//
@@ -826,6 +1017,40 @@ function curl_get($url){
     // menampilkan hasil curl
     return $output;
 }
+$API_ACTIONS['confirmation-bot-queue'] = function(Request $request, Response &$response) {
+    $type = Param("type", Route(1));
+    $items = Param("items", Route(2));
+    if (empty($items)) {
+        echo json_encode([]); die;
+    }
+    $process = true;
+    $message = '';
+    $data = explode(',', urldecode($items));
+    if ($type == 'cancel') {
+        $status = '-2';
+        $canceled = ", canceled_at = '".date('Y-m-d H:i:s')."'";
+        $message = 'Data has been canceled successfully.';
+    } else {
+        $status = '0';
+        $canceled = null;
+        $message = 'Data has been queued successfully.';
+    }
+    foreach ($data as $value) {
+        $update = ExecuteUpdate("UPDATE bot_history SET status = '{$status}' {$canceled} WHERE id = {$value}");
+        if (!$update) {
+            $process = false;
+        }
+    }
+
+    /*
+     * STATUS BOT
+     * -2 CANCEL
+     * -1 PENDING / WAITING TO CONFIRM CANCEL/QUEUING
+     * 0 QUEUING TO DELIVER
+     * 0 DELIVERED
+    */
+    WriteJson(['status' => $process, 'message' => $message]);
+};
 $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) {
     $items = Param("items", Route(2));
     if (empty($items)) {
@@ -836,53 +1061,37 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     foreach ($data as $value) { 
         $row = ExecuteRow("SELECT * FROM v_penagihan WHERE idorder = '{$value}'");
         $totalumurfaktur = $row['umur_faktur'] - $row['term_payment'];
+        $tagihan = $row['piutang'] > 0 ? $row['piutang'] : $row['nilai_faktur'];
         if ($totalumurfaktur < 0) {
-            $message = "Yth {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menyampaikan tentang adanya Faktur yang akan jatuh tempo dalam beberapa hari kedepan untuk mohon dapat dibantu pembayarannya.
+            $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menyampaikan tentang adanya Faktur yang akan jatuh tempo dalam beberapa hari kedepan untuk mohon dapat dibantu pembayarannya.
                 \nNo Faktur : {$row['kode_faktur']}
-                \nNilai Faktur : Rp {$row['nilai_faktur']}
+                \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
                 \nJatuh Tempo : {$row['jatuhtempo']}
                 \nMohon dapat diinformasikan kembali ke kami di Nomor ini apabila sudah ditransfer, dan mohon abaikan chat ini apabila sudah ditransfer.
                 \nTerimakasih atas kesetiaan dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
         if ($totalumurfaktur >= 0 && $totalumurfaktur <= 7) {
-            $message = "Yth {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menginformasikan Tagihan Faktur sbb:
+            $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menginformasikan Tagihan Faktur sbb:
                 \nNo Faktur : {$row['kode_faktur']}
-                \nNilai Faktur : Rp {$row['nilai_faktur']}
+                \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
                 \nJatuh Tempo : {$row['jatuhtempo']}
                 \nPembayaran bisa melalui transfer rekening BCA 8290977593 a/n. Suryo Sudibyo SE, dan utk memudahkan proses tracking serta menghindari penagihan kembali mohon pd saat transfer diberi keterangan “Nama_Klinik_Merek_Nomor Faktur”.
                 \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
         if ($totalumurfaktur > 7) {
-            $message = "Yth {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma mengingatkan kembali Tagihan Faktur sbb:
+            $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma mengingatkan kembali Tagihan Faktur sbb:
                 \nNo Faktur : {$row['kode_faktur']}
-                \nNilai Faktur : Rp {$row['nilai_faktur']}
+                \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
                 \nJatuh Tempo : {$row['jatuhtempo']}
                 \nPembayaran bisa melalui transfer rekening BCA 8290977593 a/n. Suryo Sudibyo SE, dan utk memudahkan proses tracking serta menghindari penagihan kembali mohon pd saat transfer diberi keterangan “Nama_Klinik_Merek_Nomor Faktur”.
                 \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', 0, '".date('Y-m-d H:i:s')."')");
+        $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', '-1', '".date('Y-m-d H:i:s')."')");
         if (!$insert) $status = false;
     }
     WriteJson(['status' => $status]);
-};
-$API_ACTIONS['action-reminder'] = function(Request $request, Response &$response) {
-    $id = urldecode(Param("id", Route(2)));
-    $type = urldecode(Param("type", Route(1)));
-    $process = true;
-    if ($type == 'cancel') {
-        $status = '-1';
-        $canceled = ", canceled_at = '".date('Y-m-d H:i:s')."'";
-    } else {
-        $status = '0';
-        $canceled = null;
-    }
-    $row = ExecuteUpdate("UPDATE bot_history SET status = '{$status}' {$canceled} WHERE id = {$id}");
-    if (!$row) {
-        $process = false;
-    }
-    WriteJson(['status' => $process]);
 };
 $API_ACTIONS['notif-pembayaran'] = function(Request $request, Response &$response) {
     $faktur = urldecode(Param("faktur", Route(1)));
@@ -908,6 +1117,9 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
     foreach($data['data'] as $row) {
     	$exists = ExecuteRow("SELECT COUNT(*) as jumlah FROM deliveryorder ded JOIN deliveryorder_detail dedd ON dedd.iddeliveryorder = ded.id JOIN `order` o ON o.id = dedd.idorder JOIN order_detail od ON od.id = dedd.idorder_detail JOIN product p ON p.id = od.idproduct WHERE ded.kode = '{$row['no_suratjalan']}' AND ded.tanggal = '{$row['tgl_kirim']}' AND p.kode = '{$row['kode_barang']}' AND o.kode = '{$row['kode_penjualan']}'");
         $order = ExecuteRow("SELECT od.id as idorderdetail, idorder, jumlah + bonus as totalorder FROM order_detail od JOIN `order` o ON o.id = od.idorder JOIN product p ON p.id = od.idproduct WHERE o.kode = '{$row['kode_penjualan']}' AND p.kode = '{$row['kode_barang']}'");
+        if ($order) {
+        	ExecuteUpdate("UPDATE `order` SET `status` = '{$row['status_penjualan']}', catatan = '{$row['catatan_penjualan']}' WHERE kode = '{$row['kode_penjualan']}'");
+        }
         if ($exists['jumlah'] < 1 && $order) {
             $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
             if (!$delivery) {
@@ -929,6 +1141,8 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
             // check readonly
             checkReadOnly("order_detail", $order['idorderdetail']);
             checkReadOnly("order", $order['idorder']);
+
+            // check error
             if (!$delivery || !$delivery_detail) {
                 $check[] = false;
             }

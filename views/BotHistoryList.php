@@ -56,8 +56,7 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("head", function () {
-    // Client script
-    $(".action-reminder").on("click",(function(a){a.preventDefault();var t=$(this).attr("data-value");if("cancel"==$(this).attr("data-type"))var n="membatalkan",e="dibatalkan",i="cancel";else n="mengaktifkan",e="diaktifkan",i="activate";Swal.fire({title:"Konfirmasi",text:"Anda yakin akan "+n+" antrian penagihan ini?",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Yes, process it!"}).then(a=>{a.isConfirmed?$.get("api/action-reminder?type="+i+"&id="+t,(function(a){!1!==a.status&&Swal.fire({icon:"success",title:"Success",text:"Data berhasil "+e+"!"}).then((function(){location.reload()}))})):Swal.fire("Canceled!","Data batal diproses.","success")})}));
+    // Write your table-specific client script here, no need to add script tags.
 });
 </script>
 <?php } ?>

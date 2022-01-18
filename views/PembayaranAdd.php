@@ -22,7 +22,6 @@ loadjs.ready("head", function () {
     fpembayaranadd.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["idinvoice", [fields.idinvoice.visible && fields.idinvoice.required ? ew.Validators.required(fields.idinvoice.caption) : null], fields.idinvoice.isInvalid],
         ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
         ["sisatagihan", [fields.sisatagihan.visible && fields.sisatagihan.required ? ew.Validators.required(fields.sisatagihan.caption) : null, ew.Validators.integer], fields.sisatagihan.isInvalid],
@@ -96,7 +95,6 @@ loadjs.ready("head", function () {
     fpembayaranadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fpembayaranadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
     fpembayaranadd.lists.idinvoice = <?= $Page->idinvoice->toClientList($Page) ?>;
     fpembayaranadd.lists.idtipepayment = <?= $Page->idtipepayment->toClientList($Page) ?>;
     loadjs.done("fpembayaranadd");
@@ -149,40 +147,6 @@ loadjs.ready(["fpembayaranadd", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-    <div id="r_idcustomer" class="form-group row">
-        <label id="elh_pembayaran_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el_pembayaran_idcustomer">
-<?php $Page->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
-    <select
-        id="x_idcustomer"
-        name="x_idcustomer"
-        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
-        data-select2-id="pembayaran_x_idcustomer"
-        data-table="pembayaran"
-        data-field="x_idcustomer"
-        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
-        <?= $Page->idcustomer->editAttributes() ?>>
-        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
-    </select>
-    <?= $Page->idcustomer->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
-<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='pembayaran_x_idcustomer']"),
-        options = { name: "x_idcustomer", selectId: "pembayaran_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.pembayaran.fields.idcustomer.selectOptions);
-    ew.createSelect(options);
-});
-</script>
 </span>
 </div></div>
     </div>
