@@ -1060,9 +1060,9 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     $data = explode(',', urldecode($items));
     foreach ($data as $value) { 
         $row = ExecuteRow("SELECT * FROM v_penagihan WHERE idorder = '{$value}'");
-        $totalumurfaktur = $row['umur_faktur'] + $row['term_payment'];
+        #$totalumurfaktur = $row['umur_faktur'] + $row['term_payment'];
         $tagihan = $row['piutang'] > 0 ? $row['piutang'] : $row['nilai_faktur'];
-        if ($totalumurfaktur < 0) {
+        if ($row['umur_faktur'] < -1) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menyampaikan tentang adanya Faktur yang akan jatuh tempo dalam beberapa hari kedepan untuk mohon dapat dibantu pembayarannya.
                 \nNo Faktur : {$row['kode_faktur']}
                 \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
@@ -1070,7 +1070,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nMohon dapat diinformasikan kembali ke kami di Nomor ini apabila sudah ditransfer, dan mohon abaikan chat ini apabila sudah ditransfer.
                 \nTerimakasih atas kesetiaan dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        if ($totalumurfaktur >= 0 && $totalumurfaktur <= 7) {
+        if ($row['umur_faktur'] >= 0 && $row['umur_faktur'] <= 7) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menginformasikan Tagihan Faktur sbb:
                 \nNo Faktur : {$row['kode_faktur']}
                 \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
@@ -1079,7 +1079,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        if ($totalumurfaktur > 7) {
+        if ($row['umur_faktur'] > 7) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma mengingatkan kembali Tagihan Faktur sbb:
                 \nNo Faktur : {$row['kode_faktur']}
                 \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
