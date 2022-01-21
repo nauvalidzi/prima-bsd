@@ -89,7 +89,7 @@ $PenagihanCustomer = &$Page;
 						</select>
 					</li>
 					<li class="d-inline-block">
-						<label class="d-block">Tgl Jatuh Tempo</label>
+						<label class="d-block">Tgl Penagihan</label>
 						<input type="date" class="form-control input-md" name="jatuhtempo" value="<?php echo $jatuhtempo ?>">
 					</li>
 					<li class="d-inline-block">
@@ -111,8 +111,8 @@ $PenagihanCustomer = &$Page;
 			<tr>
 				<th colspan="11" class="text-center">
 					<h4 class="my-2">Penagihan Customer</h4>
-					<p class="mt-3">Umur Faktur: <?php echo strtoupper($_GET['umur']) ?></p>
-					<p>Tanggal Jatuh Tempo: <?php echo date('d/m/Y', strtotime($jatuhtempo)) ?> </p>
+					<p class="mt-3 mb-0">Umur Faktur: <?php echo strtoupper($_GET['umur']) ?></p>
+					<p>Tanggal Penagihan: <?php echo date('d/m/Y', strtotime($jatuhtempo)) ?> </p>
 				</th>
 			</tr>
 		    <tr>
@@ -126,6 +126,7 @@ $PenagihanCustomer = &$Page;
 		        <th class="text-center">Nilai Faktur</th>
 		        <th class="text-center">Piutang</th>
 		        <th class="text-center">Umur Faktur</th>
+		        <th class="text-center">Jatuh Tempo Faktur</th>
 		        <th class="text-center">Tgl Antrian Penagihan</th>
 		    </tr>
 		  </thead>
@@ -143,6 +144,7 @@ $PenagihanCustomer = &$Page;
 			      <td>Rp. <span class="float-right"><?php echo number_format($row['nilai_faktur'], 2, ",", ".") ?></span></td>
 			      <td>Rp. <span class="float-right"><?php echo number_format($row['piutang'], 2, ",", ".") ?></span></td>
 			      <td class="text-center"><?php echo $row['umur_faktur'] ?> Hari</td>
+			      <td class="text-center"><?php echo tgl_indo($row['jatuhtempo']) ?></td>
 			      <td class="text-center"><?php echo !empty($row['tgl_penagihan']) ? tgl_indo($row['tgl_penagihan'], 'datetime'): '-'; ?></td>
 			    </tr>
 				<?php endforeach; ?>
@@ -157,6 +159,8 @@ $PenagihanCustomer = &$Page;
 		<script>
 			$('.send-blast').on('click', function () {
 			    var items=[];
+			    var tanggal = "<?php echo $jatuhtempo ?>";
+
 			    $("input#check-row:checked:checked").each(function (index,item) {
 			        items[index] = item.value;
 			    });
@@ -168,8 +172,9 @@ $PenagihanCustomer = &$Page;
 			        });
 			        return false;
 			    }
+			    console.log(tanggal);
 
-			    $.get("api/goto-reminder?items="+encodeURIComponent(items), function(res) {
+			    $.get("api/goto-reminder?items="+encodeURIComponent(items)+"&tanggal="+tanggal, function(res) {
 			        if (res.status !== false) {
 			            Swal.fire({
 			                icon: 'success',

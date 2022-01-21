@@ -1052,17 +1052,28 @@ $API_ACTIONS['confirmation-bot-queue'] = function(Request $request, Response &$r
     WriteJson(['status' => $process, 'message' => $message]);
 };
 $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) {
-    $items = Param("items", Route(2));
+    $items = Param("items", Route(1));
+    $tanggal = Param("tanggal", Route(2));
     if (empty($items)) {
         echo json_encode([]); die;
     }
     $status = true;
     $data = explode(',', urldecode($items));
     foreach ($data as $value) { 
-        $row = ExecuteRow("SELECT * FROM v_penagihan WHERE idorder = '{$value}'");
-        $totalumurfaktur = $row['umur_faktur'] - $row['term_payment'];
+        $row = ExecuteRow("SELECT o.id AS idorder,
+                            i.id AS idinvoice,
+                            o.kode AS kodeorder,
+                            i.kode AS kodefaktur,
+                            DATE_FORMAT(i.tglinvoice + INTERVAL `t`.`value` DAY, '%Y-%m-%d') AS jatuhtempo,
+                            TIMESTAMPDIFF(DAY, i.tglinvoice + INTERVAL `t`.`value` DAY, '{$tanggal}') AS umur_faktur
+                            FROM `order` o
+                            LEFT JOIN invoice i ON i.idorder = o.id
+                            LEFT JOIN termpayment t ON i.idtermpayment = t.id
+                            WHERE i.sisabayar > 0 AND o.id = '{$value}'");
+
+        // $totalumurfaktur = $row['umur_faktur'] + $row['term_payment'];
         $tagihan = $row['piutang'] > 0 ? $row['piutang'] : $row['nilai_faktur'];
-        if ($totalumurfaktur < 0) {
+        if ($row['umur_faktur'] < -1) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menyampaikan tentang adanya Faktur yang akan jatuh tempo dalam beberapa hari kedepan untuk mohon dapat dibantu pembayarannya.
                 \nNo Faktur : {$row['kode_faktur']}
                 \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
@@ -1070,7 +1081,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nMohon dapat diinformasikan kembali ke kami di Nomor ini apabila sudah ditransfer, dan mohon abaikan chat ini apabila sudah ditransfer.
                 \nTerimakasih atas kesetiaan dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        if ($totalumurfaktur >= 0 && $totalumurfaktur <= 7) {
+        if ($row['umur_faktur'] >= 0 && $row['umur_faktur'] <= 7) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menginformasikan Tagihan Faktur sbb:
                 \nNo Faktur : {$row['kode_faktur']}
                 \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
@@ -1079,7 +1090,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        if ($totalumurfaktur > 7) {
+        if ($row['umur_faktur'] > 7) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma mengingatkan kembali Tagihan Faktur sbb:
                 \nNo Faktur : {$row['kode_faktur']}
                 \nNilai Faktur : Rp. ".rupiah($tagihan, 'without-decimal')."
@@ -1088,7 +1099,8 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
-        $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', '-1', '".date('Y-m-d H:i:s')."')");
+        $keterangan = "Umur Faktur: {$row['umur_faktur']},\nTgl Penagihan: " . tgl_indo($tanggal) . ".";
+        $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, keterangan created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', '-1', '{$keterangan}', '".date('Y-m-d H:i:s')."')");
         if (!$insert) $status = false;
     }
     WriteJson(['status' => $status]);

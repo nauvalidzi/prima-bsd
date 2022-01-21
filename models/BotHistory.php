@@ -35,6 +35,7 @@ class BotHistory extends DbTable
     public $phone;
     public $messages;
     public $status;
+    public $keterangan;
     public $canceled_at;
 
     // Page ID
@@ -123,6 +124,12 @@ class BotHistory extends DbTable
         $this->status->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
+
+        // keterangan
+        $this->keterangan = new DbField('bot_history', 'bot_history', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keterangan->Sortable = true; // Allow sort
+        $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
+        $this->Fields['keterangan'] = &$this->keterangan;
 
         // canceled_at
         $this->canceled_at = new DbField('bot_history', 'bot_history', 'x_canceled_at', 'canceled_at', '`canceled_at`', CastDateFieldForLike("`canceled_at`", 111, "DB"), 135, 19, 111, false, '`canceled_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -550,6 +557,7 @@ class BotHistory extends DbTable
         $this->phone->DbValue = $row['phone'];
         $this->messages->DbValue = $row['messages'];
         $this->status->DbValue = $row['status'];
+        $this->keterangan->DbValue = $row['keterangan'];
         $this->canceled_at->DbValue = $row['canceled_at'];
     }
 
@@ -878,6 +886,7 @@ SORTHTML;
         $this->phone->setDbValue($row['phone']);
         $this->messages->setDbValue($row['messages']);
         $this->status->setDbValue($row['status']);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->canceled_at->setDbValue($row['canceled_at']);
     }
 
@@ -905,6 +914,8 @@ SORTHTML;
         // messages
 
         // status
+
+        // keterangan
 
         // canceled_at
 
@@ -940,6 +951,10 @@ SORTHTML;
         $this->status->ViewValue = $this->status->CurrentValue;
         $this->status->ViewValue = FormatNumber($this->status->ViewValue, 0, -2, -2, -2);
         $this->status->ViewCustomAttributes = "";
+
+        // keterangan
+        $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+        $this->keterangan->ViewCustomAttributes = "";
 
         // canceled_at
         $this->canceled_at->ViewValue = $this->canceled_at->CurrentValue;
@@ -980,6 +995,11 @@ SORTHTML;
         $this->status->LinkCustomAttributes = "";
         $this->status->HrefValue = "";
         $this->status->TooltipValue = "";
+
+        // keterangan
+        $this->keterangan->LinkCustomAttributes = "";
+        $this->keterangan->HrefValue = "";
+        $this->keterangan->TooltipValue = "";
 
         // canceled_at
         $this->canceled_at->LinkCustomAttributes = "";
@@ -1049,6 +1069,12 @@ SORTHTML;
         $this->status->EditValue = $this->status->CurrentValue;
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
+        // keterangan
+        $this->keterangan->EditAttrs["class"] = "form-control";
+        $this->keterangan->EditCustomAttributes = "";
+        $this->keterangan->EditValue = $this->keterangan->CurrentValue;
+        $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
+
         // canceled_at
         $this->canceled_at->EditAttrs["class"] = "form-control";
         $this->canceled_at->EditCustomAttributes = "";
@@ -1090,6 +1116,7 @@ SORTHTML;
                     $doc->exportCaption($this->phone);
                     $doc->exportCaption($this->messages);
                     $doc->exportCaption($this->status);
+                    $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->canceled_at);
                 } else {
                     $doc->exportCaption($this->created_at);
@@ -1133,6 +1160,7 @@ SORTHTML;
                         $doc->exportField($this->phone);
                         $doc->exportField($this->messages);
                         $doc->exportField($this->status);
+                        $doc->exportField($this->keterangan);
                         $doc->exportField($this->canceled_at);
                     } else {
                         $doc->exportField($this->created_at);

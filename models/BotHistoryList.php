@@ -575,6 +575,7 @@ class BotHistoryList extends BotHistory
         $this->phone->setVisibility();
         $this->messages->setVisibility();
         $this->status->setVisibility();
+        $this->keterangan->setVisibility();
         $this->canceled_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -873,6 +874,7 @@ class BotHistoryList extends BotHistory
         $filterList = Concat($filterList, $this->phone->AdvancedSearch->toJson(), ","); // Field phone
         $filterList = Concat($filterList, $this->messages->AdvancedSearch->toJson(), ","); // Field messages
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
+        $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
         $filterList = Concat($filterList, $this->canceled_at->AdvancedSearch->toJson(), ","); // Field canceled_at
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -970,6 +972,14 @@ class BotHistoryList extends BotHistory
         $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
         $this->status->AdvancedSearch->save();
 
+        // Field keterangan
+        $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
+        $this->keterangan->AdvancedSearch->save();
+
         // Field canceled_at
         $this->canceled_at->AdvancedSearch->SearchValue = @$filter["x_canceled_at"];
         $this->canceled_at->AdvancedSearch->SearchOperator = @$filter["z_canceled_at"];
@@ -988,6 +998,7 @@ class BotHistoryList extends BotHistory
         $this->buildBasicSearchSql($where, $this->prop_name, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->phone, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->messages, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->keterangan, $arKeywords, $type);
         return $where;
     }
 
@@ -1157,6 +1168,7 @@ class BotHistoryList extends BotHistory
             $this->updateSort($this->phone); // phone
             $this->updateSort($this->messages); // messages
             $this->updateSort($this->status); // status
+            $this->updateSort($this->keterangan); // keterangan
             $this->updateSort($this->canceled_at); // canceled_at
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1204,6 +1216,7 @@ class BotHistoryList extends BotHistory
                 $this->phone->setSort("");
                 $this->messages->setSort("");
                 $this->status->setSort("");
+                $this->keterangan->setSort("");
                 $this->canceled_at->setSort("");
             }
 
@@ -1555,6 +1568,7 @@ class BotHistoryList extends BotHistory
         $this->phone->setDbValue($row['phone']);
         $this->messages->setDbValue($row['messages']);
         $this->status->setDbValue($row['status']);
+        $this->keterangan->setDbValue($row['keterangan']);
         $this->canceled_at->setDbValue($row['canceled_at']);
     }
 
@@ -1569,6 +1583,7 @@ class BotHistoryList extends BotHistory
         $row['phone'] = null;
         $row['messages'] = null;
         $row['status'] = null;
+        $row['keterangan'] = null;
         $row['canceled_at'] = null;
         return $row;
     }
@@ -1622,6 +1637,8 @@ class BotHistoryList extends BotHistory
 
         // status
 
+        // keterangan
+
         // canceled_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
@@ -1656,6 +1673,10 @@ class BotHistoryList extends BotHistory
             $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewValue = FormatNumber($this->status->ViewValue, 0, -2, -2, -2);
             $this->status->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
 
             // canceled_at
             $this->canceled_at->ViewValue = $this->canceled_at->CurrentValue;
@@ -1696,6 +1717,11 @@ class BotHistoryList extends BotHistory
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
 
             // canceled_at
             $this->canceled_at->LinkCustomAttributes = "";

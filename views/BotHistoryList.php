@@ -156,6 +156,9 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_bot_history_status" class="bot_history_status"><?= $Page->renderSort($Page->status) ?></div></th>
 <?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_bot_history_keterangan" class="bot_history_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
+<?php } ?>
 <?php if ($Page->canceled_at->Visible) { // canceled_at ?>
         <th data-name="canceled_at" class="<?= $Page->canceled_at->headerCellClass() ?>"><div id="elh_bot_history_canceled_at" class="bot_history_canceled_at"><?= $Page->renderSort($Page->canceled_at) ?></div></th>
 <?php } ?>
@@ -279,6 +282,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_bot_history_status">
 <span<?= $Page->status->viewAttributes() ?>>
 <?= $Page->status->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_bot_history_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
