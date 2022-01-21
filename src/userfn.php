@@ -1060,7 +1060,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     $data = explode(',', urldecode($items));
     foreach ($data as $value) { 
         $row = ExecuteRow("SELECT * FROM v_penagihan WHERE idorder = '{$value}'");
-        $totalumurfaktur = $row['umur_faktur'] - $row['term_payment'];
+        $totalumurfaktur = $row['umur_faktur'] + $row['term_payment'];
         $tagihan = $row['piutang'] > 0 ? $row['piutang'] : $row['nilai_faktur'];
         if ($totalumurfaktur < 0) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menyampaikan tentang adanya Faktur yang akan jatuh tempo dalam beberapa hari kedepan untuk mohon dapat dibantu pembayarannya.
