@@ -1061,18 +1061,20 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     $data = explode(',', urldecode($items));
     foreach ($data as $value) { 
         $row = ExecuteRow("SELECT o.id AS idorder,
-                            i.id AS idinvoice,
-                            o.kode AS kodeorder,
-                            i.kode AS kodefaktur,
+                            c.nama AS nama_customer,
+                            i.kode AS kode_faktur,
                             DATE_FORMAT(i.tglinvoice + INTERVAL `t`.`value` DAY, '%Y-%m-%d') AS jatuhtempo,
-                            TIMESTAMPDIFF(DAY, i.tglinvoice + INTERVAL `t`.`value` DAY, '{$tanggal}') AS umur_faktur
-                            FROM `order` o
-                            LEFT JOIN invoice i ON i.idorder = o.id
-                            LEFT JOIN termpayment t ON i.idtermpayment = t.id
-                            WHERE i.sisabayar > 0 AND o.id = '{$value}'");
+                            TIMESTAMPDIFF(DAY, i.tglinvoice + INTERVAL `t`.`value` DAY, '{$tanggal}') AS umur_faktur,
+                            i.totaltagihan AS nilai_faktur, 
+                            i.sisabayar AS piutang
+                        FROM `order` o
+                        JOIN customer c ON c.id = o.idcustomer
+                        LEFT JOIN invoice i ON i.idorder = o.id
+                        LEFT JOIN termpayment t ON i.idtermpayment = t.id
+                        WHERE i.sisabayar > 0 AND o.id = '{$value}'");
 
         // $totalumurfaktur = $row['umur_faktur'] + $row['term_payment'];
-        $tagihan = $row['piutang'] > 0 ? $row['piutang'] : $row['nilai_faktur'];
+        $tagihan = $row['piutang'] < $row['nilai_faktur'] ? $row['piutang'] : $row['nilai_faktur'];
         if ($row['umur_faktur'] < -1) {
             $message = "Yth. {$row['nama_customer']}, Selamat Siang kami dari CV.Beautie Surya Derma menyampaikan tentang adanya Faktur yang akan jatuh tempo dalam beberapa hari kedepan untuk mohon dapat dibantu pembayarannya.
                 \nNo Faktur : {$row['kode_faktur']}

@@ -90,6 +90,7 @@ $AntrianBot = &$Page;
 					<td><?php echo $row['prop_code'] . ', ' . $row['prop_name'] ?></td>
 					<td><strong>Phone:</strong> <?php echo $row['phone'] ?><br><strong>Messages:</strong> <?php echo nl2br($row['messages']) ?></td>
 					<td class="text-center"><?php echo $row['status'] ?><br><?php echo ($row['status'] == '-2' && $row['canceled_at'] <> null) ? tgl_indo($row['canceled_at']) : '' ?></td>
+					<td><?php echo nl2br($row['keterangan']) ?></td>
 					<td class="text-center"><?php echo tgl_indo($row['created_at']) ?></td>
 				</tr>
 				<?php endforeach; ?>
