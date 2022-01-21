@@ -1062,6 +1062,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
     foreach ($data as $value) { 
         $row = ExecuteRow("SELECT o.id AS idorder,
                             c.nama AS nama_customer,
+                            c.hp AS nomor_handphone,
                             i.kode AS kode_faktur,
                             DATE_FORMAT(i.tglinvoice + INTERVAL `t`.`value` DAY, '%Y-%m-%d') AS jatuhtempo,
                             TIMESTAMPDIFF(DAY, i.tglinvoice + INTERVAL `t`.`value` DAY, '{$tanggal}') AS umur_faktur,
@@ -1102,7 +1103,7 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
         $keterangan = "Umur Faktur: {$row['umur_faktur']},\nTgl Penagihan: " . tgl_indo($tanggal) . ".";
-        $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, keterangan created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', '-1', '{$keterangan}', '".date('Y-m-d H:i:s')."')");
+        $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, keterangan, created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', '-1', '{$keterangan}', '".date('Y-m-d H:i:s')."')");
         if (!$insert) $status = false;
     }
     WriteJson(['status' => $status]);
