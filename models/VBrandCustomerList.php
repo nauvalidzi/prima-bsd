@@ -573,8 +573,11 @@ class VBrandCustomerList extends VBrandCustomer
         // Set up list options
         $this->setupListOptions();
         $this->idbrand->setVisibility();
-        $this->brand->setVisibility();
+        $this->kode_brand->setVisibility();
+        $this->nama_brand->setVisibility();
         $this->idcustomer->setVisibility();
+        $this->kode_customer->setVisibility();
+        $this->nama_customer->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -866,8 +869,11 @@ class VBrandCustomerList extends VBrandCustomer
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->idbrand->AdvancedSearch->toJson(), ","); // Field idbrand
-        $filterList = Concat($filterList, $this->brand->AdvancedSearch->toJson(), ","); // Field brand
+        $filterList = Concat($filterList, $this->kode_brand->AdvancedSearch->toJson(), ","); // Field kode_brand
+        $filterList = Concat($filterList, $this->nama_brand->AdvancedSearch->toJson(), ","); // Field nama_brand
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
+        $filterList = Concat($filterList, $this->kode_customer->AdvancedSearch->toJson(), ","); // Field kode_customer
+        $filterList = Concat($filterList, $this->nama_customer->AdvancedSearch->toJson(), ","); // Field nama_customer
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -916,13 +922,21 @@ class VBrandCustomerList extends VBrandCustomer
         $this->idbrand->AdvancedSearch->SearchOperator2 = @$filter["w_idbrand"];
         $this->idbrand->AdvancedSearch->save();
 
-        // Field brand
-        $this->brand->AdvancedSearch->SearchValue = @$filter["x_brand"];
-        $this->brand->AdvancedSearch->SearchOperator = @$filter["z_brand"];
-        $this->brand->AdvancedSearch->SearchCondition = @$filter["v_brand"];
-        $this->brand->AdvancedSearch->SearchValue2 = @$filter["y_brand"];
-        $this->brand->AdvancedSearch->SearchOperator2 = @$filter["w_brand"];
-        $this->brand->AdvancedSearch->save();
+        // Field kode_brand
+        $this->kode_brand->AdvancedSearch->SearchValue = @$filter["x_kode_brand"];
+        $this->kode_brand->AdvancedSearch->SearchOperator = @$filter["z_kode_brand"];
+        $this->kode_brand->AdvancedSearch->SearchCondition = @$filter["v_kode_brand"];
+        $this->kode_brand->AdvancedSearch->SearchValue2 = @$filter["y_kode_brand"];
+        $this->kode_brand->AdvancedSearch->SearchOperator2 = @$filter["w_kode_brand"];
+        $this->kode_brand->AdvancedSearch->save();
+
+        // Field nama_brand
+        $this->nama_brand->AdvancedSearch->SearchValue = @$filter["x_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchOperator = @$filter["z_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchCondition = @$filter["v_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchValue2 = @$filter["y_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchOperator2 = @$filter["w_nama_brand"];
+        $this->nama_brand->AdvancedSearch->save();
 
         // Field idcustomer
         $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
@@ -931,6 +945,22 @@ class VBrandCustomerList extends VBrandCustomer
         $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
         $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
         $this->idcustomer->AdvancedSearch->save();
+
+        // Field kode_customer
+        $this->kode_customer->AdvancedSearch->SearchValue = @$filter["x_kode_customer"];
+        $this->kode_customer->AdvancedSearch->SearchOperator = @$filter["z_kode_customer"];
+        $this->kode_customer->AdvancedSearch->SearchCondition = @$filter["v_kode_customer"];
+        $this->kode_customer->AdvancedSearch->SearchValue2 = @$filter["y_kode_customer"];
+        $this->kode_customer->AdvancedSearch->SearchOperator2 = @$filter["w_kode_customer"];
+        $this->kode_customer->AdvancedSearch->save();
+
+        // Field nama_customer
+        $this->nama_customer->AdvancedSearch->SearchValue = @$filter["x_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchOperator = @$filter["z_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchCondition = @$filter["v_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchValue2 = @$filter["y_nama_customer"];
+        $this->nama_customer->AdvancedSearch->SearchOperator2 = @$filter["w_nama_customer"];
+        $this->nama_customer->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -939,7 +969,10 @@ class VBrandCustomerList extends VBrandCustomer
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->brand, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kode_brand, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nama_brand, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kode_customer, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nama_customer, $arKeywords, $type);
         return $where;
     }
 
@@ -1103,8 +1136,11 @@ class VBrandCustomerList extends VBrandCustomer
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->idbrand); // idbrand
-            $this->updateSort($this->brand); // brand
+            $this->updateSort($this->kode_brand); // kode_brand
+            $this->updateSort($this->nama_brand); // nama_brand
             $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->kode_customer); // kode_customer
+            $this->updateSort($this->nama_customer); // nama_customer
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1145,8 +1181,11 @@ class VBrandCustomerList extends VBrandCustomer
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->idbrand->setSort("");
-                $this->brand->setSort("");
+                $this->kode_brand->setSort("");
+                $this->nama_brand->setSort("");
                 $this->idcustomer->setSort("");
+                $this->kode_customer->setSort("");
+                $this->nama_customer->setSort("");
             }
 
             // Reset start position
@@ -1491,8 +1530,11 @@ class VBrandCustomerList extends VBrandCustomer
             return;
         }
         $this->idbrand->setDbValue($row['idbrand']);
-        $this->brand->setDbValue($row['brand']);
+        $this->kode_brand->setDbValue($row['kode_brand']);
+        $this->nama_brand->setDbValue($row['nama_brand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kode_customer->setDbValue($row['kode_customer']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
     }
 
     // Return a row with default values
@@ -1500,8 +1542,11 @@ class VBrandCustomerList extends VBrandCustomer
     {
         $row = [];
         $row['idbrand'] = null;
-        $row['brand'] = null;
+        $row['kode_brand'] = null;
+        $row['nama_brand'] = null;
         $row['idcustomer'] = null;
+        $row['kode_customer'] = null;
+        $row['nama_customer'] = null;
         return $row;
     }
 
@@ -1541,36 +1586,69 @@ class VBrandCustomerList extends VBrandCustomer
 
         // idbrand
 
-        // brand
+        // kode_brand
+
+        // nama_brand
 
         // idcustomer
+
+        // kode_customer
+
+        // nama_customer
         if ($this->RowType == ROWTYPE_VIEW) {
             // idbrand
             $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
             $this->idbrand->ViewCustomAttributes = "";
 
-            // brand
-            $this->brand->ViewValue = $this->brand->CurrentValue;
-            $this->brand->ViewCustomAttributes = "";
+            // kode_brand
+            $this->kode_brand->ViewValue = $this->kode_brand->CurrentValue;
+            $this->kode_brand->ViewCustomAttributes = "";
+
+            // nama_brand
+            $this->nama_brand->ViewValue = $this->nama_brand->CurrentValue;
+            $this->nama_brand->ViewCustomAttributes = "";
 
             // idcustomer
             $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
             $this->idcustomer->ViewCustomAttributes = "";
+
+            // kode_customer
+            $this->kode_customer->ViewValue = $this->kode_customer->CurrentValue;
+            $this->kode_customer->ViewCustomAttributes = "";
+
+            // nama_customer
+            $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+            $this->nama_customer->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
 
-            // brand
-            $this->brand->LinkCustomAttributes = "";
-            $this->brand->HrefValue = "";
-            $this->brand->TooltipValue = "";
+            // kode_brand
+            $this->kode_brand->LinkCustomAttributes = "";
+            $this->kode_brand->HrefValue = "";
+            $this->kode_brand->TooltipValue = "";
+
+            // nama_brand
+            $this->nama_brand->LinkCustomAttributes = "";
+            $this->nama_brand->HrefValue = "";
+            $this->nama_brand->TooltipValue = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
+
+            // kode_customer
+            $this->kode_customer->LinkCustomAttributes = "";
+            $this->kode_customer->HrefValue = "";
+            $this->kode_customer->TooltipValue = "";
+
+            // nama_customer
+            $this->nama_customer->LinkCustomAttributes = "";
+            $this->nama_customer->HrefValue = "";
+            $this->nama_customer->TooltipValue = "";
         }
 
         // Call Row Rendered event

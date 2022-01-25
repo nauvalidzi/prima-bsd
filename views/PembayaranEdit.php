@@ -21,7 +21,8 @@ loadjs.ready("head", function () {
         ew.vars.tables.pembayaran = currentTable;
     fpembayaranedit.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
-        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
+        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(117)], fields.tanggal.isInvalid],
+        ["idinvoice", [fields.idinvoice.visible && fields.idinvoice.required ? ew.Validators.required(fields.idinvoice.caption) : null], fields.idinvoice.isInvalid],
         ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
         ["sisatagihan", [fields.sisatagihan.visible && fields.sisatagihan.required ? ew.Validators.required(fields.sisatagihan.caption) : null, ew.Validators.integer], fields.sisatagihan.isInvalid],
         ["jumlahbayar", [fields.jumlahbayar.visible && fields.jumlahbayar.required ? ew.Validators.required(fields.jumlahbayar.caption) : null, ew.Validators.integer], fields.jumlahbayar.isInvalid],
@@ -93,6 +94,7 @@ loadjs.ready("head", function () {
     fpembayaranedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    fpembayaranedit.lists.idinvoice = <?= $Page->idinvoice->toClientList($Page) ?>;
     fpembayaranedit.lists.idtipepayment = <?= $Page->idtipepayment->toClientList($Page) ?>;
     loadjs.done("fpembayaranedit");
 });
@@ -121,10 +123,10 @@ $Page->showMessage();
         <label id="elh_pembayaran_kode" for="x_kode" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kode->caption() ?><?= $Page->kode->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kode->cellAttributes() ?>>
 <span id="el_pembayaran_kode">
-<span<?= $Page->kode->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->kode->getDisplayValue($Page->kode->EditValue))) ?>"></span>
+<input type="<?= $Page->kode->getInputTextType() ?>" data-table="pembayaran" data-field="x_kode" name="x_kode" id="x_kode" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kode->getPlaceHolder()) ?>" value="<?= $Page->kode->EditValue ?>"<?= $Page->kode->editAttributes() ?> aria-describedby="x_kode_help">
+<?= $Page->kode->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kode->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="pembayaran" data-field="x_kode" data-hidden="1" name="x_kode" id="x_kode" value="<?= HtmlEncode($Page->kode->CurrentValue) ?>">
 </div></div>
     </div>
 <?php } ?>
@@ -133,16 +135,50 @@ $Page->showMessage();
         <label id="elh_pembayaran_tanggal" for="x_tanggal" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal->caption() ?><?= $Page->tanggal->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tanggal->cellAttributes() ?>>
 <span id="el_pembayaran_tanggal">
-<input type="<?= $Page->tanggal->getInputTextType() ?>" data-table="pembayaran" data-field="x_tanggal" name="x_tanggal" id="x_tanggal" placeholder="<?= HtmlEncode($Page->tanggal->getPlaceHolder()) ?>" value="<?= $Page->tanggal->EditValue ?>"<?= $Page->tanggal->editAttributes() ?> aria-describedby="x_tanggal_help">
+<input type="<?= $Page->tanggal->getInputTextType() ?>" data-table="pembayaran" data-field="x_tanggal" data-format="117" name="x_tanggal" id="x_tanggal" placeholder="<?= HtmlEncode($Page->tanggal->getPlaceHolder()) ?>" value="<?= $Page->tanggal->EditValue ?>"<?= $Page->tanggal->editAttributes() ?> aria-describedby="x_tanggal_help">
 <?= $Page->tanggal->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->tanggal->getErrorMessage() ?></div>
 <?php if (!$Page->tanggal->ReadOnly && !$Page->tanggal->Disabled && !isset($Page->tanggal->EditAttrs["readonly"]) && !isset($Page->tanggal->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpembayaranedit", "datetimepicker"], function() {
-    ew.createDateTimePicker("fpembayaranedit", "x_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fpembayaranedit", "x_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":117});
 });
 </script>
 <?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->idinvoice->Visible) { // idinvoice ?>
+    <div id="r_idinvoice" class="form-group row">
+        <label id="elh_pembayaran_idinvoice" for="x_idinvoice" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idinvoice->caption() ?><?= $Page->idinvoice->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idinvoice->cellAttributes() ?>>
+<span id="el_pembayaran_idinvoice">
+<?php $Page->idinvoice->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+    <select
+        id="x_idinvoice"
+        name="x_idinvoice"
+        class="form-control ew-select<?= $Page->idinvoice->isInvalidClass() ?>"
+        data-select2-id="pembayaran_x_idinvoice"
+        data-table="pembayaran"
+        data-field="x_idinvoice"
+        data-value-separator="<?= $Page->idinvoice->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idinvoice->getPlaceHolder()) ?>"
+        <?= $Page->idinvoice->editAttributes() ?>>
+        <?= $Page->idinvoice->selectOptionListHtml("x_idinvoice") ?>
+    </select>
+    <?= $Page->idinvoice->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idinvoice->getErrorMessage() ?></div>
+<?= $Page->idinvoice->Lookup->getParamTag($Page, "p_x_idinvoice") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='pembayaran_x_idinvoice']"),
+        options = { name: "x_idinvoice", selectId: "pembayaran_x_idinvoice", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.pembayaran.fields.idinvoice.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -243,14 +279,6 @@ loadjs.ready("head", function() {
 <?php } ?>
 </div><!-- /page* -->
     <input type="hidden" data-table="pembayaran" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-<?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailEdit) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("invoice", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "InvoiceGrid.php" ?>
-<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

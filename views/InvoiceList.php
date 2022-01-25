@@ -86,13 +86,6 @@ if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "suratjalan
 }
 ?>
 <?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "pembayaran") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/PembayaranMaster.php";
-    }
-}
-?>
-<?php
 if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "customer") {
     if ($Page->MasterRecordExists) {
         include_once "views/CustomerMaster.php";
@@ -145,10 +138,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="invoice">
 <?php if ($Page->getCurrentMasterTable() == "suratjalan_detail" && $Page->CurrentAction) { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="suratjalan_detail">
-<input type="hidden" name="fk_idinvoice" value="<?= HtmlEncode($Page->id->getSessionValue()) ?>">
-<?php } ?>
-<?php if ($Page->getCurrentMasterTable() == "pembayaran" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="pembayaran">
 <input type="hidden" name="fk_idinvoice" value="<?= HtmlEncode($Page->id->getSessionValue()) ?>">
 <?php } ?>
 <?php if ($Page->getCurrentMasterTable() == "customer" && $Page->CurrentAction) { ?>

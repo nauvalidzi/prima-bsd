@@ -21,14 +21,13 @@ loadjs.ready("head", function () {
         ew.vars.tables.pembayaran = currentTable;
     fpembayaranadd.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
-        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(0)], fields.tanggal.isInvalid],
+        ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(117)], fields.tanggal.isInvalid],
         ["idinvoice", [fields.idinvoice.visible && fields.idinvoice.required ? ew.Validators.required(fields.idinvoice.caption) : null], fields.idinvoice.isInvalid],
         ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
         ["sisatagihan", [fields.sisatagihan.visible && fields.sisatagihan.required ? ew.Validators.required(fields.sisatagihan.caption) : null, ew.Validators.integer], fields.sisatagihan.isInvalid],
         ["jumlahbayar", [fields.jumlahbayar.visible && fields.jumlahbayar.required ? ew.Validators.required(fields.jumlahbayar.caption) : null, ew.Validators.integer], fields.jumlahbayar.isInvalid],
         ["idtipepayment", [fields.idtipepayment.visible && fields.idtipepayment.required ? ew.Validators.required(fields.idtipepayment.caption) : null], fields.idtipepayment.isInvalid],
-        ["bukti", [fields.bukti.visible && fields.bukti.required ? ew.Validators.fileRequired(fields.bukti.caption) : null], fields.bukti.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
+        ["bukti", [fields.bukti.visible && fields.bukti.required ? ew.Validators.fileRequired(fields.bukti.caption) : null], fields.bukti.isInvalid]
     ]);
 
     // Set invalid fields
@@ -137,13 +136,13 @@ $Page->showMessage();
         <label id="elh_pembayaran_tanggal" for="x_tanggal" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal->caption() ?><?= $Page->tanggal->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tanggal->cellAttributes() ?>>
 <span id="el_pembayaran_tanggal">
-<input type="<?= $Page->tanggal->getInputTextType() ?>" data-table="pembayaran" data-field="x_tanggal" name="x_tanggal" id="x_tanggal" placeholder="<?= HtmlEncode($Page->tanggal->getPlaceHolder()) ?>" value="<?= $Page->tanggal->EditValue ?>"<?= $Page->tanggal->editAttributes() ?> aria-describedby="x_tanggal_help">
+<input type="<?= $Page->tanggal->getInputTextType() ?>" data-table="pembayaran" data-field="x_tanggal" data-format="117" name="x_tanggal" id="x_tanggal" placeholder="<?= HtmlEncode($Page->tanggal->getPlaceHolder()) ?>" value="<?= $Page->tanggal->EditValue ?>"<?= $Page->tanggal->editAttributes() ?> aria-describedby="x_tanggal_help">
 <?= $Page->tanggal->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->tanggal->getErrorMessage() ?></div>
 <?php if (!$Page->tanggal->ReadOnly && !$Page->tanggal->Disabled && !isset($Page->tanggal->EditAttrs["readonly"]) && !isset($Page->tanggal->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fpembayaranadd", "datetimepicker"], function() {
-    ew.createDateTimePicker("fpembayaranadd", "x_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fpembayaranadd", "x_tanggal", {"ignoreReadonly":true,"useCurrent":false,"format":117});
 });
 </script>
 <?php } ?>
@@ -279,18 +278,7 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_pembayaran_created_by">
-    <input type="hidden" data-table="pembayaran" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
-    </span>
 </div><!-- /page* -->
-<?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailAdd) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("invoice", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "InvoiceGrid.php" ?>
-<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

@@ -131,7 +131,6 @@ class Customer extends DbTable
 
         // idpegawai
         $this->idpegawai = new DbField('customer', 'customer', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idpegawai->IsForeignKey = true; // Foreign key field
         $this->idpegawai->Nullable = false; // NOT NULL field
         $this->idpegawai->Required = true; // Required field
         $this->idpegawai->Sortable = true; // Allow sort
@@ -407,58 +406,6 @@ class Customer extends DbTable
         }
     }
 
-    // Current master table name
-    public function getCurrentMasterTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
-    }
-
-    public function setCurrentMasterTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
-    }
-
-    // Session master WHERE clause
-    public function getMasterFilter()
-    {
-        // Master filter
-        $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "pegawai") {
-            if ($this->idpegawai->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idpegawai->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $masterFilter;
-    }
-
-    // Session detail WHERE clause
-    public function getDetailFilter()
-    {
-        // Detail filter
-        $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "pegawai") {
-            if ($this->idpegawai->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idpegawai`", $this->idpegawai->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_pegawai()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_pegawai()
-    {
-        return "`idpegawai`=@idpegawai@";
-    }
-
     // Current detail table name
     public function getCurrentDetailTable()
     {
@@ -479,16 +426,16 @@ class Customer extends DbTable
             $detailUrl = Container("alamat_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "brand_customer") {
-            $detailUrl = Container("brand_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
-        }
         if ($this->getCurrentDetailTable() == "order") {
             $detailUrl = Container("order")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($this->getCurrentDetailTable() == "invoice") {
             $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
+        }
+        if ($this->getCurrentDetailTable() == "v_list_customer_brands") {
+            $detailUrl = Container("v_list_customer_brands")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -594,13 +541,6 @@ class Customer extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            if ($this->getCurrentMasterTable() == "pegawai" || $this->getCurrentMasterTable() == "") {
-                $filter = $this->addDetailUserIDFilter($filter, "pegawai"); // Add detail User ID filter
-            }
-        }
         return $filter;
     }
 
@@ -831,58 +771,6 @@ class Customer extends DbTable
     // Update
     public function update(&$rs, $where = "", $rsold = null, $curfilter = true)
     {
-        // Cascade Update detail table 'brand_customer'
-        $cascadeUpdate = false;
-        $rscascade = [];
-        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idcustomer'
-            $cascadeUpdate = true;
-            $rscascade['idcustomer'] = $rs['id'];
-        }
-        if ($cascadeUpdate) {
-            $rswrk = Container("brand_customer")->loadRs("`idcustomer` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($rswrk as $rsdtlold) {
-                $rskey = [];
-                $rsdtlnew = array_merge($rsdtlold, $rscascade);
-                // Call Row_Updating event
-                $success = Container("brand_customer")->rowUpdating($rsdtlold, $rsdtlnew);
-                if ($success) {
-                    $success = Container("brand_customer")->update($rscascade, $rskey, $rsdtlold);
-                }
-                if (!$success) {
-                    return false;
-                }
-                // Call Row_Updated event
-                Container("brand_customer")->rowUpdated($rsdtlold, $rsdtlnew);
-            }
-        }
-
-        // Cascade Update detail table 'order'
-        $cascadeUpdate = false;
-        $rscascade = [];
-        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idcustomer'
-            $cascadeUpdate = true;
-            $rscascade['idcustomer'] = $rs['id'];
-        }
-        if ($cascadeUpdate) {
-            $rswrk = Container("order")->loadRs("`idcustomer` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($rswrk as $rsdtlold) {
-                $rskey = [];
-                $fldname = 'id';
-                $rskey[$fldname] = $rsdtlold[$fldname];
-                $rsdtlnew = array_merge($rsdtlold, $rscascade);
-                // Call Row_Updating event
-                $success = Container("order")->rowUpdating($rsdtlold, $rsdtlnew);
-                if ($success) {
-                    $success = Container("order")->update($rscascade, $rskey, $rsdtlold);
-                }
-                if (!$success) {
-                    return false;
-                }
-                // Call Row_Updated event
-                Container("order")->rowUpdated($rsdtlold, $rsdtlnew);
-            }
-        }
-
         // If no field is updated, execute may return 0. Treat as success
         $success = $this->updateSql($rs, $where, $curfilter)->execute();
         $success = ($success > 0) ? $success : true;
@@ -918,54 +806,6 @@ class Customer extends DbTable
     public function delete(&$rs, $where = "", $curfilter = false)
     {
         $success = true;
-
-        // Cascade delete detail table 'brand_customer'
-        $dtlrows = Container("brand_customer")->loadRs("`idcustomer` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
-        // Call Row Deleting event
-        foreach ($dtlrows as $dtlrow) {
-            $success = Container("brand_customer")->rowDeleting($dtlrow);
-            if (!$success) {
-                break;
-            }
-        }
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                $success = Container("brand_customer")->delete($dtlrow); // Delete
-                if (!$success) {
-                    break;
-                }
-            }
-        }
-        // Call Row Deleted event
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                Container("brand_customer")->rowDeleted($dtlrow);
-            }
-        }
-
-        // Cascade delete detail table 'order'
-        $dtlrows = Container("order")->loadRs("`idcustomer` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
-        // Call Row Deleting event
-        foreach ($dtlrows as $dtlrow) {
-            $success = Container("order")->rowDeleting($dtlrow);
-            if (!$success) {
-                break;
-            }
-        }
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                $success = Container("order")->delete($dtlrow); // Delete
-                if (!$success) {
-                    break;
-                }
-            }
-        }
-        // Call Row Deleted event
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                Container("order")->rowDeleted($dtlrow);
-            }
-        }
         if ($success) {
             $success = $this->deleteSql($rs, $where, $curfilter)->execute();
         }
@@ -1199,10 +1039,6 @@ class Customer extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "pegawai" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idpegawai->CurrentValue ?? $this->idpegawai->getSessionValue());
-        }
         return $url;
     }
 
@@ -1792,28 +1628,12 @@ SORTHTML;
 
         // ktp
         $this->ktp->LinkCustomAttributes = "";
-        if (!EmptyValue($this->ktp->CurrentValue)) {
-            $this->ktp->HrefValue = (!empty($this->ktp->ViewValue) && !is_array($this->ktp->ViewValue) ? RemoveHtml($this->ktp->ViewValue) : $this->ktp->CurrentValue); // Add prefix/suffix
-            $this->ktp->LinkAttrs["target"] = ""; // Add target
-            if ($this->isExport()) {
-                $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-            }
-        } else {
-            $this->ktp->HrefValue = "";
-        }
+        $this->ktp->HrefValue = "";
         $this->ktp->TooltipValue = "";
 
         // npwp
         $this->npwp->LinkCustomAttributes = "";
-        if (!EmptyValue($this->npwp->CurrentValue)) {
-            $this->npwp->HrefValue = (!empty($this->npwp->ViewValue) && !is_array($this->npwp->ViewValue) ? RemoveHtml($this->npwp->ViewValue) : $this->npwp->CurrentValue); // Add prefix/suffix
-            $this->npwp->LinkAttrs["target"] = ""; // Add target
-            if ($this->isExport()) {
-                $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-            }
-        } else {
-            $this->npwp->HrefValue = "";
-        }
+        $this->npwp->HrefValue = "";
         $this->npwp->TooltipValue = "";
 
         // limit_kredit_order
@@ -1891,30 +1711,7 @@ SORTHTML;
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
         $this->idpegawai->EditCustomAttributes = "";
-        if ($this->idpegawai->getSessionValue() != "") {
-            $this->idpegawai->CurrentValue = GetForeignKeyValue($this->idpegawai->getSessionValue());
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
-            if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                    } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idpegawai->ViewValue = null;
-            }
-            $this->idpegawai->ViewCustomAttributes = "";
-        } else {
-            $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
-        }
+        $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
 
         // nama
         $this->nama->EditAttrs["class"] = "form-control";
@@ -2274,30 +2071,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add master User ID filter
-    public function addMasterUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "pegawai") {
-            $filterWrk = Container("pegawai")->addUserIDFilter($filterWrk);
-        }
-        return $filterWrk;
-    }
-
-    // Add detail User ID filter
-    public function addDetailUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "pegawai") {
-            $mastertable = Container("pegawai");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->idpegawai, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        return $filterWrk;
     }
 
     // Get file data

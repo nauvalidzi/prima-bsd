@@ -56,8 +56,17 @@ $Page->showMessage();
 <?php if ($Page->idinvoice->Visible) { // idinvoice ?>
         <th class="<?= $Page->idinvoice->headerCellClass() ?>"><span id="elh_pembayaran_idinvoice" class="pembayaran_idinvoice"><?= $Page->idinvoice->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
+        <th class="<?= $Page->totaltagihan->headerCellClass() ?>"><span id="elh_pembayaran_totaltagihan" class="pembayaran_totaltagihan"><?= $Page->totaltagihan->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->sisatagihan->Visible) { // sisatagihan ?>
+        <th class="<?= $Page->sisatagihan->headerCellClass() ?>"><span id="elh_pembayaran_sisatagihan" class="pembayaran_sisatagihan"><?= $Page->sisatagihan->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->jumlahbayar->Visible) { // jumlahbayar ?>
         <th class="<?= $Page->jumlahbayar->headerCellClass() ?>"><span id="elh_pembayaran_jumlahbayar" class="pembayaran_jumlahbayar"><?= $Page->jumlahbayar->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <th class="<?= $Page->idtipepayment->headerCellClass() ?>"><span id="elh_pembayaran_idtipepayment" class="pembayaran_idtipepayment"><?= $Page->idtipepayment->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -112,11 +121,35 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
+        <td <?= $Page->totaltagihan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_pembayaran_totaltagihan" class="pembayaran_totaltagihan">
+<span<?= $Page->totaltagihan->viewAttributes() ?>>
+<?= $Page->totaltagihan->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->sisatagihan->Visible) { // sisatagihan ?>
+        <td <?= $Page->sisatagihan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_pembayaran_sisatagihan" class="pembayaran_sisatagihan">
+<span<?= $Page->sisatagihan->viewAttributes() ?>>
+<?= $Page->sisatagihan->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->jumlahbayar->Visible) { // jumlahbayar ?>
         <td <?= $Page->jumlahbayar->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_pembayaran_jumlahbayar" class="pembayaran_jumlahbayar">
 <span<?= $Page->jumlahbayar->viewAttributes() ?>>
 <?= $Page->jumlahbayar->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <td <?= $Page->idtipepayment->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_pembayaran_idtipepayment" class="pembayaran_idtipepayment">
+<span<?= $Page->idtipepayment->viewAttributes() ?>>
+<?= $Page->idtipepayment->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

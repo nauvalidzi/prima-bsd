@@ -147,8 +147,17 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idinvoice->Visible) { // idinvoice ?>
         <th data-name="idinvoice" class="<?= $Page->idinvoice->headerCellClass() ?>"><div id="elh_pembayaran_idinvoice" class="pembayaran_idinvoice"><?= $Page->renderSort($Page->idinvoice) ?></div></th>
 <?php } ?>
+<?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
+        <th data-name="totaltagihan" class="<?= $Page->totaltagihan->headerCellClass() ?>"><div id="elh_pembayaran_totaltagihan" class="pembayaran_totaltagihan"><?= $Page->renderSort($Page->totaltagihan) ?></div></th>
+<?php } ?>
+<?php if ($Page->sisatagihan->Visible) { // sisatagihan ?>
+        <th data-name="sisatagihan" class="<?= $Page->sisatagihan->headerCellClass() ?>"><div id="elh_pembayaran_sisatagihan" class="pembayaran_sisatagihan"><?= $Page->renderSort($Page->sisatagihan) ?></div></th>
+<?php } ?>
 <?php if ($Page->jumlahbayar->Visible) { // jumlahbayar ?>
         <th data-name="jumlahbayar" class="<?= $Page->jumlahbayar->headerCellClass() ?>"><div id="elh_pembayaran_jumlahbayar" class="pembayaran_jumlahbayar"><?= $Page->renderSort($Page->jumlahbayar) ?></div></th>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <th data-name="idtipepayment" class="<?= $Page->idtipepayment->headerCellClass() ?>"><div id="elh_pembayaran_idtipepayment" class="pembayaran_idtipepayment"><?= $Page->renderSort($Page->idtipepayment) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -249,11 +258,35 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
+        <td data-name="totaltagihan" <?= $Page->totaltagihan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_pembayaran_totaltagihan">
+<span<?= $Page->totaltagihan->viewAttributes() ?>>
+<?= $Page->totaltagihan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->sisatagihan->Visible) { // sisatagihan ?>
+        <td data-name="sisatagihan" <?= $Page->sisatagihan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_pembayaran_sisatagihan">
+<span<?= $Page->sisatagihan->viewAttributes() ?>>
+<?= $Page->sisatagihan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->jumlahbayar->Visible) { // jumlahbayar ?>
         <td data-name="jumlahbayar" <?= $Page->jumlahbayar->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_pembayaran_jumlahbayar">
 <span<?= $Page->jumlahbayar->viewAttributes() ?>>
 <?= $Page->jumlahbayar->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <td data-name="idtipepayment" <?= $Page->idtipepayment->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_pembayaran_idtipepayment">
+<span<?= $Page->idtipepayment->viewAttributes() ?>>
+<?= $Page->idtipepayment->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

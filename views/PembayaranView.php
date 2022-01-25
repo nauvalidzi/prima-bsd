@@ -145,15 +145,18 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+    <tr id="r_created_at">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_pembayaran_created_at"><?= $Page->created_at->caption() ?></span></td>
+        <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
+<span id="el_pembayaran_created_at">
+<span<?= $Page->created_at->viewAttributes() ?>>
+<?= $Page->created_at->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
-<?php
-    if (in_array("invoice", explode(",", $Page->getCurrentDetailTable())) && $invoice->DetailView) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("invoice", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "InvoiceGrid.php" ?>
-<?php } ?>
 </form>
 <?php
 $Page->showPageFooter();

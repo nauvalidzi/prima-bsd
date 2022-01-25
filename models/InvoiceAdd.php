@@ -1530,28 +1530,6 @@ class InvoiceAdd extends Invoice
                     return false;
                 }
             }
-            $masterFilter = $this->sqlMasterFilter_pembayaran();
-            if (strval($this->id->CurrentValue) != "") {
-                $masterFilter = str_replace("@idinvoice@", AdjustSql($this->id->CurrentValue, "DB"), $masterFilter);
-            } else {
-                $masterFilter = "";
-            }
-            if ($masterFilter != "") {
-                $rsmaster = Container("pembayaran")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
-                $masterRecordExists = $rsmaster !== false;
-                $validMasterKey = true;
-                if ($masterRecordExists) {
-                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
-                } elseif ($this->getCurrentMasterTable() == "pembayaran") {
-                    $validMasterKey = false;
-                }
-                if (!$validMasterKey) {
-                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
-                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
-                    $this->setFailureMessage($masterUserIdMsg);
-                    return false;
-                }
-            }
         }
         $conn = $this->getConnection();
 
@@ -1708,20 +1686,6 @@ class InvoiceAdd extends Invoice
                     $validMaster = false;
                 }
             }
-            if ($masterTblVar == "pembayaran") {
-                $validMaster = true;
-                $masterTbl = Container("pembayaran");
-                if (($parm = Get("fk_idinvoice", Get("id"))) !== null) {
-                    $masterTbl->idinvoice->setQueryStringValue($parm);
-                    $this->id->setQueryStringValue($masterTbl->idinvoice->QueryStringValue);
-                    $this->id->setSessionValue($this->id->QueryStringValue);
-                    if (!is_numeric($masterTbl->idinvoice->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
             if ($masterTblVar == "customer") {
                 $validMaster = true;
                 $masterTbl = Container("customer");
@@ -1746,20 +1710,6 @@ class InvoiceAdd extends Invoice
             if ($masterTblVar == "suratjalan_detail") {
                 $validMaster = true;
                 $masterTbl = Container("suratjalan_detail");
-                if (($parm = Post("fk_idinvoice", Post("id"))) !== null) {
-                    $masterTbl->idinvoice->setFormValue($parm);
-                    $this->id->setFormValue($masterTbl->idinvoice->FormValue);
-                    $this->id->setSessionValue($this->id->FormValue);
-                    if (!is_numeric($masterTbl->idinvoice->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-            if ($masterTblVar == "pembayaran") {
-                $validMaster = true;
-                $masterTbl = Container("pembayaran");
                 if (($parm = Post("fk_idinvoice", Post("id"))) !== null) {
                     $masterTbl->idinvoice->setFormValue($parm);
                     $this->id->setFormValue($masterTbl->idinvoice->FormValue);
@@ -1798,11 +1748,6 @@ class InvoiceAdd extends Invoice
 
             // Clear previous master key from Session
             if ($masterTblVar != "suratjalan_detail") {
-                if ($this->id->CurrentValue == "") {
-                    $this->id->setSessionValue("");
-                }
-            }
-            if ($masterTblVar != "pembayaran") {
                 if ($this->id->CurrentValue == "") {
                     $this->id->setSessionValue("");
                 }

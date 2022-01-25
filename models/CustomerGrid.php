@@ -1372,39 +1372,6 @@ class CustomerGrid extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_brand_customer"
-        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
-            $link = "";
-            $option = $this->ListOptions["detail_brand_customer"];
-            $url = "BrandCustomerPreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
-            if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("brand_customer", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
-                $links .= $link;
-                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
-            }
-            $detailPageObj = Container("BrandCustomerGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            $btngrp .= "</div>";
-            if ($link != "") {
-                $btngrps .= $btngrp;
-                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
-            }
-        }
-        $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
-
         // Column "detail_order"
         if ($this->DetailPages && $this->DetailPages["order"] && $this->DetailPages["order"]->Visible) {
             $link = "";
@@ -2693,6 +2660,25 @@ class CustomerGrid extends Customer
             // klinik
             $this->klinik->setDbValueDef($rsnew, $this->klinik->CurrentValue, null, $this->klinik->ReadOnly);
 
+            // Check referential integrity for master table 'pegawai'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_pegawai();
+            $keyValue = $rsnew['idpegawai'] ?? $rsold['idpegawai'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("pegawai")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "pegawai", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2781,6 +2767,24 @@ class CustomerGrid extends Customer
                 $this->setFailureMessage($idxErrMsg);
                 return false;
             }
+        }
+
+        // Check referential integrity for master table 'customer'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_pegawai();
+        if (strval($this->idpegawai->CurrentValue) != "") {
+            $masterFilter = str_replace("@id@", AdjustSql($this->idpegawai->CurrentValue, "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("pegawai")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "pegawai", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
         }
         $conn = $this->getConnection();
 

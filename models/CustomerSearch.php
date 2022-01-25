@@ -1176,28 +1176,12 @@ class CustomerSearch extends Customer
 
             // ktp
             $this->ktp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->ktp->CurrentValue)) {
-                $this->ktp->HrefValue = (!empty($this->ktp->ViewValue) && !is_array($this->ktp->ViewValue) ? RemoveHtml($this->ktp->ViewValue) : $this->ktp->CurrentValue); // Add prefix/suffix
-                $this->ktp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-                }
-            } else {
-                $this->ktp->HrefValue = "";
-            }
+            $this->ktp->HrefValue = "";
             $this->ktp->TooltipValue = "";
 
             // npwp
             $this->npwp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->npwp->CurrentValue)) {
-                $this->npwp->HrefValue = (!empty($this->npwp->ViewValue) && !is_array($this->npwp->ViewValue) ? RemoveHtml($this->npwp->ViewValue) : $this->npwp->CurrentValue); // Add prefix/suffix
-                $this->npwp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-                }
-            } else {
-                $this->npwp->HrefValue = "";
-            }
+            $this->npwp->HrefValue = "";
             $this->npwp->TooltipValue = "";
 
             // limit_kredit_order

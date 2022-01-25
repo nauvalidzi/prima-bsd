@@ -581,9 +581,6 @@ class CustomerView extends Customer
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
-
-        // Set up master/detail parameters
-        $this->setupMasterParms();
         if ($this->isPageRequest()) { // Validate request
             if (($keyValue = Get("id") ?? Route("id")) !== null) {
                 $this->id->setQueryStringValue($keyValue);
@@ -752,44 +749,6 @@ class CustomerView extends Customer
             $item->Visible = false;
         }
 
-        // "detail_brand_customer"
-        $item = &$option->add("detail_brand_customer");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
-        $links = "";
-        $detailPageObj = Container("BrandCustomerGrid");
-        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            if ($detailViewTblVar != "") {
-                $detailViewTblVar .= ",";
-            }
-            $detailViewTblVar .= "brand_customer";
-        }
-        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            if ($detailEditTblVar != "") {
-                $detailEditTblVar .= ",";
-            }
-            $detailEditTblVar .= "brand_customer";
-        }
-        if ($links != "") {
-            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-        }
-        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-        $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer');
-        if ($item->Visible) {
-            if ($detailTableLink != "") {
-                $detailTableLink .= ",";
-            }
-            $detailTableLink .= "brand_customer";
-        }
-        if ($this->ShowMultipleDetails) {
-            $item->Visible = false;
-        }
-
         // "detail_order"
         $item = &$option->add("detail_order");
         $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("order", "TblCaption");
@@ -861,6 +820,44 @@ class CustomerView extends Customer
                 $detailTableLink .= ",";
             }
             $detailTableLink .= "invoice";
+        }
+        if ($this->ShowMultipleDetails) {
+            $item->Visible = false;
+        }
+
+        // "detail_v_list_customer_brands"
+        $item = &$option->add("detail_v_list_customer_brands");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("v_list_customer_brands", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("v_list_customer_brands")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("VListCustomerBrandsList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        $links = "";
+        $detailPageObj = Container("VListCustomerBrandsGrid");
+        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            if ($detailViewTblVar != "") {
+                $detailViewTblVar .= ",";
+            }
+            $detailViewTblVar .= "v_list_customer_brands";
+        }
+        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            if ($detailEditTblVar != "") {
+                $detailEditTblVar .= ",";
+            }
+            $detailEditTblVar .= "v_list_customer_brands";
+        }
+        if ($links != "") {
+            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
+            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
+        }
+        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
+        $item->Body = $body;
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'v_list_customer_brands');
+        if ($item->Visible) {
+            if ($detailTableLink != "") {
+                $detailTableLink .= ",";
+            }
+            $detailTableLink .= "v_list_customer_brands";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -992,12 +989,6 @@ class CustomerView extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("brand_customer");
-        $detailFilter = $detailTbl->sqlDetailFilter_customer();
-        $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
-        $detailTbl->setCurrentMasterTable("customer");
-        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
-        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
         $detailTbl = Container("order");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
@@ -1005,6 +996,12 @@ class CustomerView extends Customer
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
         $detailTbl = Container("invoice");
+        $detailFilter = $detailTbl->sqlDetailFilter_customer();
+        $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
+        $detailTbl->setCurrentMasterTable("customer");
+        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
+        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
+        $detailTbl = Container("v_list_customer_brands");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -1467,28 +1464,12 @@ class CustomerView extends Customer
 
             // ktp
             $this->ktp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->ktp->CurrentValue)) {
-                $this->ktp->HrefValue = (!empty($this->ktp->ViewValue) && !is_array($this->ktp->ViewValue) ? RemoveHtml($this->ktp->ViewValue) : $this->ktp->CurrentValue); // Add prefix/suffix
-                $this->ktp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-                }
-            } else {
-                $this->ktp->HrefValue = "";
-            }
+            $this->ktp->HrefValue = "";
             $this->ktp->TooltipValue = "";
 
             // npwp
             $this->npwp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->npwp->CurrentValue)) {
-                $this->npwp->HrefValue = (!empty($this->npwp->ViewValue) && !is_array($this->npwp->ViewValue) ? RemoveHtml($this->npwp->ViewValue) : $this->npwp->CurrentValue); // Add prefix/suffix
-                $this->npwp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-                }
-            } else {
-                $this->npwp->HrefValue = "";
-            }
+            $this->npwp->HrefValue = "";
             $this->npwp->TooltipValue = "";
 
             // limit_kredit_order
@@ -1528,76 +1509,6 @@ class CustomerView extends Customer
         }
     }
 
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Get("fk_id", Get("idpegawai"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idpegawai->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Post("fk_id", Post("idpegawai"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idpegawai->setFormValue($masterTbl->id->FormValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-            $this->setSessionWhere($this->getDetailFilter());
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "pegawai") {
-                if ($this->idpegawai->CurrentValue == "") {
-                    $this->idpegawai->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up detail parms based on QueryString
     protected function setupDetailParms()
     {
@@ -1621,20 +1532,6 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                }
-            }
-            if (in_array("brand_customer", $detailTblVar)) {
-                $detailPageObj = Container("BrandCustomerGrid");
-                if ($detailPageObj->DetailView) {
-                    $detailPageObj->CurrentMode = "view";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idcustomer->IsDetailKey = true;
-                    $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
                 }
             }
             if (in_array("order", $detailTblVar)) {
@@ -1664,6 +1561,19 @@ class CustomerView extends Customer
                     $detailPageObj->id->setSessionValue(""); // Clear session key
                 }
             }
+            if (in_array("v_list_customer_brands", $detailTblVar)) {
+                $detailPageObj = Container("VListCustomerBrandsGrid");
+                if ($detailPageObj->DetailView) {
+                    $detailPageObj->CurrentMode = "view";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idcustomer->IsDetailKey = true;
+                    $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
+                }
+            }
         }
     }
 
@@ -1684,9 +1594,9 @@ class CustomerView extends Customer
         $pages = new SubPages();
         $pages->Style = "tabs";
         $pages->add('alamat_customer');
-        $pages->add('brand_customer');
         $pages->add('order');
         $pages->add('invoice');
+        $pages->add('v_list_customer_brands');
         $this->DetailPages = $pages;
     }
 

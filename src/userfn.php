@@ -603,20 +603,24 @@ function updateInvoice($idInvoice) {
 
 // dipanggil di deliveryorder_detail
 function checkReadOnly($table, $id) {
-	$readOnly = 0;
-	if ($table == "order") {
-		$hasDelivery = ExecuteScalar("SELECT count(id) FROM deliveryorder_detail WHERE idorder=".$id);
-		$readOnly = ($hasDelivery > 0 ? 1 : 0);
-		$updateReadOnly = ExecuteUpdate("UPDATE `".$table."` SET readonly=".$readOnly." WHERE id=".$id);
-	} elseif ($table == "order_detail") {
-		$hasDelivery = ExecuteScalar("SELECT count(id) FROM deliveryorder_detail WHERE idorder_detail=".$id);
-		$readOnly = ($hasDelivery > 0 ? 1 : 0);
-		$updateReadOnly = ExecuteUpdate("UPDATE `".$table."` SET readonly=".$readOnly." WHERE id=".$id);
-	} elseif ($table == "invoice") {
-		$hasPayment = ExecuteScalar("SELECT count(id) FROM pembayaran WHERE idinvoice=".$id);
-		$readOnly = ($hasPayment > 0 ? 1 : 0);
-		$updateReadOnly = ExecuteUpdate("UPDATE `".$table."` SET readonly=".$readOnly." WHERE id=".$id);
-	}
+    switch ($table) {
+        case "order":
+            $data = ExecuteScalar("SELECT count(id) FROM deliveryorder_detail WHERE idorder=".$id);     
+            break;
+        case "order_detail":
+            $data = ExecuteScalar("SELECT count(id) FROM deliveryorder_detail WHERE idorder_detail=".$id);
+            break;
+        case "invoice":
+            $data = ExecuteScalar("SELECT count(id) FROM pembayaran WHERE idinvoice=".$id);
+            break;
+        default:
+            // code...
+            break;
+    }
+    $readOnly = ($data > 0 ? 1 : 0);
+    if (!empty($table)) {        
+        $updateReadOnly = ExecuteUpdate("UPDATE `".$table."` SET readonly=".$readOnly." WHERE id=".$id);
+    }
 }
 
 // dipanggil di npd_status, ijinhaki_status, ijinbpom_status
@@ -1046,7 +1050,7 @@ $API_ACTIONS['confirmation-bot-queue'] = function(Request $request, Response &$r
      * STATUS BOT
      * -2 CANCEL
      * -1 PENDING / WAITING TO CONFIRM CANCEL/QUEUING
-     * 0 QUEUING TO DELIVER
+     * 1 QUEUING TO DELIVER
      * 0 DELIVERED
     */
     WriteJson(['status' => $process, 'message' => $message]);
@@ -1102,6 +1106,8 @@ $API_ACTIONS['goto-reminder'] = function(Request $request, Response &$response) 
                 \nApabila sudah ditransfer mohon dapat di informasikan ke nomor ini juga.
                 \nTerimakasih atas kerjasama dan kepercayaannya kepada kami. Semoga {$row['nama_customer']} sehat selalu";
         }
+
+        // keterangan column
         $keterangan = "Umur Faktur: {$row['umur_faktur']},\nTgl Penagihan: " . tgl_indo($tanggal) . ".";
         $insert = ExecuteUpdate("INSERT INTO bot_history (prop_code, prop_name, phone, messages, status, keterangan, created_at) VALUES ('{$row['kode_faktur']}', 'Penagihan {$row['nama_customer']}', '{$row['nomor_handphone']}', '{$message}', '-1', '{$keterangan}', '".date('Y-m-d H:i:s')."')");
         if (!$insert) $status = false;
@@ -1114,42 +1120,111 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
     $status = true;
     $check = [];
     foreach($data['data'] as $row) {
-    	$exists = ExecuteRow("SELECT COUNT(*) as jumlah FROM deliveryorder ded JOIN deliveryorder_detail dedd ON dedd.iddeliveryorder = ded.id JOIN `order` o ON o.id = dedd.idorder JOIN order_detail od ON od.id = dedd.idorder_detail JOIN product p ON p.id = od.idproduct WHERE ded.kode = '{$row['no_suratjalan']}' AND ded.tanggal = '{$row['tgl_kirim']}' AND p.kode = '{$row['kode_barang']}' AND o.kode = '{$row['kode_penjualan']}'");
-        $order = ExecuteRow("SELECT od.id as idorderdetail, idorder, jumlah + bonus as totalorder FROM order_detail od JOIN `order` o ON o.id = od.idorder JOIN product p ON p.id = od.idproduct WHERE o.kode = '{$row['kode_penjualan']}' AND p.kode = '{$row['kode_barang']}'");
-        if ($order) {
-        	ExecuteUpdate("UPDATE `order` SET `status` = '{$row['status_penjualan']}', catatan = '{$row['catatan_penjualan']}' WHERE kode = '{$row['kode_penjualan']}'");
-        }
-        if ($exists['jumlah'] < 1 && $order) {
-            $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
-            if (!$delivery) {
+        // INISIALISASI
+        $do = true;
+        $do_detail = true;
+
+        // CHECK EXISTING DELIVERY ORDER
+        $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
+        foreach ($row['penjualan'] as $ord) {
+            // GET JUMLAH DATA DARI DB            
+            $db_orders = ExecuteRows("SELECT o.id as idorder, od.id as idorderdetail, od.jumlah + od.bonus as totalorder FROM order_detail od JOIN `order` o ON o.id = od.idorder WHERE o.kode = '{$ord['no_penjualan']}'");
+
+            // IF NOT EXIST CREATE DELIVERY ORDER
+            if (!$delivery && $db_orders) {
                 $do = Execute("INSERT INTO deliveryorder (kode, tanggal, created_at, readonly) VALUES ('{$row['no_suratjalan']}', '{$row['tgl_kirim']}', '".date('Y-m-d H:i:s')."', 1)");
                 $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
             }
-            $sisa = $order['totalorder'] - $row['jumlah_kirim'];
-            $delivery_detail = Execute("INSERT INTO deliveryorder_detail (iddeliveryorder, idorder, idorder_detail, totalorder, jumlahkirim, sisa) VALUES ({$delivery}, {$order['idorder']}, {$order['idorderdetail']}, {$order['totalorder']}, {$row['jumlah_kirim']}, {$sisa})");
 
-            // update sisa order detail
-            ExecuteUpdate("UPDATE order_detail SET sisa = sisa-({$row['jumlah_kirim']}) WHERE id = {$order['idorderdetail']}");
+            // CEK EXISTING DATA DELIVERY & DATA ORDER
+            if ($delivery && $db_orders) {
+                $datas = [];
+                // INSERT DATA DARI API TO deliveryorder_detail
+                foreach ($ord['penjualan_detil'] as $val) {
+                    $detail = ExecuteRow("SELECT o.id as idorder, od.id as idorderdetail, od.jumlah + od.bonus as totalorder, p.id as idproduct FROM order_detail od JOIN `order` o ON o.id = od.idorder JOIN product p ON p.id = od.idproduct WHERE o.kode = '{$ord['no_penjualan']}' AND p.kode = '{$val['kode_barang']}'");
 
-            // tambah stock
-            addStock($order['idorderdetail'], $row['jumlah_kirim']);
+                    // AKUMULASI SISA ORDER
+                    $sisa = $detail['totalorder'] - $val['jumlah_kirim'];
+                    $deliverydetil_exist = "SELECT COUNT(*) AS jumlah
+                                            FROM deliveryorder ded
+                                            JOIN deliveryorder_detail dedd ON dedd.iddeliveryorder = ded.id
+                                            JOIN `order` o ON o.id = dedd.idorder
+                                            JOIN order_detail od ON od.id = dedd.idorder_detail
+                                            JOIN product p ON p.id = od.idproduct
+                                            WHERE ded.kode = '{$row['no_suratjalan']}' 
+                                            AND ded.tanggal = '{$row['tgl_kirim']}' 
+                                            AND p.kode = '{$val['kode_barang']}' 
+                                            AND o.kode = '{$ord['no_penjualan']}'";
+                    $existing = ExecuteRow($deliverydetil_exist)['jumlah'];
 
-            // check untuk close order
-            checkCloseOrder($order['idorderdetail']);
+                    // CEK EXISTING DATA deliveryorder_detail
+                    if (!$existing) {
+                        // INSERT TO DB deliveryorder_detail
+                        $do_detail = Execute("INSERT INTO deliveryorder_detail (iddeliveryorder, idorder, idorder_detail, totalorder, jumlahkirim, sisa) VALUES ({$delivery}, {$detail['idorder']}, {$detail['idorderdetail']}, {$detail['totalorder']}, {$val['jumlah_kirim']}, {$sisa})");
 
-            // check readonly
-            checkReadOnly("order_detail", $order['idorderdetail']);
-            checkReadOnly("order", $order['idorder']);
+                        // UPDATE SISA ORDER DETAIL
+                        ExecuteUpdate("UPDATE order_detail SET sisa = sisa-({$val['jumlah_kirim']}) WHERE id = {$detail['idorderdetail']}");
 
-            // check error
-            if (!$delivery || !$delivery_detail) {
-                $check[] = false;
+                        // ADD JUMLAH KIRIM TO STOCK
+                        addStock($detail['idorderdetail'], $val['jumlah_kirim']);
+
+                        // CEK CLOSE ORDER
+                        checkCloseOrder($detail['idorderdetail']);
+
+                        // CEK READONLY ORDER DETAIL
+                        checkReadOnly("order_detail", $detail['idorderdetail']);
+
+                        // CEK READONLY ORDER
+                        checkReadOnly("order", $detail['idorder']);
+                    }
+
+                    // INSERT TO TEMP ARRAY FOR CHECKING EXISTING DATA
+                    $datas[] = $detail['idorderdetail'];
+                }
+
+                /* 
+                 * CEK JUMLAH DATA ORDER:
+                 * JIKA JUMLAH DATA DARI API KURANG DARI JUMLAH DATA ORDER DI DB, 
+                 * MAKA DITAMBAHKAN DGN JUMLAH KIRIM 0
+                 */
+                if (count($ord['penjualan_detil']) < count($db_orders)) {
+                    // INSERT DATA DENGAN JUMLAH KIRIM 0, UNTUK DATA YANG TIDAK DIKIRIM
+                    foreach ($db_orders as $dbo) {
+                        $deliverydetil_exist = "SELECT COUNT(*) AS jumlah
+                                                FROM deliveryorder ded
+                                                JOIN deliveryorder_detail dedd ON dedd.iddeliveryorder = ded.id
+                                                JOIN `order` o ON o.id = dedd.idorder
+                                                JOIN order_detail od ON od.id = dedd.idorder_detail
+                                                WHERE ded.kode = '{$row['no_suratjalan']}' 
+                                                AND ded.tanggal = '{$row['tgl_kirim']}' 
+                                                AND od.id = {$dbo['idorderdetail']}
+                                                AND o.kode = '{$ord['no_penjualan']}'";
+                        $existing = ExecuteRow($deliverydetil_exist)['jumlah'];
+
+                        // JIKA DATA SUDAH ADA DI ARRAY MAKA TIDAK PERLU DI INSERT
+                        if (!in_array($dbo['idorderdetail'], $datas) && !$existing) {
+                            $do_detail = Execute("INSERT INTO deliveryorder_detail (iddeliveryorder, idorder, idorder_detail, totalorder, jumlahkirim, sisa) VALUES ({$delivery}, {$dbo['idorder']}, {$dbo['idorderdetail']}, {$dbo['totalorder']}, 0, {$dbo['totalorder']})");
+                        }
+                    }
+                }
+
+                // UPDATE STATUS ORDER
+                ExecuteUpdate("UPDATE `order` SET `status` = '{$ord['status']}', catatan = '{$ord['catatan']}' WHERE kode = '{$ord['no_penjualan']}'");
             }
         }
+
+        // check error
+        if (!$do || !$do_detail) {
+            $check[] = false;
+        }
     }
+
+    // CEK SYNC STATUS
     if (in_array(false, $check)) {
         $status = false;
     }
+
+    // OUTPUT
     WriteJson(['status' => $status, 'rows' => count($check) . ' row(s) updated!']);
 };
 $API_ACTIONS['sync-order-sip'] = function(Request $request, Response &$response) {

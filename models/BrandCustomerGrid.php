@@ -588,22 +588,6 @@ class BrandCustomerGrid extends BrandCustomer
         AddFilter($filter, $this->SearchWhere);
 
         // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "customer") {
-            $masterTbl = Container("customer");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("CustomerList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
-
-        // Load master record
         if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "brand") {
             $masterTbl = Container("brand");
             $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
@@ -1079,7 +1063,6 @@ class BrandCustomerGrid extends BrandCustomer
                 $this->setCurrentMasterTable(""); // Clear master table
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
-                        $this->idcustomer->setSessionValue("");
                         $this->idbrand->setSessionValue("");
             }
 
@@ -1509,59 +1492,31 @@ class BrandCustomerGrid extends BrandCustomer
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $lookupFilter = function() {
-                            return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
-                        };
-                        $lookupFilter = $lookupFilter->bindTo($this);
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
             }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
+            }
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // Add refer script
 
@@ -1625,59 +1580,31 @@ class BrandCustomerGrid extends BrandCustomer
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
             $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $lookupFilter = function() {
-                            return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
-                        };
-                        $lookupFilter = $lookupFilter->bindTo($this);
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
             }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
+            }
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
             // Edit refer script
 
@@ -1830,48 +1757,7 @@ class BrandCustomerGrid extends BrandCustomer
             $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
 
             // idcustomer
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->ReadOnly = true;
-            }
             $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, $this->idcustomer->ReadOnly);
-
-            // Check referential integrity for master table 'customer'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_customer();
-            $keyValue = $rsnew['idcustomer'] ?? $rsold['idcustomer'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("customer")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "customer", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
-
-            // Check referential integrity for master table 'brand'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_brand();
-            $keyValue = $rsnew['idbrand'] ?? $rsold['idbrand'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -1923,47 +1809,8 @@ class BrandCustomerGrid extends BrandCustomer
         global $Language, $Security;
 
         // Set up foreign key field value from Session
-        if ($this->getCurrentMasterTable() == "customer") {
-            $this->idcustomer->CurrentValue = $this->idcustomer->getSessionValue();
-        }
         if ($this->getCurrentMasterTable() == "brand") {
             $this->idbrand->CurrentValue = $this->idbrand->getSessionValue();
-        }
-
-        // Check referential integrity for master table 'brand_customer'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_customer();
-        if (strval($this->idcustomer->CurrentValue) != "") {
-            $masterFilter = str_replace("@id@", AdjustSql($this->idcustomer->CurrentValue, "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("customer")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "customer", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
-        }
-
-        // Check referential integrity for master table 'brand_customer'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_brand();
-        if (strval($this->idbrand->CurrentValue) != "") {
-            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
         }
         $conn = $this->getConnection();
 
@@ -2023,13 +1870,6 @@ class BrandCustomerGrid extends BrandCustomer
     {
         // Hide foreign keys
         $masterTblVar = $this->getCurrentMasterTable();
-        if ($masterTblVar == "customer") {
-            $masterTbl = Container("customer");
-            $this->idcustomer->Visible = false;
-            if ($masterTbl->EventCancelled) {
-                $this->EventCancelled = true;
-            }
-        }
         if ($masterTblVar == "brand") {
             $masterTbl = Container("brand");
             $this->idbrand->Visible = false;

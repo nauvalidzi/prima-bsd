@@ -1267,8 +1267,8 @@ class BrandEdit extends Brand
         if (in_array("product", $detailTblVar) && $detailPage->DetailEdit) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("BrandCustomerGrid");
-        if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailEdit) {
+        $detailPage = Container("VListBrandCustomersGrid");
+        if (in_array("v_list_brand_customers", $detailTblVar) && $detailPage->DetailEdit) {
             $detailPage->validateGridForm();
         }
 
@@ -1519,9 +1519,9 @@ class BrandEdit extends Brand
                     }
                 }
                 if ($editRow) {
-                    $detailPage = Container("BrandCustomerGrid");
-                    if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailEdit) {
-                        $Security->loadCurrentUserLevel($this->ProjectID . "brand_customer"); // Load user level of detail table
+                    $detailPage = Container("VListBrandCustomersGrid");
+                    if (in_array("v_list_brand_customers", $detailTblVar) && $detailPage->DetailEdit) {
+                        $Security->loadCurrentUserLevel($this->ProjectID . "v_list_brand_customers"); // Load user level of detail table
                         $editRow = $detailPage->gridUpdate();
                         $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                     }
@@ -1596,8 +1596,8 @@ class BrandEdit extends Brand
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
                 }
             }
-            if (in_array("brand_customer", $detailTblVar)) {
-                $detailPageObj = Container("BrandCustomerGrid");
+            if (in_array("v_list_brand_customers", $detailTblVar)) {
+                $detailPageObj = Container("VListBrandCustomersGrid");
                 if ($detailPageObj->DetailEdit) {
                     $detailPageObj->CurrentMode = "edit";
                     $detailPageObj->CurrentAction = "gridedit";
@@ -1608,7 +1608,6 @@ class BrandEdit extends Brand
                     $detailPageObj->idbrand->IsDetailKey = true;
                     $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
-                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -1630,7 +1629,7 @@ class BrandEdit extends Brand
     {
         $pages = new SubPages();
         $pages->add('product');
-        $pages->add('brand_customer');
+        $pages->add('v_list_brand_customers');
         $this->DetailPages = $pages;
     }
 

@@ -29,8 +29,11 @@ class VBrandCustomer extends DbTable
 
     // Fields
     public $idbrand;
-    public $brand;
+    public $kode_brand;
+    public $nama_brand;
     public $idcustomer;
+    public $kode_customer;
+    public $nama_customer;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -76,13 +79,19 @@ class VBrandCustomer extends DbTable
         $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
         $this->Fields['idbrand'] = &$this->idbrand;
 
-        // brand
-        $this->brand = new DbField('v_brand_customer', 'v_brand_customer', 'x_brand', 'brand', '`brand`', '`brand`', 200, 255, -1, false, '`brand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->brand->Nullable = false; // NOT NULL field
-        $this->brand->Required = true; // Required field
-        $this->brand->Sortable = true; // Allow sort
-        $this->brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->brand->Param, "CustomMsg");
-        $this->Fields['brand'] = &$this->brand;
+        // kode_brand
+        $this->kode_brand = new DbField('v_brand_customer', 'v_brand_customer', 'x_kode_brand', 'kode_brand', '`kode_brand`', '`kode_brand`', 200, 50, -1, false, '`kode_brand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_brand->Sortable = true; // Allow sort
+        $this->kode_brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_brand->Param, "CustomMsg");
+        $this->Fields['kode_brand'] = &$this->kode_brand;
+
+        // nama_brand
+        $this->nama_brand = new DbField('v_brand_customer', 'v_brand_customer', 'x_nama_brand', 'nama_brand', '`nama_brand`', '`nama_brand`', 200, 255, -1, false, '`nama_brand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_brand->Nullable = false; // NOT NULL field
+        $this->nama_brand->Required = true; // Required field
+        $this->nama_brand->Sortable = true; // Allow sort
+        $this->nama_brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_brand->Param, "CustomMsg");
+        $this->Fields['nama_brand'] = &$this->nama_brand;
 
         // idcustomer
         $this->idcustomer = new DbField('v_brand_customer', 'v_brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'NO');
@@ -92,6 +101,22 @@ class VBrandCustomer extends DbTable
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->Fields['idcustomer'] = &$this->idcustomer;
+
+        // kode_customer
+        $this->kode_customer = new DbField('v_brand_customer', 'v_brand_customer', 'x_kode_customer', 'kode_customer', '`kode_customer`', '`kode_customer`', 200, 50, -1, false, '`kode_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_customer->Nullable = false; // NOT NULL field
+        $this->kode_customer->Required = true; // Required field
+        $this->kode_customer->Sortable = true; // Allow sort
+        $this->kode_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_customer->Param, "CustomMsg");
+        $this->Fields['kode_customer'] = &$this->kode_customer;
+
+        // nama_customer
+        $this->nama_customer = new DbField('v_brand_customer', 'v_brand_customer', 'x_nama_customer', 'nama_customer', '`nama_customer`', '`nama_customer`', 200, 255, -1, false, '`nama_customer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_customer->Nullable = false; // NOT NULL field
+        $this->nama_customer->Required = true; // Required field
+        $this->nama_customer->Sortable = true; // Allow sort
+        $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
+        $this->Fields['nama_customer'] = &$this->nama_customer;
     }
 
     // Field Visibility
@@ -513,8 +538,11 @@ class VBrandCustomer extends DbTable
             return;
         }
         $this->idbrand->DbValue = $row['idbrand'];
-        $this->brand->DbValue = $row['brand'];
+        $this->kode_brand->DbValue = $row['kode_brand'];
+        $this->nama_brand->DbValue = $row['nama_brand'];
         $this->idcustomer->DbValue = $row['idcustomer'];
+        $this->kode_customer->DbValue = $row['kode_customer'];
+        $this->nama_customer->DbValue = $row['nama_customer'];
     }
 
     // Delete uploaded files
@@ -890,8 +918,11 @@ SORTHTML;
             return;
         }
         $this->idbrand->setDbValue($row['idbrand']);
-        $this->brand->setDbValue($row['brand']);
+        $this->kode_brand->setDbValue($row['kode_brand']);
+        $this->nama_brand->setDbValue($row['nama_brand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
+        $this->kode_customer->setDbValue($row['kode_customer']);
+        $this->nama_customer->setDbValue($row['nama_customer']);
     }
 
     // Render list row values
@@ -906,36 +937,69 @@ SORTHTML;
 
         // idbrand
 
-        // brand
+        // kode_brand
+
+        // nama_brand
 
         // idcustomer
+
+        // kode_customer
+
+        // nama_customer
 
         // idbrand
         $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
         $this->idbrand->ViewCustomAttributes = "";
 
-        // brand
-        $this->brand->ViewValue = $this->brand->CurrentValue;
-        $this->brand->ViewCustomAttributes = "";
+        // kode_brand
+        $this->kode_brand->ViewValue = $this->kode_brand->CurrentValue;
+        $this->kode_brand->ViewCustomAttributes = "";
+
+        // nama_brand
+        $this->nama_brand->ViewValue = $this->nama_brand->CurrentValue;
+        $this->nama_brand->ViewCustomAttributes = "";
 
         // idcustomer
         $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->ViewCustomAttributes = "";
+
+        // kode_customer
+        $this->kode_customer->ViewValue = $this->kode_customer->CurrentValue;
+        $this->kode_customer->ViewCustomAttributes = "";
+
+        // nama_customer
+        $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->ViewCustomAttributes = "";
 
         // idbrand
         $this->idbrand->LinkCustomAttributes = "";
         $this->idbrand->HrefValue = "";
         $this->idbrand->TooltipValue = "";
 
-        // brand
-        $this->brand->LinkCustomAttributes = "";
-        $this->brand->HrefValue = "";
-        $this->brand->TooltipValue = "";
+        // kode_brand
+        $this->kode_brand->LinkCustomAttributes = "";
+        $this->kode_brand->HrefValue = "";
+        $this->kode_brand->TooltipValue = "";
+
+        // nama_brand
+        $this->nama_brand->LinkCustomAttributes = "";
+        $this->nama_brand->HrefValue = "";
+        $this->nama_brand->TooltipValue = "";
 
         // idcustomer
         $this->idcustomer->LinkCustomAttributes = "";
         $this->idcustomer->HrefValue = "";
         $this->idcustomer->TooltipValue = "";
+
+        // kode_customer
+        $this->kode_customer->LinkCustomAttributes = "";
+        $this->kode_customer->HrefValue = "";
+        $this->kode_customer->TooltipValue = "";
+
+        // nama_customer
+        $this->nama_customer->LinkCustomAttributes = "";
+        $this->nama_customer->HrefValue = "";
+        $this->nama_customer->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -958,20 +1022,47 @@ SORTHTML;
         $this->idbrand->EditValue = $this->idbrand->CurrentValue;
         $this->idbrand->ViewCustomAttributes = "";
 
-        // brand
-        $this->brand->EditAttrs["class"] = "form-control";
-        $this->brand->EditCustomAttributes = "";
-        if (!$this->brand->Raw) {
-            $this->brand->CurrentValue = HtmlDecode($this->brand->CurrentValue);
+        // kode_brand
+        $this->kode_brand->EditAttrs["class"] = "form-control";
+        $this->kode_brand->EditCustomAttributes = "";
+        if (!$this->kode_brand->Raw) {
+            $this->kode_brand->CurrentValue = HtmlDecode($this->kode_brand->CurrentValue);
         }
-        $this->brand->EditValue = $this->brand->CurrentValue;
-        $this->brand->PlaceHolder = RemoveHtml($this->brand->caption());
+        $this->kode_brand->EditValue = $this->kode_brand->CurrentValue;
+        $this->kode_brand->PlaceHolder = RemoveHtml($this->kode_brand->caption());
+
+        // nama_brand
+        $this->nama_brand->EditAttrs["class"] = "form-control";
+        $this->nama_brand->EditCustomAttributes = "";
+        if (!$this->nama_brand->Raw) {
+            $this->nama_brand->CurrentValue = HtmlDecode($this->nama_brand->CurrentValue);
+        }
+        $this->nama_brand->EditValue = $this->nama_brand->CurrentValue;
+        $this->nama_brand->PlaceHolder = RemoveHtml($this->nama_brand->caption());
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
         $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->ViewCustomAttributes = "";
+
+        // kode_customer
+        $this->kode_customer->EditAttrs["class"] = "form-control";
+        $this->kode_customer->EditCustomAttributes = "";
+        if (!$this->kode_customer->Raw) {
+            $this->kode_customer->CurrentValue = HtmlDecode($this->kode_customer->CurrentValue);
+        }
+        $this->kode_customer->EditValue = $this->kode_customer->CurrentValue;
+        $this->kode_customer->PlaceHolder = RemoveHtml($this->kode_customer->caption());
+
+        // nama_customer
+        $this->nama_customer->EditAttrs["class"] = "form-control";
+        $this->nama_customer->EditCustomAttributes = "";
+        if (!$this->nama_customer->Raw) {
+            $this->nama_customer->CurrentValue = HtmlDecode($this->nama_customer->CurrentValue);
+        }
+        $this->nama_customer->EditValue = $this->nama_customer->CurrentValue;
+        $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1002,12 +1093,18 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->idbrand);
-                    $doc->exportCaption($this->brand);
+                    $doc->exportCaption($this->kode_brand);
+                    $doc->exportCaption($this->nama_brand);
                     $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->kode_customer);
+                    $doc->exportCaption($this->nama_customer);
                 } else {
                     $doc->exportCaption($this->idbrand);
-                    $doc->exportCaption($this->brand);
+                    $doc->exportCaption($this->kode_brand);
+                    $doc->exportCaption($this->nama_brand);
                     $doc->exportCaption($this->idcustomer);
+                    $doc->exportCaption($this->kode_customer);
+                    $doc->exportCaption($this->nama_customer);
                 }
                 $doc->endExportRow();
             }
@@ -1038,12 +1135,18 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->idbrand);
-                        $doc->exportField($this->brand);
+                        $doc->exportField($this->kode_brand);
+                        $doc->exportField($this->nama_brand);
                         $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->kode_customer);
+                        $doc->exportField($this->nama_customer);
                     } else {
                         $doc->exportField($this->idbrand);
-                        $doc->exportField($this->brand);
+                        $doc->exportField($this->kode_brand);
+                        $doc->exportField($this->nama_brand);
                         $doc->exportField($this->idcustomer);
+                        $doc->exportField($this->kode_customer);
+                        $doc->exportField($this->nama_customer);
                     }
                     $doc->endExportRow($rowCnt);
                 }

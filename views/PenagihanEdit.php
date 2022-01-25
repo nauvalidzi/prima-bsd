@@ -290,8 +290,8 @@ loadjs.ready(["fpenagihanedit", "datetimepicker"], function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
 <span id="el_penagihan_status">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->status->isInvalidClass() ?>" data-table="penagihan" data-field="x_status" name="x_status[]" id="x_status_557473" value="1"<?= ConvertToBool($Page->status->CurrentValue) ? " checked" : "" ?><?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
-    <label class="custom-control-label" for="x_status_557473"></label>
+    <input type="checkbox" class="custom-control-input<?= $Page->status->isInvalidClass() ?>" data-table="penagihan" data-field="x_status" name="x_status[]" id="x_status_978781" value="1"<?= ConvertToBool($Page->status->CurrentValue) ? " checked" : "" ?><?= $Page->status->editAttributes() ?> aria-describedby="x_status_help">
+    <label class="custom-control-label" for="x_status_978781"></label>
 </div>
 <?= $Page->status->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>

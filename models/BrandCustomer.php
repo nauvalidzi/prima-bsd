@@ -68,7 +68,6 @@ class BrandCustomer extends DbTable
 
         // idbrand
         $this->idbrand = new DbField('brand_customer', 'brand_customer', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idbrand->IsForeignKey = true; // Foreign key field
         $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
@@ -88,7 +87,6 @@ class BrandCustomer extends DbTable
 
         // idcustomer
         $this->idcustomer = new DbField('brand_customer', 'brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -142,83 +140,6 @@ class BrandCustomer extends DbTable
         } else {
             $fld->setSort("");
         }
-    }
-
-    // Current master table name
-    public function getCurrentMasterTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
-    }
-
-    public function setCurrentMasterTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
-    }
-
-    // Session master WHERE clause
-    public function getMasterFilter()
-    {
-        // Master filter
-        $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "customer") {
-            if ($this->idcustomer->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        if ($this->getCurrentMasterTable() == "brand") {
-            if ($this->idbrand->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $masterFilter;
-    }
-
-    // Session detail WHERE clause
-    public function getDetailFilter()
-    {
-        // Detail filter
-        $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "customer") {
-            if ($this->idcustomer->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idcustomer`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        if ($this->getCurrentMasterTable() == "brand") {
-            if ($this->idbrand->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idbrand`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_customer()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_customer()
-    {
-        return "`idcustomer`=@idcustomer@";
-    }
-
-    // Master filter
-    public function sqlMasterFilter_brand()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_brand()
-    {
-        return "`idbrand`=@idbrand@";
     }
 
     // Table level SQL
@@ -746,14 +667,6 @@ class BrandCustomer extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "customer" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idcustomer->CurrentValue ?? $this->idcustomer->getSessionValue());
-        }
-        if ($this->getCurrentMasterTable() == "brand" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idbrand->CurrentValue ?? $this->idbrand->getSessionValue());
-        }
         return $url;
     }
 
@@ -965,62 +878,12 @@ SORTHTML;
         // idbrand
         $this->idbrand->EditAttrs["class"] = "form-control";
         $this->idbrand->EditCustomAttributes = "";
-        if ($this->idbrand->getSessionValue() != "") {
-            $this->idbrand->CurrentValue = GetForeignKeyValue($this->idbrand->getSessionValue());
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                    } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idbrand->ViewValue = null;
-            }
-            $this->idbrand->ViewCustomAttributes = "";
-        } else {
-            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-        }
+        $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
-        if ($this->idcustomer->getSessionValue() != "") {
-            $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
-            $this->idcustomer->ViewCustomAttributes = "";
-        } else {
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
-        }
+        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
         // Call Row Rendered event
         $this->rowRendered();

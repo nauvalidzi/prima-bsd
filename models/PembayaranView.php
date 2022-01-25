@@ -544,7 +544,6 @@ class PembayaranView extends Pembayaran
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idinvoice);
         $this->setupLookupOptions($this->idtipepayment);
 
@@ -613,9 +612,6 @@ class PembayaranView extends Pembayaran
         $this->resetAttributes();
         $this->renderRow();
 
-        // Set up detail parameters
-        $this->setupDetailParms();
-
         // Normal return
         if (IsApi()) {
             $rows = $this->getRecordsFromRecordset($this->Recordset, true); // Get current record only
@@ -671,7 +667,7 @@ class PembayaranView extends Pembayaran
         } else {
             $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
         }
-        $item->Visible = ($this->EditUrl != "" && $Security->canEdit() && $this->showOptionLink("edit"));
+        $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
         // Delete
         $item = &$option->add("delete");
@@ -680,83 +676,7 @@ class PembayaranView extends Pembayaran
         } else {
             $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
         }
-        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete() && $this->showOptionLink("delete"));
-        $option = $options["detail"];
-        $detailTableLink = "";
-        $detailViewTblVar = "";
-        $detailCopyTblVar = "";
-        $detailEditTblVar = "";
-
-        // "detail_invoice"
-        $item = &$option->add("detail_invoice");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("invoice", "TblCaption");
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("InvoiceList?" . Config("TABLE_SHOW_MASTER") . "=pembayaran&" . GetForeignKeyUrl("fk_idinvoice", $this->idinvoice->CurrentValue) . "")) . "\">" . $body . "</a>";
-        $links = "";
-        $detailPageObj = Container("InvoiceGrid");
-        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'pembayaran')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            if ($detailViewTblVar != "") {
-                $detailViewTblVar .= ",";
-            }
-            $detailViewTblVar .= "invoice";
-        }
-        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'pembayaran')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=invoice"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            if ($detailEditTblVar != "") {
-                $detailEditTblVar .= ",";
-            }
-            $detailEditTblVar .= "invoice";
-        }
-        if ($links != "") {
-            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-        }
-        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-        $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'invoice');
-        if ($item->Visible) {
-            if ($detailTableLink != "") {
-                $detailTableLink .= ",";
-            }
-            $detailTableLink .= "invoice";
-        }
-        if ($this->ShowMultipleDetails) {
-            $item->Visible = false;
-        }
-
-        // Multiple details
-        if ($this->ShowMultipleDetails) {
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
-            $links = "";
-            if ($detailViewTblVar != "") {
-                $links .= "<li><a class=\"ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailViewTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            }
-            if ($detailEditTblVar != "") {
-                $links .= "<li><a class=\"ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailEditTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            }
-            if ($detailCopyTblVar != "") {
-                $links .= "<li><a class=\"ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailCopyTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
-            }
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-master-detail\" title=\"" . HtmlTitle($Language->phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->phrase("MultipleMasterDetails") . "</button>";
-                $body .= "<ul class=\"dropdown-menu ew-menu\">" . $links . "</ul>";
-            }
-            $body .= "</div>";
-            // Multiple details
-            $item = &$option->add("details");
-            $item->Body = $body;
-        }
-
-        // Set up detail default
-        $option = $options["detail"];
-        $options["detail"]->DropDownButtonPhrase = $Language->phrase("ButtonDetails");
-        $ar = explode(",", $detailTableLink);
-        $cnt = count($ar);
-        $option->UseDropDownButton = ($cnt > 1);
-        $option->UseButtonGroup = true;
-        $item = &$option->add($option->GroupOptionName);
-        $item->Body = "";
-        $item->Visible = false;
+        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
 
         // Set up action default
         $option = $options["action"];
@@ -893,7 +813,6 @@ class PembayaranView extends Pembayaran
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // kode
@@ -902,32 +821,12 @@ class PembayaranView extends Pembayaran
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 117);
             $this->tanggal->ViewCustomAttributes = "";
 
             // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
@@ -1001,7 +900,7 @@ class PembayaranView extends Pembayaran
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 117);
             $this->created_at->ViewCustomAttributes = "";
 
             // created_by
@@ -1054,50 +953,16 @@ class PembayaranView extends Pembayaran
             $this->bukti->HrefValue = "";
             $this->bukti->ExportHrefValue = $this->bukti->UploadPath . $this->bukti->Upload->DbValue;
             $this->bukti->TooltipValue = "";
+
+            // created_at
+            $this->created_at->LinkCustomAttributes = "";
+            $this->created_at->HrefValue = "";
+            $this->created_at->TooltipValue = "";
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
-        }
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
-    {
-        // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("invoice", $detailTblVar)) {
-                $detailPageObj = Container("InvoiceGrid");
-                if ($detailPageObj->DetailView) {
-                    $detailPageObj->CurrentMode = "view";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->id->IsDetailKey = true;
-                    $detailPageObj->id->CurrentValue = $this->idinvoice->CurrentValue;
-                    $detailPageObj->id->setSessionValue($detailPageObj->id->CurrentValue);
-                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
-                }
-            }
         }
     }
 
@@ -1125,12 +990,6 @@ class PembayaranView extends Pembayaran
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
                 case "x_idinvoice":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add") ? "aktif = 1" : "";

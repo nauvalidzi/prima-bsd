@@ -567,9 +567,6 @@ class PegawaiEdit extends Pegawai
         // Process form if post back
         if ($postBack) {
             $this->loadFormValues(); // Get form values
-
-            // Set up detail parameters
-            $this->setupDetailParms();
         }
 
         // Validate form if post back
@@ -596,16 +593,9 @@ class PegawaiEdit extends Pegawai
                     $this->terminate("PegawaiList"); // No matching record, return to list
                     return;
                 }
-
-                // Set up detail parameters
-                $this->setupDetailParms();
                 break;
             case "update": // Update
-                if ($this->getCurrentDetailTable() != "") { // Master/detail edit
-                    $returnUrl = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $this->getCurrentDetailTable()); // Master/Detail view page
-                } else {
-                    $returnUrl = $this->getReturnUrl();
-                }
+                $returnUrl = $this->getReturnUrl();
                 if (GetPageName($returnUrl) == "PegawaiList") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
@@ -630,9 +620,6 @@ class PegawaiEdit extends Pegawai
                 } else {
                     $this->EventCancelled = true; // Event cancelled
                     $this->restoreFormValues(); // Restore form values if update failed
-
-                    // Set up detail parameters
-                    $this->setupDetailParms();
                 }
         }
 
@@ -1420,13 +1407,6 @@ class PegawaiEdit extends Pegawai
             }
         }
 
-        // Validate detail grid
-        $detailTblVar = explode(",", $this->getCurrentDetailTable());
-        $detailPage = Container("CustomerGrid");
-        if (in_array("customer", $detailTblVar) && $detailPage->DetailEdit) {
-            $detailPage->validateGridForm();
-        }
-
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
 
@@ -1505,11 +1485,6 @@ class PegawaiEdit extends Pegawai
             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
             $editRow = false; // Update Failed
         } else {
-            // Begin transaction
-            if ($this->getCurrentDetailTable() != "") {
-                $conn->beginTransaction();
-            }
-
             // Save old values
             $this->loadDbValues($rsold);
             $rsnew = [];
@@ -1647,26 +1622,6 @@ class PegawaiEdit extends Pegawai
                         }
                     }
                 }
-
-                // Update detail records
-                $detailTblVar = explode(",", $this->getCurrentDetailTable());
-                if ($editRow) {
-                    $detailPage = Container("CustomerGrid");
-                    if (in_array("customer", $detailTblVar) && $detailPage->DetailEdit) {
-                        $Security->loadCurrentUserLevel($this->ProjectID . "customer"); // Load user level of detail table
-                        $editRow = $detailPage->gridUpdate();
-                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                    }
-                }
-
-                // Commit/Rollback transaction
-                if ($this->getCurrentDetailTable() != "") {
-                    if ($editRow) {
-                        $conn->commit(); // Commit transaction
-                    } else {
-                        $conn->rollback(); // Rollback transaction
-                    }
-                }
             } else {
                 if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
                     // Use the message, do nothing
@@ -1707,35 +1662,6 @@ class PegawaiEdit extends Pegawai
             return $Security->isValidUserID($this->id->CurrentValue);
         }
         return true;
-    }
-
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
-    {
-        // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("customer", $detailTblVar)) {
-                $detailPageObj = Container("CustomerGrid");
-                if ($detailPageObj->DetailEdit) {
-                    $detailPageObj->CurrentMode = "edit";
-                    $detailPageObj->CurrentAction = "gridedit";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idpegawai->IsDetailKey = true;
-                    $detailPageObj->idpegawai->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idpegawai->setSessionValue($detailPageObj->idpegawai->CurrentValue);
-                }
-            }
-        }
     }
 
     // Set up Breadcrumb

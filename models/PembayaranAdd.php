@@ -475,7 +475,7 @@ class PembayaranAdd extends Pembayaran
         $this->idtipepayment->setVisibility();
         $this->bukti->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->setVisibility();
+        $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -490,7 +490,6 @@ class PembayaranAdd extends Pembayaran
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idinvoice);
         $this->setupLookupOptions($this->idtipepayment);
 
@@ -532,9 +531,6 @@ class PembayaranAdd extends Pembayaran
             $this->loadFormValues(); // Load form values
         }
 
-        // Set up detail parameters
-        $this->setupDetailParms();
-
         // Validate form if post back
         if ($postBack) {
             if (!$this->validateForm()) {
@@ -559,9 +555,6 @@ class PembayaranAdd extends Pembayaran
                     $this->terminate("PembayaranList"); // No matching record, return to list
                     return;
                 }
-
-                // Set up detail parameters
-                $this->setupDetailParms();
                 break;
             case "insert": // Add new record
                 $this->SendEmail = true; // Send email on add success
@@ -569,11 +562,7 @@ class PembayaranAdd extends Pembayaran
                     if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
-                    if ($this->getCurrentDetailTable() != "") { // Master/detail add
-                        $returnUrl = $this->getDetailUrl();
-                    } else {
-                        $returnUrl = $this->getReturnUrl();
-                    }
+                    $returnUrl = $this->getReturnUrl();
                     if (GetPageName($returnUrl) == "PembayaranList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                     } elseif (GetPageName($returnUrl) == "PembayaranView") {
@@ -592,9 +581,6 @@ class PembayaranAdd extends Pembayaran
                 } else {
                     $this->EventCancelled = true; // Event cancelled
                     $this->restoreFormValues(); // Add failed, restore form values
-
-                    // Set up detail parameters
-                    $this->setupDetailParms();
                 }
         }
 
@@ -691,7 +677,7 @@ class PembayaranAdd extends Pembayaran
             } else {
                 $this->tanggal->setFormValue($val);
             }
-            $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
+            $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 117);
         }
 
         // Check field name 'idinvoice' first before field var 'x_idinvoice'
@@ -744,16 +730,6 @@ class PembayaranAdd extends Pembayaran
             }
         }
 
-        // Check field name 'created_by' first before field var 'x_created_by'
-        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
-        if (!$this->created_by->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->created_by->Visible = false; // Disable update for API request
-            } else {
-                $this->created_by->setFormValue($val);
-            }
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         $this->getUploadFiles(); // Get upload files
@@ -765,13 +741,12 @@ class PembayaranAdd extends Pembayaran
         global $CurrentForm;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
-        $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
+        $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 117);
         $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
         $this->totaltagihan->CurrentValue = $this->totaltagihan->FormValue;
         $this->sisatagihan->CurrentValue = $this->sisatagihan->FormValue;
         $this->jumlahbayar->CurrentValue = $this->jumlahbayar->FormValue;
         $this->idtipepayment->CurrentValue = $this->idtipepayment->FormValue;
-        $this->created_by->CurrentValue = $this->created_by->FormValue;
     }
 
     /**
@@ -796,15 +771,6 @@ class PembayaranAdd extends Pembayaran
         if ($row) {
             $res = true;
             $this->loadRowValues($row); // Load row values
-        }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("add");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
         }
         return $res;
     }
@@ -919,7 +885,6 @@ class PembayaranAdd extends Pembayaran
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // kode
@@ -928,32 +893,12 @@ class PembayaranAdd extends Pembayaran
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 117);
             $this->tanggal->ViewCustomAttributes = "";
 
             // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
@@ -1027,7 +972,7 @@ class PembayaranAdd extends Pembayaran
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 117);
             $this->created_at->ViewCustomAttributes = "";
 
             // created_by
@@ -1075,11 +1020,6 @@ class PembayaranAdd extends Pembayaran
             $this->bukti->HrefValue = "";
             $this->bukti->ExportHrefValue = $this->bukti->UploadPath . $this->bukti->Upload->DbValue;
             $this->bukti->TooltipValue = "";
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -1093,7 +1033,7 @@ class PembayaranAdd extends Pembayaran
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
             $this->tanggal->EditCustomAttributes = "";
-            $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 8));
+            $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 117));
             $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
 
             // idinvoice
@@ -1185,11 +1125,6 @@ class PembayaranAdd extends Pembayaran
                 RenderUploadField($this->bukti);
             }
 
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
-
             // Add refer script
 
             // kode
@@ -1224,10 +1159,6 @@ class PembayaranAdd extends Pembayaran
             $this->bukti->LinkCustomAttributes = "";
             $this->bukti->HrefValue = "";
             $this->bukti->ExportHrefValue = $this->bukti->UploadPath . $this->bukti->Upload->DbValue;
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1300,18 +1231,6 @@ class PembayaranAdd extends Pembayaran
                 $this->bukti->addErrorMessage(str_replace("%s", $this->bukti->caption(), $this->bukti->RequiredErrorMessage));
             }
         }
-        if ($this->created_by->Required) {
-            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
-                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
-            }
-        }
-
-        // Validate detail grid
-        $detailTblVar = explode(",", $this->getCurrentDetailTable());
-        $detailPage = Container("InvoiceGrid");
-        if (in_array("invoice", $detailTblVar) && $detailPage->DetailAdd) {
-            $detailPage->validateGridForm();
-        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -1329,24 +1248,7 @@ class PembayaranAdd extends Pembayaran
     protected function addRow($rsold = null)
     {
         global $Language, $Security;
-
-        // Check if valid User ID
-        $validUser = false;
-        if ($Security->currentUserID() != "" && !EmptyValue($this->created_by->CurrentValue) && !$Security->isAdmin()) { // Non system admin
-            $validUser = $Security->isValidUserID($this->created_by->CurrentValue);
-            if (!$validUser) {
-                $userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
-                $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
-                $this->setFailureMessage($userIdMsg);
-                return false;
-            }
-        }
         $conn = $this->getConnection();
-
-        // Begin transaction
-        if ($this->getCurrentDetailTable() != "") {
-            $conn->beginTransaction();
-        }
 
         // Load db values from rsold
         $this->loadDbValues($rsold);
@@ -1358,7 +1260,7 @@ class PembayaranAdd extends Pembayaran
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
 
         // tanggal
-        $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), false);
+        $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 117), CurrentDate(), false);
 
         // idinvoice
         $this->idinvoice->setDbValueDef($rsnew, $this->idinvoice->CurrentValue, 0, false);
@@ -1384,9 +1286,6 @@ class PembayaranAdd extends Pembayaran
                 $rsnew['bukti'] = $this->bukti->Upload->FileName;
             }
         }
-
-        // created_by
-        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
         if ($this->bukti->Visible && !$this->bukti->Upload->KeepFile) {
             $oldFiles = EmptyValue($this->bukti->Upload->DbValue) ? [] : [$this->bukti->htmlDecode($this->bukti->Upload->DbValue)];
             if (!EmptyValue($this->bukti->Upload->FileName)) {
@@ -1482,30 +1381,6 @@ class PembayaranAdd extends Pembayaran
             }
             $addRow = false;
         }
-
-        // Add detail records
-        if ($addRow) {
-            $detailTblVar = explode(",", $this->getCurrentDetailTable());
-            $detailPage = Container("InvoiceGrid");
-            if (in_array("invoice", $detailTblVar) && $detailPage->DetailAdd) {
-                $detailPage->id->setSessionValue($this->idinvoice->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "invoice"); // Load user level of detail table
-                $addRow = $detailPage->gridInsert();
-                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                if (!$addRow) {
-                $detailPage->id->setSessionValue(""); // Clear master key if insert failed
-                }
-            }
-        }
-
-        // Commit/Rollback transaction
-        if ($this->getCurrentDetailTable() != "") {
-            if ($addRow) {
-                $conn->commit(); // Commit transaction
-            } else {
-                $conn->rollback(); // Rollback transaction
-            }
-        }
         if ($addRow) {
             // Call Row Inserted event
             $this->rowInserted($rsold, $rsnew);
@@ -1523,50 +1398,6 @@ class PembayaranAdd extends Pembayaran
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
         return $addRow;
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
-    {
-        // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("invoice", $detailTblVar)) {
-                $detailPageObj = Container("InvoiceGrid");
-                if ($detailPageObj->DetailAdd) {
-                    if ($this->CopyRecord) {
-                        $detailPageObj->CurrentMode = "copy";
-                    } else {
-                        $detailPageObj->CurrentMode = "add";
-                    }
-                    $detailPageObj->CurrentAction = "gridadd";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->id->IsDetailKey = true;
-                    $detailPageObj->id->CurrentValue = $this->idinvoice->CurrentValue;
-                    $detailPageObj->id->setSessionValue($detailPageObj->id->CurrentValue);
-                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
-                }
-            }
-        }
     }
 
     // Set up Breadcrumb
@@ -1593,12 +1424,6 @@ class PembayaranAdd extends Pembayaran
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
                 case "x_idinvoice":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add") ? "aktif = 1" : "";

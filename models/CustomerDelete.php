@@ -424,9 +424,6 @@ class CustomerDelete extends Customer
         $this->setupLookupOptions($this->idkel);
         $this->setupLookupOptions($this->jatuh_tempo_invoice);
 
-        // Set up master/detail parameters
-        $this->setupMasterParms();
-
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
@@ -1009,6 +1006,14 @@ class CustomerDelete extends Customer
             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
             return false;
         }
+        foreach ($rows as $row) {
+            $rsdetail = Container("v_list_customer_brands")->loadRs("`idcustomer` = " . QuotedValue($row['id'], DATATYPE_NUMBER, 'DB'))->fetch();
+            if ($rsdetail !== false) {
+                $relatedRecordMsg = str_replace("%t", "v_list_customer_brands", $Language->phrase("RelatedRecordExists"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
+        }
         $conn->beginTransaction();
 
         // Clone old rows
@@ -1074,75 +1079,6 @@ class CustomerDelete extends Customer
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
         return $deleteRows;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Get("fk_id", Get("idpegawai"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idpegawai->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Post("fk_id", Post("idpegawai"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idpegawai->setFormValue($masterTbl->id->FormValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "pegawai") {
-                if ($this->idpegawai->CurrentValue == "") {
-                    $this->idpegawai->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
     }
 
     // Set up Breadcrumb

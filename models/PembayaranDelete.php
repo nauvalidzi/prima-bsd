@@ -379,10 +379,10 @@ class PembayaranDelete extends Pembayaran
         $this->tanggal->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idinvoice->setVisibility();
-        $this->totaltagihan->Visible = false;
-        $this->sisatagihan->Visible = false;
+        $this->totaltagihan->setVisibility();
+        $this->sisatagihan->setVisibility();
         $this->jumlahbayar->setVisibility();
-        $this->idtipepayment->Visible = false;
+        $this->idtipepayment->setVisibility();
         $this->bukti->Visible = false;
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
@@ -400,7 +400,6 @@ class PembayaranDelete extends Pembayaran
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idinvoice);
         $this->setupLookupOptions($this->idtipepayment);
 
@@ -417,25 +416,6 @@ class PembayaranDelete extends Pembayaran
 
         // Set up filter (WHERE Clause)
         $this->CurrentFilter = $filter;
-
-        // Check if valid User ID
-        $conn = $this->getConnection();
-        $sql = $this->getSql($this->CurrentFilter);
-        $rows = $conn->fetchAll($sql);
-        $res = true;
-        foreach ($rows as $row) {
-            $this->loadRowValues($row);
-            if (!$this->showOptionLink("delete")) {
-                $userIdMsg = $Language->phrase("NoDeletePermission");
-                $this->setFailureMessage($userIdMsg);
-                $res = false;
-                break;
-            }
-        }
-        if (!$res) {
-            $this->terminate("PembayaranList"); // Return to list
-            return;
-        }
 
         // Get action
         if (IsApi()) {
@@ -642,7 +622,6 @@ class PembayaranDelete extends Pembayaran
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // kode
@@ -651,32 +630,12 @@ class PembayaranDelete extends Pembayaran
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 117);
             $this->tanggal->ViewCustomAttributes = "";
 
             // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
@@ -750,7 +709,7 @@ class PembayaranDelete extends Pembayaran
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 117);
             $this->created_at->ViewCustomAttributes = "";
 
             // created_by
@@ -778,10 +737,25 @@ class PembayaranDelete extends Pembayaran
             $this->idinvoice->HrefValue = "";
             $this->idinvoice->TooltipValue = "";
 
+            // totaltagihan
+            $this->totaltagihan->LinkCustomAttributes = "";
+            $this->totaltagihan->HrefValue = "";
+            $this->totaltagihan->TooltipValue = "";
+
+            // sisatagihan
+            $this->sisatagihan->LinkCustomAttributes = "";
+            $this->sisatagihan->HrefValue = "";
+            $this->sisatagihan->TooltipValue = "";
+
             // jumlahbayar
             $this->jumlahbayar->LinkCustomAttributes = "";
             $this->jumlahbayar->HrefValue = "";
             $this->jumlahbayar->TooltipValue = "";
+
+            // idtipepayment
+            $this->idtipepayment->LinkCustomAttributes = "";
+            $this->idtipepayment->HrefValue = "";
+            $this->idtipepayment->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -873,16 +847,6 @@ class PembayaranDelete extends Pembayaran
         return $deleteRows;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -907,12 +871,6 @@ class PembayaranDelete extends Pembayaran
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
                 case "x_idinvoice":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add") ? "aktif = 1" : "";

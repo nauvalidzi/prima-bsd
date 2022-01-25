@@ -601,9 +601,6 @@ class BrandCustomerPreview extends BrandCustomer
     {
         $masterTblVar = Get("t", "");
         $url = "";
-        if ($masterTblVar == "customer") {
-            $url = "" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->idcustomer->QueryStringValue) . "";
-        }
         if ($masterTblVar == "brand") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->idbrand->QueryStringValue) . "";
         }
@@ -614,16 +611,6 @@ class BrandCustomerPreview extends BrandCustomer
     protected function setupForeignKeysFromFilter($f)
     {
         $masterTblVar = Get("t", "");
-        if ($masterTblVar == "customer") {
-            $find = "`idcustomer`=";
-            $x = strpos($f, $find);
-            if ($x !== false) {
-                $x += strlen($find);
-                $val = substr($f, $x);
-                $val = $this->unquoteValue($val, "DB");
-                 $this->idcustomer->setQueryStringValue($val);
-            }
-        }
         if ($masterTblVar == "brand") {
             $find = "`idbrand`=";
             $x = strpos($f, $find);

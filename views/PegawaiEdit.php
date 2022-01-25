@@ -351,14 +351,6 @@ loadjs.ready("head", function() {
 <?php } ?>
 </div><!-- /page* -->
     <input type="hidden" data-table="pegawai" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-<?php
-    if (in_array("customer", explode(",", $Page->getCurrentDetailTable())) && $customer->DetailEdit) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("customer", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "CustomerGrid.php" ?>
-<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

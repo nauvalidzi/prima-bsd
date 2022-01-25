@@ -708,9 +708,6 @@ class InvoicePreview extends Invoice
         if ($masterTblVar == "suratjalan_detail") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=suratjalan_detail&" . GetForeignKeyUrl("fk_idinvoice", $this->id->QueryStringValue) . "";
         }
-        if ($masterTblVar == "pembayaran") {
-            $url = "" . Config("TABLE_SHOW_MASTER") . "=pembayaran&" . GetForeignKeyUrl("fk_idinvoice", $this->id->QueryStringValue) . "";
-        }
         if ($masterTblVar == "customer") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->idcustomer->QueryStringValue) . "";
         }
@@ -722,16 +719,6 @@ class InvoicePreview extends Invoice
     {
         $masterTblVar = Get("t", "");
         if ($masterTblVar == "suratjalan_detail") {
-            $find = "`id`=";
-            $x = strpos($f, $find);
-            if ($x !== false) {
-                $x += strlen($find);
-                $val = substr($f, $x);
-                $val = $this->unquoteValue($val, "DB");
-                 $this->id->setQueryStringValue($val);
-            }
-        }
-        if ($masterTblVar == "pembayaran") {
             $find = "`id`=";
             $x = strpos($f, $find);
             if ($x !== false) {

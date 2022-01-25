@@ -579,9 +579,6 @@ class CustomerEdit extends Customer
                 }
             }
 
-            // Set up master detail parameters
-            $this->setupMasterParms();
-
             // Load recordset
             if ($this->isShow()) {
                 // Load current record
@@ -1524,28 +1521,12 @@ class CustomerEdit extends Customer
 
             // ktp
             $this->ktp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->ktp->CurrentValue)) {
-                $this->ktp->HrefValue = (!empty($this->ktp->ViewValue) && !is_array($this->ktp->ViewValue) ? RemoveHtml($this->ktp->ViewValue) : $this->ktp->CurrentValue); // Add prefix/suffix
-                $this->ktp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-                }
-            } else {
-                $this->ktp->HrefValue = "";
-            }
+            $this->ktp->HrefValue = "";
             $this->ktp->TooltipValue = "";
 
             // npwp
             $this->npwp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->npwp->CurrentValue)) {
-                $this->npwp->HrefValue = (!empty($this->npwp->ViewValue) && !is_array($this->npwp->ViewValue) ? RemoveHtml($this->npwp->ViewValue) : $this->npwp->CurrentValue); // Add prefix/suffix
-                $this->npwp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-                }
-            } else {
-                $this->npwp->HrefValue = "";
-            }
+            $this->npwp->HrefValue = "";
             $this->npwp->TooltipValue = "";
 
             // limit_kredit_order
@@ -1612,50 +1593,27 @@ class CustomerEdit extends Customer
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
             $this->idpegawai->EditCustomAttributes = "";
-            if ($this->idpegawai->getSessionValue() != "") {
-                $this->idpegawai->CurrentValue = GetForeignKeyValue($this->idpegawai->getSessionValue());
-                $curVal = trim(strval($this->idpegawai->CurrentValue));
-                if ($curVal != "") {
-                    $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                    if ($this->idpegawai->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                            $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
-                        } else {
-                            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idpegawai->ViewValue = null;
-                }
-                $this->idpegawai->ViewCustomAttributes = "";
+            $curVal = trim(strval($this->idpegawai->CurrentValue));
+            if ($curVal != "") {
+                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
             } else {
-                $curVal = trim(strval($this->idpegawai->CurrentValue));
-                if ($curVal != "") {
-                    $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                } else {
-                    $this->idpegawai->ViewValue = $this->idpegawai->Lookup !== null && is_array($this->idpegawai->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idpegawai->ViewValue !== null) { // Load from cache
-                    $this->idpegawai->EditValue = array_values($this->idpegawai->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idpegawai->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idpegawai->EditValue = $arwrk;
-                }
-                $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
+                $this->idpegawai->ViewValue = $this->idpegawai->Lookup !== null && is_array($this->idpegawai->Lookup->Options) ? $curVal : null;
             }
+            if ($this->idpegawai->ViewValue !== null) { // Load from cache
+                $this->idpegawai->EditValue = array_values($this->idpegawai->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idpegawai->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idpegawai->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idpegawai->EditValue = $arwrk;
+            }
+            $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
 
             // nama
             $this->nama->EditAttrs["class"] = "form-control";
@@ -2011,27 +1969,11 @@ class CustomerEdit extends Customer
 
             // ktp
             $this->ktp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->ktp->CurrentValue)) {
-                $this->ktp->HrefValue = (!empty($this->ktp->EditValue) && !is_array($this->ktp->EditValue) ? RemoveHtml($this->ktp->EditValue) : $this->ktp->CurrentValue); // Add prefix/suffix
-                $this->ktp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->ktp->HrefValue = FullUrl($this->ktp->HrefValue, "href");
-                }
-            } else {
-                $this->ktp->HrefValue = "";
-            }
+            $this->ktp->HrefValue = "";
 
             // npwp
             $this->npwp->LinkCustomAttributes = "";
-            if (!EmptyValue($this->npwp->CurrentValue)) {
-                $this->npwp->HrefValue = (!empty($this->npwp->EditValue) && !is_array($this->npwp->EditValue) ? RemoveHtml($this->npwp->EditValue) : $this->npwp->CurrentValue); // Add prefix/suffix
-                $this->npwp->LinkAttrs["target"] = ""; // Add target
-                if ($this->isExport()) {
-                    $this->npwp->HrefValue = FullUrl($this->npwp->HrefValue, "href");
-                }
-            } else {
-                $this->npwp->HrefValue = "";
-            }
+            $this->npwp->HrefValue = "";
 
             // limit_kredit_order
             $this->limit_kredit_order->LinkCustomAttributes = "";
@@ -2214,16 +2156,16 @@ class CustomerEdit extends Customer
         if (in_array("alamat_customer", $detailTblVar) && $detailPage->DetailEdit) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("BrandCustomerGrid");
-        if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailEdit) {
-            $detailPage->validateGridForm();
-        }
         $detailPage = Container("OrderGrid");
         if (in_array("order", $detailTblVar) && $detailPage->DetailEdit) {
             $detailPage->validateGridForm();
         }
         $detailPage = Container("InvoiceGrid");
         if (in_array("invoice", $detailTblVar) && $detailPage->DetailEdit) {
+            $detailPage->validateGridForm();
+        }
+        $detailPage = Container("VListCustomerBrandsGrid");
+        if (in_array("v_list_customer_brands", $detailTblVar) && $detailPage->DetailEdit) {
             $detailPage->validateGridForm();
         }
 
@@ -2284,9 +2226,6 @@ class CustomerEdit extends Customer
             $this->idtipecustomer->setDbValueDef($rsnew, $this->idtipecustomer->CurrentValue, 0, $this->idtipecustomer->ReadOnly);
 
             // idpegawai
-            if ($this->idpegawai->getSessionValue() != "") {
-                $this->idpegawai->ReadOnly = true;
-            }
             $this->idpegawai->setDbValueDef($rsnew, $this->idpegawai->CurrentValue, 0, $this->idpegawai->ReadOnly);
 
             // nama
@@ -2460,14 +2399,6 @@ class CustomerEdit extends Customer
                     }
                 }
                 if ($editRow) {
-                    $detailPage = Container("BrandCustomerGrid");
-                    if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailEdit) {
-                        $Security->loadCurrentUserLevel($this->ProjectID . "brand_customer"); // Load user level of detail table
-                        $editRow = $detailPage->gridUpdate();
-                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                    }
-                }
-                if ($editRow) {
                     $detailPage = Container("OrderGrid");
                     if (in_array("order", $detailTblVar) && $detailPage->DetailEdit) {
                         $Security->loadCurrentUserLevel($this->ProjectID . "order"); // Load user level of detail table
@@ -2479,6 +2410,14 @@ class CustomerEdit extends Customer
                     $detailPage = Container("InvoiceGrid");
                     if (in_array("invoice", $detailTblVar) && $detailPage->DetailEdit) {
                         $Security->loadCurrentUserLevel($this->ProjectID . "invoice"); // Load user level of detail table
+                        $editRow = $detailPage->gridUpdate();
+                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+                    }
+                }
+                if ($editRow) {
+                    $detailPage = Container("VListCustomerBrandsGrid");
+                    if (in_array("v_list_customer_brands", $detailTblVar) && $detailPage->DetailEdit) {
+                        $Security->loadCurrentUserLevel($this->ProjectID . "v_list_customer_brands"); // Load user level of detail table
                         $editRow = $detailPage->gridUpdate();
                         $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                     }
@@ -2524,76 +2463,6 @@ class CustomerEdit extends Customer
         return $editRow;
     }
 
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Get("fk_id", Get("idpegawai"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idpegawai->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "pegawai") {
-                $validMaster = true;
-                $masterTbl = Container("pegawai");
-                if (($parm = Post("fk_id", Post("idpegawai"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idpegawai->setFormValue($masterTbl->id->FormValue);
-                    $this->idpegawai->setSessionValue($this->idpegawai->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-            $this->setSessionWhere($this->getDetailFilter());
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "pegawai") {
-                if ($this->idpegawai->CurrentValue == "") {
-                    $this->idpegawai->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-    }
-
     // Set up detail parms based on QueryString
     protected function setupDetailParms()
     {
@@ -2618,21 +2487,6 @@ class CustomerEdit extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                }
-            }
-            if (in_array("brand_customer", $detailTblVar)) {
-                $detailPageObj = Container("BrandCustomerGrid");
-                if ($detailPageObj->DetailEdit) {
-                    $detailPageObj->CurrentMode = "edit";
-                    $detailPageObj->CurrentAction = "gridedit";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idcustomer->IsDetailKey = true;
-                    $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
-                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
                 }
             }
             if (in_array("order", $detailTblVar)) {
@@ -2664,6 +2518,20 @@ class CustomerEdit extends Customer
                     $detailPageObj->id->setSessionValue(""); // Clear session key
                 }
             }
+            if (in_array("v_list_customer_brands", $detailTblVar)) {
+                $detailPageObj = Container("VListCustomerBrandsGrid");
+                if ($detailPageObj->DetailEdit) {
+                    $detailPageObj->CurrentMode = "edit";
+                    $detailPageObj->CurrentAction = "gridedit";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idcustomer->IsDetailKey = true;
+                    $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
+                }
+            }
         }
     }
 
@@ -2684,9 +2552,9 @@ class CustomerEdit extends Customer
         $pages = new SubPages();
         $pages->Style = "tabs";
         $pages->add('alamat_customer');
-        $pages->add('brand_customer');
         $pages->add('order');
         $pages->add('invoice');
+        $pages->add('v_list_customer_brands');
         $this->DetailPages = $pages;
     }
 

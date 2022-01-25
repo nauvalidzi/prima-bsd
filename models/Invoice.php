@@ -339,13 +339,6 @@ class Invoice extends DbTable
                 return "";
             }
         }
-        if ($this->getCurrentMasterTable() == "pembayaran") {
-            if ($this->id->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`idinvoice`", $this->id->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
         if ($this->getCurrentMasterTable() == "customer") {
             if ($this->idcustomer->getSessionValue() != "") {
                 $masterFilter .= "" . GetForeignKeySql("`id`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
@@ -362,13 +355,6 @@ class Invoice extends DbTable
         // Detail filter
         $detailFilter = "";
         if ($this->getCurrentMasterTable() == "suratjalan_detail") {
-            if ($this->id->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`id`", $this->id->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        if ($this->getCurrentMasterTable() == "pembayaran") {
             if ($this->id->getSessionValue() != "") {
                 $detailFilter .= "" . GetForeignKeySql("`id`", $this->id->getSessionValue(), DATATYPE_NUMBER, "DB");
             } else {
@@ -392,17 +378,6 @@ class Invoice extends DbTable
     }
     // Detail filter
     public function sqlDetailFilter_suratjalan_detail()
-    {
-        return "`id`=@id@";
-    }
-
-    // Master filter
-    public function sqlMasterFilter_pembayaran()
-    {
-        return "`idinvoice`=@idinvoice@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_pembayaran()
     {
         return "`id`=@id@";
     }
@@ -1028,10 +1003,6 @@ class Invoice extends DbTable
     public function addMasterUrl($url)
     {
         if ($this->getCurrentMasterTable() == "suratjalan_detail" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_idinvoice", $this->id->CurrentValue ?? $this->id->getSessionValue());
-        }
-        if ($this->getCurrentMasterTable() == "pembayaran" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
             $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
             $url .= "&" . GetForeignKeyUrl("fk_idinvoice", $this->id->CurrentValue ?? $this->id->getSessionValue());
         }
@@ -1814,9 +1785,6 @@ SORTHTML;
         if ($currentMasterTable == "suratjalan_detail") {
             $filterWrk = Container("suratjalan_detail")->addUserIDFilter($filterWrk);
         }
-        if ($currentMasterTable == "pembayaran") {
-            $filterWrk = Container("pembayaran")->addUserIDFilter($filterWrk);
-        }
         return $filterWrk;
     }
 
@@ -1826,13 +1794,6 @@ SORTHTML;
         $filterWrk = $filter;
         if ($currentMasterTable == "suratjalan_detail") {
             $mastertable = Container("suratjalan_detail");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->id, $mastertable->idinvoice);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        if ($currentMasterTable == "pembayaran") {
-            $mastertable = Container("pembayaran");
             if (!$mastertable->userIdAllow()) {
                 $subqueryWrk = $mastertable->getUserIDSubquery($this->id, $mastertable->idinvoice);
                 AddFilter($filterWrk, $subqueryWrk);

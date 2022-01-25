@@ -358,14 +358,6 @@ loadjs.ready("head", function() {
     </div>
 <?php } ?>
 </div><!-- /page* -->
-<?php
-    if (in_array("customer", explode(",", $Page->getCurrentDetailTable())) && $customer->DetailAdd) {
-?>
-<?php if ($Page->getCurrentDetailTable() != "") { ?>
-<h4 class="ew-detail-caption"><?= $Language->tablePhrase("customer", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "CustomerGrid.php" ?>
-<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

@@ -533,9 +533,6 @@ class PegawaiAdd extends Pegawai
             $this->loadFormValues(); // Load form values
         }
 
-        // Set up detail parameters
-        $this->setupDetailParms();
-
         // Validate form if post back
         if ($postBack) {
             if (!$this->validateForm()) {
@@ -560,9 +557,6 @@ class PegawaiAdd extends Pegawai
                     $this->terminate("PegawaiList"); // No matching record, return to list
                     return;
                 }
-
-                // Set up detail parameters
-                $this->setupDetailParms();
                 break;
             case "insert": // Add new record
                 $this->SendEmail = true; // Send email on add success
@@ -570,11 +564,7 @@ class PegawaiAdd extends Pegawai
                     if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
-                    if ($this->getCurrentDetailTable() != "") { // Master/detail add
-                        $returnUrl = $this->getDetailUrl();
-                    } else {
-                        $returnUrl = $this->getReturnUrl();
-                    }
+                    $returnUrl = $this->getReturnUrl();
                     if (GetPageName($returnUrl) == "PegawaiList") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                     } elseif (GetPageName($returnUrl) == "PegawaiView") {
@@ -593,9 +583,6 @@ class PegawaiAdd extends Pegawai
                 } else {
                     $this->EventCancelled = true; // Event cancelled
                     $this->restoreFormValues(); // Add failed, restore form values
-
-                    // Set up detail parameters
-                    $this->setupDetailParms();
                 }
         }
 
@@ -1453,13 +1440,6 @@ class PegawaiAdd extends Pegawai
             }
         }
 
-        // Validate detail grid
-        $detailTblVar = explode(",", $this->getCurrentDetailTable());
-        $detailPage = Container("CustomerGrid");
-        if (in_array("customer", $detailTblVar) && $detailPage->DetailAdd) {
-            $detailPage->validateGridForm();
-        }
-
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
 
@@ -1531,11 +1511,6 @@ class PegawaiAdd extends Pegawai
             }
         }
         $conn = $this->getConnection();
-
-        // Begin transaction
-        if ($this->getCurrentDetailTable() != "") {
-            $conn->beginTransaction();
-        }
 
         // Load db values from rsold
         $this->loadDbValues($rsold);
@@ -1692,30 +1667,6 @@ class PegawaiAdd extends Pegawai
             }
             $addRow = false;
         }
-
-        // Add detail records
-        if ($addRow) {
-            $detailTblVar = explode(",", $this->getCurrentDetailTable());
-            $detailPage = Container("CustomerGrid");
-            if (in_array("customer", $detailTblVar) && $detailPage->DetailAdd) {
-                $detailPage->idpegawai->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "customer"); // Load user level of detail table
-                $addRow = $detailPage->gridInsert();
-                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                if (!$addRow) {
-                $detailPage->idpegawai->setSessionValue(""); // Clear master key if insert failed
-                }
-            }
-        }
-
-        // Commit/Rollback transaction
-        if ($this->getCurrentDetailTable() != "") {
-            if ($addRow) {
-                $conn->commit(); // Commit transaction
-            } else {
-                $conn->rollback(); // Rollback transaction
-            }
-        }
         if ($addRow) {
             // Call Row Inserted event
             $this->rowInserted($rsold, $rsnew);
@@ -1743,39 +1694,6 @@ class PegawaiAdd extends Pegawai
             return $Security->isValidUserID($this->id->CurrentValue);
         }
         return true;
-    }
-
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
-    {
-        // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("customer", $detailTblVar)) {
-                $detailPageObj = Container("CustomerGrid");
-                if ($detailPageObj->DetailAdd) {
-                    if ($this->CopyRecord) {
-                        $detailPageObj->CurrentMode = "copy";
-                    } else {
-                        $detailPageObj->CurrentMode = "add";
-                    }
-                    $detailPageObj->CurrentAction = "gridadd";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idpegawai->IsDetailKey = true;
-                    $detailPageObj->idpegawai->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idpegawai->setSessionValue($detailPageObj->idpegawai->CurrentValue);
-                }
-            }
-        }
     }
 
     // Set up Breadcrumb

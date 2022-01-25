@@ -128,10 +128,6 @@ $Page->showMessage();
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="suratjalan_detail">
 <input type="hidden" name="fk_idinvoice" value="<?= HtmlEncode($Page->id->getSessionValue()) ?>">
 <?php } ?>
-<?php if ($Page->getCurrentMasterTable() == "pembayaran") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="pembayaran">
-<input type="hidden" name="fk_idinvoice" value="<?= HtmlEncode($Page->id->getSessionValue()) ?>">
-<?php } ?>
 <?php if ($Page->getCurrentMasterTable() == "customer") { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="customer">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">

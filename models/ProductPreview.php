@@ -850,6 +850,7 @@ class ProductPreview extends Product
     public function pageRender()
     {
         //Log("Page Render");
+        $this->idbrand->Visible = false;
     }
 
     // Page Data Rendering event

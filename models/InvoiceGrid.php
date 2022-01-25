@@ -611,9 +611,6 @@ class InvoiceGrid extends Invoice
                 if ($this->getCurrentMasterTable() == "suratjalan_detail") {
                     $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "suratjalan_detail"); // Add master User ID filter
                 }
-                if ($this->getCurrentMasterTable() == "pembayaran") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "pembayaran"); // Add master User ID filter
-                }
                 if ($this->getCurrentMasterTable() == "customer") {
                     $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "customer"); // Add master User ID filter
                 }
@@ -629,22 +626,6 @@ class InvoiceGrid extends Invoice
             if (!$this->MasterRecordExists) {
                 $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
                 $this->terminate("SuratjalanDetailList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "pembayaran") {
-            $masterTbl = Container("pembayaran");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("PembayaranList"); // Return to master page
                 return;
             } else {
                 $masterTbl->loadListRowValues($rsmaster);
@@ -1146,7 +1127,6 @@ class InvoiceGrid extends Invoice
                 $this->setCurrentMasterTable(""); // Clear master table
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
-                        $this->id->setSessionValue("");
                         $this->id->setSessionValue("");
                         $this->idcustomer->setSessionValue("");
             }
@@ -2511,35 +2491,10 @@ class InvoiceGrid extends Invoice
                     return false;
                 }
             }
-            $masterFilter = $this->sqlMasterFilter_pembayaran();
-            if (strval($this->id->CurrentValue) != "") {
-                $masterFilter = str_replace("@idinvoice@", AdjustSql($this->id->CurrentValue, "DB"), $masterFilter);
-            } else {
-                $masterFilter = "";
-            }
-            if ($masterFilter != "") {
-                $rsmaster = Container("pembayaran")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
-                $masterRecordExists = $rsmaster !== false;
-                $validMasterKey = true;
-                if ($masterRecordExists) {
-                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
-                } elseif ($this->getCurrentMasterTable() == "pembayaran") {
-                    $validMasterKey = false;
-                }
-                if (!$validMasterKey) {
-                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
-                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
-                    $this->setFailureMessage($masterUserIdMsg);
-                    return false;
-                }
-            }
         }
 
         // Set up foreign key field value from Session
         if ($this->getCurrentMasterTable() == "suratjalan_detail") {
-            $this->id->CurrentValue = $this->id->getSessionValue();
-        }
-        if ($this->getCurrentMasterTable() == "pembayaran") {
             $this->id->CurrentValue = $this->id->getSessionValue();
         }
         if ($this->getCurrentMasterTable() == "customer") {
@@ -2637,13 +2592,6 @@ class InvoiceGrid extends Invoice
         $masterTblVar = $this->getCurrentMasterTable();
         if ($masterTblVar == "suratjalan_detail") {
             $masterTbl = Container("suratjalan_detail");
-            $this->id->Visible = false;
-            if ($masterTbl->EventCancelled) {
-                $this->EventCancelled = true;
-            }
-        }
-        if ($masterTblVar == "pembayaran") {
-            $masterTbl = Container("pembayaran");
             $this->id->Visible = false;
             if ($masterTbl->EventCancelled) {
                 $this->EventCancelled = true;

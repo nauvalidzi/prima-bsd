@@ -138,10 +138,6 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="insert">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<?php if ($Page->getCurrentMasterTable() == "pegawai") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="pegawai">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idpegawai->getSessionValue()) ?>">
-<?php } ?>
 <div class="ew-add-div"><!-- page* -->
 <?php if ($Page->kode->Visible) { // kode ?>
     <div id="r_kode" class="form-group row">
@@ -192,13 +188,6 @@ loadjs.ready("head", function() {
     <div id="r_idpegawai" class="form-group row">
         <label id="elh_customer_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idpegawai->cellAttributes() ?>>
-<?php if ($Page->idpegawai->getSessionValue() != "") { ?>
-<span id="el_customer_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->idpegawai->getDisplayValue($Page->idpegawai->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x_idpegawai" name="x_idpegawai" value="<?= HtmlEncode($Page->idpegawai->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
 <span id="el_customer_idpegawai">
     <select
         id="x_idpegawai"
@@ -225,7 +214,6 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
-<?php } ?>
 </div></div>
     </div>
 <?php } ?>
@@ -623,16 +611,6 @@ loadjs.ready("head", function() {
     }
 ?>
 <?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?></a></li>
-<?php
-    }
-?>
-<?php
     if (in_array("order", explode(",", $Page->getCurrentDetailTable())) && $order->DetailAdd) {
         if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "order") {
             $firstActiveDetailTable = "order";
@@ -652,6 +630,16 @@ loadjs.ready("head", function() {
 <?php
     }
 ?>
+<?php
+    if (in_array("v_list_customer_brands", explode(",", $Page->getCurrentDetailTable())) && $v_list_customer_brands->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "v_list_customer_brands") {
+            $firstActiveDetailTable = "v_list_customer_brands";
+        }
+?>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("v_list_customer_brands") ?>" href="#tab_v_list_customer_brands" data-toggle="tab"><?= $Language->tablePhrase("v_list_customer_brands", "TblCaption") ?></a></li>
+<?php
+    }
+?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
 <?php
@@ -662,16 +650,6 @@ loadjs.ready("head", function() {
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("alamat_customer") ?>" id="tab_alamat_customer"><!-- page* -->
 <?php include_once "AlamatCustomerGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
-<?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
-<?php include_once "BrandCustomerGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
 <?php
@@ -692,6 +670,16 @@ loadjs.ready("head", function() {
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
 <?php include_once "InvoiceGrid.php" ?>
+        </div><!-- /page* -->
+<?php } ?>
+<?php
+    if (in_array("v_list_customer_brands", explode(",", $Page->getCurrentDetailTable())) && $v_list_customer_brands->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "v_list_customer_brands") {
+            $firstActiveDetailTable = "v_list_customer_brands";
+        }
+?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("v_list_customer_brands") ?>" id="tab_v_list_customer_brands"><!-- page* -->
+<?php include_once "VListCustomerBrandsGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->
@@ -720,6 +708,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("api/nextKode/customer/0",(function(a){$("#x_kode").val(a)}))})),$("input[data-field=x_alias]").attr("placeholder","(Cth: Klinik/Apartemen/Rumah)");
+    loadjs.ready("jquery",(function(){$.get("api/nextKode/customer/0",(function(a){$("#x_kode").val(a)}))})),$("input[data-field=x_alias]").attr("placeholder","(Cth: Klinik/Apartemen/Rumah)"),$("th[data-name=kode_brand], td[data-name=kode_brand]").remove(),$("th[data-name=nama_brand], td[data-name=nama_brand]").remove(),$("th[data-name=jumlah_produk], td[data-name=jumlah_produk]").remove();
 });
 </script>

@@ -239,12 +239,7 @@ $Page->showMessage();
         <td data-name="ktp" <?= $Page->ktp->cellAttributes() ?>>
 <span id="el_customer_ktp">
 <span<?= $Page->ktp->viewAttributes() ?>>
-<?php if (!EmptyString($Page->ktp->getViewValue()) && $Page->ktp->linkAttributes() != "") { ?>
-<a<?= $Page->ktp->linkAttributes() ?>><?= $Page->ktp->getViewValue() ?></a>
-<?php } else { ?>
-<?= $Page->ktp->getViewValue() ?>
-<?php } ?>
-</span>
+<?= $Page->ktp->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -255,12 +250,7 @@ $Page->showMessage();
         <td data-name="npwp" <?= $Page->npwp->cellAttributes() ?>>
 <span id="el_customer_npwp">
 <span<?= $Page->npwp->viewAttributes() ?>>
-<?php if (!EmptyString($Page->npwp->getViewValue()) && $Page->npwp->linkAttributes() != "") { ?>
-<a<?= $Page->npwp->linkAttributes() ?>><?= $Page->npwp->getViewValue() ?></a>
-<?php } else { ?>
-<?= $Page->npwp->getViewValue() ?>
-<?php } ?>
-</span>
+<?= $Page->npwp->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -351,16 +341,6 @@ $Page->showMessage();
     }
 ?>
 <?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")) ?></a></li>
-<?php
-    }
-?>
-<?php
     if (in_array("order", explode(",", $Page->getCurrentDetailTable())) && $order->DetailView) {
         if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "order") {
             $firstActiveDetailTable = "order";
@@ -380,6 +360,16 @@ $Page->showMessage();
 <?php
     }
 ?>
+<?php
+    if (in_array("v_list_customer_brands", explode(",", $Page->getCurrentDetailTable())) && $v_list_customer_brands->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "v_list_customer_brands") {
+            $firstActiveDetailTable = "v_list_customer_brands";
+        }
+?>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("v_list_customer_brands") ?>" href="#tab_v_list_customer_brands" data-toggle="tab"><?= $Language->tablePhrase("v_list_customer_brands", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("v_list_customer_brands")->Count, $Language->phrase("DetailCount")) ?></a></li>
+<?php
+    }
+?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
 <?php
@@ -390,16 +380,6 @@ $Page->showMessage();
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("alamat_customer") ?>" id="tab_alamat_customer"><!-- page* -->
 <?php include_once "AlamatCustomerGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
-<?php
-    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
-            $firstActiveDetailTable = "brand_customer";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
-<?php include_once "BrandCustomerGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
 <?php
@@ -420,6 +400,16 @@ $Page->showMessage();
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("invoice") ?>" id="tab_invoice"><!-- page* -->
 <?php include_once "InvoiceGrid.php" ?>
+        </div><!-- /page* -->
+<?php } ?>
+<?php
+    if (in_array("v_list_customer_brands", explode(",", $Page->getCurrentDetailTable())) && $v_list_customer_brands->DetailView) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "v_list_customer_brands") {
+            $firstActiveDetailTable = "v_list_customer_brands";
+        }
+?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("v_list_customer_brands") ?>" id="tab_v_list_customer_brands"><!-- page* -->
+<?php include_once "VListCustomerBrandsGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

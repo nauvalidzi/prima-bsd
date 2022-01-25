@@ -77,15 +77,6 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
-<?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "pegawai") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/PegawaiMaster.php";
-    }
-}
-?>
-<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
@@ -129,10 +120,6 @@ $Page->showMessage();
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
 <input type="hidden" name="t" value="customer">
-<?php if ($Page->getCurrentMasterTable() == "pegawai" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="pegawai">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idpegawai->getSessionValue()) ?>">
-<?php } ?>
 <div id="gmp_customer" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
 <table id="tbl_customerlist" class="table ew-table"><!-- .ew-table -->
@@ -353,7 +340,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer"),$("a[data-table=brand_customer]").html("Brand");
+    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer");
 });
 </script>
 <?php } ?>

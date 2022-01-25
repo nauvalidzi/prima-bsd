@@ -471,7 +471,7 @@ class PembayaranEdit extends Pembayaran
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->idcustomer->Visible = false;
-        $this->idinvoice->Visible = false;
+        $this->idinvoice->setVisibility();
         $this->totaltagihan->setVisibility();
         $this->sisatagihan->setVisibility();
         $this->jumlahbayar->setVisibility();
@@ -480,7 +480,6 @@ class PembayaranEdit extends Pembayaran
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->hideFieldsForAddEdit();
-        $this->kode->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -494,7 +493,6 @@ class PembayaranEdit extends Pembayaran
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idcustomer);
         $this->setupLookupOptions($this->idinvoice);
         $this->setupLookupOptions($this->idtipepayment);
 
@@ -566,9 +564,6 @@ class PembayaranEdit extends Pembayaran
         // Process form if post back
         if ($postBack) {
             $this->loadFormValues(); // Get form values
-
-            // Set up detail parameters
-            $this->setupDetailParms();
         }
 
         // Validate form if post back
@@ -595,16 +590,9 @@ class PembayaranEdit extends Pembayaran
                     $this->terminate("PembayaranList"); // No matching record, return to list
                     return;
                 }
-
-                // Set up detail parameters
-                $this->setupDetailParms();
                 break;
             case "update": // Update
-                if ($this->getCurrentDetailTable() != "") { // Master/detail edit
-                    $returnUrl = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $this->getCurrentDetailTable()); // Master/Detail view page
-                } else {
-                    $returnUrl = $this->getReturnUrl();
-                }
+                $returnUrl = $this->getReturnUrl();
                 if (GetPageName($returnUrl) == "PembayaranList") {
                     $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                 }
@@ -629,9 +617,6 @@ class PembayaranEdit extends Pembayaran
                 } else {
                     $this->EventCancelled = true; // Event cancelled
                     $this->restoreFormValues(); // Restore form values if update failed
-
-                    // Set up detail parameters
-                    $this->setupDetailParms();
                 }
         }
 
@@ -697,7 +682,17 @@ class PembayaranEdit extends Pembayaran
             } else {
                 $this->tanggal->setFormValue($val);
             }
-            $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
+            $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 117);
+        }
+
+        // Check field name 'idinvoice' first before field var 'x_idinvoice'
+        $val = $CurrentForm->hasValue("idinvoice") ? $CurrentForm->getValue("idinvoice") : $CurrentForm->getValue("x_idinvoice");
+        if (!$this->idinvoice->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idinvoice->Visible = false; // Disable update for API request
+            } else {
+                $this->idinvoice->setFormValue($val);
+            }
         }
 
         // Check field name 'totaltagihan' first before field var 'x_totaltagihan'
@@ -755,7 +750,8 @@ class PembayaranEdit extends Pembayaran
         $this->id->CurrentValue = $this->id->FormValue;
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
-        $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 0);
+        $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 117);
+        $this->idinvoice->CurrentValue = $this->idinvoice->FormValue;
         $this->totaltagihan->CurrentValue = $this->totaltagihan->FormValue;
         $this->sisatagihan->CurrentValue = $this->sisatagihan->FormValue;
         $this->jumlahbayar->CurrentValue = $this->jumlahbayar->FormValue;
@@ -784,15 +780,6 @@ class PembayaranEdit extends Pembayaran
         if ($row) {
             $res = true;
             $this->loadRowValues($row); // Load row values
-        }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("edit");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
         }
         return $res;
     }
@@ -906,7 +893,6 @@ class PembayaranEdit extends Pembayaran
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
             // kode
@@ -915,32 +901,12 @@ class PembayaranEdit extends Pembayaran
 
             // tanggal
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 117);
             $this->tanggal->ViewCustomAttributes = "";
 
             // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                    } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idcustomer->ViewValue = null;
-            }
+            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
             $this->idcustomer->ViewCustomAttributes = "";
 
             // idinvoice
@@ -1014,7 +980,7 @@ class PembayaranEdit extends Pembayaran
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
-            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+            $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 117);
             $this->created_at->ViewCustomAttributes = "";
 
             // created_by
@@ -1031,6 +997,11 @@ class PembayaranEdit extends Pembayaran
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
             $this->tanggal->TooltipValue = "";
+
+            // idinvoice
+            $this->idinvoice->LinkCustomAttributes = "";
+            $this->idinvoice->HrefValue = "";
+            $this->idinvoice->TooltipValue = "";
 
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
@@ -1061,14 +1032,48 @@ class PembayaranEdit extends Pembayaran
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
             $this->kode->EditCustomAttributes = "readonly";
-            $this->kode->EditValue = $this->kode->CurrentValue;
-            $this->kode->ViewCustomAttributes = "";
+            if (!$this->kode->Raw) {
+                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
+            }
+            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
+            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
             $this->tanggal->EditCustomAttributes = "";
-            $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 8));
+            $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 117));
             $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
+
+            // idinvoice
+            $this->idinvoice->EditAttrs["class"] = "form-control";
+            $this->idinvoice->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idinvoice->CurrentValue));
+            if ($curVal != "") {
+                $this->idinvoice->ViewValue = $this->idinvoice->lookupCacheOption($curVal);
+            } else {
+                $this->idinvoice->ViewValue = $this->idinvoice->Lookup !== null && is_array($this->idinvoice->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idinvoice->ViewValue !== null) { // Load from cache
+                $this->idinvoice->EditValue = array_values($this->idinvoice->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idinvoice->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add") ? "aktif = 1" : "";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idinvoice->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->idinvoice->Lookup->renderViewRow($row);
+                $this->idinvoice->EditValue = $arwrk;
+            }
+            $this->idinvoice->PlaceHolder = RemoveHtml($this->idinvoice->caption());
 
             // totaltagihan
             $this->totaltagihan->EditAttrs["class"] = "form-control";
@@ -1133,11 +1138,14 @@ class PembayaranEdit extends Pembayaran
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
-            $this->kode->TooltipValue = "";
 
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
+
+            // idinvoice
+            $this->idinvoice->LinkCustomAttributes = "";
+            $this->idinvoice->HrefValue = "";
 
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
@@ -1192,6 +1200,11 @@ class PembayaranEdit extends Pembayaran
         if (!CheckDate($this->tanggal->FormValue)) {
             $this->tanggal->addErrorMessage($this->tanggal->getErrorMessage(false));
         }
+        if ($this->idinvoice->Required) {
+            if (!$this->idinvoice->IsDetailKey && EmptyValue($this->idinvoice->FormValue)) {
+                $this->idinvoice->addErrorMessage(str_replace("%s", $this->idinvoice->caption(), $this->idinvoice->RequiredErrorMessage));
+            }
+        }
         if ($this->totaltagihan->Required) {
             if (!$this->totaltagihan->IsDetailKey && EmptyValue($this->totaltagihan->FormValue)) {
                 $this->totaltagihan->addErrorMessage(str_replace("%s", $this->totaltagihan->caption(), $this->totaltagihan->RequiredErrorMessage));
@@ -1227,13 +1240,6 @@ class PembayaranEdit extends Pembayaran
             }
         }
 
-        // Validate detail grid
-        $detailTblVar = explode(",", $this->getCurrentDetailTable());
-        $detailPage = Container("InvoiceGrid");
-        if (in_array("invoice", $detailTblVar) && $detailPage->DetailEdit) {
-            $detailPage->validateGridForm();
-        }
-
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
 
@@ -1261,17 +1267,18 @@ class PembayaranEdit extends Pembayaran
             $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
             $editRow = false; // Update Failed
         } else {
-            // Begin transaction
-            if ($this->getCurrentDetailTable() != "") {
-                $conn->beginTransaction();
-            }
-
             // Save old values
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // kode
+            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", $this->kode->ReadOnly);
+
             // tanggal
-            $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 0), CurrentDate(), $this->tanggal->ReadOnly);
+            $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 117), CurrentDate(), $this->tanggal->ReadOnly);
+
+            // idinvoice
+            $this->idinvoice->setDbValueDef($rsnew, $this->idinvoice->CurrentValue, 0, $this->idinvoice->ReadOnly);
 
             // totaltagihan
             $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, $this->totaltagihan->ReadOnly);
@@ -1381,26 +1388,6 @@ class PembayaranEdit extends Pembayaran
                         }
                     }
                 }
-
-                // Update detail records
-                $detailTblVar = explode(",", $this->getCurrentDetailTable());
-                if ($editRow) {
-                    $detailPage = Container("InvoiceGrid");
-                    if (in_array("invoice", $detailTblVar) && $detailPage->DetailEdit) {
-                        $Security->loadCurrentUserLevel($this->ProjectID . "invoice"); // Load user level of detail table
-                        $editRow = $detailPage->gridUpdate();
-                        $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                    }
-                }
-
-                // Commit/Rollback transaction
-                if ($this->getCurrentDetailTable() != "") {
-                    if ($editRow) {
-                        $conn->commit(); // Commit transaction
-                    } else {
-                        $conn->rollback(); // Rollback transaction
-                    }
-                }
             } else {
                 if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
                     // Use the message, do nothing
@@ -1433,46 +1420,6 @@ class PembayaranEdit extends Pembayaran
         return $editRow;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
-    // Set up detail parms based on QueryString
-    protected function setupDetailParms()
-    {
-        // Get the keys for master table
-        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
-        if ($detailTblVar !== null) {
-            $this->setCurrentDetailTable($detailTblVar);
-        } else {
-            $detailTblVar = $this->getCurrentDetailTable();
-        }
-        if ($detailTblVar != "") {
-            $detailTblVar = explode(",", $detailTblVar);
-            if (in_array("invoice", $detailTblVar)) {
-                $detailPageObj = Container("InvoiceGrid");
-                if ($detailPageObj->DetailEdit) {
-                    $detailPageObj->CurrentMode = "edit";
-                    $detailPageObj->CurrentAction = "gridedit";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->id->IsDetailKey = true;
-                    $detailPageObj->id->CurrentValue = $this->idinvoice->CurrentValue;
-                    $detailPageObj->id->setSessionValue($detailPageObj->id->CurrentValue);
-                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
-                }
-            }
-        }
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -1497,12 +1444,6 @@ class PembayaranEdit extends Pembayaran
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idcustomer":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    break;
                 case "x_idinvoice":
                     $lookupFilter = function () {
                         return (CurrentPageID() == "add") ? "aktif = 1" : "";

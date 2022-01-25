@@ -73,6 +73,7 @@ class Pembayaran extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
@@ -93,36 +94,25 @@ class Pembayaran extends DbTable
         $this->Fields['kode'] = &$this->kode;
 
         // tanggal
-        $this->tanggal = new DbField('pembayaran', 'pembayaran', 'x_tanggal', 'tanggal', '`tanggal`', CastDateFieldForLike("`tanggal`", 0, "DB"), 135, 19, 0, false, '`tanggal`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tanggal = new DbField('pembayaran', 'pembayaran', 'x_tanggal', 'tanggal', '`tanggal`', CastDateFieldForLike("`tanggal`", 117, "DB"), 135, 19, 117, false, '`tanggal`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->tanggal->Nullable = false; // NOT NULL field
         $this->tanggal->Required = true; // Required field
         $this->tanggal->Sortable = true; // Allow sort
-        $this->tanggal->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tanggal->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectShortDateDMY"));
         $this->tanggal->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal->Param, "CustomMsg");
         $this->Fields['tanggal'] = &$this->tanggal;
 
         // idcustomer
-        $this->idcustomer = new DbField('pembayaran', 'pembayaran', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer = new DbField('pembayaran', 'pembayaran', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
-        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
         // idinvoice
         $this->idinvoice = new DbField('pembayaran', 'pembayaran', 'x_idinvoice', 'idinvoice', '`idinvoice`', '`idinvoice`', 20, 20, -1, false, '`idinvoice`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idinvoice->IsForeignKey = true; // Foreign key field
         $this->idinvoice->Nullable = false; // NOT NULL field
         $this->idinvoice->Required = true; // Required field
         $this->idinvoice->Sortable = true; // Allow sort
@@ -193,9 +183,9 @@ class Pembayaran extends DbTable
         $this->Fields['bukti'] = &$this->bukti;
 
         // created_at
-        $this->created_at = new DbField('pembayaran', 'pembayaran', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->created_at = new DbField('pembayaran', 'pembayaran', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 117, "DB"), 135, 19, 117, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Sortable = true; // Allow sort
-        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectShortDateDMY"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
 
@@ -242,32 +232,6 @@ class Pembayaran extends DbTable
         } else {
             $fld->setSort("");
         }
-    }
-
-    // Current detail table name
-    public function getCurrentDetailTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE"));
-    }
-
-    public function setCurrentDetailTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE")] = $v;
-    }
-
-    // Get detail url
-    public function getDetailUrl()
-    {
-        // Detail url
-        $detailUrl = "";
-        if ($this->getCurrentDetailTable() == "invoice") {
-            $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_idinvoice", $this->idinvoice->CurrentValue);
-        }
-        if ($detailUrl == "") {
-            $detailUrl = "PembayaranList";
-        }
-        return $detailUrl;
     }
 
     // Table level SQL
@@ -367,11 +331,6 @@ class Pembayaran extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -812,11 +771,7 @@ class Pembayaran extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        if ($parm != "") {
-            $url = $this->keyUrl("PembayaranEdit", $this->getUrlParm($parm));
-        } else {
-            $url = $this->keyUrl("PembayaranEdit", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
-        }
+        $url = $this->keyUrl("PembayaranEdit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -830,11 +785,7 @@ class Pembayaran extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        if ($parm != "") {
-            $url = $this->keyUrl("PembayaranAdd", $this->getUrlParm($parm));
-        } else {
-            $url = $this->keyUrl("PembayaranAdd", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
-        }
+        $url = $this->keyUrl("PembayaranAdd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -1046,7 +997,6 @@ SORTHTML;
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
         // kode
@@ -1055,32 +1005,12 @@ SORTHTML;
 
         // tanggal
         $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
-        $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+        $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 117);
         $this->tanggal->ViewCustomAttributes = "";
 
         // idcustomer
-        $curVal = trim(strval($this->idcustomer->CurrentValue));
-        if ($curVal != "") {
-            $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "id IN (SELECT idcustomer FROM invoice WHERE aktif=1)" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                    $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                }
-            }
-        } else {
-            $this->idcustomer->ViewValue = null;
-        }
+        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+        $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
         $this->idcustomer->ViewCustomAttributes = "";
 
         // idinvoice
@@ -1154,7 +1084,7 @@ SORTHTML;
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
-        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
+        $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 117);
         $this->created_at->ViewCustomAttributes = "";
 
         // created_by
@@ -1242,24 +1172,27 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
         $this->kode->EditCustomAttributes = "readonly";
+        if (!$this->kode->Raw) {
+            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
+        }
         $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->ViewCustomAttributes = "";
+        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
         // tanggal
         $this->tanggal->EditAttrs["class"] = "form-control";
         $this->tanggal->EditCustomAttributes = "";
-        $this->tanggal->EditValue = FormatDateTime($this->tanggal->CurrentValue, 8);
+        $this->tanggal->EditValue = FormatDateTime($this->tanggal->CurrentValue, 117);
         $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
+        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
         // idinvoice
@@ -1305,7 +1238,7 @@ SORTHTML;
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
-        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
+        $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 117);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
         // created_by
@@ -1349,6 +1282,7 @@ SORTHTML;
                     $doc->exportCaption($this->jumlahbayar);
                     $doc->exportCaption($this->idtipepayment);
                     $doc->exportCaption($this->bukti);
+                    $doc->exportCaption($this->created_at);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
@@ -1400,6 +1334,7 @@ SORTHTML;
                         $doc->exportField($this->jumlahbayar);
                         $doc->exportField($this->idtipepayment);
                         $doc->exportField($this->bukti);
+                        $doc->exportField($this->created_at);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);
@@ -1427,53 +1362,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `pembayaran`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
     }
 
     // Get file data

@@ -831,7 +831,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer"),$("a[data-table=brand_customer]").html("Brand");
+    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer");
 });
 </script>
 <?php } ?>

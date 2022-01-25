@@ -138,11 +138,20 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
         <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_v_brand_customer_idbrand" class="v_brand_customer_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
 <?php } ?>
-<?php if ($Page->brand->Visible) { // brand ?>
-        <th data-name="brand" class="<?= $Page->brand->headerCellClass() ?>"><div id="elh_v_brand_customer_brand" class="v_brand_customer_brand"><?= $Page->renderSort($Page->brand) ?></div></th>
+<?php if ($Page->kode_brand->Visible) { // kode_brand ?>
+        <th data-name="kode_brand" class="<?= $Page->kode_brand->headerCellClass() ?>"><div id="elh_v_brand_customer_kode_brand" class="v_brand_customer_kode_brand"><?= $Page->renderSort($Page->kode_brand) ?></div></th>
+<?php } ?>
+<?php if ($Page->nama_brand->Visible) { // nama_brand ?>
+        <th data-name="nama_brand" class="<?= $Page->nama_brand->headerCellClass() ?>"><div id="elh_v_brand_customer_nama_brand" class="v_brand_customer_nama_brand"><?= $Page->renderSort($Page->nama_brand) ?></div></th>
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_v_brand_customer_idcustomer" class="v_brand_customer_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
+<?php } ?>
+<?php if ($Page->kode_customer->Visible) { // kode_customer ?>
+        <th data-name="kode_customer" class="<?= $Page->kode_customer->headerCellClass() ?>"><div id="elh_v_brand_customer_kode_customer" class="v_brand_customer_kode_customer"><?= $Page->renderSort($Page->kode_customer) ?></div></th>
+<?php } ?>
+<?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+        <th data-name="nama_customer" class="<?= $Page->nama_customer->headerCellClass() ?>"><div id="elh_v_brand_customer_nama_customer" class="v_brand_customer_nama_customer"><?= $Page->renderSort($Page->nama_customer) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -219,11 +228,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->brand->Visible) { // brand ?>
-        <td data-name="brand" <?= $Page->brand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_brand_customer_brand">
-<span<?= $Page->brand->viewAttributes() ?>>
-<?= $Page->brand->getViewValue() ?></span>
+    <?php if ($Page->kode_brand->Visible) { // kode_brand ?>
+        <td data-name="kode_brand" <?= $Page->kode_brand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_brand_customer_kode_brand">
+<span<?= $Page->kode_brand->viewAttributes() ?>>
+<?= $Page->kode_brand->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->nama_brand->Visible) { // nama_brand ?>
+        <td data-name="nama_brand" <?= $Page->nama_brand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_brand_customer_nama_brand">
+<span<?= $Page->nama_brand->viewAttributes() ?>>
+<?= $Page->nama_brand->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -232,6 +249,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_brand_customer_idcustomer">
 <span<?= $Page->idcustomer->viewAttributes() ?>>
 <?= $Page->idcustomer->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kode_customer->Visible) { // kode_customer ?>
+        <td data-name="kode_customer" <?= $Page->kode_customer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_brand_customer_kode_customer">
+<span<?= $Page->kode_customer->viewAttributes() ?>>
+<?= $Page->kode_customer->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->nama_customer->Visible) { // nama_customer ?>
+        <td data-name="nama_customer" <?= $Page->nama_customer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_brand_customer_nama_customer">
+<span<?= $Page->nama_customer->viewAttributes() ?>>
+<?= $Page->nama_customer->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
