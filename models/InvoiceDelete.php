@@ -379,13 +379,13 @@ class InvoiceDelete extends Invoice
         $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idorder->setVisibility();
-        $this->totalnonpajak->Visible = false;
-        $this->pajak->Visible = false;
+        $this->totalnonpajak->setVisibility();
+        $this->pajak->setVisibility();
         $this->totaltagihan->setVisibility();
         $this->sisabayar->setVisibility();
-        $this->idtermpayment->Visible = false;
-        $this->idtipepayment->Visible = false;
-        $this->keterangan->Visible = false;
+        $this->idtermpayment->setVisibility();
+        $this->idtipepayment->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -629,6 +629,11 @@ class InvoiceDelete extends Invoice
 
         // Initialize URLs
 
+        // Convert decimal values if posted back
+        if ($this->pajak->FormValue == $this->pajak->CurrentValue && is_numeric(ConvertToFloatString($this->pajak->CurrentValue))) {
+            $this->pajak->CurrentValue = ConvertToFloatString($this->pajak->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -844,6 +849,16 @@ class InvoiceDelete extends Invoice
             }
             $this->idorder->TooltipValue = "";
 
+            // totalnonpajak
+            $this->totalnonpajak->LinkCustomAttributes = "";
+            $this->totalnonpajak->HrefValue = "";
+            $this->totalnonpajak->TooltipValue = "";
+
+            // pajak
+            $this->pajak->LinkCustomAttributes = "";
+            $this->pajak->HrefValue = "";
+            $this->pajak->TooltipValue = "";
+
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
             $this->totaltagihan->HrefValue = "";
@@ -853,6 +868,21 @@ class InvoiceDelete extends Invoice
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
             $this->sisabayar->TooltipValue = "";
+
+            // idtermpayment
+            $this->idtermpayment->LinkCustomAttributes = "";
+            $this->idtermpayment->HrefValue = "";
+            $this->idtermpayment->TooltipValue = "";
+
+            // idtipepayment
+            $this->idtipepayment->LinkCustomAttributes = "";
+            $this->idtipepayment->HrefValue = "";
+            $this->idtipepayment->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event

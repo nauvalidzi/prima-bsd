@@ -574,8 +574,8 @@ class OrderList extends Order
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
-        $this->dokumen->Visible = false;
-        $this->catatan->Visible = false;
+        $this->dokumen->setVisibility();
+        $this->catatan->setVisibility();
         $this->aktif->Visible = false;
         $this->status->setVisibility();
         $this->created_at->Visible = false;
@@ -1232,6 +1232,8 @@ class OrderList extends Order
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->dokumen); // dokumen
+            $this->updateSort($this->catatan); // catatan
             $this->updateSort($this->status); // status
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -2023,6 +2025,10 @@ class OrderList extends Order
             }
             $this->dokumen->ViewCustomAttributes = "";
 
+            // catatan
+            $this->catatan->ViewValue = $this->catatan->CurrentValue;
+            $this->catatan->ViewCustomAttributes = "";
+
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {
                 $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
@@ -2077,6 +2083,17 @@ class OrderList extends Order
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
+
+            // dokumen
+            $this->dokumen->LinkCustomAttributes = "";
+            $this->dokumen->HrefValue = "";
+            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
+            $this->dokumen->TooltipValue = "";
+
+            // catatan
+            $this->catatan->LinkCustomAttributes = "";
+            $this->catatan->HrefValue = "";
+            $this->catatan->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -2407,6 +2424,11 @@ class OrderList extends Order
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
         $this->ListOptions->Items["view"]->Body = "<a class=\"ew-row-link ew-view\" title=\"\" data-caption=\"View\" href=\"OrderDetailList?showmaster=order&fk_id={$this->id->CurrentValue}\" data-original-title=\"View\"><i data-phrase=\"ViewLink\" class=\"icon-view ew-icon\" data-caption=\"View\"></i></a>";
+        $this->dokumen->Visible = false;
+        $this->status->ViewValue = $this->status->CurrentValue == 'DO' ? 'Proses DO': $this->status->CurrentValue;
+        if ($this->catatan->CurrentValue == null) {
+            $this->catatan->Visible = false;
+        }
     }
 
     // Row Custom Action event

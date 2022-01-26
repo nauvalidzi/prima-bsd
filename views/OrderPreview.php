@@ -67,6 +67,24 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->dokumen->Visible) { // dokumen ?>
+    <?php if ($Page->SortUrl($Page->dokumen) == "") { ?>
+        <th class="<?= $Page->dokumen->headerCellClass() ?>"><?= $Page->dokumen->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->dokumen->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->dokumen->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->dokumen->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->dokumen->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->dokumen->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->dokumen->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->catatan->Visible) { // catatan ?>
+    <?php if ($Page->SortUrl($Page->catatan) == "") { ?>
+        <th class="<?= $Page->catatan->headerCellClass() ?>"><?= $Page->catatan->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->catatan->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->catatan->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->catatan->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->catatan->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->catatan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->catatan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <?php if ($Page->SortUrl($Page->status) == "") { ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><?= $Page->status->caption() ?></th>
@@ -139,6 +157,21 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->idbrand->cellAttributes() ?>>
 <span<?= $Page->idbrand->viewAttributes() ?>>
 <?= $Page->idbrand->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->dokumen->Visible) { // dokumen ?>
+        <!-- dokumen -->
+        <td<?= $Page->dokumen->cellAttributes() ?>>
+<span<?= $Page->dokumen->viewAttributes() ?>>
+<?= GetFileViewTag($Page->dokumen, $Page->dokumen->getViewValue(), false) ?>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->catatan->Visible) { // catatan ?>
+        <!-- catatan -->
+        <td<?= $Page->catatan->cellAttributes() ?>>
+<span<?= $Page->catatan->viewAttributes() ?>>
+<?= $Page->catatan->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>

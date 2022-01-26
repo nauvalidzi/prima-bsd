@@ -395,13 +395,13 @@ class InvoicePreview extends Invoice
         $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idorder->setVisibility();
-        $this->totalnonpajak->Visible = false;
-        $this->pajak->Visible = false;
+        $this->totalnonpajak->setVisibility();
+        $this->pajak->setVisibility();
         $this->totaltagihan->setVisibility();
         $this->sisabayar->setVisibility();
-        $this->idtermpayment->Visible = false;
-        $this->idtipepayment->Visible = false;
-        $this->keterangan->Visible = false;
+        $this->idtermpayment->setVisibility();
+        $this->idtipepayment->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -528,8 +528,13 @@ class InvoicePreview extends Invoice
             $this->updateSort($this->tglinvoice); // tglinvoice
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idorder); // idorder
+            $this->updateSort($this->totalnonpajak); // totalnonpajak
+            $this->updateSort($this->pajak); // pajak
             $this->updateSort($this->totaltagihan); // totaltagihan
             $this->updateSort($this->sisabayar); // sisabayar
+            $this->updateSort($this->idtermpayment); // idtermpayment
+            $this->updateSort($this->idtipepayment); // idtipepayment
+            $this->updateSort($this->keterangan); // keterangan
         }
     }
 

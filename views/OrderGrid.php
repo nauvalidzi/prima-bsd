@@ -27,6 +27,8 @@ loadjs.ready("head", function () {
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
+        ["dokumen", [fields.dokumen.visible && fields.dokumen.required ? ew.Validators.fileRequired(fields.dokumen.caption) : null], fields.dokumen.isInvalid],
+        ["catatan", [fields.catatan.visible && fields.catatan.required ? ew.Validators.required(fields.catatan.caption) : null], fields.catatan.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid]
     ]);
 
@@ -91,6 +93,10 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idbrand", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "dokumen", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "catatan", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "status", false))
             return false;
         return true;
@@ -147,6 +153,12 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->idbrand->Visible) { // idbrand ?>
         <th data-name="idbrand" class="<?= $Grid->idbrand->headerCellClass() ?>"><div id="elh_order_idbrand" class="order_idbrand"><?= $Grid->renderSort($Grid->idbrand) ?></div></th>
+<?php } ?>
+<?php if ($Grid->dokumen->Visible) { // dokumen ?>
+        <th data-name="dokumen" class="<?= $Grid->dokumen->headerCellClass() ?>"><div id="elh_order_dokumen" class="order_dokumen"><?= $Grid->renderSort($Grid->dokumen) ?></div></th>
+<?php } ?>
+<?php if ($Grid->catatan->Visible) { // catatan ?>
+        <th data-name="catatan" class="<?= $Grid->catatan->headerCellClass() ?>"><div id="elh_order_catatan" class="order_catatan"><?= $Grid->renderSort($Grid->catatan) ?></div></th>
 <?php } ?>
 <?php if ($Grid->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Grid->status->headerCellClass() ?>"><div id="elh_order_status" class="order_status"><?= $Grid->renderSort($Grid->status) ?></div></th>
@@ -478,6 +490,81 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->dokumen->Visible) { // dokumen ?>
+        <td data-name="dokumen" <?= $Grid->dokumen->cellAttributes() ?>>
+<?php if ($Grid->RowAction == "insert") { // Add record ?>
+<span id="el$rowindex$_order_dokumen" class="form-group order_dokumen">
+<div id="fd_x<?= $Grid->RowIndex ?>_dokumen">
+<div class="input-group">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" title="<?= $Grid->dokumen->title() ?>" data-table="order" data-field="x_dokumen" name="x<?= $Grid->RowIndex ?>_dokumen" id="x<?= $Grid->RowIndex ?>_dokumen" lang="<?= CurrentLanguageID() ?>"<?= $Grid->dokumen->editAttributes() ?><?= ($Grid->dokumen->ReadOnly || $Grid->dokumen->Disabled) ? " disabled" : "" ?>>
+        <label class="custom-file-label ew-file-label" for="x<?= $Grid->RowIndex ?>_dokumen"><?= $Language->phrase("ChooseFile") ?></label>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->dokumen->getErrorMessage() ?></div>
+<input type="hidden" name="fn_x<?= $Grid->RowIndex ?>_dokumen" id= "fn_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->Upload->FileName ?>">
+<input type="hidden" name="fa_x<?= $Grid->RowIndex ?>_dokumen" id= "fa_x<?= $Grid->RowIndex ?>_dokumen" value="0">
+<input type="hidden" name="fs_x<?= $Grid->RowIndex ?>_dokumen" id= "fs_x<?= $Grid->RowIndex ?>_dokumen" value="255">
+<input type="hidden" name="fx_x<?= $Grid->RowIndex ?>_dokumen" id= "fx_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x<?= $Grid->RowIndex ?>_dokumen" id= "fm_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadMaxFileSize ?>">
+</div>
+<table id="ft_x<?= $Grid->RowIndex ?>_dokumen" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+<input type="hidden" data-table="order" data-field="x_dokumen" data-hidden="1" name="o<?= $Grid->RowIndex ?>_dokumen" id="o<?= $Grid->RowIndex ?>_dokumen" value="<?= HtmlEncode($Grid->dokumen->OldValue) ?>">
+<?php } elseif ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_dokumen">
+<span<?= $Grid->dokumen->viewAttributes() ?>>
+<?= GetFileViewTag($Grid->dokumen, $Grid->dokumen->getViewValue(), false) ?>
+</span>
+</span>
+<?php } else  { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_dokumen" class="form-group order_dokumen">
+<div id="fd_x<?= $Grid->RowIndex ?>_dokumen">
+<div class="input-group">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" title="<?= $Grid->dokumen->title() ?>" data-table="order" data-field="x_dokumen" name="x<?= $Grid->RowIndex ?>_dokumen" id="x<?= $Grid->RowIndex ?>_dokumen" lang="<?= CurrentLanguageID() ?>"<?= $Grid->dokumen->editAttributes() ?><?= ($Grid->dokumen->ReadOnly || $Grid->dokumen->Disabled) ? " disabled" : "" ?>>
+        <label class="custom-file-label ew-file-label" for="x<?= $Grid->RowIndex ?>_dokumen"><?= $Language->phrase("ChooseFile") ?></label>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->dokumen->getErrorMessage() ?></div>
+<input type="hidden" name="fn_x<?= $Grid->RowIndex ?>_dokumen" id= "fn_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->Upload->FileName ?>">
+<input type="hidden" name="fa_x<?= $Grid->RowIndex ?>_dokumen" id= "fa_x<?= $Grid->RowIndex ?>_dokumen" value="<?= (Post("fa_x<?= $Grid->RowIndex ?>_dokumen") == "0") ? "0" : "1" ?>">
+<input type="hidden" name="fs_x<?= $Grid->RowIndex ?>_dokumen" id= "fs_x<?= $Grid->RowIndex ?>_dokumen" value="255">
+<input type="hidden" name="fx_x<?= $Grid->RowIndex ?>_dokumen" id= "fx_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x<?= $Grid->RowIndex ?>_dokumen" id= "fm_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadMaxFileSize ?>">
+</div>
+<table id="ft_x<?= $Grid->RowIndex ?>_dokumen" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->catatan->Visible) { // catatan ?>
+        <td data-name="catatan" <?= $Grid->catatan->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_order_catatan" class="form-group">
+<textarea data-table="order" data-field="x_catatan" name="x<?= $Grid->RowIndex ?>_catatan" id="x<?= $Grid->RowIndex ?>_catatan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->catatan->getPlaceHolder()) ?>"<?= $Grid->catatan->editAttributes() ?>><?= $Grid->catatan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->catatan->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="order" data-field="x_catatan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_catatan" id="o<?= $Grid->RowIndex ?>_catatan" value="<?= HtmlEncode($Grid->catatan->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_order_catatan" class="form-group">
+<textarea data-table="order" data-field="x_catatan" name="x<?= $Grid->RowIndex ?>_catatan" id="x<?= $Grid->RowIndex ?>_catatan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->catatan->getPlaceHolder()) ?>"<?= $Grid->catatan->editAttributes() ?>><?= $Grid->catatan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->catatan->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_order_catatan">
+<span<?= $Grid->catatan->viewAttributes() ?>>
+<?= $Grid->catatan->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="order" data-field="x_catatan" data-hidden="1" name="fordergrid$x<?= $Grid->RowIndex ?>_catatan" id="fordergrid$x<?= $Grid->RowIndex ?>_catatan" value="<?= HtmlEncode($Grid->catatan->FormValue) ?>">
+<input type="hidden" data-table="order" data-field="x_catatan" data-hidden="1" name="fordergrid$o<?= $Grid->RowIndex ?>_catatan" id="fordergrid$o<?= $Grid->RowIndex ?>_catatan" value="<?= HtmlEncode($Grid->catatan->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
     <?php if ($Grid->status->Visible) { // status ?>
         <td data-name="status" <?= $Grid->status->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -706,6 +793,45 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idbrand" id="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="order" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->dokumen->Visible) { // dokumen ?>
+        <td data-name="dokumen">
+<span id="el$rowindex$_order_dokumen" class="form-group order_dokumen">
+<div id="fd_x<?= $Grid->RowIndex ?>_dokumen">
+<div class="input-group">
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" title="<?= $Grid->dokumen->title() ?>" data-table="order" data-field="x_dokumen" name="x<?= $Grid->RowIndex ?>_dokumen" id="x<?= $Grid->RowIndex ?>_dokumen" lang="<?= CurrentLanguageID() ?>"<?= $Grid->dokumen->editAttributes() ?><?= ($Grid->dokumen->ReadOnly || $Grid->dokumen->Disabled) ? " disabled" : "" ?>>
+        <label class="custom-file-label ew-file-label" for="x<?= $Grid->RowIndex ?>_dokumen"><?= $Language->phrase("ChooseFile") ?></label>
+    </div>
+</div>
+<div class="invalid-feedback"><?= $Grid->dokumen->getErrorMessage() ?></div>
+<input type="hidden" name="fn_x<?= $Grid->RowIndex ?>_dokumen" id= "fn_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->Upload->FileName ?>">
+<input type="hidden" name="fa_x<?= $Grid->RowIndex ?>_dokumen" id= "fa_x<?= $Grid->RowIndex ?>_dokumen" value="0">
+<input type="hidden" name="fs_x<?= $Grid->RowIndex ?>_dokumen" id= "fs_x<?= $Grid->RowIndex ?>_dokumen" value="255">
+<input type="hidden" name="fx_x<?= $Grid->RowIndex ?>_dokumen" id= "fx_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x<?= $Grid->RowIndex ?>_dokumen" id= "fm_x<?= $Grid->RowIndex ?>_dokumen" value="<?= $Grid->dokumen->UploadMaxFileSize ?>">
+</div>
+<table id="ft_x<?= $Grid->RowIndex ?>_dokumen" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+<input type="hidden" data-table="order" data-field="x_dokumen" data-hidden="1" name="o<?= $Grid->RowIndex ?>_dokumen" id="o<?= $Grid->RowIndex ?>_dokumen" value="<?= HtmlEncode($Grid->dokumen->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->catatan->Visible) { // catatan ?>
+        <td data-name="catatan">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_order_catatan" class="form-group order_catatan">
+<textarea data-table="order" data-field="x_catatan" name="x<?= $Grid->RowIndex ?>_catatan" id="x<?= $Grid->RowIndex ?>_catatan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->catatan->getPlaceHolder()) ?>"<?= $Grid->catatan->editAttributes() ?>><?= $Grid->catatan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->catatan->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_order_catatan" class="form-group order_catatan">
+<span<?= $Grid->catatan->viewAttributes() ?>>
+<?= $Grid->catatan->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="order" data-field="x_catatan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_catatan" id="x<?= $Grid->RowIndex ?>_catatan" value="<?= HtmlEncode($Grid->catatan->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="order" data-field="x_catatan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_catatan" id="o<?= $Grid->RowIndex ?>_catatan" value="<?= HtmlEncode($Grid->catatan->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->status->Visible) { // status ?>

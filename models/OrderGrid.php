@@ -511,8 +511,8 @@ class OrderGrid extends Order
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
-        $this->dokumen->Visible = false;
-        $this->catatan->Visible = false;
+        $this->dokumen->setVisibility();
+        $this->catatan->setVisibility();
         $this->aktif->Visible = false;
         $this->status->setVisibility();
         $this->created_at->Visible = false;
@@ -958,6 +958,12 @@ class OrderGrid extends Order
         if ($CurrentForm->hasValue("x_idbrand") && $CurrentForm->hasValue("o_idbrand") && $this->idbrand->CurrentValue != $this->idbrand->OldValue) {
             return false;
         }
+        if (!EmptyValue($this->dokumen->Upload->Value)) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_catatan") && $CurrentForm->hasValue("o_catatan") && $this->catatan->CurrentValue != $this->catatan->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_status") && $CurrentForm->hasValue("o_status") && $this->status->CurrentValue != $this->status->OldValue) {
             return false;
         }
@@ -1047,6 +1053,8 @@ class OrderGrid extends Order
         $this->idpegawai->clearErrorMessage();
         $this->idcustomer->clearErrorMessage();
         $this->idbrand->clearErrorMessage();
+        $this->dokumen->clearErrorMessage();
+        $this->catatan->clearErrorMessage();
         $this->status->clearErrorMessage();
     }
 
@@ -1345,6 +1353,9 @@ class OrderGrid extends Order
     protected function getUploadFiles()
     {
         global $CurrentForm, $Language;
+        $this->dokumen->Upload->Index = $CurrentForm->Index;
+        $this->dokumen->Upload->uploadFile();
+        $this->dokumen->CurrentValue = $this->dokumen->Upload->FileName;
     }
 
     // Load default values
@@ -1452,6 +1463,19 @@ class OrderGrid extends Order
             $this->idbrand->setOldValue($CurrentForm->getValue("o_idbrand"));
         }
 
+        // Check field name 'catatan' first before field var 'x_catatan'
+        $val = $CurrentForm->hasValue("catatan") ? $CurrentForm->getValue("catatan") : $CurrentForm->getValue("x_catatan");
+        if (!$this->catatan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->catatan->Visible = false; // Disable update for API request
+            } else {
+                $this->catatan->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_catatan")) {
+            $this->catatan->setOldValue($CurrentForm->getValue("o_catatan"));
+        }
+
         // Check field name 'status' first before field var 'x_status'
         $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
         if (!$this->status->IsDetailKey) {
@@ -1470,6 +1494,7 @@ class OrderGrid extends Order
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
             $this->id->setFormValue($val);
         }
+        $this->getUploadFiles(); // Get upload files
     }
 
     // Restore form values
@@ -1485,6 +1510,7 @@ class OrderGrid extends Order
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
+        $this->catatan->CurrentValue = $this->catatan->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
     }
 
@@ -1740,6 +1766,10 @@ class OrderGrid extends Order
             }
             $this->dokumen->ViewCustomAttributes = "";
 
+            // catatan
+            $this->catatan->ViewValue = $this->catatan->CurrentValue;
+            $this->catatan->ViewCustomAttributes = "";
+
             // aktif
             if (strval($this->aktif->CurrentValue) != "") {
                 $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
@@ -1794,6 +1824,17 @@ class OrderGrid extends Order
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
+
+            // dokumen
+            $this->dokumen->LinkCustomAttributes = "";
+            $this->dokumen->HrefValue = "";
+            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
+            $this->dokumen->TooltipValue = "";
+
+            // catatan
+            $this->catatan->LinkCustomAttributes = "";
+            $this->catatan->HrefValue = "";
+            $this->catatan->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -1922,6 +1963,31 @@ class OrderGrid extends Order
             }
             $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
+            // dokumen
+            $this->dokumen->EditAttrs["class"] = "form-control";
+            $this->dokumen->EditCustomAttributes = "";
+            if (!EmptyValue($this->dokumen->Upload->DbValue)) {
+                $this->dokumen->EditValue = $this->dokumen->Upload->DbValue;
+            } else {
+                $this->dokumen->EditValue = "";
+            }
+            if (!EmptyValue($this->dokumen->CurrentValue)) {
+                if ($this->RowIndex == '$rowindex$') {
+                    $this->dokumen->Upload->FileName = "";
+                } else {
+                    $this->dokumen->Upload->FileName = $this->dokumen->CurrentValue;
+                }
+            }
+            if (is_numeric($this->RowIndex)) {
+                RenderUploadField($this->dokumen, $this->RowIndex);
+            }
+
+            // catatan
+            $this->catatan->EditAttrs["class"] = "form-control";
+            $this->catatan->EditCustomAttributes = "";
+            $this->catatan->EditValue = HtmlEncode($this->catatan->CurrentValue);
+            $this->catatan->PlaceHolder = RemoveHtml($this->catatan->caption());
+
             // status
             $this->status->EditAttrs["class"] = "form-control";
             $this->status->EditCustomAttributes = "";
@@ -1952,6 +2018,15 @@ class OrderGrid extends Order
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
+
+            // dokumen
+            $this->dokumen->LinkCustomAttributes = "";
+            $this->dokumen->HrefValue = "";
+            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
+
+            // catatan
+            $this->catatan->LinkCustomAttributes = "";
+            $this->catatan->HrefValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -2043,6 +2118,31 @@ class OrderGrid extends Order
             }
             $this->idbrand->ViewCustomAttributes = "";
 
+            // dokumen
+            $this->dokumen->EditAttrs["class"] = "form-control";
+            $this->dokumen->EditCustomAttributes = "";
+            if (!EmptyValue($this->dokumen->Upload->DbValue)) {
+                $this->dokumen->EditValue = $this->dokumen->Upload->DbValue;
+            } else {
+                $this->dokumen->EditValue = "";
+            }
+            if (!EmptyValue($this->dokumen->CurrentValue)) {
+                if ($this->RowIndex == '$rowindex$') {
+                    $this->dokumen->Upload->FileName = "";
+                } else {
+                    $this->dokumen->Upload->FileName = $this->dokumen->CurrentValue;
+                }
+            }
+            if (is_numeric($this->RowIndex)) {
+                RenderUploadField($this->dokumen, $this->RowIndex);
+            }
+
+            // catatan
+            $this->catatan->EditAttrs["class"] = "form-control";
+            $this->catatan->EditCustomAttributes = "";
+            $this->catatan->EditValue = HtmlEncode($this->catatan->CurrentValue);
+            $this->catatan->PlaceHolder = RemoveHtml($this->catatan->caption());
+
             // status
             $this->status->EditAttrs["class"] = "form-control";
             $this->status->EditCustomAttributes = "";
@@ -2078,6 +2178,15 @@ class OrderGrid extends Order
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
+
+            // dokumen
+            $this->dokumen->LinkCustomAttributes = "";
+            $this->dokumen->HrefValue = "";
+            $this->dokumen->ExportHrefValue = $this->dokumen->UploadPath . $this->dokumen->Upload->DbValue;
+
+            // catatan
+            $this->catatan->LinkCustomAttributes = "";
+            $this->catatan->HrefValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -2125,6 +2234,16 @@ class OrderGrid extends Order
         if ($this->idbrand->Required) {
             if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
                 $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
+            }
+        }
+        if ($this->dokumen->Required) {
+            if ($this->dokumen->Upload->FileName == "" && !$this->dokumen->Upload->KeepFile) {
+                $this->dokumen->addErrorMessage(str_replace("%s", $this->dokumen->caption(), $this->dokumen->RequiredErrorMessage));
+            }
+        }
+        if ($this->catatan->Required) {
+            if (!$this->catatan->IsDetailKey && EmptyValue($this->catatan->FormValue)) {
+                $this->catatan->addErrorMessage(str_replace("%s", $this->catatan->caption(), $this->catatan->RequiredErrorMessage));
             }
         }
         if ($this->status->Required) {
@@ -2241,8 +2360,62 @@ class OrderGrid extends Order
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // dokumen
+            if ($this->dokumen->Visible && !$this->dokumen->ReadOnly && !$this->dokumen->Upload->KeepFile) {
+                $this->dokumen->Upload->DbValue = $rsold['dokumen']; // Get original value
+                if ($this->dokumen->Upload->FileName == "") {
+                    $rsnew['dokumen'] = null;
+                } else {
+                    $rsnew['dokumen'] = $this->dokumen->Upload->FileName;
+                }
+            }
+
+            // catatan
+            $this->catatan->setDbValueDef($rsnew, $this->catatan->CurrentValue, null, $this->catatan->ReadOnly);
+
             // status
             $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
+            if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
+                $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
+                if (!EmptyValue($this->dokumen->Upload->FileName)) {
+                    $newFiles = [$this->dokumen->Upload->FileName];
+                    $NewFileCount = count($newFiles);
+                    for ($i = 0; $i < $NewFileCount; $i++) {
+                        if ($newFiles[$i] != "") {
+                            $file = $newFiles[$i];
+                            $tempPath = UploadTempPath($this->dokumen, $this->dokumen->Upload->Index);
+                            if (file_exists($tempPath . $file)) {
+                                if (Config("DELETE_UPLOADED_FILES")) {
+                                    $oldFileFound = false;
+                                    $oldFileCount = count($oldFiles);
+                                    for ($j = 0; $j < $oldFileCount; $j++) {
+                                        $oldFile = $oldFiles[$j];
+                                        if ($oldFile == $file) { // Old file found, no need to delete anymore
+                                            array_splice($oldFiles, $j, 1);
+                                            $oldFileFound = true;
+                                            break;
+                                        }
+                                    }
+                                    if ($oldFileFound) { // No need to check if file exists further
+                                        continue;
+                                    }
+                                }
+                                $file1 = UniqueFilename($this->dokumen->physicalUploadPath(), $file); // Get new file name
+                                if ($file1 != $file) { // Rename temp file
+                                    while (file_exists($tempPath . $file1) || file_exists($this->dokumen->physicalUploadPath() . $file1)) { // Make sure no file name clash
+                                        $file1 = UniqueFilename([$this->dokumen->physicalUploadPath(), $tempPath], $file1, true); // Use indexed name
+                                    }
+                                    rename($tempPath . $file, $tempPath . $file1);
+                                    $newFiles[$i] = $file1;
+                                }
+                            }
+                        }
+                    }
+                    $this->dokumen->Upload->DbValue = empty($oldFiles) ? "" : implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $oldFiles);
+                    $this->dokumen->Upload->FileName = implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $newFiles);
+                    $this->dokumen->setDbValueDef($rsnew, $this->dokumen->Upload->FileName, null, $this->dokumen->ReadOnly);
+                }
+            }
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -2257,6 +2430,37 @@ class OrderGrid extends Order
                     $editRow = true; // No field to update
                 }
                 if ($editRow) {
+                    if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
+                        $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
+                        if (!EmptyValue($this->dokumen->Upload->FileName)) {
+                            $newFiles = [$this->dokumen->Upload->FileName];
+                            $newFiles2 = [$this->dokumen->htmlDecode($rsnew['dokumen'])];
+                            $newFileCount = count($newFiles);
+                            for ($i = 0; $i < $newFileCount; $i++) {
+                                if ($newFiles[$i] != "") {
+                                    $file = UploadTempPath($this->dokumen, $this->dokumen->Upload->Index) . $newFiles[$i];
+                                    if (file_exists($file)) {
+                                        if (@$newFiles2[$i] != "") { // Use correct file name
+                                            $newFiles[$i] = $newFiles2[$i];
+                                        }
+                                        if (!$this->dokumen->Upload->SaveToFile($newFiles[$i], true, $i)) { // Just replace
+                                            $this->setFailureMessage($Language->phrase("UploadErrMsg7"));
+                                            return false;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            $newFiles = [];
+                        }
+                        if (Config("DELETE_UPLOADED_FILES")) {
+                            foreach ($oldFiles as $oldFile) {
+                                if ($oldFile != "" && !in_array($oldFile, $newFiles)) {
+                                    @unlink($this->dokumen->oldPhysicalUploadPath() . $oldFile);
+                                }
+                            }
+                        }
+                    }
                 }
             } else {
                 if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
@@ -2278,6 +2482,8 @@ class OrderGrid extends Order
 
         // Clean upload path if any
         if ($editRow) {
+            // dokumen
+            CleanUploadTempPath($this->dokumen, $this->dokumen->Upload->Index);
         }
 
         // Write JSON for API request
@@ -2332,12 +2538,66 @@ class OrderGrid extends Order
         // idbrand
         $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, false);
 
+        // dokumen
+        if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
+            $this->dokumen->Upload->DbValue = ""; // No need to delete old file
+            if ($this->dokumen->Upload->FileName == "") {
+                $rsnew['dokumen'] = null;
+            } else {
+                $rsnew['dokumen'] = $this->dokumen->Upload->FileName;
+            }
+        }
+
+        // catatan
+        $this->catatan->setDbValueDef($rsnew, $this->catatan->CurrentValue, null, false);
+
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);
 
         // created_by
         if (!$Security->isAdmin() && $Security->isLoggedIn()) { // Non system admin
             $rsnew['created_by'] = CurrentUserID();
+        }
+        if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
+            $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
+            if (!EmptyValue($this->dokumen->Upload->FileName)) {
+                $newFiles = [$this->dokumen->Upload->FileName];
+                $NewFileCount = count($newFiles);
+                for ($i = 0; $i < $NewFileCount; $i++) {
+                    if ($newFiles[$i] != "") {
+                        $file = $newFiles[$i];
+                        $tempPath = UploadTempPath($this->dokumen, $this->dokumen->Upload->Index);
+                        if (file_exists($tempPath . $file)) {
+                            if (Config("DELETE_UPLOADED_FILES")) {
+                                $oldFileFound = false;
+                                $oldFileCount = count($oldFiles);
+                                for ($j = 0; $j < $oldFileCount; $j++) {
+                                    $oldFile = $oldFiles[$j];
+                                    if ($oldFile == $file) { // Old file found, no need to delete anymore
+                                        array_splice($oldFiles, $j, 1);
+                                        $oldFileFound = true;
+                                        break;
+                                    }
+                                }
+                                if ($oldFileFound) { // No need to check if file exists further
+                                    continue;
+                                }
+                            }
+                            $file1 = UniqueFilename($this->dokumen->physicalUploadPath(), $file); // Get new file name
+                            if ($file1 != $file) { // Rename temp file
+                                while (file_exists($tempPath . $file1) || file_exists($this->dokumen->physicalUploadPath() . $file1)) { // Make sure no file name clash
+                                    $file1 = UniqueFilename([$this->dokumen->physicalUploadPath(), $tempPath], $file1, true); // Use indexed name
+                                }
+                                rename($tempPath . $file, $tempPath . $file1);
+                                $newFiles[$i] = $file1;
+                            }
+                        }
+                    }
+                }
+                $this->dokumen->Upload->DbValue = empty($oldFiles) ? "" : implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $oldFiles);
+                $this->dokumen->Upload->FileName = implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $newFiles);
+                $this->dokumen->setDbValueDef($rsnew, $this->dokumen->Upload->FileName, null, false);
+            }
         }
 
         // Call Row Inserting event
@@ -2350,6 +2610,37 @@ class OrderGrid extends Order
                 $this->setFailureMessage($e->getMessage());
             }
             if ($addRow) {
+                if ($this->dokumen->Visible && !$this->dokumen->Upload->KeepFile) {
+                    $oldFiles = EmptyValue($this->dokumen->Upload->DbValue) ? [] : [$this->dokumen->htmlDecode($this->dokumen->Upload->DbValue)];
+                    if (!EmptyValue($this->dokumen->Upload->FileName)) {
+                        $newFiles = [$this->dokumen->Upload->FileName];
+                        $newFiles2 = [$this->dokumen->htmlDecode($rsnew['dokumen'])];
+                        $newFileCount = count($newFiles);
+                        for ($i = 0; $i < $newFileCount; $i++) {
+                            if ($newFiles[$i] != "") {
+                                $file = UploadTempPath($this->dokumen, $this->dokumen->Upload->Index) . $newFiles[$i];
+                                if (file_exists($file)) {
+                                    if (@$newFiles2[$i] != "") { // Use correct file name
+                                        $newFiles[$i] = $newFiles2[$i];
+                                    }
+                                    if (!$this->dokumen->Upload->SaveToFile($newFiles[$i], true, $i)) { // Just replace
+                                        $this->setFailureMessage($Language->phrase("UploadErrMsg7"));
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        $newFiles = [];
+                    }
+                    if (Config("DELETE_UPLOADED_FILES")) {
+                        foreach ($oldFiles as $oldFile) {
+                            if ($oldFile != "" && !in_array($oldFile, $newFiles)) {
+                                @unlink($this->dokumen->oldPhysicalUploadPath() . $oldFile);
+                            }
+                        }
+                    }
+                }
             }
         } else {
             if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
@@ -2369,6 +2660,8 @@ class OrderGrid extends Order
 
         // Clean upload path if any
         if ($addRow) {
+            // dokumen
+            CleanUploadTempPath($this->dokumen, $this->dokumen->Upload->Index);
         }
 
         // Write JSON for API request

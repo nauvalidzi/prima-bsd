@@ -26,8 +26,13 @@ loadjs.ready("head", function () {
         ["tglinvoice", [fields.tglinvoice.visible && fields.tglinvoice.required ? ew.Validators.required(fields.tglinvoice.caption) : null, ew.Validators.datetime(0)], fields.tglinvoice.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["idorder", [fields.idorder.visible && fields.idorder.required ? ew.Validators.required(fields.idorder.caption) : null], fields.idorder.isInvalid],
+        ["totalnonpajak", [fields.totalnonpajak.visible && fields.totalnonpajak.required ? ew.Validators.required(fields.totalnonpajak.caption) : null, ew.Validators.integer], fields.totalnonpajak.isInvalid],
+        ["pajak", [fields.pajak.visible && fields.pajak.required ? ew.Validators.required(fields.pajak.caption) : null, ew.Validators.float], fields.pajak.isInvalid],
         ["totaltagihan", [fields.totaltagihan.visible && fields.totaltagihan.required ? ew.Validators.required(fields.totaltagihan.caption) : null, ew.Validators.integer], fields.totaltagihan.isInvalid],
-        ["sisabayar", [fields.sisabayar.visible && fields.sisabayar.required ? ew.Validators.required(fields.sisabayar.caption) : null, ew.Validators.integer], fields.sisabayar.isInvalid]
+        ["sisabayar", [fields.sisabayar.visible && fields.sisabayar.required ? ew.Validators.required(fields.sisabayar.caption) : null, ew.Validators.integer], fields.sisabayar.isInvalid],
+        ["idtermpayment", [fields.idtermpayment.visible && fields.idtermpayment.required ? ew.Validators.required(fields.idtermpayment.caption) : null], fields.idtermpayment.isInvalid],
+        ["idtipepayment", [fields.idtipepayment.visible && fields.idtipepayment.required ? ew.Validators.required(fields.idtipepayment.caption) : null], fields.idtipepayment.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -89,9 +94,19 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "idorder", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "totalnonpajak", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "pajak", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "totaltagihan", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "sisabayar", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "idtermpayment", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "idtipepayment", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "keterangan", false))
             return false;
         return true;
     }
@@ -108,6 +123,8 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     finvoicegrid.lists.idcustomer = <?= $Grid->idcustomer->toClientList($Grid) ?>;
     finvoicegrid.lists.idorder = <?= $Grid->idorder->toClientList($Grid) ?>;
+    finvoicegrid.lists.idtermpayment = <?= $Grid->idtermpayment->toClientList($Grid) ?>;
+    finvoicegrid.lists.idtipepayment = <?= $Grid->idtipepayment->toClientList($Grid) ?>;
     loadjs.done("finvoicegrid");
 });
 </script>
@@ -144,11 +161,26 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->idorder->Visible) { // idorder ?>
         <th data-name="idorder" class="<?= $Grid->idorder->headerCellClass() ?>"><div id="elh_invoice_idorder" class="invoice_idorder"><?= $Grid->renderSort($Grid->idorder) ?></div></th>
 <?php } ?>
+<?php if ($Grid->totalnonpajak->Visible) { // totalnonpajak ?>
+        <th data-name="totalnonpajak" class="<?= $Grid->totalnonpajak->headerCellClass() ?>"><div id="elh_invoice_totalnonpajak" class="invoice_totalnonpajak"><?= $Grid->renderSort($Grid->totalnonpajak) ?></div></th>
+<?php } ?>
+<?php if ($Grid->pajak->Visible) { // pajak ?>
+        <th data-name="pajak" class="<?= $Grid->pajak->headerCellClass() ?>"><div id="elh_invoice_pajak" class="invoice_pajak"><?= $Grid->renderSort($Grid->pajak) ?></div></th>
+<?php } ?>
 <?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
         <th data-name="totaltagihan" class="<?= $Grid->totaltagihan->headerCellClass() ?>"><div id="elh_invoice_totaltagihan" class="invoice_totaltagihan"><?= $Grid->renderSort($Grid->totaltagihan) ?></div></th>
 <?php } ?>
 <?php if ($Grid->sisabayar->Visible) { // sisabayar ?>
         <th data-name="sisabayar" class="<?= $Grid->sisabayar->headerCellClass() ?>"><div id="elh_invoice_sisabayar" class="invoice_sisabayar"><?= $Grid->renderSort($Grid->sisabayar) ?></div></th>
+<?php } ?>
+<?php if ($Grid->idtermpayment->Visible) { // idtermpayment ?>
+        <th data-name="idtermpayment" class="<?= $Grid->idtermpayment->headerCellClass() ?>"><div id="elh_invoice_idtermpayment" class="invoice_idtermpayment"><?= $Grid->renderSort($Grid->idtermpayment) ?></div></th>
+<?php } ?>
+<?php if ($Grid->idtipepayment->Visible) { // idtipepayment ?>
+        <th data-name="idtipepayment" class="<?= $Grid->idtipepayment->headerCellClass() ?>"><div id="elh_invoice_idtipepayment" class="invoice_idtipepayment"><?= $Grid->renderSort($Grid->idtipepayment) ?></div></th>
+<?php } ?>
+<?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Grid->keterangan->headerCellClass() ?>"><div id="elh_invoice_keterangan" class="invoice_keterangan"><?= $Grid->renderSort($Grid->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -493,6 +525,60 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->totalnonpajak->Visible) { // totalnonpajak ?>
+        <td data-name="totalnonpajak" <?= $Grid->totalnonpajak->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_totalnonpajak" class="form-group">
+<input type="<?= $Grid->totalnonpajak->getInputTextType() ?>" data-table="invoice" data-field="x_totalnonpajak" name="x<?= $Grid->RowIndex ?>_totalnonpajak" id="x<?= $Grid->RowIndex ?>_totalnonpajak" size="30" placeholder="<?= HtmlEncode($Grid->totalnonpajak->getPlaceHolder()) ?>" value="<?= $Grid->totalnonpajak->EditValue ?>"<?= $Grid->totalnonpajak->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totalnonpajak->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_totalnonpajak" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totalnonpajak" id="o<?= $Grid->RowIndex ?>_totalnonpajak" value="<?= HtmlEncode($Grid->totalnonpajak->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_totalnonpajak" class="form-group">
+<input type="<?= $Grid->totalnonpajak->getInputTextType() ?>" data-table="invoice" data-field="x_totalnonpajak" name="x<?= $Grid->RowIndex ?>_totalnonpajak" id="x<?= $Grid->RowIndex ?>_totalnonpajak" size="30" placeholder="<?= HtmlEncode($Grid->totalnonpajak->getPlaceHolder()) ?>" value="<?= $Grid->totalnonpajak->EditValue ?>"<?= $Grid->totalnonpajak->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totalnonpajak->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_totalnonpajak">
+<span<?= $Grid->totalnonpajak->viewAttributes() ?>>
+<?= $Grid->totalnonpajak->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="invoice" data-field="x_totalnonpajak" data-hidden="1" name="finvoicegrid$x<?= $Grid->RowIndex ?>_totalnonpajak" id="finvoicegrid$x<?= $Grid->RowIndex ?>_totalnonpajak" value="<?= HtmlEncode($Grid->totalnonpajak->FormValue) ?>">
+<input type="hidden" data-table="invoice" data-field="x_totalnonpajak" data-hidden="1" name="finvoicegrid$o<?= $Grid->RowIndex ?>_totalnonpajak" id="finvoicegrid$o<?= $Grid->RowIndex ?>_totalnonpajak" value="<?= HtmlEncode($Grid->totalnonpajak->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->pajak->Visible) { // pajak ?>
+        <td data-name="pajak" <?= $Grid->pajak->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_pajak" class="form-group">
+<input type="<?= $Grid->pajak->getInputTextType() ?>" data-table="invoice" data-field="x_pajak" name="x<?= $Grid->RowIndex ?>_pajak" id="x<?= $Grid->RowIndex ?>_pajak" size="30" placeholder="<?= HtmlEncode($Grid->pajak->getPlaceHolder()) ?>" value="<?= $Grid->pajak->EditValue ?>"<?= $Grid->pajak->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->pajak->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_pajak" data-hidden="1" name="o<?= $Grid->RowIndex ?>_pajak" id="o<?= $Grid->RowIndex ?>_pajak" value="<?= HtmlEncode($Grid->pajak->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_pajak" class="form-group">
+<input type="<?= $Grid->pajak->getInputTextType() ?>" data-table="invoice" data-field="x_pajak" name="x<?= $Grid->RowIndex ?>_pajak" id="x<?= $Grid->RowIndex ?>_pajak" size="30" placeholder="<?= HtmlEncode($Grid->pajak->getPlaceHolder()) ?>" value="<?= $Grid->pajak->EditValue ?>"<?= $Grid->pajak->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->pajak->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_pajak">
+<span<?= $Grid->pajak->viewAttributes() ?>>
+<?= $Grid->pajak->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="invoice" data-field="x_pajak" data-hidden="1" name="finvoicegrid$x<?= $Grid->RowIndex ?>_pajak" id="finvoicegrid$x<?= $Grid->RowIndex ?>_pajak" value="<?= HtmlEncode($Grid->pajak->FormValue) ?>">
+<input type="hidden" data-table="invoice" data-field="x_pajak" data-hidden="1" name="finvoicegrid$o<?= $Grid->RowIndex ?>_pajak" id="finvoicegrid$o<?= $Grid->RowIndex ?>_pajak" value="<?= HtmlEncode($Grid->pajak->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
     <?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
         <td data-name="totaltagihan" <?= $Grid->totaltagihan->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -543,6 +629,171 @@ loadjs.ready("head", function() {
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="invoice" data-field="x_sisabayar" data-hidden="1" name="finvoicegrid$x<?= $Grid->RowIndex ?>_sisabayar" id="finvoicegrid$x<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->FormValue) ?>">
 <input type="hidden" data-table="invoice" data-field="x_sisabayar" data-hidden="1" name="finvoicegrid$o<?= $Grid->RowIndex ?>_sisabayar" id="finvoicegrid$o<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->idtermpayment->Visible) { // idtermpayment ?>
+        <td data-name="idtermpayment" <?= $Grid->idtermpayment->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_idtermpayment" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idtermpayment"
+        name="x<?= $Grid->RowIndex ?>_idtermpayment"
+        class="form-control ew-select<?= $Grid->idtermpayment->isInvalidClass() ?>"
+        data-select2-id="invoice_x<?= $Grid->RowIndex ?>_idtermpayment"
+        data-table="invoice"
+        data-field="x_idtermpayment"
+        data-value-separator="<?= $Grid->idtermpayment->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idtermpayment->getPlaceHolder()) ?>"
+        <?= $Grid->idtermpayment->editAttributes() ?>>
+        <?= $Grid->idtermpayment->selectOptionListHtml("x{$Grid->RowIndex}_idtermpayment") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idtermpayment->getErrorMessage() ?></div>
+<?= $Grid->idtermpayment->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idtermpayment") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='invoice_x<?= $Grid->RowIndex ?>_idtermpayment']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idtermpayment", selectId: "invoice_x<?= $Grid->RowIndex ?>_idtermpayment", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.invoice.fields.idtermpayment.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_idtermpayment" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idtermpayment" id="o<?= $Grid->RowIndex ?>_idtermpayment" value="<?= HtmlEncode($Grid->idtermpayment->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_idtermpayment" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idtermpayment"
+        name="x<?= $Grid->RowIndex ?>_idtermpayment"
+        class="form-control ew-select<?= $Grid->idtermpayment->isInvalidClass() ?>"
+        data-select2-id="invoice_x<?= $Grid->RowIndex ?>_idtermpayment"
+        data-table="invoice"
+        data-field="x_idtermpayment"
+        data-value-separator="<?= $Grid->idtermpayment->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idtermpayment->getPlaceHolder()) ?>"
+        <?= $Grid->idtermpayment->editAttributes() ?>>
+        <?= $Grid->idtermpayment->selectOptionListHtml("x{$Grid->RowIndex}_idtermpayment") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idtermpayment->getErrorMessage() ?></div>
+<?= $Grid->idtermpayment->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idtermpayment") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='invoice_x<?= $Grid->RowIndex ?>_idtermpayment']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idtermpayment", selectId: "invoice_x<?= $Grid->RowIndex ?>_idtermpayment", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.invoice.fields.idtermpayment.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_idtermpayment">
+<span<?= $Grid->idtermpayment->viewAttributes() ?>>
+<?= $Grid->idtermpayment->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="invoice" data-field="x_idtermpayment" data-hidden="1" name="finvoicegrid$x<?= $Grid->RowIndex ?>_idtermpayment" id="finvoicegrid$x<?= $Grid->RowIndex ?>_idtermpayment" value="<?= HtmlEncode($Grid->idtermpayment->FormValue) ?>">
+<input type="hidden" data-table="invoice" data-field="x_idtermpayment" data-hidden="1" name="finvoicegrid$o<?= $Grid->RowIndex ?>_idtermpayment" id="finvoicegrid$o<?= $Grid->RowIndex ?>_idtermpayment" value="<?= HtmlEncode($Grid->idtermpayment->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->idtipepayment->Visible) { // idtipepayment ?>
+        <td data-name="idtipepayment" <?= $Grid->idtipepayment->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_idtipepayment" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idtipepayment"
+        name="x<?= $Grid->RowIndex ?>_idtipepayment"
+        class="form-control ew-select<?= $Grid->idtipepayment->isInvalidClass() ?>"
+        data-select2-id="invoice_x<?= $Grid->RowIndex ?>_idtipepayment"
+        data-table="invoice"
+        data-field="x_idtipepayment"
+        data-value-separator="<?= $Grid->idtipepayment->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idtipepayment->getPlaceHolder()) ?>"
+        <?= $Grid->idtipepayment->editAttributes() ?>>
+        <?= $Grid->idtipepayment->selectOptionListHtml("x{$Grid->RowIndex}_idtipepayment") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idtipepayment->getErrorMessage() ?></div>
+<?= $Grid->idtipepayment->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idtipepayment") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='invoice_x<?= $Grid->RowIndex ?>_idtipepayment']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idtipepayment", selectId: "invoice_x<?= $Grid->RowIndex ?>_idtipepayment", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.invoice.fields.idtipepayment.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_idtipepayment" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idtipepayment" id="o<?= $Grid->RowIndex ?>_idtipepayment" value="<?= HtmlEncode($Grid->idtipepayment->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_idtipepayment" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idtipepayment"
+        name="x<?= $Grid->RowIndex ?>_idtipepayment"
+        class="form-control ew-select<?= $Grid->idtipepayment->isInvalidClass() ?>"
+        data-select2-id="invoice_x<?= $Grid->RowIndex ?>_idtipepayment"
+        data-table="invoice"
+        data-field="x_idtipepayment"
+        data-value-separator="<?= $Grid->idtipepayment->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idtipepayment->getPlaceHolder()) ?>"
+        <?= $Grid->idtipepayment->editAttributes() ?>>
+        <?= $Grid->idtipepayment->selectOptionListHtml("x{$Grid->RowIndex}_idtipepayment") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idtipepayment->getErrorMessage() ?></div>
+<?= $Grid->idtipepayment->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idtipepayment") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='invoice_x<?= $Grid->RowIndex ?>_idtipepayment']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idtipepayment", selectId: "invoice_x<?= $Grid->RowIndex ?>_idtipepayment", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.invoice.fields.idtipepayment.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_idtipepayment">
+<span<?= $Grid->idtipepayment->viewAttributes() ?>>
+<?= $Grid->idtipepayment->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="invoice" data-field="x_idtipepayment" data-hidden="1" name="finvoicegrid$x<?= $Grid->RowIndex ?>_idtipepayment" id="finvoicegrid$x<?= $Grid->RowIndex ?>_idtipepayment" value="<?= HtmlEncode($Grid->idtipepayment->FormValue) ?>">
+<input type="hidden" data-table="invoice" data-field="x_idtipepayment" data-hidden="1" name="finvoicegrid$o<?= $Grid->RowIndex ?>_idtipepayment" id="finvoicegrid$o<?= $Grid->RowIndex ?>_idtipepayment" value="<?= HtmlEncode($Grid->idtipepayment->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Grid->keterangan->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_keterangan" class="form-group">
+<textarea data-table="invoice" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_keterangan" class="form-group">
+<textarea data-table="invoice" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_invoice_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="invoice" data-field="x_keterangan" data-hidden="1" name="finvoicegrid$x<?= $Grid->RowIndex ?>_keterangan" id="finvoicegrid$x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<input type="hidden" data-table="invoice" data-field="x_keterangan" data-hidden="1" name="finvoicegrid$o<?= $Grid->RowIndex ?>_keterangan" id="finvoicegrid$o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -722,6 +973,40 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="invoice" data-field="x_idorder" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idorder" id="o<?= $Grid->RowIndex ?>_idorder" value="<?= HtmlEncode($Grid->idorder->OldValue) ?>">
 </td>
     <?php } ?>
+    <?php if ($Grid->totalnonpajak->Visible) { // totalnonpajak ?>
+        <td data-name="totalnonpajak">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_invoice_totalnonpajak" class="form-group invoice_totalnonpajak">
+<input type="<?= $Grid->totalnonpajak->getInputTextType() ?>" data-table="invoice" data-field="x_totalnonpajak" name="x<?= $Grid->RowIndex ?>_totalnonpajak" id="x<?= $Grid->RowIndex ?>_totalnonpajak" size="30" placeholder="<?= HtmlEncode($Grid->totalnonpajak->getPlaceHolder()) ?>" value="<?= $Grid->totalnonpajak->EditValue ?>"<?= $Grid->totalnonpajak->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->totalnonpajak->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_invoice_totalnonpajak" class="form-group invoice_totalnonpajak">
+<span<?= $Grid->totalnonpajak->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->totalnonpajak->getDisplayValue($Grid->totalnonpajak->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_totalnonpajak" data-hidden="1" name="x<?= $Grid->RowIndex ?>_totalnonpajak" id="x<?= $Grid->RowIndex ?>_totalnonpajak" value="<?= HtmlEncode($Grid->totalnonpajak->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="invoice" data-field="x_totalnonpajak" data-hidden="1" name="o<?= $Grid->RowIndex ?>_totalnonpajak" id="o<?= $Grid->RowIndex ?>_totalnonpajak" value="<?= HtmlEncode($Grid->totalnonpajak->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->pajak->Visible) { // pajak ?>
+        <td data-name="pajak">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_invoice_pajak" class="form-group invoice_pajak">
+<input type="<?= $Grid->pajak->getInputTextType() ?>" data-table="invoice" data-field="x_pajak" name="x<?= $Grid->RowIndex ?>_pajak" id="x<?= $Grid->RowIndex ?>_pajak" size="30" placeholder="<?= HtmlEncode($Grid->pajak->getPlaceHolder()) ?>" value="<?= $Grid->pajak->EditValue ?>"<?= $Grid->pajak->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->pajak->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_invoice_pajak" class="form-group invoice_pajak">
+<span<?= $Grid->pajak->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->pajak->getDisplayValue($Grid->pajak->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_pajak" data-hidden="1" name="x<?= $Grid->RowIndex ?>_pajak" id="x<?= $Grid->RowIndex ?>_pajak" value="<?= HtmlEncode($Grid->pajak->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="invoice" data-field="x_pajak" data-hidden="1" name="o<?= $Grid->RowIndex ?>_pajak" id="o<?= $Grid->RowIndex ?>_pajak" value="<?= HtmlEncode($Grid->pajak->OldValue) ?>">
+</td>
+    <?php } ?>
     <?php if ($Grid->totaltagihan->Visible) { // totaltagihan ?>
         <td data-name="totaltagihan">
 <?php if (!$Grid->isConfirm()) { ?>
@@ -754,6 +1039,99 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="invoice" data-field="x_sisabayar" data-hidden="1" name="x<?= $Grid->RowIndex ?>_sisabayar" id="x<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="invoice" data-field="x_sisabayar" data-hidden="1" name="o<?= $Grid->RowIndex ?>_sisabayar" id="o<?= $Grid->RowIndex ?>_sisabayar" value="<?= HtmlEncode($Grid->sisabayar->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->idtermpayment->Visible) { // idtermpayment ?>
+        <td data-name="idtermpayment">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_invoice_idtermpayment" class="form-group invoice_idtermpayment">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idtermpayment"
+        name="x<?= $Grid->RowIndex ?>_idtermpayment"
+        class="form-control ew-select<?= $Grid->idtermpayment->isInvalidClass() ?>"
+        data-select2-id="invoice_x<?= $Grid->RowIndex ?>_idtermpayment"
+        data-table="invoice"
+        data-field="x_idtermpayment"
+        data-value-separator="<?= $Grid->idtermpayment->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idtermpayment->getPlaceHolder()) ?>"
+        <?= $Grid->idtermpayment->editAttributes() ?>>
+        <?= $Grid->idtermpayment->selectOptionListHtml("x{$Grid->RowIndex}_idtermpayment") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idtermpayment->getErrorMessage() ?></div>
+<?= $Grid->idtermpayment->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idtermpayment") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='invoice_x<?= $Grid->RowIndex ?>_idtermpayment']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idtermpayment", selectId: "invoice_x<?= $Grid->RowIndex ?>_idtermpayment", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.invoice.fields.idtermpayment.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_invoice_idtermpayment" class="form-group invoice_idtermpayment">
+<span<?= $Grid->idtermpayment->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idtermpayment->getDisplayValue($Grid->idtermpayment->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_idtermpayment" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idtermpayment" id="x<?= $Grid->RowIndex ?>_idtermpayment" value="<?= HtmlEncode($Grid->idtermpayment->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="invoice" data-field="x_idtermpayment" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idtermpayment" id="o<?= $Grid->RowIndex ?>_idtermpayment" value="<?= HtmlEncode($Grid->idtermpayment->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->idtipepayment->Visible) { // idtipepayment ?>
+        <td data-name="idtipepayment">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_invoice_idtipepayment" class="form-group invoice_idtipepayment">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idtipepayment"
+        name="x<?= $Grid->RowIndex ?>_idtipepayment"
+        class="form-control ew-select<?= $Grid->idtipepayment->isInvalidClass() ?>"
+        data-select2-id="invoice_x<?= $Grid->RowIndex ?>_idtipepayment"
+        data-table="invoice"
+        data-field="x_idtipepayment"
+        data-value-separator="<?= $Grid->idtipepayment->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idtipepayment->getPlaceHolder()) ?>"
+        <?= $Grid->idtipepayment->editAttributes() ?>>
+        <?= $Grid->idtipepayment->selectOptionListHtml("x{$Grid->RowIndex}_idtipepayment") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idtipepayment->getErrorMessage() ?></div>
+<?= $Grid->idtipepayment->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idtipepayment") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='invoice_x<?= $Grid->RowIndex ?>_idtipepayment']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idtipepayment", selectId: "invoice_x<?= $Grid->RowIndex ?>_idtipepayment", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.invoice.fields.idtipepayment.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_invoice_idtipepayment" class="form-group invoice_idtipepayment">
+<span<?= $Grid->idtipepayment->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idtipepayment->getDisplayValue($Grid->idtipepayment->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_idtipepayment" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idtipepayment" id="x<?= $Grid->RowIndex ?>_idtipepayment" value="<?= HtmlEncode($Grid->idtipepayment->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="invoice" data-field="x_idtipepayment" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idtipepayment" id="o<?= $Grid->RowIndex ?>_idtipepayment" value="<?= HtmlEncode($Grid->idtipepayment->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_invoice_keterangan" class="form-group invoice_keterangan">
+<textarea data-table="invoice" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_invoice_keterangan" class="form-group invoice_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="invoice" data-field="x_keterangan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="invoice" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

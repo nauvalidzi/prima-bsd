@@ -196,8 +196,8 @@ loadjs.ready(["fnpd_serahterimaedit", "datetimepicker"], function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->readonly->cellAttributes() ?>>
 <span id="el_npd_serahterima_readonly">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->readonly->isInvalidClass() ?>" data-table="npd_serahterima" data-field="x_readonly" name="x_readonly[]" id="x_readonly_728681" value="1"<?= ConvertToBool($Page->readonly->CurrentValue) ? " checked" : "" ?><?= $Page->readonly->editAttributes() ?> aria-describedby="x_readonly_help">
-    <label class="custom-control-label" for="x_readonly_728681"></label>
+    <input type="checkbox" class="custom-control-input<?= $Page->readonly->isInvalidClass() ?>" data-table="npd_serahterima" data-field="x_readonly" name="x_readonly[]" id="x_readonly_254019" value="1"<?= ConvertToBool($Page->readonly->CurrentValue) ? " checked" : "" ?><?= $Page->readonly->editAttributes() ?> aria-describedby="x_readonly_help">
+    <label class="custom-control-label" for="x_readonly_254019"></label>
 </div>
 <?= $Page->readonly->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->readonly->getErrorMessage() ?></div>

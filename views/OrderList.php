@@ -163,6 +163,12 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
         <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_order_idbrand" class="order_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
 <?php } ?>
+<?php if ($Page->dokumen->Visible) { // dokumen ?>
+        <th data-name="dokumen" class="<?= $Page->dokumen->headerCellClass() ?>"><div id="elh_order_dokumen" class="order_dokumen"><?= $Page->renderSort($Page->dokumen) ?></div></th>
+<?php } ?>
+<?php if ($Page->catatan->Visible) { // catatan ?>
+        <th data-name="catatan" class="<?= $Page->catatan->headerCellClass() ?>"><div id="elh_order_catatan" class="order_catatan"><?= $Page->renderSort($Page->catatan) ?></div></th>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_order_status" class="order_status"><?= $Page->renderSort($Page->status) ?></div></th>
 <?php } ?>
@@ -270,6 +276,23 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_order_idbrand">
 <span<?= $Page->idbrand->viewAttributes() ?>>
 <?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->dokumen->Visible) { // dokumen ?>
+        <td data-name="dokumen" <?= $Page->dokumen->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_dokumen">
+<span<?= $Page->dokumen->viewAttributes() ?>>
+<?= GetFileViewTag($Page->dokumen, $Page->dokumen->getViewValue(), false) ?>
+</span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->catatan->Visible) { // catatan ?>
+        <td data-name="catatan" <?= $Page->catatan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_order_catatan">
+<span<?= $Page->catatan->viewAttributes() ?>>
+<?= $Page->catatan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

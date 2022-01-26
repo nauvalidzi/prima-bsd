@@ -171,11 +171,26 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idorder->Visible) { // idorder ?>
         <th data-name="idorder" class="<?= $Page->idorder->headerCellClass() ?>"><div id="elh_invoice_idorder" class="invoice_idorder"><?= $Page->renderSort($Page->idorder) ?></div></th>
 <?php } ?>
+<?php if ($Page->totalnonpajak->Visible) { // totalnonpajak ?>
+        <th data-name="totalnonpajak" class="<?= $Page->totalnonpajak->headerCellClass() ?>"><div id="elh_invoice_totalnonpajak" class="invoice_totalnonpajak"><?= $Page->renderSort($Page->totalnonpajak) ?></div></th>
+<?php } ?>
+<?php if ($Page->pajak->Visible) { // pajak ?>
+        <th data-name="pajak" class="<?= $Page->pajak->headerCellClass() ?>"><div id="elh_invoice_pajak" class="invoice_pajak"><?= $Page->renderSort($Page->pajak) ?></div></th>
+<?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <th data-name="totaltagihan" class="<?= $Page->totaltagihan->headerCellClass() ?>"><div id="elh_invoice_totaltagihan" class="invoice_totaltagihan"><?= $Page->renderSort($Page->totaltagihan) ?></div></th>
 <?php } ?>
 <?php if ($Page->sisabayar->Visible) { // sisabayar ?>
         <th data-name="sisabayar" class="<?= $Page->sisabayar->headerCellClass() ?>"><div id="elh_invoice_sisabayar" class="invoice_sisabayar"><?= $Page->renderSort($Page->sisabayar) ?></div></th>
+<?php } ?>
+<?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
+        <th data-name="idtermpayment" class="<?= $Page->idtermpayment->headerCellClass() ?>"><div id="elh_invoice_idtermpayment" class="invoice_idtermpayment"><?= $Page->renderSort($Page->idtermpayment) ?></div></th>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <th data-name="idtipepayment" class="<?= $Page->idtipepayment->headerCellClass() ?>"><div id="elh_invoice_idtipepayment" class="invoice_idtipepayment"><?= $Page->renderSort($Page->idtipepayment) ?></div></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_invoice_keterangan" class="invoice_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -281,6 +296,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->totalnonpajak->Visible) { // totalnonpajak ?>
+        <td data-name="totalnonpajak" <?= $Page->totalnonpajak->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_totalnonpajak">
+<span<?= $Page->totalnonpajak->viewAttributes() ?>>
+<?= $Page->totalnonpajak->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->pajak->Visible) { // pajak ?>
+        <td data-name="pajak" <?= $Page->pajak->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_pajak">
+<span<?= $Page->pajak->viewAttributes() ?>>
+<?= $Page->pajak->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <td data-name="totaltagihan" <?= $Page->totaltagihan->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_invoice_totaltagihan">
@@ -294,6 +325,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_invoice_sisabayar">
 <span<?= $Page->sisabayar->viewAttributes() ?>>
 <?= $Page->sisabayar->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
+        <td data-name="idtermpayment" <?= $Page->idtermpayment->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_idtermpayment">
+<span<?= $Page->idtermpayment->viewAttributes() ?>>
+<?= $Page->idtermpayment->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <td data-name="idtipepayment" <?= $Page->idtipepayment->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_idtipepayment">
+<span<?= $Page->idtipepayment->viewAttributes() ?>>
+<?= $Page->idtipepayment->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -56,11 +56,26 @@ $Page->showMessage();
 <?php if ($Page->idorder->Visible) { // idorder ?>
         <th class="<?= $Page->idorder->headerCellClass() ?>"><span id="elh_invoice_idorder" class="invoice_idorder"><?= $Page->idorder->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->totalnonpajak->Visible) { // totalnonpajak ?>
+        <th class="<?= $Page->totalnonpajak->headerCellClass() ?>"><span id="elh_invoice_totalnonpajak" class="invoice_totalnonpajak"><?= $Page->totalnonpajak->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->pajak->Visible) { // pajak ?>
+        <th class="<?= $Page->pajak->headerCellClass() ?>"><span id="elh_invoice_pajak" class="invoice_pajak"><?= $Page->pajak->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <th class="<?= $Page->totaltagihan->headerCellClass() ?>"><span id="elh_invoice_totaltagihan" class="invoice_totaltagihan"><?= $Page->totaltagihan->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->sisabayar->Visible) { // sisabayar ?>
         <th class="<?= $Page->sisabayar->headerCellClass() ?>"><span id="elh_invoice_sisabayar" class="invoice_sisabayar"><?= $Page->sisabayar->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
+        <th class="<?= $Page->idtermpayment->headerCellClass() ?>"><span id="elh_invoice_idtermpayment" class="invoice_idtermpayment"><?= $Page->idtermpayment->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <th class="<?= $Page->idtipepayment->headerCellClass() ?>"><span id="elh_invoice_idtipepayment" class="invoice_idtipepayment"><?= $Page->idtipepayment->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><span id="elh_invoice_keterangan" class="invoice_keterangan"><?= $Page->keterangan->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -120,6 +135,22 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->totalnonpajak->Visible) { // totalnonpajak ?>
+        <td <?= $Page->totalnonpajak->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_totalnonpajak" class="invoice_totalnonpajak">
+<span<?= $Page->totalnonpajak->viewAttributes() ?>>
+<?= $Page->totalnonpajak->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->pajak->Visible) { // pajak ?>
+        <td <?= $Page->pajak->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_pajak" class="invoice_pajak">
+<span<?= $Page->pajak->viewAttributes() ?>>
+<?= $Page->pajak->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <td <?= $Page->totaltagihan->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_invoice_totaltagihan" class="invoice_totaltagihan">
@@ -133,6 +164,30 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_invoice_sisabayar" class="invoice_sisabayar">
 <span<?= $Page->sisabayar->viewAttributes() ?>>
 <?= $Page->sisabayar->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
+        <td <?= $Page->idtermpayment->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_idtermpayment" class="invoice_idtermpayment">
+<span<?= $Page->idtermpayment->viewAttributes() ?>>
+<?= $Page->idtermpayment->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <td <?= $Page->idtipepayment->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_idtipepayment" class="invoice_idtipepayment">
+<span<?= $Page->idtipepayment->viewAttributes() ?>>
+<?= $Page->idtipepayment->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_invoice_keterangan" class="invoice_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

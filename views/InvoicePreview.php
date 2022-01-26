@@ -58,6 +58,24 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->totalnonpajak->Visible) { // totalnonpajak ?>
+    <?php if ($Page->SortUrl($Page->totalnonpajak) == "") { ?>
+        <th class="<?= $Page->totalnonpajak->headerCellClass() ?>"><?= $Page->totalnonpajak->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->totalnonpajak->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->totalnonpajak->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->totalnonpajak->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->totalnonpajak->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->totalnonpajak->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->totalnonpajak->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->pajak->Visible) { // pajak ?>
+    <?php if ($Page->SortUrl($Page->pajak) == "") { ?>
+        <th class="<?= $Page->pajak->headerCellClass() ?>"><?= $Page->pajak->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->pajak->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->pajak->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->pajak->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->pajak->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->pajak->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->pajak->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
     <?php if ($Page->SortUrl($Page->totaltagihan) == "") { ?>
         <th class="<?= $Page->totaltagihan->headerCellClass() ?>"><?= $Page->totaltagihan->caption() ?></th>
@@ -73,6 +91,33 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->sisabayar->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->sisabayar->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->sisabayar->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->sisabayar->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->sisabayar->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->sisabayar->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
+    <?php if ($Page->SortUrl($Page->idtermpayment) == "") { ?>
+        <th class="<?= $Page->idtermpayment->headerCellClass() ?>"><?= $Page->idtermpayment->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->idtermpayment->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idtermpayment->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idtermpayment->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idtermpayment->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idtermpayment->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idtermpayment->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+    <?php if ($Page->SortUrl($Page->idtipepayment) == "") { ?>
+        <th class="<?= $Page->idtipepayment->headerCellClass() ?>"><?= $Page->idtipepayment->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->idtipepayment->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idtipepayment->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idtipepayment->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idtipepayment->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idtipepayment->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idtipepayment->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <?php if ($Page->SortUrl($Page->keterangan) == "") { ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><?= $Page->keterangan->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->keterangan->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->keterangan->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->keterangan->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->keterangan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->keterangan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -139,6 +184,20 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->totalnonpajak->Visible) { // totalnonpajak ?>
+        <!-- totalnonpajak -->
+        <td<?= $Page->totalnonpajak->cellAttributes() ?>>
+<span<?= $Page->totalnonpajak->viewAttributes() ?>>
+<?= $Page->totalnonpajak->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->pajak->Visible) { // pajak ?>
+        <!-- pajak -->
+        <td<?= $Page->pajak->cellAttributes() ?>>
+<span<?= $Page->pajak->viewAttributes() ?>>
+<?= $Page->pajak->getViewValue() ?></span>
+</td>
+<?php } ?>
 <?php if ($Page->totaltagihan->Visible) { // totaltagihan ?>
         <!-- totaltagihan -->
         <td<?= $Page->totaltagihan->cellAttributes() ?>>
@@ -151,6 +210,27 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->sisabayar->cellAttributes() ?>>
 <span<?= $Page->sisabayar->viewAttributes() ?>>
 <?= $Page->sisabayar->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->idtermpayment->Visible) { // idtermpayment ?>
+        <!-- idtermpayment -->
+        <td<?= $Page->idtermpayment->cellAttributes() ?>>
+<span<?= $Page->idtermpayment->viewAttributes() ?>>
+<?= $Page->idtermpayment->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->idtipepayment->Visible) { // idtipepayment ?>
+        <!-- idtipepayment -->
+        <td<?= $Page->idtipepayment->cellAttributes() ?>>
+<span<?= $Page->idtipepayment->viewAttributes() ?>>
+<?= $Page->idtipepayment->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <!-- keterangan -->
+        <td<?= $Page->keterangan->cellAttributes() ?>>
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

@@ -64,6 +64,29 @@ $order = Container("order");
 </td>
         </tr>
 <?php } ?>
+<?php if ($order->dokumen->Visible) { // dokumen ?>
+        <tr id="r_dokumen">
+            <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->dokumen->caption() ?></td>
+            <td <?= $order->dokumen->cellAttributes() ?>>
+<span id="el_order_dokumen">
+<span<?= $order->dokumen->viewAttributes() ?>>
+<?= GetFileViewTag($order->dokumen, $order->dokumen->getViewValue(), false) ?>
+</span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($order->catatan->Visible) { // catatan ?>
+        <tr id="r_catatan">
+            <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->catatan->caption() ?></td>
+            <td <?= $order->catatan->cellAttributes() ?>>
+<span id="el_order_catatan">
+<span<?= $order->catatan->viewAttributes() ?>>
+<?= $order->catatan->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
 <?php if ($order->status->Visible) { // status ?>
         <tr id="r_status">
             <td class="<?= $order->TableLeftColumnClass ?>"><?= $order->status->caption() ?></td>

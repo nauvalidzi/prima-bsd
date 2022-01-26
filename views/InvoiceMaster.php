@@ -58,6 +58,28 @@ $invoice = Container("invoice");
 </td>
         </tr>
 <?php } ?>
+<?php if ($invoice->totalnonpajak->Visible) { // totalnonpajak ?>
+        <tr id="r_totalnonpajak">
+            <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->totalnonpajak->caption() ?></td>
+            <td <?= $invoice->totalnonpajak->cellAttributes() ?>>
+<span id="el_invoice_totalnonpajak">
+<span<?= $invoice->totalnonpajak->viewAttributes() ?>>
+<?= $invoice->totalnonpajak->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($invoice->pajak->Visible) { // pajak ?>
+        <tr id="r_pajak">
+            <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->pajak->caption() ?></td>
+            <td <?= $invoice->pajak->cellAttributes() ?>>
+<span id="el_invoice_pajak">
+<span<?= $invoice->pajak->viewAttributes() ?>>
+<?= $invoice->pajak->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
 <?php if ($invoice->totaltagihan->Visible) { // totaltagihan ?>
         <tr id="r_totaltagihan">
             <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->totaltagihan->caption() ?></td>
@@ -76,6 +98,39 @@ $invoice = Container("invoice");
 <span id="el_invoice_sisabayar">
 <span<?= $invoice->sisabayar->viewAttributes() ?>>
 <?= $invoice->sisabayar->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($invoice->idtermpayment->Visible) { // idtermpayment ?>
+        <tr id="r_idtermpayment">
+            <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->idtermpayment->caption() ?></td>
+            <td <?= $invoice->idtermpayment->cellAttributes() ?>>
+<span id="el_invoice_idtermpayment">
+<span<?= $invoice->idtermpayment->viewAttributes() ?>>
+<?= $invoice->idtermpayment->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($invoice->idtipepayment->Visible) { // idtipepayment ?>
+        <tr id="r_idtipepayment">
+            <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->idtipepayment->caption() ?></td>
+            <td <?= $invoice->idtipepayment->cellAttributes() ?>>
+<span id="el_invoice_idtipepayment">
+<span<?= $invoice->idtipepayment->viewAttributes() ?>>
+<?= $invoice->idtipepayment->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($invoice->keterangan->Visible) { // keterangan ?>
+        <tr id="r_keterangan">
+            <td class="<?= $invoice->TableLeftColumnClass ?>"><?= $invoice->keterangan->caption() ?></td>
+            <td <?= $invoice->keterangan->cellAttributes() ?>>
+<span id="el_invoice_keterangan">
+<span<?= $invoice->keterangan->viewAttributes() ?>>
+<?= $invoice->keterangan->getViewValue() ?></span>
 </span>
 </td>
         </tr>

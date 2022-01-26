@@ -396,8 +396,8 @@ class OrderPreview extends Order
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
-        $this->dokumen->Visible = false;
-        $this->catatan->Visible = false;
+        $this->dokumen->setVisibility();
+        $this->catatan->setVisibility();
         $this->aktif->Visible = false;
         $this->status->setVisibility();
         $this->created_at->Visible = false;
@@ -520,6 +520,8 @@ class OrderPreview extends Order
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->dokumen); // dokumen
+            $this->updateSort($this->catatan); // catatan
             $this->updateSort($this->status); // status
         }
     }

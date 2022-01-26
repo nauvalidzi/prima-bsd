@@ -573,13 +573,13 @@ class InvoiceList extends Invoice
         $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idorder->setVisibility();
-        $this->totalnonpajak->Visible = false;
-        $this->pajak->Visible = false;
+        $this->totalnonpajak->setVisibility();
+        $this->pajak->setVisibility();
         $this->totaltagihan->setVisibility();
         $this->sisabayar->setVisibility();
-        $this->idtermpayment->Visible = false;
-        $this->idtipepayment->Visible = false;
-        $this->keterangan->Visible = false;
+        $this->idtermpayment->setVisibility();
+        $this->idtipepayment->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -1295,8 +1295,13 @@ class InvoiceList extends Invoice
             $this->updateSort($this->tglinvoice); // tglinvoice
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idorder); // idorder
+            $this->updateSort($this->totalnonpajak); // totalnonpajak
+            $this->updateSort($this->pajak); // pajak
             $this->updateSort($this->totaltagihan); // totaltagihan
             $this->updateSort($this->sisabayar); // sisabayar
+            $this->updateSort($this->idtermpayment); // idtermpayment
+            $this->updateSort($this->idtipepayment); // idtipepayment
+            $this->updateSort($this->keterangan); // keterangan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -2023,6 +2028,11 @@ class InvoiceList extends Invoice
         $this->InlineCopyUrl = $this->getInlineCopyUrl();
         $this->DeleteUrl = $this->getDeleteUrl();
 
+        // Convert decimal values if posted back
+        if ($this->pajak->FormValue == $this->pajak->CurrentValue && is_numeric(ConvertToFloatString($this->pajak->CurrentValue))) {
+            $this->pajak->CurrentValue = ConvertToFloatString($this->pajak->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
@@ -2238,6 +2248,16 @@ class InvoiceList extends Invoice
             }
             $this->idorder->TooltipValue = "";
 
+            // totalnonpajak
+            $this->totalnonpajak->LinkCustomAttributes = "";
+            $this->totalnonpajak->HrefValue = "";
+            $this->totalnonpajak->TooltipValue = "";
+
+            // pajak
+            $this->pajak->LinkCustomAttributes = "";
+            $this->pajak->HrefValue = "";
+            $this->pajak->TooltipValue = "";
+
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
             $this->totaltagihan->HrefValue = "";
@@ -2247,6 +2267,21 @@ class InvoiceList extends Invoice
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
             $this->sisabayar->TooltipValue = "";
+
+            // idtermpayment
+            $this->idtermpayment->LinkCustomAttributes = "";
+            $this->idtermpayment->HrefValue = "";
+            $this->idtermpayment->TooltipValue = "";
+
+            // idtipepayment
+            $this->idtipepayment->LinkCustomAttributes = "";
+            $this->idtipepayment->HrefValue = "";
+            $this->idtipepayment->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2625,6 +2660,11 @@ class InvoiceList extends Invoice
         	$this->ListOptions->Items["suratjalan"]->Body = 'Unsent';
         }
         $this->ListOptions->Items["view"]->Body = "<a class=\"ew-row-link ew-view\" title=\"\" data-caption=\"View\" href=\"InvoiceDetailList?showmaster=invoice&fk_id={$this->id->CurrentValue}\" data-original-title=\"View\"><i data-phrase=\"ViewLink\" class=\"icon-view ew-icon\" data-caption=\"View\"></i></a>";
+        $this->idtermpayment->Visible = false;
+        $this->totalnonpajak->Visible = false;
+        $this->pajak->Visible = false;
+        $this->idtipepayment->Visible = false;
+        $this->keterangan->Visible = false;
     }
 
     // Row Custom Action event

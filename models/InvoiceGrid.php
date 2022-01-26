@@ -510,13 +510,13 @@ class InvoiceGrid extends Invoice
         $this->tglinvoice->setVisibility();
         $this->idcustomer->setVisibility();
         $this->idorder->setVisibility();
-        $this->totalnonpajak->Visible = false;
-        $this->pajak->Visible = false;
+        $this->totalnonpajak->setVisibility();
+        $this->pajak->setVisibility();
         $this->totaltagihan->setVisibility();
         $this->sisabayar->setVisibility();
-        $this->idtermpayment->Visible = false;
-        $this->idtipepayment->Visible = false;
-        $this->keterangan->Visible = false;
+        $this->idtermpayment->setVisibility();
+        $this->idtipepayment->setVisibility();
+        $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->created_by->Visible = false;
         $this->aktif->Visible = false;
@@ -735,6 +735,7 @@ class InvoiceGrid extends Invoice
     // Exit inline mode
     protected function clearInlineMode()
     {
+        $this->pajak->FormValue = ""; // Clear form value
         $this->LastAction = $this->CurrentAction; // Save last action
         $this->CurrentAction = ""; // Clear action
         $_SESSION[SESSION_INLINE_MODE] = ""; // Clear inline mode
@@ -986,10 +987,25 @@ class InvoiceGrid extends Invoice
         if ($CurrentForm->hasValue("x_idorder") && $CurrentForm->hasValue("o_idorder") && $this->idorder->CurrentValue != $this->idorder->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_totalnonpajak") && $CurrentForm->hasValue("o_totalnonpajak") && $this->totalnonpajak->CurrentValue != $this->totalnonpajak->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_pajak") && $CurrentForm->hasValue("o_pajak") && $this->pajak->CurrentValue != $this->pajak->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_totaltagihan") && $CurrentForm->hasValue("o_totaltagihan") && $this->totaltagihan->CurrentValue != $this->totaltagihan->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_sisabayar") && $CurrentForm->hasValue("o_sisabayar") && $this->sisabayar->CurrentValue != $this->sisabayar->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_idtermpayment") && $CurrentForm->hasValue("o_idtermpayment") && $this->idtermpayment->CurrentValue != $this->idtermpayment->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_idtipepayment") && $CurrentForm->hasValue("o_idtipepayment") && $this->idtipepayment->CurrentValue != $this->idtipepayment->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_keterangan") && $CurrentForm->hasValue("o_keterangan") && $this->keterangan->CurrentValue != $this->keterangan->OldValue) {
             return false;
         }
         return true;
@@ -1077,8 +1093,13 @@ class InvoiceGrid extends Invoice
         $this->tglinvoice->clearErrorMessage();
         $this->idcustomer->clearErrorMessage();
         $this->idorder->clearErrorMessage();
+        $this->totalnonpajak->clearErrorMessage();
+        $this->pajak->clearErrorMessage();
         $this->totaltagihan->clearErrorMessage();
         $this->sisabayar->clearErrorMessage();
+        $this->idtermpayment->clearErrorMessage();
+        $this->idtipepayment->clearErrorMessage();
+        $this->keterangan->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1512,6 +1533,32 @@ class InvoiceGrid extends Invoice
             $this->idorder->setOldValue($CurrentForm->getValue("o_idorder"));
         }
 
+        // Check field name 'totalnonpajak' first before field var 'x_totalnonpajak'
+        $val = $CurrentForm->hasValue("totalnonpajak") ? $CurrentForm->getValue("totalnonpajak") : $CurrentForm->getValue("x_totalnonpajak");
+        if (!$this->totalnonpajak->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->totalnonpajak->Visible = false; // Disable update for API request
+            } else {
+                $this->totalnonpajak->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_totalnonpajak")) {
+            $this->totalnonpajak->setOldValue($CurrentForm->getValue("o_totalnonpajak"));
+        }
+
+        // Check field name 'pajak' first before field var 'x_pajak'
+        $val = $CurrentForm->hasValue("pajak") ? $CurrentForm->getValue("pajak") : $CurrentForm->getValue("x_pajak");
+        if (!$this->pajak->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->pajak->Visible = false; // Disable update for API request
+            } else {
+                $this->pajak->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_pajak")) {
+            $this->pajak->setOldValue($CurrentForm->getValue("o_pajak"));
+        }
+
         // Check field name 'totaltagihan' first before field var 'x_totaltagihan'
         $val = $CurrentForm->hasValue("totaltagihan") ? $CurrentForm->getValue("totaltagihan") : $CurrentForm->getValue("x_totaltagihan");
         if (!$this->totaltagihan->IsDetailKey) {
@@ -1538,6 +1585,45 @@ class InvoiceGrid extends Invoice
             $this->sisabayar->setOldValue($CurrentForm->getValue("o_sisabayar"));
         }
 
+        // Check field name 'idtermpayment' first before field var 'x_idtermpayment'
+        $val = $CurrentForm->hasValue("idtermpayment") ? $CurrentForm->getValue("idtermpayment") : $CurrentForm->getValue("x_idtermpayment");
+        if (!$this->idtermpayment->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idtermpayment->Visible = false; // Disable update for API request
+            } else {
+                $this->idtermpayment->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_idtermpayment")) {
+            $this->idtermpayment->setOldValue($CurrentForm->getValue("o_idtermpayment"));
+        }
+
+        // Check field name 'idtipepayment' first before field var 'x_idtipepayment'
+        $val = $CurrentForm->hasValue("idtipepayment") ? $CurrentForm->getValue("idtipepayment") : $CurrentForm->getValue("x_idtipepayment");
+        if (!$this->idtipepayment->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idtipepayment->Visible = false; // Disable update for API request
+            } else {
+                $this->idtipepayment->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_idtipepayment")) {
+            $this->idtipepayment->setOldValue($CurrentForm->getValue("o_idtipepayment"));
+        }
+
+        // Check field name 'keterangan' first before field var 'x_keterangan'
+        $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
+        if (!$this->keterangan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->keterangan->Visible = false; // Disable update for API request
+            } else {
+                $this->keterangan->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_keterangan")) {
+            $this->keterangan->setOldValue($CurrentForm->getValue("o_keterangan"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1557,8 +1643,13 @@ class InvoiceGrid extends Invoice
         $this->tglinvoice->CurrentValue = UnFormatDateTime($this->tglinvoice->CurrentValue, 0);
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idorder->CurrentValue = $this->idorder->FormValue;
+        $this->totalnonpajak->CurrentValue = $this->totalnonpajak->FormValue;
+        $this->pajak->CurrentValue = $this->pajak->FormValue;
         $this->totaltagihan->CurrentValue = $this->totaltagihan->FormValue;
         $this->sisabayar->CurrentValue = $this->sisabayar->FormValue;
+        $this->idtermpayment->CurrentValue = $this->idtermpayment->FormValue;
+        $this->idtipepayment->CurrentValue = $this->idtipepayment->FormValue;
+        $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
 
     // Load recordset
@@ -1699,6 +1790,11 @@ class InvoiceGrid extends Invoice
         $this->EditUrl = $this->getEditUrl();
         $this->CopyUrl = $this->getCopyUrl();
         $this->DeleteUrl = $this->getDeleteUrl();
+
+        // Convert decimal values if posted back
+        if ($this->pajak->FormValue == $this->pajak->CurrentValue && is_numeric(ConvertToFloatString($this->pajak->CurrentValue))) {
+            $this->pajak->CurrentValue = ConvertToFloatString($this->pajak->CurrentValue);
+        }
 
         // Call Row_Rendering event
         $this->rowRendering();
@@ -1915,6 +2011,16 @@ class InvoiceGrid extends Invoice
             }
             $this->idorder->TooltipValue = "";
 
+            // totalnonpajak
+            $this->totalnonpajak->LinkCustomAttributes = "";
+            $this->totalnonpajak->HrefValue = "";
+            $this->totalnonpajak->TooltipValue = "";
+
+            // pajak
+            $this->pajak->LinkCustomAttributes = "";
+            $this->pajak->HrefValue = "";
+            $this->pajak->TooltipValue = "";
+
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
             $this->totaltagihan->HrefValue = "";
@@ -1924,6 +2030,21 @@ class InvoiceGrid extends Invoice
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
             $this->sisabayar->TooltipValue = "";
+
+            // idtermpayment
+            $this->idtermpayment->LinkCustomAttributes = "";
+            $this->idtermpayment->HrefValue = "";
+            $this->idtermpayment->TooltipValue = "";
+
+            // idtipepayment
+            $this->idtipepayment->LinkCustomAttributes = "";
+            $this->idtipepayment->HrefValue = "";
+            $this->idtipepayment->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -2028,6 +2149,22 @@ class InvoiceGrid extends Invoice
             }
             $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
+            // totalnonpajak
+            $this->totalnonpajak->EditAttrs["class"] = "form-control";
+            $this->totalnonpajak->EditCustomAttributes = "readonly";
+            $this->totalnonpajak->EditValue = HtmlEncode($this->totalnonpajak->CurrentValue);
+            $this->totalnonpajak->PlaceHolder = RemoveHtml($this->totalnonpajak->caption());
+
+            // pajak
+            $this->pajak->EditAttrs["class"] = "form-control";
+            $this->pajak->EditCustomAttributes = "";
+            $this->pajak->EditValue = HtmlEncode($this->pajak->CurrentValue);
+            $this->pajak->PlaceHolder = RemoveHtml($this->pajak->caption());
+            if (strval($this->pajak->EditValue) != "" && is_numeric($this->pajak->EditValue)) {
+                $this->pajak->EditValue = FormatNumber($this->pajak->EditValue, -2, -2, -2, -2);
+                $this->pajak->OldValue = $this->pajak->EditValue;
+            }
+
             // totaltagihan
             $this->totaltagihan->EditAttrs["class"] = "form-control";
             $this->totaltagihan->EditCustomAttributes = "readonly";
@@ -2039,6 +2176,62 @@ class InvoiceGrid extends Invoice
             $this->sisabayar->EditCustomAttributes = "";
             $this->sisabayar->EditValue = HtmlEncode($this->sisabayar->CurrentValue);
             $this->sisabayar->PlaceHolder = RemoveHtml($this->sisabayar->caption());
+
+            // idtermpayment
+            $this->idtermpayment->EditAttrs["class"] = "form-control";
+            $this->idtermpayment->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idtermpayment->CurrentValue));
+            if ($curVal != "") {
+                $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
+            } else {
+                $this->idtermpayment->ViewValue = $this->idtermpayment->Lookup !== null && is_array($this->idtermpayment->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idtermpayment->ViewValue !== null) { // Load from cache
+                $this->idtermpayment->EditValue = array_values($this->idtermpayment->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idtermpayment->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idtermpayment->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idtermpayment->EditValue = $arwrk;
+            }
+            $this->idtermpayment->PlaceHolder = RemoveHtml($this->idtermpayment->caption());
+
+            // idtipepayment
+            $this->idtipepayment->EditAttrs["class"] = "form-control";
+            $this->idtipepayment->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idtipepayment->CurrentValue));
+            if ($curVal != "") {
+                $this->idtipepayment->ViewValue = $this->idtipepayment->lookupCacheOption($curVal);
+            } else {
+                $this->idtipepayment->ViewValue = $this->idtipepayment->Lookup !== null && is_array($this->idtipepayment->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idtipepayment->ViewValue !== null) { // Load from cache
+                $this->idtipepayment->EditValue = array_values($this->idtipepayment->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idtipepayment->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idtipepayment->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idtipepayment->EditValue = $arwrk;
+            }
+            $this->idtipepayment->PlaceHolder = RemoveHtml($this->idtipepayment->caption());
+
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
             // Add refer script
 
@@ -2066,6 +2259,14 @@ class InvoiceGrid extends Invoice
                 $this->idorder->HrefValue = "";
             }
 
+            // totalnonpajak
+            $this->totalnonpajak->LinkCustomAttributes = "";
+            $this->totalnonpajak->HrefValue = "";
+
+            // pajak
+            $this->pajak->LinkCustomAttributes = "";
+            $this->pajak->HrefValue = "";
+
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
             $this->totaltagihan->HrefValue = "";
@@ -2073,6 +2274,18 @@ class InvoiceGrid extends Invoice
             // sisabayar
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
+
+            // idtermpayment
+            $this->idtermpayment->LinkCustomAttributes = "";
+            $this->idtermpayment->HrefValue = "";
+
+            // idtipepayment
+            $this->idtipepayment->LinkCustomAttributes = "";
+            $this->idtipepayment->HrefValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -2174,6 +2387,22 @@ class InvoiceGrid extends Invoice
             }
             $this->idorder->PlaceHolder = RemoveHtml($this->idorder->caption());
 
+            // totalnonpajak
+            $this->totalnonpajak->EditAttrs["class"] = "form-control";
+            $this->totalnonpajak->EditCustomAttributes = "readonly";
+            $this->totalnonpajak->EditValue = HtmlEncode($this->totalnonpajak->CurrentValue);
+            $this->totalnonpajak->PlaceHolder = RemoveHtml($this->totalnonpajak->caption());
+
+            // pajak
+            $this->pajak->EditAttrs["class"] = "form-control";
+            $this->pajak->EditCustomAttributes = "";
+            $this->pajak->EditValue = HtmlEncode($this->pajak->CurrentValue);
+            $this->pajak->PlaceHolder = RemoveHtml($this->pajak->caption());
+            if (strval($this->pajak->EditValue) != "" && is_numeric($this->pajak->EditValue)) {
+                $this->pajak->EditValue = FormatNumber($this->pajak->EditValue, -2, -2, -2, -2);
+                $this->pajak->OldValue = $this->pajak->EditValue;
+            }
+
             // totaltagihan
             $this->totaltagihan->EditAttrs["class"] = "form-control";
             $this->totaltagihan->EditCustomAttributes = "readonly";
@@ -2185,6 +2414,62 @@ class InvoiceGrid extends Invoice
             $this->sisabayar->EditCustomAttributes = "";
             $this->sisabayar->EditValue = HtmlEncode($this->sisabayar->CurrentValue);
             $this->sisabayar->PlaceHolder = RemoveHtml($this->sisabayar->caption());
+
+            // idtermpayment
+            $this->idtermpayment->EditAttrs["class"] = "form-control";
+            $this->idtermpayment->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idtermpayment->CurrentValue));
+            if ($curVal != "") {
+                $this->idtermpayment->ViewValue = $this->idtermpayment->lookupCacheOption($curVal);
+            } else {
+                $this->idtermpayment->ViewValue = $this->idtermpayment->Lookup !== null && is_array($this->idtermpayment->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idtermpayment->ViewValue !== null) { // Load from cache
+                $this->idtermpayment->EditValue = array_values($this->idtermpayment->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idtermpayment->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idtermpayment->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idtermpayment->EditValue = $arwrk;
+            }
+            $this->idtermpayment->PlaceHolder = RemoveHtml($this->idtermpayment->caption());
+
+            // idtipepayment
+            $this->idtipepayment->EditAttrs["class"] = "form-control";
+            $this->idtipepayment->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idtipepayment->CurrentValue));
+            if ($curVal != "") {
+                $this->idtipepayment->ViewValue = $this->idtipepayment->lookupCacheOption($curVal);
+            } else {
+                $this->idtipepayment->ViewValue = $this->idtipepayment->Lookup !== null && is_array($this->idtipepayment->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idtipepayment->ViewValue !== null) { // Load from cache
+                $this->idtipepayment->EditValue = array_values($this->idtipepayment->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idtipepayment->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idtipepayment->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idtipepayment->EditValue = $arwrk;
+            }
+            $this->idtipepayment->PlaceHolder = RemoveHtml($this->idtipepayment->caption());
+
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
             // Edit refer script
 
@@ -2213,6 +2498,14 @@ class InvoiceGrid extends Invoice
                 $this->idorder->HrefValue = "";
             }
 
+            // totalnonpajak
+            $this->totalnonpajak->LinkCustomAttributes = "";
+            $this->totalnonpajak->HrefValue = "";
+
+            // pajak
+            $this->pajak->LinkCustomAttributes = "";
+            $this->pajak->HrefValue = "";
+
             // totaltagihan
             $this->totaltagihan->LinkCustomAttributes = "";
             $this->totaltagihan->HrefValue = "";
@@ -2220,6 +2513,18 @@ class InvoiceGrid extends Invoice
             // sisabayar
             $this->sisabayar->LinkCustomAttributes = "";
             $this->sisabayar->HrefValue = "";
+
+            // idtermpayment
+            $this->idtermpayment->LinkCustomAttributes = "";
+            $this->idtermpayment->HrefValue = "";
+
+            // idtipepayment
+            $this->idtipepayment->LinkCustomAttributes = "";
+            $this->idtipepayment->HrefValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2263,6 +2568,22 @@ class InvoiceGrid extends Invoice
                 $this->idorder->addErrorMessage(str_replace("%s", $this->idorder->caption(), $this->idorder->RequiredErrorMessage));
             }
         }
+        if ($this->totalnonpajak->Required) {
+            if (!$this->totalnonpajak->IsDetailKey && EmptyValue($this->totalnonpajak->FormValue)) {
+                $this->totalnonpajak->addErrorMessage(str_replace("%s", $this->totalnonpajak->caption(), $this->totalnonpajak->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->totalnonpajak->FormValue)) {
+            $this->totalnonpajak->addErrorMessage($this->totalnonpajak->getErrorMessage(false));
+        }
+        if ($this->pajak->Required) {
+            if (!$this->pajak->IsDetailKey && EmptyValue($this->pajak->FormValue)) {
+                $this->pajak->addErrorMessage(str_replace("%s", $this->pajak->caption(), $this->pajak->RequiredErrorMessage));
+            }
+        }
+        if (!CheckNumber($this->pajak->FormValue)) {
+            $this->pajak->addErrorMessage($this->pajak->getErrorMessage(false));
+        }
         if ($this->totaltagihan->Required) {
             if (!$this->totaltagihan->IsDetailKey && EmptyValue($this->totaltagihan->FormValue)) {
                 $this->totaltagihan->addErrorMessage(str_replace("%s", $this->totaltagihan->caption(), $this->totaltagihan->RequiredErrorMessage));
@@ -2278,6 +2599,21 @@ class InvoiceGrid extends Invoice
         }
         if (!CheckInteger($this->sisabayar->FormValue)) {
             $this->sisabayar->addErrorMessage($this->sisabayar->getErrorMessage(false));
+        }
+        if ($this->idtermpayment->Required) {
+            if (!$this->idtermpayment->IsDetailKey && EmptyValue($this->idtermpayment->FormValue)) {
+                $this->idtermpayment->addErrorMessage(str_replace("%s", $this->idtermpayment->caption(), $this->idtermpayment->RequiredErrorMessage));
+            }
+        }
+        if ($this->idtipepayment->Required) {
+            if (!$this->idtipepayment->IsDetailKey && EmptyValue($this->idtipepayment->FormValue)) {
+                $this->idtipepayment->addErrorMessage(str_replace("%s", $this->idtipepayment->caption(), $this->idtipepayment->RequiredErrorMessage));
+            }
+        }
+        if ($this->keterangan->Required) {
+            if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
+                $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -2400,11 +2736,26 @@ class InvoiceGrid extends Invoice
             // idorder
             $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, $this->idorder->ReadOnly);
 
+            // totalnonpajak
+            $this->totalnonpajak->setDbValueDef($rsnew, $this->totalnonpajak->CurrentValue, 0, $this->totalnonpajak->ReadOnly);
+
+            // pajak
+            $this->pajak->setDbValueDef($rsnew, $this->pajak->CurrentValue, 0, $this->pajak->ReadOnly);
+
             // totaltagihan
             $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, $this->totaltagihan->ReadOnly);
 
             // sisabayar
             $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, $this->sisabayar->ReadOnly);
+
+            // idtermpayment
+            $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, $this->idtermpayment->ReadOnly);
+
+            // idtipepayment
+            $this->idtipepayment->setDbValueDef($rsnew, $this->idtipepayment->CurrentValue, null, $this->idtipepayment->ReadOnly);
+
+            // keterangan
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
@@ -2520,11 +2871,26 @@ class InvoiceGrid extends Invoice
         // idorder
         $this->idorder->setDbValueDef($rsnew, $this->idorder->CurrentValue, 0, false);
 
+        // totalnonpajak
+        $this->totalnonpajak->setDbValueDef($rsnew, $this->totalnonpajak->CurrentValue, 0, strval($this->totalnonpajak->CurrentValue) == "");
+
+        // pajak
+        $this->pajak->setDbValueDef($rsnew, $this->pajak->CurrentValue, 0, strval($this->pajak->CurrentValue) == "");
+
         // totaltagihan
         $this->totaltagihan->setDbValueDef($rsnew, $this->totaltagihan->CurrentValue, 0, strval($this->totaltagihan->CurrentValue) == "");
 
         // sisabayar
         $this->sisabayar->setDbValueDef($rsnew, $this->sisabayar->CurrentValue, 0, strval($this->sisabayar->CurrentValue) == "");
+
+        // idtermpayment
+        $this->idtermpayment->setDbValueDef($rsnew, $this->idtermpayment->CurrentValue, 0, false);
+
+        // idtipepayment
+        $this->idtipepayment->setDbValueDef($rsnew, $this->idtipepayment->CurrentValue, null, false);
+
+        // keterangan
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // id
         if ($this->id->getSessionValue() != "") {
