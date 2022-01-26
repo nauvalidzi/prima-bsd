@@ -468,8 +468,7 @@ class VListBrandCustomersEdit extends VListBrandCustomers
         $this->idcustomer->setVisibility();
         $this->kode_customer->Visible = false;
         $this->nama_customer->Visible = false;
-        $this->jumlah_produk->Visible = false;
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -678,7 +677,14 @@ class VListBrandCustomersEdit extends VListBrandCustomers
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_id")) {
+            $this->id->setOldValue($CurrentForm->getValue("o_id"));
         }
     }
 
@@ -686,9 +692,9 @@ class VListBrandCustomersEdit extends VListBrandCustomers
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
     }
 
     /**
@@ -742,7 +748,6 @@ class VListBrandCustomersEdit extends VListBrandCustomers
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->jumlah_produk->setDbValue($row['jumlah_produk']);
         $this->id->setDbValue($row['id']);
     }
 
@@ -754,7 +759,6 @@ class VListBrandCustomersEdit extends VListBrandCustomers
         $row['idcustomer'] = null;
         $row['kode_customer'] = null;
         $row['nama_customer'] = null;
-        $row['jumlah_produk'] = null;
         $row['id'] = null;
         return $row;
     }
@@ -794,8 +798,6 @@ class VListBrandCustomersEdit extends VListBrandCustomers
         // kode_customer
 
         // nama_customer
-
-        // jumlah_produk
 
         // id
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -849,10 +851,10 @@ class VListBrandCustomersEdit extends VListBrandCustomers
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
 
-            // jumlah_produk
-            $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
-            $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_produk->ViewCustomAttributes = "";
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
+            $this->id->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -863,6 +865,11 @@ class VListBrandCustomersEdit extends VListBrandCustomers
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -937,6 +944,10 @@ class VListBrandCustomersEdit extends VListBrandCustomers
             }
             $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+
             // Edit refer script
 
             // idbrand
@@ -946,6 +957,10 @@ class VListBrandCustomersEdit extends VListBrandCustomers
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -974,6 +989,11 @@ class VListBrandCustomersEdit extends VListBrandCustomers
         if ($this->idcustomer->Required) {
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
 
@@ -1016,6 +1036,9 @@ class VListBrandCustomersEdit extends VListBrandCustomers
 
             // idcustomer
             $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, $this->idcustomer->ReadOnly);
+
+            // id
+            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
 
             // Check referential integrity for master table 'brand'
             $validMasterRecord = true;
@@ -1312,7 +1335,12 @@ class VListBrandCustomersEdit extends VListBrandCustomers
     // Form Custom Validate event
     public function formCustomValidate(&$customError)
     {
-        // Return error message in CustomError
+        // Cek duplikat data
+        $cek = ExecuteRow("SELECT COUNT(*) AS jumlah, b.title AS nama_brand, v.nama_customer FROM v_list_brand_customers v JOIN brand b ON b.id = v.idbrand WHERE v.idbrand = {$this->idbrand->FormValue} AND v.idcustomer = {$this->idcustomer->FormValue}");
+        if ($cek['jumlah'] > 0) {
+        	$customError = "{$cek['nama_brand']} dengan customer {$cek['nama_customer']} telah ditambahkan.<br>Silakan pilih customer lain untuk brand {$cek['nama_brand']}";
+        	return false;
+        }
         return true;
     }
 }

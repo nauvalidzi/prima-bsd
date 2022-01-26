@@ -4526,11 +4526,8 @@
       <field id="nama_customer">
         <phrase id="fldcaption" value="Nama Customer" />
       </field>
-      <field id="jumlah_produk">
-        <phrase id="fldcaption" value="Jumlah Produk" />
-      </field>
       <field id="id">
-        <phrase id="fldcaption" value="id" />
+        <phrase id="fldcaption" value="Jumlah Produk" />
       </field>
     </table>
     <table id="v_list_customer_brands">

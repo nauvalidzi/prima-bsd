@@ -469,7 +469,7 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
         $this->kode_brand->Visible = false;
         $this->nama_brand->Visible = false;
         $this->jumlah_produk->Visible = false;
-        $this->id->Visible = false;
+        $this->id->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -678,7 +678,14 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
+            if (IsApi() && $val === null) {
+                $this->id->Visible = false; // Disable update for API request
+            } else {
+                $this->id->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_id")) {
+            $this->id->setOldValue($CurrentForm->getValue("o_id"));
         }
     }
 
@@ -686,9 +693,9 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
     public function restoreFormValues()
     {
         global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
+        $this->id->CurrentValue = $this->id->FormValue;
     }
 
     /**
@@ -854,6 +861,11 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
             $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
             $this->jumlah_produk->ViewCustomAttributes = "";
 
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 4, -2, -2, -2);
+            $this->id->ViewCustomAttributes = "";
+
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
@@ -863,6 +875,11 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
             $this->idbrand->TooltipValue = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idcustomer
             $this->idcustomer->EditAttrs["class"] = "form-control";
@@ -937,6 +954,10 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
             }
             $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
+            // id
+            $this->id->EditAttrs["class"] = "form-control";
+            $this->id->EditCustomAttributes = "";
+
             // Edit refer script
 
             // idcustomer
@@ -946,6 +967,10 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -974,6 +999,11 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
         if ($this->idbrand->Required) {
             if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
                 $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
+            }
+        }
+        if ($this->id->Required) {
+            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
+                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
 
@@ -1016,6 +1046,9 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
 
             // idbrand
             $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
+
+            // id
+            $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, $this->id->ReadOnly);
 
             // Check referential integrity for master table 'customer'
             $validMasterRecord = true;
@@ -1312,7 +1345,12 @@ class VListCustomerBrandsEdit extends VListCustomerBrands
     // Form Custom Validate event
     public function formCustomValidate(&$customError)
     {
-        // Return error message in CustomError
+        // Cek duplikat data
+        $cek = ExecuteRow("SELECT COUNT(*) AS jumlah, c.nama AS nama_customer, v.nama_brand FROM v_list_customer_brands v JOIN customer c ON c.id = v.idbrand WHERE v.idbrand = {$this->idbrand->FormValue} AND v.idcustomer = {$this->idcustomer->FormValue}");
+        if ($cek['jumlah'] > 0) {
+        	$customError = "{$cek['nama_customer']} dengan brand {$cek['nama_brand']} telah ditambahkan.<br>Silakan pilih brand lain untuk customer {$cek['nama_customer']}";
+        	return false;
+        }
         return true;
     }
 }

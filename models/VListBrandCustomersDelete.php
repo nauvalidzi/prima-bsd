@@ -375,7 +375,6 @@ class VListBrandCustomersDelete extends VListBrandCustomers
         $this->idcustomer->setVisibility();
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
-        $this->jumlah_produk->setVisibility();
         $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -548,7 +547,6 @@ class VListBrandCustomersDelete extends VListBrandCustomers
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->jumlah_produk->setDbValue($row['jumlah_produk']);
         $this->id->setDbValue($row['id']);
     }
 
@@ -560,7 +558,6 @@ class VListBrandCustomersDelete extends VListBrandCustomers
         $row['idcustomer'] = null;
         $row['kode_customer'] = null;
         $row['nama_customer'] = null;
-        $row['jumlah_produk'] = null;
         $row['id'] = null;
         return $row;
     }
@@ -584,8 +581,6 @@ class VListBrandCustomersDelete extends VListBrandCustomers
         // kode_customer
 
         // nama_customer
-
-        // jumlah_produk
 
         // id
         $this->id->CellCssStyle = "white-space: nowrap;";
@@ -640,11 +635,6 @@ class VListBrandCustomersDelete extends VListBrandCustomers
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
 
-            // jumlah_produk
-            $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
-            $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_produk->ViewCustomAttributes = "";
-
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
@@ -664,11 +654,6 @@ class VListBrandCustomersDelete extends VListBrandCustomers
             $this->nama_customer->LinkCustomAttributes = "";
             $this->nama_customer->HrefValue = "";
             $this->nama_customer->TooltipValue = "";
-
-            // jumlah_produk
-            $this->jumlah_produk->LinkCustomAttributes = "";
-            $this->jumlah_produk->HrefValue = "";
-            $this->jumlah_produk->TooltipValue = "";
         }
 
         // Call Row Rendered event

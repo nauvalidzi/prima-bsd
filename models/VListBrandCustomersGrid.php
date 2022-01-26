@@ -506,7 +506,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         $this->idcustomer->setVisibility();
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
-        $this->jumlah_produk->setVisibility();
         $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -944,9 +943,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         if ($CurrentForm->hasValue("x_nama_customer") && $CurrentForm->hasValue("o_nama_customer") && $this->nama_customer->CurrentValue != $this->nama_customer->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_jumlah_produk") && $CurrentForm->hasValue("o_jumlah_produk") && $this->jumlah_produk->CurrentValue != $this->jumlah_produk->OldValue) {
-            return false;
-        }
         return true;
     }
 
@@ -1032,7 +1028,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         $this->idcustomer->clearErrorMessage();
         $this->kode_customer->clearErrorMessage();
         $this->nama_customer->clearErrorMessage();
-        $this->jumlah_produk->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1051,10 +1046,14 @@ class VListBrandCustomersGrid extends VListBrandCustomers
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "";
+            $this->DefaultSort = "`idcustomer` ASC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
+                if ($this->idcustomer->getSort() != "") {
+                    $useDefaultSort = false;
+                }
                 if ($useDefaultSort) {
+                    $this->idcustomer->setSort("ASC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -1278,8 +1277,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         $this->kode_customer->OldValue = $this->kode_customer->CurrentValue;
         $this->nama_customer->CurrentValue = null;
         $this->nama_customer->OldValue = $this->nama_customer->CurrentValue;
-        $this->jumlah_produk->CurrentValue = 0;
-        $this->jumlah_produk->OldValue = $this->jumlah_produk->CurrentValue;
         $this->id->CurrentValue = 0;
         $this->id->OldValue = $this->id->CurrentValue;
     }
@@ -1343,19 +1340,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->setOldValue($CurrentForm->getValue("o_nama_customer"));
         }
 
-        // Check field name 'jumlah_produk' first before field var 'x_jumlah_produk'
-        $val = $CurrentForm->hasValue("jumlah_produk") ? $CurrentForm->getValue("jumlah_produk") : $CurrentForm->getValue("x_jumlah_produk");
-        if (!$this->jumlah_produk->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->jumlah_produk->Visible = false; // Disable update for API request
-            } else {
-                $this->jumlah_produk->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_jumlah_produk")) {
-            $this->jumlah_produk->setOldValue($CurrentForm->getValue("o_jumlah_produk"));
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
@@ -1372,7 +1356,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->kode_customer->CurrentValue = $this->kode_customer->FormValue;
         $this->nama_customer->CurrentValue = $this->nama_customer->FormValue;
-        $this->jumlah_produk->CurrentValue = $this->jumlah_produk->FormValue;
     }
 
     // Load recordset
@@ -1447,7 +1430,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->jumlah_produk->setDbValue($row['jumlah_produk']);
         $this->id->setDbValue($row['id']);
     }
 
@@ -1460,7 +1442,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['kode_customer'] = $this->kode_customer->CurrentValue;
         $row['nama_customer'] = $this->nama_customer->CurrentValue;
-        $row['jumlah_produk'] = $this->jumlah_produk->CurrentValue;
         $row['id'] = $this->id->CurrentValue;
         return $row;
     }
@@ -1504,8 +1485,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         // kode_customer
 
         // nama_customer
-
-        // jumlah_produk
 
         // id
         $this->id->CellCssStyle = "white-space: nowrap;";
@@ -1560,11 +1539,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
 
-            // jumlah_produk
-            $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
-            $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_produk->ViewCustomAttributes = "";
-
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
@@ -1584,11 +1558,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->LinkCustomAttributes = "";
             $this->nama_customer->HrefValue = "";
             $this->nama_customer->TooltipValue = "";
-
-            // jumlah_produk
-            $this->jumlah_produk->LinkCustomAttributes = "";
-            $this->jumlah_produk->HrefValue = "";
-            $this->jumlah_produk->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -1682,11 +1651,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->EditValue = HtmlEncode($this->nama_customer->CurrentValue);
             $this->nama_customer->PlaceHolder = RemoveHtml($this->nama_customer->caption());
 
-            // jumlah_produk
-            $this->jumlah_produk->EditAttrs["class"] = "form-control";
-            $this->jumlah_produk->EditCustomAttributes = "";
-            $this->jumlah_produk->CurrentValue = 0;
-
             // Add refer script
 
             // idbrand
@@ -1704,10 +1668,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             // nama_customer
             $this->nama_customer->LinkCustomAttributes = "";
             $this->nama_customer->HrefValue = "";
-
-            // jumlah_produk
-            $this->jumlah_produk->LinkCustomAttributes = "";
-            $this->jumlah_produk->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -1791,10 +1751,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->EditAttrs["class"] = "form-control";
             $this->nama_customer->EditCustomAttributes = "";
 
-            // jumlah_produk
-            $this->jumlah_produk->EditAttrs["class"] = "form-control";
-            $this->jumlah_produk->EditCustomAttributes = "";
-
             // Edit refer script
 
             // idbrand
@@ -1812,10 +1768,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             // nama_customer
             $this->nama_customer->LinkCustomAttributes = "";
             $this->nama_customer->HrefValue = "";
-
-            // jumlah_produk
-            $this->jumlah_produk->LinkCustomAttributes = "";
-            $this->jumlah_produk->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1854,11 +1806,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         if ($this->nama_customer->Required) {
             if (!$this->nama_customer->IsDetailKey && EmptyValue($this->nama_customer->FormValue)) {
                 $this->nama_customer->addErrorMessage(str_replace("%s", $this->nama_customer->caption(), $this->nama_customer->RequiredErrorMessage));
-            }
-        }
-        if ($this->jumlah_produk->Required) {
-            if (!$this->jumlah_produk->IsDetailKey && EmptyValue($this->jumlah_produk->FormValue)) {
-                $this->jumlah_produk->addErrorMessage(str_replace("%s", $this->jumlah_produk->caption(), $this->jumlah_produk->RequiredErrorMessage));
             }
         }
 
@@ -1985,9 +1932,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             // nama_customer
             $this->nama_customer->setDbValueDef($rsnew, $this->nama_customer->CurrentValue, "", $this->nama_customer->ReadOnly);
 
-            // jumlah_produk
-            $this->jumlah_produk->setDbValueDef($rsnew, $this->jumlah_produk->CurrentValue, 0, $this->jumlah_produk->ReadOnly);
-
             // Check referential integrity for master table 'brand'
             $validMasterRecord = true;
             $masterFilter = $this->sqlMasterFilter_brand();
@@ -2110,9 +2054,6 @@ class VListBrandCustomersGrid extends VListBrandCustomers
 
         // nama_customer
         $this->nama_customer->setDbValueDef($rsnew, $this->nama_customer->CurrentValue, "", false);
-
-        // jumlah_produk
-        $this->jumlah_produk->setDbValueDef($rsnew, $this->jumlah_produk->CurrentValue, 0, strval($this->jumlah_produk->CurrentValue) == "");
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

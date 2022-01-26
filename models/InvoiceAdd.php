@@ -1921,7 +1921,16 @@ class InvoiceAdd extends Invoice
     // Form Custom Validate event
     public function formCustomValidate(&$customError)
     {
-        // Return error message in CustomError
+        // CEK DUPLIKAT DATA INVOICE DETAIL
+        $data = [];
+        foreach ($GLOBALS["invoice_detail"]->GetGridFormValues() as $row) {
+            $data[] = $row['idorder_detail'];
+        }
+        if (check_duplicate($data) == true) {
+            $customError = "Terjadi duplikat data pada Invoice Detail.";
+            return false;
+        }
+        // CEK DUPLIKAT DATA INVOICE DETAIL
         return true;
     }
 }

@@ -56,9 +56,6 @@ $Page->showMessage();
 <?php if ($Page->nama_customer->Visible) { // nama_customer ?>
         <th class="<?= $Page->nama_customer->headerCellClass() ?>"><span id="elh_v_list_brand_customers_nama_customer" class="v_list_brand_customers_nama_customer"><?= $Page->nama_customer->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->jumlah_produk->Visible) { // jumlah_produk ?>
-        <th class="<?= $Page->jumlah_produk->headerCellClass() ?>"><span id="elh_v_list_brand_customers_jumlah_produk" class="v_list_brand_customers_jumlah_produk"><?= $Page->jumlah_produk->caption() ?></span></th>
-<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -109,14 +106,6 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_v_list_brand_customers_nama_customer" class="v_list_brand_customers_nama_customer">
 <span<?= $Page->nama_customer->viewAttributes() ?>>
 <?= $Page->nama_customer->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->jumlah_produk->Visible) { // jumlah_produk ?>
-        <td <?= $Page->jumlah_produk->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_list_brand_customers_jumlah_produk" class="v_list_brand_customers_jumlah_produk">
-<span<?= $Page->jumlah_produk->viewAttributes() ?>>
-<?= $Page->jumlah_produk->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

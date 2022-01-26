@@ -372,6 +372,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $("th[data-name=kode_customer], td[data-name=kode_customer]").remove(),$("th[data-name=nama_customer], td[data-name=nama_customer]").remove(),$("th[data-name=jumlah_produk], td[data-name=jumlah_produk]").remove();
+    $("th[data-name=kode_customer], td[data-name=kode_customer]").remove(),$("th[data-name=nama_customer], td[data-name=nama_customer]").remove();
 });
 </script>

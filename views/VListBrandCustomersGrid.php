@@ -25,8 +25,7 @@ loadjs.ready("head", function () {
         ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["kode_customer", [fields.kode_customer.visible && fields.kode_customer.required ? ew.Validators.required(fields.kode_customer.caption) : null], fields.kode_customer.isInvalid],
-        ["nama_customer", [fields.nama_customer.visible && fields.nama_customer.required ? ew.Validators.required(fields.nama_customer.caption) : null], fields.nama_customer.isInvalid],
-        ["jumlah_produk", [fields.jumlah_produk.visible && fields.jumlah_produk.required ? ew.Validators.required(fields.jumlah_produk.caption) : null], fields.jumlah_produk.isInvalid]
+        ["nama_customer", [fields.nama_customer.visible && fields.nama_customer.required ? ew.Validators.required(fields.nama_customer.caption) : null], fields.nama_customer.isInvalid]
     ]);
 
     // Set invalid fields
@@ -88,8 +87,6 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "nama_customer", false))
             return false;
-        if (ew.valueChanged(fobj, rowIndex, "jumlah_produk", false))
-            return false;
         return true;
     }
 
@@ -140,9 +137,6 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->nama_customer->Visible) { // nama_customer ?>
         <th data-name="nama_customer" class="<?= $Grid->nama_customer->headerCellClass() ?>"><div id="elh_v_list_brand_customers_nama_customer" class="v_list_brand_customers_nama_customer"><?= $Grid->renderSort($Grid->nama_customer) ?></div></th>
-<?php } ?>
-<?php if ($Grid->jumlah_produk->Visible) { // jumlah_produk ?>
-        <th data-name="jumlah_produk" class="<?= $Grid->jumlah_produk->headerCellClass() ?>"><div id="elh_v_list_brand_customers_jumlah_produk" class="v_list_brand_customers_jumlah_produk"><?= $Grid->renderSort($Grid->jumlah_produk) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -465,31 +459,6 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->jumlah_produk->Visible) { // jumlah_produk ?>
-        <td data-name="jumlah_produk" <?= $Grid->jumlah_produk->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_jumlah_produk" class="form-group">
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlah_produk" id="x<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->CurrentValue) ?>">
-</span>
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlah_produk" id="o<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_jumlah_produk" class="form-group">
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlah_produk" id="x<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->CurrentValue) ?>">
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_jumlah_produk">
-<span<?= $Grid->jumlah_produk->viewAttributes() ?>>
-<?= $Grid->jumlah_produk->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="fv_list_brand_customersgrid$x<?= $Grid->RowIndex ?>_jumlah_produk" id="fv_list_brand_customersgrid$x<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->FormValue) ?>">
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="fv_list_brand_customersgrid$o<?= $Grid->RowIndex ?>_jumlah_produk" id="fv_list_brand_customersgrid$o<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -643,18 +612,6 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="v_list_brand_customers" data-field="x_nama_customer" data-hidden="1" name="x<?= $Grid->RowIndex ?>_nama_customer" id="x<?= $Grid->RowIndex ?>_nama_customer" value="<?= HtmlEncode($Grid->nama_customer->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="v_list_brand_customers" data-field="x_nama_customer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_nama_customer" id="o<?= $Grid->RowIndex ?>_nama_customer" value="<?= HtmlEncode($Grid->nama_customer->OldValue) ?>">
-</td>
-    <?php } ?>
-    <?php if ($Grid->jumlah_produk->Visible) { // jumlah_produk ?>
-        <td data-name="jumlah_produk">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_v_list_brand_customers_jumlah_produk" class="form-group v_list_brand_customers_jumlah_produk">
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlah_produk" id="x<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->CurrentValue) ?>">
-</span>
-<?php } else { ?>
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlah_produk" id="x<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="v_list_brand_customers" data-field="x_jumlah_produk" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlah_produk" id="o<?= $Grid->RowIndex ?>_jumlah_produk" value="<?= HtmlEncode($Grid->jumlah_produk->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

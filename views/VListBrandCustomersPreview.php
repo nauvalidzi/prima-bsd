@@ -58,15 +58,6 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->jumlah_produk->Visible) { // jumlah_produk ?>
-    <?php if ($Page->SortUrl($Page->jumlah_produk) == "") { ?>
-        <th class="<?= $Page->jumlah_produk->headerCellClass() ?>"><?= $Page->jumlah_produk->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->jumlah_produk->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->jumlah_produk->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->jumlah_produk->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->jumlah_produk->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->jumlah_produk->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->jumlah_produk->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -123,13 +114,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->nama_customer->cellAttributes() ?>>
 <span<?= $Page->nama_customer->viewAttributes() ?>>
 <?= $Page->nama_customer->getViewValue() ?></span>
-</td>
-<?php } ?>
-<?php if ($Page->jumlah_produk->Visible) { // jumlah_produk ?>
-        <!-- jumlah_produk -->
-        <td<?= $Page->jumlah_produk->cellAttributes() ?>>
-<span<?= $Page->jumlah_produk->viewAttributes() ?>>
-<?= $Page->jumlah_produk->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

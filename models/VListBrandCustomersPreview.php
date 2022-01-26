@@ -391,7 +391,6 @@ class VListBrandCustomersPreview extends VListBrandCustomers
         $this->idcustomer->setVisibility();
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
-        $this->jumlah_produk->setVisibility();
         $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -484,7 +483,6 @@ class VListBrandCustomersPreview extends VListBrandCustomers
             $this->idcustomer->setSort("");
             $this->kode_customer->setSort("");
             $this->nama_customer->setSort("");
-            $this->jumlah_produk->setSort("");
             $this->id->setSort("");
 
             // Save sort to session
@@ -501,7 +499,6 @@ class VListBrandCustomersPreview extends VListBrandCustomers
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->kode_customer); // kode_customer
             $this->updateSort($this->nama_customer); // nama_customer
-            $this->updateSort($this->jumlah_produk); // jumlah_produk
         }
     }
 
@@ -515,7 +512,7 @@ class VListBrandCustomersPreview extends VListBrandCustomers
     {
         $sort = $this->getSessionOrderBy();
         if (!$sort) {
-            $sort = "";
+            $sort = "`idcustomer` ASC";
         }
         return $this->buildSelectSql(
             $this->getSqlSelect(),
@@ -797,12 +794,6 @@ class VListBrandCustomersPreview extends VListBrandCustomers
     {
         // Example:
         //$footer = "your footer";
-        //$footer = '<a class="btn btn-default btn-sm ew-add-edit ew-add" title="" data-caption="Add" href="ProductAdd?showmaster=brand&amp;fk_id=105" data-original-title="Add"><i data-phrase="AddLink" class="fas fa-plus ew-icon" data-caption="Add"></i></a>';
-        //echo '<script>$(`.ew-preview-other-options`).append(`<span class="ew-add-edit-option ew-list-option-separator" data-name="add">
-        //        <span id="el__add" class="_add">
-        //            <a class="btn btn-default btn-sm ew-add-edit ew-add" title="" data-caption="Add" href="ProductAdd?showmaster=brand&amp;fk_id=105" data-original-title="Add"><i data-phrase="AddLink" class="fas fa-plus ew-icon" data-caption="Add"></i></a>
-        //        </span>
-        //    </span>`)';
     }
 
     // ListOptions Load event

@@ -32,7 +32,6 @@ class VListBrandCustomers extends DbTable
     public $idcustomer;
     public $kode_customer;
     public $nama_customer;
-    public $jumlah_produk;
     public $id;
 
     // Page ID
@@ -123,16 +122,8 @@ class VListBrandCustomers extends DbTable
         $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
         $this->Fields['nama_customer'] = &$this->nama_customer;
 
-        // jumlah_produk
-        $this->jumlah_produk = new DbField('v_list_brand_customers', 'v_list_brand_customers', 'x_jumlah_produk', 'jumlah_produk', '`jumlah_produk`', '`jumlah_produk`', 20, 21, -1, false, '`jumlah_produk`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->jumlah_produk->Nullable = false; // NOT NULL field
-        $this->jumlah_produk->Sortable = true; // Allow sort
-        $this->jumlah_produk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->jumlah_produk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah_produk->Param, "CustomMsg");
-        $this->Fields['jumlah_produk'] = &$this->jumlah_produk;
-
         // id
-        $this->id = new DbField('v_list_brand_customers', 'v_list_brand_customers', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('v_list_brand_customers', 'v_list_brand_customers', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = false; // Allow sort
@@ -605,7 +596,6 @@ class VListBrandCustomers extends DbTable
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->kode_customer->DbValue = $row['kode_customer'];
         $this->nama_customer->DbValue = $row['nama_customer'];
-        $this->jumlah_produk->DbValue = $row['jumlah_produk'];
         $this->id->DbValue = $row['id'];
     }
 
@@ -935,7 +925,6 @@ SORTHTML;
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->jumlah_produk->setDbValue($row['jumlah_produk']);
         $this->id->setDbValue($row['id']);
     }
 
@@ -956,8 +945,6 @@ SORTHTML;
         // kode_customer
 
         // nama_customer
-
-        // jumlah_produk
 
         // id
         $this->id->CellCssStyle = "white-space: nowrap;";
@@ -1012,11 +999,6 @@ SORTHTML;
         $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
         $this->nama_customer->ViewCustomAttributes = "";
 
-        // jumlah_produk
-        $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
-        $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
-        $this->jumlah_produk->ViewCustomAttributes = "";
-
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
@@ -1041,11 +1023,6 @@ SORTHTML;
         $this->nama_customer->LinkCustomAttributes = "";
         $this->nama_customer->HrefValue = "";
         $this->nama_customer->TooltipValue = "";
-
-        // jumlah_produk
-        $this->jumlah_produk->LinkCustomAttributes = "";
-        $this->jumlah_produk->HrefValue = "";
-        $this->jumlah_produk->TooltipValue = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1108,15 +1085,9 @@ SORTHTML;
         $this->nama_customer->EditAttrs["class"] = "form-control";
         $this->nama_customer->EditCustomAttributes = "";
 
-        // jumlah_produk
-        $this->jumlah_produk->EditAttrs["class"] = "form-control";
-        $this->jumlah_produk->EditCustomAttributes = "";
-
         // id
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1150,13 +1121,11 @@ SORTHTML;
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kode_customer);
                     $doc->exportCaption($this->nama_customer);
-                    $doc->exportCaption($this->jumlah_produk);
                 } else {
                     $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kode_customer);
                     $doc->exportCaption($this->nama_customer);
-                    $doc->exportCaption($this->jumlah_produk);
                 }
                 $doc->endExportRow();
             }
@@ -1190,13 +1159,11 @@ SORTHTML;
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kode_customer);
                         $doc->exportField($this->nama_customer);
-                        $doc->exportField($this->jumlah_produk);
                     } else {
                         $doc->exportField($this->idbrand);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kode_customer);
                         $doc->exportField($this->nama_customer);
-                        $doc->exportField($this->jumlah_produk);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1267,7 +1234,6 @@ SORTHTML;
         $this->UpdateTable = "brand_customer";
         unset($rsnew['kode_customer']);
         unset($rsnew['nama_customer']);
-        unset($rsnew['jumlah_produk']);
         return true;
     }
 
@@ -1285,7 +1251,6 @@ SORTHTML;
         $this->UpdateTable = "brand_customer";
         unset($rsnew['kode_customer']);
         unset($rsnew['nama_customer']);
-        unset($rsnew['jumlah_produk']);
         return true;
     }
 

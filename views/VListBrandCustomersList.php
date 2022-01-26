@@ -160,9 +160,6 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nama_customer->Visible) { // nama_customer ?>
         <th data-name="nama_customer" class="<?= $Page->nama_customer->headerCellClass() ?>"><div id="elh_v_list_brand_customers_nama_customer" class="v_list_brand_customers_nama_customer"><?= $Page->renderSort($Page->nama_customer) ?></div></th>
 <?php } ?>
-<?php if ($Page->jumlah_produk->Visible) { // jumlah_produk ?>
-        <th data-name="jumlah_produk" class="<?= $Page->jumlah_produk->headerCellClass() ?>"><div id="elh_v_list_brand_customers_jumlah_produk" class="v_list_brand_customers_jumlah_produk"><?= $Page->renderSort($Page->jumlah_produk) ?></div></th>
-<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -259,14 +256,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_list_brand_customers_nama_customer">
 <span<?= $Page->nama_customer->viewAttributes() ?>>
 <?= $Page->nama_customer->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->jumlah_produk->Visible) { // jumlah_produk ?>
-        <td data-name="jumlah_produk" <?= $Page->jumlah_produk->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_list_brand_customers_jumlah_produk">
-<span<?= $Page->jumlah_produk->viewAttributes() ?>>
-<?= $Page->jumlah_produk->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

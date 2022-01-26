@@ -569,7 +569,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         $this->idcustomer->setVisibility();
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
-        $this->jumlah_produk->setVisibility();
         $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -890,7 +889,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
         $filterList = Concat($filterList, $this->kode_customer->AdvancedSearch->toJson(), ","); // Field kode_customer
         $filterList = Concat($filterList, $this->nama_customer->AdvancedSearch->toJson(), ","); // Field nama_customer
-        $filterList = Concat($filterList, $this->jumlah_produk->AdvancedSearch->toJson(), ","); // Field jumlah_produk
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -962,14 +960,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         $this->nama_customer->AdvancedSearch->SearchValue2 = @$filter["y_nama_customer"];
         $this->nama_customer->AdvancedSearch->SearchOperator2 = @$filter["w_nama_customer"];
         $this->nama_customer->AdvancedSearch->save();
-
-        // Field jumlah_produk
-        $this->jumlah_produk->AdvancedSearch->SearchValue = @$filter["x_jumlah_produk"];
-        $this->jumlah_produk->AdvancedSearch->SearchOperator = @$filter["z_jumlah_produk"];
-        $this->jumlah_produk->AdvancedSearch->SearchCondition = @$filter["v_jumlah_produk"];
-        $this->jumlah_produk->AdvancedSearch->SearchValue2 = @$filter["y_jumlah_produk"];
-        $this->jumlah_produk->AdvancedSearch->SearchOperator2 = @$filter["w_jumlah_produk"];
-        $this->jumlah_produk->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1146,7 +1136,6 @@ class VListBrandCustomersList extends VListBrandCustomers
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->kode_customer); // kode_customer
             $this->updateSort($this->nama_customer); // nama_customer
-            $this->updateSort($this->jumlah_produk); // jumlah_produk
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1156,10 +1145,14 @@ class VListBrandCustomersList extends VListBrandCustomers
     {
         $orderBy = $this->getSessionOrderBy(); // Get ORDER BY from Session
         if ($orderBy == "") {
-            $this->DefaultSort = "";
+            $this->DefaultSort = "`idcustomer` ASC";
             if ($this->getSqlOrderBy() != "") {
                 $useDefaultSort = true;
+                if ($this->idcustomer->getSort() != "") {
+                    $useDefaultSort = false;
+                }
                 if ($useDefaultSort) {
+                    $this->idcustomer->setSort("ASC");
                     $orderBy = $this->getSqlOrderBy();
                     $this->setSessionOrderBy($orderBy);
                 } else {
@@ -1198,7 +1191,6 @@ class VListBrandCustomersList extends VListBrandCustomers
                 $this->idcustomer->setSort("");
                 $this->kode_customer->setSort("");
                 $this->nama_customer->setSort("");
-                $this->jumlah_produk->setSort("");
                 $this->id->setSort("");
             }
 
@@ -1582,7 +1574,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->jumlah_produk->setDbValue($row['jumlah_produk']);
         $this->id->setDbValue($row['id']);
     }
 
@@ -1594,7 +1585,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         $row['idcustomer'] = null;
         $row['kode_customer'] = null;
         $row['nama_customer'] = null;
-        $row['jumlah_produk'] = null;
         $row['id'] = null;
         return $row;
     }
@@ -1640,8 +1630,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         // kode_customer
 
         // nama_customer
-
-        // jumlah_produk
 
         // id
         $this->id->CellCssStyle = "white-space: nowrap;";
@@ -1696,11 +1684,6 @@ class VListBrandCustomersList extends VListBrandCustomers
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
 
-            // jumlah_produk
-            $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
-            $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_produk->ViewCustomAttributes = "";
-
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
@@ -1720,11 +1703,6 @@ class VListBrandCustomersList extends VListBrandCustomers
             $this->nama_customer->LinkCustomAttributes = "";
             $this->nama_customer->HrefValue = "";
             $this->nama_customer->TooltipValue = "";
-
-            // jumlah_produk
-            $this->jumlah_produk->LinkCustomAttributes = "";
-            $this->jumlah_produk->HrefValue = "";
-            $this->jumlah_produk->TooltipValue = "";
         }
 
         // Call Row Rendered event

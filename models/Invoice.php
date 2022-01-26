@@ -1949,7 +1949,7 @@ SORTHTML;
         	}
         }
         // UPDATE FAKTUR
-        ExecuteUpdate("UPDATE faktur SET tagihan = tagihan-{$rs['totaltagihan']}, piutang = piutang-{$rs['totaltagihan']}, updated_at = '".date('Y-m-d H:i:s')."' WHERE idorder = {$rs['idorder']}");
+        //ExecuteUpdate("UPDATE faktur SET tagihan = tagihan-{$rs['totaltagihan']}, piutang = piutang-{$rs['totaltagihan']}, updated_at = '".date('Y-m-d H:i:s')."' WHERE idorder = {$rs['idorder']}");
         return true;
     }
 

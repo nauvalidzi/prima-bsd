@@ -515,7 +515,7 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
     {
         $sort = $this->getSessionOrderBy();
         if (!$sort) {
-            $sort = "";
+            $sort = "`idbrand` ASC";
         }
         return $this->buildSelectSql(
             $this->getSqlSelect(),

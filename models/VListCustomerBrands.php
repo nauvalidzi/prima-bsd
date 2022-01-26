@@ -131,7 +131,7 @@ class VListCustomerBrands extends DbTable
         $this->Fields['jumlah_produk'] = &$this->jumlah_produk;
 
         // id
-        $this->id = new DbField('v_list_customer_brands', 'v_list_customer_brands', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id = new DbField('v_list_customer_brands', 'v_list_customer_brands', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Nullable = false; // NOT NULL field
         $this->id->Sortable = false; // Allow sort
@@ -1114,8 +1114,6 @@ SORTHTML;
         // id
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // Call Row Rendered event
         $this->rowRendered();

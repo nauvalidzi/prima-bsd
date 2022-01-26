@@ -515,6 +515,13 @@ function update_status_order($idinvoice, $attr="") {
     return true;
 }
 
+function check_duplicate($data) {
+    if (count($data) > count(array_unique($data)) ) {
+        return true;
+    }
+    return false;
+}
+
 //-- FUNGSI TERBILANG --//
 function penyebut($nilai) {
 	$nilai = abs($nilai);
