@@ -351,6 +351,7 @@ class VListBrandCustomersPreview extends VListBrandCustomers
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -391,6 +392,7 @@ class VListBrandCustomersPreview extends VListBrandCustomers
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
         $this->jumlah_produk->setVisibility();
+        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -483,6 +485,7 @@ class VListBrandCustomersPreview extends VListBrandCustomers
             $this->kode_customer->setSort("");
             $this->nama_customer->setSort("");
             $this->jumlah_produk->setSort("");
+            $this->id->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -537,6 +540,18 @@ class VListBrandCustomersPreview extends VListBrandCustomers
         $item->OnLeft = false;
         $item->Visible = false;
 
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "delete"
+        $item = &$this->ListOptions->add("delete");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canDelete();
+        $item->OnLeft = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -558,6 +573,37 @@ class VListBrandCustomersPreview extends VListBrandCustomers
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $masterKeyUrl = $this->masterKeyUrl();
+
+        // "edit"
+        $opt = $this->ListOptions["edit"];
+        if ($Security->canEdit()) {
+            $editCaption = $Language->phrase("EditLink");
+            $editTitle = HtmlTitle($editCaption);
+            $editUrl = $this->getEditUrl($masterKeyUrl);
+            if ($this->UseModalLinks && !IsMobile()) {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,btn:'SaveBtn',url:'" . HtmlEncode($editUrl) . "'});\">" . $editCaption . "</a>";
+            } else {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" href=\"" . HtmlEncode($editUrl) . "\">" . $editCaption . "</a>";
+            }
+        } else {
+            $opt->Body = "";
+        }
+
+        // "delete"
+        $opt = $this->ListOptions["delete"];
+        if ($Security->canDelete()) {
+            $deleteCaption = $Language->phrase("DeleteLink");
+            $deleteTitle = HtmlTitle($deleteCaption);
+            $deleteUrl = $this->getDeleteUrl();
+            if ($this->UseModalLinks && !IsMobile()) {
+                $deleteUrl .= (ContainsString($deleteUrl, "?") ? "&" : "?") . "action=1";
+                $opt->Body = "<a class=\"ew-row-link ew-delete\" onclick=\"return ew.confirmDelete(this);\" title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
+            } else {
+                $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
+            }
+        } else {
+            $opt->Body = "";
+        }
 
         // Call ListOptions_Rendered event
         $this->listOptionsRendered();
@@ -736,6 +782,7 @@ class VListBrandCustomersPreview extends VListBrandCustomers
     public function pageRender()
     {
         //Log("Page Render");
+        $this->idbrand->Visible = false;
     }
 
     // Page Data Rendering event

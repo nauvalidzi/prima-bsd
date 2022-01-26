@@ -357,6 +357,7 @@ class BrandCustomerAdd extends BrandCustomer
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -368,6 +369,9 @@ class BrandCustomerAdd extends BrandCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -460,6 +464,7 @@ class BrandCustomerAdd extends BrandCustomer
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
+        $this->id->Visible = false;
         $this->idbrand->setVisibility();
         $this->idcustomer->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -495,8 +500,13 @@ class BrandCustomerAdd extends BrandCustomer
             $this->CurrentAction = Post("action"); // Get form action
             $this->setKey(Post($this->OldKeyName));
             $postBack = true;
-        } else { // Not post back
-            $this->CopyRecord = false;
+        } else {
+            // Load key values from QueryString
+            if (($keyValue = Get("id") ?? Route("id")) !== null) {
+                $this->id->setQueryStringValue($keyValue);
+            }
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
+            $this->CopyRecord = !EmptyValue($this->OldKey);
             if ($this->CopyRecord) {
                 $this->CurrentAction = "copy"; // Copy record
             } else {
@@ -605,6 +615,8 @@ class BrandCustomerAdd extends BrandCustomer
     // Load default values
     protected function loadDefaultValues()
     {
+        $this->id->CurrentValue = null;
+        $this->id->OldValue = $this->id->CurrentValue;
         $this->idbrand->CurrentValue = null;
         $this->idbrand->OldValue = $this->idbrand->CurrentValue;
         $this->idcustomer->CurrentValue = null;
@@ -636,6 +648,9 @@ class BrandCustomerAdd extends BrandCustomer
                 $this->idcustomer->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
 
     // Restore form values
@@ -693,6 +708,7 @@ class BrandCustomerAdd extends BrandCustomer
         if (!$rs) {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
     }
@@ -702,6 +718,7 @@ class BrandCustomerAdd extends BrandCustomer
     {
         $this->loadDefaultValues();
         $row = [];
+        $row['id'] = $this->id->CurrentValue;
         $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         return $row;
@@ -710,7 +727,17 @@ class BrandCustomerAdd extends BrandCustomer
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -725,10 +752,16 @@ class BrandCustomerAdd extends BrandCustomer
 
         // Common render codes for all row types
 
+        // id
+
         // idbrand
 
         // idcustomer
         if ($this->RowType == ROWTYPE_VIEW) {
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
             // idbrand
             $curVal = trim(strval($this->idbrand->CurrentValue));
             if ($curVal != "") {

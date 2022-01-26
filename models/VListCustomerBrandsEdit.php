@@ -7,21 +7,21 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class VListBrandCustomersAdd extends VListBrandCustomers
+class VListCustomerBrandsEdit extends VListCustomerBrands
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "add";
+    public $PageID = "edit";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'v_list_brand_customers';
+    public $TableName = 'v_list_customer_brands';
 
     // Page object name
-    public $PageObjName = "VListBrandCustomersAdd";
+    public $PageObjName = "VListCustomerBrandsEdit";
 
     // Rendering View
     public $RenderingView = false;
@@ -127,9 +127,9 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         // Parent constuctor
         parent::__construct();
 
-        // Table object (v_list_brand_customers)
-        if (!isset($GLOBALS["v_list_brand_customers"]) || get_class($GLOBALS["v_list_brand_customers"]) == PROJECT_NAMESPACE . "v_list_brand_customers") {
-            $GLOBALS["v_list_brand_customers"] = &$this;
+        // Table object (v_list_customer_brands)
+        if (!isset($GLOBALS["v_list_customer_brands"]) || get_class($GLOBALS["v_list_customer_brands"]) == PROJECT_NAMESPACE . "v_list_customer_brands") {
+            $GLOBALS["v_list_customer_brands"] = &$this;
         }
 
         // Page URL
@@ -137,7 +137,7 @@ class VListBrandCustomersAdd extends VListBrandCustomers
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'v_list_brand_customers');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'v_list_customer_brands');
         }
 
         // Start timer
@@ -222,7 +222,7 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("v_list_brand_customers"));
+                $doc = new $class(Container("v_list_customer_brands"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -266,7 +266,7 @@ class VListBrandCustomersAdd extends VListBrandCustomers
                 $pageName = GetPageName($url);
                 if ($pageName != $this->getListUrl()) { // Not List page
                     $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "VListBrandCustomersView") {
+                    if ($pageName == "VListCustomerBrandsView") {
                         $row["view"] = "1";
                     }
                 } else { // List page should not be shown as modal => error
@@ -435,15 +435,18 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         }
         $lookup->toJson($this); // Use settings from current page
     }
-    public $FormClassName = "ew-horizontal ew-form ew-add-form";
+    public $FormClassName = "ew-horizontal ew-form ew-edit-form";
     public $IsModal = false;
     public $IsMobileOrModal = false;
-    public $DbMasterFilter = "";
-    public $DbDetailFilter = "";
+    public $DbMasterFilter;
+    public $DbDetailFilter;
+    public $HashValue; // Hash Value
+    public $DisplayRecords = 1;
     public $StartRecord;
-    public $Priv = 0;
-    public $OldRecordset;
-    public $CopyRecord;
+    public $StopRecord;
+    public $TotalRecords = 0;
+    public $RecordRange = 10;
+    public $RecordCount;
 
     /**
      * Page run
@@ -461,10 +464,10 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->idbrand->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->kode_customer->Visible = false;
-        $this->nama_customer->Visible = false;
+        $this->idbrand->setVisibility();
+        $this->kode_brand->Visible = false;
+        $this->nama_brand->Visible = false;
         $this->jumlah_produk->Visible = false;
         $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
@@ -481,111 +484,141 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idbrand);
         $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->idbrand);
 
         // Check modal
         if ($this->IsModal) {
             $SkipHeaderFooter = true;
         }
         $this->IsMobileOrModal = IsMobile() || $this->IsModal;
-        $this->FormClassName = "ew-form ew-add-form ew-horizontal";
+        $this->FormClassName = "ew-form ew-edit-form ew-horizontal";
+        $loaded = false;
         $postBack = false;
 
-        // Set up current action
+        // Set up current action and primary key
         if (IsApi()) {
-            $this->CurrentAction = "insert"; // Add record directly
-            $postBack = true;
-        } elseif (Post("action") !== null) {
-            $this->CurrentAction = Post("action"); // Get form action
-            $this->setKey(Post($this->OldKeyName));
+            // Load key values
+            $loaded = true;
+            if (($keyValue = Get("id") ?? Key(0) ?? Route(2)) !== null) {
+                $this->id->setQueryStringValue($keyValue);
+                $this->id->setOldValue($this->id->QueryStringValue);
+            } elseif (Post("id") !== null) {
+                $this->id->setFormValue(Post("id"));
+                $this->id->setOldValue($this->id->FormValue);
+            } else {
+                $loaded = false; // Unable to load key
+            }
+
+            // Load record
+            if ($loaded) {
+                $loaded = $this->loadRow();
+            }
+            if (!$loaded) {
+                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+                $this->terminate();
+                return;
+            }
+            $this->CurrentAction = "update"; // Update record directly
+            $this->OldKey = $this->getKey(true); // Get from CurrentValue
             $postBack = true;
         } else {
-            // Load key values from QueryString
-            if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-            }
-            $this->OldKey = $this->getKey(true); // Get from CurrentValue
-            $this->CopyRecord = !EmptyValue($this->OldKey);
-            if ($this->CopyRecord) {
-                $this->CurrentAction = "copy"; // Copy record
+            if (Post("action") !== null) {
+                $this->CurrentAction = Post("action"); // Get action code
+                if (!$this->isShow()) { // Not reload record, handle as postback
+                    $postBack = true;
+                }
+
+                // Get key from Form
+                $this->setKey(Post($this->OldKeyName), $this->isShow());
             } else {
-                $this->CurrentAction = "show"; // Display blank record
+                $this->CurrentAction = "show"; // Default action is display
+
+                // Load key from QueryString
+                $loadByQuery = false;
+                if (($keyValue = Get("id") ?? Route("id")) !== null) {
+                    $this->id->setQueryStringValue($keyValue);
+                    $loadByQuery = true;
+                } else {
+                    $this->id->CurrentValue = null;
+                }
+            }
+
+            // Set up master detail parameters
+            $this->setupMasterParms();
+
+            // Load recordset
+            if ($this->isShow()) {
+                // Load current record
+                $loaded = $this->loadRow();
+                $this->OldKey = $loaded ? $this->getKey(true) : ""; // Get from CurrentValue
             }
         }
 
-        // Load old record / default values
-        $loaded = $this->loadOldRecord();
-
-        // Set up master/detail parameters
-        // NOTE: must be after loadOldRecord to prevent master key values overwritten
-        $this->setupMasterParms();
-
-        // Load form values
+        // Process form if post back
         if ($postBack) {
-            $this->loadFormValues(); // Load form values
+            $this->loadFormValues(); // Get form values
         }
 
         // Validate form if post back
         if ($postBack) {
             if (!$this->validateForm()) {
                 $this->EventCancelled = true; // Event cancelled
-                $this->restoreFormValues(); // Restore form values
+                $this->restoreFormValues();
                 if (IsApi()) {
                     $this->terminate();
                     return;
                 } else {
-                    $this->CurrentAction = "show"; // Form error, reset action
+                    $this->CurrentAction = ""; // Form error, reset action
                 }
             }
         }
 
         // Perform current action
         switch ($this->CurrentAction) {
-            case "copy": // Copy an existing record
-                if (!$loaded) { // Record not loaded
+            case "show": // Get a record to display
+                if (!$loaded) { // Load record based on key
                     if ($this->getFailureMessage() == "") {
                         $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
                     }
-                    $this->terminate("VListBrandCustomersList"); // No matching record, return to list
+                    $this->terminate("VListCustomerBrandsList"); // No matching record, return to list
                     return;
                 }
                 break;
-            case "insert": // Add new record
-                $this->SendEmail = true; // Send email on add success
-                if ($this->addRow($this->OldRecordset)) { // Add successful
-                    if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
-                        $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
+            case "update": // Update
+                $returnUrl = $this->getReturnUrl();
+                if (GetPageName($returnUrl) == "VListCustomerBrandsList") {
+                    $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
+                }
+                $this->SendEmail = true; // Send email on update success
+                if ($this->editRow()) { // Update record based on key
+                    if ($this->getSuccessMessage() == "") {
+                        $this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Update success
                     }
-                    $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "VListBrandCustomersList") {
-                        $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "VListBrandCustomersView") {
-                        $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
-                    }
-                    if (IsApi()) { // Return to caller
+                    if (IsApi()) {
                         $this->terminate(true);
                         return;
                     } else {
-                        $this->terminate($returnUrl);
+                        $this->terminate($returnUrl); // Return to caller
                         return;
                     }
                 } elseif (IsApi()) { // API request, return
                     $this->terminate();
                     return;
+                } elseif ($this->getFailureMessage() == $Language->phrase("NoRecord")) {
+                    $this->terminate($returnUrl); // Return to caller
+                    return;
                 } else {
                     $this->EventCancelled = true; // Event cancelled
-                    $this->restoreFormValues(); // Add failed, restore form values
+                    $this->restoreFormValues(); // Restore form values if update failed
                 }
         }
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
-        // Render row based on row type
-        $this->RowType = ROWTYPE_ADD; // Render add type
-
-        // Render row
+        // Render the record
+        $this->RowType = ROWTYPE_EDIT; // Render as Edit
         $this->resetAttributes();
         $this->renderRow();
 
@@ -616,34 +649,11 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         global $CurrentForm, $Language;
     }
 
-    // Load default values
-    protected function loadDefaultValues()
-    {
-        $this->idbrand->CurrentValue = 0;
-        $this->idcustomer->CurrentValue = 0;
-        $this->kode_customer->CurrentValue = null;
-        $this->kode_customer->OldValue = $this->kode_customer->CurrentValue;
-        $this->nama_customer->CurrentValue = null;
-        $this->nama_customer->OldValue = $this->nama_customer->CurrentValue;
-        $this->jumlah_produk->CurrentValue = 0;
-        $this->id->CurrentValue = 0;
-    }
-
     // Load form values
     protected function loadFormValues()
     {
         // Load from form
         global $CurrentForm;
-
-        // Check field name 'idbrand' first before field var 'x_idbrand'
-        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
-        if (!$this->idbrand->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idbrand->Visible = false; // Disable update for API request
-            } else {
-                $this->idbrand->setFormValue($val);
-            }
-        }
 
         // Check field name 'idcustomer' first before field var 'x_idcustomer'
         $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
@@ -652,6 +662,16 @@ class VListBrandCustomersAdd extends VListBrandCustomers
                 $this->idcustomer->Visible = false; // Disable update for API request
             } else {
                 $this->idcustomer->setFormValue($val);
+            }
+        }
+
+        // Check field name 'idbrand' first before field var 'x_idbrand'
+        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
+        if (!$this->idbrand->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idbrand->Visible = false; // Disable update for API request
+            } else {
+                $this->idbrand->setFormValue($val);
             }
         }
 
@@ -667,8 +687,8 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     {
         global $CurrentForm;
                         $this->id->CurrentValue = $this->id->FormValue;
-        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
     }
 
     /**
@@ -718,10 +738,10 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         if (!$rs) {
             return;
         }
-        $this->idbrand->setDbValue($row['idbrand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->kode_customer->setDbValue($row['kode_customer']);
-        $this->nama_customer->setDbValue($row['nama_customer']);
+        $this->idbrand->setDbValue($row['idbrand']);
+        $this->kode_brand->setDbValue($row['kode_brand']);
+        $this->nama_brand->setDbValue($row['nama_brand']);
         $this->jumlah_produk->setDbValue($row['jumlah_produk']);
         $this->id->setDbValue($row['id']);
     }
@@ -729,14 +749,13 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     // Return a row with default values
     protected function newRow()
     {
-        $this->loadDefaultValues();
         $row = [];
-        $row['idbrand'] = $this->idbrand->CurrentValue;
-        $row['idcustomer'] = $this->idcustomer->CurrentValue;
-        $row['kode_customer'] = $this->kode_customer->CurrentValue;
-        $row['nama_customer'] = $this->nama_customer->CurrentValue;
-        $row['jumlah_produk'] = $this->jumlah_produk->CurrentValue;
-        $row['id'] = $this->id->CurrentValue;
+        $row['idcustomer'] = null;
+        $row['idbrand'] = null;
+        $row['kode_brand'] = null;
+        $row['nama_brand'] = null;
+        $row['jumlah_produk'] = null;
+        $row['id'] = null;
         return $row;
     }
 
@@ -768,39 +787,18 @@ class VListBrandCustomersAdd extends VListBrandCustomers
 
         // Common render codes for all row types
 
-        // idbrand
-
         // idcustomer
 
-        // kode_customer
+        // idbrand
 
-        // nama_customer
+        // kode_brand
+
+        // nama_brand
 
         // jumlah_produk
 
         // id
         if ($this->RowType == ROWTYPE_VIEW) {
-            // idbrand
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                    } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idbrand->ViewValue = null;
-            }
-            $this->idbrand->ViewCustomAttributes = "";
-
             // idcustomer
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
@@ -822,111 +820,132 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // kode_customer
-            $this->kode_customer->ViewValue = $this->kode_customer->CurrentValue;
-            $this->kode_customer->ViewCustomAttributes = "";
+            // idbrand
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->ViewValue = null;
+            }
+            $this->idbrand->ViewCustomAttributes = "";
 
-            // nama_customer
-            $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
-            $this->nama_customer->ViewCustomAttributes = "";
+            // kode_brand
+            $this->kode_brand->ViewValue = $this->kode_brand->CurrentValue;
+            $this->kode_brand->ViewCustomAttributes = "";
+
+            // nama_brand
+            $this->nama_brand->ViewValue = $this->nama_brand->CurrentValue;
+            $this->nama_brand->ViewCustomAttributes = "";
 
             // jumlah_produk
             $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
             $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
             $this->jumlah_produk->ViewCustomAttributes = "";
 
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
-
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
-        } elseif ($this->RowType == ROWTYPE_ADD) {
-            // idbrand
-            $this->idbrand->EditAttrs["class"] = "form-control";
-            $this->idbrand->EditCustomAttributes = "";
-            if ($this->idbrand->getSessionValue() != "") {
-                $this->idbrand->CurrentValue = GetForeignKeyValue($this->idbrand->getSessionValue());
-                $curVal = trim(strval($this->idbrand->CurrentValue));
-                if ($curVal != "") {
-                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                    if ($this->idbrand->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                            $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                        } else {
-                            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idbrand->ViewValue = null;
-                }
-                $this->idbrand->ViewCustomAttributes = "";
-            } else {
-                $curVal = trim(strval($this->idbrand->CurrentValue));
-                if ($curVal != "") {
-                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                } else {
-                    $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idbrand->ViewValue !== null) { // Load from cache
-                    $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idbrand->EditValue = $arwrk;
-                }
-                $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-            }
-
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            } else {
-                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idcustomer->EditValue = $arwrk;
-            }
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
-
-            // Add refer script
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+        } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // idcustomer
+            $this->idcustomer->EditAttrs["class"] = "form-control";
+            $this->idcustomer->EditCustomAttributes = "";
+            if ($this->idcustomer->getSessionValue() != "") {
+                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
+                $curVal = trim(strval($this->idcustomer->CurrentValue));
+                if ($curVal != "") {
+                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                        } else {
+                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                        }
+                    }
+                } else {
+                    $this->idcustomer->ViewValue = null;
+                }
+                $this->idcustomer->ViewCustomAttributes = "";
+            } else {
+                $curVal = trim(strval($this->idcustomer->CurrentValue));
+                if ($curVal != "") {
+                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                } else {
+                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+                }
+                if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+                } else { // Lookup from database
+                    if ($curVal == "") {
+                        $filterWrk = "0=1";
+                    } else {
+                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                    }
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    $arwrk = $rswrk;
+                    $this->idcustomer->EditValue = $arwrk;
+                }
+                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+            }
+
+            // idbrand
+            $this->idbrand->EditAttrs["class"] = "form-control";
+            $this->idbrand->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+            } else {
+                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idbrand->ViewValue !== null) { // Load from cache
+                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idbrand->EditValue = $arwrk;
+            }
+            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+
+            // Edit refer script
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -947,14 +966,14 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->idbrand->Required) {
-            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
-                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
-            }
-        }
         if ($this->idcustomer->Required) {
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
+        }
+        if ($this->idbrand->Required) {
+            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
+                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
             }
         }
 
@@ -970,96 +989,108 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         return $validateForm;
     }
 
-    // Add record
-    protected function addRow($rsold = null)
+    // Update record based on key values
+    protected function editRow()
     {
-        global $Language, $Security;
-
-        // Check referential integrity for master table 'v_list_brand_customers'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_brand();
-        if (strval($this->idbrand->CurrentValue) != "") {
-            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
-        }
+        global $Security, $Language;
+        $oldKeyFilter = $this->getRecordFilter();
+        $filter = $this->applyUserIDFilters($oldKeyFilter);
         $conn = $this->getConnection();
-
-        // Load db values from rsold
-        $this->loadDbValues($rsold);
-        if ($rsold) {
-        }
-        $rsnew = [];
-
-        // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, strval($this->idbrand->CurrentValue) == "");
-
-        // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
-
-        // Call Row Inserting event
-        $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
-            }
-        }
-        $addRow = false;
-        if ($insertRow) {
-            try {
-                $addRow = $this->insert($rsnew);
-            } catch (\Exception $e) {
-                $this->setFailureMessage($e->getMessage());
-            }
-            if ($addRow) {
-            }
+        $this->CurrentFilter = $filter;
+        $sql = $this->getCurrentSql();
+        $rsold = $conn->fetchAssoc($sql);
+        $editRow = false;
+        if (!$rsold) {
+            $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
+            $editRow = false; // Update Failed
         } else {
-            if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
-                // Use the message, do nothing
-            } elseif ($this->CancelMessage != "") {
-                $this->setFailureMessage($this->CancelMessage);
-                $this->CancelMessage = "";
-            } else {
-                $this->setFailureMessage($Language->phrase("InsertCancelled"));
+            // Save old values
+            $this->loadDbValues($rsold);
+            $rsnew = [];
+
+            // idcustomer
+            if ($this->idcustomer->getSessionValue() != "") {
+                $this->idcustomer->ReadOnly = true;
             }
-            $addRow = false;
+            $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, $this->idcustomer->ReadOnly);
+
+            // idbrand
+            $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
+
+            // Check referential integrity for master table 'customer'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_customer();
+            $keyValue = $rsnew['idcustomer'] ?? $rsold['idcustomer'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("customer")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "customer", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
+
+            // Call Row Updating event
+            $updateRow = $this->rowUpdating($rsold, $rsnew);
+
+            // Check for duplicate key when key changed
+            if ($updateRow) {
+                $newKeyFilter = $this->getRecordFilter($rsnew);
+                if ($newKeyFilter != $oldKeyFilter) {
+                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
+                    if ($rsChk !== false) {
+                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
+                        $this->setFailureMessage($keyErrMsg);
+                        $updateRow = false;
+                    }
+                }
+            }
+            if ($updateRow) {
+                if (count($rsnew) > 0) {
+                    try {
+                        $editRow = $this->update($rsnew, "", $rsold);
+                    } catch (\Exception $e) {
+                        $this->setFailureMessage($e->getMessage());
+                    }
+                } else {
+                    $editRow = true; // No field to update
+                }
+                if ($editRow) {
+                }
+            } else {
+                if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
+                    // Use the message, do nothing
+                } elseif ($this->CancelMessage != "") {
+                    $this->setFailureMessage($this->CancelMessage);
+                    $this->CancelMessage = "";
+                } else {
+                    $this->setFailureMessage($Language->phrase("UpdateCancelled"));
+                }
+                $editRow = false;
+            }
         }
-        if ($addRow) {
-            // Call Row Inserted event
-            $this->rowInserted($rsold, $rsnew);
+
+        // Call Row_Updated event
+        if ($editRow) {
+            $this->rowUpdated($rsold, $rsnew);
         }
 
         // Clean upload path if any
-        if ($addRow) {
+        if ($editRow) {
         }
 
         // Write JSON for API request
-        if (IsApi() && $addRow) {
+        if (IsApi() && $editRow) {
             $row = $this->getRecordsFromRecordset([$rsnew], true);
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
-        return $addRow;
+        return $editRow;
     }
 
     // Set up master/detail based on QueryString
@@ -1074,13 +1105,13 @@ class VListBrandCustomersAdd extends VListBrandCustomers
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
             }
-            if ($masterTblVar == "brand") {
+            if ($masterTblVar == "customer") {
                 $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Get("fk_id", Get("idbrand"))) !== null) {
+                $masterTbl = Container("customer");
+                if (($parm = Get("fk_id", Get("idcustomer"))) !== null) {
                     $masterTbl->id->setQueryStringValue($parm);
-                    $this->idbrand->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idbrand->setSessionValue($this->idbrand->QueryStringValue);
+                    $this->idcustomer->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idcustomer->setSessionValue($this->idcustomer->QueryStringValue);
                     if (!is_numeric($masterTbl->id->QueryStringValue)) {
                         $validMaster = false;
                     }
@@ -1095,13 +1126,13 @@ class VListBrandCustomersAdd extends VListBrandCustomers
                     $this->DbMasterFilter = "";
                     $this->DbDetailFilter = "";
             }
-            if ($masterTblVar == "brand") {
+            if ($masterTblVar == "customer") {
                 $validMaster = true;
-                $masterTbl = Container("brand");
-                if (($parm = Post("fk_id", Post("idbrand"))) !== null) {
+                $masterTbl = Container("customer");
+                if (($parm = Post("fk_id", Post("idcustomer"))) !== null) {
                     $masterTbl->id->setFormValue($parm);
-                    $this->idbrand->setFormValue($masterTbl->id->FormValue);
-                    $this->idbrand->setSessionValue($this->idbrand->FormValue);
+                    $this->idcustomer->setFormValue($masterTbl->id->FormValue);
+                    $this->idcustomer->setSessionValue($this->idcustomer->FormValue);
                     if (!is_numeric($masterTbl->id->FormValue)) {
                         $validMaster = false;
                     }
@@ -1113,6 +1144,7 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         if ($validMaster) {
             // Save current master table
             $this->setCurrentMasterTable($masterTblVar);
+            $this->setSessionWhere($this->getDetailFilter());
 
             // Reset start record counter (new master key)
             if (!$this->isAddOrEdit()) {
@@ -1121,9 +1153,9 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             }
 
             // Clear previous master key from Session
-            if ($masterTblVar != "brand") {
-                if ($this->idbrand->CurrentValue == "") {
-                    $this->idbrand->setSessionValue("");
+            if ($masterTblVar != "customer") {
+                if ($this->idcustomer->CurrentValue == "") {
+                    $this->idcustomer->setSessionValue("");
                 }
             }
         }
@@ -1137,9 +1169,9 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("VListBrandCustomersList"), "", $this->TableVar, true);
-        $pageId = ($this->isCopy()) ? "Copy" : "Add";
-        $Breadcrumb->add("add", $pageId, $url);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("VListCustomerBrandsList"), "", $this->TableVar, true);
+        $pageId = "edit";
+        $Breadcrumb->add("edit", $pageId, $url);
     }
 
     // Setup lookup options
@@ -1155,9 +1187,9 @@ class VListBrandCustomersAdd extends VListBrandCustomers
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idbrand":
-                    break;
                 case "x_idcustomer":
+                    break;
+                case "x_idbrand":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1181,6 +1213,45 @@ class VListBrandCustomersAdd extends VListBrandCustomers
                 }
                 $fld->Lookup->Options = $ar;
             }
+        }
+    }
+
+    // Set up starting record parameters
+    public function setupStartRecord()
+    {
+        if ($this->DisplayRecords == 0) {
+            return;
+        }
+        if ($this->isPageRequest()) { // Validate request
+            $startRec = Get(Config("TABLE_START_REC"));
+            $pageNo = Get(Config("TABLE_PAGE_NO"));
+            if ($pageNo !== null) { // Check for "pageno" parameter first
+                if (is_numeric($pageNo)) {
+                    $this->StartRecord = ($pageNo - 1) * $this->DisplayRecords + 1;
+                    if ($this->StartRecord <= 0) {
+                        $this->StartRecord = 1;
+                    } elseif ($this->StartRecord >= (int)(($this->TotalRecords - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1) {
+                        $this->StartRecord = (int)(($this->TotalRecords - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1;
+                    }
+                    $this->setStartRecordNumber($this->StartRecord);
+                }
+            } elseif ($startRec !== null) { // Check for "start" parameter
+                $this->StartRecord = $startRec;
+                $this->setStartRecordNumber($this->StartRecord);
+            }
+        }
+        $this->StartRecord = $this->getStartRecordNumber();
+
+        // Check if correct start record counter
+        if (!is_numeric($this->StartRecord) || $this->StartRecord == "") { // Avoid invalid start record counter
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->StartRecord > $this->TotalRecords) { // Avoid starting record > total records
+            $this->StartRecord = (int)(($this->TotalRecords - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1; // Point to last page first record
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif (($this->StartRecord - 1) % $this->DisplayRecords != 0) {
+            $this->StartRecord = (int)(($this->StartRecord - 1) / $this->DisplayRecords) * $this->DisplayRecords + 1; // Point to page boundary
+            $this->setStartRecordNumber($this->StartRecord);
         }
     }
 

@@ -7,12 +7,12 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class VListBrandCustomersAdd extends VListBrandCustomers
+class VListBrandCustomersDelete extends VListBrandCustomers
 {
     use MessagesTrait;
 
     // Page ID
-    public $PageID = "add";
+    public $PageID = "delete";
 
     // Project ID
     public $ProjectID = PROJECT_ID;
@@ -21,7 +21,7 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     public $TableName = 'v_list_brand_customers';
 
     // Page object name
-    public $PageObjName = "VListBrandCustomersAdd";
+    public $PageObjName = "VListBrandCustomersDelete";
 
     // Rendering View
     public $RenderingView = false;
@@ -259,25 +259,8 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             if (!Config("DEBUG") && ob_get_length()) {
                 ob_end_clean();
             }
-
-            // Handle modal response
-            if ($this->IsModal) { // Show as modal
-                $row = ["url" => GetUrl($url), "modal" => "1"];
-                $pageName = GetPageName($url);
-                if ($pageName != $this->getListUrl()) { // Not List page
-                    $row["caption"] = $this->getModalCaption($pageName);
-                    if ($pageName == "VListBrandCustomersView") {
-                        $row["view"] = "1";
-                    }
-                } else { // List page should not be shown as modal => error
-                    $row["error"] = $this->getFailureMessage();
-                    $this->clearFailureMessage();
-                }
-                WriteJson($row);
-            } else {
-                SaveDebugMessage();
-                Redirect(GetUrl($url));
-            }
+            SaveDebugMessage();
+            Redirect(GetUrl($url));
         }
         return; // Return to controller
     }
@@ -370,80 +353,14 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     protected function hideFieldsForAddEdit()
     {
     }
-
-    // Lookup data
-    public function lookup()
-    {
-        global $Language, $Security;
-
-        // Get lookup object
-        $fieldName = Post("field");
-        $lookup = $this->Fields[$fieldName]->Lookup;
-
-        // Get lookup parameters
-        $lookupType = Post("ajax", "unknown");
-        $pageSize = -1;
-        $offset = -1;
-        $searchValue = "";
-        if (SameText($lookupType, "modal")) {
-            $searchValue = Post("sv", "");
-            $pageSize = Post("recperpage", 10);
-            $offset = Post("start", 0);
-        } elseif (SameText($lookupType, "autosuggest")) {
-            $searchValue = Param("q", "");
-            $pageSize = Param("n", -1);
-            $pageSize = is_numeric($pageSize) ? (int)$pageSize : -1;
-            if ($pageSize <= 0) {
-                $pageSize = Config("AUTO_SUGGEST_MAX_ENTRIES");
-            }
-            $start = Param("start", -1);
-            $start = is_numeric($start) ? (int)$start : -1;
-            $page = Param("page", -1);
-            $page = is_numeric($page) ? (int)$page : -1;
-            $offset = $start >= 0 ? $start : ($page > 0 && $pageSize > 0 ? ($page - 1) * $pageSize : 0);
-        }
-        $userSelect = Decrypt(Post("s", ""));
-        $userFilter = Decrypt(Post("f", ""));
-        $userOrderBy = Decrypt(Post("o", ""));
-        $keys = Post("keys");
-        $lookup->LookupType = $lookupType; // Lookup type
-        if ($keys !== null) { // Selected records from modal
-            if (is_array($keys)) {
-                $keys = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $keys);
-            }
-            $lookup->FilterFields = []; // Skip parent fields if any
-            $lookup->FilterValues[] = $keys; // Lookup values
-            $pageSize = -1; // Show all records
-        } else { // Lookup values
-            $lookup->FilterValues[] = Post("v0", Post("lookupValue", ""));
-        }
-        $cnt = is_array($lookup->FilterFields) ? count($lookup->FilterFields) : 0;
-        for ($i = 1; $i <= $cnt; $i++) {
-            $lookup->FilterValues[] = Post("v" . $i, "");
-        }
-        $lookup->SearchValue = $searchValue;
-        $lookup->PageSize = $pageSize;
-        $lookup->Offset = $offset;
-        if ($userSelect != "") {
-            $lookup->UserSelect = $userSelect;
-        }
-        if ($userFilter != "") {
-            $lookup->UserFilter = $userFilter;
-        }
-        if ($userOrderBy != "") {
-            $lookup->UserOrderBy = $userOrderBy;
-        }
-        $lookup->toJson($this); // Use settings from current page
-    }
-    public $FormClassName = "ew-horizontal ew-form ew-add-form";
-    public $IsModal = false;
-    public $IsMobileOrModal = false;
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";
     public $StartRecord;
-    public $Priv = 0;
-    public $OldRecordset;
-    public $CopyRecord;
+    public $TotalRecords = 0;
+    public $RecordCount;
+    public $RecKeys = [];
+    public $StartRowCount = 1;
+    public $RowCount = 0;
 
     /**
      * Page run
@@ -452,20 +369,13 @@ class VListBrandCustomersAdd extends VListBrandCustomers
      */
     public function run()
     {
-        global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm,
-            $SkipHeaderFooter;
-
-        // Is modal
-        $this->IsModal = Param("modal") == "1";
-
-        // Create form object
-        $CurrentForm = new HttpForm();
+        global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
         $this->idbrand->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->kode_customer->Visible = false;
-        $this->nama_customer->Visible = false;
-        $this->jumlah_produk->Visible = false;
+        $this->kode_customer->setVisibility();
+        $this->nama_customer->setVisibility();
+        $this->jumlah_produk->setVisibility();
         $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -484,110 +394,66 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         $this->setupLookupOptions($this->idbrand);
         $this->setupLookupOptions($this->idcustomer);
 
-        // Check modal
-        if ($this->IsModal) {
-            $SkipHeaderFooter = true;
-        }
-        $this->IsMobileOrModal = IsMobile() || $this->IsModal;
-        $this->FormClassName = "ew-form ew-add-form ew-horizontal";
-        $postBack = false;
-
-        // Set up current action
-        if (IsApi()) {
-            $this->CurrentAction = "insert"; // Add record directly
-            $postBack = true;
-        } elseif (Post("action") !== null) {
-            $this->CurrentAction = Post("action"); // Get form action
-            $this->setKey(Post($this->OldKeyName));
-            $postBack = true;
-        } else {
-            // Load key values from QueryString
-            if (($keyValue = Get("id") ?? Route("id")) !== null) {
-                $this->id->setQueryStringValue($keyValue);
-            }
-            $this->OldKey = $this->getKey(true); // Get from CurrentValue
-            $this->CopyRecord = !EmptyValue($this->OldKey);
-            if ($this->CopyRecord) {
-                $this->CurrentAction = "copy"; // Copy record
-            } else {
-                $this->CurrentAction = "show"; // Display blank record
-            }
-        }
-
-        // Load old record / default values
-        $loaded = $this->loadOldRecord();
-
         // Set up master/detail parameters
-        // NOTE: must be after loadOldRecord to prevent master key values overwritten
         $this->setupMasterParms();
-
-        // Load form values
-        if ($postBack) {
-            $this->loadFormValues(); // Load form values
-        }
-
-        // Validate form if post back
-        if ($postBack) {
-            if (!$this->validateForm()) {
-                $this->EventCancelled = true; // Event cancelled
-                $this->restoreFormValues(); // Restore form values
-                if (IsApi()) {
-                    $this->terminate();
-                    return;
-                } else {
-                    $this->CurrentAction = "show"; // Form error, reset action
-                }
-            }
-        }
-
-        // Perform current action
-        switch ($this->CurrentAction) {
-            case "copy": // Copy an existing record
-                if (!$loaded) { // Record not loaded
-                    if ($this->getFailureMessage() == "") {
-                        $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
-                    }
-                    $this->terminate("VListBrandCustomersList"); // No matching record, return to list
-                    return;
-                }
-                break;
-            case "insert": // Add new record
-                $this->SendEmail = true; // Send email on add success
-                if ($this->addRow($this->OldRecordset)) { // Add successful
-                    if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
-                        $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
-                    }
-                    $returnUrl = $this->getReturnUrl();
-                    if (GetPageName($returnUrl) == "VListBrandCustomersList") {
-                        $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
-                    } elseif (GetPageName($returnUrl) == "VListBrandCustomersView") {
-                        $returnUrl = $this->getViewUrl(); // View page, return to View page with keyurl directly
-                    }
-                    if (IsApi()) { // Return to caller
-                        $this->terminate(true);
-                        return;
-                    } else {
-                        $this->terminate($returnUrl);
-                        return;
-                    }
-                } elseif (IsApi()) { // API request, return
-                    $this->terminate();
-                    return;
-                } else {
-                    $this->EventCancelled = true; // Event cancelled
-                    $this->restoreFormValues(); // Add failed, restore form values
-                }
-        }
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
 
-        // Render row based on row type
-        $this->RowType = ROWTYPE_ADD; // Render add type
+        // Load key parameters
+        $this->RecKeys = $this->getRecordKeys(); // Load record keys
+        $filter = $this->getFilterFromRecordKeys();
+        if ($filter == "") {
+            $this->terminate("VListBrandCustomersList"); // Prevent SQL injection, return to list
+            return;
+        }
 
-        // Render row
-        $this->resetAttributes();
-        $this->renderRow();
+        // Set up filter (WHERE Clause)
+        $this->CurrentFilter = $filter;
+
+        // Get action
+        if (IsApi()) {
+            $this->CurrentAction = "delete"; // Delete record directly
+        } elseif (Post("action") !== null) {
+            $this->CurrentAction = Post("action");
+        } elseif (Get("action") == "1") {
+            $this->CurrentAction = "delete"; // Delete record directly
+        } else {
+            $this->CurrentAction = "show"; // Display record
+        }
+        if ($this->isDelete()) {
+            $this->SendEmail = true; // Send email on delete success
+            if ($this->deleteRows()) { // Delete rows
+                if ($this->getSuccessMessage() == "") {
+                    $this->setSuccessMessage($Language->phrase("DeleteSuccess")); // Set up success message
+                }
+                if (IsApi()) {
+                    $this->terminate(true);
+                    return;
+                } else {
+                    $this->terminate($this->getReturnUrl()); // Return to caller
+                    return;
+                }
+            } else { // Delete failed
+                if (IsApi()) {
+                    $this->terminate();
+                    return;
+                }
+                $this->CurrentAction = "show"; // Display record
+            }
+        }
+        if ($this->isShow()) { // Load records for display
+            if ($this->Recordset = $this->loadRecordset()) {
+                $this->TotalRecords = $this->Recordset->recordCount(); // Get record count
+            }
+            if ($this->TotalRecords <= 0) { // No record found, exit
+                if ($this->Recordset) {
+                    $this->Recordset->close();
+                }
+                $this->terminate("VListBrandCustomersList"); // Return to list
+                return;
+            }
+        }
 
         // Set LoginStatus / Page_Rendering / Page_Render
         if (!IsApi() && !$this->isTerminated()) {
@@ -610,65 +476,25 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         }
     }
 
-    // Get upload files
-    protected function getUploadFiles()
+    // Load recordset
+    public function loadRecordset($offset = -1, $rowcnt = -1)
     {
-        global $CurrentForm, $Language;
-    }
+        // Load List page SQL (QueryBuilder)
+        $sql = $this->getListSql();
 
-    // Load default values
-    protected function loadDefaultValues()
-    {
-        $this->idbrand->CurrentValue = 0;
-        $this->idcustomer->CurrentValue = 0;
-        $this->kode_customer->CurrentValue = null;
-        $this->kode_customer->OldValue = $this->kode_customer->CurrentValue;
-        $this->nama_customer->CurrentValue = null;
-        $this->nama_customer->OldValue = $this->nama_customer->CurrentValue;
-        $this->jumlah_produk->CurrentValue = 0;
-        $this->id->CurrentValue = 0;
-    }
-
-    // Load form values
-    protected function loadFormValues()
-    {
-        // Load from form
-        global $CurrentForm;
-
-        // Check field name 'idbrand' first before field var 'x_idbrand'
-        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
-        if (!$this->idbrand->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idbrand->Visible = false; // Disable update for API request
-            } else {
-                $this->idbrand->setFormValue($val);
-            }
+        // Load recordset
+        if ($offset > -1) {
+            $sql->setFirstResult($offset);
         }
-
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
-            } else {
-                $this->idcustomer->setFormValue($val);
-            }
+        if ($rowcnt > 0) {
+            $sql->setMaxResults($rowcnt);
         }
+        $stmt = $sql->execute();
+        $rs = new Recordset($stmt, $sql);
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-    }
-
-    // Restore form values
-    public function restoreFormValues()
-    {
-        global $CurrentForm;
-                        $this->id->CurrentValue = $this->id->FormValue;
-        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
+        // Call Recordset Selected event
+        $this->recordsetSelected($rs);
+        return $rs;
     }
 
     /**
@@ -729,31 +555,14 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     // Return a row with default values
     protected function newRow()
     {
-        $this->loadDefaultValues();
         $row = [];
-        $row['idbrand'] = $this->idbrand->CurrentValue;
-        $row['idcustomer'] = $this->idcustomer->CurrentValue;
-        $row['kode_customer'] = $this->kode_customer->CurrentValue;
-        $row['nama_customer'] = $this->nama_customer->CurrentValue;
-        $row['jumlah_produk'] = $this->jumlah_produk->CurrentValue;
-        $row['id'] = $this->id->CurrentValue;
+        $row['idbrand'] = null;
+        $row['idcustomer'] = null;
+        $row['kode_customer'] = null;
+        $row['nama_customer'] = null;
+        $row['jumlah_produk'] = null;
+        $row['id'] = null;
         return $row;
-    }
-
-    // Load old record
-    protected function loadOldRecord()
-    {
-        // Load old record
-        $this->OldRecordset = null;
-        $validKey = $this->OldKey != "";
-        if ($validKey) {
-            $this->CurrentFilter = $this->getRecordFilter();
-            $sql = $this->getCurrentSql();
-            $conn = $this->getConnection();
-            $this->OldRecordset = LoadRecordset($sql, $conn);
-        }
-        $this->loadRowValues($this->OldRecordset); // Load row values
-        return $validKey;
     }
 
     // Render row values based on field settings
@@ -779,6 +588,7 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         // jumlah_produk
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // idbrand
             $curVal = trim(strval($this->idbrand->CurrentValue));
@@ -844,92 +654,21 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
-        } elseif ($this->RowType == ROWTYPE_ADD) {
-            // idbrand
-            $this->idbrand->EditAttrs["class"] = "form-control";
-            $this->idbrand->EditCustomAttributes = "";
-            if ($this->idbrand->getSessionValue() != "") {
-                $this->idbrand->CurrentValue = GetForeignKeyValue($this->idbrand->getSessionValue());
-                $curVal = trim(strval($this->idbrand->CurrentValue));
-                if ($curVal != "") {
-                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                    if ($this->idbrand->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                            $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
-                        } else {
-                            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idbrand->ViewValue = null;
-                }
-                $this->idbrand->ViewCustomAttributes = "";
-            } else {
-                $curVal = trim(strval($this->idbrand->CurrentValue));
-                if ($curVal != "") {
-                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                } else {
-                    $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idbrand->ViewValue !== null) { // Load from cache
-                    $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idbrand->EditValue = $arwrk;
-                }
-                $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-            }
 
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
-            if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            } else {
-                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idcustomer->EditValue = $arwrk;
-            }
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+            // kode_customer
+            $this->kode_customer->LinkCustomAttributes = "";
+            $this->kode_customer->HrefValue = "";
+            $this->kode_customer->TooltipValue = "";
 
-            // Add refer script
+            // nama_customer
+            $this->nama_customer->LinkCustomAttributes = "";
+            $this->nama_customer->HrefValue = "";
+            $this->nama_customer->TooltipValue = "";
 
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-        }
-        if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
-            $this->setupFieldTitles();
+            // jumlah_produk
+            $this->jumlah_produk->LinkCustomAttributes = "";
+            $this->jumlah_produk->HrefValue = "";
+            $this->jumlah_produk->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -938,128 +677,87 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         }
     }
 
-    // Validate form
-    protected function validateForm()
-    {
-        global $Language;
-
-        // Check if validation required
-        if (!Config("SERVER_VALIDATE")) {
-            return true;
-        }
-        if ($this->idbrand->Required) {
-            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
-                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
-            }
-        }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
-            }
-        }
-
-        // Return validate result
-        $validateForm = !$this->hasInvalidFields();
-
-        // Call Form_CustomValidate event
-        $formCustomError = "";
-        $validateForm = $validateForm && $this->formCustomValidate($formCustomError);
-        if ($formCustomError != "") {
-            $this->setFailureMessage($formCustomError);
-        }
-        return $validateForm;
-    }
-
-    // Add record
-    protected function addRow($rsold = null)
+    // Delete records based on current filter
+    protected function deleteRows()
     {
         global $Language, $Security;
-
-        // Check referential integrity for master table 'v_list_brand_customers'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_brand();
-        if (strval($this->idbrand->CurrentValue) != "") {
-            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
+        if (!$Security->canDelete()) {
+            $this->setFailureMessage($Language->phrase("NoDeletePermission")); // No delete permission
             return false;
         }
+        $deleteRows = true;
+        $sql = $this->getCurrentSql();
         $conn = $this->getConnection();
-
-        // Load db values from rsold
-        $this->loadDbValues($rsold);
-        if ($rsold) {
+        $rows = $conn->fetchAll($sql);
+        if (count($rows) == 0) {
+            $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
+            return false;
         }
-        $rsnew = [];
+        $conn->beginTransaction();
 
-        // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, strval($this->idbrand->CurrentValue) == "");
+        // Clone old rows
+        $rsold = $rows;
 
-        // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
-
-        // Call Row Inserting event
-        $insertRow = $this->rowInserting($rsold, $rsnew);
-
-        // Check if key value entered
-        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
-            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
-            $insertRow = false;
-        }
-
-        // Check for duplicate key
-        if ($insertRow && $this->ValidateKey) {
-            $filter = $this->getRecordFilter($rsnew);
-            $rsChk = $this->loadRs($filter)->fetch();
-            if ($rsChk !== false) {
-                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
-                $this->setFailureMessage($keyErrMsg);
-                $insertRow = false;
+        // Call row deleting event
+        if ($deleteRows) {
+            foreach ($rsold as $row) {
+                $deleteRows = $this->rowDeleting($row);
+                if (!$deleteRows) {
+                    break;
+                }
             }
         }
-        $addRow = false;
-        if ($insertRow) {
-            try {
-                $addRow = $this->insert($rsnew);
-            } catch (\Exception $e) {
-                $this->setFailureMessage($e->getMessage());
+        if ($deleteRows) {
+            $key = "";
+            foreach ($rsold as $row) {
+                $thisKey = "";
+                if ($thisKey != "") {
+                    $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
+                }
+                $thisKey .= $row['id'];
+                if (Config("DELETE_UPLOADED_FILES")) { // Delete old files
+                    $this->deleteUploadedFiles($row);
+                }
+                $deleteRows = $this->delete($row); // Delete
+                if ($deleteRows === false) {
+                    break;
+                }
+                if ($key != "") {
+                    $key .= ", ";
+                }
+                $key .= $thisKey;
             }
-            if ($addRow) {
-            }
-        } else {
+        }
+        if (!$deleteRows) {
+            // Set up error message
             if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
                 // Use the message, do nothing
             } elseif ($this->CancelMessage != "") {
                 $this->setFailureMessage($this->CancelMessage);
                 $this->CancelMessage = "";
             } else {
-                $this->setFailureMessage($Language->phrase("InsertCancelled"));
+                $this->setFailureMessage($Language->phrase("DeleteCancelled"));
             }
-            $addRow = false;
         }
-        if ($addRow) {
-            // Call Row Inserted event
-            $this->rowInserted($rsold, $rsnew);
+        if ($deleteRows) {
+            $conn->commit(); // Commit the changes
+        } else {
+            $conn->rollback(); // Rollback changes
         }
 
-        // Clean upload path if any
-        if ($addRow) {
+        // Call Row Deleted event
+        if ($deleteRows) {
+            foreach ($rsold as $row) {
+                $this->rowDeleted($row);
+            }
         }
 
         // Write JSON for API request
-        if (IsApi() && $addRow) {
-            $row = $this->getRecordsFromRecordset([$rsnew], true);
+        if (IsApi() && $deleteRows) {
+            $row = $this->getRecordsFromRecordset($rsold);
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
-        return $addRow;
+        return $deleteRows;
     }
 
     // Set up master/detail based on QueryString
@@ -1138,8 +836,8 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
         $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("VListBrandCustomersList"), "", $this->TableVar, true);
-        $pageId = ($this->isCopy()) ? "Copy" : "Add";
-        $Breadcrumb->add("add", $pageId, $url);
+        $pageId = "delete";
+        $Breadcrumb->add("delete", $pageId, $url);
     }
 
     // Setup lookup options
@@ -1236,12 +934,5 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     {
         // Example:
         //$footer = "your footer";
-    }
-
-    // Form Custom Validate event
-    public function formCustomValidate(&$customError)
-    {
-        // Return error message in CustomError
-        return true;
     }
 }

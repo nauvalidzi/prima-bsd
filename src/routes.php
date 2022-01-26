@@ -237,13 +237,13 @@ return function (App $app) {
     );
 
     // brand_customer
-    $app->any('/BrandCustomerList', BrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('BrandCustomerList-brand_customer-list'); // list
-    $app->any('/BrandCustomerAdd', BrandCustomerController::class . ':add')->add(PermissionMiddleware::class)->setName('BrandCustomerAdd-brand_customer-add'); // add
+    $app->any('/BrandCustomerList[/{id}]', BrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('BrandCustomerList-brand_customer-list'); // list
+    $app->any('/BrandCustomerAdd[/{id}]', BrandCustomerController::class . ':add')->add(PermissionMiddleware::class)->setName('BrandCustomerAdd-brand_customer-add'); // add
     $app->group(
         '/brand_customer',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', BrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('brand_customer/list-brand_customer-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '', BrandCustomerController::class . ':add')->add(PermissionMiddleware::class)->setName('brand_customer/add-brand_customer-add-2'); // add
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', BrandCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('brand_customer/list-brand_customer-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', BrandCustomerController::class . ':add')->add(PermissionMiddleware::class)->setName('brand_customer/add-brand_customer-add-2'); // add
         }
     );
 
@@ -1354,27 +1354,35 @@ return function (App $app) {
     $app->any('/AntrianBot[/{params:.*}]', AntrianBotController::class)->add(PermissionMiddleware::class)->setName('AntrianBot-antrian_bot-custom'); // custom
 
     // v_list_brand_customers
-    $app->any('/VListBrandCustomersList', VListBrandCustomersController::class . ':list')->add(PermissionMiddleware::class)->setName('VListBrandCustomersList-v_list_brand_customers-list'); // list
-    $app->any('/VListBrandCustomersAdd', VListBrandCustomersController::class . ':add')->add(PermissionMiddleware::class)->setName('VListBrandCustomersAdd-v_list_brand_customers-add'); // add
+    $app->any('/VListBrandCustomersList[/{id}]', VListBrandCustomersController::class . ':list')->add(PermissionMiddleware::class)->setName('VListBrandCustomersList-v_list_brand_customers-list'); // list
+    $app->any('/VListBrandCustomersAdd[/{id}]', VListBrandCustomersController::class . ':add')->add(PermissionMiddleware::class)->setName('VListBrandCustomersAdd-v_list_brand_customers-add'); // add
+    $app->any('/VListBrandCustomersEdit[/{id}]', VListBrandCustomersController::class . ':edit')->add(PermissionMiddleware::class)->setName('VListBrandCustomersEdit-v_list_brand_customers-edit'); // edit
+    $app->any('/VListBrandCustomersDelete[/{id}]', VListBrandCustomersController::class . ':delete')->add(PermissionMiddleware::class)->setName('VListBrandCustomersDelete-v_list_brand_customers-delete'); // delete
     $app->any('/VListBrandCustomersPreview', VListBrandCustomersController::class . ':preview')->add(PermissionMiddleware::class)->setName('VListBrandCustomersPreview-v_list_brand_customers-preview'); // preview
     $app->group(
         '/v_list_brand_customers',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', VListBrandCustomersController::class . ':list')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/list-v_list_brand_customers-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '', VListBrandCustomersController::class . ':add')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/add-v_list_brand_customers-add-2'); // add
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', VListBrandCustomersController::class . ':list')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/list-v_list_brand_customers-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', VListBrandCustomersController::class . ':add')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/add-v_list_brand_customers-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', VListBrandCustomersController::class . ':edit')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/edit-v_list_brand_customers-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', VListBrandCustomersController::class . ':delete')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/delete-v_list_brand_customers-delete-2'); // delete
             $group->any('/' . Config("PREVIEW_ACTION") . '', VListBrandCustomersController::class . ':preview')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/preview-v_list_brand_customers-preview-2'); // preview
         }
     );
 
     // v_list_customer_brands
-    $app->any('/VListCustomerBrandsList', VListCustomerBrandsController::class . ':list')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsList-v_list_customer_brands-list'); // list
-    $app->any('/VListCustomerBrandsAdd', VListCustomerBrandsController::class . ':add')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsAdd-v_list_customer_brands-add'); // add
+    $app->any('/VListCustomerBrandsList[/{id}]', VListCustomerBrandsController::class . ':list')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsList-v_list_customer_brands-list'); // list
+    $app->any('/VListCustomerBrandsAdd[/{id}]', VListCustomerBrandsController::class . ':add')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsAdd-v_list_customer_brands-add'); // add
+    $app->any('/VListCustomerBrandsEdit[/{id}]', VListCustomerBrandsController::class . ':edit')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsEdit-v_list_customer_brands-edit'); // edit
+    $app->any('/VListCustomerBrandsDelete[/{id}]', VListCustomerBrandsController::class . ':delete')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsDelete-v_list_customer_brands-delete'); // delete
     $app->any('/VListCustomerBrandsPreview', VListCustomerBrandsController::class . ':preview')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsPreview-v_list_customer_brands-preview'); // preview
     $app->group(
         '/v_list_customer_brands',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', VListCustomerBrandsController::class . ':list')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/list-v_list_customer_brands-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '', VListCustomerBrandsController::class . ':add')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/add-v_list_customer_brands-add-2'); // add
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', VListCustomerBrandsController::class . ':list')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/list-v_list_customer_brands-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', VListCustomerBrandsController::class . ':add')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/add-v_list_customer_brands-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', VListCustomerBrandsController::class . ':edit')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/edit-v_list_customer_brands-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', VListCustomerBrandsController::class . ':delete')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/delete-v_list_customer_brands-delete-2'); // delete
             $group->any('/' . Config("PREVIEW_ACTION") . '', VListCustomerBrandsController::class . ':preview')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/preview-v_list_customer_brands-preview-2'); // preview
         }
     );

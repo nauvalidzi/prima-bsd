@@ -20,6 +20,18 @@ class VListCustomerBrandsController extends ControllerBase
         return $this->runPage($request, $response, $args, "VListCustomerBrandsAdd");
     }
 
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "VListCustomerBrandsEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "VListCustomerBrandsDelete");
+    }
+
     // preview
     public function preview(Request $request, Response $response, array $args): Response
     {

@@ -426,6 +426,7 @@ class BrandCustomerList extends BrandCustomer
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -437,6 +438,9 @@ class BrandCustomerList extends BrandCustomer
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
 
     // Lookup data
@@ -564,6 +568,7 @@ class BrandCustomerList extends BrandCustomer
 
         // Set up list options
         $this->setupListOptions();
+        $this->id->setVisibility();
         $this->idbrand->setVisibility();
         $this->idcustomer->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -807,6 +812,7 @@ class BrandCustomerList extends BrandCustomer
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->id); // id
             $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->idcustomer); // idcustomer
             $this->setStartRecordNumber(1); // Reset start position
@@ -851,6 +857,7 @@ class BrandCustomerList extends BrandCustomer
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
+                $this->id->setSort("");
                 $this->idbrand->setSort("");
                 $this->idcustomer->setSort("");
             }
@@ -950,6 +957,7 @@ class BrandCustomerList extends BrandCustomer
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1192,6 +1200,7 @@ class BrandCustomerList extends BrandCustomer
         if (!$rs) {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
     }
@@ -1200,6 +1209,7 @@ class BrandCustomerList extends BrandCustomer
     protected function newRow()
     {
         $row = [];
+        $row['id'] = null;
         $row['idbrand'] = null;
         $row['idcustomer'] = null;
         return $row;
@@ -1208,7 +1218,17 @@ class BrandCustomerList extends BrandCustomer
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -1229,10 +1249,16 @@ class BrandCustomerList extends BrandCustomer
 
         // Common render codes for all row types
 
+        // id
+
         // idbrand
 
         // idcustomer
         if ($this->RowType == ROWTYPE_VIEW) {
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewCustomAttributes = "";
+
             // idbrand
             $curVal = trim(strval($this->idbrand->CurrentValue));
             if ($curVal != "") {
@@ -1278,6 +1304,11 @@ class BrandCustomerList extends BrandCustomer
                 $this->idcustomer->ViewValue = null;
             }
             $this->idcustomer->ViewCustomAttributes = "";
+
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";

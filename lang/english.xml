@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/1/25" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/1/26" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1704,6 +1704,9 @@
     </table>
     <table id="brand_customer">
       <phrase id="tblcaption" value="Customer Brand" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
       <field id="idbrand">
         <phrase id="fldcaption" value="Brand" />
       </field>
@@ -4526,6 +4529,9 @@
       <field id="jumlah_produk">
         <phrase id="fldcaption" value="Jumlah Produk" />
       </field>
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
     </table>
     <table id="v_list_customer_brands">
       <phrase id="tblcaption" value="Brand List" />
@@ -4543,6 +4549,9 @@
       </field>
       <field id="jumlah_produk">
         <phrase id="fldcaption" value="Customer" />
+      </field>
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
       </field>
     </table>
     <table id="tipe_sla">

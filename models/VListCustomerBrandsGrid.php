@@ -363,6 +363,7 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -506,6 +507,7 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         $this->kode_brand->setVisibility();
         $this->nama_brand->setVisibility();
         $this->jumlah_produk->setVisibility();
+        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -889,6 +891,11 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
                     $gridInsert = $this->addRow($this->OldRecordset); // Insert this row
                 //}
                 if ($gridInsert) {
+                    if ($key != "") {
+                        $key .= Config("COMPOSITE_KEY_SEPARATOR");
+                    }
+                    $key .= $this->id->CurrentValue;
+
                     // Add filter for this record
                     $filter = $this->getRecordFilter();
                     if ($wrkfilter != "") {
@@ -1104,6 +1111,18 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         $item->OnLeft = false;
         $item->Visible = false;
 
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "delete"
+        $item = &$this->ListOptions->add("delete");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canDelete();
+        $item->OnLeft = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1153,14 +1172,30 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
                 $options = &$this->ListOptions;
                 $options->UseButtonGroup = true; // Use button group for grid delete button
                 $opt = $options["griddelete"];
-                if (is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
+                if (!$Security->canDelete() && is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
                     $opt->Body = "&nbsp;";
                 } else {
                     $opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
                 }
             }
         }
-        if ($this->CurrentMode == "view") { // View mode
+        if ($this->CurrentMode == "view") {
+            // "edit"
+            $opt = $this->ListOptions["edit"];
+            $editcaption = HtmlTitle($Language->phrase("EditLink"));
+            if ($Security->canEdit()) {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "delete"
+            $opt = $this->ListOptions["delete"];
+            if ($Security->canDelete()) {
+            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
         } // End View mode
         $this->renderListOptionsExt();
 
@@ -1245,6 +1280,8 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         $this->nama_brand->OldValue = $this->nama_brand->CurrentValue;
         $this->jumlah_produk->CurrentValue = 0;
         $this->jumlah_produk->OldValue = $this->jumlah_produk->CurrentValue;
+        $this->id->CurrentValue = 0;
+        $this->id->OldValue = $this->id->CurrentValue;
     }
 
     // Load form values
@@ -1318,12 +1355,19 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         if ($CurrentForm->hasValue("o_jumlah_produk")) {
             $this->jumlah_produk->setOldValue($CurrentForm->getValue("o_jumlah_produk"));
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
     }
 
     // Restore form values
     public function restoreFormValues()
     {
         global $CurrentForm;
+                        $this->id->CurrentValue = $this->id->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->kode_brand->CurrentValue = $this->kode_brand->FormValue;
@@ -1404,6 +1448,7 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         $this->kode_brand->setDbValue($row['kode_brand']);
         $this->nama_brand->setDbValue($row['nama_brand']);
         $this->jumlah_produk->setDbValue($row['jumlah_produk']);
+        $this->id->setDbValue($row['id']);
     }
 
     // Return a row with default values
@@ -1416,13 +1461,24 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         $row['kode_brand'] = $this->kode_brand->CurrentValue;
         $row['nama_brand'] = $this->nama_brand->CurrentValue;
         $row['jumlah_produk'] = $this->jumlah_produk->CurrentValue;
+        $row['id'] = $this->id->CurrentValue;
         return $row;
     }
 
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -1450,6 +1506,9 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         // nama_brand
 
         // jumlah_produk
+
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $curVal = trim(strval($this->idcustomer->CurrentValue));
@@ -1848,6 +1907,10 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
             $key = "";
             foreach ($rsold as $row) {
                 $thisKey = "";
+                if ($thisKey != "") {
+                    $thisKey .= Config("COMPOSITE_KEY_SEPARATOR");
+                }
+                $thisKey .= $row['id'];
                 if (Config("DELETE_UPLOADED_FILES")) { // Delete old files
                     $this->deleteUploadedFiles($row);
                 }
@@ -1946,6 +2009,19 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
 
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
+
+            // Check for duplicate key when key changed
+            if ($updateRow) {
+                $newKeyFilter = $this->getRecordFilter($rsnew);
+                if ($newKeyFilter != $oldKeyFilter) {
+                    $rsChk = $this->loadRs($newKeyFilter)->fetch();
+                    if ($rsChk !== false) {
+                        $keyErrMsg = str_replace("%f", $newKeyFilter, $Language->phrase("DupKey"));
+                        $this->setFailureMessage($keyErrMsg);
+                        $updateRow = false;
+                    }
+                }
+            }
             if ($updateRow) {
                 if (count($rsnew) > 0) {
                     try {
@@ -2040,6 +2116,23 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
+
+        // Check if key value entered
+        if ($insertRow && $this->ValidateKey && strval($rsnew['id']) == "") {
+            $this->setFailureMessage($Language->phrase("InvalidKeyValue"));
+            $insertRow = false;
+        }
+
+        // Check for duplicate key
+        if ($insertRow && $this->ValidateKey) {
+            $filter = $this->getRecordFilter($rsnew);
+            $rsChk = $this->loadRs($filter)->fetch();
+            if ($rsChk !== false) {
+                $keyErrMsg = str_replace("%f", $filter, $Language->phrase("DupKey"));
+                $this->setFailureMessage($keyErrMsg);
+                $insertRow = false;
+            }
+        }
         $addRow = false;
         if ($insertRow) {
             try {

@@ -33,6 +33,7 @@ class VListBrandCustomers extends DbTable
     public $kode_customer;
     public $nama_customer;
     public $jumlah_produk;
+    public $id;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -129,6 +130,15 @@ class VListBrandCustomers extends DbTable
         $this->jumlah_produk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->jumlah_produk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah_produk->Param, "CustomMsg");
         $this->Fields['jumlah_produk'] = &$this->jumlah_produk;
+
+        // id
+        $this->id = new DbField('v_list_brand_customers', 'v_list_brand_customers', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
+        $this->id->Sortable = false; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
     }
 
     // Field Visibility
@@ -566,6 +576,9 @@ class VListBrandCustomers extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
+            if (array_key_exists('id', $rs)) {
+                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -593,6 +606,7 @@ class VListBrandCustomers extends DbTable
         $this->kode_customer->DbValue = $row['kode_customer'];
         $this->nama_customer->DbValue = $row['nama_customer'];
         $this->jumlah_produk->DbValue = $row['jumlah_produk'];
+        $this->id->DbValue = $row['id'];
     }
 
     // Delete uploaded files
@@ -604,13 +618,19 @@ class VListBrandCustomers extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "";
+        return "`id` = @id@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
+        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -619,7 +639,12 @@ class VListBrandCustomers extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 0) {
+        if (count($keys) == 1) {
+            if ($current) {
+                $this->id->CurrentValue = $keys[0];
+            } else {
+                $this->id->OldValue = $keys[0];
+            }
         }
     }
 
@@ -627,6 +652,19 @@ class VListBrandCustomers extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
+        if (is_array($row)) {
+            $val = array_key_exists('id', $row) ? $row['id'] : null;
+        } else {
+            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
         return $keyFilter;
     }
 
@@ -758,6 +796,7 @@ class VListBrandCustomers extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
+        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -768,6 +807,11 @@ class VListBrandCustomers extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
+        if ($this->id->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->id->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -826,12 +870,23 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
+            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+                $arKeys[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
+                $arKeys[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
+                if (!is_numeric($key)) {
+                    continue;
+                }
                 $ar[] = $key;
             }
         }
@@ -846,6 +901,11 @@ SORTHTML;
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
+            }
+            if ($setCurrent) {
+                $this->id->CurrentValue = $key;
+            } else {
+                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -876,6 +936,7 @@ SORTHTML;
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
         $this->jumlah_produk->setDbValue($row['jumlah_produk']);
+        $this->id->setDbValue($row['id']);
     }
 
     // Render list row values
@@ -897,6 +958,9 @@ SORTHTML;
         // nama_customer
 
         // jumlah_produk
+
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // idbrand
         $curVal = trim(strval($this->idbrand->CurrentValue));
@@ -953,6 +1017,11 @@ SORTHTML;
         $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
         $this->jumlah_produk->ViewCustomAttributes = "";
 
+        // id
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
+
         // idbrand
         $this->idbrand->LinkCustomAttributes = "";
         $this->idbrand->HrefValue = "";
@@ -977,6 +1046,11 @@ SORTHTML;
         $this->jumlah_produk->LinkCustomAttributes = "";
         $this->jumlah_produk->HrefValue = "";
         $this->jumlah_produk->TooltipValue = "";
+
+        // id
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1037,6 +1111,12 @@ SORTHTML;
         // jumlah_produk
         $this->jumlah_produk->EditAttrs["class"] = "form-control";
         $this->jumlah_produk->EditCustomAttributes = "";
+
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
+        $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1256,6 +1336,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
+        $this->UpdateTable = "brand_customer";
         return true;
     }
 

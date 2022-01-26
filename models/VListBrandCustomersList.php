@@ -426,6 +426,7 @@ class VListBrandCustomersList extends VListBrandCustomers
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -569,6 +570,7 @@ class VListBrandCustomersList extends VListBrandCustomers
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
         $this->jumlah_produk->setVisibility();
+        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -1197,6 +1199,7 @@ class VListBrandCustomersList extends VListBrandCustomers
                 $this->kode_customer->setSort("");
                 $this->nama_customer->setSort("");
                 $this->jumlah_produk->setSort("");
+                $this->id->setSort("");
             }
 
             // Reset start position
@@ -1215,6 +1218,18 @@ class VListBrandCustomersList extends VListBrandCustomers
         $item->Body = "";
         $item->OnLeft = false;
         $item->Visible = false;
+
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "delete"
+        $item = &$this->ListOptions->add("delete");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canDelete();
+        $item->OnLeft = false;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -1258,7 +1273,23 @@ class VListBrandCustomersList extends VListBrandCustomers
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") { // View mode
+        if ($this->CurrentMode == "view") {
+            // "edit"
+            $opt = $this->ListOptions["edit"];
+            $editcaption = HtmlTitle($Language->phrase("EditLink"));
+            if ($Security->canEdit()) {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "delete"
+            $opt = $this->ListOptions["delete"];
+            if ($Security->canDelete()) {
+            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
         } // End View mode
 
         // Set up list action buttons
@@ -1294,6 +1325,7 @@ class VListBrandCustomersList extends VListBrandCustomers
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1551,6 +1583,7 @@ class VListBrandCustomersList extends VListBrandCustomers
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
         $this->jumlah_produk->setDbValue($row['jumlah_produk']);
+        $this->id->setDbValue($row['id']);
     }
 
     // Return a row with default values
@@ -1562,13 +1595,24 @@ class VListBrandCustomersList extends VListBrandCustomers
         $row['kode_customer'] = null;
         $row['nama_customer'] = null;
         $row['jumlah_produk'] = null;
+        $row['id'] = null;
         return $row;
     }
 
     // Load old record
     protected function loadOldRecord()
     {
-        return false;
+        // Load old record
+        $this->OldRecordset = null;
+        $validKey = $this->OldKey != "";
+        if ($validKey) {
+            $this->CurrentFilter = $this->getRecordFilter();
+            $sql = $this->getCurrentSql();
+            $conn = $this->getConnection();
+            $this->OldRecordset = LoadRecordset($sql, $conn);
+        }
+        $this->loadRowValues($this->OldRecordset); // Load row values
+        return $validKey;
     }
 
     // Render row values based on field settings
@@ -1598,6 +1642,9 @@ class VListBrandCustomersList extends VListBrandCustomers
         // nama_customer
 
         // jumlah_produk
+
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // idbrand
             $curVal = trim(strval($this->idbrand->CurrentValue));

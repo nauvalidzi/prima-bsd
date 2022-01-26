@@ -1778,25 +1778,6 @@ class ProductEdit extends Product
 
             // aktif
             $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, 0, $this->aktif->ReadOnly);
-
-            // Check referential integrity for master table 'brand'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_brand();
-            $keyValue = $rsnew['idbrand'] ?? $rsold['idbrand'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
             if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
                 $oldFiles = EmptyValue($this->foto->Upload->DbValue) ? [] : [$this->foto->htmlDecode($this->foto->Upload->DbValue)];
                 if (!EmptyValue($this->foto->Upload->FileName)) {

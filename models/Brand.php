@@ -609,6 +609,8 @@ class Brand extends DbTable
             $rswrk = Container("v_list_brand_customers")->loadRs("`idbrand` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($rswrk as $rsdtlold) {
                 $rskey = [];
+                $fldname = 'id';
+                $rskey[$fldname] = $rsdtlold[$fldname];
                 $rsdtlnew = array_merge($rsdtlold, $rscascade);
                 // Call Row_Updating event
                 $success = Container("v_list_brand_customers")->rowUpdating($rsdtlold, $rsdtlnew);
