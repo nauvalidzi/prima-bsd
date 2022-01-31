@@ -388,8 +388,8 @@ class VListBrandCustomersPreview extends VListBrandCustomers
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idbrand->Visible = false;
-        $this->idcustomer->Visible = false;
+        $this->idbrand->setVisibility();
+        $this->idcustomer->setVisibility();
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -495,6 +495,8 @@ class VListBrandCustomersPreview extends VListBrandCustomers
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
+            $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->kode_customer); // kode_customer
             $this->updateSort($this->nama_customer); // nama_customer
         }
@@ -713,6 +715,10 @@ class VListBrandCustomersPreview extends VListBrandCustomers
                 case "x_idbrand":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "id > 0";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";
@@ -778,6 +784,7 @@ class VListBrandCustomersPreview extends VListBrandCustomers
     {
         //Log("Page Render");
         $this->idbrand->Visible = false;
+        $this->idcustomer->Visible = false;
     }
 
     // Page Data Rendering event

@@ -566,8 +566,8 @@ class VListCustomerBrandsList extends VListCustomerBrands
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idcustomer->Visible = false;
-        $this->idbrand->Visible = false;
+        $this->idcustomer->setVisibility();
+        $this->idbrand->setVisibility();
         $this->kode_brand->setVisibility();
         $this->nama_brand->setVisibility();
         $this->jumlah_produk->setVisibility();
@@ -1142,6 +1142,8 @@ class VListCustomerBrandsList extends VListCustomerBrands
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->kode_brand); // kode_brand
             $this->updateSort($this->nama_brand); // nama_brand
             $this->updateSort($this->jumlah_produk); // jumlah_produk
@@ -1675,7 +1677,11 @@ class VListCustomerBrandsList extends VListCustomerBrands
                 $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
                 if ($this->idbrand->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -1702,6 +1708,16 @@ class VListCustomerBrandsList extends VListCustomerBrands
             $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
             $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
             $this->jumlah_produk->ViewCustomAttributes = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
 
             // kode_brand
             $this->kode_brand->LinkCustomAttributes = "";
@@ -1865,6 +1881,10 @@ class VListCustomerBrandsList extends VListCustomerBrands
                 case "x_idcustomer":
                     break;
                 case "x_idbrand":
+                    $lookupFilter = function () {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

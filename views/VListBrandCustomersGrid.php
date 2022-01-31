@@ -22,6 +22,8 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.v_list_brand_customers)
         ew.vars.tables.v_list_brand_customers = currentTable;
     fv_list_brand_customersgrid.addFields([
+        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["kode_customer", [fields.kode_customer.visible && fields.kode_customer.required ? ew.Validators.required(fields.kode_customer.caption) : null], fields.kode_customer.isInvalid],
         ["nama_customer", [fields.nama_customer.visible && fields.nama_customer.required ? ew.Validators.required(fields.nama_customer.caption) : null], fields.nama_customer.isInvalid]
     ]);
@@ -77,6 +79,10 @@ loadjs.ready("head", function () {
     // Check empty row
     fv_list_brand_customersgrid.emptyRow = function (rowIndex) {
         var fobj = this.getForm();
+        if (ew.valueChanged(fobj, rowIndex, "idbrand", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "idcustomer", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "kode_customer", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "nama_customer", false))
@@ -94,6 +100,8 @@ loadjs.ready("head", function () {
     fv_list_brand_customersgrid.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    fv_list_brand_customersgrid.lists.idbrand = <?= $Grid->idbrand->toClientList($Grid) ?>;
+    fv_list_brand_customersgrid.lists.idcustomer = <?= $Grid->idcustomer->toClientList($Grid) ?>;
     loadjs.done("fv_list_brand_customersgrid");
 });
 </script>
@@ -118,6 +126,12 @@ $Grid->renderListOptions();
 // Render list options (header, left)
 $Grid->ListOptions->render("header", "left");
 ?>
+<?php if ($Grid->idbrand->Visible) { // idbrand ?>
+        <th data-name="idbrand" class="<?= $Grid->idbrand->headerCellClass() ?>"><div id="elh_v_list_brand_customers_idbrand" class="v_list_brand_customers_idbrand"><?= $Grid->renderSort($Grid->idbrand) ?></div></th>
+<?php } ?>
+<?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
+        <th data-name="idcustomer" class="<?= $Grid->idcustomer->headerCellClass() ?>"><div id="elh_v_list_brand_customers_idcustomer" class="v_list_brand_customers_idcustomer"><?= $Grid->renderSort($Grid->idcustomer) ?></div></th>
+<?php } ?>
 <?php if ($Grid->kode_customer->Visible) { // kode_customer ?>
         <th data-name="kode_customer" class="<?= $Grid->kode_customer->headerCellClass() ?>"><div id="elh_v_list_brand_customers_kode_customer" class="v_list_brand_customers_kode_customer"><?= $Grid->renderSort($Grid->kode_customer) ?></div></th>
 <?php } ?>
@@ -237,6 +251,162 @@ while ($Grid->RecordCount < $Grid->StopRecord) {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 ?>
+    <?php if ($Grid->idbrand->Visible) { // idbrand ?>
+        <td data-name="idbrand" <?= $Grid->idbrand->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<?php if ($Grid->idbrand->getSessionValue() != "") { ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idbrand" class="form-group">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_idbrand" name="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>" data-hidden="1">
+<?php } else { ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idbrand" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idbrand"
+        name="x<?= $Grid->RowIndex ?>_idbrand"
+        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
+        data-select2-id="v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand"
+        data-table="v_list_brand_customers"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
+        <?= $Grid->idbrand->editAttributes() ?>>
+        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
+<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.v_list_brand_customers.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<?php if ($Grid->idbrand->getSessionValue() != "") { ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idbrand" class="form-group">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_idbrand" name="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>" data-hidden="1">
+<?php } else { ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idbrand" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idbrand"
+        name="x<?= $Grid->RowIndex ?>_idbrand"
+        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
+        data-select2-id="v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand"
+        data-table="v_list_brand_customers"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
+        <?= $Grid->idbrand->editAttributes() ?>>
+        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
+<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.v_list_brand_customers.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idbrand">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<?= $Grid->idbrand->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idbrand" data-hidden="1" name="fv_list_brand_customersgrid$x<?= $Grid->RowIndex ?>_idbrand" id="fv_list_brand_customersgrid$x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->FormValue) ?>">
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idbrand" data-hidden="1" name="fv_list_brand_customersgrid$o<?= $Grid->RowIndex ?>_idbrand" id="fv_list_brand_customersgrid$o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
+        <td data-name="idcustomer" <?= $Grid->idcustomer->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idcustomer" class="form-group">
+<?php $Grid->idcustomer->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idcustomer"
+        name="x<?= $Grid->RowIndex ?>_idcustomer"
+        class="form-control ew-select<?= $Grid->idcustomer->isInvalidClass() ?>"
+        data-select2-id="v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer"
+        data-table="v_list_brand_customers"
+        data-field="x_idcustomer"
+        data-value-separator="<?= $Grid->idcustomer->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idcustomer->getPlaceHolder()) ?>"
+        <?= $Grid->idcustomer->editAttributes() ?>>
+        <?= $Grid->idcustomer->selectOptionListHtml("x{$Grid->RowIndex}_idcustomer") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idcustomer->getErrorMessage() ?></div>
+<?= $Grid->idcustomer->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idcustomer") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idcustomer", selectId: "v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.v_list_brand_customers.fields.idcustomer.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idcustomer" class="form-group">
+<?php $Grid->idcustomer->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idcustomer"
+        name="x<?= $Grid->RowIndex ?>_idcustomer"
+        class="form-control ew-select<?= $Grid->idcustomer->isInvalidClass() ?>"
+        data-select2-id="v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer"
+        data-table="v_list_brand_customers"
+        data-field="x_idcustomer"
+        data-value-separator="<?= $Grid->idcustomer->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idcustomer->getPlaceHolder()) ?>"
+        <?= $Grid->idcustomer->editAttributes() ?>>
+        <?= $Grid->idcustomer->selectOptionListHtml("x{$Grid->RowIndex}_idcustomer") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idcustomer->getErrorMessage() ?></div>
+<?= $Grid->idcustomer->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idcustomer") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idcustomer", selectId: "v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.v_list_brand_customers.fields.idcustomer.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_v_list_brand_customers_idcustomer">
+<span<?= $Grid->idcustomer->viewAttributes() ?>>
+<?= $Grid->idcustomer->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idcustomer" data-hidden="1" name="fv_list_brand_customersgrid$x<?= $Grid->RowIndex ?>_idcustomer" id="fv_list_brand_customersgrid$x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->FormValue) ?>">
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idcustomer" data-hidden="1" name="fv_list_brand_customersgrid$o<?= $Grid->RowIndex ?>_idcustomer" id="fv_list_brand_customersgrid$o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
     <?php if ($Grid->kode_customer->Visible) { // kode_customer ?>
         <td data-name="kode_customer" <?= $Grid->kode_customer->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -333,6 +503,91 @@ loadjs.ready(["fv_list_brand_customersgrid","load"], function () {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 ?>
+    <?php if ($Grid->idbrand->Visible) { // idbrand ?>
+        <td data-name="idbrand">
+<?php if (!$Grid->isConfirm()) { ?>
+<?php if ($Grid->idbrand->getSessionValue() != "") { ?>
+<span id="el$rowindex$_v_list_brand_customers_idbrand" class="form-group v_list_brand_customers_idbrand">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_idbrand" name="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>" data-hidden="1">
+<?php } else { ?>
+<span id="el$rowindex$_v_list_brand_customers_idbrand" class="form-group v_list_brand_customers_idbrand">
+    <select
+        id="x<?= $Grid->RowIndex ?>_idbrand"
+        name="x<?= $Grid->RowIndex ?>_idbrand"
+        class="form-control ew-select<?= $Grid->idbrand->isInvalidClass() ?>"
+        data-select2-id="v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand"
+        data-table="v_list_brand_customers"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Grid->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idbrand->getPlaceHolder()) ?>"
+        <?= $Grid->idbrand->editAttributes() ?>>
+        <?= $Grid->idbrand->selectOptionListHtml("x{$Grid->RowIndex}_idbrand") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idbrand->getErrorMessage() ?></div>
+<?= $Grid->idbrand->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idbrand", selectId: "v_list_brand_customers_x<?= $Grid->RowIndex ?>_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.v_list_brand_customers.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php } else { ?>
+<span id="el$rowindex$_v_list_brand_customers_idbrand" class="form-group v_list_brand_customers_idbrand">
+<span<?= $Grid->idbrand->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idbrand" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idbrand" id="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
+        <td data-name="idcustomer">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_v_list_brand_customers_idcustomer" class="form-group v_list_brand_customers_idcustomer">
+<?php $Grid->idcustomer->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+    <select
+        id="x<?= $Grid->RowIndex ?>_idcustomer"
+        name="x<?= $Grid->RowIndex ?>_idcustomer"
+        class="form-control ew-select<?= $Grid->idcustomer->isInvalidClass() ?>"
+        data-select2-id="v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer"
+        data-table="v_list_brand_customers"
+        data-field="x_idcustomer"
+        data-value-separator="<?= $Grid->idcustomer->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->idcustomer->getPlaceHolder()) ?>"
+        <?= $Grid->idcustomer->editAttributes() ?>>
+        <?= $Grid->idcustomer->selectOptionListHtml("x{$Grid->RowIndex}_idcustomer") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->idcustomer->getErrorMessage() ?></div>
+<?= $Grid->idcustomer->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idcustomer") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_idcustomer", selectId: "v_list_brand_customers_x<?= $Grid->RowIndex ?>_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.v_list_brand_customers.fields.idcustomer.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_v_list_brand_customers_idcustomer" class="form-group v_list_brand_customers_idcustomer">
+<span<?= $Grid->idcustomer->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idcustomer" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idcustomer" id="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="v_list_brand_customers" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
+</td>
+    <?php } ?>
     <?php if ($Grid->kode_customer->Visible) { // kode_customer ?>
         <td data-name="kode_customer">
 <?php if (!$Grid->isConfirm()) { ?>

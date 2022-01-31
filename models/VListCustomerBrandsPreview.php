@@ -388,8 +388,8 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idcustomer->Visible = false;
-        $this->idbrand->Visible = false;
+        $this->idcustomer->setVisibility();
+        $this->idbrand->setVisibility();
         $this->kode_brand->setVisibility();
         $this->nama_brand->setVisibility();
         $this->jumlah_produk->setVisibility();
@@ -497,6 +497,8 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
+            $this->updateSort($this->idcustomer); // idcustomer
+            $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->kode_brand); // kode_brand
             $this->updateSort($this->nama_brand); // nama_brand
             $this->updateSort($this->jumlah_produk); // jumlah_produk
@@ -716,6 +718,10 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
                 case "x_idcustomer":
                     break;
                 case "x_idbrand":
+                    $lookupFilter = function () {
+                        return "id > 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";
@@ -781,6 +787,7 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
     {
         //Log("Page Render");
         $this->idcustomer->Visible = false;
+        $this->idbrand->Visible = false;
     }
 
     // Page Data Rendering event

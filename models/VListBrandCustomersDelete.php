@@ -372,8 +372,8 @@ class VListBrandCustomersDelete extends VListBrandCustomers
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->idbrand->Visible = false;
-        $this->idcustomer->Visible = false;
+        $this->idbrand->setVisibility();
+        $this->idcustomer->setVisibility();
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -612,7 +612,11 @@ class VListBrandCustomersDelete extends VListBrandCustomers
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return "id > 0";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -634,6 +638,16 @@ class VListBrandCustomersDelete extends VListBrandCustomers
             // nama_customer
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
 
             // kode_customer
             $this->kode_customer->LinkCustomAttributes = "";
@@ -831,6 +845,10 @@ class VListBrandCustomersDelete extends VListBrandCustomers
                 case "x_idbrand":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "id > 0";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

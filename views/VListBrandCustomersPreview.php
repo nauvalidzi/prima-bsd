@@ -22,6 +22,24 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+    <?php if ($Page->SortUrl($Page->idbrand) == "") { ?>
+        <th class="<?= $Page->idbrand->headerCellClass() ?>"><?= $Page->idbrand->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->idbrand->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idbrand->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idbrand->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idbrand->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idbrand->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idbrand->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
+    <?php if ($Page->SortUrl($Page->idcustomer) == "") { ?>
+        <th class="<?= $Page->idcustomer->headerCellClass() ?>"><?= $Page->idcustomer->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->idcustomer->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->idcustomer->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->idcustomer->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->idcustomer->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->idcustomer->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->idcustomer->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->kode_customer->Visible) { // kode_customer ?>
     <?php if ($Page->SortUrl($Page->kode_customer) == "") { ?>
         <th class="<?= $Page->kode_customer->headerCellClass() ?>"><?= $Page->kode_customer->caption() ?></th>
@@ -70,6 +88,20 @@ while ($Page->Recordset && !$Page->Recordset->EOF) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <!-- idbrand -->
+        <td<?= $Page->idbrand->cellAttributes() ?>>
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
+        <!-- idcustomer -->
+        <td<?= $Page->idcustomer->cellAttributes() ?>>
+<span<?= $Page->idcustomer->viewAttributes() ?>>
+<?= $Page->idcustomer->getViewValue() ?></span>
+</td>
+<?php } ?>
 <?php if ($Page->kode_customer->Visible) { // kode_customer ?>
         <!-- kode_customer -->
         <td<?= $Page->kode_customer->cellAttributes() ?>>

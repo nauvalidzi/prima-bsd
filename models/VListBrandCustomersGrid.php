@@ -503,8 +503,8 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idbrand->Visible = false;
-        $this->idcustomer->Visible = false;
+        $this->idbrand->setVisibility();
+        $this->idcustomer->setVisibility();
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
         $this->hideFieldsForAddEdit();
@@ -931,6 +931,12 @@ class VListBrandCustomersGrid extends VListBrandCustomers
     public function emptyRow()
     {
         global $CurrentForm;
+        if ($CurrentForm->hasValue("x_idbrand") && $CurrentForm->hasValue("o_idbrand") && $this->idbrand->CurrentValue != $this->idbrand->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_idcustomer") && $CurrentForm->hasValue("o_idcustomer") && $this->idcustomer->CurrentValue != $this->idcustomer->OldValue) {
+            return false;
+        }
         if ($CurrentForm->hasValue("x_kode_customer") && $CurrentForm->hasValue("o_kode_customer") && $this->kode_customer->CurrentValue != $this->kode_customer->OldValue) {
             return false;
         }
@@ -1018,6 +1024,8 @@ class VListBrandCustomersGrid extends VListBrandCustomers
     // Reset form status
     public function resetFormError()
     {
+        $this->idbrand->clearErrorMessage();
+        $this->idcustomer->clearErrorMessage();
         $this->kode_customer->clearErrorMessage();
         $this->nama_customer->clearErrorMessage();
     }
@@ -1280,6 +1288,32 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         global $CurrentForm;
         $CurrentForm->FormName = $this->FormName;
 
+        // Check field name 'idbrand' first before field var 'x_idbrand'
+        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
+        if (!$this->idbrand->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idbrand->Visible = false; // Disable update for API request
+            } else {
+                $this->idbrand->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_idbrand")) {
+            $this->idbrand->setOldValue($CurrentForm->getValue("o_idbrand"));
+        }
+
+        // Check field name 'idcustomer' first before field var 'x_idcustomer'
+        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
+        if (!$this->idcustomer->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->idcustomer->Visible = false; // Disable update for API request
+            } else {
+                $this->idcustomer->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_idcustomer")) {
+            $this->idcustomer->setOldValue($CurrentForm->getValue("o_idcustomer"));
+        }
+
         // Check field name 'kode_customer' first before field var 'x_kode_customer'
         $val = $CurrentForm->hasValue("kode_customer") ? $CurrentForm->getValue("kode_customer") : $CurrentForm->getValue("x_kode_customer");
         if (!$this->kode_customer->IsDetailKey) {
@@ -1318,6 +1352,8 @@ class VListBrandCustomersGrid extends VListBrandCustomers
     {
         global $CurrentForm;
                         $this->id->CurrentValue = $this->id->FormValue;
+        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
+        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
         $this->kode_customer->CurrentValue = $this->kode_customer->FormValue;
         $this->nama_customer->CurrentValue = $this->nama_customer->FormValue;
     }
@@ -1480,7 +1516,11 @@ class VListBrandCustomersGrid extends VListBrandCustomers
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return "id > 0";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -1503,6 +1543,16 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
 
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+            $this->idcustomer->TooltipValue = "";
+
             // kode_customer
             $this->kode_customer->LinkCustomAttributes = "";
             $this->kode_customer->HrefValue = "";
@@ -1513,6 +1563,84 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->HrefValue = "";
             $this->nama_customer->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
+            // idbrand
+            $this->idbrand->EditAttrs["class"] = "form-control";
+            $this->idbrand->EditCustomAttributes = "";
+            if ($this->idbrand->getSessionValue() != "") {
+                $this->idbrand->CurrentValue = GetForeignKeyValue($this->idbrand->getSessionValue());
+                $this->idbrand->OldValue = $this->idbrand->CurrentValue;
+                $curVal = trim(strval($this->idbrand->CurrentValue));
+                if ($curVal != "") {
+                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                    if ($this->idbrand->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                            $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                        } else {
+                            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                        }
+                    }
+                } else {
+                    $this->idbrand->ViewValue = null;
+                }
+                $this->idbrand->ViewCustomAttributes = "";
+            } else {
+                $curVal = trim(strval($this->idbrand->CurrentValue));
+                if ($curVal != "") {
+                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                } else {
+                    $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
+                }
+                if ($this->idbrand->ViewValue !== null) { // Load from cache
+                    $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
+                } else { // Lookup from database
+                    if ($curVal == "") {
+                        $filterWrk = "0=1";
+                    } else {
+                        $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
+                    }
+                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    $arwrk = $rswrk;
+                    $this->idbrand->EditValue = $arwrk;
+                }
+                $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+            }
+
+            // idcustomer
+            $this->idcustomer->EditAttrs["class"] = "form-control";
+            $this->idcustomer->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+            } else {
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $lookupFilter = function() {
+                    return "id > 0";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
+            }
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+
             // kode_customer
             $this->kode_customer->EditAttrs["class"] = "form-control";
             $this->kode_customer->EditCustomAttributes = "";
@@ -1533,6 +1661,14 @@ class VListBrandCustomersGrid extends VListBrandCustomers
 
             // Add refer script
 
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
+
             // kode_customer
             $this->kode_customer->LinkCustomAttributes = "";
             $this->kode_customer->HrefValue = "";
@@ -1541,6 +1677,84 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->LinkCustomAttributes = "";
             $this->nama_customer->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
+            // idbrand
+            $this->idbrand->EditAttrs["class"] = "form-control";
+            $this->idbrand->EditCustomAttributes = "";
+            if ($this->idbrand->getSessionValue() != "") {
+                $this->idbrand->CurrentValue = GetForeignKeyValue($this->idbrand->getSessionValue());
+                $this->idbrand->OldValue = $this->idbrand->CurrentValue;
+                $curVal = trim(strval($this->idbrand->CurrentValue));
+                if ($curVal != "") {
+                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                    if ($this->idbrand->ViewValue === null) { // Lookup from database
+                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                        $ari = count($rswrk);
+                        if ($ari > 0) { // Lookup values found
+                            $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                            $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                        } else {
+                            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                        }
+                    }
+                } else {
+                    $this->idbrand->ViewValue = null;
+                }
+                $this->idbrand->ViewCustomAttributes = "";
+            } else {
+                $curVal = trim(strval($this->idbrand->CurrentValue));
+                if ($curVal != "") {
+                    $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                } else {
+                    $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
+                }
+                if ($this->idbrand->ViewValue !== null) { // Load from cache
+                    $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
+                } else { // Lookup from database
+                    if ($curVal == "") {
+                        $filterWrk = "0=1";
+                    } else {
+                        $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
+                    }
+                    $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    $arwrk = $rswrk;
+                    $this->idbrand->EditValue = $arwrk;
+                }
+                $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+            }
+
+            // idcustomer
+            $this->idcustomer->EditAttrs["class"] = "form-control";
+            $this->idcustomer->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+            } else {
+                $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idcustomer->ViewValue !== null) { // Load from cache
+                $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $lookupFilter = function() {
+                    return "id > 0";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idcustomer->EditValue = $arwrk;
+            }
+            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+
             // kode_customer
             $this->kode_customer->EditAttrs["class"] = "form-control";
             $this->kode_customer->EditCustomAttributes = "";
@@ -1550,6 +1764,14 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->nama_customer->EditCustomAttributes = "";
 
             // Edit refer script
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+
+            // idcustomer
+            $this->idcustomer->LinkCustomAttributes = "";
+            $this->idcustomer->HrefValue = "";
 
             // kode_customer
             $this->kode_customer->LinkCustomAttributes = "";
@@ -1577,6 +1799,16 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
+        }
+        if ($this->idbrand->Required) {
+            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
+                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
+            }
+        }
+        if ($this->idcustomer->Required) {
+            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
+                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+            }
         }
         if ($this->kode_customer->Required) {
             if (!$this->kode_customer->IsDetailKey && EmptyValue($this->kode_customer->FormValue)) {
@@ -1697,6 +1929,15 @@ class VListBrandCustomersGrid extends VListBrandCustomers
             $this->loadDbValues($rsold);
             $rsnew = [];
 
+            // idbrand
+            if ($this->idbrand->getSessionValue() != "") {
+                $this->idbrand->ReadOnly = true;
+            }
+            $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
+
+            // idcustomer
+            $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, $this->idcustomer->ReadOnly);
+
             // kode_customer
             $this->kode_customer->setDbValueDef($rsnew, $this->kode_customer->CurrentValue, "", $this->kode_customer->ReadOnly);
 
@@ -1792,8 +2033,8 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         // Check referential integrity for master table 'v_list_brand_customers'
         $validMasterRecord = true;
         $masterFilter = $this->sqlMasterFilter_brand();
-        if ($this->idbrand->getSessionValue() != "") {
-        $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->getSessionValue(), "DB"), $masterFilter);
+        if (strval($this->idbrand->CurrentValue) != "") {
+            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
         } else {
             $validMasterRecord = false;
         }
@@ -1814,16 +2055,17 @@ class VListBrandCustomersGrid extends VListBrandCustomers
         }
         $rsnew = [];
 
+        // idbrand
+        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, strval($this->idbrand->CurrentValue) == "");
+
+        // idcustomer
+        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
+
         // kode_customer
         $this->kode_customer->setDbValueDef($rsnew, $this->kode_customer->CurrentValue, "", false);
 
         // nama_customer
         $this->nama_customer->setDbValueDef($rsnew, $this->nama_customer->CurrentValue, "", false);
-
-        // idbrand
-        if ($this->idbrand->getSessionValue() != "") {
-            $rsnew['idbrand'] = $this->idbrand->getSessionValue();
-        }
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -1913,6 +2155,10 @@ class VListBrandCustomersGrid extends VListBrandCustomers
                 case "x_idbrand":
                     break;
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "id > 0";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";
