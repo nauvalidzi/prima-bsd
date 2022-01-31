@@ -26,8 +26,9 @@ loadjs.ready("head", function () {
         ["idnpd_sample", [fields.idnpd_sample.visible && fields.idnpd_sample.required ? ew.Validators.required(fields.idnpd_sample.caption) : null], fields.idnpd_sample.isInvalid],
         ["tanggal_review", [fields.tanggal_review.visible && fields.tanggal_review.required ? ew.Validators.required(fields.tanggal_review.caption) : null, ew.Validators.datetime(0)], fields.tanggal_review.isInvalid],
         ["tanggal_submit", [fields.tanggal_submit.visible && fields.tanggal_submit.required ? ew.Validators.required(fields.tanggal_submit.caption) : null, ew.Validators.datetime(0)], fields.tanggal_submit.isInvalid],
+        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid]
+        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null, ew.Validators.integer], fields.review_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -89,9 +90,11 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "tanggal_submit", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "ukuran", false))
+            return false;
         if (ew.valueChanged(fobj, rowIndex, "status", false))
             return false;
-        if (ew.valueChanged(fobj, rowIndex, "ukuran", false))
+        if (ew.valueChanged(fobj, rowIndex, "review_by", false))
             return false;
         return true;
     }
@@ -145,11 +148,14 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->tanggal_submit->Visible) { // tanggal_submit ?>
         <th data-name="tanggal_submit" class="<?= $Grid->tanggal_submit->headerCellClass() ?>"><div id="elh_npd_review_tanggal_submit" class="npd_review_tanggal_submit"><?= $Grid->renderSort($Grid->tanggal_submit) ?></div></th>
 <?php } ?>
+<?php if ($Grid->ukuran->Visible) { // ukuran ?>
+        <th data-name="ukuran" class="<?= $Grid->ukuran->headerCellClass() ?>"><div id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Grid->renderSort($Grid->ukuran) ?></div></th>
+<?php } ?>
 <?php if ($Grid->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Grid->status->headerCellClass() ?>"><div id="elh_npd_review_status" class="npd_review_status"><?= $Grid->renderSort($Grid->status) ?></div></th>
 <?php } ?>
-<?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Grid->ukuran->headerCellClass() ?>"><div id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Grid->renderSort($Grid->ukuran) ?></div></th>
+<?php if ($Grid->review_by->Visible) { // review_by ?>
+        <th data-name="review_by" class="<?= $Grid->review_by->headerCellClass() ?>"><div id="elh_npd_review_review_by" class="npd_review_review_by"><?= $Grid->renderSort($Grid->review_by) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -502,6 +508,33 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
+        <td data-name="ukuran" <?= $Grid->ukuran->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran" class="form-group">
+<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran" class="form-group">
+<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran">
+<span<?= $Grid->ukuran->viewAttributes() ?>>
+<?= $Grid->ukuran->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_ukuran" id="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_ukuran" id="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
     <?php if ($Grid->status->Visible) { // status ?>
         <td data-name="status" <?= $Grid->status->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -569,29 +602,29 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Grid->ukuran->cellAttributes() ?>>
+    <?php if ($Grid->review_by->Visible) { // review_by ?>
+        <td data-name="review_by" <?= $Grid->review_by->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_npd_review_review_by" class="form-group">
+<input type="<?= $Grid->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" size="30" placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>" value="<?= $Grid->review_by->EditValue ?>"<?= $Grid->review_by->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_review_by" id="o<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_npd_review_review_by" class="form-group">
+<input type="<?= $Grid->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" size="30" placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>" value="<?= $Grid->review_by->EditValue ?>"<?= $Grid->review_by->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<?= $Grid->ukuran->getViewValue() ?></span>
+<span id="el<?= $Grid->RowCount ?>_npd_review_review_by">
+<span<?= $Grid->review_by->viewAttributes() ?>>
+<?= $Grid->review_by->getViewValue() ?></span>
 </span>
 <?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_ukuran" id="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_ukuran" id="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_review_by" id="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->FormValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_review_by" id="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -773,6 +806,23 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
 <input type="hidden" data-table="npd_review" data-field="x_tanggal_submit" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tanggal_submit" id="o<?= $Grid->RowIndex ?>_tanggal_submit" value="<?= HtmlEncode($Grid->tanggal_submit->OldValue) ?>">
 </td>
     <?php } ?>
+    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
+        <td data-name="ukuran">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_review_ukuran" class="form-group npd_review_ukuran">
+<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_review_ukuran" class="form-group npd_review_ukuran">
+<span<?= $Grid->ukuran->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->ukuran->getDisplayValue($Grid->ukuran->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+</td>
+    <?php } ?>
     <?php if ($Grid->status->Visible) { // status ?>
         <td data-name="status">
 <?php if (!$Grid->isConfirm()) { ?>
@@ -810,21 +860,21 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
 <input type="hidden" data-table="npd_review" data-field="x_status" data-hidden="1" name="o<?= $Grid->RowIndex ?>_status" id="o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran">
+    <?php if ($Grid->review_by->Visible) { // review_by ?>
+        <td data-name="review_by">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_npd_review_ukuran" class="form-group npd_review_ukuran">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
+<span id="el$rowindex$_npd_review_review_by" class="form-group npd_review_review_by">
+<input type="<?= $Grid->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" size="30" placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>" value="<?= $Grid->review_by->EditValue ?>"<?= $Grid->review_by->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
 </span>
 <?php } else { ?>
-<span id="el$rowindex$_npd_review_ukuran" class="form-group npd_review_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->ukuran->getDisplayValue($Grid->ukuran->ViewValue))) ?>"></span>
+<span id="el$rowindex$_npd_review_review_by" class="form-group npd_review_review_by">
+<span<?= $Grid->review_by->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->review_by->getDisplayValue($Grid->review_by->ViewValue))) ?>"></span>
 </span>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_review_by" id="o<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

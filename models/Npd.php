@@ -93,6 +93,8 @@ class Npd extends DbTable
     public $readonly;
     public $created_at;
     public $updated_at;
+    public $receipt_by;
+    public $approve_by;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -739,6 +741,20 @@ class Npd extends DbTable
         $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectShortDateDMY"));
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
+
+        // receipt_by
+        $this->receipt_by = new DbField('npd', 'npd', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 3, 11, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->receipt_by->Sortable = true; // Allow sort
+        $this->receipt_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
+        $this->Fields['receipt_by'] = &$this->receipt_by;
+
+        // approve_by
+        $this->approve_by = new DbField('npd', 'npd', 'x_approve_by', 'approve_by', '`approve_by`', '`approve_by`', 3, 11, -1, false, '`approve_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->approve_by->Sortable = true; // Allow sort
+        $this->approve_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->approve_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approve_by->Param, "CustomMsg");
+        $this->Fields['approve_by'] = &$this->approve_by;
     }
 
     // Field Visibility
@@ -812,10 +828,6 @@ class Npd extends DbTable
         }
         if ($this->getCurrentDetailTable() == "npd_desain") {
             $detailUrl = Container("npd_desain")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
-        }
-        if ($this->getCurrentDetailTable() == "npd_terms") {
-            $detailUrl = Container("npd_terms")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -1518,6 +1530,8 @@ class Npd extends DbTable
         $this->readonly->DbValue = $row['readonly'];
         $this->created_at->DbValue = $row['created_at'];
         $this->updated_at->DbValue = $row['updated_at'];
+        $this->receipt_by->DbValue = $row['receipt_by'];
+        $this->approve_by->DbValue = $row['approve_by'];
     }
 
     // Delete uploaded files
@@ -1911,6 +1925,8 @@ SORTHTML;
         $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->approve_by->setDbValue($row['approve_by']);
     }
 
     // Render list row values
@@ -2053,6 +2069,10 @@ SORTHTML;
         // created_at
 
         // updated_at
+
+        // receipt_by
+
+        // approve_by
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -2646,6 +2666,16 @@ SORTHTML;
         $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
         $this->updated_at->ViewCustomAttributes = "";
 
+        // receipt_by
+        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+        $this->receipt_by->ViewValue = FormatNumber($this->receipt_by->ViewValue, 0, -2, -2, -2);
+        $this->receipt_by->ViewCustomAttributes = "";
+
+        // approve_by
+        $this->approve_by->ViewValue = $this->approve_by->CurrentValue;
+        $this->approve_by->ViewValue = FormatNumber($this->approve_by->ViewValue, 0, -2, -2, -2);
+        $this->approve_by->ViewCustomAttributes = "";
+
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
@@ -2970,6 +3000,16 @@ SORTHTML;
         $this->updated_at->LinkCustomAttributes = "";
         $this->updated_at->HrefValue = "";
         $this->updated_at->TooltipValue = "";
+
+        // receipt_by
+        $this->receipt_by->LinkCustomAttributes = "";
+        $this->receipt_by->HrefValue = "";
+        $this->receipt_by->TooltipValue = "";
+
+        // approve_by
+        $this->approve_by->LinkCustomAttributes = "";
+        $this->approve_by->HrefValue = "";
+        $this->approve_by->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -3436,6 +3476,18 @@ SORTHTML;
         $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 17);
         $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
+        // receipt_by
+        $this->receipt_by->EditAttrs["class"] = "form-control";
+        $this->receipt_by->EditCustomAttributes = "";
+        $this->receipt_by->EditValue = $this->receipt_by->CurrentValue;
+        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
+
+        // approve_by
+        $this->approve_by->EditAttrs["class"] = "form-control";
+        $this->approve_by->EditCustomAttributes = "";
+        $this->approve_by->EditValue = $this->approve_by->CurrentValue;
+        $this->approve_by->PlaceHolder = RemoveHtml($this->approve_by->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -3527,6 +3579,8 @@ SORTHTML;
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
+                    $doc->exportCaption($this->receipt_by);
+                    $doc->exportCaption($this->approve_by);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idpegawai);
@@ -3590,6 +3644,8 @@ SORTHTML;
                     $doc->exportCaption($this->readonly);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
+                    $doc->exportCaption($this->receipt_by);
+                    $doc->exportCaption($this->approve_by);
                 }
                 $doc->endExportRow();
             }
@@ -3682,6 +3738,8 @@ SORTHTML;
                         $doc->exportField($this->status);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
+                        $doc->exportField($this->receipt_by);
+                        $doc->exportField($this->approve_by);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idpegawai);
@@ -3745,6 +3803,8 @@ SORTHTML;
                         $doc->exportField($this->readonly);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
+                        $doc->exportField($this->receipt_by);
+                        $doc->exportField($this->approve_by);
                     }
                     $doc->endExportRow($rowCnt);
                 }

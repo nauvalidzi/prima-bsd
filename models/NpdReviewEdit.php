@@ -472,6 +472,7 @@ class NpdReviewEdit extends NpdReview
         $this->idnpd_sample->Visible = false;
         $this->tanggal_review->setVisibility();
         $this->tanggal_submit->setVisibility();
+        $this->ukuran->setVisibility();
         $this->wadah->setVisibility();
         $this->bentuk_opsi->setVisibility();
         $this->bentuk_revisi->setVisibility();
@@ -499,7 +500,7 @@ class NpdReviewEdit extends NpdReview
         $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
-        $this->ukuran->setVisibility();
+        $this->review_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -705,6 +706,16 @@ class NpdReviewEdit extends NpdReview
                 $this->tanggal_submit->setFormValue($val);
             }
             $this->tanggal_submit->CurrentValue = UnFormatDateTime($this->tanggal_submit->CurrentValue, 0);
+        }
+
+        // Check field name 'ukuran' first before field var 'x_ukuran'
+        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
+        if (!$this->ukuran->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->ukuran->Visible = false; // Disable update for API request
+            } else {
+                $this->ukuran->setFormValue($val);
+            }
         }
 
         // Check field name 'wadah' first before field var 'x_wadah'
@@ -957,13 +968,13 @@ class NpdReviewEdit extends NpdReview
             }
         }
 
-        // Check field name 'ukuran' first before field var 'x_ukuran'
-        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
-        if (!$this->ukuran->IsDetailKey) {
+        // Check field name 'review_by' first before field var 'x_review_by'
+        $val = $CurrentForm->hasValue("review_by") ? $CurrentForm->getValue("review_by") : $CurrentForm->getValue("x_review_by");
+        if (!$this->review_by->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->ukuran->Visible = false; // Disable update for API request
+                $this->review_by->Visible = false; // Disable update for API request
             } else {
-                $this->ukuran->setFormValue($val);
+                $this->review_by->setFormValue($val);
             }
         }
 
@@ -983,6 +994,7 @@ class NpdReviewEdit extends NpdReview
         $this->tanggal_review->CurrentValue = UnFormatDateTime($this->tanggal_review->CurrentValue, 0);
         $this->tanggal_submit->CurrentValue = $this->tanggal_submit->FormValue;
         $this->tanggal_submit->CurrentValue = UnFormatDateTime($this->tanggal_submit->CurrentValue, 0);
+        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
         $this->wadah->CurrentValue = $this->wadah->FormValue;
         $this->bentuk_opsi->CurrentValue = $this->bentuk_opsi->FormValue;
         $this->bentuk_revisi->CurrentValue = $this->bentuk_revisi->FormValue;
@@ -1008,7 +1020,7 @@ class NpdReviewEdit extends NpdReview
         $this->efeknegatif_revisi->CurrentValue = $this->efeknegatif_revisi->FormValue;
         $this->kesimpulan->CurrentValue = $this->kesimpulan->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
-        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
+        $this->review_by->CurrentValue = $this->review_by->FormValue;
     }
 
     /**
@@ -1063,6 +1075,7 @@ class NpdReviewEdit extends NpdReview
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->tanggal_review->setDbValue($row['tanggal_review']);
         $this->tanggal_submit->setDbValue($row['tanggal_submit']);
+        $this->ukuran->setDbValue($row['ukuran']);
         $this->wadah->setDbValue($row['wadah']);
         $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
         $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
@@ -1090,7 +1103,7 @@ class NpdReviewEdit extends NpdReview
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->ukuran->setDbValue($row['ukuran']);
+        $this->review_by->setDbValue($row['review_by']);
     }
 
     // Return a row with default values
@@ -1102,6 +1115,7 @@ class NpdReviewEdit extends NpdReview
         $row['idnpd_sample'] = null;
         $row['tanggal_review'] = null;
         $row['tanggal_submit'] = null;
+        $row['ukuran'] = null;
         $row['wadah'] = null;
         $row['bentuk_opsi'] = null;
         $row['bentuk_revisi'] = null;
@@ -1129,7 +1143,7 @@ class NpdReviewEdit extends NpdReview
         $row['status'] = null;
         $row['created_at'] = null;
         $row['readonly'] = null;
-        $row['ukuran'] = null;
+        $row['review_by'] = null;
         return $row;
     }
 
@@ -1170,6 +1184,8 @@ class NpdReviewEdit extends NpdReview
         // tanggal_review
 
         // tanggal_submit
+
+        // ukuran
 
         // wadah
 
@@ -1225,7 +1241,7 @@ class NpdReviewEdit extends NpdReview
 
         // readonly
 
-        // ukuran
+        // review_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1290,6 +1306,10 @@ class NpdReviewEdit extends NpdReview
             $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
             $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
             $this->tanggal_submit->ViewCustomAttributes = "";
+
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
 
             // wadah
             $this->wadah->ViewValue = $this->wadah->CurrentValue;
@@ -1452,9 +1472,10 @@ class NpdReviewEdit extends NpdReview
             }
             $this->readonly->ViewCustomAttributes = "";
 
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
+            // review_by
+            $this->review_by->ViewValue = $this->review_by->CurrentValue;
+            $this->review_by->ViewValue = FormatNumber($this->review_by->ViewValue, 0, -2, -2, -2);
+            $this->review_by->ViewCustomAttributes = "";
 
             // tanggal_review
             $this->tanggal_review->LinkCustomAttributes = "";
@@ -1465,6 +1486,11 @@ class NpdReviewEdit extends NpdReview
             $this->tanggal_submit->LinkCustomAttributes = "";
             $this->tanggal_submit->HrefValue = "";
             $this->tanggal_submit->TooltipValue = "";
+
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
 
             // wadah
             $this->wadah->LinkCustomAttributes = "";
@@ -1591,10 +1617,10 @@ class NpdReviewEdit extends NpdReview
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
+            // review_by
+            $this->review_by->LinkCustomAttributes = "";
+            $this->review_by->HrefValue = "";
+            $this->review_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // tanggal_review
             $this->tanggal_review->EditAttrs["class"] = "form-control";
@@ -1607,6 +1633,15 @@ class NpdReviewEdit extends NpdReview
             $this->tanggal_submit->EditCustomAttributes = "";
             $this->tanggal_submit->EditValue = HtmlEncode(FormatDateTime($this->tanggal_submit->CurrentValue, 8));
             $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
+
+            // ukuran
+            $this->ukuran->EditAttrs["class"] = "form-control";
+            $this->ukuran->EditCustomAttributes = "";
+            if (!$this->ukuran->Raw) {
+                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
+            }
+            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
+            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
 
             // wadah
             $this->wadah->EditAttrs["class"] = "form-control";
@@ -1782,14 +1817,11 @@ class NpdReviewEdit extends NpdReview
             $this->status->EditValue = $this->status->options(false);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
-            // ukuran
-            $this->ukuran->EditAttrs["class"] = "form-control";
-            $this->ukuran->EditCustomAttributes = "";
-            if (!$this->ukuran->Raw) {
-                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-            }
-            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
-            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
+            // review_by
+            $this->review_by->EditAttrs["class"] = "form-control";
+            $this->review_by->EditCustomAttributes = "";
+            $this->review_by->EditValue = HtmlEncode($this->review_by->CurrentValue);
+            $this->review_by->PlaceHolder = RemoveHtml($this->review_by->caption());
 
             // Edit refer script
 
@@ -1800,6 +1832,10 @@ class NpdReviewEdit extends NpdReview
             // tanggal_submit
             $this->tanggal_submit->LinkCustomAttributes = "";
             $this->tanggal_submit->HrefValue = "";
+
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
 
             // wadah
             $this->wadah->LinkCustomAttributes = "";
@@ -1901,9 +1937,9 @@ class NpdReviewEdit extends NpdReview
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
+            // review_by
+            $this->review_by->LinkCustomAttributes = "";
+            $this->review_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1939,6 +1975,11 @@ class NpdReviewEdit extends NpdReview
         }
         if (!CheckDate($this->tanggal_submit->FormValue)) {
             $this->tanggal_submit->addErrorMessage($this->tanggal_submit->getErrorMessage(false));
+        }
+        if ($this->ukuran->Required) {
+            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
+                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
+            }
         }
         if ($this->wadah->Required) {
             if (!$this->wadah->IsDetailKey && EmptyValue($this->wadah->FormValue)) {
@@ -2065,10 +2106,13 @@ class NpdReviewEdit extends NpdReview
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
-        if ($this->ukuran->Required) {
-            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
-                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
+        if ($this->review_by->Required) {
+            if (!$this->review_by->IsDetailKey && EmptyValue($this->review_by->FormValue)) {
+                $this->review_by->addErrorMessage(str_replace("%s", $this->review_by->caption(), $this->review_by->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->review_by->FormValue)) {
+            $this->review_by->addErrorMessage($this->review_by->getErrorMessage(false));
         }
 
         // Return validate result
@@ -2107,6 +2151,9 @@ class NpdReviewEdit extends NpdReview
 
             // tanggal_submit
             $this->tanggal_submit->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_submit->CurrentValue, 0), CurrentDate(), $this->tanggal_submit->ReadOnly);
+
+            // ukuran
+            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
 
             // wadah
             $this->wadah->setDbValueDef($rsnew, $this->wadah->CurrentValue, null, $this->wadah->ReadOnly);
@@ -2183,8 +2230,8 @@ class NpdReviewEdit extends NpdReview
             // status
             $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, 0, $this->status->ReadOnly);
 
-            // ukuran
-            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
+            // review_by
+            $this->review_by->setDbValueDef($rsnew, $this->review_by->CurrentValue, null, $this->review_by->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;

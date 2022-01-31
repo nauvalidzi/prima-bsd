@@ -56,11 +56,14 @@ $Page->showMessage();
 <?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
         <th class="<?= $Page->tanggal_submit->headerCellClass() ?>"><span id="elh_npd_review_tanggal_submit" class="npd_review_tanggal_submit"><?= $Page->tanggal_submit->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><span id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Page->ukuran->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_npd_review_status" class="npd_review_status"><?= $Page->status->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><span id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Page->ukuran->caption() ?></span></th>
+<?php if ($Page->review_by->Visible) { // review_by ?>
+        <th class="<?= $Page->review_by->headerCellClass() ?>"><span id="elh_npd_review_review_by" class="npd_review_review_by"><?= $Page->review_by->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -115,6 +118,14 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <td <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_ukuran" class="npd_review_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <td <?= $Page->status->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_review_status" class="npd_review_status">
@@ -123,11 +134,11 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <td <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_review_ukuran" class="npd_review_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
+<?php if ($Page->review_by->Visible) { // review_by ?>
+        <td <?= $Page->review_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_review_by" class="npd_review_review_by">
+<span<?= $Page->review_by->viewAttributes() ?>>
+<?= $Page->review_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

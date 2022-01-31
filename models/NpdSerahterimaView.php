@@ -519,13 +519,12 @@ class NpdSerahterimaView extends NpdSerahterima
         $this->IsModal = Param("modal") == "1";
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
-        $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->tanggal_request->setVisibility();
-        $this->tanggal_serahterima->setVisibility();
-        $this->jenis_produk->setVisibility();
+        $this->tgl_request->setVisibility();
+        $this->tgl_serahterima->setVisibility();
         $this->readonly->setVisibility();
         $this->created_at->setVisibility();
+        $this->receipt_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -540,6 +539,8 @@ class NpdSerahterimaView extends NpdSerahterima
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->receipt_by);
 
         // Check modal
         if ($this->IsModal) {
@@ -606,6 +607,9 @@ class NpdSerahterimaView extends NpdSerahterima
         $this->resetAttributes();
         $this->renderRow();
 
+        // Set up detail parameters
+        $this->setupDetailParms();
+
         // Normal return
         if (IsApi()) {
             $rows = $this->getRecordsFromRecordset($this->Recordset, true); // Get current record only
@@ -663,16 +667,6 @@ class NpdSerahterimaView extends NpdSerahterima
         }
         $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
-        // Copy
-        $item = &$option->add("copy");
-        $copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode(GetUrl($this->CopyUrl)) . "'});\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-        }
-        $item->Visible = ($this->CopyUrl != "" && $Security->canAdd());
-
         // Delete
         $item = &$option->add("delete");
         if ($this->IsModal) { // Handle as inline delete
@@ -681,6 +675,83 @@ class NpdSerahterimaView extends NpdSerahterima
             $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
         }
         $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
+        $option = $options["detail"];
+        $detailTableLink = "";
+        $detailViewTblVar = "";
+        $detailCopyTblVar = "";
+        $detailEditTblVar = "";
+
+        // "detail_npd_sample"
+        $item = &$option->add("detail_npd_sample");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("npd_sample", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("npd_sample")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("NpdSampleList?" . Config("TABLE_SHOW_MASTER") . "=npd_serahterima&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        $links = "";
+        $detailPageObj = Container("NpdSampleGrid");
+        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'npd_serahterima')) {
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=npd_sample"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            if ($detailViewTblVar != "") {
+                $detailViewTblVar .= ",";
+            }
+            $detailViewTblVar .= "npd_sample";
+        }
+        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'npd_serahterima')) {
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=npd_sample"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            if ($detailEditTblVar != "") {
+                $detailEditTblVar .= ",";
+            }
+            $detailEditTblVar .= "npd_sample";
+        }
+        if ($links != "") {
+            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
+            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
+        }
+        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
+        $item->Body = $body;
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'npd_sample');
+        if ($item->Visible) {
+            if ($detailTableLink != "") {
+                $detailTableLink .= ",";
+            }
+            $detailTableLink .= "npd_sample";
+        }
+        if ($this->ShowMultipleDetails) {
+            $item->Visible = false;
+        }
+
+        // Multiple details
+        if ($this->ShowMultipleDetails) {
+            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
+            $links = "";
+            if ($detailViewTblVar != "") {
+                $links .= "<li><a class=\"ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailViewTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            }
+            if ($detailEditTblVar != "") {
+                $links .= "<li><a class=\"ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailEditTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            }
+            if ($detailCopyTblVar != "") {
+                $links .= "<li><a class=\"ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailCopyTblVar))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
+            }
+            if ($links != "") {
+                $body .= "<button class=\"dropdown-toggle btn btn-default ew-master-detail\" title=\"" . HtmlTitle($Language->phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->phrase("MultipleMasterDetails") . "</button>";
+                $body .= "<ul class=\"dropdown-menu ew-menu\">" . $links . "</ul>";
+            }
+            $body .= "</div>";
+            // Multiple details
+            $item = &$option->add("details");
+            $item->Body = $body;
+        }
+
+        // Set up detail default
+        $option = $options["detail"];
+        $options["detail"]->DropDownButtonPhrase = $Language->phrase("ButtonDetails");
+        $ar = explode(",", $detailTableLink);
+        $cnt = count($ar);
+        $option->UseDropDownButton = ($cnt > 1);
+        $option->UseButtonGroup = true;
+        $item = &$option->add($option->GroupOptionName);
+        $item->Body = "";
+        $item->Visible = false;
 
         // Set up action default
         $option = $options["action"];
@@ -740,13 +811,18 @@ class NpdSerahterimaView extends NpdSerahterima
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->tanggal_request->setDbValue($row['tanggal_request']);
-        $this->tanggal_serahterima->setDbValue($row['tanggal_serahterima']);
-        $this->jenis_produk->setDbValue($row['jenis_produk']);
+        $this->tgl_request->setDbValue($row['tgl_request']);
+        $this->tgl_serahterima->setDbValue($row['tgl_serahterima']);
         $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $detailTbl = Container("npd_sample");
+        $detailFilter = $detailTbl->sqlDetailFilter_npd_serahterima();
+        $detailFilter = str_replace("@idserahterima@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
+        $detailTbl->setCurrentMasterTable("npd_serahterima");
+        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
+        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
     }
 
     // Return a row with default values
@@ -754,13 +830,12 @@ class NpdSerahterimaView extends NpdSerahterima
     {
         $row = [];
         $row['id'] = null;
-        $row['idpegawai'] = null;
         $row['idcustomer'] = null;
-        $row['tanggal_request'] = null;
-        $row['tanggal_serahterima'] = null;
-        $row['jenis_produk'] = null;
+        $row['tgl_request'] = null;
+        $row['tgl_serahterima'] = null;
         $row['readonly'] = null;
         $row['created_at'] = null;
+        $row['receipt_by'] = null;
         return $row;
     }
 
@@ -784,43 +859,48 @@ class NpdSerahterimaView extends NpdSerahterima
 
         // id
 
-        // idpegawai
-
         // idcustomer
 
-        // tanggal_request
+        // tgl_request
 
-        // tanggal_serahterima
-
-        // jenis_produk
+        // tgl_serahterima
 
         // readonly
 
         // created_at
-        if ($this->RowType == ROWTYPE_VIEW) {
-            // idpegawai
-            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-            $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
-            $this->idpegawai->ViewCustomAttributes = "";
 
+        // receipt_by
+        if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idcustomer->ViewValue = null;
+            }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // tanggal_request
-            $this->tanggal_request->ViewValue = $this->tanggal_request->CurrentValue;
-            $this->tanggal_request->ViewValue = FormatDateTime($this->tanggal_request->ViewValue, 0);
-            $this->tanggal_request->ViewCustomAttributes = "";
+            // tgl_request
+            $this->tgl_request->ViewValue = $this->tgl_request->CurrentValue;
+            $this->tgl_request->ViewValue = FormatDateTime($this->tgl_request->ViewValue, 0);
+            $this->tgl_request->ViewCustomAttributes = "";
 
-            // tanggal_serahterima
-            $this->tanggal_serahterima->ViewValue = $this->tanggal_serahterima->CurrentValue;
-            $this->tanggal_serahterima->ViewValue = FormatDateTime($this->tanggal_serahterima->ViewValue, 0);
-            $this->tanggal_serahterima->ViewCustomAttributes = "";
-
-            // jenis_produk
-            $this->jenis_produk->ViewValue = $this->jenis_produk->CurrentValue;
-            $this->jenis_produk->ViewCustomAttributes = "";
+            // tgl_serahterima
+            $this->tgl_serahterima->ViewValue = $this->tgl_serahterima->CurrentValue;
+            $this->tgl_serahterima->ViewValue = FormatDateTime($this->tgl_serahterima->ViewValue, 0);
+            $this->tgl_serahterima->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -835,30 +915,41 @@ class NpdSerahterimaView extends NpdSerahterima
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
-            // tanggal_request
-            $this->tanggal_request->LinkCustomAttributes = "";
-            $this->tanggal_request->HrefValue = "";
-            $this->tanggal_request->TooltipValue = "";
+            // tgl_request
+            $this->tgl_request->LinkCustomAttributes = "";
+            $this->tgl_request->HrefValue = "";
+            $this->tgl_request->TooltipValue = "";
 
-            // tanggal_serahterima
-            $this->tanggal_serahterima->LinkCustomAttributes = "";
-            $this->tanggal_serahterima->HrefValue = "";
-            $this->tanggal_serahterima->TooltipValue = "";
-
-            // jenis_produk
-            $this->jenis_produk->LinkCustomAttributes = "";
-            $this->jenis_produk->HrefValue = "";
-            $this->jenis_produk->TooltipValue = "";
+            // tgl_serahterima
+            $this->tgl_serahterima->LinkCustomAttributes = "";
+            $this->tgl_serahterima->HrefValue = "";
+            $this->tgl_serahterima->TooltipValue = "";
 
             // readonly
             $this->readonly->LinkCustomAttributes = "";
@@ -869,11 +960,45 @@ class NpdSerahterimaView extends NpdSerahterima
             $this->created_at->LinkCustomAttributes = "";
             $this->created_at->HrefValue = "";
             $this->created_at->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+    }
+
+    // Set up detail parms based on QueryString
+    protected function setupDetailParms()
+    {
+        // Get the keys for master table
+        $detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
+        if ($detailTblVar !== null) {
+            $this->setCurrentDetailTable($detailTblVar);
+        } else {
+            $detailTblVar = $this->getCurrentDetailTable();
+        }
+        if ($detailTblVar != "") {
+            $detailTblVar = explode(",", $detailTblVar);
+            if (in_array("npd_sample", $detailTblVar)) {
+                $detailPageObj = Container("NpdSampleGrid");
+                if ($detailPageObj->DetailView) {
+                    $detailPageObj->CurrentMode = "view";
+
+                    // Save current master table to detail table
+                    $detailPageObj->setCurrentMasterTable($this->TableVar);
+                    $detailPageObj->setStartRecordNumber(1);
+                    $detailPageObj->idserahterima->IsDetailKey = true;
+                    $detailPageObj->idserahterima->CurrentValue = $this->id->CurrentValue;
+                    $detailPageObj->idserahterima->setSessionValue($detailPageObj->idserahterima->CurrentValue);
+                    $detailPageObj->idnpd->setSessionValue(""); // Clear session key
+                }
+            }
         }
     }
 
@@ -901,7 +1026,11 @@ class NpdSerahterimaView extends NpdSerahterima
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idcustomer":
+                    break;
                 case "x_readonly":
+                    break;
+                case "x_receipt_by":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1005,6 +1134,11 @@ class NpdSerahterimaView extends NpdSerahterima
     public function pageRender()
     {
         //Log("Page Render");
+        $this->OtherOptions["action"]->Items["add"]->Visible = false;
+        if ($this->readonly->CurrentValue) {
+        	$this->OtherOptions["action"]->Items["edit"]->Visible = false;
+        	$this->OtherOptions["action"]->Items["delete"]->Visible = false;
+        }
     }
 
     // Page Data Rendering event

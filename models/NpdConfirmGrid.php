@@ -516,7 +516,7 @@ class NpdConfirmGrid extends NpdConfirm
         $this->jabatan->Visible = false;
         $this->notelp->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->confirm_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -1321,8 +1321,8 @@ class NpdConfirmGrid extends NpdConfirm
         $this->notelp->OldValue = $this->notelp->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
-        $this->created_by->OldValue = $this->created_by->CurrentValue;
+        $this->confirm_by->CurrentValue = CurrentUserID();
+        $this->confirm_by->OldValue = $this->confirm_by->CurrentValue;
         $this->readonly->CurrentValue = 0;
         $this->readonly->OldValue = $this->readonly->CurrentValue;
     }
@@ -1517,7 +1517,7 @@ class NpdConfirmGrid extends NpdConfirm
         $this->jabatan->setDbValue($row['jabatan']);
         $this->notelp->setDbValue($row['notelp']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->confirm_by->setDbValue($row['confirm_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1537,7 +1537,7 @@ class NpdConfirmGrid extends NpdConfirm
         $row['jabatan'] = $this->jabatan->CurrentValue;
         $row['notelp'] = $this->notelp->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
+        $row['confirm_by'] = $this->confirm_by->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
         return $row;
     }
@@ -1596,7 +1596,7 @@ class NpdConfirmGrid extends NpdConfirm
 
         // created_at
 
-        // created_by
+        // confirm_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1672,10 +1672,10 @@ class NpdConfirmGrid extends NpdConfirm
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // confirm_by
+            $this->confirm_by->ViewValue = $this->confirm_by->CurrentValue;
+            $this->confirm_by->ViewValue = FormatNumber($this->confirm_by->ViewValue, 0, -2, -2, -2);
+            $this->confirm_by->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -2102,7 +2102,7 @@ class NpdConfirmGrid extends NpdConfirm
             $this->personincharge->setDbValueDef($rsnew, $this->personincharge->CurrentValue, "", $this->personincharge->ReadOnly);
 
             // notelp
-            $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, null, $this->notelp->ReadOnly);
+            $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, "", $this->notelp->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
@@ -2203,13 +2203,13 @@ class NpdConfirmGrid extends NpdConfirm
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // tglkonfirmasi
         $this->tglkonfirmasi->setDbValueDef($rsnew, UnFormatDateTime($this->tglkonfirmasi->CurrentValue, 0), CurrentDate(), false);
 
         // idnpd_sample
-        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, false);
+        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, strval($this->idnpd_sample->CurrentValue) == "");
 
         // namapemesan
         $this->namapemesan->setDbValueDef($rsnew, $this->namapemesan->CurrentValue, "", false);
@@ -2218,7 +2218,7 @@ class NpdConfirmGrid extends NpdConfirm
         $this->personincharge->setDbValueDef($rsnew, $this->personincharge->CurrentValue, "", false);
 
         // notelp
-        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, null, false);
+        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, "", false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

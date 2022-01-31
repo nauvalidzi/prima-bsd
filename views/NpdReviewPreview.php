@@ -58,6 +58,15 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <?php if ($Page->SortUrl($Page->ukuran) == "") { ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><?= $Page->ukuran->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->ukuran->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ukuran->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ukuran->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ukuran->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ukuran->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ukuran->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <?php if ($Page->SortUrl($Page->status) == "") { ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><?= $Page->status->caption() ?></th>
@@ -67,12 +76,12 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <?php if ($Page->SortUrl($Page->ukuran) == "") { ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><?= $Page->ukuran->caption() ?></th>
+<?php if ($Page->review_by->Visible) { // review_by ?>
+    <?php if ($Page->SortUrl($Page->review_by) == "") { ?>
+        <th class="<?= $Page->review_by->headerCellClass() ?>"><?= $Page->review_by->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ukuran->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ukuran->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ukuran->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ukuran->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ukuran->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->review_by->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->review_by->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->review_by->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->review_by->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->review_by->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->review_by->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -134,6 +143,13 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->tanggal_submit->getViewValue() ?></span>
 </td>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <!-- ukuran -->
+        <td<?= $Page->ukuran->cellAttributes() ?>>
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</td>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <!-- status -->
         <td<?= $Page->status->cellAttributes() ?>>
@@ -141,11 +157,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->status->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <!-- ukuran -->
-        <td<?= $Page->ukuran->cellAttributes() ?>>
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
+<?php if ($Page->review_by->Visible) { // review_by ?>
+        <!-- review_by -->
+        <td<?= $Page->review_by->cellAttributes() ?>>
+<span<?= $Page->review_by->viewAttributes() ?>>
+<?= $Page->review_by->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

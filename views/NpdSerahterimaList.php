@@ -17,18 +17,6 @@ loadjs.ready("head", function () {
     fnpd_serahterimalist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
     loadjs.done("fnpd_serahterimalist");
 });
-var fnpd_serahterimalistsrch, currentSearchForm, currentAdvancedSearchForm;
-loadjs.ready("head", function () {
-    var $ = jQuery;
-    // Form object for search
-    fnpd_serahterimalistsrch = currentSearchForm = new ew.Form("fnpd_serahterimalistsrch");
-
-    // Dynamic selection lists
-
-    // Filters
-    fnpd_serahterimalistsrch.filterList = <?= $Page->getFilterList() ?>;
-    loadjs.done("fnpd_serahterimalistsrch");
-});
 </script>
 <style>
 .ew-table-preview-row { /* main table preview row color */
@@ -68,46 +56,12 @@ loadjs.ready("head", function () {
 <?php if ($Page->ImportOptions->visible()) { ?>
 <?php $Page->ImportOptions->render("body") ?>
 <?php } ?>
-<?php if ($Page->SearchOptions->visible()) { ?>
-<?php $Page->SearchOptions->render("body") ?>
-<?php } ?>
-<?php if ($Page->FilterOptions->visible()) { ?>
-<?php $Page->FilterOptions->render("body") ?>
-<?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
-<?php if ($Security->canSearch()) { ?>
-<?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
-<form name="fnpd_serahterimalistsrch" id="fnpd_serahterimalistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
-<div id="fnpd_serahterimalistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
-<input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="npd_serahterima">
-    <div class="ew-extended-search">
-<div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
-    <div class="ew-quick-search input-group">
-        <input type="text" name="<?= Config("TABLE_BASIC_SEARCH") ?>" id="<?= Config("TABLE_BASIC_SEARCH") ?>" class="form-control" value="<?= HtmlEncode($Page->BasicSearch->getKeyword()) ?>" placeholder="<?= HtmlEncode($Language->phrase("Search")) ?>">
-        <input type="hidden" name="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" value="<?= HtmlEncode($Page->BasicSearch->getType()) ?>">
-        <div class="input-group-append">
-            <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
-            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span></button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this);"><?= $Language->phrase("QuickSearchAuto") ?></a>
-                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "=") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, '=');"><?= $Language->phrase("QuickSearchExact") ?></a>
-                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "AND") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'AND');"><?= $Language->phrase("QuickSearchAll") ?></a>
-                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "OR") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'OR');"><?= $Language->phrase("QuickSearchAny") ?></a>
-            </div>
-        </div>
-    </div>
-</div>
-    </div><!-- /.ew-extended-search -->
-</div><!-- /.ew-search-panel -->
-</form>
-<?php } ?>
-<?php } ?>
 <?php $Page->showPageHeader(); ?>
 <?php
 $Page->showMessage();
@@ -135,26 +89,23 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <th data-name="idpegawai" class="<?= $Page->idpegawai->headerCellClass() ?>"><div id="elh_npd_serahterima_idpegawai" class="npd_serahterima_idpegawai"><?= $Page->renderSort($Page->idpegawai) ?></div></th>
-<?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_npd_serahterima_idcustomer" class="npd_serahterima_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
 <?php } ?>
-<?php if ($Page->tanggal_request->Visible) { // tanggal_request ?>
-        <th data-name="tanggal_request" class="<?= $Page->tanggal_request->headerCellClass() ?>"><div id="elh_npd_serahterima_tanggal_request" class="npd_serahterima_tanggal_request"><?= $Page->renderSort($Page->tanggal_request) ?></div></th>
+<?php if ($Page->tgl_request->Visible) { // tgl_request ?>
+        <th data-name="tgl_request" class="<?= $Page->tgl_request->headerCellClass() ?>"><div id="elh_npd_serahterima_tgl_request" class="npd_serahterima_tgl_request"><?= $Page->renderSort($Page->tgl_request) ?></div></th>
 <?php } ?>
-<?php if ($Page->tanggal_serahterima->Visible) { // tanggal_serahterima ?>
-        <th data-name="tanggal_serahterima" class="<?= $Page->tanggal_serahterima->headerCellClass() ?>"><div id="elh_npd_serahterima_tanggal_serahterima" class="npd_serahterima_tanggal_serahterima"><?= $Page->renderSort($Page->tanggal_serahterima) ?></div></th>
-<?php } ?>
-<?php if ($Page->jenis_produk->Visible) { // jenis_produk ?>
-        <th data-name="jenis_produk" class="<?= $Page->jenis_produk->headerCellClass() ?>"><div id="elh_npd_serahterima_jenis_produk" class="npd_serahterima_jenis_produk"><?= $Page->renderSort($Page->jenis_produk) ?></div></th>
+<?php if ($Page->tgl_serahterima->Visible) { // tgl_serahterima ?>
+        <th data-name="tgl_serahterima" class="<?= $Page->tgl_serahterima->headerCellClass() ?>"><div id="elh_npd_serahterima_tgl_serahterima" class="npd_serahterima_tgl_serahterima"><?= $Page->renderSort($Page->tgl_serahterima) ?></div></th>
 <?php } ?>
 <?php if ($Page->readonly->Visible) { // readonly ?>
         <th data-name="readonly" class="<?= $Page->readonly->headerCellClass() ?>"><div id="elh_npd_serahterima_readonly" class="npd_serahterima_readonly"><?= $Page->renderSort($Page->readonly) ?></div></th>
 <?php } ?>
 <?php if ($Page->created_at->Visible) { // created_at ?>
         <th data-name="created_at" class="<?= $Page->created_at->headerCellClass() ?>"><div id="elh_npd_serahterima_created_at" class="npd_serahterima_created_at"><?= $Page->renderSort($Page->created_at) ?></div></th>
+<?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <th data-name="receipt_by" class="<?= $Page->receipt_by->headerCellClass() ?>"><div id="elh_npd_serahterima_receipt_by" class="npd_serahterima_receipt_by"><?= $Page->renderSort($Page->receipt_by) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -223,14 +174,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <td data-name="idpegawai" <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<?= $Page->idpegawai->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_serahterima_idcustomer">
@@ -239,27 +182,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tanggal_request->Visible) { // tanggal_request ?>
-        <td data-name="tanggal_request" <?= $Page->tanggal_request->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_tanggal_request">
-<span<?= $Page->tanggal_request->viewAttributes() ?>>
-<?= $Page->tanggal_request->getViewValue() ?></span>
+    <?php if ($Page->tgl_request->Visible) { // tgl_request ?>
+        <td data-name="tgl_request" <?= $Page->tgl_request->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_serahterima_tgl_request">
+<span<?= $Page->tgl_request->viewAttributes() ?>>
+<?= $Page->tgl_request->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tanggal_serahterima->Visible) { // tanggal_serahterima ?>
-        <td data-name="tanggal_serahterima" <?= $Page->tanggal_serahterima->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_tanggal_serahterima">
-<span<?= $Page->tanggal_serahterima->viewAttributes() ?>>
-<?= $Page->tanggal_serahterima->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->jenis_produk->Visible) { // jenis_produk ?>
-        <td data-name="jenis_produk" <?= $Page->jenis_produk->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_jenis_produk">
-<span<?= $Page->jenis_produk->viewAttributes() ?>>
-<?= $Page->jenis_produk->getViewValue() ?></span>
+    <?php if ($Page->tgl_serahterima->Visible) { // tgl_serahterima ?>
+        <td data-name="tgl_serahterima" <?= $Page->tgl_serahterima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_serahterima_tgl_serahterima">
+<span<?= $Page->tgl_serahterima->viewAttributes() ?>>
+<?= $Page->tgl_serahterima->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -279,6 +214,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_serahterima_created_at">
 <span<?= $Page->created_at->viewAttributes() ?>>
 <?= $Page->created_at->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <td data-name="receipt_by" <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_serahterima_receipt_by">
+<span<?= $Page->receipt_by->viewAttributes() ?>>
+<?= $Page->receipt_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

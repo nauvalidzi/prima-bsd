@@ -581,7 +581,6 @@ class NpdSampleList extends NpdSample
         $this->jumlah->setVisibility();
         $this->status->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -748,6 +747,9 @@ class NpdSampleList extends NpdSample
                 if ($this->getCurrentMasterTable() == "npd") {
                     $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "npd"); // Add master User ID filter
                 }
+                if ($this->getCurrentMasterTable() == "npd_serahterima") {
+                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "npd_serahterima"); // Add master User ID filter
+                }
         }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
@@ -776,6 +778,22 @@ class NpdSampleList extends NpdSample
             if (!$this->MasterRecordExists) {
                 $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
                 $this->terminate("NpdList"); // Return to master page
+                return;
+            } else {
+                $masterTbl->loadListRowValues($rsmaster);
+                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
+                $masterTbl->renderListRow();
+            }
+        }
+
+        // Load master record
+        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "npd_serahterima") {
+            $masterTbl = Container("npd_serahterima");
+            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
+            $this->MasterRecordExists = $rsmaster !== false;
+            if (!$this->MasterRecordExists) {
+                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
+                $this->terminate("NpdSerahterimaList"); // Return to master page
                 return;
             } else {
                 $masterTbl->loadListRowValues($rsmaster);
@@ -936,7 +954,6 @@ class NpdSampleList extends NpdSample
         $filterList = Concat($filterList, $this->jumlah->AdvancedSearch->toJson(), ","); // Field jumlah
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1081,14 +1098,6 @@ class NpdSampleList extends NpdSample
         $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
-
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
 
         // Field readonly
         $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
@@ -1325,6 +1334,7 @@ class NpdSampleList extends NpdSample
                 $this->DbDetailFilter = "";
                         $this->idserahterima->setSessionValue("");
                         $this->idnpd->setSessionValue("");
+                        $this->idserahterima->setSessionValue("");
             }
 
             // Reset (clear) sorting order
@@ -1344,7 +1354,6 @@ class NpdSampleList extends NpdSample
                 $this->jumlah->setSort("");
                 $this->status->setSort("");
                 $this->created_at->setSort("");
-                $this->created_by->setSort("");
                 $this->readonly->setSort("");
             }
 
@@ -1429,7 +1438,7 @@ class NpdSampleList extends NpdSample
             // "view"
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
+            if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1438,7 +1447,7 @@ class NpdSampleList extends NpdSample
             // "edit"
             $opt = $this->ListOptions["edit"];
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
+            if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1446,7 +1455,7 @@ class NpdSampleList extends NpdSample
 
             // "delete"
             $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
+            if ($Security->canDelete()) {
             $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1752,7 +1761,6 @@ class NpdSampleList extends NpdSample
         $this->jumlah->setDbValue($row['jumlah']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1773,7 +1781,6 @@ class NpdSampleList extends NpdSample
         $row['jumlah'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -1837,8 +1844,6 @@ class NpdSampleList extends NpdSample
         // status
 
         // created_at
-
-        // created_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1917,11 +1922,6 @@ class NpdSampleList extends NpdSample
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -2022,16 +2022,6 @@ class NpdSampleList extends NpdSample
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up master/detail based on QueryString
     protected function setupMasterParms()
     {
@@ -2065,6 +2055,20 @@ class NpdSampleList extends NpdSample
                     $masterTbl->id->setQueryStringValue($parm);
                     $this->idnpd->setQueryStringValue($masterTbl->id->QueryStringValue);
                     $this->idnpd->setSessionValue($this->idnpd->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Get("fk_id", Get("idserahterima"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idserahterima->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->QueryStringValue);
                     if (!is_numeric($masterTbl->id->QueryStringValue)) {
                         $validMaster = false;
                     }
@@ -2107,6 +2111,20 @@ class NpdSampleList extends NpdSample
                     $validMaster = false;
                 }
             }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Post("fk_id", Post("idserahterima"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idserahterima->setFormValue($masterTbl->id->FormValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
         }
         if ($validMaster) {
             // Update URL
@@ -2133,6 +2151,11 @@ class NpdSampleList extends NpdSample
             if ($masterTblVar != "npd") {
                 if ($this->idnpd->CurrentValue == "") {
                     $this->idnpd->setSessionValue("");
+                }
+            }
+            if ($masterTblVar != "npd_serahterima") {
+                if ($this->idserahterima->CurrentValue == "") {
+                    $this->idserahterima->setSessionValue("");
                 }
             }
         }

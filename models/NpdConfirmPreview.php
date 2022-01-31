@@ -401,7 +401,7 @@ class NpdConfirmPreview extends NpdConfirm
         $this->jabatan->Visible = false;
         $this->notelp->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->confirm_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -500,7 +500,7 @@ class NpdConfirmPreview extends NpdConfirm
             $this->jabatan->setSort("");
             $this->notelp->setSort("");
             $this->created_at->setSort("");
-            $this->created_by->setSort("");
+            $this->confirm_by->setSort("");
             $this->readonly->setSort("");
 
             // Save sort to session

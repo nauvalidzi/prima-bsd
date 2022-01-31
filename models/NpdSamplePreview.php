@@ -403,7 +403,6 @@ class NpdSamplePreview extends NpdSample
         $this->jumlah->setVisibility();
         $this->status->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -504,7 +503,6 @@ class NpdSamplePreview extends NpdSample
             $this->jumlah->setSort("");
             $this->status->setSort("");
             $this->created_at->setSort("");
-            $this->created_by->setSort("");
             $this->readonly->setSort("");
 
             // Save sort to session
@@ -707,6 +705,9 @@ class NpdSamplePreview extends NpdSample
         if ($masterTblVar == "npd") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=npd&" . GetForeignKeyUrl("fk_id", $this->idnpd->QueryStringValue) . "";
         }
+        if ($masterTblVar == "npd_serahterima") {
+            $url = "" . Config("TABLE_SHOW_MASTER") . "=npd_serahterima&" . GetForeignKeyUrl("fk_id", $this->idserahterima->QueryStringValue) . "";
+        }
         return $url;
     }
 
@@ -732,6 +733,16 @@ class NpdSamplePreview extends NpdSample
                 $val = substr($f, $x);
                 $val = $this->unquoteValue($val, "DB");
                  $this->idnpd->setQueryStringValue($val);
+            }
+        }
+        if ($masterTblVar == "npd_serahterima") {
+            $find = "`idserahterima`=";
+            $x = strpos($f, $find);
+            if ($x !== false) {
+                $x += strlen($find);
+                $val = substr($f, $x);
+                $val = $this->unquoteValue($val, "DB");
+                 $this->idserahterima->setQueryStringValue($val);
             }
         }
     }

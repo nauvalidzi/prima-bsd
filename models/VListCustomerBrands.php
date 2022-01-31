@@ -28,12 +28,12 @@ class VListCustomerBrands extends DbTable
     public $ExportDoc;
 
     // Fields
+    public $id;
     public $idcustomer;
     public $idbrand;
     public $kode_brand;
     public $nama_brand;
     public $jumlah_produk;
-    public $id;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -70,6 +70,15 @@ class VListCustomerBrands extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
+        // id
+        $this->id = new DbField('v_list_customer_brands', 'v_list_customer_brands', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
+        $this->id->Sortable = false; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
+
         // idcustomer
         $this->idcustomer = new DbField('v_list_customer_brands', 'v_list_customer_brands', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->IsForeignKey = true; // Foreign key field
@@ -80,10 +89,10 @@ class VListCustomerBrands extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'brand', false, 'id', ["kode","title","",""], [], [], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'brand', false, 'id', ["kode","title","",""], [], [], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -129,15 +138,6 @@ class VListCustomerBrands extends DbTable
         $this->jumlah_produk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->jumlah_produk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah_produk->Param, "CustomMsg");
         $this->Fields['jumlah_produk'] = &$this->jumlah_produk;
-
-        // id
-        $this->id = new DbField('v_list_customer_brands', 'v_list_customer_brands', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->Sortable = false; // Allow sort
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
-        $this->Fields['id'] = &$this->id;
     }
 
     // Field Visibility
@@ -600,12 +600,12 @@ class VListCustomerBrands extends DbTable
         if (!is_array($row)) {
             return;
         }
+        $this->id->DbValue = $row['id'];
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->idbrand->DbValue = $row['idbrand'];
         $this->kode_brand->DbValue = $row['kode_brand'];
         $this->nama_brand->DbValue = $row['nama_brand'];
         $this->jumlah_produk->DbValue = $row['jumlah_produk'];
-        $this->id->DbValue = $row['id'];
     }
 
     // Delete uploaded files
@@ -930,12 +930,12 @@ SORTHTML;
         } else {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->kode_brand->setDbValue($row['kode_brand']);
         $this->nama_brand->setDbValue($row['nama_brand']);
         $this->jumlah_produk->setDbValue($row['jumlah_produk']);
-        $this->id->setDbValue($row['id']);
     }
 
     // Render list row values
@@ -948,6 +948,9 @@ SORTHTML;
 
         // Common render codes
 
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
+
         // idcustomer
 
         // idbrand
@@ -959,7 +962,9 @@ SORTHTML;
         // jumlah_produk
 
         // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 4, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
 
         // idcustomer
         $curVal = trim(strval($this->idcustomer->CurrentValue));
@@ -1017,9 +1022,9 @@ SORTHTML;
         $this->jumlah_produk->ViewCustomAttributes = "";
 
         // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 4, -2, -2, -2);
-        $this->id->ViewCustomAttributes = "";
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
 
         // idcustomer
         $this->idcustomer->LinkCustomAttributes = "";
@@ -1046,11 +1051,6 @@ SORTHTML;
         $this->jumlah_produk->HrefValue = "";
         $this->jumlah_produk->TooltipValue = "";
 
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
-
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1065,6 +1065,10 @@ SORTHTML;
 
         // Call Row Rendering event
         $this->rowRendering();
+
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
 
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
@@ -1110,10 +1114,6 @@ SORTHTML;
         // jumlah_produk
         $this->jumlah_produk->EditAttrs["class"] = "form-control";
         $this->jumlah_produk->EditCustomAttributes = "";
-
-        // id
-        $this->id->EditAttrs["class"] = "form-control";
-        $this->id->EditCustomAttributes = "";
 
         // Call Row Rendered event
         $this->rowRendered();

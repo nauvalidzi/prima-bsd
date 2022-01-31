@@ -379,6 +379,7 @@ class NpdReviewDelete extends NpdReview
         $this->idnpd_sample->setVisibility();
         $this->tanggal_review->setVisibility();
         $this->tanggal_submit->setVisibility();
+        $this->ukuran->setVisibility();
         $this->wadah->Visible = false;
         $this->bentuk_opsi->Visible = false;
         $this->bentuk_revisi->Visible = false;
@@ -406,7 +407,7 @@ class NpdReviewDelete extends NpdReview
         $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
-        $this->ukuran->setVisibility();
+        $this->review_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -579,6 +580,7 @@ class NpdReviewDelete extends NpdReview
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->tanggal_review->setDbValue($row['tanggal_review']);
         $this->tanggal_submit->setDbValue($row['tanggal_submit']);
+        $this->ukuran->setDbValue($row['ukuran']);
         $this->wadah->setDbValue($row['wadah']);
         $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
         $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
@@ -606,7 +608,7 @@ class NpdReviewDelete extends NpdReview
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->ukuran->setDbValue($row['ukuran']);
+        $this->review_by->setDbValue($row['review_by']);
     }
 
     // Return a row with default values
@@ -618,6 +620,7 @@ class NpdReviewDelete extends NpdReview
         $row['idnpd_sample'] = null;
         $row['tanggal_review'] = null;
         $row['tanggal_submit'] = null;
+        $row['ukuran'] = null;
         $row['wadah'] = null;
         $row['bentuk_opsi'] = null;
         $row['bentuk_revisi'] = null;
@@ -645,7 +648,7 @@ class NpdReviewDelete extends NpdReview
         $row['status'] = null;
         $row['created_at'] = null;
         $row['readonly'] = null;
-        $row['ukuran'] = null;
+        $row['review_by'] = null;
         return $row;
     }
 
@@ -670,6 +673,8 @@ class NpdReviewDelete extends NpdReview
         // tanggal_review
 
         // tanggal_submit
+
+        // ukuran
 
         // wadah
 
@@ -725,7 +730,7 @@ class NpdReviewDelete extends NpdReview
 
         // readonly
 
-        // ukuran
+        // review_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -790,6 +795,10 @@ class NpdReviewDelete extends NpdReview
             $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
             $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
             $this->tanggal_submit->ViewCustomAttributes = "";
+
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
 
             // wadah
             $this->wadah->ViewValue = $this->wadah->CurrentValue;
@@ -952,9 +961,10 @@ class NpdReviewDelete extends NpdReview
             }
             $this->readonly->ViewCustomAttributes = "";
 
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
+            // review_by
+            $this->review_by->ViewValue = $this->review_by->CurrentValue;
+            $this->review_by->ViewValue = FormatNumber($this->review_by->ViewValue, 0, -2, -2, -2);
+            $this->review_by->ViewCustomAttributes = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
@@ -976,15 +986,20 @@ class NpdReviewDelete extends NpdReview
             $this->tanggal_submit->HrefValue = "";
             $this->tanggal_submit->TooltipValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
+
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
+            // review_by
+            $this->review_by->LinkCustomAttributes = "";
+            $this->review_by->HrefValue = "";
+            $this->review_by->TooltipValue = "";
         }
 
         // Call Row Rendered event

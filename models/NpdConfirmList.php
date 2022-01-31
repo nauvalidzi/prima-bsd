@@ -579,7 +579,7 @@ class NpdConfirmList extends NpdConfirm
         $this->jabatan->Visible = false;
         $this->notelp->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->confirm_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -906,7 +906,7 @@ class NpdConfirmList extends NpdConfirm
         $filterList = Concat($filterList, $this->jabatan->AdvancedSearch->toJson(), ","); // Field jabatan
         $filterList = Concat($filterList, $this->notelp->AdvancedSearch->toJson(), ","); // Field notelp
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
+        $filterList = Concat($filterList, $this->confirm_by->AdvancedSearch->toJson(), ","); // Field confirm_by
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1036,13 +1036,13 @@ class NpdConfirmList extends NpdConfirm
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
 
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
+        // Field confirm_by
+        $this->confirm_by->AdvancedSearch->SearchValue = @$filter["x_confirm_by"];
+        $this->confirm_by->AdvancedSearch->SearchOperator = @$filter["z_confirm_by"];
+        $this->confirm_by->AdvancedSearch->SearchCondition = @$filter["v_confirm_by"];
+        $this->confirm_by->AdvancedSearch->SearchValue2 = @$filter["y_confirm_by"];
+        $this->confirm_by->AdvancedSearch->SearchOperator2 = @$filter["w_confirm_by"];
+        $this->confirm_by->AdvancedSearch->save();
 
         // Field readonly
         $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
@@ -1291,7 +1291,7 @@ class NpdConfirmList extends NpdConfirm
                 $this->jabatan->setSort("");
                 $this->notelp->setSort("");
                 $this->created_at->setSort("");
-                $this->created_by->setSort("");
+                $this->confirm_by->setSort("");
                 $this->readonly->setSort("");
             }
 
@@ -1698,7 +1698,7 @@ class NpdConfirmList extends NpdConfirm
         $this->jabatan->setDbValue($row['jabatan']);
         $this->notelp->setDbValue($row['notelp']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->confirm_by->setDbValue($row['confirm_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1717,7 +1717,7 @@ class NpdConfirmList extends NpdConfirm
         $row['jabatan'] = null;
         $row['notelp'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['confirm_by'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -1778,7 +1778,7 @@ class NpdConfirmList extends NpdConfirm
 
         // created_at
 
-        // created_by
+        // confirm_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1854,10 +1854,10 @@ class NpdConfirmList extends NpdConfirm
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // confirm_by
+            $this->confirm_by->ViewValue = $this->confirm_by->CurrentValue;
+            $this->confirm_by->ViewValue = FormatNumber($this->confirm_by->ViewValue, 0, -2, -2, -2);
+            $this->confirm_by->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {

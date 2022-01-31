@@ -20,13 +20,10 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd_serahterima)
         ew.vars.tables.npd_serahterima = currentTable;
     fnpd_serahterimaedit.addFields([
-        ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null, ew.Validators.integer], fields.idpegawai.isInvalid],
-        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null, ew.Validators.integer], fields.idcustomer.isInvalid],
-        ["tanggal_request", [fields.tanggal_request.visible && fields.tanggal_request.required ? ew.Validators.required(fields.tanggal_request.caption) : null, ew.Validators.datetime(0)], fields.tanggal_request.isInvalid],
-        ["tanggal_serahterima", [fields.tanggal_serahterima.visible && fields.tanggal_serahterima.required ? ew.Validators.required(fields.tanggal_serahterima.caption) : null, ew.Validators.datetime(0)], fields.tanggal_serahterima.isInvalid],
-        ["jenis_produk", [fields.jenis_produk.visible && fields.jenis_produk.required ? ew.Validators.required(fields.jenis_produk.caption) : null], fields.jenis_produk.isInvalid],
-        ["readonly", [fields.readonly.visible && fields.readonly.required ? ew.Validators.required(fields.readonly.caption) : null], fields.readonly.isInvalid],
-        ["created_at", [fields.created_at.visible && fields.created_at.required ? ew.Validators.required(fields.created_at.caption) : null, ew.Validators.datetime(0)], fields.created_at.isInvalid]
+        ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
+        ["tgl_request", [fields.tgl_request.visible && fields.tgl_request.required ? ew.Validators.required(fields.tgl_request.caption) : null, ew.Validators.datetime(0)], fields.tgl_request.isInvalid],
+        ["tgl_serahterima", [fields.tgl_serahterima.visible && fields.tgl_serahterima.required ? ew.Validators.required(fields.tgl_serahterima.caption) : null, ew.Validators.datetime(0)], fields.tgl_serahterima.isInvalid],
+        ["receipt_by", [fields.receipt_by.visible && fields.receipt_by.required ? ew.Validators.required(fields.receipt_by.caption) : null], fields.receipt_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -93,7 +90,8 @@ loadjs.ready("head", function () {
     fnpd_serahterimaedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fnpd_serahterimaedit.lists.readonly = <?= $Page->readonly->toClientList($Page) ?>;
+    fnpd_serahterimaedit.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
+    fnpd_serahterimaedit.lists.receipt_by = <?= $Page->receipt_by->toClientList($Page) ?>;
     loadjs.done("fnpd_serahterimaedit");
 });
 </script>
@@ -116,42 +114,51 @@ $Page->showMessage();
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-    <div id="r_idpegawai" class="form-group row">
-        <label id="elh_npd_serahterima_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el_npd_serahterima_idpegawai">
-<input type="<?= $Page->idpegawai->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_idpegawai" name="x_idpegawai" id="x_idpegawai" size="30" placeholder="<?= HtmlEncode($Page->idpegawai->getPlaceHolder()) ?>" value="<?= $Page->idpegawai->EditValue ?>"<?= $Page->idpegawai->editAttributes() ?> aria-describedby="x_idpegawai_help">
-<?= $Page->idpegawai->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idpegawai->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
     <div id="r_idcustomer" class="form-group row">
         <label id="elh_npd_serahterima_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
 <span id="el_npd_serahterima_idcustomer">
-<input type="<?= $Page->idcustomer->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_idcustomer" name="x_idcustomer" id="x_idcustomer" size="30" placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>" value="<?= $Page->idcustomer->EditValue ?>"<?= $Page->idcustomer->editAttributes() ?> aria-describedby="x_idcustomer_help">
-<?= $Page->idcustomer->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
+    <select
+        id="x_idcustomer"
+        name="x_idcustomer"
+        class="form-control ew-select<?= $Page->idcustomer->isInvalidClass() ?>"
+        data-select2-id="npd_serahterima_x_idcustomer"
+        data-table="npd_serahterima"
+        data-field="x_idcustomer"
+        data-value-separator="<?= $Page->idcustomer->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idcustomer->getPlaceHolder()) ?>"
+        <?= $Page->idcustomer->editAttributes() ?>>
+        <?= $Page->idcustomer->selectOptionListHtml("x_idcustomer") ?>
+    </select>
+    <?= $Page->idcustomer->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idcustomer->getErrorMessage() ?></div>
+<?= $Page->idcustomer->Lookup->getParamTag($Page, "p_x_idcustomer") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_serahterima_x_idcustomer']"),
+        options = { name: "x_idcustomer", selectId: "npd_serahterima_x_idcustomer", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_serahterima.fields.idcustomer.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tanggal_request->Visible) { // tanggal_request ?>
-    <div id="r_tanggal_request" class="form-group row">
-        <label id="elh_npd_serahterima_tanggal_request" for="x_tanggal_request" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal_request->caption() ?><?= $Page->tanggal_request->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tanggal_request->cellAttributes() ?>>
-<span id="el_npd_serahterima_tanggal_request">
-<input type="<?= $Page->tanggal_request->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_tanggal_request" name="x_tanggal_request" id="x_tanggal_request" placeholder="<?= HtmlEncode($Page->tanggal_request->getPlaceHolder()) ?>" value="<?= $Page->tanggal_request->EditValue ?>"<?= $Page->tanggal_request->editAttributes() ?> aria-describedby="x_tanggal_request_help">
-<?= $Page->tanggal_request->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tanggal_request->getErrorMessage() ?></div>
-<?php if (!$Page->tanggal_request->ReadOnly && !$Page->tanggal_request->Disabled && !isset($Page->tanggal_request->EditAttrs["readonly"]) && !isset($Page->tanggal_request->EditAttrs["disabled"])) { ?>
+<?php if ($Page->tgl_request->Visible) { // tgl_request ?>
+    <div id="r_tgl_request" class="form-group row">
+        <label id="elh_npd_serahterima_tgl_request" for="x_tgl_request" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tgl_request->caption() ?><?= $Page->tgl_request->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tgl_request->cellAttributes() ?>>
+<span id="el_npd_serahterima_tgl_request">
+<input type="<?= $Page->tgl_request->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_tgl_request" name="x_tgl_request" id="x_tgl_request" placeholder="<?= HtmlEncode($Page->tgl_request->getPlaceHolder()) ?>" value="<?= $Page->tgl_request->EditValue ?>"<?= $Page->tgl_request->editAttributes() ?> aria-describedby="x_tgl_request_help">
+<?= $Page->tgl_request->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tgl_request->getErrorMessage() ?></div>
+<?php if (!$Page->tgl_request->ReadOnly && !$Page->tgl_request->Disabled && !isset($Page->tgl_request->EditAttrs["readonly"]) && !isset($Page->tgl_request->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fnpd_serahterimaedit", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpd_serahterimaedit", "x_tanggal_request", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fnpd_serahterimaedit", "x_tgl_request", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 });
 </script>
 <?php } ?>
@@ -159,18 +166,18 @@ loadjs.ready(["fnpd_serahterimaedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tanggal_serahterima->Visible) { // tanggal_serahterima ?>
-    <div id="r_tanggal_serahterima" class="form-group row">
-        <label id="elh_npd_serahterima_tanggal_serahterima" for="x_tanggal_serahterima" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tanggal_serahterima->caption() ?><?= $Page->tanggal_serahterima->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tanggal_serahterima->cellAttributes() ?>>
-<span id="el_npd_serahterima_tanggal_serahterima">
-<input type="<?= $Page->tanggal_serahterima->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_tanggal_serahterima" name="x_tanggal_serahterima" id="x_tanggal_serahterima" placeholder="<?= HtmlEncode($Page->tanggal_serahterima->getPlaceHolder()) ?>" value="<?= $Page->tanggal_serahterima->EditValue ?>"<?= $Page->tanggal_serahterima->editAttributes() ?> aria-describedby="x_tanggal_serahterima_help">
-<?= $Page->tanggal_serahterima->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tanggal_serahterima->getErrorMessage() ?></div>
-<?php if (!$Page->tanggal_serahterima->ReadOnly && !$Page->tanggal_serahterima->Disabled && !isset($Page->tanggal_serahterima->EditAttrs["readonly"]) && !isset($Page->tanggal_serahterima->EditAttrs["disabled"])) { ?>
+<?php if ($Page->tgl_serahterima->Visible) { // tgl_serahterima ?>
+    <div id="r_tgl_serahterima" class="form-group row">
+        <label id="elh_npd_serahterima_tgl_serahterima" for="x_tgl_serahterima" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tgl_serahterima->caption() ?><?= $Page->tgl_serahterima->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tgl_serahterima->cellAttributes() ?>>
+<span id="el_npd_serahterima_tgl_serahterima">
+<input type="<?= $Page->tgl_serahterima->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_tgl_serahterima" name="x_tgl_serahterima" id="x_tgl_serahterima" placeholder="<?= HtmlEncode($Page->tgl_serahterima->getPlaceHolder()) ?>" value="<?= $Page->tgl_serahterima->EditValue ?>"<?= $Page->tgl_serahterima->editAttributes() ?> aria-describedby="x_tgl_serahterima_help">
+<?= $Page->tgl_serahterima->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tgl_serahterima->getErrorMessage() ?></div>
+<?php if (!$Page->tgl_serahterima->ReadOnly && !$Page->tgl_serahterima->Disabled && !isset($Page->tgl_serahterima->EditAttrs["readonly"]) && !isset($Page->tgl_serahterima->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fnpd_serahterimaedit", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpd_serahterimaedit", "x_tanggal_serahterima", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fnpd_serahterimaedit", "x_tgl_serahterima", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 });
 </script>
 <?php } ?>
@@ -178,54 +185,49 @@ loadjs.ready(["fnpd_serahterimaedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->jenis_produk->Visible) { // jenis_produk ?>
-    <div id="r_jenis_produk" class="form-group row">
-        <label id="elh_npd_serahterima_jenis_produk" for="x_jenis_produk" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jenis_produk->caption() ?><?= $Page->jenis_produk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jenis_produk->cellAttributes() ?>>
-<span id="el_npd_serahterima_jenis_produk">
-<input type="<?= $Page->jenis_produk->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_jenis_produk" name="x_jenis_produk" id="x_jenis_produk" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->jenis_produk->getPlaceHolder()) ?>" value="<?= $Page->jenis_produk->EditValue ?>"<?= $Page->jenis_produk->editAttributes() ?> aria-describedby="x_jenis_produk_help">
-<?= $Page->jenis_produk->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jenis_produk->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->readonly->Visible) { // readonly ?>
-    <div id="r_readonly" class="form-group row">
-        <label id="elh_npd_serahterima_readonly" class="<?= $Page->LeftColumnClass ?>"><?= $Page->readonly->caption() ?><?= $Page->readonly->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->readonly->cellAttributes() ?>>
-<span id="el_npd_serahterima_readonly">
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->readonly->isInvalidClass() ?>" data-table="npd_serahterima" data-field="x_readonly" name="x_readonly[]" id="x_readonly_254019" value="1"<?= ConvertToBool($Page->readonly->CurrentValue) ? " checked" : "" ?><?= $Page->readonly->editAttributes() ?> aria-describedby="x_readonly_help">
-    <label class="custom-control-label" for="x_readonly_254019"></label>
-</div>
-<?= $Page->readonly->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->readonly->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->created_at->Visible) { // created_at ?>
-    <div id="r_created_at" class="form-group row">
-        <label id="elh_npd_serahterima_created_at" for="x_created_at" class="<?= $Page->LeftColumnClass ?>"><?= $Page->created_at->caption() ?><?= $Page->created_at->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->created_at->cellAttributes() ?>>
-<span id="el_npd_serahterima_created_at">
-<input type="<?= $Page->created_at->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_created_at" name="x_created_at" id="x_created_at" placeholder="<?= HtmlEncode($Page->created_at->getPlaceHolder()) ?>" value="<?= $Page->created_at->EditValue ?>"<?= $Page->created_at->editAttributes() ?> aria-describedby="x_created_at_help">
-<?= $Page->created_at->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->created_at->getErrorMessage() ?></div>
-<?php if (!$Page->created_at->ReadOnly && !$Page->created_at->Disabled && !isset($Page->created_at->EditAttrs["readonly"]) && !isset($Page->created_at->EditAttrs["disabled"])) { ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+    <div id="r_receipt_by" class="form-group row">
+        <label id="elh_npd_serahterima_receipt_by" for="x_receipt_by" class="<?= $Page->LeftColumnClass ?>"><?= $Page->receipt_by->caption() ?><?= $Page->receipt_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el_npd_serahterima_receipt_by">
+    <select
+        id="x_receipt_by"
+        name="x_receipt_by"
+        class="form-control ew-select<?= $Page->receipt_by->isInvalidClass() ?>"
+        data-select2-id="npd_serahterima_x_receipt_by"
+        data-table="npd_serahterima"
+        data-field="x_receipt_by"
+        data-value-separator="<?= $Page->receipt_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->receipt_by->getPlaceHolder()) ?>"
+        <?= $Page->receipt_by->editAttributes() ?>>
+        <?= $Page->receipt_by->selectOptionListHtml("x_receipt_by") ?>
+    </select>
+    <?= $Page->receipt_by->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->receipt_by->getErrorMessage() ?></div>
+<?= $Page->receipt_by->Lookup->getParamTag($Page, "p_x_receipt_by") ?>
 <script>
-loadjs.ready(["fnpd_serahterimaedit", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpd_serahterimaedit", "x_created_at", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_serahterima_x_receipt_by']"),
+        options = { name: "x_receipt_by", selectId: "npd_serahterima_x_receipt_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_serahterima.fields.receipt_by.selectOptions);
+    ew.createSelect(options);
 });
 </script>
-<?php } ?>
 </span>
 </div></div>
     </div>
 <?php } ?>
 </div><!-- /page* -->
     <input type="hidden" data-table="npd_serahterima" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
+<?php
+    if (in_array("npd_sample", explode(",", $Page->getCurrentDetailTable())) && $npd_sample->DetailEdit) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("npd_sample", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "NpdSampleGrid.php" ?>
+<?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

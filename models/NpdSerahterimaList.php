@@ -181,7 +181,7 @@ class NpdSerahterimaList extends NpdSerahterima
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "NpdSerahterimaAdd";
+        $this->AddUrl = "NpdSerahterimaAdd?" . Config("TABLE_SHOW_DETAIL") . "=";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
@@ -569,13 +569,12 @@ class NpdSerahterimaList extends NpdSerahterima
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->tanggal_request->setVisibility();
-        $this->tanggal_serahterima->setVisibility();
-        $this->jenis_produk->setVisibility();
+        $this->tgl_request->setVisibility();
+        $this->tgl_serahterima->setVisibility();
         $this->readonly->setVisibility();
         $this->created_at->setVisibility();
+        $this->receipt_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -603,6 +602,8 @@ class NpdSerahterimaList extends NpdSerahterima
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->receipt_by);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -652,33 +653,8 @@ class NpdSerahterimaList extends NpdSerahterima
                 $this->OtherOptions->hideAllOptions();
             }
 
-            // Get default search criteria
-            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
-
-            // Get basic search values
-            $this->loadBasicSearchValues();
-
-            // Process filter list
-            if ($this->processFilterList()) {
-                $this->terminate();
-                return;
-            }
-
-            // Restore search parms from Session if not searching / reset / export
-            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
-                $this->restoreSearchParms();
-            }
-
-            // Call Recordset SearchValidated event
-            $this->recordsetSearchValidated();
-
             // Set up sorting order
             $this->setupSortOrder();
-
-            // Get basic search criteria
-            if (!$this->hasInvalidFields()) {
-                $srchBasic = $this->basicSearchWhere();
-            }
         }
 
         // Restore display records
@@ -692,31 +668,6 @@ class NpdSerahterimaList extends NpdSerahterima
         // Load Sorting Order
         if ($this->Command != "json") {
             $this->loadSortOrder();
-        }
-
-        // Load search default if no existing search criteria
-        if (!$this->checkSearchParms()) {
-            // Load basic search from default
-            $this->BasicSearch->loadDefault();
-            if ($this->BasicSearch->Keyword != "") {
-                $srchBasic = $this->basicSearchWhere();
-            }
-        }
-
-        // Build search criteria
-        AddFilter($this->SearchWhere, $srchAdvanced);
-        AddFilter($this->SearchWhere, $srchBasic);
-
-        // Call Recordset_Searching event
-        $this->recordsetSearching($this->SearchWhere);
-
-        // Save search criteria
-        if ($this->Command == "search" && !$this->RestoreSearch) {
-            $this->setSearchWhere($this->SearchWhere); // Save to Session
-            $this->StartRecord = 1; // Reset start record counter
-            $this->setStartRecordNumber($this->StartRecord);
-        } elseif ($this->Command != "json") {
-            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -858,289 +809,6 @@ class NpdSerahterimaList extends NpdSerahterima
         return $wrkFilter;
     }
 
-    // Get list of filters
-    public function getFilterList()
-    {
-        global $UserProfile;
-
-        // Initialize
-        $filterList = "";
-        $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
-        $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
-        $filterList = Concat($filterList, $this->tanggal_request->AdvancedSearch->toJson(), ","); // Field tanggal_request
-        $filterList = Concat($filterList, $this->tanggal_serahterima->AdvancedSearch->toJson(), ","); // Field tanggal_serahterima
-        $filterList = Concat($filterList, $this->jenis_produk->AdvancedSearch->toJson(), ","); // Field jenis_produk
-        $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
-        $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        if ($this->BasicSearch->Keyword != "") {
-            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
-            $filterList = Concat($filterList, $wrk, ",");
-        }
-
-        // Return filter list in JSON
-        if ($filterList != "") {
-            $filterList = "\"data\":{" . $filterList . "}";
-        }
-        if ($savedFilterList != "") {
-            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
-        }
-        return ($filterList != "") ? "{" . $filterList . "}" : "null";
-    }
-
-    // Process filter list
-    protected function processFilterList()
-    {
-        global $UserProfile;
-        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
-            $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fnpd_serahterimalistsrch", $filters);
-            WriteJson([["success" => true]]); // Success
-            return true;
-        } elseif (Post("cmd") == "resetfilter") {
-            $this->restoreFilterList();
-        }
-        return false;
-    }
-
-    // Restore list of filters
-    protected function restoreFilterList()
-    {
-        // Return if not reset filter
-        if (Post("cmd") !== "resetfilter") {
-            return false;
-        }
-        $filter = json_decode(Post("filter"), true);
-        $this->Command = "search";
-
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
-
-        // Field idpegawai
-        $this->idpegawai->AdvancedSearch->SearchValue = @$filter["x_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator = @$filter["z_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchCondition = @$filter["v_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchValue2 = @$filter["y_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator2 = @$filter["w_idpegawai"];
-        $this->idpegawai->AdvancedSearch->save();
-
-        // Field idcustomer
-        $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchCondition = @$filter["v_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
-        $this->idcustomer->AdvancedSearch->save();
-
-        // Field tanggal_request
-        $this->tanggal_request->AdvancedSearch->SearchValue = @$filter["x_tanggal_request"];
-        $this->tanggal_request->AdvancedSearch->SearchOperator = @$filter["z_tanggal_request"];
-        $this->tanggal_request->AdvancedSearch->SearchCondition = @$filter["v_tanggal_request"];
-        $this->tanggal_request->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_request"];
-        $this->tanggal_request->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_request"];
-        $this->tanggal_request->AdvancedSearch->save();
-
-        // Field tanggal_serahterima
-        $this->tanggal_serahterima->AdvancedSearch->SearchValue = @$filter["x_tanggal_serahterima"];
-        $this->tanggal_serahterima->AdvancedSearch->SearchOperator = @$filter["z_tanggal_serahterima"];
-        $this->tanggal_serahterima->AdvancedSearch->SearchCondition = @$filter["v_tanggal_serahterima"];
-        $this->tanggal_serahterima->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_serahterima"];
-        $this->tanggal_serahterima->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_serahterima"];
-        $this->tanggal_serahterima->AdvancedSearch->save();
-
-        // Field jenis_produk
-        $this->jenis_produk->AdvancedSearch->SearchValue = @$filter["x_jenis_produk"];
-        $this->jenis_produk->AdvancedSearch->SearchOperator = @$filter["z_jenis_produk"];
-        $this->jenis_produk->AdvancedSearch->SearchCondition = @$filter["v_jenis_produk"];
-        $this->jenis_produk->AdvancedSearch->SearchValue2 = @$filter["y_jenis_produk"];
-        $this->jenis_produk->AdvancedSearch->SearchOperator2 = @$filter["w_jenis_produk"];
-        $this->jenis_produk->AdvancedSearch->save();
-
-        // Field readonly
-        $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
-        $this->readonly->AdvancedSearch->SearchOperator = @$filter["z_readonly"];
-        $this->readonly->AdvancedSearch->SearchCondition = @$filter["v_readonly"];
-        $this->readonly->AdvancedSearch->SearchValue2 = @$filter["y_readonly"];
-        $this->readonly->AdvancedSearch->SearchOperator2 = @$filter["w_readonly"];
-        $this->readonly->AdvancedSearch->save();
-
-        // Field created_at
-        $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
-        $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
-        $this->created_at->AdvancedSearch->SearchCondition = @$filter["v_created_at"];
-        $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
-        $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
-        $this->created_at->AdvancedSearch->save();
-        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
-        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
-    }
-
-    // Return basic search SQL
-    protected function basicSearchSql($arKeywords, $type)
-    {
-        $where = "";
-        $this->buildBasicSearchSql($where, $this->jenis_produk, $arKeywords, $type);
-        return $where;
-    }
-
-    // Build basic search SQL
-    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
-    {
-        $defCond = ($type == "OR") ? "OR" : "AND";
-        $arSql = []; // Array for SQL parts
-        $arCond = []; // Array for search conditions
-        $cnt = count($arKeywords);
-        $j = 0; // Number of SQL parts
-        for ($i = 0; $i < $cnt; $i++) {
-            $keyword = $arKeywords[$i];
-            $keyword = trim($keyword);
-            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
-                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
-                $ar = explode("\\", $keyword);
-            } else {
-                $ar = [$keyword];
-            }
-            foreach ($ar as $keyword) {
-                if ($keyword != "") {
-                    $wrk = "";
-                    if ($keyword == "OR" && $type == "") {
-                        if ($j > 0) {
-                            $arCond[$j - 1] = "OR";
-                        }
-                    } elseif ($keyword == Config("NULL_VALUE")) {
-                        $wrk = $fld->Expression . " IS NULL";
-                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
-                        $wrk = $fld->Expression . " IS NOT NULL";
-                    } elseif ($fld->IsVirtual && $fld->Visible) {
-                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
-                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-                    }
-                    if ($wrk != "") {
-                        $arSql[$j] = $wrk;
-                        $arCond[$j] = $defCond;
-                        $j += 1;
-                    }
-                }
-            }
-        }
-        $cnt = count($arSql);
-        $quoted = false;
-        $sql = "";
-        if ($cnt > 0) {
-            for ($i = 0; $i < $cnt - 1; $i++) {
-                if ($arCond[$i] == "OR") {
-                    if (!$quoted) {
-                        $sql .= "(";
-                    }
-                    $quoted = true;
-                }
-                $sql .= $arSql[$i];
-                if ($quoted && $arCond[$i] != "OR") {
-                    $sql .= ")";
-                    $quoted = false;
-                }
-                $sql .= " " . $arCond[$i] . " ";
-            }
-            $sql .= $arSql[$cnt - 1];
-            if ($quoted) {
-                $sql .= ")";
-            }
-        }
-        if ($sql != "") {
-            if ($where != "") {
-                $where .= " OR ";
-            }
-            $where .= "(" . $sql . ")";
-        }
-    }
-
-    // Return basic search WHERE clause based on search keyword and type
-    protected function basicSearchWhere($default = false)
-    {
-        global $Security;
-        $searchStr = "";
-        if (!$Security->canSearch()) {
-            return "";
-        }
-        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
-        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
-
-        // Get search SQL
-        if ($searchKeyword != "") {
-            $ar = $this->BasicSearch->keywordList($default);
-            // Search keyword in any fields
-            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
-                foreach ($ar as $keyword) {
-                    if ($keyword != "") {
-                        if ($searchStr != "") {
-                            $searchStr .= " " . $searchType . " ";
-                        }
-                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
-                    }
-                }
-            } else {
-                $searchStr = $this->basicSearchSql($ar, $searchType);
-            }
-            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
-                $this->Command = "search";
-            }
-        }
-        if (!$default && $this->Command == "search") {
-            $this->BasicSearch->setKeyword($searchKeyword);
-            $this->BasicSearch->setType($searchType);
-        }
-        return $searchStr;
-    }
-
-    // Check if search parm exists
-    protected function checkSearchParms()
-    {
-        // Check basic search
-        if ($this->BasicSearch->issetSession()) {
-            return true;
-        }
-        return false;
-    }
-
-    // Clear all search parameters
-    protected function resetSearchParms()
-    {
-        // Clear search WHERE clause
-        $this->SearchWhere = "";
-        $this->setSearchWhere($this->SearchWhere);
-
-        // Clear basic search parameters
-        $this->resetBasicSearchParms();
-    }
-
-    // Load advanced search default values
-    protected function loadAdvancedSearchDefault()
-    {
-        return false;
-    }
-
-    // Clear all basic search parameters
-    protected function resetBasicSearchParms()
-    {
-        $this->BasicSearch->unsetSession();
-    }
-
-    // Restore all search parameters
-    protected function restoreSearchParms()
-    {
-        $this->RestoreSearch = true;
-
-        // Restore basic search values
-        $this->BasicSearch->load();
-    }
-
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -1148,13 +816,12 @@ class NpdSerahterimaList extends NpdSerahterima
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->tanggal_request); // tanggal_request
-            $this->updateSort($this->tanggal_serahterima); // tanggal_serahterima
-            $this->updateSort($this->jenis_produk); // jenis_produk
+            $this->updateSort($this->tgl_request); // tgl_request
+            $this->updateSort($this->tgl_serahterima); // tgl_serahterima
             $this->updateSort($this->readonly); // readonly
             $this->updateSort($this->created_at); // created_at
+            $this->updateSort($this->receipt_by); // receipt_by
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1185,23 +852,17 @@ class NpdSerahterimaList extends NpdSerahterima
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
-            // Reset search criteria
-            if ($this->Command == "reset" || $this->Command == "resetall") {
-                $this->resetSearchParms();
-            }
-
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->idpegawai->setSort("");
                 $this->idcustomer->setSort("");
-                $this->tanggal_request->setSort("");
-                $this->tanggal_serahterima->setSort("");
-                $this->jenis_produk->setSort("");
+                $this->tgl_request->setSort("");
+                $this->tgl_serahterima->setSort("");
                 $this->readonly->setSort("");
                 $this->created_at->setSort("");
+                $this->receipt_by->setSort("");
             }
 
             // Reset start position
@@ -1233,17 +894,32 @@ class NpdSerahterimaList extends NpdSerahterima
         $item->Visible = $Security->canEdit();
         $item->OnLeft = false;
 
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canAdd();
-        $item->OnLeft = false;
-
         // "delete"
         $item = &$this->ListOptions->add("delete");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canDelete();
         $item->OnLeft = false;
+
+        // "detail_npd_sample"
+        $item = &$this->ListOptions->add("detail_npd_sample");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'npd_sample') && !$this->ShowMultipleDetails;
+        $item->OnLeft = false;
+        $item->ShowInButtonGroup = false;
+
+        // Multiple details
+        if ($this->ShowMultipleDetails) {
+            $item = &$this->ListOptions->add("details");
+            $item->CssClass = "text-nowrap";
+            $item->Visible = $this->ShowMultipleDetails;
+            $item->OnLeft = false;
+            $item->ShowInButtonGroup = false;
+        }
+
+        // Set up detail pages
+        $pages = new SubPages();
+        $pages->add("npd_sample");
+        $this->DetailPages = $pages;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -1258,6 +934,14 @@ class NpdSerahterimaList extends NpdSerahterima
         $item->Visible = false;
         $item->OnLeft = false;
         $item->Header = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"custom-control-input\" onclick=\"ew.selectAllKey(this);\"><label class=\"custom-control-label\" for=\"key\"></label></div>";
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
@@ -1286,6 +970,10 @@ class NpdSerahterimaList extends NpdSerahterima
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1302,15 +990,6 @@ class NpdSerahterimaList extends NpdSerahterima
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
             if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "copy"
-            $opt = $this->ListOptions["copy"];
-            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
-            if ($Security->canAdd()) {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
@@ -1354,6 +1033,67 @@ class NpdSerahterimaList extends NpdSerahterima
                 $opt->Visible = true;
             }
         }
+        $detailViewTblVar = "";
+        $detailCopyTblVar = "";
+        $detailEditTblVar = "";
+
+        // "detail_npd_sample"
+        $opt = $this->ListOptions["detail_npd_sample"];
+        if ($Security->allowList(CurrentProjectID() . 'npd_sample')) {
+            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("npd_sample", "TblCaption");
+            $body .= "&nbsp;" . str_replace("%c", Container("npd_sample")->Count, $Language->phrase("DetailCount"));
+            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("NpdSampleList?" . Config("TABLE_SHOW_MASTER") . "=npd_serahterima&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
+            $links = "";
+            $detailPage = Container("NpdSampleGrid");
+            if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'npd_serahterima')) {
+                $caption = $Language->phrase("MasterDetailViewLink");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=npd_sample");
+                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
+                if ($detailViewTblVar != "") {
+                    $detailViewTblVar .= ",";
+                }
+                $detailViewTblVar .= "npd_sample";
+            }
+            if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'npd_serahterima')) {
+                $caption = $Language->phrase("MasterDetailEditLink");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=npd_sample");
+                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
+                if ($detailEditTblVar != "") {
+                    $detailEditTblVar .= ",";
+                }
+                $detailEditTblVar .= "npd_sample";
+            }
+            if ($links != "") {
+                $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
+                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
+            }
+            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
+            $opt->Body = $body;
+            if ($this->ShowMultipleDetails) {
+                $opt->Visible = false;
+            }
+        }
+        if ($this->ShowMultipleDetails) {
+            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
+            $links = "";
+            if ($detailViewTblVar != "") {
+                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailViewTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            }
+            if ($detailEditTblVar != "") {
+                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailEditTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            }
+            if ($detailCopyTblVar != "") {
+                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode($this->GetCopyUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailCopyTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
+            }
+            if ($links != "") {
+                $body .= "<button class=\"dropdown-toggle btn btn-default ew-master-detail\" title=\"" . HtmlTitle($Language->phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->phrase("MultipleMasterDetails") . "</button>";
+                $body .= "<ul class=\"dropdown-menu ew-menu\">" . $links . "</ul>";
+            }
+            $body .= "</div>";
+            // Multiple details
+            $opt = $this->ListOptions["details"];
+            $opt->Body = $body;
+        }
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
@@ -1376,6 +1116,37 @@ class NpdSerahterimaList extends NpdSerahterima
         $addcaption = HtmlTitle($Language->phrase("AddLink"));
         $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
         $item->Visible = $this->AddUrl != "" && $Security->canAdd();
+        $option = $options["detail"];
+        $detailTableLink = "";
+                $item = &$option->add("detailadd_npd_sample");
+                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=npd_sample");
+                $detailPage = Container("NpdSampleGrid");
+                $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
+                $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
+                $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'npd_serahterima') && $Security->canAdd());
+                if ($item->Visible) {
+                    if ($detailTableLink != "") {
+                        $detailTableLink .= ",";
+                    }
+                    $detailTableLink .= "npd_sample";
+                }
+
+        // Add multiple details
+        if ($this->ShowMultipleDetails) {
+            $item = &$option->add("detailsadd");
+            $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailTableLink);
+            $caption = $Language->phrase("AddMasterDetailLink");
+            $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
+            $item->Visible = $detailTableLink != "" && $Security->canAdd();
+            // Hide single master/detail items
+            $ar = explode(",", $detailTableLink);
+            $cnt = count($ar);
+            for ($i = 0; $i < $cnt; $i++) {
+                if ($item = $option["detailadd_" . $ar[$i]]) {
+                    $item->Visible = false;
+                }
+            }
+        }
         $option = $options["action"];
 
         // Set up options default
@@ -1394,10 +1165,10 @@ class NpdSerahterimaList extends NpdSerahterima
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
         $item->Body = "<a class=\"ew-save-filter\" data-form=\"fnpd_serahterimalistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = true;
+        $item->Visible = false;
         $item = &$this->FilterOptions->add("deletefilter");
         $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fnpd_serahterimalistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = true;
+        $item->Visible = false;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1530,16 +1301,75 @@ class NpdSerahterimaList extends NpdSerahterima
     protected function renderListOptionsExt()
     {
         global $Security, $Language;
-    }
+        $links = "";
+        $btngrps = "";
+        $sqlwrk = "`idserahterima`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-    // Load basic search values
-    protected function loadBasicSearchValues()
-    {
-        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
-        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
-            $this->Command = "search";
+        // Column "detail_npd_sample"
+        if ($this->DetailPages && $this->DetailPages["npd_sample"] && $this->DetailPages["npd_sample"]->Visible) {
+            $link = "";
+            $option = $this->ListOptions["detail_npd_sample"];
+            $url = "NpdSamplePreview?t=npd_serahterima&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"npd_sample\" data-url=\"" . $url . "\">";
+            if ($Security->allowList(CurrentProjectID() . 'npd_serahterima')) {
+                $label = $Language->TablePhrase("npd_sample", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("npd_sample")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"npd_sample\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $links .= $link;
+                $detaillnk = JsEncodeAttribute("NpdSampleList?" . Config("TABLE_SHOW_MASTER") . "=npd_serahterima&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("npd_sample", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+            }
+            $detailPageObj = Container("NpdSampleGrid");
+            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'npd_serahterima')) {
+                $caption = $Language->phrase("MasterDetailViewLink");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=npd_sample");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'npd_serahterima')) {
+                $caption = $Language->phrase("MasterDetailEditLink");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=npd_sample");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
+            }
+            $btngrp .= "</div>";
+            if ($link != "") {
+                $btngrps .= $btngrp;
+                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
+            }
         }
-        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+
+        // Hide detail items if necessary
+        $this->ListOptions->hideDetailItemsForDropDown();
+
+        // Column "preview"
+        $option = $this->ListOptions["preview"];
+        if (!$option) { // Add preview column
+            $option = &$this->ListOptions->add("preview");
+            $option->OnLeft = false;
+            if ($option->OnLeft) {
+                $option->moveTo($this->ListOptions->itemPos("checkbox") + 1);
+            } else {
+                $option->moveTo($this->ListOptions->itemPos("checkbox"));
+            }
+            $option->Visible = !($this->isExport() || $this->isGridAdd() || $this->isGridEdit());
+            $option->ShowInDropDown = false;
+            $option->ShowInButtonGroup = false;
+        }
+        if ($option) {
+            $option->Body = "<i class=\"ew-preview-row-btn ew-icon icon-expand\"></i>";
+            $option->Body .= "<div class=\"d-none ew-preview\">" . $links . $btngrps . "</div>";
+            if ($option->Visible) {
+                $option->Visible = $links != "";
+            }
+        }
+
+        // Column "details" (Multiple details)
+        $option = $this->ListOptions["details"];
+        if ($option) {
+            $option->Body .= "<div class=\"d-none ew-preview\">" . $links . $btngrps . "</div>";
+            if ($option->Visible) {
+                $option->Visible = $links != "";
+            }
+        }
     }
 
     // Load recordset
@@ -1611,13 +1441,18 @@ class NpdSerahterimaList extends NpdSerahterima
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->tanggal_request->setDbValue($row['tanggal_request']);
-        $this->tanggal_serahterima->setDbValue($row['tanggal_serahterima']);
-        $this->jenis_produk->setDbValue($row['jenis_produk']);
+        $this->tgl_request->setDbValue($row['tgl_request']);
+        $this->tgl_serahterima->setDbValue($row['tgl_serahterima']);
         $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $detailTbl = Container("npd_sample");
+        $detailFilter = $detailTbl->sqlDetailFilter_npd_serahterima();
+        $detailFilter = str_replace("@idserahterima@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
+        $detailTbl->setCurrentMasterTable("npd_serahterima");
+        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
+        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
     }
 
     // Return a row with default values
@@ -1625,13 +1460,12 @@ class NpdSerahterimaList extends NpdSerahterima
     {
         $row = [];
         $row['id'] = null;
-        $row['idpegawai'] = null;
         $row['idcustomer'] = null;
-        $row['tanggal_request'] = null;
-        $row['tanggal_serahterima'] = null;
-        $row['jenis_produk'] = null;
+        $row['tgl_request'] = null;
+        $row['tgl_serahterima'] = null;
         $row['readonly'] = null;
         $row['created_at'] = null;
+        $row['receipt_by'] = null;
         return $row;
     }
 
@@ -1671,43 +1505,48 @@ class NpdSerahterimaList extends NpdSerahterima
 
         // id
 
-        // idpegawai
-
         // idcustomer
 
-        // tanggal_request
+        // tgl_request
 
-        // tanggal_serahterima
-
-        // jenis_produk
+        // tgl_serahterima
 
         // readonly
 
         // created_at
-        if ($this->RowType == ROWTYPE_VIEW) {
-            // idpegawai
-            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-            $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
-            $this->idpegawai->ViewCustomAttributes = "";
 
+        // receipt_by
+        if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idcustomer->ViewValue = null;
+            }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // tanggal_request
-            $this->tanggal_request->ViewValue = $this->tanggal_request->CurrentValue;
-            $this->tanggal_request->ViewValue = FormatDateTime($this->tanggal_request->ViewValue, 0);
-            $this->tanggal_request->ViewCustomAttributes = "";
+            // tgl_request
+            $this->tgl_request->ViewValue = $this->tgl_request->CurrentValue;
+            $this->tgl_request->ViewValue = FormatDateTime($this->tgl_request->ViewValue, 0);
+            $this->tgl_request->ViewCustomAttributes = "";
 
-            // tanggal_serahterima
-            $this->tanggal_serahterima->ViewValue = $this->tanggal_serahterima->CurrentValue;
-            $this->tanggal_serahterima->ViewValue = FormatDateTime($this->tanggal_serahterima->ViewValue, 0);
-            $this->tanggal_serahterima->ViewCustomAttributes = "";
-
-            // jenis_produk
-            $this->jenis_produk->ViewValue = $this->jenis_produk->CurrentValue;
-            $this->jenis_produk->ViewCustomAttributes = "";
+            // tgl_serahterima
+            $this->tgl_serahterima->ViewValue = $this->tgl_serahterima->CurrentValue;
+            $this->tgl_serahterima->ViewValue = FormatDateTime($this->tgl_serahterima->ViewValue, 0);
+            $this->tgl_serahterima->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -1722,30 +1561,41 @@ class NpdSerahterimaList extends NpdSerahterima
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
-            // tanggal_request
-            $this->tanggal_request->LinkCustomAttributes = "";
-            $this->tanggal_request->HrefValue = "";
-            $this->tanggal_request->TooltipValue = "";
+            // tgl_request
+            $this->tgl_request->LinkCustomAttributes = "";
+            $this->tgl_request->HrefValue = "";
+            $this->tgl_request->TooltipValue = "";
 
-            // tanggal_serahterima
-            $this->tanggal_serahterima->LinkCustomAttributes = "";
-            $this->tanggal_serahterima->HrefValue = "";
-            $this->tanggal_serahterima->TooltipValue = "";
-
-            // jenis_produk
-            $this->jenis_produk->LinkCustomAttributes = "";
-            $this->jenis_produk->HrefValue = "";
-            $this->jenis_produk->TooltipValue = "";
+            // tgl_serahterima
+            $this->tgl_serahterima->LinkCustomAttributes = "";
+            $this->tgl_serahterima->HrefValue = "";
+            $this->tgl_serahterima->TooltipValue = "";
 
             // readonly
             $this->readonly->LinkCustomAttributes = "";
@@ -1756,6 +1606,11 @@ class NpdSerahterimaList extends NpdSerahterima
             $this->created_at->LinkCustomAttributes = "";
             $this->created_at->HrefValue = "";
             $this->created_at->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1771,17 +1626,6 @@ class NpdSerahterimaList extends NpdSerahterima
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
-
-        // Search button
-        $item = &$this->SearchOptions->add("searchtoggle");
-        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fnpd_serahterimalistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
-        $item->Visible = true;
-
-        // Show all button
-        $item = &$this->SearchOptions->add("showall");
-        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
-        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1826,7 +1670,11 @@ class NpdSerahterimaList extends NpdSerahterima
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idcustomer":
+                    break;
                 case "x_readonly":
+                    break;
+                case "x_receipt_by":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1937,6 +1785,13 @@ class NpdSerahterimaList extends NpdSerahterima
     {
         // Example:
         //$header = "your header";
+        echo "
+        <style>
+        	.ew-list-other-options .ew-add-edit-option {
+        		display: none;
+        	}
+        </style>
+        ";
     }
 
     // Page Data Rendered event
@@ -1976,6 +1831,10 @@ class NpdSerahterimaList extends NpdSerahterima
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
+        if ($this->readonly->CurrentValue == 1) {
+        	$this->ListOptions->Items["edit"]->Body = "";
+        	$this->ListOptions->Items["delete"]->Body = "";
+        }
     }
 
     // Row Custom Action event

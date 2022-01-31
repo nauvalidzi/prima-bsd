@@ -29,7 +29,7 @@ loadjs.ready("head", function () {
         ["personincharge", [fields.personincharge.visible && fields.personincharge.required ? ew.Validators.required(fields.personincharge.caption) : null], fields.personincharge.isInvalid],
         ["jabatan", [fields.jabatan.visible && fields.jabatan.required ? ew.Validators.required(fields.jabatan.caption) : null], fields.jabatan.isInvalid],
         ["notelp", [fields.notelp.visible && fields.notelp.required ? ew.Validators.required(fields.notelp.caption) : null], fields.notelp.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
+        ["confirm_by", [fields.confirm_by.visible && fields.confirm_by.required ? ew.Validators.required(fields.confirm_by.caption) : null], fields.confirm_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -280,8 +280,8 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_npd_confirm_created_by">
-    <input type="hidden" data-table="npd_confirm" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
+    <span id="el_npd_confirm_confirm_by">
+    <input type="hidden" data-table="npd_confirm" data-field="x_confirm_by" data-hidden="1" name="x_confirm_by" id="x_confirm_by" value="<?= HtmlEncode($Page->confirm_by->CurrentValue) ?>">
     </span>
 </div><!-- /page* -->
 <?php if (!$Page->IsModal) { ?>

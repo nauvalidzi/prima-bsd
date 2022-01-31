@@ -41,7 +41,6 @@ class NpdSample extends DbTable
     public $jumlah;
     public $status;
     public $created_at;
-    public $created_by;
     public $readonly;
 
     // Page ID
@@ -76,6 +75,7 @@ class NpdSample extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
@@ -116,7 +116,7 @@ class NpdSample extends DbTable
         $this->Fields['idserahterima'] = &$this->idserahterima;
 
         // kode
-        $this->kode = new DbField('npd_sample', 'npd_sample', 'x_kode', 'kode', '`kode`', '`kode`', 200, 20, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode = new DbField('npd_sample', 'npd_sample', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kode->Nullable = false; // NOT NULL field
         $this->kode->Required = true; // Required field
         $this->kode->Sortable = true; // Allow sort
@@ -124,7 +124,7 @@ class NpdSample extends DbTable
         $this->Fields['kode'] = &$this->kode;
 
         // nama
-        $this->nama = new DbField('npd_sample', 'npd_sample', 'x_nama', 'nama', '`nama`', '`nama`', 200, 100, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama = new DbField('npd_sample', 'npd_sample', 'x_nama', 'nama', '`nama`', '`nama`', 200, 255, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->nama->Nullable = false; // NOT NULL field
         $this->nama->Required = true; // Required field
         $this->nama->Sortable = true; // Allow sort
@@ -132,7 +132,7 @@ class NpdSample extends DbTable
         $this->Fields['nama'] = &$this->nama;
 
         // sediaan
-        $this->sediaan = new DbField('npd_sample', 'npd_sample', 'x_sediaan', 'sediaan', '`sediaan`', '`sediaan`', 200, 100, -1, false, '`sediaan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sediaan = new DbField('npd_sample', 'npd_sample', 'x_sediaan', 'sediaan', '`sediaan`', '`sediaan`', 200, 50, -1, false, '`sediaan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->sediaan->Nullable = false; // NOT NULL field
         $this->sediaan->Required = true; // Required field
         $this->sediaan->Sortable = true; // Allow sort
@@ -140,7 +140,7 @@ class NpdSample extends DbTable
         $this->Fields['sediaan'] = &$this->sediaan;
 
         // ukuran
-        $this->ukuran = new DbField('npd_sample', 'npd_sample', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 100, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->ukuran = new DbField('npd_sample', 'npd_sample', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 50, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->ukuran->Nullable = false; // NOT NULL field
         $this->ukuran->Required = true; // Required field
         $this->ukuran->Sortable = true; // Allow sort
@@ -148,7 +148,7 @@ class NpdSample extends DbTable
         $this->Fields['ukuran'] = &$this->ukuran;
 
         // warna
-        $this->warna = new DbField('npd_sample', 'npd_sample', 'x_warna', 'warna', '`warna`', '`warna`', 200, 100, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->warna = new DbField('npd_sample', 'npd_sample', 'x_warna', 'warna', '`warna`', '`warna`', 200, 50, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->warna->Nullable = false; // NOT NULL field
         $this->warna->Required = true; // Required field
         $this->warna->Sortable = true; // Allow sort
@@ -156,7 +156,7 @@ class NpdSample extends DbTable
         $this->Fields['warna'] = &$this->warna;
 
         // bau
-        $this->bau = new DbField('npd_sample', 'npd_sample', 'x_bau', 'bau', '`bau`', '`bau`', 200, 100, -1, false, '`bau`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bau = new DbField('npd_sample', 'npd_sample', 'x_bau', 'bau', '`bau`', '`bau`', 200, 50, -1, false, '`bau`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bau->Nullable = false; // NOT NULL field
         $this->bau->Required = true; // Required field
         $this->bau->Sortable = true; // Allow sort
@@ -164,7 +164,7 @@ class NpdSample extends DbTable
         $this->Fields['bau'] = &$this->bau;
 
         // fungsi
-        $this->fungsi = new DbField('npd_sample', 'npd_sample', 'x_fungsi', 'fungsi', '`fungsi`', '`fungsi`', 200, 100, -1, false, '`fungsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->fungsi = new DbField('npd_sample', 'npd_sample', 'x_fungsi', 'fungsi', '`fungsi`', '`fungsi`', 200, 50, -1, false, '`fungsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->fungsi->Nullable = false; // NOT NULL field
         $this->fungsi->Required = true; // Required field
         $this->fungsi->Sortable = true; // Allow sort
@@ -204,13 +204,6 @@ class NpdSample extends DbTable
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
-
-        // created_by
-        $this->created_by = new DbField('npd_sample', 'npd_sample', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
 
         // readonly
         $this->readonly = new DbField('npd_sample', 'npd_sample', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
@@ -298,6 +291,13 @@ class NpdSample extends DbTable
                 return "";
             }
         }
+        if ($this->getCurrentMasterTable() == "npd_serahterima") {
+            if ($this->idserahterima->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idserahterima->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
         return $masterFilter;
     }
 
@@ -316,6 +316,13 @@ class NpdSample extends DbTable
         if ($this->getCurrentMasterTable() == "npd") {
             if ($this->idnpd->getSessionValue() != "") {
                 $detailFilter .= "" . GetForeignKeySql("`idnpd`", $this->idnpd->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        if ($this->getCurrentMasterTable() == "npd_serahterima") {
+            if ($this->idserahterima->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`idserahterima`", $this->idserahterima->getSessionValue(), DATATYPE_NUMBER, "DB");
             } else {
                 return "";
             }
@@ -343,6 +350,17 @@ class NpdSample extends DbTable
     public function sqlDetailFilter_npd()
     {
         return "`idnpd`=@idnpd@";
+    }
+
+    // Master filter
+    public function sqlMasterFilter_npd_serahterima()
+    {
+        return "`id`=@id@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_npd_serahterima()
+    {
+        return "`idserahterima`=@idserahterima@";
     }
 
     // Table level SQL
@@ -445,7 +463,15 @@ class NpdSample extends DbTable
         global $Security;
         // Add User ID filter
         if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
+            if ($this->getCurrentMasterTable() == "serahterima" || $this->getCurrentMasterTable() == "") {
+                $filter = $this->addDetailUserIDFilter($filter, "serahterima"); // Add detail User ID filter
+            }
+            if ($this->getCurrentMasterTable() == "npd" || $this->getCurrentMasterTable() == "") {
+                $filter = $this->addDetailUserIDFilter($filter, "npd"); // Add detail User ID filter
+            }
+            if ($this->getCurrentMasterTable() == "npd_serahterima" || $this->getCurrentMasterTable() == "") {
+                $filter = $this->addDetailUserIDFilter($filter, "npd_serahterima"); // Add detail User ID filter
+            }
         }
         return $filter;
     }
@@ -737,7 +763,6 @@ class NpdSample extends DbTable
         $this->jumlah->DbValue = $row['jumlah'];
         $this->status->DbValue = $row['status'];
         $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
         $this->readonly->DbValue = $row['readonly'];
     }
 
@@ -926,6 +951,10 @@ class NpdSample extends DbTable
             $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
             $url .= "&" . GetForeignKeyUrl("fk_id", $this->idnpd->CurrentValue ?? $this->idnpd->getSessionValue());
         }
+        if ($this->getCurrentMasterTable() == "npd_serahterima" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idserahterima->CurrentValue ?? $this->idserahterima->getSessionValue());
+        }
         return $url;
     }
 
@@ -1080,7 +1109,6 @@ SORTHTML;
         $this->jumlah->setDbValue($row['jumlah']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1119,8 +1147,6 @@ SORTHTML;
         // status
 
         // created_at
-
-        // created_by
 
         // readonly
 
@@ -1200,11 +1226,6 @@ SORTHTML;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
-
         // readonly
         if (ConvertToBool($this->readonly->CurrentValue)) {
             $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -1277,11 +1298,6 @@ SORTHTML;
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
-
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
 
         // readonly
         $this->readonly->LinkCustomAttributes = "";
@@ -1430,10 +1446,6 @@ SORTHTML;
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
-
         // readonly
         $this->readonly->EditCustomAttributes = "";
         $this->readonly->EditValue = $this->readonly->options(false);
@@ -1491,7 +1503,6 @@ SORTHTML;
                     $doc->exportCaption($this->jumlah);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
                     $doc->exportCaption($this->readonly);
                 }
                 $doc->endExportRow();
@@ -1546,7 +1557,6 @@ SORTHTML;
                         $doc->exportField($this->jumlah);
                         $doc->exportField($this->status);
                         $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
                         $doc->exportField($this->readonly);
                     }
                     $doc->endExportRow($rowCnt);
@@ -1562,53 +1572,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `npd_sample`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
     }
 
     // Add master User ID filter

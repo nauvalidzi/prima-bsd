@@ -44,12 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <th class="<?= $Page->idbrand->headerCellClass() ?>"><span id="elh_v_list_brand_customers_idbrand" class="v_list_brand_customers_idbrand"><?= $Page->idbrand->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th class="<?= $Page->idcustomer->headerCellClass() ?>"><span id="elh_v_list_brand_customers_idcustomer" class="v_list_brand_customers_idcustomer"><?= $Page->idcustomer->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->kode_customer->Visible) { // kode_customer ?>
         <th class="<?= $Page->kode_customer->headerCellClass() ?>"><span id="elh_v_list_brand_customers_kode_customer" class="v_list_brand_customers_kode_customer"><?= $Page->kode_customer->caption() ?></span></th>
 <?php } ?>
@@ -77,22 +71,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <td <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_list_brand_customers_idbrand" class="v_list_brand_customers_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_list_brand_customers_idcustomer" class="v_list_brand_customers_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->kode_customer->Visible) { // kode_customer ?>
         <td <?= $Page->kode_customer->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_v_list_brand_customers_kode_customer" class="v_list_brand_customers_kode_customer">

@@ -395,6 +395,7 @@ class NpdReviewPreview extends NpdReview
         $this->idnpd_sample->setVisibility();
         $this->tanggal_review->setVisibility();
         $this->tanggal_submit->setVisibility();
+        $this->ukuran->setVisibility();
         $this->wadah->Visible = false;
         $this->bentuk_opsi->Visible = false;
         $this->bentuk_revisi->Visible = false;
@@ -422,7 +423,7 @@ class NpdReviewPreview extends NpdReview
         $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
-        $this->ukuran->setVisibility();
+        $this->review_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -515,6 +516,7 @@ class NpdReviewPreview extends NpdReview
             $this->idnpd_sample->setSort("");
             $this->tanggal_review->setSort("");
             $this->tanggal_submit->setSort("");
+            $this->ukuran->setSort("");
             $this->wadah->setSort("");
             $this->bentuk_opsi->setSort("");
             $this->bentuk_revisi->setSort("");
@@ -542,7 +544,7 @@ class NpdReviewPreview extends NpdReview
             $this->status->setSort("");
             $this->created_at->setSort("");
             $this->readonly->setSort("");
-            $this->ukuran->setSort("");
+            $this->review_by->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -558,8 +560,9 @@ class NpdReviewPreview extends NpdReview
             $this->updateSort($this->idnpd_sample); // idnpd_sample
             $this->updateSort($this->tanggal_review); // tanggal_review
             $this->updateSort($this->tanggal_submit); // tanggal_submit
-            $this->updateSort($this->status); // status
             $this->updateSort($this->ukuran); // ukuran
+            $this->updateSort($this->status); // status
+            $this->updateSort($this->review_by); // review_by
         }
     }
 

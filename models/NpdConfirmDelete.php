@@ -385,7 +385,7 @@ class NpdConfirmDelete extends NpdConfirm
         $this->jabatan->Visible = false;
         $this->notelp->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
+        $this->confirm_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -565,7 +565,7 @@ class NpdConfirmDelete extends NpdConfirm
         $this->jabatan->setDbValue($row['jabatan']);
         $this->notelp->setDbValue($row['notelp']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->confirm_by->setDbValue($row['confirm_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -584,7 +584,7 @@ class NpdConfirmDelete extends NpdConfirm
         $row['jabatan'] = null;
         $row['notelp'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
+        $row['confirm_by'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -623,7 +623,7 @@ class NpdConfirmDelete extends NpdConfirm
 
         // created_at
 
-        // created_by
+        // confirm_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -699,10 +699,10 @@ class NpdConfirmDelete extends NpdConfirm
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // confirm_by
+            $this->confirm_by->ViewValue = $this->confirm_by->CurrentValue;
+            $this->confirm_by->ViewValue = FormatNumber($this->confirm_by->ViewValue, 0, -2, -2, -2);
+            $this->confirm_by->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {

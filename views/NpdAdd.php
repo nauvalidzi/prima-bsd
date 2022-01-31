@@ -80,7 +80,9 @@ loadjs.ready("head", function () {
         ["delivery_singlepoint", [fields.delivery_singlepoint.visible && fields.delivery_singlepoint.required ? ew.Validators.required(fields.delivery_singlepoint.caption) : null], fields.delivery_singlepoint.isInvalid],
         ["delivery_multipoint", [fields.delivery_multipoint.visible && fields.delivery_multipoint.required ? ew.Validators.required(fields.delivery_multipoint.caption) : null], fields.delivery_multipoint.isInvalid],
         ["delivery_termlain", [fields.delivery_termlain.visible && fields.delivery_termlain.required ? ew.Validators.required(fields.delivery_termlain.caption) : null], fields.delivery_termlain.isInvalid],
-        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid]
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
+        ["receipt_by", [fields.receipt_by.visible && fields.receipt_by.required ? ew.Validators.required(fields.receipt_by.caption) : null, ew.Validators.integer], fields.receipt_by.isInvalid],
+        ["approve_by", [fields.approve_by.visible && fields.approve_by.required ? ew.Validators.required(fields.approve_by.caption) : null, ew.Validators.integer], fields.approve_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -1332,6 +1334,30 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+    <div id="r_receipt_by" class="form-group row">
+        <label id="elh_npd_receipt_by" for="x_receipt_by" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_receipt_by"><?= $Page->receipt_by->caption() ?><?= $Page->receipt_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->receipt_by->cellAttributes() ?>>
+<template id="tpx_npd_receipt_by"><span id="el_npd_receipt_by">
+<input type="<?= $Page->receipt_by->getInputTextType() ?>" data-table="npd" data-field="x_receipt_by" data-page="1" name="x_receipt_by" id="x_receipt_by" size="30" placeholder="<?= HtmlEncode($Page->receipt_by->getPlaceHolder()) ?>" value="<?= $Page->receipt_by->EditValue ?>"<?= $Page->receipt_by->editAttributes() ?> aria-describedby="x_receipt_by_help">
+<?= $Page->receipt_by->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->receipt_by->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->approve_by->Visible) { // approve_by ?>
+    <div id="r_approve_by" class="form-group row">
+        <label id="elh_npd_approve_by" for="x_approve_by" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_approve_by"><?= $Page->approve_by->caption() ?><?= $Page->approve_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->approve_by->cellAttributes() ?>>
+<template id="tpx_npd_approve_by"><span id="el_npd_approve_by">
+<input type="<?= $Page->approve_by->getInputTextType() ?>" data-table="npd" data-field="x_approve_by" data-page="1" name="x_approve_by" id="x_approve_by" size="30" placeholder="<?= HtmlEncode($Page->approve_by->getPlaceHolder()) ?>" value="<?= $Page->approve_by->EditValue ?>"<?= $Page->approve_by->editAttributes() ?> aria-describedby="x_approve_by_help">
+<?= $Page->approve_by->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->approve_by->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 </div><!-- /page* -->
 <div id="tpd_npdadd" class="ew-custom-template"></div>
 <template id="tpm_npdadd">
@@ -1685,16 +1711,6 @@ loadjs.ready("head", function() {
 <?php
     }
 ?>
-<?php
-    if (in_array("npd_terms", explode(",", $Page->getCurrentDetailTable())) && $npd_terms->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_terms") {
-            $firstActiveDetailTable = "npd_terms";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("npd_terms") ?>" href="#tab_npd_terms" data-toggle="tab"><?= $Language->tablePhrase("npd_terms", "TblCaption") ?></a></li>
-<?php
-    }
-?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
 <?php
@@ -1745,16 +1761,6 @@ loadjs.ready("head", function() {
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_desain") ?>" id="tab_npd_desain"><!-- page* -->
 <?php include_once "NpdDesainGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
-<?php
-    if (in_array("npd_terms", explode(",", $Page->getCurrentDetailTable())) && $npd_terms->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_terms") {
-            $firstActiveDetailTable = "npd_terms";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_terms") ?>" id="tab_npd_terms"><!-- page* -->
-<?php include_once "NpdTermsGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

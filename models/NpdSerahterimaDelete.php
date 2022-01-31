@@ -375,13 +375,12 @@ class NpdSerahterimaDelete extends NpdSerahterima
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
-        $this->tanggal_request->setVisibility();
-        $this->tanggal_serahterima->setVisibility();
-        $this->jenis_produk->setVisibility();
+        $this->tgl_request->setVisibility();
+        $this->tgl_serahterima->setVisibility();
         $this->readonly->setVisibility();
         $this->created_at->setVisibility();
+        $this->receipt_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -396,6 +395,8 @@ class NpdSerahterimaDelete extends NpdSerahterima
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idcustomer);
+        $this->setupLookupOptions($this->receipt_by);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -545,13 +546,12 @@ class NpdSerahterimaDelete extends NpdSerahterima
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->tanggal_request->setDbValue($row['tanggal_request']);
-        $this->tanggal_serahterima->setDbValue($row['tanggal_serahterima']);
-        $this->jenis_produk->setDbValue($row['jenis_produk']);
+        $this->tgl_request->setDbValue($row['tgl_request']);
+        $this->tgl_serahterima->setDbValue($row['tgl_serahterima']);
         $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
     }
 
     // Return a row with default values
@@ -559,13 +559,12 @@ class NpdSerahterimaDelete extends NpdSerahterima
     {
         $row = [];
         $row['id'] = null;
-        $row['idpegawai'] = null;
         $row['idcustomer'] = null;
-        $row['tanggal_request'] = null;
-        $row['tanggal_serahterima'] = null;
-        $row['jenis_produk'] = null;
+        $row['tgl_request'] = null;
+        $row['tgl_serahterima'] = null;
         $row['readonly'] = null;
         $row['created_at'] = null;
+        $row['receipt_by'] = null;
         return $row;
     }
 
@@ -583,43 +582,48 @@ class NpdSerahterimaDelete extends NpdSerahterima
 
         // id
 
-        // idpegawai
-
         // idcustomer
 
-        // tanggal_request
+        // tgl_request
 
-        // tanggal_serahterima
-
-        // jenis_produk
+        // tgl_serahterima
 
         // readonly
 
         // created_at
-        if ($this->RowType == ROWTYPE_VIEW) {
-            // idpegawai
-            $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-            $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
-            $this->idpegawai->ViewCustomAttributes = "";
 
+        // receipt_by
+        if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            if ($curVal != "") {
+                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                    } else {
+                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idcustomer->ViewValue = null;
+            }
             $this->idcustomer->ViewCustomAttributes = "";
 
-            // tanggal_request
-            $this->tanggal_request->ViewValue = $this->tanggal_request->CurrentValue;
-            $this->tanggal_request->ViewValue = FormatDateTime($this->tanggal_request->ViewValue, 0);
-            $this->tanggal_request->ViewCustomAttributes = "";
+            // tgl_request
+            $this->tgl_request->ViewValue = $this->tgl_request->CurrentValue;
+            $this->tgl_request->ViewValue = FormatDateTime($this->tgl_request->ViewValue, 0);
+            $this->tgl_request->ViewCustomAttributes = "";
 
-            // tanggal_serahterima
-            $this->tanggal_serahterima->ViewValue = $this->tanggal_serahterima->CurrentValue;
-            $this->tanggal_serahterima->ViewValue = FormatDateTime($this->tanggal_serahterima->ViewValue, 0);
-            $this->tanggal_serahterima->ViewCustomAttributes = "";
-
-            // jenis_produk
-            $this->jenis_produk->ViewValue = $this->jenis_produk->CurrentValue;
-            $this->jenis_produk->ViewCustomAttributes = "";
+            // tgl_serahterima
+            $this->tgl_serahterima->ViewValue = $this->tgl_serahterima->CurrentValue;
+            $this->tgl_serahterima->ViewValue = FormatDateTime($this->tgl_serahterima->ViewValue, 0);
+            $this->tgl_serahterima->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -634,30 +638,41 @@ class NpdSerahterimaDelete extends NpdSerahterima
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
 
-            // tanggal_request
-            $this->tanggal_request->LinkCustomAttributes = "";
-            $this->tanggal_request->HrefValue = "";
-            $this->tanggal_request->TooltipValue = "";
+            // tgl_request
+            $this->tgl_request->LinkCustomAttributes = "";
+            $this->tgl_request->HrefValue = "";
+            $this->tgl_request->TooltipValue = "";
 
-            // tanggal_serahterima
-            $this->tanggal_serahterima->LinkCustomAttributes = "";
-            $this->tanggal_serahterima->HrefValue = "";
-            $this->tanggal_serahterima->TooltipValue = "";
-
-            // jenis_produk
-            $this->jenis_produk->LinkCustomAttributes = "";
-            $this->jenis_produk->HrefValue = "";
-            $this->jenis_produk->TooltipValue = "";
+            // tgl_serahterima
+            $this->tgl_serahterima->LinkCustomAttributes = "";
+            $this->tgl_serahterima->HrefValue = "";
+            $this->tgl_serahterima->TooltipValue = "";
 
             // readonly
             $this->readonly->LinkCustomAttributes = "";
@@ -668,6 +683,11 @@ class NpdSerahterimaDelete extends NpdSerahterima
             $this->created_at->LinkCustomAttributes = "";
             $this->created_at->HrefValue = "";
             $this->created_at->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -783,7 +803,11 @@ class NpdSerahterimaDelete extends NpdSerahterima
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idcustomer":
+                    break;
                 case "x_readonly":
+                    break;
+                case "x_receipt_by":
                     break;
                 default:
                     $lookupFilter = "";

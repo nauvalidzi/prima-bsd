@@ -39,7 +39,7 @@ class NpdConfirm extends DbTable
     public $jabatan;
     public $notelp;
     public $created_at;
-    public $created_by;
+    public $confirm_by;
     public $readonly;
 
     // Page ID
@@ -90,7 +90,6 @@ class NpdConfirm extends DbTable
         $this->idnpd = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
-        $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
@@ -108,7 +107,6 @@ class NpdConfirm extends DbTable
         // idnpd_sample
         $this->idnpd_sample = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd_sample', 'idnpd_sample', '`idnpd_sample`', '`idnpd_sample`', 20, 20, -1, false, '`idnpd_sample`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd_sample->Nullable = false; // NOT NULL field
-        $this->idnpd_sample->Required = true; // Required field
         $this->idnpd_sample->Sortable = true; // Allow sort
         $this->idnpd_sample->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd_sample->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -156,12 +154,16 @@ class NpdConfirm extends DbTable
 
         // jabatan
         $this->jabatan = new DbField('npd_confirm', 'npd_confirm', 'x_jabatan', 'jabatan', '`jabatan`', '`jabatan`', 200, 255, -1, false, '`jabatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jabatan->Nullable = false; // NOT NULL field
+        $this->jabatan->Required = true; // Required field
         $this->jabatan->Sortable = true; // Allow sort
         $this->jabatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jabatan->Param, "CustomMsg");
         $this->Fields['jabatan'] = &$this->jabatan;
 
         // notelp
         $this->notelp = new DbField('npd_confirm', 'npd_confirm', 'x_notelp', 'notelp', '`notelp`', '`notelp`', 200, 16, -1, false, '`notelp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->notelp->Nullable = false; // NOT NULL field
+        $this->notelp->Required = true; // Required field
         $this->notelp->Sortable = true; // Allow sort
         $this->notelp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->notelp->Param, "CustomMsg");
         $this->Fields['notelp'] = &$this->notelp;
@@ -175,12 +177,12 @@ class NpdConfirm extends DbTable
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
 
-        // created_by
-        $this->created_by = new DbField('npd_confirm', 'npd_confirm', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
+        // confirm_by
+        $this->confirm_by = new DbField('npd_confirm', 'npd_confirm', 'x_confirm_by', 'confirm_by', '`confirm_by`', '`confirm_by`', 3, 10, -1, false, '`confirm_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
+        $this->confirm_by->Sortable = true; // Allow sort
+        $this->confirm_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->confirm_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->confirm_by->Param, "CustomMsg");
+        $this->Fields['confirm_by'] = &$this->confirm_by;
 
         // readonly
         $this->readonly = new DbField('npd_confirm', 'npd_confirm', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
@@ -675,7 +677,7 @@ class NpdConfirm extends DbTable
         $this->jabatan->DbValue = $row['jabatan'];
         $this->notelp->DbValue = $row['notelp'];
         $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
+        $this->confirm_by->DbValue = $row['confirm_by'];
         $this->readonly->DbValue = $row['readonly'];
     }
 
@@ -1019,7 +1021,7 @@ SORTHTML;
         $this->jabatan->setDbValue($row['jabatan']);
         $this->notelp->setDbValue($row['notelp']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->confirm_by->setDbValue($row['confirm_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1055,7 +1057,7 @@ SORTHTML;
 
         // created_at
 
-        // created_by
+        // confirm_by
 
         // readonly
 
@@ -1131,10 +1133,10 @@ SORTHTML;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
+        // confirm_by
+        $this->confirm_by->ViewValue = $this->confirm_by->CurrentValue;
+        $this->confirm_by->ViewValue = FormatNumber($this->confirm_by->ViewValue, 0, -2, -2, -2);
+        $this->confirm_by->ViewCustomAttributes = "";
 
         // readonly
         if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -1200,10 +1202,10 @@ SORTHTML;
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
 
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
+        // confirm_by
+        $this->confirm_by->LinkCustomAttributes = "";
+        $this->confirm_by->HrefValue = "";
+        $this->confirm_by->TooltipValue = "";
 
         // readonly
         $this->readonly->LinkCustomAttributes = "";
@@ -1318,9 +1320,9 @@ SORTHTML;
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
+        // confirm_by
+        $this->confirm_by->EditAttrs["class"] = "form-control";
+        $this->confirm_by->EditCustomAttributes = "";
 
         // readonly
         $this->readonly->EditCustomAttributes = "";
@@ -1376,7 +1378,7 @@ SORTHTML;
                     $doc->exportCaption($this->jabatan);
                     $doc->exportCaption($this->notelp);
                     $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
+                    $doc->exportCaption($this->confirm_by);
                     $doc->exportCaption($this->readonly);
                 }
                 $doc->endExportRow();
@@ -1428,7 +1430,7 @@ SORTHTML;
                         $doc->exportField($this->jabatan);
                         $doc->exportField($this->notelp);
                         $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
+                        $doc->exportField($this->confirm_by);
                         $doc->exportField($this->readonly);
                     }
                     $doc->endExportRow($rowCnt);

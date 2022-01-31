@@ -29,8 +29,7 @@ loadjs.ready("head", function () {
         ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
         ["bau", [fields.bau.visible && fields.bau.required ? ew.Validators.required(fields.bau.caption) : null], fields.bau.isInvalid],
         ["fungsi", [fields.fungsi.visible && fields.fungsi.required ? ew.Validators.required(fields.fungsi.caption) : null], fields.fungsi.isInvalid],
-        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
-        ["created_by", [fields.created_by.visible && fields.created_by.required ? ew.Validators.required(fields.created_by.caption) : null], fields.created_by.isInvalid]
+        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid]
     ]);
 
     // Set invalid fields
@@ -126,6 +125,10 @@ $Page->showMessage();
 <?php if ($Page->getCurrentMasterTable() == "npd") { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
+<?php } ?>
+<?php if ($Page->getCurrentMasterTable() == "npd_serahterima") { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd_serahterima">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idserahterima->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
@@ -286,9 +289,6 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_npd_sample_created_by">
-    <input type="hidden" data-table="npd_sample" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
-    </span>
 </div><!-- /page* -->
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->

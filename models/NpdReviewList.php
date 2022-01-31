@@ -573,6 +573,7 @@ class NpdReviewList extends NpdReview
         $this->idnpd_sample->setVisibility();
         $this->tanggal_review->setVisibility();
         $this->tanggal_submit->setVisibility();
+        $this->ukuran->setVisibility();
         $this->wadah->Visible = false;
         $this->bentuk_opsi->Visible = false;
         $this->bentuk_revisi->Visible = false;
@@ -600,7 +601,7 @@ class NpdReviewList extends NpdReview
         $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
-        $this->ukuran->setVisibility();
+        $this->review_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -921,6 +922,7 @@ class NpdReviewList extends NpdReview
         $filterList = Concat($filterList, $this->idnpd_sample->AdvancedSearch->toJson(), ","); // Field idnpd_sample
         $filterList = Concat($filterList, $this->tanggal_review->AdvancedSearch->toJson(), ","); // Field tanggal_review
         $filterList = Concat($filterList, $this->tanggal_submit->AdvancedSearch->toJson(), ","); // Field tanggal_submit
+        $filterList = Concat($filterList, $this->ukuran->AdvancedSearch->toJson(), ","); // Field ukuran
         $filterList = Concat($filterList, $this->wadah->AdvancedSearch->toJson(), ","); // Field wadah
         $filterList = Concat($filterList, $this->bentuk_opsi->AdvancedSearch->toJson(), ","); // Field bentuk_opsi
         $filterList = Concat($filterList, $this->bentuk_revisi->AdvancedSearch->toJson(), ","); // Field bentuk_revisi
@@ -948,7 +950,7 @@ class NpdReviewList extends NpdReview
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
-        $filterList = Concat($filterList, $this->ukuran->AdvancedSearch->toJson(), ","); // Field ukuran
+        $filterList = Concat($filterList, $this->review_by->AdvancedSearch->toJson(), ","); // Field review_by
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1028,6 +1030,14 @@ class NpdReviewList extends NpdReview
         $this->tanggal_submit->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_submit"];
         $this->tanggal_submit->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_submit"];
         $this->tanggal_submit->AdvancedSearch->save();
+
+        // Field ukuran
+        $this->ukuran->AdvancedSearch->SearchValue = @$filter["x_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchOperator = @$filter["z_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchCondition = @$filter["v_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchValue2 = @$filter["y_ukuran"];
+        $this->ukuran->AdvancedSearch->SearchOperator2 = @$filter["w_ukuran"];
+        $this->ukuran->AdvancedSearch->save();
 
         // Field wadah
         $this->wadah->AdvancedSearch->SearchValue = @$filter["x_wadah"];
@@ -1245,13 +1255,13 @@ class NpdReviewList extends NpdReview
         $this->readonly->AdvancedSearch->SearchOperator2 = @$filter["w_readonly"];
         $this->readonly->AdvancedSearch->save();
 
-        // Field ukuran
-        $this->ukuran->AdvancedSearch->SearchValue = @$filter["x_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchOperator = @$filter["z_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchCondition = @$filter["v_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchValue2 = @$filter["y_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchOperator2 = @$filter["w_ukuran"];
-        $this->ukuran->AdvancedSearch->save();
+        // Field review_by
+        $this->review_by->AdvancedSearch->SearchValue = @$filter["x_review_by"];
+        $this->review_by->AdvancedSearch->SearchOperator = @$filter["z_review_by"];
+        $this->review_by->AdvancedSearch->SearchCondition = @$filter["v_review_by"];
+        $this->review_by->AdvancedSearch->SearchValue2 = @$filter["y_review_by"];
+        $this->review_by->AdvancedSearch->SearchOperator2 = @$filter["w_review_by"];
+        $this->review_by->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1260,6 +1270,7 @@ class NpdReviewList extends NpdReview
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
+        $this->buildBasicSearchSql($where, $this->ukuran, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->wadah, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->bentuk_revisi, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->viskositas_revisi, $arKeywords, $type);
@@ -1273,7 +1284,6 @@ class NpdReviewList extends NpdReview
         $this->buildBasicSearchSql($where, $this->efekpositif_revisi, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->efeknegatif_revisi, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->kesimpulan, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->ukuran, $arKeywords, $type);
         return $where;
     }
 
@@ -1440,8 +1450,9 @@ class NpdReviewList extends NpdReview
             $this->updateSort($this->idnpd_sample); // idnpd_sample
             $this->updateSort($this->tanggal_review); // tanggal_review
             $this->updateSort($this->tanggal_submit); // tanggal_submit
-            $this->updateSort($this->status); // status
             $this->updateSort($this->ukuran); // ukuran
+            $this->updateSort($this->status); // status
+            $this->updateSort($this->review_by); // review_by
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1494,6 +1505,7 @@ class NpdReviewList extends NpdReview
                 $this->idnpd_sample->setSort("");
                 $this->tanggal_review->setSort("");
                 $this->tanggal_submit->setSort("");
+                $this->ukuran->setSort("");
                 $this->wadah->setSort("");
                 $this->bentuk_opsi->setSort("");
                 $this->bentuk_revisi->setSort("");
@@ -1521,7 +1533,7 @@ class NpdReviewList extends NpdReview
                 $this->status->setSort("");
                 $this->created_at->setSort("");
                 $this->readonly->setSort("");
-                $this->ukuran->setSort("");
+                $this->review_by->setSort("");
             }
 
             // Reset start position
@@ -1920,6 +1932,7 @@ class NpdReviewList extends NpdReview
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->tanggal_review->setDbValue($row['tanggal_review']);
         $this->tanggal_submit->setDbValue($row['tanggal_submit']);
+        $this->ukuran->setDbValue($row['ukuran']);
         $this->wadah->setDbValue($row['wadah']);
         $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
         $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
@@ -1947,7 +1960,7 @@ class NpdReviewList extends NpdReview
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->ukuran->setDbValue($row['ukuran']);
+        $this->review_by->setDbValue($row['review_by']);
     }
 
     // Return a row with default values
@@ -1959,6 +1972,7 @@ class NpdReviewList extends NpdReview
         $row['idnpd_sample'] = null;
         $row['tanggal_review'] = null;
         $row['tanggal_submit'] = null;
+        $row['ukuran'] = null;
         $row['wadah'] = null;
         $row['bentuk_opsi'] = null;
         $row['bentuk_revisi'] = null;
@@ -1986,7 +2000,7 @@ class NpdReviewList extends NpdReview
         $row['status'] = null;
         $row['created_at'] = null;
         $row['readonly'] = null;
-        $row['ukuran'] = null;
+        $row['review_by'] = null;
         return $row;
     }
 
@@ -2033,6 +2047,8 @@ class NpdReviewList extends NpdReview
         // tanggal_review
 
         // tanggal_submit
+
+        // ukuran
 
         // wadah
 
@@ -2088,7 +2104,7 @@ class NpdReviewList extends NpdReview
 
         // readonly
 
-        // ukuran
+        // review_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -2153,6 +2169,10 @@ class NpdReviewList extends NpdReview
             $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
             $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
             $this->tanggal_submit->ViewCustomAttributes = "";
+
+            // ukuran
+            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+            $this->ukuran->ViewCustomAttributes = "";
 
             // wadah
             $this->wadah->ViewValue = $this->wadah->CurrentValue;
@@ -2315,9 +2335,10 @@ class NpdReviewList extends NpdReview
             }
             $this->readonly->ViewCustomAttributes = "";
 
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
+            // review_by
+            $this->review_by->ViewValue = $this->review_by->CurrentValue;
+            $this->review_by->ViewValue = FormatNumber($this->review_by->ViewValue, 0, -2, -2, -2);
+            $this->review_by->ViewCustomAttributes = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
@@ -2339,15 +2360,20 @@ class NpdReviewList extends NpdReview
             $this->tanggal_submit->HrefValue = "";
             $this->tanggal_submit->TooltipValue = "";
 
+            // ukuran
+            $this->ukuran->LinkCustomAttributes = "";
+            $this->ukuran->HrefValue = "";
+            $this->ukuran->TooltipValue = "";
+
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
+            // review_by
+            $this->review_by->LinkCustomAttributes = "";
+            $this->review_by->HrefValue = "";
+            $this->review_by->TooltipValue = "";
         }
 
         // Call Row Rendered event

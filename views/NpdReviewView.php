@@ -89,6 +89,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <tr id="r_ukuran">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_ukuran"><?= $Page->ukuran->caption() ?></span></td>
+        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el_npd_review_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->wadah->Visible) { // wadah ?>
     <tr id="r_wadah">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_wadah"><?= $Page->wadah->caption() ?></span></td>
@@ -364,13 +375,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <tr id="r_ukuran">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_ukuran"><?= $Page->ukuran->caption() ?></span></td>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el_npd_review_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
+<?php if ($Page->review_by->Visible) { // review_by ?>
+    <tr id="r_review_by">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_review_review_by"><?= $Page->review_by->caption() ?></span></td>
+        <td data-name="review_by" <?= $Page->review_by->cellAttributes() ?>>
+<span id="el_npd_review_review_by">
+<span<?= $Page->review_by->viewAttributes() ?>>
+<?= $Page->review_by->getViewValue() ?></span>
 </span>
 </td>
     </tr>

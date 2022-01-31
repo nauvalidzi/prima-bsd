@@ -130,6 +130,28 @@ $npd = Container("npd");
 </td>
         </tr>
 <?php } ?>
+<?php if ($npd->receipt_by->Visible) { // receipt_by ?>
+        <tr id="r_receipt_by">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->receipt_by->caption() ?></td>
+            <td <?= $npd->receipt_by->cellAttributes() ?>>
+<span id="el_npd_receipt_by">
+<span<?= $npd->receipt_by->viewAttributes() ?>>
+<?= $npd->receipt_by->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->approve_by->Visible) { // approve_by ?>
+        <tr id="r_approve_by">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->approve_by->caption() ?></td>
+            <td <?= $npd->approve_by->cellAttributes() ?>>
+<span id="el_npd_approve_by">
+<span<?= $npd->approve_by->viewAttributes() ?>>
+<?= $npd->approve_by->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
     </tbody>
 </table>
 </div>

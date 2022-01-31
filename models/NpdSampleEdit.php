@@ -480,7 +480,6 @@ class NpdSampleEdit extends NpdSample
         $this->jumlah->setVisibility();
         $this->status->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -791,15 +790,6 @@ class NpdSampleEdit extends NpdSample
             $res = true;
             $this->loadRowValues($row); // Load row values
         }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("edit");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
-        }
         return $res;
     }
 
@@ -837,7 +827,6 @@ class NpdSampleEdit extends NpdSample
         $this->jumlah->setDbValue($row['jumlah']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -858,7 +847,6 @@ class NpdSampleEdit extends NpdSample
         $row['jumlah'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -916,8 +904,6 @@ class NpdSampleEdit extends NpdSample
         // status
 
         // created_at
-
-        // created_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -996,11 +982,6 @@ class NpdSampleEdit extends NpdSample
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -1353,16 +1334,6 @@ class NpdSampleEdit extends NpdSample
         return $editRow;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up master/detail based on QueryString
     protected function setupMasterParms()
     {
@@ -1396,6 +1367,20 @@ class NpdSampleEdit extends NpdSample
                     $masterTbl->id->setQueryStringValue($parm);
                     $this->idnpd->setQueryStringValue($masterTbl->id->QueryStringValue);
                     $this->idnpd->setSessionValue($this->idnpd->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Get("fk_id", Get("idserahterima"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idserahterima->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->QueryStringValue);
                     if (!is_numeric($masterTbl->id->QueryStringValue)) {
                         $validMaster = false;
                     }
@@ -1438,6 +1423,20 @@ class NpdSampleEdit extends NpdSample
                     $validMaster = false;
                 }
             }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Post("fk_id", Post("idserahterima"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idserahterima->setFormValue($masterTbl->id->FormValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
         }
         if ($validMaster) {
             // Save current master table
@@ -1459,6 +1458,11 @@ class NpdSampleEdit extends NpdSample
             if ($masterTblVar != "npd") {
                 if ($this->idnpd->CurrentValue == "") {
                     $this->idnpd->setSessionValue("");
+                }
+            }
+            if ($masterTblVar != "npd_serahterima") {
+                if ($this->idserahterima->CurrentValue == "") {
+                    $this->idserahterima->setSessionValue("");
                 }
             }
         }

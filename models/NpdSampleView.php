@@ -531,7 +531,6 @@ class NpdSampleView extends NpdSample
         $this->jumlah->setVisibility();
         $this->status->setVisibility();
         $this->created_at->setVisibility();
-        $this->created_by->setVisibility();
         $this->readonly->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -672,7 +671,7 @@ class NpdSampleView extends NpdSample
         } else {
             $item->Body = "<a class=\"ew-action ew-edit\" title=\"" . $editcaption . "\" data-caption=\"" . $editcaption . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("ViewPageEditLink") . "</a>";
         }
-        $item->Visible = ($this->EditUrl != "" && $Security->canEdit() && $this->showOptionLink("edit"));
+        $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
         // Delete
         $item = &$option->add("delete");
@@ -681,7 +680,7 @@ class NpdSampleView extends NpdSample
         } else {
             $item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
         }
-        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete() && $this->showOptionLink("delete"));
+        $item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
 
         // Set up action default
         $option = $options["action"];
@@ -753,7 +752,6 @@ class NpdSampleView extends NpdSample
         $this->jumlah->setDbValue($row['jumlah']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -774,7 +772,6 @@ class NpdSampleView extends NpdSample
         $row['jumlah'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -822,8 +819,6 @@ class NpdSampleView extends NpdSample
         // status
 
         // created_at
-
-        // created_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -903,11 +898,6 @@ class NpdSampleView extends NpdSample
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
                 $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -973,16 +963,6 @@ class NpdSampleView extends NpdSample
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up master/detail based on QueryString
     protected function setupMasterParms()
     {
@@ -1016,6 +996,20 @@ class NpdSampleView extends NpdSample
                     $masterTbl->id->setQueryStringValue($parm);
                     $this->idnpd->setQueryStringValue($masterTbl->id->QueryStringValue);
                     $this->idnpd->setSessionValue($this->idnpd->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Get("fk_id", Get("idserahterima"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idserahterima->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->QueryStringValue);
                     if (!is_numeric($masterTbl->id->QueryStringValue)) {
                         $validMaster = false;
                     }
@@ -1058,6 +1052,20 @@ class NpdSampleView extends NpdSample
                     $validMaster = false;
                 }
             }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Post("fk_id", Post("idserahterima"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idserahterima->setFormValue($masterTbl->id->FormValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
         }
         if ($validMaster) {
             // Save current master table
@@ -1079,6 +1087,11 @@ class NpdSampleView extends NpdSample
             if ($masterTblVar != "npd") {
                 if ($this->idnpd->CurrentValue == "") {
                     $this->idnpd->setSessionValue("");
+                }
+            }
+            if ($masterTblVar != "npd_serahterima") {
+                if ($this->idserahterima->CurrentValue == "") {
+                    $this->idserahterima->setSessionValue("");
                 }
             }
         }

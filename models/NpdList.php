@@ -633,6 +633,8 @@ class NpdList extends Npd
         $this->readonly->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
+        $this->receipt_by->setVisibility();
+        $this->approve_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -1003,6 +1005,8 @@ class NpdList extends Npd
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
+        $filterList = Concat($filterList, $this->receipt_by->AdvancedSearch->toJson(), ","); // Field receipt_by
+        $filterList = Concat($filterList, $this->approve_by->AdvancedSearch->toJson(), ","); // Field approve_by
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1554,6 +1558,22 @@ class NpdList extends Npd
         $this->updated_at->AdvancedSearch->SearchValue2 = @$filter["y_updated_at"];
         $this->updated_at->AdvancedSearch->SearchOperator2 = @$filter["w_updated_at"];
         $this->updated_at->AdvancedSearch->save();
+
+        // Field receipt_by
+        $this->receipt_by->AdvancedSearch->SearchValue = @$filter["x_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchOperator = @$filter["z_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchCondition = @$filter["v_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchValue2 = @$filter["y_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchOperator2 = @$filter["w_receipt_by"];
+        $this->receipt_by->AdvancedSearch->save();
+
+        // Field approve_by
+        $this->approve_by->AdvancedSearch->SearchValue = @$filter["x_approve_by"];
+        $this->approve_by->AdvancedSearch->SearchOperator = @$filter["z_approve_by"];
+        $this->approve_by->AdvancedSearch->SearchCondition = @$filter["v_approve_by"];
+        $this->approve_by->AdvancedSearch->SearchValue2 = @$filter["y_approve_by"];
+        $this->approve_by->AdvancedSearch->SearchOperator2 = @$filter["w_approve_by"];
+        $this->approve_by->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1767,6 +1787,8 @@ class NpdList extends Npd
             $this->updateSort($this->idproduct_acuan); // idproduct_acuan
             $this->updateSort($this->kategoriproduk); // kategoriproduk
             $this->updateSort($this->jenisproduk); // jenisproduk
+            $this->updateSort($this->receipt_by); // receipt_by
+            $this->updateSort($this->approve_by); // approve_by
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1875,6 +1897,8 @@ class NpdList extends Npd
                 $this->readonly->setSort("");
                 $this->created_at->setSort("");
                 $this->updated_at->setSort("");
+                $this->receipt_by->setSort("");
+                $this->approve_by->setSort("");
             }
 
             // Reset start position
@@ -1929,13 +1953,6 @@ class NpdList extends Npd
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
-        // "detail_npd_terms"
-        $item = &$this->ListOptions->add("detail_npd_terms");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'npd_terms') && !$this->ShowMultipleDetails;
-        $item->OnLeft = false;
-        $item->ShowInButtonGroup = false;
-
         // Multiple details
         if ($this->ShowMultipleDetails) {
             $item = &$this->ListOptions->add("details");
@@ -1952,7 +1969,6 @@ class NpdList extends Npd
         $pages->add("npd_confirm");
         $pages->add("npd_harga");
         $pages->add("npd_desain");
-        $pages->add("npd_terms");
         $this->DetailPages = $pages;
 
         // List actions
@@ -1968,6 +1984,14 @@ class NpdList extends Npd
         $item->Visible = false;
         $item->OnLeft = false;
         $item->Header = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"custom-control-input\" onclick=\"ew.selectAllKey(this);\"><label class=\"custom-control-label\" for=\"key\"></label></div>";
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
@@ -1996,6 +2020,10 @@ class NpdList extends Npd
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") { // View mode
         } // End View mode
@@ -2128,25 +2156,6 @@ class NpdList extends Npd
                 $opt->Visible = false;
             }
         }
-
-        // "detail_npd_terms"
-        $opt = $this->ListOptions["detail_npd_terms"];
-        if ($Security->allowList(CurrentProjectID() . 'npd_terms')) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("npd_terms", "TblCaption");
-            $body .= "&nbsp;" . str_replace("%c", Container("npd_terms")->Count, $Language->phrase("DetailCount"));
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("NpdTermsList?" . Config("TABLE_SHOW_MASTER") . "=npd&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
-            $links = "";
-            $detailPage = Container("NpdTermsGrid");
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-            }
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-            $opt->Body = $body;
-            if ($this->ShowMultipleDetails) {
-                $opt->Visible = false;
-            }
-        }
         if ($this->ShowMultipleDetails) {
             $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
             $links = "";
@@ -2251,18 +2260,6 @@ class NpdList extends Npd
                         $detailTableLink .= ",";
                     }
                     $detailTableLink .= "npd_desain";
-                }
-                $item = &$option->add("detailadd_npd_terms");
-                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=npd_terms");
-                $detailPage = Container("NpdTermsGrid");
-                $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
-                $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
-                $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'npd') && $Security->canAdd());
-                if ($item->Visible) {
-                    if ($detailTableLink != "") {
-                        $detailTableLink .= ",";
-                    }
-                    $detailTableLink .= "npd_terms";
                 }
 
         // Add multiple details
@@ -2577,34 +2574,6 @@ class NpdList extends Npd
                 $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
             }
         }
-        $sqlwrk = "`idnpd`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
-
-        // Column "detail_npd_terms"
-        if ($this->DetailPages && $this->DetailPages["npd_terms"] && $this->DetailPages["npd_terms"]->Visible) {
-            $link = "";
-            $option = $this->ListOptions["detail_npd_terms"];
-            $url = "NpdTermsPreview?t=npd&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"npd_terms\" data-url=\"" . $url . "\">";
-            if ($Security->allowList(CurrentProjectID() . 'npd')) {
-                $label = $Language->TablePhrase("npd_terms", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("npd_terms")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"npd_terms\" data-url=\"" . $url . "\">" . $label . "</a></li>";
-                $links .= $link;
-                $detaillnk = JsEncodeAttribute("NpdTermsList?" . Config("TABLE_SHOW_MASTER") . "=npd&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("npd_terms", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
-            }
-            $detailPageObj = Container("NpdTermsGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'npd')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=npd_terms");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            $btngrp .= "</div>";
-            if ($link != "") {
-                $btngrps .= $btngrp;
-                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
-            }
-        }
 
         // Hide detail items if necessary
         $this->ListOptions->hideDetailItemsForDropDown();
@@ -2784,6 +2753,8 @@ class NpdList extends Npd
         $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->approve_by->setDbValue($row['approve_by']);
         $detailTbl = Container("npd_sample");
         $detailFilter = $detailTbl->sqlDetailFilter_npd();
         $detailFilter = str_replace("@idnpd@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
@@ -2809,12 +2780,6 @@ class NpdList extends Npd
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
         $detailTbl = Container("npd_desain");
-        $detailFilter = $detailTbl->sqlDetailFilter_npd();
-        $detailFilter = str_replace("@idnpd@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
-        $detailTbl->setCurrentMasterTable("npd");
-        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
-        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("npd_terms");
         $detailFilter = $detailTbl->sqlDetailFilter_npd();
         $detailFilter = str_replace("@idnpd@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("npd");
@@ -2891,6 +2856,8 @@ class NpdList extends Npd
         $row['readonly'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
+        $row['receipt_by'] = null;
+        $row['approve_by'] = null;
         return $row;
     }
 
@@ -3058,6 +3025,10 @@ class NpdList extends Npd
         // created_at
 
         // updated_at
+
+        // receipt_by
+
+        // approve_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -3643,6 +3614,16 @@ class NpdList extends Npd
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
             $this->updated_at->ViewCustomAttributes = "";
 
+            // receipt_by
+            $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+            $this->receipt_by->ViewValue = FormatNumber($this->receipt_by->ViewValue, 0, -2, -2, -2);
+            $this->receipt_by->ViewCustomAttributes = "";
+
+            // approve_by
+            $this->approve_by->ViewValue = $this->approve_by->CurrentValue;
+            $this->approve_by->ViewValue = FormatNumber($this->approve_by->ViewValue, 0, -2, -2, -2);
+            $this->approve_by->ViewCustomAttributes = "";
+
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
@@ -3697,6 +3678,16 @@ class NpdList extends Npd
             $this->jenisproduk->LinkCustomAttributes = "";
             $this->jenisproduk->HrefValue = "";
             $this->jenisproduk->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
+
+            // approve_by
+            $this->approve_by->LinkCustomAttributes = "";
+            $this->approve_by->HrefValue = "";
+            $this->approve_by->TooltipValue = "";
         }
 
         // Call Row Rendered event

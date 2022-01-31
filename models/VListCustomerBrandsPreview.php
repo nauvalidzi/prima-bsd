@@ -387,12 +387,12 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
 
         // Set up list options
         $this->setupListOptions();
-        $this->idcustomer->setVisibility();
-        $this->idbrand->setVisibility();
+        $this->id->Visible = false;
+        $this->idcustomer->Visible = false;
+        $this->idbrand->Visible = false;
         $this->kode_brand->setVisibility();
         $this->nama_brand->setVisibility();
         $this->jumlah_produk->setVisibility();
-        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -480,12 +480,12 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
             $this->StartRecord = 1;
             $this->CurrentOrder = "";
             $this->CurrentOrderType = "";
+            $this->id->setSort("");
             $this->idcustomer->setSort("");
             $this->idbrand->setSort("");
             $this->kode_brand->setSort("");
             $this->nama_brand->setSort("");
             $this->jumlah_produk->setSort("");
-            $this->id->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -497,8 +497,6 @@ class VListCustomerBrandsPreview extends VListCustomerBrands
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->kode_brand); // kode_brand
             $this->updateSort($this->nama_brand); // nama_brand
             $this->updateSort($this->jumlah_produk); // jumlah_produk

@@ -123,6 +123,10 @@ $Page->showMessage();
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
 <?php } ?>
+<?php if ($Page->getCurrentMasterTable() == "npd_serahterima") { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd_serahterima">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idserahterima->getSessionValue()) ?>">
+<?php } ?>
 <div class="ew-edit-div"><!-- page* -->
 <?php if ($Page->kode->Visible) { // kode ?>
     <div id="r_kode" class="form-group row">

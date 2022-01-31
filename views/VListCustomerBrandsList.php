@@ -148,12 +148,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_v_list_customer_brands_idcustomer" class="v_list_customer_brands_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
-<?php } ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_v_list_customer_brands_idbrand" class="v_list_customer_brands_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
-<?php } ?>
 <?php if ($Page->kode_brand->Visible) { // kode_brand ?>
         <th data-name="kode_brand" class="<?= $Page->kode_brand->headerCellClass() ?>"><div id="elh_v_list_customer_brands_kode_brand" class="v_list_customer_brands_kode_brand"><?= $Page->renderSort($Page->kode_brand) ?></div></th>
 <?php } ?>
@@ -230,22 +224,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td data-name="idcustomer" <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_list_customer_brands_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_list_customer_brands_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->kode_brand->Visible) { // kode_brand ?>
         <td data-name="kode_brand" <?= $Page->kode_brand->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_v_list_customer_brands_kode_brand">

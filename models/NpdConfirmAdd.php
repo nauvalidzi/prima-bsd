@@ -475,7 +475,7 @@ class NpdConfirmAdd extends NpdConfirm
         $this->jabatan->setVisibility();
         $this->notelp->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->setVisibility();
+        $this->confirm_by->setVisibility();
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -653,7 +653,7 @@ class NpdConfirmAdd extends NpdConfirm
         $this->notelp->OldValue = $this->notelp->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
+        $this->confirm_by->CurrentValue = CurrentUserID();
         $this->readonly->CurrentValue = 0;
     }
 
@@ -744,13 +744,13 @@ class NpdConfirmAdd extends NpdConfirm
             }
         }
 
-        // Check field name 'created_by' first before field var 'x_created_by'
-        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
-        if (!$this->created_by->IsDetailKey) {
+        // Check field name 'confirm_by' first before field var 'x_confirm_by'
+        $val = $CurrentForm->hasValue("confirm_by") ? $CurrentForm->getValue("confirm_by") : $CurrentForm->getValue("x_confirm_by");
+        if (!$this->confirm_by->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->created_by->Visible = false; // Disable update for API request
+                $this->confirm_by->Visible = false; // Disable update for API request
             } else {
-                $this->created_by->setFormValue($val);
+                $this->confirm_by->setFormValue($val);
             }
         }
 
@@ -772,7 +772,7 @@ class NpdConfirmAdd extends NpdConfirm
         $this->personincharge->CurrentValue = $this->personincharge->FormValue;
         $this->jabatan->CurrentValue = $this->jabatan->FormValue;
         $this->notelp->CurrentValue = $this->notelp->FormValue;
-        $this->created_by->CurrentValue = $this->created_by->FormValue;
+        $this->confirm_by->CurrentValue = $this->confirm_by->FormValue;
     }
 
     /**
@@ -834,7 +834,7 @@ class NpdConfirmAdd extends NpdConfirm
         $this->jabatan->setDbValue($row['jabatan']);
         $this->notelp->setDbValue($row['notelp']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
+        $this->confirm_by->setDbValue($row['confirm_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -854,7 +854,7 @@ class NpdConfirmAdd extends NpdConfirm
         $row['jabatan'] = $this->jabatan->CurrentValue;
         $row['notelp'] = $this->notelp->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
+        $row['confirm_by'] = $this->confirm_by->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
         return $row;
     }
@@ -909,7 +909,7 @@ class NpdConfirmAdd extends NpdConfirm
 
         // created_at
 
-        // created_by
+        // confirm_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -985,10 +985,10 @@ class NpdConfirmAdd extends NpdConfirm
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
+            // confirm_by
+            $this->confirm_by->ViewValue = $this->confirm_by->CurrentValue;
+            $this->confirm_by->ViewValue = FormatNumber($this->confirm_by->ViewValue, 0, -2, -2, -2);
+            $this->confirm_by->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -1044,10 +1044,10 @@ class NpdConfirmAdd extends NpdConfirm
             $this->notelp->HrefValue = "";
             $this->notelp->TooltipValue = "";
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
+            // confirm_by
+            $this->confirm_by->LinkCustomAttributes = "";
+            $this->confirm_by->HrefValue = "";
+            $this->confirm_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -1157,10 +1157,10 @@ class NpdConfirmAdd extends NpdConfirm
             $this->notelp->EditValue = HtmlEncode($this->notelp->CurrentValue);
             $this->notelp->PlaceHolder = RemoveHtml($this->notelp->caption());
 
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
+            // confirm_by
+            $this->confirm_by->EditAttrs["class"] = "form-control";
+            $this->confirm_by->EditCustomAttributes = "";
+            $this->confirm_by->CurrentValue = CurrentUserID();
 
             // Add refer script
 
@@ -1201,9 +1201,9 @@ class NpdConfirmAdd extends NpdConfirm
             $this->notelp->LinkCustomAttributes = "";
             $this->notelp->HrefValue = "";
 
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
+            // confirm_by
+            $this->confirm_by->LinkCustomAttributes = "";
+            $this->confirm_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1275,9 +1275,9 @@ class NpdConfirmAdd extends NpdConfirm
                 $this->notelp->addErrorMessage(str_replace("%s", $this->notelp->caption(), $this->notelp->RequiredErrorMessage));
             }
         }
-        if ($this->created_by->Required) {
-            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
-                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
+        if ($this->confirm_by->Required) {
+            if (!$this->confirm_by->IsDetailKey && EmptyValue($this->confirm_by->FormValue)) {
+                $this->confirm_by->addErrorMessage(str_replace("%s", $this->confirm_by->caption(), $this->confirm_by->RequiredErrorMessage));
             }
         }
 
@@ -1324,13 +1324,13 @@ class NpdConfirmAdd extends NpdConfirm
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
 
         // tglkonfirmasi
         $this->tglkonfirmasi->setDbValueDef($rsnew, UnFormatDateTime($this->tglkonfirmasi->CurrentValue, 0), CurrentDate(), false);
 
         // idnpd_sample
-        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, false);
+        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, strval($this->idnpd_sample->CurrentValue) == "");
 
         // foto
         if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
@@ -1352,13 +1352,13 @@ class NpdConfirmAdd extends NpdConfirm
         $this->personincharge->setDbValueDef($rsnew, $this->personincharge->CurrentValue, "", false);
 
         // jabatan
-        $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, null, false);
+        $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, "", false);
 
         // notelp
-        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, null, false);
+        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, "", false);
 
-        // created_by
-        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
+        // confirm_by
+        $this->confirm_by->setDbValueDef($rsnew, $this->confirm_by->CurrentValue, null, false);
         if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
             $oldFiles = EmptyValue($this->foto->Upload->DbValue) ? [] : [$this->foto->htmlDecode($this->foto->Upload->DbValue)];
             if (!EmptyValue($this->foto->Upload->FileName)) {

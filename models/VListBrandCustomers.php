@@ -28,11 +28,11 @@ class VListBrandCustomers extends DbTable
     public $ExportDoc;
 
     // Fields
+    public $id;
     public $idbrand;
     public $idcustomer;
     public $kode_customer;
     public $nama_customer;
-    public $id;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -68,6 +68,15 @@ class VListBrandCustomers extends DbTable
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
+
+        // id
+        $this->id = new DbField('v_list_brand_customers', 'v_list_brand_customers', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
+        $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->Nullable = false; // NOT NULL field
+        $this->id->Sortable = false; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
 
         // idbrand
         $this->idbrand = new DbField('v_list_brand_customers', 'v_list_brand_customers', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -121,15 +130,6 @@ class VListBrandCustomers extends DbTable
         $this->nama_customer->Sortable = true; // Allow sort
         $this->nama_customer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_customer->Param, "CustomMsg");
         $this->Fields['nama_customer'] = &$this->nama_customer;
-
-        // id
-        $this->id = new DbField('v_list_brand_customers', 'v_list_brand_customers', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Nullable = false; // NOT NULL field
-        $this->id->Sortable = false; // Allow sort
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
-        $this->Fields['id'] = &$this->id;
     }
 
     // Field Visibility
@@ -592,11 +592,11 @@ class VListBrandCustomers extends DbTable
         if (!is_array($row)) {
             return;
         }
+        $this->id->DbValue = $row['id'];
         $this->idbrand->DbValue = $row['idbrand'];
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->kode_customer->DbValue = $row['kode_customer'];
         $this->nama_customer->DbValue = $row['nama_customer'];
-        $this->id->DbValue = $row['id'];
     }
 
     // Delete uploaded files
@@ -921,11 +921,11 @@ SORTHTML;
         } else {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->id->setDbValue($row['id']);
     }
 
     // Render list row values
@@ -938,6 +938,9 @@ SORTHTML;
 
         // Common render codes
 
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
+
         // idbrand
 
         // idcustomer
@@ -947,7 +950,9 @@ SORTHTML;
         // nama_customer
 
         // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
 
         // idbrand
         $curVal = trim(strval($this->idbrand->CurrentValue));
@@ -1000,9 +1005,9 @@ SORTHTML;
         $this->nama_customer->ViewCustomAttributes = "";
 
         // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
-        $this->id->ViewCustomAttributes = "";
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
 
         // idbrand
         $this->idbrand->LinkCustomAttributes = "";
@@ -1024,11 +1029,6 @@ SORTHTML;
         $this->nama_customer->HrefValue = "";
         $this->nama_customer->TooltipValue = "";
 
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
-
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1043,6 +1043,10 @@ SORTHTML;
 
         // Call Row Rendering event
         $this->rowRendering();
+
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
 
         // idbrand
         $this->idbrand->EditAttrs["class"] = "form-control";
@@ -1084,10 +1088,6 @@ SORTHTML;
         // nama_customer
         $this->nama_customer->EditAttrs["class"] = "form-control";
         $this->nama_customer->EditCustomAttributes = "";
-
-        // id
-        $this->id->EditAttrs["class"] = "form-control";
-        $this->id->EditCustomAttributes = "";
 
         // Call Row Rendered event
         $this->rowRendered();

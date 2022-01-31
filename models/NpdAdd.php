@@ -542,6 +542,8 @@ class NpdAdd extends Npd
         $this->readonly->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
+        $this->receipt_by->setVisibility();
+        $this->approve_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -848,6 +850,8 @@ class NpdAdd extends Npd
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->updated_at->CurrentValue = null;
         $this->updated_at->OldValue = $this->updated_at->CurrentValue;
+        $this->receipt_by->CurrentValue = 0;
+        $this->approve_by->CurrentValue = 0;
     }
 
     // Load form values
@@ -1468,6 +1472,26 @@ class NpdAdd extends Npd
             }
         }
 
+        // Check field name 'receipt_by' first before field var 'x_receipt_by'
+        $val = $CurrentForm->hasValue("receipt_by") ? $CurrentForm->getValue("receipt_by") : $CurrentForm->getValue("x_receipt_by");
+        if (!$this->receipt_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->receipt_by->Visible = false; // Disable update for API request
+            } else {
+                $this->receipt_by->setFormValue($val);
+            }
+        }
+
+        // Check field name 'approve_by' first before field var 'x_approve_by'
+        $val = $CurrentForm->hasValue("approve_by") ? $CurrentForm->getValue("approve_by") : $CurrentForm->getValue("x_approve_by");
+        if (!$this->approve_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->approve_by->Visible = false; // Disable update for API request
+            } else {
+                $this->approve_by->setFormValue($val);
+            }
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -1539,6 +1563,8 @@ class NpdAdd extends Npd
         $this->delivery_multipoint->CurrentValue = $this->delivery_multipoint->FormValue;
         $this->delivery_termlain->CurrentValue = $this->delivery_termlain->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
+        $this->receipt_by->CurrentValue = $this->receipt_by->FormValue;
+        $this->approve_by->CurrentValue = $this->approve_by->FormValue;
     }
 
     /**
@@ -1653,6 +1679,8 @@ class NpdAdd extends Npd
         $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->approve_by->setDbValue($row['approve_by']);
     }
 
     // Return a row with default values
@@ -1725,6 +1753,8 @@ class NpdAdd extends Npd
         $row['readonly'] = $this->readonly->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['updated_at'] = $this->updated_at->CurrentValue;
+        $row['receipt_by'] = $this->receipt_by->CurrentValue;
+        $row['approve_by'] = $this->approve_by->CurrentValue;
         return $row;
     }
 
@@ -1885,6 +1915,10 @@ class NpdAdd extends Npd
         // created_at
 
         // updated_at
+
+        // receipt_by
+
+        // approve_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -2478,6 +2512,16 @@ class NpdAdd extends Npd
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
             $this->updated_at->ViewCustomAttributes = "";
 
+            // receipt_by
+            $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+            $this->receipt_by->ViewValue = FormatNumber($this->receipt_by->ViewValue, 0, -2, -2, -2);
+            $this->receipt_by->ViewCustomAttributes = "";
+
+            // approve_by
+            $this->approve_by->ViewValue = $this->approve_by->CurrentValue;
+            $this->approve_by->ViewValue = FormatNumber($this->approve_by->ViewValue, 0, -2, -2, -2);
+            $this->approve_by->ViewCustomAttributes = "";
+
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
@@ -2782,6 +2826,16 @@ class NpdAdd extends Npd
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
+
+            // approve_by
+            $this->approve_by->LinkCustomAttributes = "";
+            $this->approve_by->HrefValue = "";
+            $this->approve_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idpegawai
             $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -3515,6 +3569,18 @@ class NpdAdd extends Npd
             $this->status->EditValue = $this->status->options(true);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
+            // receipt_by
+            $this->receipt_by->EditAttrs["class"] = "form-control";
+            $this->receipt_by->EditCustomAttributes = "";
+            $this->receipt_by->EditValue = HtmlEncode($this->receipt_by->CurrentValue);
+            $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
+
+            // approve_by
+            $this->approve_by->EditAttrs["class"] = "form-control";
+            $this->approve_by->EditCustomAttributes = "";
+            $this->approve_by->EditValue = HtmlEncode($this->approve_by->CurrentValue);
+            $this->approve_by->PlaceHolder = RemoveHtml($this->approve_by->caption());
+
             // Add refer script
 
             // idpegawai
@@ -3760,6 +3826,14 @@ class NpdAdd extends Npd
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+
+            // approve_by
+            $this->approve_by->LinkCustomAttributes = "";
+            $this->approve_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -4156,6 +4230,22 @@ class NpdAdd extends Npd
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
+        if ($this->receipt_by->Required) {
+            if (!$this->receipt_by->IsDetailKey && EmptyValue($this->receipt_by->FormValue)) {
+                $this->receipt_by->addErrorMessage(str_replace("%s", $this->receipt_by->caption(), $this->receipt_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->receipt_by->FormValue)) {
+            $this->receipt_by->addErrorMessage($this->receipt_by->getErrorMessage(false));
+        }
+        if ($this->approve_by->Required) {
+            if (!$this->approve_by->IsDetailKey && EmptyValue($this->approve_by->FormValue)) {
+                $this->approve_by->addErrorMessage(str_replace("%s", $this->approve_by->caption(), $this->approve_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->approve_by->FormValue)) {
+            $this->approve_by->addErrorMessage($this->approve_by->getErrorMessage(false));
+        }
 
         // Validate detail grid
         $detailTblVar = explode(",", $this->getCurrentDetailTable());
@@ -4177,10 +4267,6 @@ class NpdAdd extends Npd
         }
         $detailPage = Container("NpdDesainGrid");
         if (in_array("npd_desain", $detailTblVar) && $detailPage->DetailAdd) {
-            $detailPage->validateGridForm();
-        }
-        $detailPage = Container("NpdTermsGrid");
-        if (in_array("npd_terms", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
 
@@ -4406,6 +4492,12 @@ class NpdAdd extends Npd
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", false);
 
+        // receipt_by
+        $this->receipt_by->setDbValueDef($rsnew, $this->receipt_by->CurrentValue, null, false);
+
+        // approve_by
+        $this->approve_by->setDbValueDef($rsnew, $this->approve_by->CurrentValue, null, false);
+
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
         $addRow = false;
@@ -4476,16 +4568,6 @@ class NpdAdd extends Npd
             if (in_array("npd_desain", $detailTblVar) && $detailPage->DetailAdd) {
                 $detailPage->idnpd->setSessionValue($this->id->CurrentValue); // Set master key
                 $Security->loadCurrentUserLevel($this->ProjectID . "npd_desain"); // Load user level of detail table
-                $addRow = $detailPage->gridInsert();
-                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                if (!$addRow) {
-                $detailPage->idnpd->setSessionValue(""); // Clear master key if insert failed
-                }
-            }
-            $detailPage = Container("NpdTermsGrid");
-            if (in_array("npd_terms", $detailTblVar) && $detailPage->DetailAdd) {
-                $detailPage->idnpd->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "npd_terms"); // Load user level of detail table
                 $addRow = $detailPage->gridInsert();
                 $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                 if (!$addRow) {
@@ -4622,24 +4704,6 @@ class NpdAdd extends Npd
                     $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
                 }
             }
-            if (in_array("npd_terms", $detailTblVar)) {
-                $detailPageObj = Container("NpdTermsGrid");
-                if ($detailPageObj->DetailAdd) {
-                    if ($this->CopyRecord) {
-                        $detailPageObj->CurrentMode = "copy";
-                    } else {
-                        $detailPageObj->CurrentMode = "add";
-                    }
-                    $detailPageObj->CurrentAction = "gridadd";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idnpd->IsDetailKey = true;
-                    $detailPageObj->idnpd->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
-                }
-            }
         }
     }
 
@@ -4664,7 +4728,6 @@ class NpdAdd extends Npd
         $pages->add('npd_confirm');
         $pages->add('npd_harga');
         $pages->add('npd_desain');
-        $pages->add('npd_terms');
         $this->DetailPages = $pages;
     }
 

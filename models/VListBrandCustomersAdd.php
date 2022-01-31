@@ -461,11 +461,11 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
+        $this->id->Visible = false;
         $this->idbrand->setVisibility();
         $this->idcustomer->setVisibility();
         $this->kode_customer->Visible = false;
         $this->nama_customer->Visible = false;
-        $this->id->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -618,13 +618,13 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     // Load default values
     protected function loadDefaultValues()
     {
+        $this->id->CurrentValue = 0;
         $this->idbrand->CurrentValue = 0;
         $this->idcustomer->CurrentValue = 0;
         $this->kode_customer->CurrentValue = null;
         $this->kode_customer->OldValue = $this->kode_customer->CurrentValue;
         $this->nama_customer->CurrentValue = null;
         $this->nama_customer->OldValue = $this->nama_customer->CurrentValue;
-        $this->id->CurrentValue = 0;
     }
 
     // Load form values
@@ -656,11 +656,7 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->id->Visible = false; // Disable update for API request
-            } else {
-                $this->id->setFormValue($val);
-            }
+            $this->id->setFormValue($val);
         }
     }
 
@@ -668,9 +664,9 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     public function restoreFormValues()
     {
         global $CurrentForm;
+                        $this->id->CurrentValue = $this->id->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->id->CurrentValue = $this->id->FormValue;
     }
 
     /**
@@ -720,11 +716,11 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         if (!$rs) {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->id->setDbValue($row['id']);
     }
 
     // Return a row with default values
@@ -732,11 +728,11 @@ class VListBrandCustomersAdd extends VListBrandCustomers
     {
         $this->loadDefaultValues();
         $row = [];
+        $row['id'] = $this->id->CurrentValue;
         $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['kode_customer'] = $this->kode_customer->CurrentValue;
         $row['nama_customer'] = $this->nama_customer->CurrentValue;
-        $row['id'] = $this->id->CurrentValue;
         return $row;
     }
 
@@ -768,6 +764,8 @@ class VListBrandCustomersAdd extends VListBrandCustomers
 
         // Common render codes for all row types
 
+        // id
+
         // idbrand
 
         // idcustomer
@@ -775,8 +773,6 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         // kode_customer
 
         // nama_customer
-
-        // id
         if ($this->RowType == ROWTYPE_VIEW) {
             // idbrand
             $curVal = trim(strval($this->idbrand->CurrentValue));
@@ -828,11 +824,6 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
 
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
-            $this->id->ViewCustomAttributes = "";
-
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
             $this->idbrand->HrefValue = "";
@@ -842,11 +833,6 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
             $this->idcustomer->TooltipValue = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -921,11 +907,6 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             }
             $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->CurrentValue = 0;
-
             // Add refer script
 
             // idbrand
@@ -935,10 +916,6 @@ class VListBrandCustomersAdd extends VListBrandCustomers
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -967,11 +944,6 @@ class VListBrandCustomersAdd extends VListBrandCustomers
         if ($this->idcustomer->Required) {
             if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
                 $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
-            }
-        }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
             }
         }
 
@@ -1022,9 +994,6 @@ class VListBrandCustomersAdd extends VListBrandCustomers
 
         // idcustomer
         $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
-
-        // id
-        $this->id->setDbValueDef($rsnew, $this->id->CurrentValue, 0, strval($this->id->CurrentValue) == "");
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

@@ -502,12 +502,12 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
 
         // Set up list options
         $this->setupListOptions();
-        $this->idcustomer->setVisibility();
-        $this->idbrand->setVisibility();
+        $this->id->Visible = false;
+        $this->idcustomer->Visible = false;
+        $this->idbrand->Visible = false;
         $this->kode_brand->setVisibility();
         $this->nama_brand->setVisibility();
         $this->jumlah_produk->setVisibility();
-        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -932,12 +932,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
     public function emptyRow()
     {
         global $CurrentForm;
-        if ($CurrentForm->hasValue("x_idcustomer") && $CurrentForm->hasValue("o_idcustomer") && $this->idcustomer->CurrentValue != $this->idcustomer->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_idbrand") && $CurrentForm->hasValue("o_idbrand") && $this->idbrand->CurrentValue != $this->idbrand->OldValue) {
-            return false;
-        }
         if ($CurrentForm->hasValue("x_kode_brand") && $CurrentForm->hasValue("o_kode_brand") && $this->kode_brand->CurrentValue != $this->kode_brand->OldValue) {
             return false;
         }
@@ -1028,8 +1022,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
     // Reset form status
     public function resetFormError()
     {
-        $this->idcustomer->clearErrorMessage();
-        $this->idbrand->clearErrorMessage();
         $this->kode_brand->clearErrorMessage();
         $this->nama_brand->clearErrorMessage();
         $this->jumlah_produk->clearErrorMessage();
@@ -1274,6 +1266,8 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
     // Load default values
     protected function loadDefaultValues()
     {
+        $this->id->CurrentValue = 0;
+        $this->id->OldValue = $this->id->CurrentValue;
         $this->idcustomer->CurrentValue = 0;
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
         $this->idbrand->CurrentValue = 0;
@@ -1284,8 +1278,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         $this->nama_brand->OldValue = $this->nama_brand->CurrentValue;
         $this->jumlah_produk->CurrentValue = 0;
         $this->jumlah_produk->OldValue = $this->jumlah_produk->CurrentValue;
-        $this->id->CurrentValue = 0;
-        $this->id->OldValue = $this->id->CurrentValue;
     }
 
     // Load form values
@@ -1294,32 +1286,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         // Load from form
         global $CurrentForm;
         $CurrentForm->FormName = $this->FormName;
-
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
-            } else {
-                $this->idcustomer->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_idcustomer")) {
-            $this->idcustomer->setOldValue($CurrentForm->getValue("o_idcustomer"));
-        }
-
-        // Check field name 'idbrand' first before field var 'x_idbrand'
-        $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
-        if (!$this->idbrand->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->idbrand->Visible = false; // Disable update for API request
-            } else {
-                $this->idbrand->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_idbrand")) {
-            $this->idbrand->setOldValue($CurrentForm->getValue("o_idbrand"));
-        }
 
         // Check field name 'kode_brand' first before field var 'x_kode_brand'
         $val = $CurrentForm->hasValue("kode_brand") ? $CurrentForm->getValue("kode_brand") : $CurrentForm->getValue("x_kode_brand");
@@ -1372,8 +1338,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
     {
         global $CurrentForm;
                         $this->id->CurrentValue = $this->id->FormValue;
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->kode_brand->CurrentValue = $this->kode_brand->FormValue;
         $this->nama_brand->CurrentValue = $this->nama_brand->FormValue;
         $this->jumlah_produk->CurrentValue = $this->jumlah_produk->FormValue;
@@ -1447,12 +1411,12 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         if (!$rs) {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->kode_brand->setDbValue($row['kode_brand']);
         $this->nama_brand->setDbValue($row['nama_brand']);
         $this->jumlah_produk->setDbValue($row['jumlah_produk']);
-        $this->id->setDbValue($row['id']);
     }
 
     // Return a row with default values
@@ -1460,12 +1424,12 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
     {
         $this->loadDefaultValues();
         $row = [];
+        $row['id'] = $this->id->CurrentValue;
         $row['idcustomer'] = $this->idcustomer->CurrentValue;
         $row['idbrand'] = $this->idbrand->CurrentValue;
         $row['kode_brand'] = $this->kode_brand->CurrentValue;
         $row['nama_brand'] = $this->nama_brand->CurrentValue;
         $row['jumlah_produk'] = $this->jumlah_produk->CurrentValue;
-        $row['id'] = $this->id->CurrentValue;
         return $row;
     }
 
@@ -1501,6 +1465,9 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
 
         // Common render codes for all row types
 
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
+
         // idcustomer
 
         // idbrand
@@ -1510,9 +1477,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         // nama_brand
 
         // jumlah_produk
-
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $curVal = trim(strval($this->idcustomer->CurrentValue));
@@ -1569,16 +1533,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
             $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
             $this->jumlah_produk->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
-
             // kode_brand
             $this->kode_brand->LinkCustomAttributes = "";
             $this->kode_brand->HrefValue = "";
@@ -1594,80 +1548,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
             $this->jumlah_produk->HrefValue = "";
             $this->jumlah_produk->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
-            } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
-            }
-
-            // idbrand
-            $this->idbrand->EditAttrs["class"] = "form-control";
-            $this->idbrand->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-            } else {
-                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idbrand->ViewValue !== null) { // Load from cache
-                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idbrand->EditValue = $arwrk;
-            }
-            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-
             // kode_brand
             $this->kode_brand->EditAttrs["class"] = "form-control";
             $this->kode_brand->EditCustomAttributes = "";
@@ -1693,14 +1573,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
 
             // Add refer script
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-
             // kode_brand
             $this->kode_brand->LinkCustomAttributes = "";
             $this->kode_brand->HrefValue = "";
@@ -1713,80 +1585,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
             $this->jumlah_produk->LinkCustomAttributes = "";
             $this->jumlah_produk->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->CurrentValue = GetForeignKeyValue($this->idcustomer->getSessionValue());
-                $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                    if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                        $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                        $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                        $ari = count($rswrk);
-                        if ($ari > 0) { // Lookup values found
-                            $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                            $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
-                        } else {
-                            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-                        }
-                    }
-                } else {
-                    $this->idcustomer->ViewValue = null;
-                }
-                $this->idcustomer->ViewCustomAttributes = "";
-            } else {
-                $curVal = trim(strval($this->idcustomer->CurrentValue));
-                if ($curVal != "") {
-                    $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->Lookup !== null && is_array($this->idcustomer->Lookup->Options) ? $curVal : null;
-                }
-                if ($this->idcustomer->ViewValue !== null) { // Load from cache
-                    $this->idcustomer->EditValue = array_values($this->idcustomer->Lookup->Options);
-                } else { // Lookup from database
-                    if ($curVal == "") {
-                        $filterWrk = "0=1";
-                    } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
-                    }
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    $arwrk = $rswrk;
-                    $this->idcustomer->EditValue = $arwrk;
-                }
-                $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
-            }
-
-            // idbrand
-            $this->idbrand->EditAttrs["class"] = "form-control";
-            $this->idbrand->EditCustomAttributes = "";
-            $curVal = trim(strval($this->idbrand->CurrentValue));
-            if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-            } else {
-                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->idbrand->ViewValue !== null) { // Load from cache
-                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->idbrand->EditValue = $arwrk;
-            }
-            $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
-
             // kode_brand
             $this->kode_brand->EditAttrs["class"] = "form-control";
             $this->kode_brand->EditCustomAttributes = "";
@@ -1800,14 +1598,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
             $this->jumlah_produk->EditCustomAttributes = "";
 
             // Edit refer script
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
 
             // kode_brand
             $this->kode_brand->LinkCustomAttributes = "";
@@ -1839,16 +1629,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         // Check if validation required
         if (!Config("SERVER_VALIDATE")) {
             return true;
-        }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
-            }
-        }
-        if ($this->idbrand->Required) {
-            if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
-                $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
-            }
         }
         if ($this->kode_brand->Required) {
             if (!$this->kode_brand->IsDetailKey && EmptyValue($this->kode_brand->FormValue)) {
@@ -1974,15 +1754,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // idcustomer
-            if ($this->idcustomer->getSessionValue() != "") {
-                $this->idcustomer->ReadOnly = true;
-            }
-            $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, $this->idcustomer->ReadOnly);
-
-            // idbrand
-            $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
-
             // kode_brand
             $this->kode_brand->setDbValueDef($rsnew, $this->kode_brand->CurrentValue, null, $this->kode_brand->ReadOnly);
 
@@ -2081,8 +1852,8 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         // Check referential integrity for master table 'v_list_customer_brands'
         $validMasterRecord = true;
         $masterFilter = $this->sqlMasterFilter_customer();
-        if (strval($this->idcustomer->CurrentValue) != "") {
-            $masterFilter = str_replace("@id@", AdjustSql($this->idcustomer->CurrentValue, "DB"), $masterFilter);
+        if ($this->idcustomer->getSessionValue() != "") {
+        $masterFilter = str_replace("@id@", AdjustSql($this->idcustomer->getSessionValue(), "DB"), $masterFilter);
         } else {
             $validMasterRecord = false;
         }
@@ -2103,12 +1874,6 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
         }
         $rsnew = [];
 
-        // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, 0, strval($this->idcustomer->CurrentValue) == "");
-
-        // idbrand
-        $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, strval($this->idbrand->CurrentValue) == "");
-
         // kode_brand
         $this->kode_brand->setDbValueDef($rsnew, $this->kode_brand->CurrentValue, null, false);
 
@@ -2117,6 +1882,11 @@ class VListCustomerBrandsGrid extends VListCustomerBrands
 
         // jumlah_produk
         $this->jumlah_produk->setDbValueDef($rsnew, $this->jumlah_produk->CurrentValue, 0, strval($this->jumlah_produk->CurrentValue) == "");
+
+        // idcustomer
+        if ($this->idcustomer->getSessionValue() != "") {
+            $rsnew['idcustomer'] = $this->idcustomer->getSessionValue();
+        }
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

@@ -214,8 +214,8 @@ loadjs.ready(["fnpd_termsedit", "datetimepicker"], function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->sifat_order->cellAttributes() ?>>
 <span id="el_npd_terms_sifat_order">
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x_sifat_order[]" id="x_sifat_order_707095" value="1"<?= ConvertToBool($Page->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Page->sifat_order->editAttributes() ?> aria-describedby="x_sifat_order_help">
-    <label class="custom-control-label" for="x_sifat_order_707095"></label>
+    <input type="checkbox" class="custom-control-input<?= $Page->sifat_order->isInvalidClass() ?>" data-table="npd_terms" data-field="x_sifat_order" name="x_sifat_order[]" id="x_sifat_order_224803" value="1"<?= ConvertToBool($Page->sifat_order->CurrentValue) ? " checked" : "" ?><?= $Page->sifat_order->editAttributes() ?> aria-describedby="x_sifat_order_help">
+    <label class="custom-control-label" for="x_sifat_order_224803"></label>
 </div>
 <?= $Page->sifat_order->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->sifat_order->getErrorMessage() ?></div>

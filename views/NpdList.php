@@ -168,6 +168,12 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->jenisproduk->Visible) { // jenisproduk ?>
         <th data-name="jenisproduk" class="<?= $Page->jenisproduk->headerCellClass() ?>"><div id="elh_npd_jenisproduk" class="npd_jenisproduk"><?= $Page->renderSort($Page->jenisproduk) ?></div></th>
 <?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <th data-name="receipt_by" class="<?= $Page->receipt_by->headerCellClass() ?>"><div id="elh_npd_receipt_by" class="npd_receipt_by"><?= $Page->renderSort($Page->receipt_by) ?></div></th>
+<?php } ?>
+<?php if ($Page->approve_by->Visible) { // approve_by ?>
+        <th data-name="approve_by" class="<?= $Page->approve_by->headerCellClass() ?>"><div id="elh_npd_approve_by" class="npd_approve_by"><?= $Page->renderSort($Page->approve_by) ?></div></th>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -320,6 +326,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_jenisproduk">
 <span<?= $Page->jenisproduk->viewAttributes() ?>>
 <?= $Page->jenisproduk->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <td data-name="receipt_by" <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_receipt_by">
+<span<?= $Page->receipt_by->viewAttributes() ?>>
+<?= $Page->receipt_by->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->approve_by->Visible) { // approve_by ?>
+        <td data-name="approve_by" <?= $Page->approve_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_approve_by">
+<span<?= $Page->approve_by->viewAttributes() ?>>
+<?= $Page->approve_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

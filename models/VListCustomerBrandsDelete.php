@@ -371,12 +371,12 @@ class VListCustomerBrandsDelete extends VListCustomerBrands
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->idcustomer->setVisibility();
-        $this->idbrand->setVisibility();
+        $this->id->Visible = false;
+        $this->idcustomer->Visible = false;
+        $this->idbrand->Visible = false;
         $this->kode_brand->setVisibility();
         $this->nama_brand->setVisibility();
         $this->jumlah_produk->setVisibility();
-        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -544,24 +544,24 @@ class VListCustomerBrandsDelete extends VListCustomerBrands
         if (!$rs) {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->kode_brand->setDbValue($row['kode_brand']);
         $this->nama_brand->setDbValue($row['nama_brand']);
         $this->jumlah_produk->setDbValue($row['jumlah_produk']);
-        $this->id->setDbValue($row['id']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
+        $row['id'] = null;
         $row['idcustomer'] = null;
         $row['idbrand'] = null;
         $row['kode_brand'] = null;
         $row['nama_brand'] = null;
         $row['jumlah_produk'] = null;
-        $row['id'] = null;
         return $row;
     }
 
@@ -577,6 +577,9 @@ class VListCustomerBrandsDelete extends VListCustomerBrands
 
         // Common render codes for all row types
 
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
+
         // idcustomer
 
         // idbrand
@@ -586,9 +589,6 @@ class VListCustomerBrandsDelete extends VListCustomerBrands
         // nama_brand
 
         // jumlah_produk
-
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $curVal = trim(strval($this->idcustomer->CurrentValue));
@@ -644,16 +644,6 @@ class VListCustomerBrandsDelete extends VListCustomerBrands
             $this->jumlah_produk->ViewValue = $this->jumlah_produk->CurrentValue;
             $this->jumlah_produk->ViewValue = FormatNumber($this->jumlah_produk->ViewValue, 0, -2, -2, -2);
             $this->jumlah_produk->ViewCustomAttributes = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
 
             // kode_brand
             $this->kode_brand->LinkCustomAttributes = "";

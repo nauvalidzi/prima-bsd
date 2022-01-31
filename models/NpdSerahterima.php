@@ -29,13 +29,12 @@ class NpdSerahterima extends DbTable
 
     // Fields
     public $id;
-    public $idpegawai;
     public $idcustomer;
-    public $tanggal_request;
-    public $tanggal_serahterima;
-    public $jenis_produk;
+    public $tgl_request;
+    public $tgl_serahterima;
     public $readonly;
     public $created_at;
+    public $receipt_by;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -76,54 +75,48 @@ class NpdSerahterima extends DbTable
         $this->id = new DbField('npd_serahterima', 'npd_serahterima', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
+        $this->id->IsForeignKey = true; // Foreign key field
         $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
-        // idpegawai
-        $this->idpegawai = new DbField('npd_serahterima', 'npd_serahterima', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idpegawai->Nullable = false; // NOT NULL field
-        $this->idpegawai->Required = true; // Required field
-        $this->idpegawai->Sortable = true; // Allow sort
-        $this->idpegawai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
-        $this->Fields['idpegawai'] = &$this->idpegawai;
-
         // idcustomer
-        $this->idcustomer = new DbField('npd_serahterima', 'npd_serahterima', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idcustomer = new DbField('npd_serahterima', 'npd_serahterima', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
+        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
         $this->Fields['idcustomer'] = &$this->idcustomer;
 
-        // tanggal_request
-        $this->tanggal_request = new DbField('npd_serahterima', 'npd_serahterima', 'x_tanggal_request', 'tanggal_request', '`tanggal_request`', CastDateFieldForLike("`tanggal_request`", 0, "DB"), 135, 19, 0, false, '`tanggal_request`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggal_request->Nullable = false; // NOT NULL field
-        $this->tanggal_request->Required = true; // Required field
-        $this->tanggal_request->Sortable = true; // Allow sort
-        $this->tanggal_request->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggal_request->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_request->Param, "CustomMsg");
-        $this->Fields['tanggal_request'] = &$this->tanggal_request;
+        // tgl_request
+        $this->tgl_request = new DbField('npd_serahterima', 'npd_serahterima', 'x_tgl_request', 'tgl_request', '`tgl_request`', CastDateFieldForLike("`tgl_request`", 0, "DB"), 133, 10, 0, false, '`tgl_request`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tgl_request->Nullable = false; // NOT NULL field
+        $this->tgl_request->Required = true; // Required field
+        $this->tgl_request->Sortable = true; // Allow sort
+        $this->tgl_request->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tgl_request->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_request->Param, "CustomMsg");
+        $this->Fields['tgl_request'] = &$this->tgl_request;
 
-        // tanggal_serahterima
-        $this->tanggal_serahterima = new DbField('npd_serahterima', 'npd_serahterima', 'x_tanggal_serahterima', 'tanggal_serahterima', '`tanggal_serahterima`', CastDateFieldForLike("`tanggal_serahterima`", 0, "DB"), 135, 19, 0, false, '`tanggal_serahterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggal_serahterima->Nullable = false; // NOT NULL field
-        $this->tanggal_serahterima->Required = true; // Required field
-        $this->tanggal_serahterima->Sortable = true; // Allow sort
-        $this->tanggal_serahterima->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggal_serahterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_serahterima->Param, "CustomMsg");
-        $this->Fields['tanggal_serahterima'] = &$this->tanggal_serahterima;
-
-        // jenis_produk
-        $this->jenis_produk = new DbField('npd_serahterima', 'npd_serahterima', 'x_jenis_produk', 'jenis_produk', '`jenis_produk`', '`jenis_produk`', 200, 50, -1, false, '`jenis_produk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jenis_produk->Nullable = false; // NOT NULL field
-        $this->jenis_produk->Required = true; // Required field
-        $this->jenis_produk->Sortable = true; // Allow sort
-        $this->jenis_produk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jenis_produk->Param, "CustomMsg");
-        $this->Fields['jenis_produk'] = &$this->jenis_produk;
+        // tgl_serahterima
+        $this->tgl_serahterima = new DbField('npd_serahterima', 'npd_serahterima', 'x_tgl_serahterima', 'tgl_serahterima', '`tgl_serahterima`', CastDateFieldForLike("`tgl_serahterima`", 0, "DB"), 133, 10, 0, false, '`tgl_serahterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tgl_serahterima->Nullable = false; // NOT NULL field
+        $this->tgl_serahterima->Required = true; // Required field
+        $this->tgl_serahterima->Sortable = true; // Allow sort
+        $this->tgl_serahterima->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tgl_serahterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgl_serahterima->Param, "CustomMsg");
+        $this->Fields['tgl_serahterima'] = &$this->tgl_serahterima;
 
         // readonly
         $this->readonly = new DbField('npd_serahterima', 'npd_serahterima', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
@@ -152,6 +145,23 @@ class NpdSerahterima extends DbTable
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
+
+        // receipt_by
+        $this->receipt_by = new DbField('npd_serahterima', 'npd_serahterima', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 3, 11, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->receipt_by->Sortable = true; // Allow sort
+        $this->receipt_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->receipt_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->receipt_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
+        $this->Fields['receipt_by'] = &$this->receipt_by;
     }
 
     // Field Visibility
@@ -189,6 +199,32 @@ class NpdSerahterima extends DbTable
         } else {
             $fld->setSort("");
         }
+    }
+
+    // Current detail table name
+    public function getCurrentDetailTable()
+    {
+        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE"));
+    }
+
+    public function setCurrentDetailTable($v)
+    {
+        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_DETAIL_TABLE")] = $v;
+    }
+
+    // Get detail url
+    public function getDetailUrl()
+    {
+        // Detail url
+        $detailUrl = "";
+        if ($this->getCurrentDetailTable() == "npd_sample") {
+            $detailUrl = Container("npd_sample")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
+        }
+        if ($detailUrl == "") {
+            $detailUrl = "NpdSerahterimaList";
+        }
+        return $detailUrl;
     }
 
     // Table level SQL
@@ -566,13 +602,12 @@ class NpdSerahterima extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->idpegawai->DbValue = $row['idpegawai'];
         $this->idcustomer->DbValue = $row['idcustomer'];
-        $this->tanggal_request->DbValue = $row['tanggal_request'];
-        $this->tanggal_serahterima->DbValue = $row['tanggal_serahterima'];
-        $this->jenis_produk->DbValue = $row['jenis_produk'];
+        $this->tgl_request->DbValue = $row['tgl_request'];
+        $this->tgl_serahterima->DbValue = $row['tgl_serahterima'];
         $this->readonly->DbValue = $row['readonly'];
         $this->created_at->DbValue = $row['created_at'];
+        $this->receipt_by->DbValue = $row['receipt_by'];
     }
 
     // Delete uploaded files
@@ -718,7 +753,11 @@ class NpdSerahterima extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("NpdSerahterimaEdit", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("NpdSerahterimaEdit", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("NpdSerahterimaEdit", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 
@@ -732,7 +771,11 @@ class NpdSerahterima extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("NpdSerahterimaAdd", $this->getUrlParm($parm));
+        if ($parm != "") {
+            $url = $this->keyUrl("NpdSerahterimaAdd", $this->getUrlParm($parm));
+        } else {
+            $url = $this->keyUrl("NpdSerahterimaAdd", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+        }
         return $this->addMasterUrl($url);
     }
 
@@ -894,13 +937,12 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->tanggal_request->setDbValue($row['tanggal_request']);
-        $this->tanggal_serahterima->setDbValue($row['tanggal_serahterima']);
-        $this->jenis_produk->setDbValue($row['jenis_produk']);
+        $this->tgl_request->setDbValue($row['tgl_request']);
+        $this->tgl_serahterima->setDbValue($row['tgl_serahterima']);
         $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
     }
 
     // Render list row values
@@ -915,47 +957,52 @@ SORTHTML;
 
         // id
 
-        // idpegawai
-
         // idcustomer
 
-        // tanggal_request
+        // tgl_request
 
-        // tanggal_serahterima
-
-        // jenis_produk
+        // tgl_serahterima
 
         // readonly
 
         // created_at
 
+        // receipt_by
+
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // idpegawai
-        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
-        $this->idpegawai->ViewValue = FormatNumber($this->idpegawai->ViewValue, 0, -2, -2, -2);
-        $this->idpegawai->ViewCustomAttributes = "";
-
         // idcustomer
-        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->idcustomer->CurrentValue));
+        if ($curVal != "") {
+            $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
+            if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
+                    $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                } else {
+                    $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                }
+            }
+        } else {
+            $this->idcustomer->ViewValue = null;
+        }
         $this->idcustomer->ViewCustomAttributes = "";
 
-        // tanggal_request
-        $this->tanggal_request->ViewValue = $this->tanggal_request->CurrentValue;
-        $this->tanggal_request->ViewValue = FormatDateTime($this->tanggal_request->ViewValue, 0);
-        $this->tanggal_request->ViewCustomAttributes = "";
+        // tgl_request
+        $this->tgl_request->ViewValue = $this->tgl_request->CurrentValue;
+        $this->tgl_request->ViewValue = FormatDateTime($this->tgl_request->ViewValue, 0);
+        $this->tgl_request->ViewCustomAttributes = "";
 
-        // tanggal_serahterima
-        $this->tanggal_serahterima->ViewValue = $this->tanggal_serahterima->CurrentValue;
-        $this->tanggal_serahterima->ViewValue = FormatDateTime($this->tanggal_serahterima->ViewValue, 0);
-        $this->tanggal_serahterima->ViewCustomAttributes = "";
-
-        // jenis_produk
-        $this->jenis_produk->ViewValue = $this->jenis_produk->CurrentValue;
-        $this->jenis_produk->ViewCustomAttributes = "";
+        // tgl_serahterima
+        $this->tgl_serahterima->ViewValue = $this->tgl_serahterima->CurrentValue;
+        $this->tgl_serahterima->ViewValue = FormatDateTime($this->tgl_serahterima->ViewValue, 0);
+        $this->tgl_serahterima->ViewCustomAttributes = "";
 
         // readonly
         if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -970,35 +1017,46 @@ SORTHTML;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
+        // receipt_by
+        $curVal = trim(strval($this->receipt_by->CurrentValue));
+        if ($curVal != "") {
+            $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+            if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                } else {
+                    $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->receipt_by->ViewValue = null;
+        }
+        $this->receipt_by->ViewCustomAttributes = "";
+
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
-
-        // idpegawai
-        $this->idpegawai->LinkCustomAttributes = "";
-        $this->idpegawai->HrefValue = "";
-        $this->idpegawai->TooltipValue = "";
 
         // idcustomer
         $this->idcustomer->LinkCustomAttributes = "";
         $this->idcustomer->HrefValue = "";
         $this->idcustomer->TooltipValue = "";
 
-        // tanggal_request
-        $this->tanggal_request->LinkCustomAttributes = "";
-        $this->tanggal_request->HrefValue = "";
-        $this->tanggal_request->TooltipValue = "";
+        // tgl_request
+        $this->tgl_request->LinkCustomAttributes = "";
+        $this->tgl_request->HrefValue = "";
+        $this->tgl_request->TooltipValue = "";
 
-        // tanggal_serahterima
-        $this->tanggal_serahterima->LinkCustomAttributes = "";
-        $this->tanggal_serahterima->HrefValue = "";
-        $this->tanggal_serahterima->TooltipValue = "";
-
-        // jenis_produk
-        $this->jenis_produk->LinkCustomAttributes = "";
-        $this->jenis_produk->HrefValue = "";
-        $this->jenis_produk->TooltipValue = "";
+        // tgl_serahterima
+        $this->tgl_serahterima->LinkCustomAttributes = "";
+        $this->tgl_serahterima->HrefValue = "";
+        $this->tgl_serahterima->TooltipValue = "";
 
         // readonly
         $this->readonly->LinkCustomAttributes = "";
@@ -1009,6 +1067,11 @@ SORTHTML;
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
+
+        // receipt_by
+        $this->receipt_by->LinkCustomAttributes = "";
+        $this->receipt_by->HrefValue = "";
+        $this->receipt_by->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1031,38 +1094,22 @@ SORTHTML;
         $this->id->EditValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
-        // idpegawai
-        $this->idpegawai->EditAttrs["class"] = "form-control";
-        $this->idpegawai->EditCustomAttributes = "";
-        $this->idpegawai->EditValue = $this->idpegawai->CurrentValue;
-        $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
-
         // idcustomer
         $this->idcustomer->EditAttrs["class"] = "form-control";
         $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
         $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
 
-        // tanggal_request
-        $this->tanggal_request->EditAttrs["class"] = "form-control";
-        $this->tanggal_request->EditCustomAttributes = "";
-        $this->tanggal_request->EditValue = FormatDateTime($this->tanggal_request->CurrentValue, 8);
-        $this->tanggal_request->PlaceHolder = RemoveHtml($this->tanggal_request->caption());
+        // tgl_request
+        $this->tgl_request->EditAttrs["class"] = "form-control";
+        $this->tgl_request->EditCustomAttributes = "";
+        $this->tgl_request->EditValue = FormatDateTime($this->tgl_request->CurrentValue, 8);
+        $this->tgl_request->PlaceHolder = RemoveHtml($this->tgl_request->caption());
 
-        // tanggal_serahterima
-        $this->tanggal_serahterima->EditAttrs["class"] = "form-control";
-        $this->tanggal_serahterima->EditCustomAttributes = "";
-        $this->tanggal_serahterima->EditValue = FormatDateTime($this->tanggal_serahterima->CurrentValue, 8);
-        $this->tanggal_serahterima->PlaceHolder = RemoveHtml($this->tanggal_serahterima->caption());
-
-        // jenis_produk
-        $this->jenis_produk->EditAttrs["class"] = "form-control";
-        $this->jenis_produk->EditCustomAttributes = "";
-        if (!$this->jenis_produk->Raw) {
-            $this->jenis_produk->CurrentValue = HtmlDecode($this->jenis_produk->CurrentValue);
-        }
-        $this->jenis_produk->EditValue = $this->jenis_produk->CurrentValue;
-        $this->jenis_produk->PlaceHolder = RemoveHtml($this->jenis_produk->caption());
+        // tgl_serahterima
+        $this->tgl_serahterima->EditAttrs["class"] = "form-control";
+        $this->tgl_serahterima->EditCustomAttributes = "";
+        $this->tgl_serahterima->EditValue = FormatDateTime($this->tgl_serahterima->CurrentValue, 8);
+        $this->tgl_serahterima->PlaceHolder = RemoveHtml($this->tgl_serahterima->caption());
 
         // readonly
         $this->readonly->EditCustomAttributes = "";
@@ -1074,6 +1121,11 @@ SORTHTML;
         $this->created_at->EditCustomAttributes = "";
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
+
+        // receipt_by
+        $this->receipt_by->EditAttrs["class"] = "form-control";
+        $this->receipt_by->EditCustomAttributes = "";
+        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1103,21 +1155,19 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->tanggal_request);
-                    $doc->exportCaption($this->tanggal_serahterima);
-                    $doc->exportCaption($this->jenis_produk);
+                    $doc->exportCaption($this->tgl_request);
+                    $doc->exportCaption($this->tgl_serahterima);
                     $doc->exportCaption($this->readonly);
                     $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->receipt_by);
                 } else {
-                    $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->tanggal_request);
-                    $doc->exportCaption($this->tanggal_serahterima);
-                    $doc->exportCaption($this->jenis_produk);
+                    $doc->exportCaption($this->tgl_request);
+                    $doc->exportCaption($this->tgl_serahterima);
                     $doc->exportCaption($this->readonly);
                     $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->receipt_by);
                 }
                 $doc->endExportRow();
             }
@@ -1147,21 +1197,19 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->tanggal_request);
-                        $doc->exportField($this->tanggal_serahterima);
-                        $doc->exportField($this->jenis_produk);
+                        $doc->exportField($this->tgl_request);
+                        $doc->exportField($this->tgl_serahterima);
                         $doc->exportField($this->readonly);
                         $doc->exportField($this->created_at);
+                        $doc->exportField($this->receipt_by);
                     } else {
-                        $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->tanggal_request);
-                        $doc->exportField($this->tanggal_serahterima);
-                        $doc->exportField($this->jenis_produk);
+                        $doc->exportField($this->tgl_request);
+                        $doc->exportField($this->tgl_serahterima);
                         $doc->exportField($this->readonly);
                         $doc->exportField($this->created_at);
+                        $doc->exportField($this->receipt_by);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1229,6 +1277,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['created_at'] = date('Y-m-d H:i:s');
         return true;
     }
 

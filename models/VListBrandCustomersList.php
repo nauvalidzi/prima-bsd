@@ -565,11 +565,11 @@ class VListBrandCustomersList extends VListBrandCustomers
 
         // Set up list options
         $this->setupListOptions();
-        $this->idbrand->setVisibility();
-        $this->idcustomer->setVisibility();
+        $this->id->Visible = false;
+        $this->idbrand->Visible = false;
+        $this->idcustomer->Visible = false;
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
-        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -1132,8 +1132,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idbrand); // idbrand
-            $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->kode_customer); // kode_customer
             $this->updateSort($this->nama_customer); // nama_customer
             $this->setStartRecordNumber(1); // Reset start position
@@ -1187,11 +1185,11 @@ class VListBrandCustomersList extends VListBrandCustomers
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
+                $this->id->setSort("");
                 $this->idbrand->setSort("");
                 $this->idcustomer->setSort("");
                 $this->kode_customer->setSort("");
                 $this->nama_customer->setSort("");
-                $this->id->setSort("");
             }
 
             // Reset start position
@@ -1570,22 +1568,22 @@ class VListBrandCustomersList extends VListBrandCustomers
         if (!$rs) {
             return;
         }
+        $this->id->setDbValue($row['id']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kode_customer->setDbValue($row['kode_customer']);
         $this->nama_customer->setDbValue($row['nama_customer']);
-        $this->id->setDbValue($row['id']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
+        $row['id'] = null;
         $row['idbrand'] = null;
         $row['idcustomer'] = null;
         $row['kode_customer'] = null;
         $row['nama_customer'] = null;
-        $row['id'] = null;
         return $row;
     }
 
@@ -1623,6 +1621,9 @@ class VListBrandCustomersList extends VListBrandCustomers
 
         // Common render codes for all row types
 
+        // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
+
         // idbrand
 
         // idcustomer
@@ -1630,9 +1631,6 @@ class VListBrandCustomersList extends VListBrandCustomers
         // kode_customer
 
         // nama_customer
-
-        // id
-        $this->id->CellCssStyle = "white-space: nowrap;";
         if ($this->RowType == ROWTYPE_VIEW) {
             // idbrand
             $curVal = trim(strval($this->idbrand->CurrentValue));
@@ -1683,16 +1681,6 @@ class VListBrandCustomersList extends VListBrandCustomers
             // nama_customer
             $this->nama_customer->ViewValue = $this->nama_customer->CurrentValue;
             $this->nama_customer->ViewCustomAttributes = "";
-
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
-
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
 
             // kode_customer
             $this->kode_customer->LinkCustomAttributes = "";

@@ -92,6 +92,13 @@ if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd") {
     }
 }
 ?>
+<?php
+if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd_serahterima") {
+    if ($Page->MasterRecordExists) {
+        include_once "views/NpdSerahterimaMaster.php";
+    }
+}
+?>
 <?php } ?>
 <?php
 $Page->renderOtherOptions();
@@ -143,6 +150,10 @@ $Page->showMessage();
 <?php if ($Page->getCurrentMasterTable() == "npd" && $Page->CurrentAction) { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
+<?php } ?>
+<?php if ($Page->getCurrentMasterTable() == "npd_serahterima" && $Page->CurrentAction) { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd_serahterima">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idserahterima->getSessionValue()) ?>">
 <?php } ?>
 <div id="gmp_npd_sample" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>

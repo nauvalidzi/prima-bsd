@@ -33,6 +33,7 @@ class NpdReview extends DbTable
     public $idnpd_sample;
     public $tanggal_review;
     public $tanggal_submit;
+    public $ukuran;
     public $wadah;
     public $bentuk_opsi;
     public $bentuk_revisi;
@@ -60,7 +61,7 @@ class NpdReview extends DbTable
     public $status;
     public $created_at;
     public $readonly;
-    public $ukuran;
+    public $review_by;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -160,6 +161,12 @@ class NpdReview extends DbTable
         $this->tanggal_submit->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->tanggal_submit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_submit->Param, "CustomMsg");
         $this->Fields['tanggal_submit'] = &$this->tanggal_submit;
+
+        // ukuran
+        $this->ukuran = new DbField('npd_review', 'npd_review', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 50, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->ukuran->Sortable = true; // Allow sort
+        $this->ukuran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuran->Param, "CustomMsg");
+        $this->Fields['ukuran'] = &$this->ukuran;
 
         // wadah
         $this->wadah = new DbField('npd_review', 'npd_review', 'x_wadah', 'wadah', '`wadah`', '`wadah`', 200, 50, -1, false, '`wadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -481,11 +488,12 @@ class NpdReview extends DbTable
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
         $this->Fields['readonly'] = &$this->readonly;
 
-        // ukuran
-        $this->ukuran = new DbField('npd_review', 'npd_review', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 50, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->ukuran->Sortable = true; // Allow sort
-        $this->ukuran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuran->Param, "CustomMsg");
-        $this->Fields['ukuran'] = &$this->ukuran;
+        // review_by
+        $this->review_by = new DbField('npd_review', 'npd_review', 'x_review_by', 'review_by', '`review_by`', '`review_by`', 3, 11, -1, false, '`review_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->review_by->Sortable = true; // Allow sort
+        $this->review_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->review_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->review_by->Param, "CustomMsg");
+        $this->Fields['review_by'] = &$this->review_by;
     }
 
     // Field Visibility
@@ -956,6 +964,7 @@ class NpdReview extends DbTable
         $this->idnpd_sample->DbValue = $row['idnpd_sample'];
         $this->tanggal_review->DbValue = $row['tanggal_review'];
         $this->tanggal_submit->DbValue = $row['tanggal_submit'];
+        $this->ukuran->DbValue = $row['ukuran'];
         $this->wadah->DbValue = $row['wadah'];
         $this->bentuk_opsi->DbValue = $row['bentuk_opsi'];
         $this->bentuk_revisi->DbValue = $row['bentuk_revisi'];
@@ -983,7 +992,7 @@ class NpdReview extends DbTable
         $this->status->DbValue = $row['status'];
         $this->created_at->DbValue = $row['created_at'];
         $this->readonly->DbValue = $row['readonly'];
-        $this->ukuran->DbValue = $row['ukuran'];
+        $this->review_by->DbValue = $row['review_by'];
     }
 
     // Delete uploaded files
@@ -1313,6 +1322,7 @@ SORTHTML;
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->tanggal_review->setDbValue($row['tanggal_review']);
         $this->tanggal_submit->setDbValue($row['tanggal_submit']);
+        $this->ukuran->setDbValue($row['ukuran']);
         $this->wadah->setDbValue($row['wadah']);
         $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
         $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
@@ -1340,7 +1350,7 @@ SORTHTML;
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->ukuran->setDbValue($row['ukuran']);
+        $this->review_by->setDbValue($row['review_by']);
     }
 
     // Render list row values
@@ -1362,6 +1372,8 @@ SORTHTML;
         // tanggal_review
 
         // tanggal_submit
+
+        // ukuran
 
         // wadah
 
@@ -1417,7 +1429,7 @@ SORTHTML;
 
         // readonly
 
-        // ukuran
+        // review_by
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1482,6 +1494,10 @@ SORTHTML;
         $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
         $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
         $this->tanggal_submit->ViewCustomAttributes = "";
+
+        // ukuran
+        $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
+        $this->ukuran->ViewCustomAttributes = "";
 
         // wadah
         $this->wadah->ViewValue = $this->wadah->CurrentValue;
@@ -1644,9 +1660,10 @@ SORTHTML;
         }
         $this->readonly->ViewCustomAttributes = "";
 
-        // ukuran
-        $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-        $this->ukuran->ViewCustomAttributes = "";
+        // review_by
+        $this->review_by->ViewValue = $this->review_by->CurrentValue;
+        $this->review_by->ViewValue = FormatNumber($this->review_by->ViewValue, 0, -2, -2, -2);
+        $this->review_by->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1672,6 +1689,11 @@ SORTHTML;
         $this->tanggal_submit->LinkCustomAttributes = "";
         $this->tanggal_submit->HrefValue = "";
         $this->tanggal_submit->TooltipValue = "";
+
+        // ukuran
+        $this->ukuran->LinkCustomAttributes = "";
+        $this->ukuran->HrefValue = "";
+        $this->ukuran->TooltipValue = "";
 
         // wadah
         $this->wadah->LinkCustomAttributes = "";
@@ -1808,10 +1830,10 @@ SORTHTML;
         $this->readonly->HrefValue = "";
         $this->readonly->TooltipValue = "";
 
-        // ukuran
-        $this->ukuran->LinkCustomAttributes = "";
-        $this->ukuran->HrefValue = "";
-        $this->ukuran->TooltipValue = "";
+        // review_by
+        $this->review_by->LinkCustomAttributes = "";
+        $this->review_by->HrefValue = "";
+        $this->review_by->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1882,6 +1904,15 @@ SORTHTML;
         $this->tanggal_submit->EditCustomAttributes = "";
         $this->tanggal_submit->EditValue = FormatDateTime($this->tanggal_submit->CurrentValue, 8);
         $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
+
+        // ukuran
+        $this->ukuran->EditAttrs["class"] = "form-control";
+        $this->ukuran->EditCustomAttributes = "";
+        if (!$this->ukuran->Raw) {
+            $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
+        }
+        $this->ukuran->EditValue = $this->ukuran->CurrentValue;
+        $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
 
         // wadah
         $this->wadah->EditAttrs["class"] = "form-control";
@@ -2068,14 +2099,11 @@ SORTHTML;
         $this->readonly->EditValue = $this->readonly->options(false);
         $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
 
-        // ukuran
-        $this->ukuran->EditAttrs["class"] = "form-control";
-        $this->ukuran->EditCustomAttributes = "";
-        if (!$this->ukuran->Raw) {
-            $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-        }
-        $this->ukuran->EditValue = $this->ukuran->CurrentValue;
-        $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
+        // review_by
+        $this->review_by->EditAttrs["class"] = "form-control";
+        $this->review_by->EditCustomAttributes = "";
+        $this->review_by->EditValue = $this->review_by->CurrentValue;
+        $this->review_by->PlaceHolder = RemoveHtml($this->review_by->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2109,6 +2137,7 @@ SORTHTML;
                     $doc->exportCaption($this->idnpd_sample);
                     $doc->exportCaption($this->tanggal_review);
                     $doc->exportCaption($this->tanggal_submit);
+                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->wadah);
                     $doc->exportCaption($this->bentuk_opsi);
                     $doc->exportCaption($this->bentuk_revisi);
@@ -2134,13 +2163,14 @@ SORTHTML;
                     $doc->exportCaption($this->efeknegatif_revisi);
                     $doc->exportCaption($this->kesimpulan);
                     $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->ukuran);
+                    $doc->exportCaption($this->review_by);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->idnpd_sample);
                     $doc->exportCaption($this->tanggal_review);
                     $doc->exportCaption($this->tanggal_submit);
+                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->wadah);
                     $doc->exportCaption($this->bentuk_opsi);
                     $doc->exportCaption($this->bentuk_revisi);
@@ -2168,7 +2198,7 @@ SORTHTML;
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->readonly);
-                    $doc->exportCaption($this->ukuran);
+                    $doc->exportCaption($this->review_by);
                 }
                 $doc->endExportRow();
             }
@@ -2202,6 +2232,7 @@ SORTHTML;
                         $doc->exportField($this->idnpd_sample);
                         $doc->exportField($this->tanggal_review);
                         $doc->exportField($this->tanggal_submit);
+                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->wadah);
                         $doc->exportField($this->bentuk_opsi);
                         $doc->exportField($this->bentuk_revisi);
@@ -2227,13 +2258,14 @@ SORTHTML;
                         $doc->exportField($this->efeknegatif_revisi);
                         $doc->exportField($this->kesimpulan);
                         $doc->exportField($this->status);
-                        $doc->exportField($this->ukuran);
+                        $doc->exportField($this->review_by);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
                         $doc->exportField($this->idnpd_sample);
                         $doc->exportField($this->tanggal_review);
                         $doc->exportField($this->tanggal_submit);
+                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->wadah);
                         $doc->exportField($this->bentuk_opsi);
                         $doc->exportField($this->bentuk_revisi);
@@ -2261,7 +2293,7 @@ SORTHTML;
                         $doc->exportField($this->status);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->readonly);
-                        $doc->exportField($this->ukuran);
+                        $doc->exportField($this->review_by);
                     }
                     $doc->endExportRow($rowCnt);
                 }

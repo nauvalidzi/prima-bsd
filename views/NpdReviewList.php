@@ -160,11 +160,14 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->tanggal_submit->Visible) { // tanggal_submit ?>
         <th data-name="tanggal_submit" class="<?= $Page->tanggal_submit->headerCellClass() ?>"><div id="elh_npd_review_tanggal_submit" class="npd_review_tanggal_submit"><?= $Page->renderSort($Page->tanggal_submit) ?></div></th>
 <?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
+<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_npd_review_status" class="npd_review_status"><?= $Page->renderSort($Page->status) ?></div></th>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
+<?php if ($Page->review_by->Visible) { // review_by ?>
+        <th data-name="review_by" class="<?= $Page->review_by->headerCellClass() ?>"><div id="elh_npd_review_review_by" class="npd_review_review_by"><?= $Page->renderSort($Page->review_by) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -265,6 +268,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->ukuran->Visible) { // ukuran ?>
+        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_ukuran">
+<span<?= $Page->ukuran->viewAttributes() ?>>
+<?= $Page->ukuran->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->status->Visible) { // status ?>
         <td data-name="status" <?= $Page->status->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_review_status">
@@ -273,11 +284,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_review_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
+    <?php if ($Page->review_by->Visible) { // review_by ?>
+        <td data-name="review_by" <?= $Page->review_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_review_review_by">
+<span<?= $Page->review_by->viewAttributes() ?>>
+<?= $Page->review_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

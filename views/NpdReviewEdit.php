@@ -22,6 +22,7 @@ loadjs.ready("head", function () {
     fnpd_reviewedit.addFields([
         ["tanggal_review", [fields.tanggal_review.visible && fields.tanggal_review.required ? ew.Validators.required(fields.tanggal_review.caption) : null, ew.Validators.datetime(0)], fields.tanggal_review.isInvalid],
         ["tanggal_submit", [fields.tanggal_submit.visible && fields.tanggal_submit.required ? ew.Validators.required(fields.tanggal_submit.caption) : null, ew.Validators.datetime(0)], fields.tanggal_submit.isInvalid],
+        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["wadah", [fields.wadah.visible && fields.wadah.required ? ew.Validators.required(fields.wadah.caption) : null], fields.wadah.isInvalid],
         ["bentuk_opsi", [fields.bentuk_opsi.visible && fields.bentuk_opsi.required ? ew.Validators.required(fields.bentuk_opsi.caption) : null], fields.bentuk_opsi.isInvalid],
         ["bentuk_revisi", [fields.bentuk_revisi.visible && fields.bentuk_revisi.required ? ew.Validators.required(fields.bentuk_revisi.caption) : null], fields.bentuk_revisi.isInvalid],
@@ -47,7 +48,7 @@ loadjs.ready("head", function () {
         ["efeknegatif_revisi", [fields.efeknegatif_revisi.visible && fields.efeknegatif_revisi.required ? ew.Validators.required(fields.efeknegatif_revisi.caption) : null], fields.efeknegatif_revisi.isInvalid],
         ["kesimpulan", [fields.kesimpulan.visible && fields.kesimpulan.required ? ew.Validators.required(fields.kesimpulan.caption) : null], fields.kesimpulan.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid]
+        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null, ew.Validators.integer], fields.review_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -186,6 +187,18 @@ loadjs.ready(["fnpd_reviewedit", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->ukuran->Visible) { // ukuran ?>
+    <div id="r_ukuran" class="form-group row">
+        <label id="elh_npd_review_ukuran" for="x_ukuran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ukuran->caption() ?><?= $Page->ukuran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ukuran->cellAttributes() ?>>
+<span id="el_npd_review_ukuran">
+<input type="<?= $Page->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x_ukuran" id="x_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ukuran->getPlaceHolder()) ?>" value="<?= $Page->ukuran->EditValue ?>"<?= $Page->ukuran->editAttributes() ?> aria-describedby="x_ukuran_help">
+<?= $Page->ukuran->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ukuran->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -730,14 +743,14 @@ loadjs.ready(["fnpd_reviewedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <div id="r_ukuran" class="form-group row">
-        <label id="elh_npd_review_ukuran" for="x_ukuran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ukuran->caption() ?><?= $Page->ukuran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el_npd_review_ukuran">
-<input type="<?= $Page->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x_ukuran" id="x_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ukuran->getPlaceHolder()) ?>" value="<?= $Page->ukuran->EditValue ?>"<?= $Page->ukuran->editAttributes() ?> aria-describedby="x_ukuran_help">
-<?= $Page->ukuran->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->ukuran->getErrorMessage() ?></div>
+<?php if ($Page->review_by->Visible) { // review_by ?>
+    <div id="r_review_by" class="form-group row">
+        <label id="elh_npd_review_review_by" for="x_review_by" class="<?= $Page->LeftColumnClass ?>"><?= $Page->review_by->caption() ?><?= $Page->review_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->review_by->cellAttributes() ?>>
+<span id="el_npd_review_review_by">
+<input type="<?= $Page->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x_review_by" id="x_review_by" size="30" placeholder="<?= HtmlEncode($Page->review_by->getPlaceHolder()) ?>" value="<?= $Page->review_by->EditValue ?>"<?= $Page->review_by->editAttributes() ?> aria-describedby="x_review_by_help">
+<?= $Page->review_by->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->review_by->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

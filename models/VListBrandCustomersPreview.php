@@ -387,11 +387,11 @@ class VListBrandCustomersPreview extends VListBrandCustomers
 
         // Set up list options
         $this->setupListOptions();
-        $this->idbrand->setVisibility();
-        $this->idcustomer->setVisibility();
+        $this->id->Visible = false;
+        $this->idbrand->Visible = false;
+        $this->idcustomer->Visible = false;
         $this->kode_customer->setVisibility();
         $this->nama_customer->setVisibility();
-        $this->id->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -479,11 +479,11 @@ class VListBrandCustomersPreview extends VListBrandCustomers
             $this->StartRecord = 1;
             $this->CurrentOrder = "";
             $this->CurrentOrderType = "";
+            $this->id->setSort("");
             $this->idbrand->setSort("");
             $this->idcustomer->setSort("");
             $this->kode_customer->setSort("");
             $this->nama_customer->setSort("");
-            $this->id->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -495,8 +495,6 @@ class VListBrandCustomersPreview extends VListBrandCustomers
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->idbrand); // idbrand
-            $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->kode_customer); // kode_customer
             $this->updateSort($this->nama_customer); // nama_customer
         }

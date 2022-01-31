@@ -477,7 +477,6 @@ class NpdSampleAdd extends NpdSample
         $this->jumlah->setVisibility();
         $this->status->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->setVisibility();
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -655,7 +654,6 @@ class NpdSampleAdd extends NpdSample
         $this->status->CurrentValue = 0;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
         $this->readonly->CurrentValue = 0;
     }
 
@@ -765,16 +763,6 @@ class NpdSampleAdd extends NpdSample
             }
         }
 
-        // Check field name 'created_by' first before field var 'x_created_by'
-        $val = $CurrentForm->hasValue("created_by") ? $CurrentForm->getValue("created_by") : $CurrentForm->getValue("x_created_by");
-        if (!$this->created_by->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->created_by->Visible = false; // Disable update for API request
-            } else {
-                $this->created_by->setFormValue($val);
-            }
-        }
-
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
     }
@@ -793,7 +781,6 @@ class NpdSampleAdd extends NpdSample
         $this->bau->CurrentValue = $this->bau->FormValue;
         $this->fungsi->CurrentValue = $this->fungsi->FormValue;
         $this->jumlah->CurrentValue = $this->jumlah->FormValue;
-        $this->created_by->CurrentValue = $this->created_by->FormValue;
     }
 
     /**
@@ -818,15 +805,6 @@ class NpdSampleAdd extends NpdSample
         if ($row) {
             $res = true;
             $this->loadRowValues($row); // Load row values
-        }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("add");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
         }
         return $res;
     }
@@ -865,7 +843,6 @@ class NpdSampleAdd extends NpdSample
         $this->jumlah->setDbValue($row['jumlah']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -887,7 +864,6 @@ class NpdSampleAdd extends NpdSample
         $row['jumlah'] = $this->jumlah->CurrentValue;
         $row['status'] = $this->status->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
-        $row['created_by'] = $this->created_by->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
         return $row;
     }
@@ -945,8 +921,6 @@ class NpdSampleAdd extends NpdSample
         // status
 
         // created_at
-
-        // created_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1026,11 +1000,6 @@ class NpdSampleAdd extends NpdSample
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
                 $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -1088,11 +1057,6 @@ class NpdSampleAdd extends NpdSample
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
             $this->jumlah->TooltipValue = "";
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -1224,11 +1188,6 @@ class NpdSampleAdd extends NpdSample
             $this->jumlah->EditValue = HtmlEncode($this->jumlah->CurrentValue);
             $this->jumlah->PlaceHolder = RemoveHtml($this->jumlah->caption());
 
-            // created_by
-            $this->created_by->EditAttrs["class"] = "form-control";
-            $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
-
             // Add refer script
 
             // idnpd
@@ -1270,10 +1229,6 @@ class NpdSampleAdd extends NpdSample
             // jumlah
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1350,11 +1305,6 @@ class NpdSampleAdd extends NpdSample
         if (!CheckInteger($this->jumlah->FormValue)) {
             $this->jumlah->addErrorMessage($this->jumlah->getErrorMessage(false));
         }
-        if ($this->created_by->Required) {
-            if (!$this->created_by->IsDetailKey && EmptyValue($this->created_by->FormValue)) {
-                $this->created_by->addErrorMessage(str_replace("%s", $this->created_by->caption(), $this->created_by->RequiredErrorMessage));
-            }
-        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -1372,18 +1322,6 @@ class NpdSampleAdd extends NpdSample
     protected function addRow($rsold = null)
     {
         global $Language, $Security;
-
-        // Check if valid User ID
-        $validUser = false;
-        if ($Security->currentUserID() != "" && !EmptyValue($this->created_by->CurrentValue) && !$Security->isAdmin()) { // Non system admin
-            $validUser = $Security->isValidUserID($this->created_by->CurrentValue);
-            if (!$validUser) {
-                $userIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedUserID"));
-                $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
-                $this->setFailureMessage($userIdMsg);
-                return false;
-            }
-        }
 
         // Check if valid key values for master user
         if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
@@ -1484,9 +1422,6 @@ class NpdSampleAdd extends NpdSample
         // jumlah
         $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, strval($this->jumlah->CurrentValue) == "");
 
-        // created_by
-        $this->created_by->setDbValueDef($rsnew, $this->created_by->CurrentValue, null, false);
-
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
         $addRow = false;
@@ -1524,16 +1459,6 @@ class NpdSampleAdd extends NpdSample
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
         return $addRow;
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
     }
 
     // Set up master/detail based on QueryString
@@ -1576,6 +1501,20 @@ class NpdSampleAdd extends NpdSample
                     $validMaster = false;
                 }
             }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Get("fk_id", Get("idserahterima"))) !== null) {
+                    $masterTbl->id->setQueryStringValue($parm);
+                    $this->idserahterima->setQueryStringValue($masterTbl->id->QueryStringValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->QueryStringValue);
+                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
         } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
             $masterTblVar = $master;
             if ($masterTblVar == "") {
@@ -1611,6 +1550,20 @@ class NpdSampleAdd extends NpdSample
                     $validMaster = false;
                 }
             }
+            if ($masterTblVar == "npd_serahterima") {
+                $validMaster = true;
+                $masterTbl = Container("npd_serahterima");
+                if (($parm = Post("fk_id", Post("idserahterima"))) !== null) {
+                    $masterTbl->id->setFormValue($parm);
+                    $this->idserahterima->setFormValue($masterTbl->id->FormValue);
+                    $this->idserahterima->setSessionValue($this->idserahterima->FormValue);
+                    if (!is_numeric($masterTbl->id->FormValue)) {
+                        $validMaster = false;
+                    }
+                } else {
+                    $validMaster = false;
+                }
+            }
         }
         if ($validMaster) {
             // Save current master table
@@ -1631,6 +1584,11 @@ class NpdSampleAdd extends NpdSample
             if ($masterTblVar != "npd") {
                 if ($this->idnpd->CurrentValue == "") {
                     $this->idnpd->setSessionValue("");
+                }
+            }
+            if ($masterTblVar != "npd_serahterima") {
+                if ($this->idserahterima->CurrentValue == "") {
+                    $this->idserahterima->setSessionValue("");
                 }
             }
         }

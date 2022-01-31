@@ -45,17 +45,6 @@ $Page->showMessage();
 <input type="hidden" name="t" value="npd_serahterima">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <table class="table table-striped table-sm ew-view-table">
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-    <tr id="r_idpegawai">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_idpegawai"><?= $Page->idpegawai->caption() ?></span></td>
-        <td data-name="idpegawai" <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el_npd_serahterima_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<?= $Page->idpegawai->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
     <tr id="r_idcustomer">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_idcustomer"><?= $Page->idcustomer->caption() ?></span></td>
@@ -67,35 +56,24 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->tanggal_request->Visible) { // tanggal_request ?>
-    <tr id="r_tanggal_request">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_tanggal_request"><?= $Page->tanggal_request->caption() ?></span></td>
-        <td data-name="tanggal_request" <?= $Page->tanggal_request->cellAttributes() ?>>
-<span id="el_npd_serahterima_tanggal_request">
-<span<?= $Page->tanggal_request->viewAttributes() ?>>
-<?= $Page->tanggal_request->getViewValue() ?></span>
+<?php if ($Page->tgl_request->Visible) { // tgl_request ?>
+    <tr id="r_tgl_request">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_tgl_request"><?= $Page->tgl_request->caption() ?></span></td>
+        <td data-name="tgl_request" <?= $Page->tgl_request->cellAttributes() ?>>
+<span id="el_npd_serahterima_tgl_request">
+<span<?= $Page->tgl_request->viewAttributes() ?>>
+<?= $Page->tgl_request->getViewValue() ?></span>
 </span>
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->tanggal_serahterima->Visible) { // tanggal_serahterima ?>
-    <tr id="r_tanggal_serahterima">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_tanggal_serahterima"><?= $Page->tanggal_serahterima->caption() ?></span></td>
-        <td data-name="tanggal_serahterima" <?= $Page->tanggal_serahterima->cellAttributes() ?>>
-<span id="el_npd_serahterima_tanggal_serahterima">
-<span<?= $Page->tanggal_serahterima->viewAttributes() ?>>
-<?= $Page->tanggal_serahterima->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->jenis_produk->Visible) { // jenis_produk ?>
-    <tr id="r_jenis_produk">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_jenis_produk"><?= $Page->jenis_produk->caption() ?></span></td>
-        <td data-name="jenis_produk" <?= $Page->jenis_produk->cellAttributes() ?>>
-<span id="el_npd_serahterima_jenis_produk">
-<span<?= $Page->jenis_produk->viewAttributes() ?>>
-<?= $Page->jenis_produk->getViewValue() ?></span>
+<?php if ($Page->tgl_serahterima->Visible) { // tgl_serahterima ?>
+    <tr id="r_tgl_serahterima">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_tgl_serahterima"><?= $Page->tgl_serahterima->caption() ?></span></td>
+        <td data-name="tgl_serahterima" <?= $Page->tgl_serahterima->cellAttributes() ?>>
+<span id="el_npd_serahterima_tgl_serahterima">
+<span<?= $Page->tgl_serahterima->viewAttributes() ?>>
+<?= $Page->tgl_serahterima->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -125,7 +103,26 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+    <tr id="r_receipt_by">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_receipt_by"><?= $Page->receipt_by->caption() ?></span></td>
+        <td data-name="receipt_by" <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el_npd_serahterima_receipt_by">
+<span<?= $Page->receipt_by->viewAttributes() ?>>
+<?= $Page->receipt_by->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 </table>
+<?php
+    if (in_array("npd_sample", explode(",", $Page->getCurrentDetailTable())) && $npd_sample->DetailView) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("npd_sample", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("npd_sample")->Count, $Language->phrase("DetailCount")) ?></h4>
+<?php } ?>
+<?php include_once "NpdSampleGrid.php" ?>
+<?php } ?>
 </form>
 <?php
 $Page->showPageFooter();
