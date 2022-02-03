@@ -56,8 +56,8 @@ $Page->showMessage();
 <?php if ($Page->nama->Visible) { // nama ?>
         <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_customer_nama" class="customer_nama"><?= $Page->nama->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
-        <th class="<?= $Page->jenis_usaha->headerCellClass() ?>"><span id="elh_customer_jenis_usaha" class="customer_jenis_usaha"><?= $Page->jenis_usaha->caption() ?></span></th>
+<?php if ($Page->idprov->Visible) { // idprov ?>
+        <th class="<?= $Page->idprov->headerCellClass() ?>"><span id="elh_customer_idprov" class="customer_idprov"><?= $Page->idprov->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->hp->Visible) { // hp ?>
         <th class="<?= $Page->hp->headerCellClass() ?>"><span id="elh_customer_hp" class="customer_hp"><?= $Page->hp->caption() ?></span></th>
@@ -118,11 +118,11 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
-        <td <?= $Page->jenis_usaha->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_customer_jenis_usaha" class="customer_jenis_usaha">
-<span<?= $Page->jenis_usaha->viewAttributes() ?>>
-<?= $Page->jenis_usaha->getViewValue() ?></span>
+<?php if ($Page->idprov->Visible) { // idprov ?>
+        <td <?= $Page->idprov->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_customer_idprov" class="customer_idprov">
+<span<?= $Page->idprov->viewAttributes() ?>>
+<?= $Page->idprov->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

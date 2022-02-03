@@ -351,6 +351,8 @@ class BrandCustomerPreview extends BrandCustomer
     {
         $key = "";
         if (is_array($ar)) {
+            $key .= @$ar['idbrand'] . Config("COMPOSITE_KEY_SEPARATOR");
+            $key .= @$ar['idcustomer'];
         }
         return $key;
     }
@@ -604,6 +606,9 @@ class BrandCustomerPreview extends BrandCustomer
         if ($masterTblVar == "brand") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->idbrand->QueryStringValue) . "";
         }
+        if ($masterTblVar == "customer") {
+            $url = "" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->idcustomer->QueryStringValue) . "";
+        }
         return $url;
     }
 
@@ -619,6 +624,16 @@ class BrandCustomerPreview extends BrandCustomer
                 $val = substr($f, $x);
                 $val = $this->unquoteValue($val, "DB");
                  $this->idbrand->setQueryStringValue($val);
+            }
+        }
+        if ($masterTblVar == "customer") {
+            $find = "`idcustomer`=";
+            $x = strpos($f, $find);
+            if ($x !== false) {
+                $x += strlen($find);
+                $val = substr($f, $x);
+                $val = $this->unquoteValue($val, "DB");
+                 $this->idcustomer->setQueryStringValue($val);
             }
         }
     }
@@ -664,7 +679,7 @@ class BrandCustomerPreview extends BrandCustomer
                     break;
                 case "x_idcustomer":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                        return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
@@ -755,6 +770,10 @@ class BrandCustomerPreview extends BrandCustomer
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
+        $opt = &$this->ListOptions->Add("edit");
+        $opt->Header = "";
+        $opt = &$this->ListOptions->Add("delete");
+        $opt->Header = "";
     }
 
     // ListOptions Rendering event
@@ -770,5 +789,7 @@ class BrandCustomerPreview extends BrandCustomer
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
+        $this->ListOptions->Items["edit"]->Body = "<a class=\"ew-row-link ew-edit\" title=\"\" data-caption=\"Edit\" href=\"BrandcustomerEdit2?brand={$this->idbrand->CurrentValue}&customer={$this->idcustomer->CurrentValue}\" data-original-title=\"Edit\"><i data-phrase=\"EditLink\" class=\"icon-edit ew-icon\" data-caption=\"Edit\"></i></a>";
+        $this->ListOptions->Items["delete"]->Body = "<a class=\"ew-row-link ew-delete\" title=\"\" data-caption=\"Delete\" href=\"BrandcustomerDelete2?brand={$this->idbrand->CurrentValue}&customer={$this->idcustomer->CurrentValue}\" data-original-title=\"Delete\"><i data-phrase=\"DeleteLink\" class=\"fas fa-trash ew-icon\" data-caption=\"Delete\"></i></a>";
     }
 }

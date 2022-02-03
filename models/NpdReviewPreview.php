@@ -443,6 +443,7 @@ class NpdReviewPreview extends NpdReview
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
+        $this->setupLookupOptions($this->review_by);
 
         // Load filter
         $filter = Get("f", "");
@@ -834,6 +835,8 @@ class NpdReviewPreview extends NpdReview
                 case "x_status":
                     break;
                 case "x_readonly":
+                    break;
+                case "x_review_by":
                     break;
                 default:
                     $lookupFilter = "";

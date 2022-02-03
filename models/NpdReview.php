@@ -489,8 +489,18 @@ class NpdReview extends DbTable
         $this->Fields['readonly'] = &$this->readonly;
 
         // review_by
-        $this->review_by = new DbField('npd_review', 'npd_review', 'x_review_by', 'review_by', '`review_by`', '`review_by`', 3, 11, -1, false, '`review_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->review_by = new DbField('npd_review', 'npd_review', 'x_review_by', 'review_by', '`review_by`', '`review_by`', 3, 11, -1, false, '`review_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->review_by->Sortable = true; // Allow sort
+        $this->review_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->review_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->review_by->Lookup = new Lookup('review_by', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->review_by->Lookup = new Lookup('review_by', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
         $this->review_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->review_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->review_by->Param, "CustomMsg");
         $this->Fields['review_by'] = &$this->review_by;
@@ -1661,8 +1671,24 @@ SORTHTML;
         $this->readonly->ViewCustomAttributes = "";
 
         // review_by
-        $this->review_by->ViewValue = $this->review_by->CurrentValue;
-        $this->review_by->ViewValue = FormatNumber($this->review_by->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->review_by->CurrentValue));
+        if ($curVal != "") {
+            $this->review_by->ViewValue = $this->review_by->lookupCacheOption($curVal);
+            if ($this->review_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->review_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->review_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->review_by->ViewValue = $this->review_by->displayValue($arwrk);
+                } else {
+                    $this->review_by->ViewValue = $this->review_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->review_by->ViewValue = null;
+        }
         $this->review_by->ViewCustomAttributes = "";
 
         // id
@@ -2102,7 +2128,6 @@ SORTHTML;
         // review_by
         $this->review_by->EditAttrs["class"] = "form-control";
         $this->review_by->EditCustomAttributes = "";
-        $this->review_by->EditValue = $this->review_by->CurrentValue;
         $this->review_by->PlaceHolder = RemoveHtml($this->review_by->caption());
 
         // Call Row Rendered event

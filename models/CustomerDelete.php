@@ -379,9 +379,9 @@ class CustomerDelete extends Customer
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
         $this->nama->setVisibility();
-        $this->jenis_usaha->setVisibility();
+        $this->jenis_usaha->Visible = false;
         $this->jabatan->Visible = false;
-        $this->idprov->Visible = false;
+        $this->idprov->setVisibility();
         $this->idkab->Visible = false;
         $this->idkec->Visible = false;
         $this->idkel->Visible = false;
@@ -968,10 +968,10 @@ class CustomerDelete extends Customer
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
 
-            // jenis_usaha
-            $this->jenis_usaha->LinkCustomAttributes = "";
-            $this->jenis_usaha->HrefValue = "";
-            $this->jenis_usaha->TooltipValue = "";
+            // idprov
+            $this->idprov->LinkCustomAttributes = "";
+            $this->idprov->HrefValue = "";
+            $this->idprov->TooltipValue = "";
 
             // hp
             $this->hp->LinkCustomAttributes = "";
@@ -1005,14 +1005,6 @@ class CustomerDelete extends Customer
         if (count($rows) == 0) {
             $this->setFailureMessage($Language->phrase("NoRecord")); // No record found
             return false;
-        }
-        foreach ($rows as $row) {
-            $rsdetail = Container("v_list_customer_brands")->loadRs("`idcustomer` = " . QuotedValue($row['id'], DATATYPE_NUMBER, 'DB'))->fetch();
-            if ($rsdetail !== false) {
-                $relatedRecordMsg = str_replace("%t", "v_list_customer_brands", $Language->phrase("RelatedRecordExists"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
         }
         $conn->beginTransaction();
 

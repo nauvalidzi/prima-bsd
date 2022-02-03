@@ -517,6 +517,7 @@ class NpdReviewEdit extends NpdReview
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
+        $this->setupLookupOptions($this->review_by);
 
         // Check modal
         if ($this->IsModal) {
@@ -1473,8 +1474,24 @@ class NpdReviewEdit extends NpdReview
             $this->readonly->ViewCustomAttributes = "";
 
             // review_by
-            $this->review_by->ViewValue = $this->review_by->CurrentValue;
-            $this->review_by->ViewValue = FormatNumber($this->review_by->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->review_by->CurrentValue));
+            if ($curVal != "") {
+                $this->review_by->ViewValue = $this->review_by->lookupCacheOption($curVal);
+                if ($this->review_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->review_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->review_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->review_by->ViewValue = $this->review_by->displayValue($arwrk);
+                    } else {
+                        $this->review_by->ViewValue = $this->review_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->review_by->ViewValue = null;
+            }
             $this->review_by->ViewCustomAttributes = "";
 
             // tanggal_review
@@ -1820,7 +1837,26 @@ class NpdReviewEdit extends NpdReview
             // review_by
             $this->review_by->EditAttrs["class"] = "form-control";
             $this->review_by->EditCustomAttributes = "";
-            $this->review_by->EditValue = HtmlEncode($this->review_by->CurrentValue);
+            $curVal = trim(strval($this->review_by->CurrentValue));
+            if ($curVal != "") {
+                $this->review_by->ViewValue = $this->review_by->lookupCacheOption($curVal);
+            } else {
+                $this->review_by->ViewValue = $this->review_by->Lookup !== null && is_array($this->review_by->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->review_by->ViewValue !== null) { // Load from cache
+                $this->review_by->EditValue = array_values($this->review_by->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->review_by->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->review_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->review_by->EditValue = $arwrk;
+            }
             $this->review_by->PlaceHolder = RemoveHtml($this->review_by->caption());
 
             // Edit refer script
@@ -2110,9 +2146,6 @@ class NpdReviewEdit extends NpdReview
             if (!$this->review_by->IsDetailKey && EmptyValue($this->review_by->FormValue)) {
                 $this->review_by->addErrorMessage(str_replace("%s", $this->review_by->caption(), $this->review_by->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->review_by->FormValue)) {
-            $this->review_by->addErrorMessage($this->review_by->getErrorMessage(false));
         }
 
         // Return validate result
@@ -2427,6 +2460,8 @@ class NpdReviewEdit extends NpdReview
                 case "x_status":
                     break;
                 case "x_readonly":
+                    break;
+                case "x_review_by":
                     break;
                 default:
                     $lookupFilter = "";

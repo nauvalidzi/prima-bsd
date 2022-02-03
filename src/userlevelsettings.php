@@ -332,7 +332,13 @@ $USER_LEVEL_PRIVS = [["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}pegawai","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}v_list_customer_brands","1","288"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla","-2","0"],
     ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla","0","0"],
-    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla","1","288"]];
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}tipe_sla","1","288"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}brandcustomer_edit.php","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}brandcustomer_edit.php","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}brandcustomer_edit.php","1","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}brandcustomer_delete.php","-2","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}brandcustomer_delete.php","0","0"],
+    ["{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}brandcustomer_delete.php","1","0"]];
 // User level table info
 $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","PegawaiList"],
     ["userlevels","userlevels","Manajemen User",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","UserlevelsList"],
@@ -441,4 +447,6 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{4FA0DF52-C852-4B9E-A
     ["antrian_bot.php","antrian_bot","Antrian Bot",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","AntrianBot"],
     ["v_list_brand_customers","v_list_brand_customers","Customer List",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VListBrandCustomersList"],
     ["v_list_customer_brands","v_list_customer_brands","Brand List",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","VListCustomerBrandsList"],
-    ["tipe_sla","tipe_sla","Tipe SLA",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","TipeSlaList"]];
+    ["tipe_sla","tipe_sla","Tipe SLA",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","TipeSlaList"],
+    ["brandcustomer_edit.php","brandcustomer_edit2","Brand Customer Edit",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","BrandcustomerEdit2"],
+    ["brandcustomer_delete.php","brandcustomer_delete2","Brand Customer Delete",true,"{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}","BrandcustomerDelete2"]];

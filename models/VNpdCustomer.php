@@ -172,7 +172,6 @@ class VNpdCustomer extends DbTable
         // created_at
         $this->created_at = new DbField('v_npd_customer', 'v_npd_customer', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Nullable = false; // NOT NULL field
-        $this->created_at->Required = true; // Required field
         $this->created_at->Sortable = true; // Allow sort
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");

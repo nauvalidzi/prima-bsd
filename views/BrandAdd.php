@@ -329,20 +329,20 @@ $Page->showMessage();
     </div>
 <?php } ?>
 <?php
-    if (in_array("v_list_brand_customers", explode(",", $Page->getCurrentDetailTable())) && $v_list_brand_customers->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "v_list_brand_customers") {
-            $firstActiveDetailTable = "v_list_brand_customers";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-    <div class="card ew-accordion-card <?= $Page->DetailPages->pageStyle("v_list_brand_customers") ?>">
+    <div class="card ew-accordion-card <?= $Page->DetailPages->pageStyle("brand_customer") ?>">
         <div class="card-header">
             <h4 class="card-title">
-                <a data-toggle="collapse" role="button" class="collapsed" aria-expanded="<?= JsonEncode($Page->DetailPages->isActive("v_list_brand_customers")) ?>" data-parent="#Page_details" href="#tab_v_list_brand_customers"><?= $Language->tablePhrase("v_list_brand_customers", "TblCaption") ?></a>
+                <a data-toggle="collapse" role="button" class="collapsed" aria-expanded="<?= JsonEncode($Page->DetailPages->isActive("brand_customer")) ?>" data-parent="#Page_details" href="#tab_brand_customer"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?></a>
             </h4>
         </div>
-        <div class="collapse <?= $Page->DetailPages->pageStyle("v_list_brand_customers") ?>" id="tab_v_list_brand_customers"><!-- page* -->
+        <div class="collapse <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
             <div class="card-body"><!-- .card-body -->
-<?php include_once "VListBrandCustomersGrid.php" ?>
+<?php include_once "BrandCustomerGrid.php" ?>
             </div><!-- /.card-body -->
         </div><!-- /page* -->
     </div>

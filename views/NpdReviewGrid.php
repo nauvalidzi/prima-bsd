@@ -28,7 +28,7 @@ loadjs.ready("head", function () {
         ["tanggal_submit", [fields.tanggal_submit.visible && fields.tanggal_submit.required ? ew.Validators.required(fields.tanggal_submit.caption) : null, ew.Validators.datetime(0)], fields.tanggal_submit.isInvalid],
         ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null, ew.Validators.integer], fields.review_by.isInvalid]
+        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null], fields.review_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -112,6 +112,7 @@ loadjs.ready("head", function () {
     fnpd_reviewgrid.lists.idnpd = <?= $Grid->idnpd->toClientList($Grid) ?>;
     fnpd_reviewgrid.lists.idnpd_sample = <?= $Grid->idnpd_sample->toClientList($Grid) ?>;
     fnpd_reviewgrid.lists.status = <?= $Grid->status->toClientList($Grid) ?>;
+    fnpd_reviewgrid.lists.review_by = <?= $Grid->review_by->toClientList($Grid) ?>;
     loadjs.done("fnpd_reviewgrid");
 });
 </script>
@@ -606,15 +607,57 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
         <td data-name="review_by" <?= $Grid->review_by->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_review_review_by" class="form-group">
-<input type="<?= $Grid->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" size="30" placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>" value="<?= $Grid->review_by->EditValue ?>"<?= $Grid->review_by->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
+    <select
+        id="x<?= $Grid->RowIndex ?>_review_by"
+        name="x<?= $Grid->RowIndex ?>_review_by"
+        class="form-control ew-select<?= $Grid->review_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_review_by"
+        data-table="npd_review"
+        data-field="x_review_by"
+        data-value-separator="<?= $Grid->review_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>"
+        <?= $Grid->review_by->editAttributes() ?>>
+        <?= $Grid->review_by->selectOptionListHtml("x{$Grid->RowIndex}_review_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
+<?= $Grid->review_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_review_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_review_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_review_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_review_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.review_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_review_by" id="o<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?= $Grid->RowCount ?>_npd_review_review_by" class="form-group">
-<input type="<?= $Grid->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" size="30" placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>" value="<?= $Grid->review_by->EditValue ?>"<?= $Grid->review_by->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
+    <select
+        id="x<?= $Grid->RowIndex ?>_review_by"
+        name="x<?= $Grid->RowIndex ?>_review_by"
+        class="form-control ew-select<?= $Grid->review_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_review_by"
+        data-table="npd_review"
+        data-field="x_review_by"
+        data-value-separator="<?= $Grid->review_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>"
+        <?= $Grid->review_by->editAttributes() ?>>
+        <?= $Grid->review_by->selectOptionListHtml("x{$Grid->RowIndex}_review_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
+<?= $Grid->review_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_review_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_review_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_review_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_review_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.review_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
@@ -864,8 +907,29 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
         <td data-name="review_by">
 <?php if (!$Grid->isConfirm()) { ?>
 <span id="el$rowindex$_npd_review_review_by" class="form-group npd_review_review_by">
-<input type="<?= $Grid->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" size="30" placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>" value="<?= $Grid->review_by->EditValue ?>"<?= $Grid->review_by->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
+    <select
+        id="x<?= $Grid->RowIndex ?>_review_by"
+        name="x<?= $Grid->RowIndex ?>_review_by"
+        class="form-control ew-select<?= $Grid->review_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_review_by"
+        data-table="npd_review"
+        data-field="x_review_by"
+        data-value-separator="<?= $Grid->review_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->review_by->getPlaceHolder()) ?>"
+        <?= $Grid->review_by->editAttributes() ?>>
+        <?= $Grid->review_by->selectOptionListHtml("x{$Grid->RowIndex}_review_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->review_by->getErrorMessage() ?></div>
+<?= $Grid->review_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_review_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_review_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_review_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_review_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.review_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_npd_review_review_by" class="form-group npd_review_review_by">

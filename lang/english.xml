@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/1/31" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/2/3" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -925,6 +925,12 @@
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
     <phrase id="footertext" value="&amp;copy;2021 PT. Prima Visi Globalindo" />
+    <menu id="1058">
+      <phrase id="menutext" value="Brand Customer Edit" />
+    </menu>
+    <menu id="1059">
+      <phrase id="menutext" value="Brand Customer Delete" />
+    </menu>
     <menu id="1055">
       <phrase id="menutext" value="Customer List" />
     </menu>
@@ -992,7 +998,7 @@
       <phrase id="menutext" value="Pengembangan Produk" />
     </menu>
     <menu id="347">
-      <phrase id="menutext" value="NPD" />
+      <phrase id="menutext" value="Pengajuan NPD" />
     </menu>
     <menu id="805">
       <phrase id="menutext" value="Serah Terima Sampel" />
@@ -1701,9 +1707,6 @@
     </table>
     <table id="brand_customer">
       <phrase id="tblcaption" value="Customer Brand" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
       <field id="idbrand">
         <phrase id="fldcaption" value="Brand" />
       </field>
@@ -4372,41 +4375,35 @@
     </table>
     <table id="v_list_brand_customers">
       <phrase id="tblcaption" value="Customer List" />
-      <field id="id">
-        <phrase id="fldcaption" value="Jumlah Produk" />
-      </field>
       <field id="idbrand">
-        <phrase id="fldcaption" value="Brand" />
+        <phrase id="fldcaption" value="idbrand" />
       </field>
       <field id="idcustomer">
-        <phrase id="fldcaption" value="Customer" />
+        <phrase id="fldcaption" value="idcustomer" />
       </field>
       <field id="kode_customer">
-        <phrase id="fldcaption" value="Kode Customer" />
+        <phrase id="fldcaption" value="kode customer" />
       </field>
       <field id="nama_customer">
-        <phrase id="fldcaption" value="Nama Customer" />
+        <phrase id="fldcaption" value="nama customer" />
       </field>
     </table>
     <table id="v_list_customer_brands">
       <phrase id="tblcaption" value="Brand List" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
       <field id="idcustomer">
-        <phrase id="fldcaption" value="Customer" />
+        <phrase id="fldcaption" value="idcustomer" />
       </field>
       <field id="idbrand">
-        <phrase id="fldcaption" value="Brand" />
+        <phrase id="fldcaption" value="idbrand" />
       </field>
       <field id="kode_brand">
-        <phrase id="fldcaption" value="Kode Brand" />
+        <phrase id="fldcaption" value="kode brand" />
       </field>
       <field id="nama_brand">
-        <phrase id="fldcaption" value="Nama Brand" />
+        <phrase id="fldcaption" value="nama brand" />
       </field>
       <field id="jumlah_produk">
-        <phrase id="fldcaption" value="Jumlah Produk" />
+        <phrase id="fldcaption" value="jumlah produk" />
       </field>
     </table>
     <table id="tipe_sla">
@@ -4426,6 +4423,12 @@
       <field id="updated_at">
         <phrase id="fldcaption" value="Updated" />
       </field>
+    </table>
+    <table id="brandcustomer_edit2">
+      <phrase id="tblcaption" value="Brand Customer Edit" />
+    </table>
+    <table id="brandcustomer_delete2">
+      <phrase id="tblcaption" value="Brand Customer Delete" />
     </table>
   </project>
 </ew-language>

@@ -50,7 +50,7 @@ loadjs.ready("head", function () {
         ["efeknegatif_revisi", [fields.efeknegatif_revisi.visible && fields.efeknegatif_revisi.required ? ew.Validators.required(fields.efeknegatif_revisi.caption) : null], fields.efeknegatif_revisi.isInvalid],
         ["kesimpulan", [fields.kesimpulan.visible && fields.kesimpulan.required ? ew.Validators.required(fields.kesimpulan.caption) : null], fields.kesimpulan.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null, ew.Validators.integer], fields.review_by.isInvalid]
+        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null], fields.review_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -131,6 +131,7 @@ loadjs.ready("head", function () {
     fnpd_reviewadd.lists.efekpositif_opsi = <?= $Page->efekpositif_opsi->toClientList($Page) ?>;
     fnpd_reviewadd.lists.efeknegatif_opsi = <?= $Page->efeknegatif_opsi->toClientList($Page) ?>;
     fnpd_reviewadd.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    fnpd_reviewadd.lists.review_by = <?= $Page->review_by->toClientList($Page) ?>;
     loadjs.done("fnpd_reviewadd");
 });
 </script>
@@ -827,9 +828,30 @@ loadjs.ready(["fnpd_reviewadd", "datetimepicker"], function() {
         <label id="elh_npd_review_review_by" for="x_review_by" class="<?= $Page->LeftColumnClass ?>"><?= $Page->review_by->caption() ?><?= $Page->review_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->review_by->cellAttributes() ?>>
 <span id="el_npd_review_review_by">
-<input type="<?= $Page->review_by->getInputTextType() ?>" data-table="npd_review" data-field="x_review_by" name="x_review_by" id="x_review_by" size="30" placeholder="<?= HtmlEncode($Page->review_by->getPlaceHolder()) ?>" value="<?= $Page->review_by->EditValue ?>"<?= $Page->review_by->editAttributes() ?> aria-describedby="x_review_by_help">
-<?= $Page->review_by->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->review_by->getErrorMessage() ?></div>
+    <select
+        id="x_review_by"
+        name="x_review_by"
+        class="form-control ew-select<?= $Page->review_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x_review_by"
+        data-table="npd_review"
+        data-field="x_review_by"
+        data-value-separator="<?= $Page->review_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->review_by->getPlaceHolder()) ?>"
+        <?= $Page->review_by->editAttributes() ?>>
+        <?= $Page->review_by->selectOptionListHtml("x_review_by") ?>
+    </select>
+    <?= $Page->review_by->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->review_by->getErrorMessage() ?></div>
+<?= $Page->review_by->Lookup->getParamTag($Page, "p_x_review_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x_review_by']"),
+        options = { name: "x_review_by", selectId: "npd_review_x_review_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.review_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>

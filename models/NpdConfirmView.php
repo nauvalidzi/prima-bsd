@@ -896,10 +896,10 @@ class NpdConfirmView extends NpdConfirm
             $this->confirm_by->ViewCustomAttributes = "";
 
             // readonly
-            if (ConvertToBool($this->readonly->CurrentValue)) {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
+                $this->readonly->ViewValue = null;
             }
             $this->readonly->ViewCustomAttributes = "";
 

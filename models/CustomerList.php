@@ -573,9 +573,9 @@ class CustomerList extends Customer
         $this->idtipecustomer->setVisibility();
         $this->idpegawai->setVisibility();
         $this->nama->setVisibility();
-        $this->jenis_usaha->setVisibility();
+        $this->jenis_usaha->Visible = false;
         $this->jabatan->Visible = false;
-        $this->idprov->Visible = false;
+        $this->idprov->setVisibility();
         $this->idkab->Visible = false;
         $this->idkec->Visible = false;
         $this->idkel->Visible = false;
@@ -1665,7 +1665,7 @@ class CustomerList extends Customer
             $this->updateSort($this->idtipecustomer); // idtipecustomer
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->nama); // nama
-            $this->updateSort($this->jenis_usaha); // jenis_usaha
+            $this->updateSort($this->idprov); // idprov
             $this->updateSort($this->hp); // hp
             $this->updateSort($this->klinik); // klinik
             $this->setStartRecordNumber(1); // Reset start position
@@ -1797,10 +1797,10 @@ class CustomerList extends Customer
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
-        // "detail_v_list_customer_brands"
-        $item = &$this->ListOptions->add("detail_v_list_customer_brands");
+        // "detail_brand_customer"
+        $item = &$this->ListOptions->add("detail_brand_customer");
         $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'v_list_customer_brands') && !$this->ShowMultipleDetails;
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer') && !$this->ShowMultipleDetails;
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
@@ -1818,7 +1818,7 @@ class CustomerList extends Customer
         $pages->add("alamat_customer");
         $pages->add("order");
         $pages->add("invoice");
-        $pages->add("v_list_customer_brands");
+        $pages->add("brand_customer");
         $this->DetailPages = $pages;
 
         // List actions
@@ -2048,31 +2048,31 @@ class CustomerList extends Customer
             }
         }
 
-        // "detail_v_list_customer_brands"
-        $opt = $this->ListOptions["detail_v_list_customer_brands"];
-        if ($Security->allowList(CurrentProjectID() . 'v_list_customer_brands')) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("v_list_customer_brands", "TblCaption");
-            $body .= "&nbsp;" . str_replace("%c", Container("v_list_customer_brands")->Count, $Language->phrase("DetailCount"));
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("VListCustomerBrandsList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
+        // "detail_brand_customer"
+        $opt = $this->ListOptions["detail_brand_customer"];
+        if ($Security->allowList(CurrentProjectID() . 'brand_customer')) {
+            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+            $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
             $links = "";
-            $detailPage = Container("VListCustomerBrandsGrid");
+            $detailPage = Container("BrandCustomerGrid");
             if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
                 if ($detailViewTblVar != "") {
                     $detailViewTblVar .= ",";
                 }
-                $detailViewTblVar .= "v_list_customer_brands";
+                $detailViewTblVar .= "brand_customer";
             }
             if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
                 if ($detailEditTblVar != "") {
                     $detailEditTblVar .= ",";
                 }
-                $detailEditTblVar .= "v_list_customer_brands";
+                $detailEditTblVar .= "brand_customer";
             }
             if ($links != "") {
                 $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -2165,9 +2165,9 @@ class CustomerList extends Customer
                     }
                     $detailTableLink .= "invoice";
                 }
-                $item = &$option->add("detailadd_v_list_customer_brands");
-                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands");
-                $detailPage = Container("VListCustomerBrandsGrid");
+                $item = &$option->add("detailadd_brand_customer");
+                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
+                $detailPage = Container("BrandCustomerGrid");
                 $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
                 $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
                 $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'customer') && $Security->canAdd());
@@ -2175,7 +2175,7 @@ class CustomerList extends Customer
                     if ($detailTableLink != "") {
                         $detailTableLink .= ",";
                     }
-                    $detailTableLink .= "v_list_customer_brands";
+                    $detailTableLink .= "brand_customer";
                 }
 
         // Add multiple details
@@ -2451,29 +2451,29 @@ class CustomerList extends Customer
         }
         $sqlwrk = "`idcustomer`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
 
-        // Column "detail_v_list_customer_brands"
-        if ($this->DetailPages && $this->DetailPages["v_list_customer_brands"] && $this->DetailPages["v_list_customer_brands"]->Visible) {
+        // Column "detail_brand_customer"
+        if ($this->DetailPages && $this->DetailPages["brand_customer"] && $this->DetailPages["brand_customer"]->Visible) {
             $link = "";
-            $option = $this->ListOptions["detail_v_list_customer_brands"];
-            $url = "VListCustomerBrandsPreview?t=customer&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"v_list_customer_brands\" data-url=\"" . $url . "\">";
+            $option = $this->ListOptions["detail_brand_customer"];
+            $url = "BrandCustomerPreview?t=customer&f=" . Encrypt($sqlwrk);
+            $btngrp = "<div data-table=\"brand_customer\" data-url=\"" . $url . "\">";
             if ($Security->allowList(CurrentProjectID() . 'customer')) {
-                $label = $Language->TablePhrase("v_list_customer_brands", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("v_list_customer_brands")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"v_list_customer_brands\" data-url=\"" . $url . "\">" . $label . "</a></li>";
+                $label = $Language->TablePhrase("brand_customer", "TblCaption");
+                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount")));
+                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"brand_customer\" data-url=\"" . $url . "\">" . $label . "</a></li>";
                 $links .= $link;
-                $detaillnk = JsEncodeAttribute("VListCustomerBrandsList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("v_list_customer_brands", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
+                $detaillnk = JsEncodeAttribute("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
+                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("brand_customer", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
-            $detailPageObj = Container("VListCustomerBrandsGrid");
+            $detailPageObj = Container("BrandCustomerGrid");
             if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands");
+                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands");
+                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
             $btngrp .= "</div>";
@@ -2867,7 +2867,7 @@ class CustomerList extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("v_list_customer_brands");
+        $detailTbl = Container("brand_customer");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -3263,10 +3263,10 @@ class CustomerList extends Customer
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
 
-            // jenis_usaha
-            $this->jenis_usaha->LinkCustomAttributes = "";
-            $this->jenis_usaha->HrefValue = "";
-            $this->jenis_usaha->TooltipValue = "";
+            // idprov
+            $this->idprov->LinkCustomAttributes = "";
+            $this->idprov->HrefValue = "";
+            $this->idprov->TooltipValue = "";
 
             // hp
             $this->hp->LinkCustomAttributes = "";

@@ -281,11 +281,10 @@ loadjs.ready("head", function() {
 <?php if ($Grid->idbrand->getSessionValue() != "") { ?>
 <span id="el<?= $Grid->RowCount ?>_brand_customer_idbrand" class="form-group">
 <span<?= $Grid->idbrand->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->ViewValue))) ?>"></span>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idbrand->getDisplayValue($Grid->idbrand->EditValue))) ?>"></span>
 </span>
 <input type="hidden" id="x<?= $Grid->RowIndex ?>_idbrand" name="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>" data-hidden="1">
 <?php } else { ?>
-<span id="el<?= $Grid->RowCount ?>_brand_customer_idbrand" class="form-group">
     <select
         id="x<?= $Grid->RowIndex ?>_idbrand"
         name="x<?= $Grid->RowIndex ?>_idbrand"
@@ -309,8 +308,8 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
-</span>
 <?php } ?>
+<input type="hidden" data-table="brand_customer" data-field="x_idbrand" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idbrand" id="o<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->OldValue ?? $Grid->idbrand->CurrentValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_brand_customer_idbrand">
@@ -323,10 +322,19 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php } ?>
 </td>
+    <?php } else { ?>
+            <input type="hidden" data-table="brand_customer" data-field="x_idbrand" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idbrand" id="x<?= $Grid->RowIndex ?>_idbrand" value="<?= HtmlEncode($Grid->idbrand->CurrentValue) ?>">
     <?php } ?>
     <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
         <td data-name="idcustomer" <?= $Grid->idcustomer->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
+<span id="el<?= $Grid->RowCount ?>_brand_customer_idcustomer" class="form-group">
+<span<?= $Grid->idcustomer->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
+<?php } else { ?>
 <span id="el<?= $Grid->RowCount ?>_brand_customer_idcustomer" class="form-group">
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -352,10 +360,17 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
+<?php } ?>
 <input type="hidden" data-table="brand_customer" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
 <span id="el<?= $Grid->RowCount ?>_brand_customer_idcustomer" class="form-group">
+<span<?= $Grid->idcustomer->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->EditValue))) ?>"></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
+<?php } else { ?>
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
         name="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -379,7 +394,8 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
-</span>
+<?php } ?>
+<input type="hidden" data-table="brand_customer" data-field="x_idcustomer" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idcustomer" id="o<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->OldValue ?? $Grid->idcustomer->CurrentValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?= $Grid->RowCount ?>_brand_customer_idcustomer">
@@ -392,6 +408,8 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php } ?>
 </td>
+    <?php } else { ?>
+            <input type="hidden" data-table="brand_customer" data-field="x_idcustomer" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idcustomer" id="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>">
     <?php } ?>
 <?php
 // Render list options (body, right)
@@ -486,6 +504,13 @@ loadjs.ready("head", function() {
     <?php if ($Grid->idcustomer->Visible) { // idcustomer ?>
         <td data-name="idcustomer">
 <?php if (!$Grid->isConfirm()) { ?>
+<?php if ($Grid->idcustomer->getSessionValue() != "") { ?>
+<span id="el$rowindex$_brand_customer_idcustomer" class="form-group brand_customer_idcustomer">
+<span<?= $Grid->idcustomer->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idcustomer->getDisplayValue($Grid->idcustomer->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_idcustomer" name="x<?= $Grid->RowIndex ?>_idcustomer" value="<?= HtmlEncode($Grid->idcustomer->CurrentValue) ?>" data-hidden="1">
+<?php } else { ?>
 <span id="el$rowindex$_brand_customer_idcustomer" class="form-group brand_customer_idcustomer">
     <select
         id="x<?= $Grid->RowIndex ?>_idcustomer"
@@ -511,6 +536,7 @@ loadjs.ready("head", function() {
 });
 </script>
 </span>
+<?php } ?>
 <?php } else { ?>
 <span id="el$rowindex$_brand_customer_idcustomer" class="form-group brand_customer_idcustomer">
 <span<?= $Grid->idcustomer->viewAttributes() ?>>

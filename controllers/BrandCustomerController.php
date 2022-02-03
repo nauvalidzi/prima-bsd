@@ -19,4 +19,10 @@ class BrandCustomerController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "BrandCustomerAdd");
     }
+
+    // preview
+    public function preview(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "BrandCustomerPreview", false);
+    }
 }

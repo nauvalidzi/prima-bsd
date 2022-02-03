@@ -399,6 +399,46 @@ function Api_Action($app)
         $html .= "</div>";
         return $response->withJson($html);
     });
+    $app->post('/brandcustomer-delete', function ($request, $response, $args) {
+        $idbrand = $request->getParsedBodyParam('brand');
+        $idcustomer = $request->getParsedBodyParam('customer');
+        $redirect = $request->getParsedBodyParam('redirect');
+        $status = true;
+        $message = 'Deleted successfully';
+        $check = ExecuteRow("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$idbrand} AND idcustomer = {$idcustomer}")['exist'];
+        if ($check < 1) {
+            return $response->withJson(['success' => false, 'message' => 'Data not found']);
+        }
+        $delete = Execute("DELETE FROM brand_customer WHERE idbrand = {$idbrand} AND idcustomer = {$idcustomer}");
+        if (!$delete) {
+            $status = false;
+            $message = 'Error deleting data into database!';
+        }
+        return $response->withJson(['success' => $status, 'message' => $message, 'redirect' => urlencode($redirect . "?param=delete")]);
+    });
+    $app->post('/brandcustomer-edit', function ($request, $response, $args) {
+        $old_idbrand = $request->getParsedBodyParam('old_idbrand');
+        $old_idcustomer = $request->getParsedBodyParam('old_idcustomer');
+        $idbrand = $request->getParsedBodyParam('idbrand');
+        $idcustomer = $request->getParsedBodyParam('idcustomer');
+        $redirect = $request->getParsedBodyParam('redirect');
+        $status = true;
+        $message = 'Updated successfully';
+        $check = ExecuteRow("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$old_idbrand} AND idcustomer = {$old_idcustomer}")['exist'];
+        if ($check < 1) {
+            return $response->withJson(['success' => false, 'message' => 'Duplicate data, please select another Brand/Customer.']);
+        }
+        $future = ExecuteRow("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$idbrand} AND idcustomer = {$idcustomer}")['exist'];
+        if ($future > 0) {
+            return $response->withJson(['success' => false, 'message' => 'Duplicate data, please select another Brand/Customer.']);
+        }
+        $edit = ExecuteUpdate("UPDATE brand_customer SET idbrand = {$idbrand}, idcustomer = {$idcustomer} WHERE idbrand = {$old_idbrand} AND idcustomer = {$old_idcustomer}");
+        if (!$edit) {
+            $status = false;
+            $message = 'Error editing data into database!';
+        }
+        return $response->withJson(['success' => $status, 'message' => $message, 'redirect' => urlencode($redirect . "?param=update")]);
+    });
 }
 
 // Container Build event
@@ -1269,3 +1309,38 @@ $API_ACTIONS['sync-order-sip'] = function(Request $request, Response &$response)
 //     }
 //     WriteJson(['status' => $status]);
 // };
+$API_ACTIONS['brandcustomer-edit'] = function(Request $request, Response &$response) {
+    $brand = Param("brand", Route(1));
+    $customer = Param("customer", Route(2));
+    $old_brand = Param("old_brand", Route(3));
+    $old_customer = Param("old_customer", Route(4));
+    $status = true;
+    $message = 'Updated successfully';
+    $check = ExecuteRow("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$brand} AND idcustomer = {$customer}")['exist'];
+    if ($check > 0) {
+        return WriteJson(['status' => false, 'message' => 'Duplicate data, please select another Brand/Customer.']);
+    }
+    $edit = Execute("UPDATE brand_customer SET idbrand = {$brand}, idcustomer = {$customer} WHERE idbrand = {$old_brand} AND idcustomer = {$old_idcustomer}");
+    if (!$edit) {
+        $status = false;
+        $message = 'Error editing data into database!';
+    }
+    WriteJson(['status' => $status, 'message' => $message]);
+};
+$API_ACTIONS['brandcustomer-delete'] = function(Request $request, Response &$response) {
+    $brand = Param("brand", Route(1));
+    $customer = Param("customer", Route(2));
+    $redirect = 'BrandList';//Param("landing", Route(3));
+    $status = true;
+    $message = 'Deleted successfully';
+    $check = ExecuteRow("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$brand} AND idcustomer = {$customer}")['exist'];
+    if ($check < 1) {
+        return WriteJson(['success' => false, 'message' => 'Data not found']);
+    }
+    $delete = Execute("DELETE FROM brand_customer WHERE idbrand = {$brand} AND idcustomer = {$customer}");
+    if (!$delete) {
+        $status = false;
+        $message = 'Error deleting data into database!';
+    }
+    WriteJson(['success' => $status, 'message' => $message, 'redirect' => urldecode($redirect)]);
+};

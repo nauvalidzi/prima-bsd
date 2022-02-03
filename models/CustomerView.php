@@ -825,26 +825,26 @@ class CustomerView extends Customer
             $item->Visible = false;
         }
 
-        // "detail_v_list_customer_brands"
-        $item = &$option->add("detail_v_list_customer_brands");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("v_list_customer_brands", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("v_list_customer_brands")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("VListCustomerBrandsList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        // "detail_brand_customer"
+        $item = &$option->add("detail_brand_customer");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=customer&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
         $links = "";
-        $detailPageObj = Container("VListCustomerBrandsGrid");
+        $detailPageObj = Container("BrandCustomerGrid");
         if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
             if ($detailViewTblVar != "") {
                 $detailViewTblVar .= ",";
             }
-            $detailViewTblVar .= "v_list_customer_brands";
+            $detailViewTblVar .= "brand_customer";
         }
         if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'customer')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_customer_brands"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
             if ($detailEditTblVar != "") {
                 $detailEditTblVar .= ",";
             }
-            $detailEditTblVar .= "v_list_customer_brands";
+            $detailEditTblVar .= "brand_customer";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -852,12 +852,12 @@ class CustomerView extends Customer
         }
         $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
         $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'v_list_customer_brands');
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer');
         if ($item->Visible) {
             if ($detailTableLink != "") {
                 $detailTableLink .= ",";
             }
-            $detailTableLink .= "v_list_customer_brands";
+            $detailTableLink .= "brand_customer";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -1001,7 +1001,7 @@ class CustomerView extends Customer
         $detailTbl->setCurrentMasterTable("customer");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("v_list_customer_brands");
+        $detailTbl = Container("brand_customer");
         $detailFilter = $detailTbl->sqlDetailFilter_customer();
         $detailFilter = str_replace("@idcustomer@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("customer");
@@ -1561,8 +1561,8 @@ class CustomerView extends Customer
                     $detailPageObj->id->setSessionValue(""); // Clear session key
                 }
             }
-            if (in_array("v_list_customer_brands", $detailTblVar)) {
-                $detailPageObj = Container("VListCustomerBrandsGrid");
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
                 if ($detailPageObj->DetailView) {
                     $detailPageObj->CurrentMode = "view";
 
@@ -1572,6 +1572,7 @@ class CustomerView extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
+                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -1596,7 +1597,7 @@ class CustomerView extends Customer
         $pages->add('alamat_customer');
         $pages->add('order');
         $pages->add('invoice');
-        $pages->add('v_list_customer_brands');
+        $pages->add('brand_customer');
         $this->DetailPages = $pages;
     }
 

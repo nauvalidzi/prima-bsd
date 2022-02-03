@@ -90,6 +90,7 @@ class NpdConfirm extends DbTable
         $this->idnpd = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
+        $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
@@ -107,6 +108,7 @@ class NpdConfirm extends DbTable
         // idnpd_sample
         $this->idnpd_sample = new DbField('npd_confirm', 'npd_confirm', 'x_idnpd_sample', 'idnpd_sample', '`idnpd_sample`', '`idnpd_sample`', 20, 20, -1, false, '`idnpd_sample`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd_sample->Nullable = false; // NOT NULL field
+        $this->idnpd_sample->Required = true; // Required field
         $this->idnpd_sample->Sortable = true; // Allow sort
         $this->idnpd_sample->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd_sample->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -154,16 +156,12 @@ class NpdConfirm extends DbTable
 
         // jabatan
         $this->jabatan = new DbField('npd_confirm', 'npd_confirm', 'x_jabatan', 'jabatan', '`jabatan`', '`jabatan`', 200, 255, -1, false, '`jabatan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jabatan->Nullable = false; // NOT NULL field
-        $this->jabatan->Required = true; // Required field
         $this->jabatan->Sortable = true; // Allow sort
         $this->jabatan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jabatan->Param, "CustomMsg");
         $this->Fields['jabatan'] = &$this->jabatan;
 
         // notelp
         $this->notelp = new DbField('npd_confirm', 'npd_confirm', 'x_notelp', 'notelp', '`notelp`', '`notelp`', 200, 16, -1, false, '`notelp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->notelp->Nullable = false; // NOT NULL field
-        $this->notelp->Required = true; // Required field
         $this->notelp->Sortable = true; // Allow sort
         $this->notelp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->notelp->Param, "CustomMsg");
         $this->Fields['notelp'] = &$this->notelp;
@@ -178,17 +176,16 @@ class NpdConfirm extends DbTable
         $this->Fields['created_at'] = &$this->created_at;
 
         // confirm_by
-        $this->confirm_by = new DbField('npd_confirm', 'npd_confirm', 'x_confirm_by', 'confirm_by', '`confirm_by`', '`confirm_by`', 3, 10, -1, false, '`confirm_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
+        $this->confirm_by = new DbField('npd_confirm', 'npd_confirm', 'x_confirm_by', 'confirm_by', '`confirm_by`', '`confirm_by`', 3, 11, -1, false, '`confirm_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
         $this->confirm_by->Sortable = true; // Allow sort
         $this->confirm_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->confirm_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->confirm_by->Param, "CustomMsg");
         $this->Fields['confirm_by'] = &$this->confirm_by;
 
         // readonly
-        $this->readonly = new DbField('npd_confirm', 'npd_confirm', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
+        $this->readonly = new DbField('npd_confirm', 'npd_confirm', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'RADIO');
         $this->readonly->Nullable = false; // NOT NULL field
         $this->readonly->Sortable = true; // Allow sort
-        $this->readonly->DataType = DATATYPE_BOOLEAN;
         switch ($CurrentLanguage) {
             case "en":
                 $this->readonly->Lookup = new Lookup('readonly', 'npd_confirm', false, '', ["","","",""], [], [], [], [], [], [], '', '');
@@ -1139,10 +1136,10 @@ SORTHTML;
         $this->confirm_by->ViewCustomAttributes = "";
 
         // readonly
-        if (ConvertToBool($this->readonly->CurrentValue)) {
-            $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
+        if (strval($this->readonly->CurrentValue) != "") {
+            $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
         } else {
-            $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
+            $this->readonly->ViewValue = null;
         }
         $this->readonly->ViewCustomAttributes = "";
 

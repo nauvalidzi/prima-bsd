@@ -261,8 +261,8 @@ class Brand extends DbTable
             $detailUrl = Container("product")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "v_list_brand_customers") {
-            $detailUrl = Container("v_list_brand_customers")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+        if ($this->getCurrentDetailTable() == "brand_customer") {
+            $detailUrl = Container("brand_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -598,7 +598,7 @@ class Brand extends DbTable
     // Update
     public function update(&$rs, $where = "", $rsold = null, $curfilter = true)
     {
-        // Cascade Update detail table 'v_list_brand_customers'
+        // Cascade Update detail table 'product'
         $cascadeUpdate = false;
         $rscascade = [];
         if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idbrand'
@@ -606,22 +606,22 @@ class Brand extends DbTable
             $rscascade['idbrand'] = $rs['id'];
         }
         if ($cascadeUpdate) {
-            $rswrk = Container("v_list_brand_customers")->loadRs("`idbrand` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
+            $rswrk = Container("product")->loadRs("`idbrand` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($rswrk as $rsdtlold) {
                 $rskey = [];
                 $fldname = 'id';
                 $rskey[$fldname] = $rsdtlold[$fldname];
                 $rsdtlnew = array_merge($rsdtlold, $rscascade);
                 // Call Row_Updating event
-                $success = Container("v_list_brand_customers")->rowUpdating($rsdtlold, $rsdtlnew);
+                $success = Container("product")->rowUpdating($rsdtlold, $rsdtlnew);
                 if ($success) {
-                    $success = Container("v_list_brand_customers")->update($rscascade, $rskey, $rsdtlold);
+                    $success = Container("product")->update($rscascade, $rskey, $rsdtlold);
                 }
                 if (!$success) {
                     return false;
                 }
                 // Call Row_Updated event
-                Container("v_list_brand_customers")->rowUpdated($rsdtlold, $rsdtlnew);
+                Container("product")->rowUpdated($rsdtlold, $rsdtlnew);
             }
         }
 
@@ -661,18 +661,18 @@ class Brand extends DbTable
     {
         $success = true;
 
-        // Cascade delete detail table 'v_list_brand_customers'
-        $dtlrows = Container("v_list_brand_customers")->loadRs("`idbrand` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
+        // Cascade delete detail table 'product'
+        $dtlrows = Container("product")->loadRs("`idbrand` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
         // Call Row Deleting event
         foreach ($dtlrows as $dtlrow) {
-            $success = Container("v_list_brand_customers")->rowDeleting($dtlrow);
+            $success = Container("product")->rowDeleting($dtlrow);
             if (!$success) {
                 break;
             }
         }
         if ($success) {
             foreach ($dtlrows as $dtlrow) {
-                $success = Container("v_list_brand_customers")->delete($dtlrow); // Delete
+                $success = Container("product")->delete($dtlrow); // Delete
                 if (!$success) {
                     break;
                 }
@@ -681,7 +681,7 @@ class Brand extends DbTable
         // Call Row Deleted event
         if ($success) {
             foreach ($dtlrows as $dtlrow) {
-                Container("v_list_brand_customers")->rowDeleted($dtlrow);
+                Container("product")->rowDeleted($dtlrow);
             }
         }
         if ($success) {

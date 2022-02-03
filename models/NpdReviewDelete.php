@@ -424,6 +424,7 @@ class NpdReviewDelete extends NpdReview
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
+        $this->setupLookupOptions($this->review_by);
 
         // Set up master/detail parameters
         $this->setupMasterParms();
@@ -962,8 +963,24 @@ class NpdReviewDelete extends NpdReview
             $this->readonly->ViewCustomAttributes = "";
 
             // review_by
-            $this->review_by->ViewValue = $this->review_by->CurrentValue;
-            $this->review_by->ViewValue = FormatNumber($this->review_by->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->review_by->CurrentValue));
+            if ($curVal != "") {
+                $this->review_by->ViewValue = $this->review_by->lookupCacheOption($curVal);
+                if ($this->review_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->review_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->review_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->review_by->ViewValue = $this->review_by->displayValue($arwrk);
+                    } else {
+                        $this->review_by->ViewValue = $this->review_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->review_by->ViewValue = null;
+            }
             $this->review_by->ViewCustomAttributes = "";
 
             // idnpd
@@ -1221,6 +1238,8 @@ class NpdReviewDelete extends NpdReview
                 case "x_status":
                     break;
                 case "x_readonly":
+                    break;
+                case "x_review_by":
                     break;
                 default:
                     $lookupFilter = "";

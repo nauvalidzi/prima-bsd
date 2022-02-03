@@ -2159,8 +2159,8 @@ class CustomerAdd extends Customer
         if (in_array("invoice", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("VListCustomerBrandsGrid");
-        if (in_array("v_list_customer_brands", $detailTblVar) && $detailPage->DetailAdd) {
+        $detailPage = Container("BrandCustomerGrid");
+        if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
 
@@ -2410,10 +2410,10 @@ class CustomerAdd extends Customer
                 $detailPage->idcustomer->setSessionValue(""); // Clear master key if insert failed
                 }
             }
-            $detailPage = Container("VListCustomerBrandsGrid");
-            if (in_array("v_list_customer_brands", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage = Container("BrandCustomerGrid");
+            if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
                 $detailPage->idcustomer->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "v_list_customer_brands"); // Load user level of detail table
+                $Security->loadCurrentUserLevel($this->ProjectID . "brand_customer"); // Load user level of detail table
                 $addRow = $detailPage->gridInsert();
                 $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                 if (!$addRow) {
@@ -2516,8 +2516,8 @@ class CustomerAdd extends Customer
                     $detailPageObj->id->setSessionValue(""); // Clear session key
                 }
             }
-            if (in_array("v_list_customer_brands", $detailTblVar)) {
-                $detailPageObj = Container("VListCustomerBrandsGrid");
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
                 if ($detailPageObj->DetailAdd) {
                     if ($this->CopyRecord) {
                         $detailPageObj->CurrentMode = "copy";
@@ -2532,6 +2532,7 @@ class CustomerAdd extends Customer
                     $detailPageObj->idcustomer->IsDetailKey = true;
                     $detailPageObj->idcustomer->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idcustomer->setSessionValue($detailPageObj->idcustomer->CurrentValue);
+                    $detailPageObj->idbrand->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -2556,7 +2557,7 @@ class CustomerAdd extends Customer
         $pages->add('alamat_customer');
         $pages->add('order');
         $pages->add('invoice');
-        $pages->add('v_list_customer_brands');
+        $pages->add('brand_customer');
         $this->DetailPages = $pages;
     }
 

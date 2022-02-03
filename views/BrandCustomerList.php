@@ -59,6 +59,22 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
+<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
+<?php
+if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "brand") {
+    if ($Page->MasterRecordExists) {
+        include_once "views/BrandMaster.php";
+    }
+}
+?>
+<?php
+if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "customer") {
+    if ($Page->MasterRecordExists) {
+        include_once "views/CustomerMaster.php";
+    }
+}
+?>
+<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
@@ -74,6 +90,14 @@ $Page->showMessage();
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
 <input type="hidden" name="t" value="brand_customer">
+<?php if ($Page->getCurrentMasterTable() == "brand" && $Page->CurrentAction) { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="brand">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idbrand->getSessionValue()) ?>">
+<?php } ?>
+<?php if ($Page->getCurrentMasterTable() == "customer" && $Page->CurrentAction) { ?>
+<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="customer">
+<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idcustomer->getSessionValue()) ?>">
+<?php } ?>
 <div id="gmp_brand_customer" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
 <table id="tbl_brand_customerlist" class="table ew-table"><!-- .ew-table -->
@@ -89,9 +113,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_brand_customer_id" class="brand_customer_id"><?= $Page->renderSort($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
         <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_brand_customer_idbrand" class="brand_customer_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
 <?php } ?>
@@ -165,14 +186,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_brand_customer_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->idbrand->Visible) { // idbrand ?>
         <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_brand_customer_idbrand">

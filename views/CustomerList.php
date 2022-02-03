@@ -147,8 +147,8 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_customer_nama" class="customer_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
 <?php } ?>
-<?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
-        <th data-name="jenis_usaha" class="<?= $Page->jenis_usaha->headerCellClass() ?>"><div id="elh_customer_jenis_usaha" class="customer_jenis_usaha"><?= $Page->renderSort($Page->jenis_usaha) ?></div></th>
+<?php if ($Page->idprov->Visible) { // idprov ?>
+        <th data-name="idprov" class="<?= $Page->idprov->headerCellClass() ?>"><div id="elh_customer_idprov" class="customer_idprov"><?= $Page->renderSort($Page->idprov) ?></div></th>
 <?php } ?>
 <?php if ($Page->hp->Visible) { // hp ?>
         <th data-name="hp" class="<?= $Page->hp->headerCellClass() ?>"><div id="elh_customer_hp" class="customer_hp"><?= $Page->renderSort($Page->hp) ?></div></th>
@@ -255,11 +255,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->jenis_usaha->Visible) { // jenis_usaha ?>
-        <td data-name="jenis_usaha" <?= $Page->jenis_usaha->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_customer_jenis_usaha">
-<span<?= $Page->jenis_usaha->viewAttributes() ?>>
-<?= $Page->jenis_usaha->getViewValue() ?></span>
+    <?php if ($Page->idprov->Visible) { // idprov ?>
+        <td data-name="idprov" <?= $Page->idprov->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_customer_idprov">
+<span<?= $Page->idprov->viewAttributes() ?>>
+<?= $Page->idprov->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -340,7 +340,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer");
+    $(".ew-detail-add-group").html("Add Customer").attr("href","CustomerAdd?showdetail=alamat_customer");var getnotif="<?php echo ($_GET['param']) ?? '' ?>";if("update"==getnotif||"delete"==getnotif){const e="update"==getnotif?"Updated":"Deleted";$(document).Toasts("create",{class:"ew-toast bg-success",title:"Success",delay:3e3,autohide:!0,body:e+" successfully"});new URLSearchParams("param="+getnotif).delete("param"),window.history.pushState({},document.title,window.location.pathname)}
 });
 </script>
 <?php } ?>

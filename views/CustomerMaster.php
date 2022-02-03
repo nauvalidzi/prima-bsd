@@ -53,13 +53,13 @@ $customer = Container("customer");
 </td>
         </tr>
 <?php } ?>
-<?php if ($customer->jenis_usaha->Visible) { // jenis_usaha ?>
-        <tr id="r_jenis_usaha">
-            <td class="<?= $customer->TableLeftColumnClass ?>"><?= $customer->jenis_usaha->caption() ?></td>
-            <td <?= $customer->jenis_usaha->cellAttributes() ?>>
-<span id="el_customer_jenis_usaha">
-<span<?= $customer->jenis_usaha->viewAttributes() ?>>
-<?= $customer->jenis_usaha->getViewValue() ?></span>
+<?php if ($customer->idprov->Visible) { // idprov ?>
+        <tr id="r_idprov">
+            <td class="<?= $customer->TableLeftColumnClass ?>"><?= $customer->idprov->caption() ?></td>
+            <td <?= $customer->idprov->cellAttributes() ?>>
+<span id="el_customer_idprov">
+<span<?= $customer->idprov->viewAttributes() ?>>
+<?= $customer->idprov->getViewValue() ?></span>
 </span>
 </td>
         </tr>

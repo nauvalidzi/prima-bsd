@@ -666,12 +666,12 @@ loadjs.ready("head", function() {
     }
 ?>
 <?php
-    if (in_array("v_list_customer_brands", explode(",", $Page->getCurrentDetailTable())) && $v_list_customer_brands->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "v_list_customer_brands") {
-            $firstActiveDetailTable = "v_list_customer_brands";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("v_list_customer_brands") ?>" href="#tab_v_list_customer_brands" data-toggle="tab"><?= $Language->tablePhrase("v_list_customer_brands", "TblCaption") ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("brand_customer") ?>" href="#tab_brand_customer" data-toggle="tab"><?= $Language->tablePhrase("brand_customer", "TblCaption") ?></a></li>
 <?php
     }
 ?>
@@ -708,13 +708,13 @@ loadjs.ready("head", function() {
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("v_list_customer_brands", explode(",", $Page->getCurrentDetailTable())) && $v_list_customer_brands->DetailEdit) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "v_list_customer_brands") {
-            $firstActiveDetailTable = "v_list_customer_brands";
+    if (in_array("brand_customer", explode(",", $Page->getCurrentDetailTable())) && $brand_customer->DetailEdit) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "brand_customer") {
+            $firstActiveDetailTable = "brand_customer";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("v_list_customer_brands") ?>" id="tab_v_list_customer_brands"><!-- page* -->
-<?php include_once "VListCustomerBrandsGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("brand_customer") ?>" id="tab_brand_customer"><!-- page* -->
+<?php include_once "BrandCustomerGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

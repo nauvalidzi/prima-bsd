@@ -329,7 +329,7 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    $(".ew-detail-add-group").html("Add Brand");
+    $(".ew-detail-add-group").html("Add Brand");var getnotif="<?php echo ($_GET['param']) ?? '' ?>";if("update"==getnotif||"delete"==getnotif){const e="update"==getnotif?"Updated":"Deleted";$(document).Toasts("create",{class:"ew-toast bg-success",title:"Success",delay:3e3,autohide:!0,body:e+" successfully"});new URLSearchParams("param="+getnotif).delete("param"),window.history.pushState({},document.title,window.location.pathname)}
 });
 </script>
 <?php } ?>

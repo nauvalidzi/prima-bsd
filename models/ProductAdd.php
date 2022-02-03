@@ -1713,6 +1713,24 @@ class ProductAdd extends Product
     protected function addRow($rsold = null)
     {
         global $Language, $Security;
+
+        // Check referential integrity for master table 'product'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_brand();
+        if (strval($this->idbrand->CurrentValue) != "") {
+            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
+        }
         $conn = $this->getConnection();
 
         // Load db values from rsold

@@ -965,10 +965,10 @@ class NpdConfirmEdit extends NpdConfirm
             $this->confirm_by->ViewCustomAttributes = "";
 
             // readonly
-            if (ConvertToBool($this->readonly->CurrentValue)) {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
+                $this->readonly->ViewValue = null;
             }
             $this->readonly->ViewCustomAttributes = "";
 
@@ -1217,10 +1217,10 @@ class NpdConfirmEdit extends NpdConfirm
             $this->personincharge->setDbValueDef($rsnew, $this->personincharge->CurrentValue, "", $this->personincharge->ReadOnly);
 
             // jabatan
-            $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, "", $this->jabatan->ReadOnly);
+            $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, null, $this->jabatan->ReadOnly);
 
             // notelp
-            $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, "", $this->notelp->ReadOnly);
+            $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, null, $this->notelp->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;

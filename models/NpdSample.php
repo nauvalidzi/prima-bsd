@@ -172,7 +172,7 @@ class NpdSample extends DbTable
         $this->Fields['fungsi'] = &$this->fungsi;
 
         // jumlah
-        $this->jumlah = new DbField('npd_sample', 'npd_sample', 'x_jumlah', 'jumlah', '`jumlah`', '`jumlah`', 3, 11, -1, false, '`jumlah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jumlah = new DbField('npd_sample', 'npd_sample', 'x_jumlah', 'jumlah', '`jumlah`', '`jumlah`', 3, 10, -1, false, '`jumlah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->jumlah->Nullable = false; // NOT NULL field
         $this->jumlah->Sortable = true; // Allow sort
         $this->jumlah->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

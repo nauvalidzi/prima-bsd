@@ -1226,8 +1226,8 @@ class BrandAdd extends Brand
         if (in_array("product", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("VListBrandCustomersGrid");
-        if (in_array("v_list_brand_customers", $detailTblVar) && $detailPage->DetailAdd) {
+        $detailPage = Container("BrandCustomerGrid");
+        if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
 
@@ -1478,10 +1478,10 @@ class BrandAdd extends Brand
                 $detailPage->idbrand->setSessionValue(""); // Clear master key if insert failed
                 }
             }
-            $detailPage = Container("VListBrandCustomersGrid");
-            if (in_array("v_list_brand_customers", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage = Container("BrandCustomerGrid");
+            if (in_array("brand_customer", $detailTblVar) && $detailPage->DetailAdd) {
                 $detailPage->idbrand->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "v_list_brand_customers"); // Load user level of detail table
+                $Security->loadCurrentUserLevel($this->ProjectID . "brand_customer"); // Load user level of detail table
                 $addRow = $detailPage->gridInsert();
                 $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                 if (!$addRow) {
@@ -1550,8 +1550,8 @@ class BrandAdd extends Brand
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
                 }
             }
-            if (in_array("v_list_brand_customers", $detailTblVar)) {
-                $detailPageObj = Container("VListBrandCustomersGrid");
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
                 if ($detailPageObj->DetailAdd) {
                     if ($this->CopyRecord) {
                         $detailPageObj->CurrentMode = "copy";
@@ -1566,6 +1566,7 @@ class BrandAdd extends Brand
                     $detailPageObj->idbrand->IsDetailKey = true;
                     $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
+                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -1587,7 +1588,7 @@ class BrandAdd extends Brand
     {
         $pages = new SubPages();
         $pages->add('product');
-        $pages->add('v_list_brand_customers');
+        $pages->add('brand_customer');
         $this->DetailPages = $pages;
     }
 

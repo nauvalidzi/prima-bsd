@@ -991,10 +991,10 @@ class NpdConfirmAdd extends NpdConfirm
             $this->confirm_by->ViewCustomAttributes = "";
 
             // readonly
-            if (ConvertToBool($this->readonly->CurrentValue)) {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
+                $this->readonly->ViewValue = null;
             }
             $this->readonly->ViewCustomAttributes = "";
 
@@ -1324,13 +1324,13 @@ class NpdConfirmAdd extends NpdConfirm
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
 
         // tglkonfirmasi
         $this->tglkonfirmasi->setDbValueDef($rsnew, UnFormatDateTime($this->tglkonfirmasi->CurrentValue, 0), CurrentDate(), false);
 
         // idnpd_sample
-        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, strval($this->idnpd_sample->CurrentValue) == "");
+        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, false);
 
         // foto
         if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
@@ -1352,10 +1352,10 @@ class NpdConfirmAdd extends NpdConfirm
         $this->personincharge->setDbValueDef($rsnew, $this->personincharge->CurrentValue, "", false);
 
         // jabatan
-        $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, "", false);
+        $this->jabatan->setDbValueDef($rsnew, $this->jabatan->CurrentValue, null, false);
 
         // notelp
-        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, "", false);
+        $this->notelp->setDbValueDef($rsnew, $this->notelp->CurrentValue, null, false);
 
         // confirm_by
         $this->confirm_by->setDbValueDef($rsnew, $this->confirm_by->CurrentValue, null, false);

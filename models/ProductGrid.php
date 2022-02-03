@@ -2328,6 +2328,25 @@ class ProductGrid extends Product
             // updated_at
             $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 11), CurrentDate(), $this->updated_at->ReadOnly);
 
+            // Check referential integrity for master table 'brand'
+            $validMasterRecord = true;
+            $masterFilter = $this->sqlMasterFilter_brand();
+            $keyValue = $rsnew['idbrand'] ?? $rsold['idbrand'];
+            if (strval($keyValue) != "") {
+                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+            } else {
+                $validMasterRecord = false;
+            }
+            if ($validMasterRecord) {
+                $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+                $validMasterRecord = $rsmaster !== false;
+            }
+            if (!$validMasterRecord) {
+                $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+                $this->setFailureMessage($relatedRecordMsg);
+                return false;
+            }
+
             // Call Row Updating event
             $updateRow = $this->rowUpdating($rsold, $rsnew);
             if ($updateRow) {
@@ -2380,6 +2399,24 @@ class ProductGrid extends Product
         // Set up foreign key field value from Session
         if ($this->getCurrentMasterTable() == "brand") {
             $this->idbrand->CurrentValue = $this->idbrand->getSessionValue();
+        }
+
+        // Check referential integrity for master table 'product'
+        $validMasterRecord = true;
+        $masterFilter = $this->sqlMasterFilter_brand();
+        if (strval($this->idbrand->CurrentValue) != "") {
+            $masterFilter = str_replace("@id@", AdjustSql($this->idbrand->CurrentValue, "DB"), $masterFilter);
+        } else {
+            $validMasterRecord = false;
+        }
+        if ($validMasterRecord) {
+            $rsmaster = Container("brand")->loadRs($masterFilter)->fetch();
+            $validMasterRecord = $rsmaster !== false;
+        }
+        if (!$validMasterRecord) {
+            $relatedRecordMsg = str_replace("%t", "brand", $Language->phrase("RelatedRecordRequired"));
+            $this->setFailureMessage($relatedRecordMsg);
+            return false;
         }
         $conn = $this->getConnection();
 

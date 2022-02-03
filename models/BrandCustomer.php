@@ -28,7 +28,6 @@ class BrandCustomer extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $id;
     public $idbrand;
     public $idcustomer;
 
@@ -67,17 +66,10 @@ class BrandCustomer extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // id
-        $this->id = new DbField('brand_customer', 'brand_customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Sortable = true; // Allow sort
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
-        $this->Fields['id'] = &$this->id;
-
         // idbrand
         $this->idbrand = new DbField('brand_customer', 'brand_customer', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idbrand->IsPrimaryKey = true; // Primary key field
+        $this->idbrand->IsForeignKey = true; // Foreign key field
         $this->idbrand->Nullable = false; // NOT NULL field
         $this->idbrand->Required = true; // Required field
         $this->idbrand->Sortable = true; // Allow sort
@@ -97,6 +89,8 @@ class BrandCustomer extends DbTable
 
         // idcustomer
         $this->idcustomer = new DbField('brand_customer', 'brand_customer', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idcustomer->IsPrimaryKey = true; // Primary key field
+        $this->idcustomer->IsForeignKey = true; // Foreign key field
         $this->idcustomer->Nullable = false; // NOT NULL field
         $this->idcustomer->Required = true; // Required field
         $this->idcustomer->Sortable = true; // Allow sort
@@ -150,6 +144,83 @@ class BrandCustomer extends DbTable
         } else {
             $fld->setSort("");
         }
+    }
+
+    // Current master table name
+    public function getCurrentMasterTable()
+    {
+        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
+    }
+
+    public function setCurrentMasterTable($v)
+    {
+        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
+    }
+
+    // Session master WHERE clause
+    public function getMasterFilter()
+    {
+        // Master filter
+        $masterFilter = "";
+        if ($this->getCurrentMasterTable() == "brand") {
+            if ($this->idbrand->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        if ($this->getCurrentMasterTable() == "customer") {
+            if ($this->idcustomer->getSessionValue() != "") {
+                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        return $masterFilter;
+    }
+
+    // Session detail WHERE clause
+    public function getDetailFilter()
+    {
+        // Detail filter
+        $detailFilter = "";
+        if ($this->getCurrentMasterTable() == "brand") {
+            if ($this->idbrand->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`idbrand`", $this->idbrand->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        if ($this->getCurrentMasterTable() == "customer") {
+            if ($this->idcustomer->getSessionValue() != "") {
+                $detailFilter .= "" . GetForeignKeySql("`idcustomer`", $this->idcustomer->getSessionValue(), DATATYPE_NUMBER, "DB");
+            } else {
+                return "";
+            }
+        }
+        return $detailFilter;
+    }
+
+    // Master filter
+    public function sqlMasterFilter_brand()
+    {
+        return "`id`=@id@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_brand()
+    {
+        return "`idbrand`=@idbrand@";
+    }
+
+    // Master filter
+    public function sqlMasterFilter_customer()
+    {
+        return "`id`=@id@";
+    }
+    // Detail filter
+    public function sqlDetailFilter_customer()
+    {
+        return "`idcustomer`=@idcustomer@";
     }
 
     // Table level SQL
@@ -439,9 +510,6 @@ class BrandCustomer extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
         }
         return $success;
     }
@@ -501,8 +569,11 @@ class BrandCustomer extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('idbrand', $rs)) {
+                AddFilter($where, QuotedName('idbrand', $this->Dbid) . '=' . QuotedValue($rs['idbrand'], $this->idbrand->DataType, $this->Dbid));
+            }
+            if (array_key_exists('idcustomer', $rs)) {
+                AddFilter($where, QuotedName('idcustomer', $this->Dbid) . '=' . QuotedValue($rs['idcustomer'], $this->idcustomer->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -526,7 +597,6 @@ class BrandCustomer extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
         $this->idbrand->DbValue = $row['idbrand'];
         $this->idcustomer->DbValue = $row['idcustomer'];
     }
@@ -540,14 +610,20 @@ class BrandCustomer extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`idbrand` = @idbrand@ AND `idcustomer` = @idcustomer@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->idbrand->CurrentValue : $this->idbrand->OldValue;
+        if (EmptyValue($val)) {
+            return "";
+        } else {
+            $keys[] = $val;
+        }
+        $val = $current ? $this->idcustomer->CurrentValue : $this->idcustomer->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -561,11 +637,16 @@ class BrandCustomer extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
+        if (count($keys) == 2) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->idbrand->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->idbrand->OldValue = $keys[0];
+            }
+            if ($current) {
+                $this->idcustomer->CurrentValue = $keys[1];
+            } else {
+                $this->idcustomer->OldValue = $keys[1];
             }
         }
     }
@@ -575,9 +656,9 @@ class BrandCustomer extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('idbrand', $row) ? $row['idbrand'] : null;
         } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+            $val = $this->idbrand->OldValue !== null ? $this->idbrand->OldValue : $this->idbrand->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -585,7 +666,20 @@ class BrandCustomer extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@idbrand@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+        }
+        if (is_array($row)) {
+            $val = array_key_exists('idcustomer', $row) ? $row['idcustomer'] : null;
+        } else {
+            $val = $this->idcustomer->OldValue !== null ? $this->idcustomer->OldValue : $this->idcustomer->CurrentValue;
+        }
+        if (!is_numeric($val)) {
+            return "0=1"; // Invalid key
+        }
+        if ($val === null) {
+            return "0=1"; // Invalid key
+        } else {
+            $keyFilter = str_replace("@idcustomer@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -708,13 +802,22 @@ class BrandCustomer extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
+        if ($this->getCurrentMasterTable() == "brand" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idbrand->CurrentValue ?? $this->idbrand->getSessionValue());
+        }
+        if ($this->getCurrentMasterTable() == "customer" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idcustomer->CurrentValue ?? $this->idcustomer->getSessionValue());
+        }
         return $url;
     }
 
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
+        $json .= "idbrand:" . JsonEncode($this->idbrand->CurrentValue, "number");
+        $json .= ",idcustomer:" . JsonEncode($this->idcustomer->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -725,8 +828,13 @@ class BrandCustomer extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->id->CurrentValue);
+        if ($this->idbrand->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idbrand->CurrentValue);
+        } else {
+            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
+        }
+        if ($this->idcustomer->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idcustomer->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -787,13 +895,26 @@ SORTHTML;
         if (Param("key_m") !== null) {
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
+            for ($i = 0; $i < $cnt; $i++) {
+                $arKeys[$i] = explode(Config("COMPOSITE_KEY_SEPARATOR"), $arKeys[$i]);
+            }
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
-                $arKeys[] = $keyValue;
+            if (($keyValue = Param("idbrand") ?? Route("idbrand")) !== null) {
+                $arKey[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
+                $arKey[] = $keyValue;
             } else {
                 $arKeys = null; // Do not setup
+            }
+            if (($keyValue = Param("idcustomer") ?? Route("idcustomer")) !== null) {
+                $arKey[] = $keyValue;
+            } elseif (IsApi() && (($keyValue = Key(1) ?? Route(3)) !== null)) {
+                $arKey[] = $keyValue;
+            } else {
+                $arKeys = null; // Do not setup
+            }
+            if (is_array($arKeys)) {
+                $arKeys[] = $arKey;
             }
 
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
@@ -802,7 +923,13 @@ SORTHTML;
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
+                if (!is_array($key) || count($key) != 2) {
+                    continue; // Just skip so other keys will still work
+                }
+                if (!is_numeric($key[0])) { // idbrand
+                    continue;
+                }
+                if (!is_numeric($key[1])) { // idcustomer
                     continue;
                 }
                 $ar[] = $key;
@@ -821,9 +948,14 @@ SORTHTML;
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->idbrand->CurrentValue = $key[0];
             } else {
-                $this->id->OldValue = $key;
+                $this->idbrand->OldValue = $key[0];
+            }
+            if ($setCurrent) {
+                $this->idcustomer->CurrentValue = $key[1];
+            } else {
+                $this->idcustomer->OldValue = $key[1];
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -849,7 +981,6 @@ SORTHTML;
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idcustomer->setDbValue($row['idcustomer']);
     }
@@ -864,15 +995,9 @@ SORTHTML;
 
         // Common render codes
 
-        // id
-
         // idbrand
 
         // idcustomer
-
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
 
         // idbrand
         $curVal = trim(strval($this->idbrand->CurrentValue));
@@ -902,7 +1027,7 @@ SORTHTML;
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 1" : "";;
+                    return (CurrentPageID() == "add" or CurrentPageID() == "edit" ) ? "id > 0" : "";;
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -919,11 +1044,6 @@ SORTHTML;
             $this->idcustomer->ViewValue = null;
         }
         $this->idcustomer->ViewCustomAttributes = "";
-
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
 
         // idbrand
         $this->idbrand->LinkCustomAttributes = "";
@@ -949,12 +1069,6 @@ SORTHTML;
 
         // Call Row Rendering event
         $this->rowRendering();
-
-        // id
-        $this->id->EditAttrs["class"] = "form-control";
-        $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
 
         // idbrand
         $this->idbrand->EditAttrs["class"] = "form-control";
@@ -994,11 +1108,9 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->idcustomer);
                 } else {
-                    $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->idcustomer);
                 }
@@ -1030,11 +1142,9 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->idbrand);
                         $doc->exportField($this->idcustomer);
                     } else {
-                        $doc->exportField($this->id);
                         $doc->exportField($this->idbrand);
                         $doc->exportField($this->idcustomer);
                     }

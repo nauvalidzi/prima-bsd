@@ -434,8 +434,8 @@ class Customer extends DbTable
             $detailUrl = Container("invoice")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "v_list_customer_brands") {
-            $detailUrl = Container("v_list_customer_brands")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+        if ($this->getCurrentDetailTable() == "brand_customer") {
+            $detailUrl = Container("brand_customer")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -478,7 +478,7 @@ class Customer extends DbTable
     public function getSqlWhere() // Where
     {
         $where = ($this->SqlWhere != "") ? $this->SqlWhere : "";
-        $this->DefaultFilter = "`id` > -1";
+        $this->DefaultFilter = "`id` > 0";
         AddFilter($where, $this->DefaultFilter);
         return $where;
     }

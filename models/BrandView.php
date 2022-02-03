@@ -726,26 +726,26 @@ class BrandView extends Brand
             $item->Visible = false;
         }
 
-        // "detail_v_list_brand_customers"
-        $item = &$option->add("detail_v_list_brand_customers");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("v_list_brand_customers", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("v_list_brand_customers")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("VListBrandCustomersList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
+        // "detail_brand_customer"
+        $item = &$option->add("detail_brand_customer");
+        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("brand_customer", "TblCaption");
+        $body .= "&nbsp;" . str_replace("%c", Container("brand_customer")->Count, $Language->phrase("DetailCount"));
+        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("BrandCustomerList?" . Config("TABLE_SHOW_MASTER") . "=brand&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
         $links = "";
-        $detailPageObj = Container("VListBrandCustomersGrid");
+        $detailPageObj = Container("BrandCustomerGrid");
         if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'brand')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_brand_customers"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
             if ($detailViewTblVar != "") {
                 $detailViewTblVar .= ",";
             }
-            $detailViewTblVar .= "v_list_brand_customers";
+            $detailViewTblVar .= "brand_customer";
         }
         if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'brand')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=v_list_brand_customers"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=brand_customer"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
             if ($detailEditTblVar != "") {
                 $detailEditTblVar .= ",";
             }
-            $detailEditTblVar .= "v_list_brand_customers";
+            $detailEditTblVar .= "brand_customer";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -753,12 +753,12 @@ class BrandView extends Brand
         }
         $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
         $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'v_list_brand_customers');
+        $item->Visible = $Security->allowList(CurrentProjectID() . 'brand_customer');
         if ($item->Visible) {
             if ($detailTableLink != "") {
                 $detailTableLink .= ",";
             }
-            $detailTableLink .= "v_list_brand_customers";
+            $detailTableLink .= "brand_customer";
         }
         if ($this->ShowMultipleDetails) {
             $item->Visible = false;
@@ -875,7 +875,7 @@ class BrandView extends Brand
         $detailTbl->setCurrentMasterTable("brand");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("v_list_brand_customers");
+        $detailTbl = Container("brand_customer");
         $detailFilter = $detailTbl->sqlDetailFilter_brand();
         $detailFilter = str_replace("@idbrand@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("brand");
@@ -1134,8 +1134,8 @@ class BrandView extends Brand
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
                 }
             }
-            if (in_array("v_list_brand_customers", $detailTblVar)) {
-                $detailPageObj = Container("VListBrandCustomersGrid");
+            if (in_array("brand_customer", $detailTblVar)) {
+                $detailPageObj = Container("BrandCustomerGrid");
                 if ($detailPageObj->DetailView) {
                     $detailPageObj->CurrentMode = "view";
 
@@ -1145,6 +1145,7 @@ class BrandView extends Brand
                     $detailPageObj->idbrand->IsDetailKey = true;
                     $detailPageObj->idbrand->CurrentValue = $this->id->CurrentValue;
                     $detailPageObj->idbrand->setSessionValue($detailPageObj->idbrand->CurrentValue);
+                    $detailPageObj->idcustomer->setSessionValue(""); // Clear session key
                 }
             }
         }
@@ -1166,7 +1167,7 @@ class BrandView extends Brand
     {
         $pages = new SubPages();
         $pages->add('product');
-        $pages->add('v_list_brand_customers');
+        $pages->add('brand_customer');
         $this->DetailPages = $pages;
     }
 
