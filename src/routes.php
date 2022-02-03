@@ -1336,28 +1336,6 @@ return function (App $app) {
     // antrian_bot
     $app->any('/AntrianBot[/{params:.*}]', AntrianBotController::class)->add(PermissionMiddleware::class)->setName('AntrianBot-antrian_bot-custom'); // custom
 
-    // v_list_brand_customers
-    $app->any('/VListBrandCustomersList', VListBrandCustomersController::class . ':list')->add(PermissionMiddleware::class)->setName('VListBrandCustomersList-v_list_brand_customers-list'); // list
-    $app->any('/VListBrandCustomersAdd', VListBrandCustomersController::class . ':add')->add(PermissionMiddleware::class)->setName('VListBrandCustomersAdd-v_list_brand_customers-add'); // add
-    $app->group(
-        '/v_list_brand_customers',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', VListBrandCustomersController::class . ':list')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/list-v_list_brand_customers-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '', VListBrandCustomersController::class . ':add')->add(PermissionMiddleware::class)->setName('v_list_brand_customers/add-v_list_brand_customers-add-2'); // add
-        }
-    );
-
-    // v_list_customer_brands
-    $app->any('/VListCustomerBrandsList', VListCustomerBrandsController::class . ':list')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsList-v_list_customer_brands-list'); // list
-    $app->any('/VListCustomerBrandsAdd', VListCustomerBrandsController::class . ':add')->add(PermissionMiddleware::class)->setName('VListCustomerBrandsAdd-v_list_customer_brands-add'); // add
-    $app->group(
-        '/v_list_customer_brands',
-        function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '', VListCustomerBrandsController::class . ':list')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/list-v_list_customer_brands-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '', VListCustomerBrandsController::class . ':add')->add(PermissionMiddleware::class)->setName('v_list_customer_brands/add-v_list_customer_brands-add-2'); // add
-        }
-    );
-
     // tipe_sla
     $app->any('/TipeSlaList[/{id}]', TipeSlaController::class . ':list')->add(PermissionMiddleware::class)->setName('TipeSlaList-tipe_sla-list'); // list
     $app->any('/TipeSlaAdd[/{id}]', TipeSlaController::class . ':add')->add(PermissionMiddleware::class)->setName('TipeSlaAdd-tipe_sla-add'); // add

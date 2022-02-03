@@ -931,12 +931,6 @@
     <menu id="1059">
       <phrase id="menutext" value="Brand Customer Delete" />
     </menu>
-    <menu id="1055">
-      <phrase id="menutext" value="Customer List" />
-    </menu>
-    <menu id="1056">
-      <phrase id="menutext" value="Brand List" />
-    </menu>
     <menu id="925">
       <phrase id="menutext" value="npd master kemasan" />
     </menu>
@@ -4372,39 +4366,6 @@
     </table>
     <table id="antrian_bot">
       <phrase id="tblcaption" value="Antrian Bot" />
-    </table>
-    <table id="v_list_brand_customers">
-      <phrase id="tblcaption" value="Customer List" />
-      <field id="idbrand">
-        <phrase id="fldcaption" value="idbrand" />
-      </field>
-      <field id="idcustomer">
-        <phrase id="fldcaption" value="idcustomer" />
-      </field>
-      <field id="kode_customer">
-        <phrase id="fldcaption" value="kode customer" />
-      </field>
-      <field id="nama_customer">
-        <phrase id="fldcaption" value="nama customer" />
-      </field>
-    </table>
-    <table id="v_list_customer_brands">
-      <phrase id="tblcaption" value="Brand List" />
-      <field id="idcustomer">
-        <phrase id="fldcaption" value="idcustomer" />
-      </field>
-      <field id="idbrand">
-        <phrase id="fldcaption" value="idbrand" />
-      </field>
-      <field id="kode_brand">
-        <phrase id="fldcaption" value="kode brand" />
-      </field>
-      <field id="nama_brand">
-        <phrase id="fldcaption" value="nama brand" />
-      </field>
-      <field id="jumlah_produk">
-        <phrase id="fldcaption" value="jumlah produk" />
-      </field>
     </table>
     <table id="tipe_sla">
       <phrase id="tblcaption" value="Tipe SLA" />

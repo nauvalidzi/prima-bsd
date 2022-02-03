@@ -156,8 +156,6 @@ return [
     "kualitasbarang" => \DI\create(Kualitasbarang::class),
     "viskositasbarang" => \DI\create(Viskositasbarang::class),
     "antrian_bot" => \DI\create(AntrianBot::class),
-    "v_list_brand_customers" => \DI\create(VListBrandCustomers::class),
-    "v_list_customer_brands" => \DI\create(VListCustomerBrands::class),
     "tipe_sla" => \DI\create(TipeSla::class),
     "brandcustomer_edit2" => \DI\create(BrandcustomerEdit2::class),
     "brandcustomer_delete2" => \DI\create(BrandcustomerDelete2::class),
