@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $NpdSampleList = &$Page;
@@ -79,13 +79,6 @@ loadjs.ready("head", function () {
 <?php } ?>
 <?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
 <?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "serahterima") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/SerahterimaMaster.php";
-    }
-}
-?>
-<?php
 if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd") {
     if ($Page->MasterRecordExists) {
         include_once "views/NpdMaster.php";
@@ -143,10 +136,6 @@ $Page->showMessage();
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
 <input type="hidden" name="t" value="npd_sample">
-<?php if ($Page->getCurrentMasterTable() == "serahterima" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="serahterima">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idserahterima->getSessionValue()) ?>">
-<?php } ?>
 <?php if ($Page->getCurrentMasterTable() == "npd" && $Page->CurrentAction) { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">

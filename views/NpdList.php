@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $NpdList = &$Page;
@@ -168,6 +168,30 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->jenisproduk->Visible) { // jenisproduk ?>
         <th data-name="jenisproduk" class="<?= $Page->jenisproduk->headerCellClass() ?>"><div id="elh_npd_jenisproduk" class="npd_jenisproduk"><?= $Page->renderSort($Page->jenisproduk) ?></div></th>
 <?php } ?>
+<?php if ($Page->kemasanwadah->Visible) { // kemasanwadah ?>
+        <th data-name="kemasanwadah" class="<?= $Page->kemasanwadah->headerCellClass() ?>"><div id="elh_npd_kemasanwadah" class="npd_kemasanwadah"><?= $Page->renderSort($Page->kemasanwadah) ?></div></th>
+<?php } ?>
+<?php if ($Page->ukurankemasansekunder->Visible) { // ukurankemasansekunder ?>
+        <th data-name="ukurankemasansekunder" class="<?= $Page->ukurankemasansekunder->headerCellClass() ?>"><div id="elh_npd_ukurankemasansekunder" class="npd_ukurankemasansekunder"><?= $Page->renderSort($Page->ukurankemasansekunder) ?></div></th>
+<?php } ?>
+<?php if ($Page->satuankemasansekunder->Visible) { // satuankemasansekunder ?>
+        <th data-name="satuankemasansekunder" class="<?= $Page->satuankemasansekunder->headerCellClass() ?>"><div id="elh_npd_satuankemasansekunder" class="npd_satuankemasansekunder"><?= $Page->renderSort($Page->satuankemasansekunder) ?></div></th>
+<?php } ?>
+<?php if ($Page->kemasanbahan->Visible) { // kemasanbahan ?>
+        <th data-name="kemasanbahan" class="<?= $Page->kemasanbahan->headerCellClass() ?>"><div id="elh_npd_kemasanbahan" class="npd_kemasanbahan"><?= $Page->renderSort($Page->kemasanbahan) ?></div></th>
+<?php } ?>
+<?php if ($Page->kemasankomposisi->Visible) { // kemasankomposisi ?>
+        <th data-name="kemasankomposisi" class="<?= $Page->kemasankomposisi->headerCellClass() ?>"><div id="elh_npd_kemasankomposisi" class="npd_kemasankomposisi"><?= $Page->renderSort($Page->kemasankomposisi) ?></div></th>
+<?php } ?>
+<?php if ($Page->labeltekstur->Visible) { // labeltekstur ?>
+        <th data-name="labeltekstur" class="<?= $Page->labeltekstur->headerCellClass() ?>"><div id="elh_npd_labeltekstur" class="npd_labeltekstur"><?= $Page->renderSort($Page->labeltekstur) ?></div></th>
+<?php } ?>
+<?php if ($Page->labelprint->Visible) { // labelprint ?>
+        <th data-name="labelprint" class="<?= $Page->labelprint->headerCellClass() ?>"><div id="elh_npd_labelprint" class="npd_labelprint"><?= $Page->renderSort($Page->labelprint) ?></div></th>
+<?php } ?>
+<?php if ($Page->labeljmlwarna->Visible) { // labeljmlwarna ?>
+        <th data-name="labeljmlwarna" class="<?= $Page->labeljmlwarna->headerCellClass() ?>"><div id="elh_npd_labeljmlwarna" class="npd_labeljmlwarna"><?= $Page->renderSort($Page->labeljmlwarna) ?></div></th>
+<?php } ?>
 <?php if ($Page->receipt_by->Visible) { // receipt_by ?>
         <th data-name="receipt_by" class="<?= $Page->receipt_by->headerCellClass() ?>"><div id="elh_npd_receipt_by" class="npd_receipt_by"><?= $Page->renderSort($Page->receipt_by) ?></div></th>
 <?php } ?>
@@ -326,6 +350,70 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_jenisproduk">
 <span<?= $Page->jenisproduk->viewAttributes() ?>>
 <?= $Page->jenisproduk->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kemasanwadah->Visible) { // kemasanwadah ?>
+        <td data-name="kemasanwadah" <?= $Page->kemasanwadah->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_kemasanwadah">
+<span<?= $Page->kemasanwadah->viewAttributes() ?>>
+<?= $Page->kemasanwadah->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->ukurankemasansekunder->Visible) { // ukurankemasansekunder ?>
+        <td data-name="ukurankemasansekunder" <?= $Page->ukurankemasansekunder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_ukurankemasansekunder">
+<span<?= $Page->ukurankemasansekunder->viewAttributes() ?>>
+<?= $Page->ukurankemasansekunder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->satuankemasansekunder->Visible) { // satuankemasansekunder ?>
+        <td data-name="satuankemasansekunder" <?= $Page->satuankemasansekunder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_satuankemasansekunder">
+<span<?= $Page->satuankemasansekunder->viewAttributes() ?>>
+<?= $Page->satuankemasansekunder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kemasanbahan->Visible) { // kemasanbahan ?>
+        <td data-name="kemasanbahan" <?= $Page->kemasanbahan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_kemasanbahan">
+<span<?= $Page->kemasanbahan->viewAttributes() ?>>
+<?= $Page->kemasanbahan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kemasankomposisi->Visible) { // kemasankomposisi ?>
+        <td data-name="kemasankomposisi" <?= $Page->kemasankomposisi->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_kemasankomposisi">
+<span<?= $Page->kemasankomposisi->viewAttributes() ?>>
+<?= $Page->kemasankomposisi->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->labeltekstur->Visible) { // labeltekstur ?>
+        <td data-name="labeltekstur" <?= $Page->labeltekstur->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_labeltekstur">
+<span<?= $Page->labeltekstur->viewAttributes() ?>>
+<?= $Page->labeltekstur->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->labelprint->Visible) { // labelprint ?>
+        <td data-name="labelprint" <?= $Page->labelprint->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_labelprint">
+<span<?= $Page->labelprint->viewAttributes() ?>>
+<?= $Page->labelprint->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->labeljmlwarna->Visible) { // labeljmlwarna ?>
+        <td data-name="labeljmlwarna" <?= $Page->labeljmlwarna->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_labeljmlwarna">
+<span<?= $Page->labeljmlwarna->viewAttributes() ?>>
+<?= $Page->labeljmlwarna->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

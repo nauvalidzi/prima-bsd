@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -738,37 +738,8 @@ class NpdSampleList extends NpdSample
         // Restore master/detail filter
         $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
         $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "serahterima") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "serahterima"); // Add master User ID filter
-                }
-                if ($this->getCurrentMasterTable() == "npd") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "npd"); // Add master User ID filter
-                }
-                if ($this->getCurrentMasterTable() == "npd_serahterima") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "npd_serahterima"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "serahterima") {
-            $masterTbl = Container("serahterima");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("SerahterimaList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
 
         // Load master record
         if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "npd") {
@@ -1332,7 +1303,6 @@ class NpdSampleList extends NpdSample
                 $this->setCurrentMasterTable(""); // Clear master table
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
-                        $this->idserahterima->setSessionValue("");
                         $this->idnpd->setSessionValue("");
                         $this->idserahterima->setSessionValue("");
             }
@@ -2034,20 +2004,6 @@ class NpdSampleList extends NpdSample
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
             }
-            if ($masterTblVar == "serahterima") {
-                $validMaster = true;
-                $masterTbl = Container("serahterima");
-                if (($parm = Get("fk_id", Get("idserahterima"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idserahterima->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idserahterima->setSessionValue($this->idserahterima->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
             if ($masterTblVar == "npd") {
                 $validMaster = true;
                 $masterTbl = Container("npd");
@@ -2082,20 +2038,6 @@ class NpdSampleList extends NpdSample
                     $validMaster = true;
                     $this->DbMasterFilter = "";
                     $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "serahterima") {
-                $validMaster = true;
-                $masterTbl = Container("serahterima");
-                if (($parm = Post("fk_id", Post("idserahterima"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idserahterima->setFormValue($masterTbl->id->FormValue);
-                    $this->idserahterima->setSessionValue($this->idserahterima->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
             }
             if ($masterTblVar == "npd") {
                 $validMaster = true;
@@ -2143,11 +2085,6 @@ class NpdSampleList extends NpdSample
             }
 
             // Clear previous master key from Session
-            if ($masterTblVar != "serahterima") {
-                if ($this->idserahterima->CurrentValue == "") {
-                    $this->idserahterima->setSessionValue("");
-                }
-            }
             if ($masterTblVar != "npd") {
                 if ($this->idnpd->CurrentValue == "") {
                     $this->idnpd->setSessionValue("");

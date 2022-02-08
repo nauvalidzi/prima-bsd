@@ -4,7 +4,7 @@
  * PHPMaker 2021 constants
  */
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 /**
  * Constants
@@ -83,8 +83,8 @@ define(PROJECT_NAMESPACE . "ALLOW_ALL", 511); // All (1 + 2 + 4 + 8 + 16 + 32 + 
 define(PROJECT_NAMESPACE . "PRODUCT_VERSION", "17.0.8");
 
 // Project
-define(PROJECT_NAMESPACE . "PROJECT_NAME", "distributor"); // Project name
-define(PROJECT_NAMESPACE . "PROJECT_ID", "{4FA0DF52-C852-4B9E-ABFE-6BF1F23D959B}"); // Project ID
+define(PROJECT_NAMESPACE . "PROJECT_NAME", "production2"); // Project name
+define(PROJECT_NAMESPACE . "PROJECT_ID", "{B32B7005-E649-463B-AEE9-0CDA6C0094D3}"); // Project ID
 
 /**
  * Character encoding

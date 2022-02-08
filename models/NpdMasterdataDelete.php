@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -352,6 +352,9 @@ class NpdMasterdataDelete extends NpdMasterdata
      */
     protected function hideFieldsForAddEdit()
     {
+        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+            $this->id->Visible = false;
+        }
     }
     public $DbMasterFilter = "";
     public $DbDetailFilter = "";

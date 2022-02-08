@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -91,15 +91,16 @@ class NpdSample extends DbTable
         $this->idnpd = new DbField('npd_sample', 'npd_sample', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
+        $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort
         $this->idnpd->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], ["serahterima x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["warna","parfum"], ["x_warna","x_bau"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["warna","parfum"], ["x_warna","x_bau"], '', '');
                 break;
             default:
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], ["serahterima x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["warna","parfum"], ["x_warna","x_bau"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["warna","parfum"], ["x_warna","x_bau"], '', '');
                 break;
         }
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -110,6 +111,7 @@ class NpdSample extends DbTable
         $this->idserahterima = new DbField('npd_sample', 'npd_sample', 'x_idserahterima', 'idserahterima', '`idserahterima`', '`idserahterima`', 20, 20, -1, false, '`idserahterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->idserahterima->IsForeignKey = true; // Foreign key field
         $this->idserahterima->Nullable = false; // NOT NULL field
+        $this->idserahterima->Required = true; // Required field
         $this->idserahterima->Sortable = true; // Allow sort
         $this->idserahterima->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idserahterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idserahterima->Param, "CustomMsg");
@@ -133,40 +135,30 @@ class NpdSample extends DbTable
 
         // sediaan
         $this->sediaan = new DbField('npd_sample', 'npd_sample', 'x_sediaan', 'sediaan', '`sediaan`', '`sediaan`', 200, 50, -1, false, '`sediaan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->sediaan->Nullable = false; // NOT NULL field
-        $this->sediaan->Required = true; // Required field
         $this->sediaan->Sortable = true; // Allow sort
         $this->sediaan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sediaan->Param, "CustomMsg");
         $this->Fields['sediaan'] = &$this->sediaan;
 
         // ukuran
         $this->ukuran = new DbField('npd_sample', 'npd_sample', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 50, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->ukuran->Nullable = false; // NOT NULL field
-        $this->ukuran->Required = true; // Required field
         $this->ukuran->Sortable = true; // Allow sort
         $this->ukuran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuran->Param, "CustomMsg");
         $this->Fields['ukuran'] = &$this->ukuran;
 
         // warna
         $this->warna = new DbField('npd_sample', 'npd_sample', 'x_warna', 'warna', '`warna`', '`warna`', 200, 50, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->warna->Nullable = false; // NOT NULL field
-        $this->warna->Required = true; // Required field
         $this->warna->Sortable = true; // Allow sort
         $this->warna->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->warna->Param, "CustomMsg");
         $this->Fields['warna'] = &$this->warna;
 
         // bau
         $this->bau = new DbField('npd_sample', 'npd_sample', 'x_bau', 'bau', '`bau`', '`bau`', 200, 50, -1, false, '`bau`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bau->Nullable = false; // NOT NULL field
-        $this->bau->Required = true; // Required field
         $this->bau->Sortable = true; // Allow sort
         $this->bau->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bau->Param, "CustomMsg");
         $this->Fields['bau'] = &$this->bau;
 
         // fungsi
         $this->fungsi = new DbField('npd_sample', 'npd_sample', 'x_fungsi', 'fungsi', '`fungsi`', '`fungsi`', 200, 50, -1, false, '`fungsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->fungsi->Nullable = false; // NOT NULL field
-        $this->fungsi->Required = true; // Required field
         $this->fungsi->Sortable = true; // Allow sort
         $this->fungsi->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->fungsi->Param, "CustomMsg");
         $this->Fields['fungsi'] = &$this->fungsi;
@@ -277,13 +269,6 @@ class NpdSample extends DbTable
     {
         // Master filter
         $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "serahterima") {
-            if ($this->idserahterima->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idserahterima->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
         if ($this->getCurrentMasterTable() == "npd") {
             if ($this->idnpd->getSessionValue() != "") {
                 $masterFilter .= "" . GetForeignKeySql("`id`", $this->idnpd->getSessionValue(), DATATYPE_NUMBER, "DB");
@@ -306,13 +291,6 @@ class NpdSample extends DbTable
     {
         // Detail filter
         $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "serahterima") {
-            if ($this->idserahterima->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idserahterima`", $this->idserahterima->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
         if ($this->getCurrentMasterTable() == "npd") {
             if ($this->idnpd->getSessionValue() != "") {
                 $detailFilter .= "" . GetForeignKeySql("`idnpd`", $this->idnpd->getSessionValue(), DATATYPE_NUMBER, "DB");
@@ -328,17 +306,6 @@ class NpdSample extends DbTable
             }
         }
         return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_serahterima()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_serahterima()
-    {
-        return "`idserahterima`=@idserahterima@";
     }
 
     // Master filter
@@ -460,19 +427,6 @@ class NpdSample extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            if ($this->getCurrentMasterTable() == "serahterima" || $this->getCurrentMasterTable() == "") {
-                $filter = $this->addDetailUserIDFilter($filter, "serahterima"); // Add detail User ID filter
-            }
-            if ($this->getCurrentMasterTable() == "npd" || $this->getCurrentMasterTable() == "") {
-                $filter = $this->addDetailUserIDFilter($filter, "npd"); // Add detail User ID filter
-            }
-            if ($this->getCurrentMasterTable() == "npd_serahterima" || $this->getCurrentMasterTable() == "") {
-                $filter = $this->addDetailUserIDFilter($filter, "npd_serahterima"); // Add detail User ID filter
-            }
-        }
         return $filter;
     }
 
@@ -943,10 +897,6 @@ class NpdSample extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "serahterima" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idserahterima->CurrentValue ?? $this->idserahterima->getSessionValue());
-        }
         if ($this->getCurrentMasterTable() == "npd" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
             $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
             $url .= "&" . GetForeignKeyUrl("fk_id", $this->idnpd->CurrentValue ?? $this->idnpd->getSessionValue());
@@ -1572,30 +1522,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add master User ID filter
-    public function addMasterUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "serahterima") {
-            $filterWrk = Container("serahterima")->addUserIDFilter($filterWrk);
-        }
-        return $filterWrk;
-    }
-
-    // Add detail User ID filter
-    public function addDetailUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "serahterima") {
-            $mastertable = Container("serahterima");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->idserahterima, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        return $filterWrk;
     }
 
     // Get file data

@@ -1,4 +1,4 @@
-<?php namespace PHPMaker2021\distributor; ?>
+<?php namespace PHPMaker2021\production2; ?>
 <form id="ew-email-form" class="ew-horizontal ew-form ew-email-form" action="<?= CurrentPageUrl(false) ?>">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $NpdSampleAdd = &$Page;
@@ -118,10 +118,6 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="insert">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<?php if ($Page->getCurrentMasterTable() == "serahterima") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="serahterima">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idserahterima->getSessionValue()) ?>">
-<?php } ?>
 <?php if ($Page->getCurrentMasterTable() == "npd") { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">

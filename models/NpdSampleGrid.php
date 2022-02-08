@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -599,37 +599,8 @@ class NpdSampleGrid extends NpdSample
         // Restore master/detail filter
         $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
         $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "serahterima") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "serahterima"); // Add master User ID filter
-                }
-                if ($this->getCurrentMasterTable() == "npd") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "npd"); // Add master User ID filter
-                }
-                if ($this->getCurrentMasterTable() == "npd_serahterima") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "npd_serahterima"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
-
-        // Load master record
-        if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "serahterima") {
-            $masterTbl = Container("serahterima");
-            $rsmaster = $masterTbl->loadRs($this->DbMasterFilter)->fetch(\PDO::FETCH_ASSOC);
-            $this->MasterRecordExists = $rsmaster !== false;
-            if (!$this->MasterRecordExists) {
-                $this->setFailureMessage($Language->phrase("NoRecord")); // Set no record found
-                $this->terminate("SerahterimaList"); // Return to master page
-                return;
-            } else {
-                $masterTbl->loadListRowValues($rsmaster);
-                $masterTbl->RowType = ROWTYPE_MASTER; // Master row
-                $masterTbl->renderListRow();
-            }
-        }
 
         // Load master record
         if ($this->CurrentMode != "add" && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "npd") {
@@ -1148,7 +1119,6 @@ class NpdSampleGrid extends NpdSample
                 $this->setCurrentMasterTable(""); // Clear master table
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
-                        $this->idserahterima->setSessionValue("");
                         $this->idnpd->setSessionValue("");
                         $this->idserahterima->setSessionValue("");
             }
@@ -2333,41 +2303,22 @@ class NpdSampleGrid extends NpdSample
             $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);
 
             // sediaan
-            $this->sediaan->setDbValueDef($rsnew, $this->sediaan->CurrentValue, "", $this->sediaan->ReadOnly);
+            $this->sediaan->setDbValueDef($rsnew, $this->sediaan->CurrentValue, null, $this->sediaan->ReadOnly);
 
             // ukuran
-            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, "", $this->ukuran->ReadOnly);
+            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
 
             // warna
-            $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, "", $this->warna->ReadOnly);
+            $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, null, $this->warna->ReadOnly);
 
             // bau
-            $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, "", $this->bau->ReadOnly);
+            $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, null, $this->bau->ReadOnly);
 
             // fungsi
-            $this->fungsi->setDbValueDef($rsnew, $this->fungsi->CurrentValue, "", $this->fungsi->ReadOnly);
+            $this->fungsi->setDbValueDef($rsnew, $this->fungsi->CurrentValue, null, $this->fungsi->ReadOnly);
 
             // jumlah
             $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, $this->jumlah->ReadOnly);
-
-            // Check referential integrity for master table 'serahterima'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_serahterima();
-            $keyValue = $rsnew['idserahterima'] ?? $rsold['idserahterima'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("serahterima")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "serahterima", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
@@ -2437,59 +2388,12 @@ class NpdSampleGrid extends NpdSample
     {
         global $Language, $Security;
 
-        // Check if valid key values for master user
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $masterFilter = $this->sqlMasterFilter_serahterima();
-            if (strval($this->idserahterima->CurrentValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($this->idserahterima->CurrentValue, "DB"), $masterFilter);
-            } else {
-                $masterFilter = "";
-            }
-            if ($masterFilter != "") {
-                $rsmaster = Container("serahterima")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
-                $masterRecordExists = $rsmaster !== false;
-                $validMasterKey = true;
-                if ($masterRecordExists) {
-                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
-                } elseif ($this->getCurrentMasterTable() == "serahterima") {
-                    $validMasterKey = false;
-                }
-                if (!$validMasterKey) {
-                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
-                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
-                    $this->setFailureMessage($masterUserIdMsg);
-                    return false;
-                }
-            }
-        }
-
         // Set up foreign key field value from Session
-        if ($this->getCurrentMasterTable() == "serahterima") {
-            $this->idserahterima->CurrentValue = $this->idserahterima->getSessionValue();
-        }
         if ($this->getCurrentMasterTable() == "npd") {
             $this->idnpd->CurrentValue = $this->idnpd->getSessionValue();
         }
         if ($this->getCurrentMasterTable() == "npd_serahterima") {
             $this->idserahterima->CurrentValue = $this->idserahterima->getSessionValue();
-        }
-
-        // Check referential integrity for master table 'npd_sample'
-        $validMasterRecord = true;
-        $masterFilter = $this->sqlMasterFilter_serahterima();
-        if ($this->idserahterima->getSessionValue() != "") {
-        $masterFilter = str_replace("@id@", AdjustSql($this->idserahterima->getSessionValue(), "DB"), $masterFilter);
-        } else {
-            $validMasterRecord = false;
-        }
-        if ($validMasterRecord) {
-            $rsmaster = Container("serahterima")->loadRs($masterFilter)->fetch();
-            $validMasterRecord = $rsmaster !== false;
-        }
-        if (!$validMasterRecord) {
-            $relatedRecordMsg = str_replace("%t", "serahterima", $Language->phrase("RelatedRecordRequired"));
-            $this->setFailureMessage($relatedRecordMsg);
-            return false;
         }
 
         // Check referential integrity for master table 'npd_sample'
@@ -2518,7 +2422,7 @@ class NpdSampleGrid extends NpdSample
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
 
         // kode
         $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, "", false);
@@ -2527,19 +2431,19 @@ class NpdSampleGrid extends NpdSample
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
 
         // sediaan
-        $this->sediaan->setDbValueDef($rsnew, $this->sediaan->CurrentValue, "", false);
+        $this->sediaan->setDbValueDef($rsnew, $this->sediaan->CurrentValue, null, false);
 
         // ukuran
-        $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, "", false);
+        $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, false);
 
         // warna
-        $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, "", false);
+        $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, null, false);
 
         // bau
-        $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, "", false);
+        $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, null, false);
 
         // fungsi
-        $this->fungsi->setDbValueDef($rsnew, $this->fungsi->CurrentValue, "", false);
+        $this->fungsi->setDbValueDef($rsnew, $this->fungsi->CurrentValue, null, false);
 
         // jumlah
         $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, strval($this->jumlah->CurrentValue) == "");
@@ -2593,13 +2497,6 @@ class NpdSampleGrid extends NpdSample
     {
         // Hide foreign keys
         $masterTblVar = $this->getCurrentMasterTable();
-        if ($masterTblVar == "serahterima") {
-            $masterTbl = Container("serahterima");
-            $this->idserahterima->Visible = false;
-            if ($masterTbl->EventCancelled) {
-                $this->EventCancelled = true;
-            }
-        }
         if ($masterTblVar == "npd") {
             $masterTbl = Container("npd");
             $this->idnpd->Visible = false;

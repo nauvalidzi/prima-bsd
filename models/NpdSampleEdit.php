@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -1235,41 +1235,22 @@ class NpdSampleEdit extends NpdSample
             $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);
 
             // sediaan
-            $this->sediaan->setDbValueDef($rsnew, $this->sediaan->CurrentValue, "", $this->sediaan->ReadOnly);
+            $this->sediaan->setDbValueDef($rsnew, $this->sediaan->CurrentValue, null, $this->sediaan->ReadOnly);
 
             // ukuran
-            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, "", $this->ukuran->ReadOnly);
+            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
 
             // warna
-            $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, "", $this->warna->ReadOnly);
+            $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, null, $this->warna->ReadOnly);
 
             // bau
-            $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, "", $this->bau->ReadOnly);
+            $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, null, $this->bau->ReadOnly);
 
             // fungsi
-            $this->fungsi->setDbValueDef($rsnew, $this->fungsi->CurrentValue, "", $this->fungsi->ReadOnly);
+            $this->fungsi->setDbValueDef($rsnew, $this->fungsi->CurrentValue, null, $this->fungsi->ReadOnly);
 
             // jumlah
             $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, $this->jumlah->ReadOnly);
-
-            // Check referential integrity for master table 'serahterima'
-            $validMasterRecord = true;
-            $masterFilter = $this->sqlMasterFilter_serahterima();
-            $keyValue = $rsnew['idserahterima'] ?? $rsold['idserahterima'];
-            if (strval($keyValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
-            } else {
-                $validMasterRecord = false;
-            }
-            if ($validMasterRecord) {
-                $rsmaster = Container("serahterima")->loadRs($masterFilter)->fetch();
-                $validMasterRecord = $rsmaster !== false;
-            }
-            if (!$validMasterRecord) {
-                $relatedRecordMsg = str_replace("%t", "serahterima", $Language->phrase("RelatedRecordRequired"));
-                $this->setFailureMessage($relatedRecordMsg);
-                return false;
-            }
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
@@ -1346,20 +1327,6 @@ class NpdSampleEdit extends NpdSample
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
             }
-            if ($masterTblVar == "serahterima") {
-                $validMaster = true;
-                $masterTbl = Container("serahterima");
-                if (($parm = Get("fk_id", Get("idserahterima"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idserahterima->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idserahterima->setSessionValue($this->idserahterima->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
             if ($masterTblVar == "npd") {
                 $validMaster = true;
                 $masterTbl = Container("npd");
@@ -1394,20 +1361,6 @@ class NpdSampleEdit extends NpdSample
                     $validMaster = true;
                     $this->DbMasterFilter = "";
                     $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "serahterima") {
-                $validMaster = true;
-                $masterTbl = Container("serahterima");
-                if (($parm = Post("fk_id", Post("idserahterima"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idserahterima->setFormValue($masterTbl->id->FormValue);
-                    $this->idserahterima->setSessionValue($this->idserahterima->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
             }
             if ($masterTblVar == "npd") {
                 $validMaster = true;
@@ -1450,11 +1403,6 @@ class NpdSampleEdit extends NpdSample
             }
 
             // Clear previous master key from Session
-            if ($masterTblVar != "serahterima") {
-                if ($this->idserahterima->CurrentValue == "") {
-                    $this->idserahterima->setSessionValue("");
-                }
-            }
             if ($masterTblVar != "npd") {
                 if ($this->idnpd->CurrentValue == "") {
                     $this->idnpd->setSessionValue("");

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -113,14 +113,16 @@ class VNpdCustomer extends DbTable
         $this->Fields['kodeorder'] = &$this->kodeorder;
 
         // kategoriproduk
-        $this->kategoriproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_kategoriproduk', 'kategoriproduk', '`kategoriproduk`', '`kategoriproduk`', 200, 50, -1, false, '`kategoriproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kategoriproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_kategoriproduk', 'kategoriproduk', '`kategoriproduk`', '`kategoriproduk`', 3, 11, -1, false, '`kategoriproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kategoriproduk->Sortable = true; // Allow sort
+        $this->kategoriproduk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->kategoriproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kategoriproduk->Param, "CustomMsg");
         $this->Fields['kategoriproduk'] = &$this->kategoriproduk;
 
         // jenisproduk
-        $this->jenisproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_jenisproduk', 'jenisproduk', '`jenisproduk`', '`jenisproduk`', 200, 50, -1, false, '`jenisproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jenisproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_jenisproduk', 'jenisproduk', '`jenisproduk`', '`jenisproduk`', 3, 11, -1, false, '`jenisproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->jenisproduk->Sortable = true; // Allow sort
+        $this->jenisproduk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->jenisproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jenisproduk->Param, "CustomMsg");
         $this->Fields['jenisproduk'] = &$this->jenisproduk;
 
@@ -144,13 +146,13 @@ class VNpdCustomer extends DbTable
         $this->Fields['bahan_campaign'] = &$this->bahan_campaign;
 
         // warna
-        $this->warna = new DbField('v_npd_customer', 'v_npd_customer', 'x_warna', 'warna', '`warna`', '`warna`', 200, 255, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->warna = new DbField('v_npd_customer', 'v_npd_customer', 'x_warna', 'warna', '`warna`', '`warna`', 200, 50, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->warna->Sortable = true; // Allow sort
         $this->warna->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->warna->Param, "CustomMsg");
         $this->Fields['warna'] = &$this->warna;
 
         // parfum
-        $this->parfum = new DbField('v_npd_customer', 'v_npd_customer', 'x_parfum', 'parfum', '`parfum`', '`parfum`', 200, 255, -1, false, '`parfum`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->parfum = new DbField('v_npd_customer', 'v_npd_customer', 'x_parfum', 'parfum', '`parfum`', '`parfum`', 200, 50, -1, false, '`parfum`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->parfum->Sortable = true; // Allow sort
         $this->parfum->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->parfum->Param, "CustomMsg");
         $this->Fields['parfum'] = &$this->parfum;
@@ -1060,10 +1062,12 @@ SORTHTML;
 
         // kategoriproduk
         $this->kategoriproduk->ViewValue = $this->kategoriproduk->CurrentValue;
+        $this->kategoriproduk->ViewValue = FormatNumber($this->kategoriproduk->ViewValue, 0, -2, -2, -2);
         $this->kategoriproduk->ViewCustomAttributes = "";
 
         // jenisproduk
         $this->jenisproduk->ViewValue = $this->jenisproduk->CurrentValue;
+        $this->jenisproduk->ViewValue = FormatNumber($this->jenisproduk->ViewValue, 0, -2, -2, -2);
         $this->jenisproduk->ViewCustomAttributes = "";
 
         // idproduct_acuan
@@ -1264,18 +1268,12 @@ SORTHTML;
         // kategoriproduk
         $this->kategoriproduk->EditAttrs["class"] = "form-control";
         $this->kategoriproduk->EditCustomAttributes = "";
-        if (!$this->kategoriproduk->Raw) {
-            $this->kategoriproduk->CurrentValue = HtmlDecode($this->kategoriproduk->CurrentValue);
-        }
         $this->kategoriproduk->EditValue = $this->kategoriproduk->CurrentValue;
         $this->kategoriproduk->PlaceHolder = RemoveHtml($this->kategoriproduk->caption());
 
         // jenisproduk
         $this->jenisproduk->EditAttrs["class"] = "form-control";
         $this->jenisproduk->EditCustomAttributes = "";
-        if (!$this->jenisproduk->Raw) {
-            $this->jenisproduk->CurrentValue = HtmlDecode($this->jenisproduk->CurrentValue);
-        }
         $this->jenisproduk->EditValue = $this->jenisproduk->CurrentValue;
         $this->jenisproduk->PlaceHolder = RemoveHtml($this->jenisproduk->caption());
 

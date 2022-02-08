@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Slim\Views\PhpRenderer;
 use Slim\Csrf\Guard;
@@ -73,12 +73,9 @@ return [
     "npd_review" => \DI\create(NpdReview::class),
     "npd_confirm" => \DI\create(NpdConfirm::class),
     "npd_harga" => \DI\create(NpdHarga::class),
-    "npd_master_spesifikasi" => \DI\create(NpdMasterSpesifikasi::class),
     "npd_desain" => \DI\create(NpdDesain::class),
     "npd_masterdata" => \DI\create(NpdMasterdata::class),
-    "npd_master_kemasan" => \DI\create(NpdMasterKemasan::class),
     "npd_status" => \DI\create(NpdStatus::class),
-    "serahterima" => \DI\create(Serahterima::class),
     "v_orderdetail" => \DI\create(VOrderdetail::class),
     "v_stock" => \DI\create(VStock::class),
     "print_invoice" => \DI\create(PrintInvoice::class),
@@ -114,7 +111,6 @@ return [
     "d_jatuhtempo" => \DI\create(DJatuhtempo::class),
     "v_piutang_detail" => \DI\create(VPiutangDetail::class),
     "suratjalan" => \DI\create(Suratjalan::class),
-    "v_penagihan" => \DI\create(VPenagihan::class),
     "suratjalan_detail" => \DI\create(SuratjalanDetail::class),
     "laporan_order_customer" => \DI\create(LaporanOrderCustomer::class),
     "penagihan_customer" => \DI\create(PenagihanCustomer::class),
@@ -149,16 +145,17 @@ return [
     "stock_order_detail" => \DI\create(StockOrderDetail::class),
     "stock_deliveryorder" => \DI\create(StockDeliveryorder::class),
     "stock_deliveryorder_detail" => \DI\create(StockDeliveryorderDetail::class),
-    "aplikasibarang" => \DI\create(Aplikasibarang::class),
-    "jenisbarang" => \DI\create(Jenisbarang::class),
-    "kategoribarang" => \DI\create(Kategoribarang::class),
-    "kemasanbarang" => \DI\create(Kemasanbarang::class),
-    "kualitasbarang" => \DI\create(Kualitasbarang::class),
-    "viskositasbarang" => \DI\create(Viskositasbarang::class),
+    "jenisproduk" => \DI\create(Jenisproduk::class),
+    "kategoriproduk" => \DI\create(Kategoriproduk::class),
     "antrian_bot" => \DI\create(AntrianBot::class),
     "tipe_sla" => \DI\create(TipeSla::class),
     "brandcustomer_edit2" => \DI\create(BrandcustomerEdit2::class),
     "brandcustomer_delete2" => \DI\create(BrandcustomerDelete2::class),
+    "npd_kemasan_bahan" => \DI\create(NpdKemasanBahan::class),
+    "npd_kemasan_bentuk" => \DI\create(NpdKemasanBentuk::class),
+    "npd_kemasan_komposisi" => \DI\create(NpdKemasanKomposisi::class),
+    "npd_label_print" => \DI\create(NpdLabelPrint::class),
+    "npd_label_tekstur" => \DI\create(NpdLabelTekstur::class),
 
     // User table
     "usertable" => \DI\get("pegawai"),

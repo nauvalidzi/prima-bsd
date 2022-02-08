@@ -1,8 +1,8 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
-use PHPMaker2021\distributor\{UserProfile, Language, AdvancedSecurity, Timer, HttpErrorHandler};
+use PHPMaker2021\production2\{UserProfile, Language, AdvancedSecurity, Timer, HttpErrorHandler};
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;

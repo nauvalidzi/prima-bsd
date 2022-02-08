@@ -166,12 +166,12 @@
     ),
     'nyholm/psr7' => 
     array (
-      'pretty_version' => '1.4.1',
-      'version' => '1.4.1.0',
+      'pretty_version' => '1.5.0',
+      'version' => '1.5.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2212385b47153ea71b1c1b1374f8cb5e4f7892ec',
+      'reference' => '1461e07a0f2a975a52082ca3b769ca912b816226',
     ),
     'nyholm/psr7-server' => 
     array (
@@ -184,12 +184,12 @@
     ),
     'opis/closure' => 
     array (
-      'pretty_version' => '3.6.2',
-      'version' => '3.6.2.0',
+      'pretty_version' => '3.6.3',
+      'version' => '3.6.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '06e2ebd25f2869e54a306dda991f7db58066f7f6',
+      'reference' => '3d81e4309d2a927abbe66df935f4bb60082805ad',
     ),
     'paragonie/random_compat' => 
     array (

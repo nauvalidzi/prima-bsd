@@ -1,7 +1,7 @@
-<?php namespace PHPMaker2021\distributor; ?>
+<?php namespace PHPMaker2021\production2; ?>
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $Crosstab1Crosstab = &$Page;

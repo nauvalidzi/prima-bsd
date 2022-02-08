@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Set up and run Grid object
 $Grid = Container("DeliveryorderDetailGrid");

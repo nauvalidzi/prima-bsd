@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Table
 $npd = Container("npd");
@@ -126,6 +126,94 @@ $npd = Container("npd");
 <span id="el_npd_jenisproduk">
 <span<?= $npd->jenisproduk->viewAttributes() ?>>
 <?= $npd->jenisproduk->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->kemasanwadah->Visible) { // kemasanwadah ?>
+        <tr id="r_kemasanwadah">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->kemasanwadah->caption() ?></td>
+            <td <?= $npd->kemasanwadah->cellAttributes() ?>>
+<span id="el_npd_kemasanwadah">
+<span<?= $npd->kemasanwadah->viewAttributes() ?>>
+<?= $npd->kemasanwadah->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->ukurankemasansekunder->Visible) { // ukurankemasansekunder ?>
+        <tr id="r_ukurankemasansekunder">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->ukurankemasansekunder->caption() ?></td>
+            <td <?= $npd->ukurankemasansekunder->cellAttributes() ?>>
+<span id="el_npd_ukurankemasansekunder">
+<span<?= $npd->ukurankemasansekunder->viewAttributes() ?>>
+<?= $npd->ukurankemasansekunder->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->satuankemasansekunder->Visible) { // satuankemasansekunder ?>
+        <tr id="r_satuankemasansekunder">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->satuankemasansekunder->caption() ?></td>
+            <td <?= $npd->satuankemasansekunder->cellAttributes() ?>>
+<span id="el_npd_satuankemasansekunder">
+<span<?= $npd->satuankemasansekunder->viewAttributes() ?>>
+<?= $npd->satuankemasansekunder->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->kemasanbahan->Visible) { // kemasanbahan ?>
+        <tr id="r_kemasanbahan">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->kemasanbahan->caption() ?></td>
+            <td <?= $npd->kemasanbahan->cellAttributes() ?>>
+<span id="el_npd_kemasanbahan">
+<span<?= $npd->kemasanbahan->viewAttributes() ?>>
+<?= $npd->kemasanbahan->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->kemasankomposisi->Visible) { // kemasankomposisi ?>
+        <tr id="r_kemasankomposisi">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->kemasankomposisi->caption() ?></td>
+            <td <?= $npd->kemasankomposisi->cellAttributes() ?>>
+<span id="el_npd_kemasankomposisi">
+<span<?= $npd->kemasankomposisi->viewAttributes() ?>>
+<?= $npd->kemasankomposisi->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->labeltekstur->Visible) { // labeltekstur ?>
+        <tr id="r_labeltekstur">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->labeltekstur->caption() ?></td>
+            <td <?= $npd->labeltekstur->cellAttributes() ?>>
+<span id="el_npd_labeltekstur">
+<span<?= $npd->labeltekstur->viewAttributes() ?>>
+<?= $npd->labeltekstur->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->labelprint->Visible) { // labelprint ?>
+        <tr id="r_labelprint">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->labelprint->caption() ?></td>
+            <td <?= $npd->labelprint->cellAttributes() ?>>
+<span id="el_npd_labelprint">
+<span<?= $npd->labelprint->viewAttributes() ?>>
+<?= $npd->labelprint->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->labeljmlwarna->Visible) { // labeljmlwarna ?>
+        <tr id="r_labeljmlwarna">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->labeljmlwarna->caption() ?></td>
+            <td <?= $npd->labeljmlwarna->cellAttributes() ?>>
+<span id="el_npd_labeljmlwarna">
+<span<?= $npd->labeljmlwarna->viewAttributes() ?>>
+<?= $npd->labeljmlwarna->getViewValue() ?></span>
 </span>
 </td>
         </tr>

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -699,9 +699,6 @@ class NpdSamplePreview extends NpdSample
     {
         $masterTblVar = Get("t", "");
         $url = "";
-        if ($masterTblVar == "serahterima") {
-            $url = "" . Config("TABLE_SHOW_MASTER") . "=serahterima&" . GetForeignKeyUrl("fk_id", $this->idserahterima->QueryStringValue) . "";
-        }
         if ($masterTblVar == "npd") {
             $url = "" . Config("TABLE_SHOW_MASTER") . "=npd&" . GetForeignKeyUrl("fk_id", $this->idnpd->QueryStringValue) . "";
         }
@@ -715,16 +712,6 @@ class NpdSamplePreview extends NpdSample
     protected function setupForeignKeysFromFilter($f)
     {
         $masterTblVar = Get("t", "");
-        if ($masterTblVar == "serahterima") {
-            $find = "`idserahterima`=";
-            $x = strpos($f, $find);
-            if ($x !== false) {
-                $x += strlen($find);
-                $val = substr($f, $x);
-                $val = $this->unquoteValue($val, "DB");
-                 $this->idserahterima->setQueryStringValue($val);
-            }
-        }
         if ($masterTblVar == "npd") {
             $find = "`idnpd`=";
             $x = strpos($f, $find);

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -862,20 +862,6 @@ class NpdSampleDelete extends NpdSample
                 $this->DbMasterFilter = "";
                 $this->DbDetailFilter = "";
             }
-            if ($masterTblVar == "serahterima") {
-                $validMaster = true;
-                $masterTbl = Container("serahterima");
-                if (($parm = Get("fk_id", Get("idserahterima"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idserahterima->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idserahterima->setSessionValue($this->idserahterima->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
             if ($masterTblVar == "npd") {
                 $validMaster = true;
                 $masterTbl = Container("npd");
@@ -910,20 +896,6 @@ class NpdSampleDelete extends NpdSample
                     $validMaster = true;
                     $this->DbMasterFilter = "";
                     $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "serahterima") {
-                $validMaster = true;
-                $masterTbl = Container("serahterima");
-                if (($parm = Post("fk_id", Post("idserahterima"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idserahterima->setFormValue($masterTbl->id->FormValue);
-                    $this->idserahterima->setSessionValue($this->idserahterima->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
             }
             if ($masterTblVar == "npd") {
                 $validMaster = true;
@@ -965,11 +937,6 @@ class NpdSampleDelete extends NpdSample
             }
 
             // Clear previous master key from Session
-            if ($masterTblVar != "serahterima") {
-                if ($this->idserahterima->CurrentValue == "") {
-                    $this->idserahterima->setSessionValue("");
-                }
-            }
             if ($masterTblVar != "npd") {
                 if ($this->idnpd->CurrentValue == "") {
                     $this->idnpd->setSessionValue("");

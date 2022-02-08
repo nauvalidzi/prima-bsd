@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $NpdAdd = &$Page;
@@ -42,18 +42,27 @@ loadjs.ready("head", function () {
         ["parfum", [fields.parfum.visible && fields.parfum.required ? ew.Validators.required(fields.parfum.caption) : null], fields.parfum.isInvalid],
         ["aroma", [fields.aroma.visible && fields.aroma.required ? ew.Validators.required(fields.aroma.caption) : null], fields.aroma.isInvalid],
         ["aplikasi", [fields.aplikasi.visible && fields.aplikasi.required ? ew.Validators.required(fields.aplikasi.caption) : null], fields.aplikasi.isInvalid],
-        ["aksesoris", [fields.aksesoris.visible && fields.aksesoris.required ? ew.Validators.required(fields.aksesoris.caption) : null], fields.aksesoris.isInvalid],
+        ["estetika", [fields.estetika.visible && fields.estetika.required ? ew.Validators.required(fields.estetika.caption) : null], fields.estetika.isInvalid],
         ["tambahan", [fields.tambahan.visible && fields.tambahan.required ? ew.Validators.required(fields.tambahan.caption) : null], fields.tambahan.isInvalid],
         ["ukurankemasan", [fields.ukurankemasan.visible && fields.ukurankemasan.required ? ew.Validators.required(fields.ukurankemasan.caption) : null], fields.ukurankemasan.isInvalid],
         ["satuankemasan", [fields.satuankemasan.visible && fields.satuankemasan.required ? ew.Validators.required(fields.satuankemasan.caption) : null], fields.satuankemasan.isInvalid],
-        ["kemasanbentuk", [fields.kemasanbentuk.visible && fields.kemasanbentuk.required ? ew.Validators.required(fields.kemasanbentuk.caption) : null], fields.kemasanbentuk.isInvalid],
+        ["kemasanwadah", [fields.kemasanwadah.visible && fields.kemasanwadah.required ? ew.Validators.required(fields.kemasanwadah.caption) : null], fields.kemasanwadah.isInvalid],
         ["kemasantutup", [fields.kemasantutup.visible && fields.kemasantutup.required ? ew.Validators.required(fields.kemasantutup.caption) : null], fields.kemasantutup.isInvalid],
         ["kemasancatatan", [fields.kemasancatatan.visible && fields.kemasancatatan.required ? ew.Validators.required(fields.kemasancatatan.caption) : null], fields.kemasancatatan.isInvalid],
-        ["labelukuran", [fields.labelukuran.visible && fields.labelukuran.required ? ew.Validators.required(fields.labelukuran.caption) : null], fields.labelukuran.isInvalid],
+        ["ukurankemasansekunder", [fields.ukurankemasansekunder.visible && fields.ukurankemasansekunder.required ? ew.Validators.required(fields.ukurankemasansekunder.caption) : null], fields.ukurankemasansekunder.isInvalid],
+        ["satuankemasansekunder", [fields.satuankemasansekunder.visible && fields.satuankemasansekunder.required ? ew.Validators.required(fields.satuankemasansekunder.caption) : null], fields.satuankemasansekunder.isInvalid],
+        ["kemasanbahan", [fields.kemasanbahan.visible && fields.kemasanbahan.required ? ew.Validators.required(fields.kemasanbahan.caption) : null], fields.kemasanbahan.isInvalid],
+        ["kemasanbentuk", [fields.kemasanbentuk.visible && fields.kemasanbentuk.required ? ew.Validators.required(fields.kemasanbentuk.caption) : null], fields.kemasanbentuk.isInvalid],
+        ["kemasankomposisi", [fields.kemasankomposisi.visible && fields.kemasankomposisi.required ? ew.Validators.required(fields.kemasankomposisi.caption) : null], fields.kemasankomposisi.isInvalid],
+        ["kemasancatatansekunder", [fields.kemasancatatansekunder.visible && fields.kemasancatatansekunder.required ? ew.Validators.required(fields.kemasancatatansekunder.caption) : null], fields.kemasancatatansekunder.isInvalid],
         ["labelbahan", [fields.labelbahan.visible && fields.labelbahan.required ? ew.Validators.required(fields.labelbahan.caption) : null], fields.labelbahan.isInvalid],
         ["labelkualitas", [fields.labelkualitas.visible && fields.labelkualitas.required ? ew.Validators.required(fields.labelkualitas.caption) : null], fields.labelkualitas.isInvalid],
         ["labelposisi", [fields.labelposisi.visible && fields.labelposisi.required ? ew.Validators.required(fields.labelposisi.caption) : null], fields.labelposisi.isInvalid],
         ["labelcatatan", [fields.labelcatatan.visible && fields.labelcatatan.required ? ew.Validators.required(fields.labelcatatan.caption) : null], fields.labelcatatan.isInvalid],
+        ["labeltekstur", [fields.labeltekstur.visible && fields.labeltekstur.required ? ew.Validators.required(fields.labeltekstur.caption) : null], fields.labeltekstur.isInvalid],
+        ["labelprint", [fields.labelprint.visible && fields.labelprint.required ? ew.Validators.required(fields.labelprint.caption) : null], fields.labelprint.isInvalid],
+        ["labeljmlwarna", [fields.labeljmlwarna.visible && fields.labeljmlwarna.required ? ew.Validators.required(fields.labeljmlwarna.caption) : null, ew.Validators.integer], fields.labeljmlwarna.isInvalid],
+        ["labelcatatanhotprint", [fields.labelcatatanhotprint.visible && fields.labelcatatanhotprint.required ? ew.Validators.required(fields.labelcatatanhotprint.caption) : null], fields.labelcatatanhotprint.isInvalid],
         ["ukuran_utama", [fields.ukuran_utama.visible && fields.ukuran_utama.required ? ew.Validators.required(fields.ukuran_utama.caption) : null], fields.ukuran_utama.isInvalid],
         ["utama_harga_isi", [fields.utama_harga_isi.visible && fields.utama_harga_isi.required ? ew.Validators.required(fields.utama_harga_isi.caption) : null, ew.Validators.integer], fields.utama_harga_isi.isInvalid],
         ["utama_harga_isi_proyeksi", [fields.utama_harga_isi_proyeksi.visible && fields.utama_harga_isi_proyeksi.required ? ew.Validators.required(fields.utama_harga_isi_proyeksi.caption) : null, ew.Validators.integer], fields.utama_harga_isi_proyeksi.isInvalid],
@@ -156,16 +165,26 @@ loadjs.ready("head", function () {
     fnpdadd.lists.idproduct_acuan = <?= $Page->idproduct_acuan->toClientList($Page) ?>;
     fnpdadd.lists.kategoriproduk = <?= $Page->kategoriproduk->toClientList($Page) ?>;
     fnpdadd.lists.jenisproduk = <?= $Page->jenisproduk->toClientList($Page) ?>;
+    fnpdadd.lists.kualitasproduk = <?= $Page->kualitasproduk->toClientList($Page) ?>;
     fnpdadd.lists.satuansediaan = <?= $Page->satuansediaan->toClientList($Page) ?>;
     fnpdadd.lists.bentuk = <?= $Page->bentuk->toClientList($Page) ?>;
+    fnpdadd.lists.viskositas = <?= $Page->viskositas->toClientList($Page) ?>;
+    fnpdadd.lists.warna = <?= $Page->warna->toClientList($Page) ?>;
     fnpdadd.lists.parfum = <?= $Page->parfum->toClientList($Page) ?>;
     fnpdadd.lists.aplikasi = <?= $Page->aplikasi->toClientList($Page) ?>;
+    fnpdadd.lists.estetika = <?= $Page->estetika->toClientList($Page) ?>;
     fnpdadd.lists.satuankemasan = <?= $Page->satuankemasan->toClientList($Page) ?>;
-    fnpdadd.lists.kemasanbentuk = <?= $Page->kemasanbentuk->toClientList($Page) ?>;
+    fnpdadd.lists.kemasanwadah = <?= $Page->kemasanwadah->toClientList($Page) ?>;
     fnpdadd.lists.kemasantutup = <?= $Page->kemasantutup->toClientList($Page) ?>;
+    fnpdadd.lists.satuankemasansekunder = <?= $Page->satuankemasansekunder->toClientList($Page) ?>;
+    fnpdadd.lists.kemasanbahan = <?= $Page->kemasanbahan->toClientList($Page) ?>;
+    fnpdadd.lists.kemasanbentuk = <?= $Page->kemasanbentuk->toClientList($Page) ?>;
+    fnpdadd.lists.kemasankomposisi = <?= $Page->kemasankomposisi->toClientList($Page) ?>;
     fnpdadd.lists.labelbahan = <?= $Page->labelbahan->toClientList($Page) ?>;
     fnpdadd.lists.labelkualitas = <?= $Page->labelkualitas->toClientList($Page) ?>;
     fnpdadd.lists.labelposisi = <?= $Page->labelposisi->toClientList($Page) ?>;
+    fnpdadd.lists.labeltekstur = <?= $Page->labeltekstur->toClientList($Page) ?>;
+    fnpdadd.lists.labelprint = <?= $Page->labelprint->toClientList($Page) ?>;
     fnpdadd.lists.status = <?= $Page->status->toClientList($Page) ?>;
     loadjs.done("fnpdadd");
 });
@@ -351,7 +370,7 @@ loadjs.ready(["fnpdadd", "datetimepicker"], function() {
     data-type="select-one"
     data-template="tp_x_sifatorder"
     data-target="dsl_x_sifatorder"
-    data-repeatcolumn="5"
+    data-repeatcolumn="2"
     class="form-control<?= $Page->sifatorder->isInvalidClass() ?>"
     data-table="npd"
     data-field="x_sifatorder"
@@ -462,7 +481,6 @@ loadjs.ready("head", function() {
         <label id="elh_npd_jenisproduk" for="x_jenisproduk" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_jenisproduk"><?= $Page->jenisproduk->caption() ?><?= $Page->jenisproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jenisproduk->cellAttributes() ?>>
 <template id="tpx_npd_jenisproduk"><span id="el_npd_jenisproduk">
-<?php $Page->jenisproduk->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x_jenisproduk"
         name="x_jenisproduk"
@@ -506,10 +524,31 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->kualitasproduk->Visible) { // kualitasproduk ?>
     <div id="r_kualitasproduk" class="form-group row">
-        <label id="elh_npd_kualitasproduk" for="x_kualitasproduk" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kualitasproduk"><?= $Page->kualitasproduk->caption() ?><?= $Page->kualitasproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_kualitasproduk" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kualitasproduk"><?= $Page->kualitasproduk->caption() ?><?= $Page->kualitasproduk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kualitasproduk->cellAttributes() ?>>
 <template id="tpx_npd_kualitasproduk"><span id="el_npd_kualitasproduk">
-<input type="<?= $Page->kualitasproduk->getInputTextType() ?>" data-table="npd" data-field="x_kualitasproduk" data-page="1" name="x_kualitasproduk" id="x_kualitasproduk" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->kualitasproduk->getPlaceHolder()) ?>" value="<?= $Page->kualitasproduk->EditValue ?>"<?= $Page->kualitasproduk->editAttributes() ?> aria-describedby="x_kualitasproduk_help">
+<template id="tp_x_kualitasproduk">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_kualitasproduk" name="x_kualitasproduk" id="x_kualitasproduk"<?= $Page->kualitasproduk->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_kualitasproduk" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_kualitasproduk"
+    name="x_kualitasproduk"
+    value="<?= HtmlEncode($Page->kualitasproduk->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_kualitasproduk"
+    data-target="dsl_x_kualitasproduk"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->kualitasproduk->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_kualitasproduk"
+    data-page="1"
+    data-value-separator="<?= $Page->kualitasproduk->displayValueSeparatorAttribute() ?>"
+    <?= $Page->kualitasproduk->editAttributes() ?>>
 <?= $Page->kualitasproduk->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->kualitasproduk->getErrorMessage() ?></div>
 </span></template>
@@ -594,7 +633,7 @@ loadjs.ready("head", function() {
     data-type="select-one"
     data-template="tp_x_bentuk"
     data-target="dsl_x_bentuk"
-    data-repeatcolumn="5"
+    data-repeatcolumn="4"
     class="form-control<?= $Page->bentuk->isInvalidClass() ?>"
     data-table="npd"
     data-field="x_bentuk"
@@ -610,24 +649,68 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->viskositas->Visible) { // viskositas ?>
     <div id="r_viskositas" class="form-group row">
-        <label id="elh_npd_viskositas" for="x_viskositas" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_viskositas"><?= $Page->viskositas->caption() ?><?= $Page->viskositas->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_viskositas" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_viskositas"><?= $Page->viskositas->caption() ?><?= $Page->viskositas->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->viskositas->cellAttributes() ?>>
 <template id="tpx_npd_viskositas"><span id="el_npd_viskositas">
-<input type="<?= $Page->viskositas->getInputTextType() ?>" data-table="npd" data-field="x_viskositas" data-page="1" name="x_viskositas" id="x_viskositas" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->viskositas->getPlaceHolder()) ?>" value="<?= $Page->viskositas->EditValue ?>"<?= $Page->viskositas->editAttributes() ?> aria-describedby="x_viskositas_help">
+<template id="tp_x_viskositas">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_viskositas" name="x_viskositas" id="x_viskositas"<?= $Page->viskositas->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_viskositas" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_viskositas"
+    name="x_viskositas"
+    value="<?= HtmlEncode($Page->viskositas->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_viskositas"
+    data-target="dsl_x_viskositas"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->viskositas->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_viskositas"
+    data-page="1"
+    data-value-separator="<?= $Page->viskositas->displayValueSeparatorAttribute() ?>"
+    <?= $Page->viskositas->editAttributes() ?>>
 <?= $Page->viskositas->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->viskositas->getErrorMessage() ?></div>
+<?= $Page->viskositas->Lookup->getParamTag($Page, "p_x_viskositas") ?>
 </span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->warna->Visible) { // warna ?>
     <div id="r_warna" class="form-group row">
-        <label id="elh_npd_warna" for="x_warna" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_warna"><?= $Page->warna->caption() ?><?= $Page->warna->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_warna" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_warna"><?= $Page->warna->caption() ?><?= $Page->warna->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->warna->cellAttributes() ?>>
 <template id="tpx_npd_warna"><span id="el_npd_warna">
-<input type="<?= $Page->warna->getInputTextType() ?>" data-table="npd" data-field="x_warna" data-page="1" name="x_warna" id="x_warna" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->warna->getPlaceHolder()) ?>" value="<?= $Page->warna->EditValue ?>"<?= $Page->warna->editAttributes() ?> aria-describedby="x_warna_help">
+<template id="tp_x_warna">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_warna" name="x_warna" id="x_warna"<?= $Page->warna->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_warna" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_warna"
+    name="x_warna"
+    value="<?= HtmlEncode($Page->warna->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_warna"
+    data-target="dsl_x_warna"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->warna->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_warna"
+    data-page="1"
+    data-value-separator="<?= $Page->warna->displayValueSeparatorAttribute() ?>"
+    <?= $Page->warna->editAttributes() ?>>
 <?= $Page->warna->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->warna->getErrorMessage() ?></div>
+<?= $Page->warna->Lookup->getParamTag($Page, "p_x_warna") ?>
 </span></template>
 </div></div>
     </div>
@@ -680,46 +763,68 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->aplikasi->Visible) { // aplikasi ?>
     <div id="r_aplikasi" class="form-group row">
-        <label id="elh_npd_aplikasi" for="x_aplikasi" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_aplikasi"><?= $Page->aplikasi->caption() ?><?= $Page->aplikasi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_aplikasi" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_aplikasi"><?= $Page->aplikasi->caption() ?><?= $Page->aplikasi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasi->cellAttributes() ?>>
 <template id="tpx_npd_aplikasi"><span id="el_npd_aplikasi">
-    <select
-        id="x_aplikasi"
-        name="x_aplikasi"
-        class="form-control ew-select<?= $Page->aplikasi->isInvalidClass() ?>"
-        data-select2-id="npd_x_aplikasi"
-        data-table="npd"
-        data-field="x_aplikasi"
-        data-page="1"
-        data-value-separator="<?= $Page->aplikasi->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->aplikasi->getPlaceHolder()) ?>"
-        <?= $Page->aplikasi->editAttributes() ?>>
-        <?= $Page->aplikasi->selectOptionListHtml("x_aplikasi") ?>
-    </select>
-    <?= $Page->aplikasi->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->aplikasi->getErrorMessage() ?></div>
+<template id="tp_x_aplikasi">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_aplikasi" name="x_aplikasi" id="x_aplikasi"<?= $Page->aplikasi->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_aplikasi" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_aplikasi"
+    name="x_aplikasi"
+    value="<?= HtmlEncode($Page->aplikasi->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_aplikasi"
+    data-target="dsl_x_aplikasi"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->aplikasi->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_aplikasi"
+    data-page="1"
+    data-value-separator="<?= $Page->aplikasi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->aplikasi->editAttributes() ?>>
+<?= $Page->aplikasi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->aplikasi->getErrorMessage() ?></div>
 <?= $Page->aplikasi->Lookup->getParamTag($Page, "p_x_aplikasi") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_aplikasi']"),
-        options = { name: "x_aplikasi", selectId: "npd_x_aplikasi", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.aplikasi.selectOptions);
-    ew.createSelect(options);
-});
-</script>
 </span></template>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aksesoris->Visible) { // aksesoris ?>
-    <div id="r_aksesoris" class="form-group row">
-        <label id="elh_npd_aksesoris" for="x_aksesoris" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_aksesoris"><?= $Page->aksesoris->caption() ?><?= $Page->aksesoris->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aksesoris->cellAttributes() ?>>
-<template id="tpx_npd_aksesoris"><span id="el_npd_aksesoris">
-<input type="<?= $Page->aksesoris->getInputTextType() ?>" data-table="npd" data-field="x_aksesoris" data-page="1" name="x_aksesoris" id="x_aksesoris" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aksesoris->getPlaceHolder()) ?>" value="<?= $Page->aksesoris->EditValue ?>"<?= $Page->aksesoris->editAttributes() ?> aria-describedby="x_aksesoris_help">
-<?= $Page->aksesoris->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aksesoris->getErrorMessage() ?></div>
+<?php if ($Page->estetika->Visible) { // estetika ?>
+    <div id="r_estetika" class="form-group row">
+        <label id="elh_npd_estetika" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_estetika"><?= $Page->estetika->caption() ?><?= $Page->estetika->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->estetika->cellAttributes() ?>>
+<template id="tpx_npd_estetika"><span id="el_npd_estetika">
+<template id="tp_x_estetika">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_estetika" name="x_estetika" id="x_estetika"<?= $Page->estetika->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_estetika" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_estetika"
+    name="x_estetika"
+    value="<?= HtmlEncode($Page->estetika->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_estetika"
+    data-target="dsl_x_estetika"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->estetika->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_estetika"
+    data-page="1"
+    data-value-separator="<?= $Page->estetika->displayValueSeparatorAttribute() ?>"
+    <?= $Page->estetika->editAttributes() ?>>
+<?= $Page->estetika->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->estetika->getErrorMessage() ?></div>
+<?= $Page->estetika->Lookup->getParamTag($Page, "p_x_estetika") ?>
 </span></template>
 </div></div>
     </div>
@@ -782,36 +887,36 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->kemasanbentuk->Visible) { // kemasanbentuk ?>
-    <div id="r_kemasanbentuk" class="form-group row">
-        <label id="elh_npd_kemasanbentuk" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kemasanbentuk"><?= $Page->kemasanbentuk->caption() ?><?= $Page->kemasanbentuk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasanbentuk->cellAttributes() ?>>
-<template id="tpx_npd_kemasanbentuk"><span id="el_npd_kemasanbentuk">
-<template id="tp_x_kemasanbentuk">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_kemasanbentuk" name="x_kemasanbentuk" id="x_kemasanbentuk"<?= $Page->kemasanbentuk->editAttributes() ?>>
+<?php if ($Page->kemasanwadah->Visible) { // kemasanwadah ?>
+    <div id="r_kemasanwadah" class="form-group row">
+        <label id="elh_npd_kemasanwadah" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kemasanwadah"><?= $Page->kemasanwadah->caption() ?><?= $Page->kemasanwadah->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasanwadah->cellAttributes() ?>>
+<template id="tpx_npd_kemasanwadah"><span id="el_npd_kemasanwadah">
+<template id="tp_x_kemasanwadah">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_kemasanwadah" name="x_kemasanwadah" id="x_kemasanwadah"<?= $Page->kemasanwadah->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
-<div id="dsl_x_kemasanbentuk" class="ew-item-list"></div>
+<div id="dsl_x_kemasanwadah" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_kemasanbentuk[]"
-    name="x_kemasanbentuk[]"
-    value="<?= HtmlEncode($Page->kemasanbentuk->CurrentValue) ?>"
-    data-type="select-multiple"
-    data-template="tp_x_kemasanbentuk"
-    data-target="dsl_x_kemasanbentuk"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->kemasanbentuk->isInvalidClass() ?>"
+    id="x_kemasanwadah"
+    name="x_kemasanwadah"
+    value="<?= HtmlEncode($Page->kemasanwadah->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_kemasanwadah"
+    data-target="dsl_x_kemasanwadah"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->kemasanwadah->isInvalidClass() ?>"
     data-table="npd"
-    data-field="x_kemasanbentuk"
+    data-field="x_kemasanwadah"
     data-page="1"
-    data-value-separator="<?= $Page->kemasanbentuk->displayValueSeparatorAttribute() ?>"
-    <?= $Page->kemasanbentuk->editAttributes() ?>>
-<?= $Page->kemasanbentuk->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->kemasanbentuk->getErrorMessage() ?></div>
-<?= $Page->kemasanbentuk->Lookup->getParamTag($Page, "p_x_kemasanbentuk") ?>
+    data-value-separator="<?= $Page->kemasanwadah->displayValueSeparatorAttribute() ?>"
+    <?= $Page->kemasanwadah->editAttributes() ?>>
+<?= $Page->kemasanwadah->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kemasanwadah->getErrorMessage() ?></div>
+<?= $Page->kemasanwadah->Lookup->getParamTag($Page, "p_x_kemasanwadah") ?>
 </span></template>
 </div></div>
     </div>
@@ -822,21 +927,21 @@ loadjs.ready("head", function() {
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasantutup->cellAttributes() ?>>
 <template id="tpx_npd_kemasantutup"><span id="el_npd_kemasantutup">
 <template id="tp_x_kemasantutup">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" data-table="npd" data-field="x_kemasantutup" name="x_kemasantutup" id="x_kemasantutup"<?= $Page->kemasantutup->editAttributes() ?>>
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_kemasantutup" name="x_kemasantutup" id="x_kemasantutup"<?= $Page->kemasantutup->editAttributes() ?>>
         <label class="custom-control-label"></label>
     </div>
 </template>
 <div id="dsl_x_kemasantutup" class="ew-item-list"></div>
 <input type="hidden"
     is="selection-list"
-    id="x_kemasantutup[]"
-    name="x_kemasantutup[]"
+    id="x_kemasantutup"
+    name="x_kemasantutup"
     value="<?= HtmlEncode($Page->kemasantutup->CurrentValue) ?>"
-    data-type="select-multiple"
+    data-type="select-one"
     data-template="tp_x_kemasantutup"
     data-target="dsl_x_kemasantutup"
-    data-repeatcolumn="5"
+    data-repeatcolumn="4"
     class="form-control<?= $Page->kemasantutup->isInvalidClass() ?>"
     data-table="npd"
     data-field="x_kemasantutup"
@@ -862,14 +967,162 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->labelukuran->Visible) { // labelukuran ?>
-    <div id="r_labelukuran" class="form-group row">
-        <label id="elh_npd_labelukuran" for="x_labelukuran" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_labelukuran"><?= $Page->labelukuran->caption() ?><?= $Page->labelukuran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labelukuran->cellAttributes() ?>>
-<template id="tpx_npd_labelukuran"><span id="el_npd_labelukuran">
-<input type="<?= $Page->labelukuran->getInputTextType() ?>" data-table="npd" data-field="x_labelukuran" data-page="1" name="x_labelukuran" id="x_labelukuran" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->labelukuran->getPlaceHolder()) ?>" value="<?= $Page->labelukuran->EditValue ?>"<?= $Page->labelukuran->editAttributes() ?> aria-describedby="x_labelukuran_help">
-<?= $Page->labelukuran->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->labelukuran->getErrorMessage() ?></div>
+<?php if ($Page->ukurankemasansekunder->Visible) { // ukurankemasansekunder ?>
+    <div id="r_ukurankemasansekunder" class="form-group row">
+        <label id="elh_npd_ukurankemasansekunder" for="x_ukurankemasansekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_ukurankemasansekunder"><?= $Page->ukurankemasansekunder->caption() ?><?= $Page->ukurankemasansekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ukurankemasansekunder->cellAttributes() ?>>
+<template id="tpx_npd_ukurankemasansekunder"><span id="el_npd_ukurankemasansekunder">
+<input type="<?= $Page->ukurankemasansekunder->getInputTextType() ?>" data-table="npd" data-field="x_ukurankemasansekunder" data-page="1" name="x_ukurankemasansekunder" id="x_ukurankemasansekunder" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->ukurankemasansekunder->getPlaceHolder()) ?>" value="<?= $Page->ukurankemasansekunder->EditValue ?>"<?= $Page->ukurankemasansekunder->editAttributes() ?> aria-describedby="x_ukurankemasansekunder_help">
+<?= $Page->ukurankemasansekunder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->ukurankemasansekunder->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->satuankemasansekunder->Visible) { // satuankemasansekunder ?>
+    <div id="r_satuankemasansekunder" class="form-group row">
+        <label id="elh_npd_satuankemasansekunder" for="x_satuankemasansekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_satuankemasansekunder"><?= $Page->satuankemasansekunder->caption() ?><?= $Page->satuankemasansekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->satuankemasansekunder->cellAttributes() ?>>
+<template id="tpx_npd_satuankemasansekunder"><span id="el_npd_satuankemasansekunder">
+    <select
+        id="x_satuankemasansekunder"
+        name="x_satuankemasansekunder"
+        class="form-control ew-select<?= $Page->satuankemasansekunder->isInvalidClass() ?>"
+        data-select2-id="npd_x_satuankemasansekunder"
+        data-table="npd"
+        data-field="x_satuankemasansekunder"
+        data-page="1"
+        data-value-separator="<?= $Page->satuankemasansekunder->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->satuankemasansekunder->getPlaceHolder()) ?>"
+        <?= $Page->satuankemasansekunder->editAttributes() ?>>
+        <?= $Page->satuankemasansekunder->selectOptionListHtml("x_satuankemasansekunder") ?>
+    </select>
+    <?= $Page->satuankemasansekunder->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->satuankemasansekunder->getErrorMessage() ?></div>
+<?= $Page->satuankemasansekunder->Lookup->getParamTag($Page, "p_x_satuankemasansekunder") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_x_satuankemasansekunder']"),
+        options = { name: "x_satuankemasansekunder", selectId: "npd_x_satuankemasansekunder", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd.fields.satuankemasansekunder.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->kemasanbahan->Visible) { // kemasanbahan ?>
+    <div id="r_kemasanbahan" class="form-group row">
+        <label id="elh_npd_kemasanbahan" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kemasanbahan"><?= $Page->kemasanbahan->caption() ?><?= $Page->kemasanbahan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasanbahan->cellAttributes() ?>>
+<template id="tpx_npd_kemasanbahan"><span id="el_npd_kemasanbahan">
+<template id="tp_x_kemasanbahan">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_kemasanbahan" name="x_kemasanbahan" id="x_kemasanbahan"<?= $Page->kemasanbahan->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_kemasanbahan" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_kemasanbahan"
+    name="x_kemasanbahan"
+    value="<?= HtmlEncode($Page->kemasanbahan->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_kemasanbahan"
+    data-target="dsl_x_kemasanbahan"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->kemasanbahan->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_kemasanbahan"
+    data-page="1"
+    data-value-separator="<?= $Page->kemasanbahan->displayValueSeparatorAttribute() ?>"
+    <?= $Page->kemasanbahan->editAttributes() ?>>
+<?= $Page->kemasanbahan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kemasanbahan->getErrorMessage() ?></div>
+<?= $Page->kemasanbahan->Lookup->getParamTag($Page, "p_x_kemasanbahan") ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->kemasanbentuk->Visible) { // kemasanbentuk ?>
+    <div id="r_kemasanbentuk" class="form-group row">
+        <label id="elh_npd_kemasanbentuk" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kemasanbentuk"><?= $Page->kemasanbentuk->caption() ?><?= $Page->kemasanbentuk->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasanbentuk->cellAttributes() ?>>
+<template id="tpx_npd_kemasanbentuk"><span id="el_npd_kemasanbentuk">
+<template id="tp_x_kemasanbentuk">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_kemasanbentuk" name="x_kemasanbentuk" id="x_kemasanbentuk"<?= $Page->kemasanbentuk->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_kemasanbentuk" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_kemasanbentuk"
+    name="x_kemasanbentuk"
+    value="<?= HtmlEncode($Page->kemasanbentuk->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_kemasanbentuk"
+    data-target="dsl_x_kemasanbentuk"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->kemasanbentuk->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_kemasanbentuk"
+    data-page="1"
+    data-value-separator="<?= $Page->kemasanbentuk->displayValueSeparatorAttribute() ?>"
+    <?= $Page->kemasanbentuk->editAttributes() ?>>
+<?= $Page->kemasanbentuk->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kemasanbentuk->getErrorMessage() ?></div>
+<?= $Page->kemasanbentuk->Lookup->getParamTag($Page, "p_x_kemasanbentuk") ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->kemasankomposisi->Visible) { // kemasankomposisi ?>
+    <div id="r_kemasankomposisi" class="form-group row">
+        <label id="elh_npd_kemasankomposisi" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kemasankomposisi"><?= $Page->kemasankomposisi->caption() ?><?= $Page->kemasankomposisi->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasankomposisi->cellAttributes() ?>>
+<template id="tpx_npd_kemasankomposisi"><span id="el_npd_kemasankomposisi">
+<template id="tp_x_kemasankomposisi">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_kemasankomposisi" name="x_kemasankomposisi" id="x_kemasankomposisi"<?= $Page->kemasankomposisi->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_kemasankomposisi" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_kemasankomposisi"
+    name="x_kemasankomposisi"
+    value="<?= HtmlEncode($Page->kemasankomposisi->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_kemasankomposisi"
+    data-target="dsl_x_kemasankomposisi"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->kemasankomposisi->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_kemasankomposisi"
+    data-page="1"
+    data-value-separator="<?= $Page->kemasankomposisi->displayValueSeparatorAttribute() ?>"
+    <?= $Page->kemasankomposisi->editAttributes() ?>>
+<?= $Page->kemasankomposisi->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kemasankomposisi->getErrorMessage() ?></div>
+<?= $Page->kemasankomposisi->Lookup->getParamTag($Page, "p_x_kemasankomposisi") ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->kemasancatatansekunder->Visible) { // kemasancatatansekunder ?>
+    <div id="r_kemasancatatansekunder" class="form-group row">
+        <label id="elh_npd_kemasancatatansekunder" for="x_kemasancatatansekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_kemasancatatansekunder"><?= $Page->kemasancatatansekunder->caption() ?><?= $Page->kemasancatatansekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kemasancatatansekunder->cellAttributes() ?>>
+<template id="tpx_npd_kemasancatatansekunder"><span id="el_npd_kemasancatatansekunder">
+<textarea data-table="npd" data-field="x_kemasancatatansekunder" data-page="1" name="x_kemasancatatansekunder" id="x_kemasancatatansekunder" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->kemasancatatansekunder->getPlaceHolder()) ?>"<?= $Page->kemasancatatansekunder->editAttributes() ?> aria-describedby="x_kemasancatatansekunder_help"><?= $Page->kemasancatatansekunder->EditValue ?></textarea>
+<?= $Page->kemasancatatansekunder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->kemasancatatansekunder->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
@@ -894,7 +1147,7 @@ loadjs.ready("head", function() {
     data-type="select-one"
     data-template="tp_x_labelbahan"
     data-target="dsl_x_labelbahan"
-    data-repeatcolumn="5"
+    data-repeatcolumn="4"
     class="form-control<?= $Page->labelbahan->isInvalidClass() ?>"
     data-table="npd"
     data-field="x_labelbahan"
@@ -928,7 +1181,7 @@ loadjs.ready("head", function() {
     data-type="select-one"
     data-template="tp_x_labelkualitas"
     data-target="dsl_x_labelkualitas"
-    data-repeatcolumn="5"
+    data-repeatcolumn="4"
     class="form-control<?= $Page->labelkualitas->isInvalidClass() ?>"
     data-table="npd"
     data-field="x_labelkualitas"
@@ -962,7 +1215,7 @@ loadjs.ready("head", function() {
     data-type="select-one"
     data-template="tp_x_labelposisi"
     data-target="dsl_x_labelposisi"
-    data-repeatcolumn="5"
+    data-repeatcolumn="4"
     class="form-control<?= $Page->labelposisi->isInvalidClass() ?>"
     data-table="npd"
     data-field="x_labelposisi"
@@ -984,6 +1237,98 @@ loadjs.ready("head", function() {
 <textarea data-table="npd" data-field="x_labelcatatan" data-page="1" name="x_labelcatatan" id="x_labelcatatan" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->labelcatatan->getPlaceHolder()) ?>"<?= $Page->labelcatatan->editAttributes() ?> aria-describedby="x_labelcatatan_help"><?= $Page->labelcatatan->EditValue ?></textarea>
 <?= $Page->labelcatatan->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->labelcatatan->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->labeltekstur->Visible) { // labeltekstur ?>
+    <div id="r_labeltekstur" class="form-group row">
+        <label id="elh_npd_labeltekstur" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_labeltekstur"><?= $Page->labeltekstur->caption() ?><?= $Page->labeltekstur->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labeltekstur->cellAttributes() ?>>
+<template id="tpx_npd_labeltekstur"><span id="el_npd_labeltekstur">
+<template id="tp_x_labeltekstur">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_labeltekstur" name="x_labeltekstur" id="x_labeltekstur"<?= $Page->labeltekstur->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_labeltekstur" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_labeltekstur"
+    name="x_labeltekstur"
+    value="<?= HtmlEncode($Page->labeltekstur->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_labeltekstur"
+    data-target="dsl_x_labeltekstur"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->labeltekstur->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_labeltekstur"
+    data-page="1"
+    data-value-separator="<?= $Page->labeltekstur->displayValueSeparatorAttribute() ?>"
+    <?= $Page->labeltekstur->editAttributes() ?>>
+<?= $Page->labeltekstur->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->labeltekstur->getErrorMessage() ?></div>
+<?= $Page->labeltekstur->Lookup->getParamTag($Page, "p_x_labeltekstur") ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->labelprint->Visible) { // labelprint ?>
+    <div id="r_labelprint" class="form-group row">
+        <label id="elh_npd_labelprint" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_labelprint"><?= $Page->labelprint->caption() ?><?= $Page->labelprint->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labelprint->cellAttributes() ?>>
+<template id="tpx_npd_labelprint"><span id="el_npd_labelprint">
+<template id="tp_x_labelprint">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_labelprint" name="x_labelprint" id="x_labelprint"<?= $Page->labelprint->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_labelprint" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_labelprint"
+    name="x_labelprint"
+    value="<?= HtmlEncode($Page->labelprint->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_labelprint"
+    data-target="dsl_x_labelprint"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->labelprint->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_labelprint"
+    data-page="1"
+    data-value-separator="<?= $Page->labelprint->displayValueSeparatorAttribute() ?>"
+    <?= $Page->labelprint->editAttributes() ?>>
+<?= $Page->labelprint->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->labelprint->getErrorMessage() ?></div>
+<?= $Page->labelprint->Lookup->getParamTag($Page, "p_x_labelprint") ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->labeljmlwarna->Visible) { // labeljmlwarna ?>
+    <div id="r_labeljmlwarna" class="form-group row">
+        <label id="elh_npd_labeljmlwarna" for="x_labeljmlwarna" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_labeljmlwarna"><?= $Page->labeljmlwarna->caption() ?><?= $Page->labeljmlwarna->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labeljmlwarna->cellAttributes() ?>>
+<template id="tpx_npd_labeljmlwarna"><span id="el_npd_labeljmlwarna">
+<input type="<?= $Page->labeljmlwarna->getInputTextType() ?>" data-table="npd" data-field="x_labeljmlwarna" data-page="1" name="x_labeljmlwarna" id="x_labeljmlwarna" placeholder="<?= HtmlEncode($Page->labeljmlwarna->getPlaceHolder()) ?>" value="<?= $Page->labeljmlwarna->EditValue ?>"<?= $Page->labeljmlwarna->editAttributes() ?> aria-describedby="x_labeljmlwarna_help">
+<?= $Page->labeljmlwarna->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->labeljmlwarna->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->labelcatatanhotprint->Visible) { // labelcatatanhotprint ?>
+    <div id="r_labelcatatanhotprint" class="form-group row">
+        <label id="elh_npd_labelcatatanhotprint" for="x_labelcatatanhotprint" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_labelcatatanhotprint"><?= $Page->labelcatatanhotprint->caption() ?><?= $Page->labelcatatanhotprint->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->labelcatatanhotprint->cellAttributes() ?>>
+<template id="tpx_npd_labelcatatanhotprint"><span id="el_npd_labelcatatanhotprint">
+<textarea data-table="npd" data-field="x_labelcatatanhotprint" data-page="1" name="x_labelcatatanhotprint" id="x_labelcatatanhotprint" cols="35" rows="4" placeholder="<?= HtmlEncode($Page->labelcatatanhotprint->getPlaceHolder()) ?>"<?= $Page->labelcatatanhotprint->editAttributes() ?> aria-describedby="x_labelcatatanhotprint_help"><?= $Page->labelcatatanhotprint->EditValue ?></textarea>
+<?= $Page->labelcatatanhotprint->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->labelcatatanhotprint->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
@@ -1379,10 +1724,6 @@ loadjs.ready("head", function() {
                     <label class="col-4 col-form-label text-right"><?= $Page->sifatorder->caption() ?></label>
                     <div class="col-8"><slot class="ew-slot" name="tpx_npd_sifatorder"></slot></div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-4 col-form-label text-right"><?= $Page->status->caption() ?></label>
-                    <div class="col-8"></div>
-                </div>
             </div>
             <div class="col-4">
                 <div class="form-group row">
@@ -1476,8 +1817,8 @@ loadjs.ready("head", function() {
                 <div class="col-8"><slot class="ew-slot" name="tpx_npd_aplikasi"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->aksesoris->caption() ?></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_npd_aksesoris"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->estetika->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_estetika"></slot></div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->tambahan->caption() ?></label>
@@ -1496,8 +1837,8 @@ loadjs.ready("head", function() {
                 <div class="col-1"><slot class="ew-slot" name="tpx_npd_satuankemasan"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->kemasanbentuk->caption() ?></label>
-                <div class="col-10"><slot class="ew-slot" name="tpx_npd_kemasanbentuk"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->kemasanwadah->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_kemasanwadah"></slot></div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->kemasantutup->caption() ?></label>
@@ -1511,13 +1852,37 @@ loadjs.ready("head", function() {
     </div>
     <div class="card">
         <div class="card-header">
-            <div class="card-title">LABEL</div>
+            <div class="card-title">KEMASAN SEKUNDER</div>
         </div>
         <div class="card-body">
-            <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->labelukuran->caption() ?></label>
-                <div class="col-10"><slot class="ew-slot" name="tpx_npd_labelukuran"></slot></div>
+        	<div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->ukurankemasansekunder->caption() ?></label>
+                <div class="col-3"><slot class="ew-slot" name="tpx_npd_ukurankemasansekunder"></slot></div>
+                <div class="col-1"><slot class="ew-slot" name="tpx_npd_satuankemasansekunder"></slot></div>
             </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->kemasanbahan->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_kemasanbahan"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->kemasanbentuk->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_kemasanbentuk"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->kemasankomposisi->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_kemasankomposisi"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->kemasancatatansekunder->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_kemasancatatansekunder"></slot></div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">LABEL STIKER</div>
+        </div>
+        <div class="card-body">
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->labelbahan->caption() ?></label>
                 <div class="col-10"><slot class="ew-slot" name="tpx_npd_labelbahan"></slot></div>
@@ -1536,7 +1901,30 @@ loadjs.ready("head", function() {
             </div>
         </div>
     </div>
-        <div class="card">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">LABEL HOT PRINT</div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->labeltekstur->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_labeltekstur"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->labelprint->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_labelprint"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->labeljmlwarna->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_labeljmlwarna"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->labelcatatanhotprint->caption() ?></label>
+                <div class="col-10"><slot class="ew-slot" name="tpx_npd_labelcatatanhotprint"></slot></div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
         <div class="card-header">
             <div class="card-title">TARGET HARGA & PROYEKSI</div>
         </div>
