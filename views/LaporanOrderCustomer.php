@@ -45,18 +45,6 @@ $LaporanOrderCustomer = &$Page;
 		$result = ExecuteQuery($query)->fetchAll();
 	}
 ?>
-<style>
-	.col-flex {
-		width: 150px;
-		min-width: 150px;
-		max-width: 150px;
-	}
-	.col-description {
-		width: 250px;
-		min-width: 250px;
-		max-width: 250px;
-	}
-</style>
 <div class="container">
  	<div class="row">
 		<form method="post" action="<?php echo CurrentPage()->PageObjName ?>">
@@ -96,35 +84,35 @@ $LaporanOrderCustomer = &$Page;
 			</div>
 		</form>
 	</div>
-	<div class="row">
+	<div class="row table-responsive">
 	    <?php if(isset($_POST['srhDate'])) : ?>
-	    <table class="table ew-table table-bordered" id="printTable">
+	    <table class="table ew-table table-bordered" id="printTable" style="min-width: max-content;">
 		  <thead>
 			<tr>
-				<th colspan="17" class="text-center">
+				<th colspan="18" class="text-center">
 					<h4 class="my-2">Laporan Order Customer</h4>
 					<p class="mt-3">Periode: <?php echo ($dateFrom == $dateTo) ? tgl_indo($dateFrom) : tgl_indo($dateFrom) . ' - ' . tgl_indo($dateTo) ?></p>
 				</th>
 			</tr>
 		    <tr>
 		        <th class="text-center">No</th>
-		        <th class="text-center col-flex">Kode Customer</th>
-		        <th class="text-center col-description">Nama Customer</th>
-		        <th class="text-center col-flex">Tgl P.O.</th>
-		        <th class="text-center col-flex">Kode P.O.</th>
-		        <th class="text-center col-flex">Kode Produk</th>
-		        <th class="text-center col-description">Nama Produk</th>
-		        <th class="text-center col-flex">Brand</th>
-		        <th class="text-center col-flex">Jumlah Order</th>
-		        <th class="text-center col-flex">Bonus</th>
-		        <th class="text-center col-flex">Kemasan</th>
-		        <th class="text-center col-flex">Harga Satuan</th>
-		        <th class="text-center col-flex">No. Faktur</th>
-		        <th class="text-center col-flex">Nilai P.O.</th>
-		        <th class="text-center col-flex">Diskon &#37;</th>
-		        <th class="text-center col-flex">Nilai Faktur</th>
-		        <th class="text-center col-flex">Marketing</th>
-		        <th class="text-center col-flex">Due Date</th>
+		        <th class="text-center">Kode Customer</th>
+		        <th class="text-center">Nama Customer</th>
+		        <th class="text-center">Tgl P.O.</th>
+		        <th class="text-center">Kode P.O.</th>
+		        <th class="text-center">Kode Produk</th>
+		        <th class="text-center">Nama Produk</th>
+		        <th class="text-center">Brand</th>
+		        <th class="text-center">Jumlah Order</th>
+		        <th class="text-center">Bonus</th>
+		        <th class="text-center">Kemasan</th>
+		        <th class="text-center">Harga Satuan</th>
+		        <th class="text-center">No. Faktur</th>
+		        <th class="text-center">Nilai P.O.</th>
+		        <th class="text-center">Diskon &#37;</th>
+		        <th class="text-center">Nilai Faktur</th>
+		        <th class="text-center">Marketing</th>
+		        <th class="text-center">Due Date</th>
 		    </tr>
 		  </thead>
 		  <tbody>
