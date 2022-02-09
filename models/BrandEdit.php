@@ -1777,7 +1777,7 @@ class BrandEdit extends Brand
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
-        $count = ExecuteScalar("SELECT COUNT(*) FROM brand WHERE kode='".$this->kode->FormValue."' AND id NOT IN (".$this->id->CurrentValue.")");
+        $count = ExecuteScalar("SELECT COUNT(*) FROM brand WHERE kode = '{$this->kode->FormValue}' AND id NOT IN ({$this->id->CurrentValue})");
         if ($count>0) {
         	$customError = "Kode Brand sudah terpakai.";
             return false;

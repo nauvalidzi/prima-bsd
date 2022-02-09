@@ -637,6 +637,15 @@ return function (App $app) {
     // laporansales
     $app->any('/Laporansales[/{params:.*}]', LaporansalesController::class)->add(PermissionMiddleware::class)->setName('Laporansales-laporansales-custom'); // custom
 
+    // v_order_customer
+    $app->any('/VOrderCustomerList[/{idorder}/{idcustomer}]', VOrderCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('VOrderCustomerList-v_order_customer-list'); // list
+    $app->group(
+        '/v_order_customer',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{idorder}/{idcustomer}]', VOrderCustomerController::class . ':list')->add(PermissionMiddleware::class)->setName('v_order_customer/list-v_order_customer-list-2'); // list
+        }
+    );
+
     // laporan_delivery_order
     $app->any('/LaporanDeliveryOrder[/{params:.*}]', LaporanDeliveryOrderController::class)->add(PermissionMiddleware::class)->setName('LaporanDeliveryOrder-laporan_delivery_order-custom'); // custom
 
@@ -962,37 +971,61 @@ return function (App $app) {
 
     // npd_aplikasi_sediaan
     $app->any('/NpdAplikasiSediaanList[/{id}]', NpdAplikasiSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdAplikasiSediaanList-npd_aplikasi_sediaan-list'); // list
+    $app->any('/NpdAplikasiSediaanAdd[/{id}]', NpdAplikasiSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdAplikasiSediaanAdd-npd_aplikasi_sediaan-add'); // add
+    $app->any('/NpdAplikasiSediaanEdit[/{id}]', NpdAplikasiSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdAplikasiSediaanEdit-npd_aplikasi_sediaan-edit'); // edit
+    $app->any('/NpdAplikasiSediaanDelete[/{id}]', NpdAplikasiSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdAplikasiSediaanDelete-npd_aplikasi_sediaan-delete'); // delete
     $app->group(
         '/npd_aplikasi_sediaan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdAplikasiSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_aplikasi_sediaan/list-npd_aplikasi_sediaan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdAplikasiSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_aplikasi_sediaan/add-npd_aplikasi_sediaan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdAplikasiSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_aplikasi_sediaan/edit-npd_aplikasi_sediaan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdAplikasiSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_aplikasi_sediaan/delete-npd_aplikasi_sediaan-delete-2'); // delete
         }
     );
 
     // npd_bentuk_sediaan
     $app->any('/NpdBentukSediaanList[/{id}]', NpdBentukSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdBentukSediaanList-npd_bentuk_sediaan-list'); // list
+    $app->any('/NpdBentukSediaanAdd[/{id}]', NpdBentukSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdBentukSediaanAdd-npd_bentuk_sediaan-add'); // add
+    $app->any('/NpdBentukSediaanEdit[/{id}]', NpdBentukSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdBentukSediaanEdit-npd_bentuk_sediaan-edit'); // edit
+    $app->any('/NpdBentukSediaanDelete[/{id}]', NpdBentukSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdBentukSediaanDelete-npd_bentuk_sediaan-delete'); // delete
     $app->group(
         '/npd_bentuk_sediaan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdBentukSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_bentuk_sediaan/list-npd_bentuk_sediaan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdBentukSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_bentuk_sediaan/add-npd_bentuk_sediaan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdBentukSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_bentuk_sediaan/edit-npd_bentuk_sediaan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdBentukSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_bentuk_sediaan/delete-npd_bentuk_sediaan-delete-2'); // delete
         }
     );
 
     // npd_estetika_sediaan
     $app->any('/NpdEstetikaSediaanList[/{id}]', NpdEstetikaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdEstetikaSediaanList-npd_estetika_sediaan-list'); // list
+    $app->any('/NpdEstetikaSediaanAdd[/{id}]', NpdEstetikaSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdEstetikaSediaanAdd-npd_estetika_sediaan-add'); // add
+    $app->any('/NpdEstetikaSediaanEdit[/{id}]', NpdEstetikaSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdEstetikaSediaanEdit-npd_estetika_sediaan-edit'); // edit
+    $app->any('/NpdEstetikaSediaanDelete[/{id}]', NpdEstetikaSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdEstetikaSediaanDelete-npd_estetika_sediaan-delete'); // delete
     $app->group(
         '/npd_estetika_sediaan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdEstetikaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_estetika_sediaan/list-npd_estetika_sediaan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdEstetikaSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_estetika_sediaan/add-npd_estetika_sediaan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdEstetikaSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_estetika_sediaan/edit-npd_estetika_sediaan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdEstetikaSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_estetika_sediaan/delete-npd_estetika_sediaan-delete-2'); // delete
         }
     );
 
     // npd_kemasan_tutup
     $app->any('/NpdKemasanTutupList[/{id}]', NpdKemasanTutupController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdKemasanTutupList-npd_kemasan_tutup-list'); // list
+    $app->any('/NpdKemasanTutupAdd[/{id}]', NpdKemasanTutupController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdKemasanTutupAdd-npd_kemasan_tutup-add'); // add
+    $app->any('/NpdKemasanTutupEdit[/{id}]', NpdKemasanTutupController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdKemasanTutupEdit-npd_kemasan_tutup-edit'); // edit
+    $app->any('/NpdKemasanTutupDelete[/{id}]', NpdKemasanTutupController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdKemasanTutupDelete-npd_kemasan_tutup-delete'); // delete
     $app->group(
         '/npd_kemasan_tutup',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdKemasanTutupController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_kemasan_tutup/list-npd_kemasan_tutup-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdKemasanTutupController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_kemasan_tutup/add-npd_kemasan_tutup-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdKemasanTutupController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_kemasan_tutup/edit-npd_kemasan_tutup-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdKemasanTutupController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_kemasan_tutup/delete-npd_kemasan_tutup-delete-2'); // delete
         }
     );
 
@@ -1015,37 +1048,61 @@ return function (App $app) {
 
     // npd_kemasan_wadah
     $app->any('/NpdKemasanWadahList[/{id}]', NpdKemasanWadahController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdKemasanWadahList-npd_kemasan_wadah-list'); // list
+    $app->any('/NpdKemasanWadahAdd[/{id}]', NpdKemasanWadahController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdKemasanWadahAdd-npd_kemasan_wadah-add'); // add
+    $app->any('/NpdKemasanWadahEdit[/{id}]', NpdKemasanWadahController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdKemasanWadahEdit-npd_kemasan_wadah-edit'); // edit
+    $app->any('/NpdKemasanWadahDelete[/{id}]', NpdKemasanWadahController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdKemasanWadahDelete-npd_kemasan_wadah-delete'); // delete
     $app->group(
         '/npd_kemasan_wadah',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdKemasanWadahController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_kemasan_wadah/list-npd_kemasan_wadah-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdKemasanWadahController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_kemasan_wadah/add-npd_kemasan_wadah-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdKemasanWadahController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_kemasan_wadah/edit-npd_kemasan_wadah-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdKemasanWadahController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_kemasan_wadah/delete-npd_kemasan_wadah-delete-2'); // delete
         }
     );
 
     // npd_label_bahan
     $app->any('/NpdLabelBahanList[/{id}]', NpdLabelBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelBahanList-npd_label_bahan-list'); // list
+    $app->any('/NpdLabelBahanAdd[/{id}]', NpdLabelBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelBahanAdd-npd_label_bahan-add'); // add
+    $app->any('/NpdLabelBahanEdit[/{id}]', NpdLabelBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelBahanEdit-npd_label_bahan-edit'); // edit
+    $app->any('/NpdLabelBahanDelete[/{id}]', NpdLabelBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelBahanDelete-npd_label_bahan-delete'); // delete
     $app->group(
         '/npd_label_bahan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_bahan/list-npd_label_bahan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_bahan/add-npd_label_bahan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_bahan/edit-npd_label_bahan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_bahan/delete-npd_label_bahan-delete-2'); // delete
         }
     );
 
     // npd_label_posisi
     $app->any('/NpdLabelPosisiList[/{id}]', NpdLabelPosisiController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiList-npd_label_posisi-list'); // list
+    $app->any('/NpdLabelPosisiAdd[/{id}]', NpdLabelPosisiController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiAdd-npd_label_posisi-add'); // add
+    $app->any('/NpdLabelPosisiEdit[/{id}]', NpdLabelPosisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiEdit-npd_label_posisi-edit'); // edit
+    $app->any('/NpdLabelPosisiDelete[/{id}]', NpdLabelPosisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiDelete-npd_label_posisi-delete'); // delete
     $app->group(
         '/npd_label_posisi',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_posisi/list-npd_label_posisi-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_posisi/add-npd_label_posisi-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_posisi/edit-npd_label_posisi-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_posisi/delete-npd_label_posisi-delete-2'); // delete
         }
     );
 
     // npd_parfum_sediaan
     $app->any('/NpdParfumSediaanList[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanList-npd_parfum_sediaan-list'); // list
+    $app->any('/NpdParfumSediaanAdd[/{id}]', NpdParfumSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanAdd-npd_parfum_sediaan-add'); // add
+    $app->any('/NpdParfumSediaanEdit[/{id}]', NpdParfumSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanEdit-npd_parfum_sediaan-edit'); // edit
+    $app->any('/NpdParfumSediaanDelete[/{id}]', NpdParfumSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanDelete-npd_parfum_sediaan-delete'); // delete
     $app->group(
         '/npd_parfum_sediaan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/list-npd_parfum_sediaan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/add-npd_parfum_sediaan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/edit-npd_parfum_sediaan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/delete-npd_parfum_sediaan-delete-2'); // delete
         }
     );
 
@@ -1096,28 +1153,46 @@ return function (App $app) {
 
     // npd_label_kualitas
     $app->any('/NpdLabelKualitasList[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasList-npd_label_kualitas-list'); // list
+    $app->any('/NpdLabelKualitasAdd[/{id}]', NpdLabelKualitasController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasAdd-npd_label_kualitas-add'); // add
+    $app->any('/NpdLabelKualitasEdit[/{id}]', NpdLabelKualitasController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasEdit-npd_label_kualitas-edit'); // edit
+    $app->any('/NpdLabelKualitasDelete[/{id}]', NpdLabelKualitasController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasDelete-npd_label_kualitas-delete'); // delete
     $app->group(
         '/npd_label_kualitas',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/list-npd_label_kualitas-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/add-npd_label_kualitas-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/edit-npd_label_kualitas-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/delete-npd_label_kualitas-delete-2'); // delete
         }
     );
 
     // npd_viskositas_sediaan
     $app->any('/NpdViskositasSediaanList[/{id}]', NpdViskositasSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdViskositasSediaanList-npd_viskositas_sediaan-list'); // list
+    $app->any('/NpdViskositasSediaanAdd[/{id}]', NpdViskositasSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdViskositasSediaanAdd-npd_viskositas_sediaan-add'); // add
+    $app->any('/NpdViskositasSediaanEdit[/{id}]', NpdViskositasSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdViskositasSediaanEdit-npd_viskositas_sediaan-edit'); // edit
+    $app->any('/NpdViskositasSediaanDelete[/{id}]', NpdViskositasSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdViskositasSediaanDelete-npd_viskositas_sediaan-delete'); // delete
     $app->group(
         '/npd_viskositas_sediaan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdViskositasSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_viskositas_sediaan/list-npd_viskositas_sediaan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdViskositasSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_viskositas_sediaan/add-npd_viskositas_sediaan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdViskositasSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_viskositas_sediaan/edit-npd_viskositas_sediaan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdViskositasSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_viskositas_sediaan/delete-npd_viskositas_sediaan-delete-2'); // delete
         }
     );
 
     // npd_warna_sediaan
     $app->any('/NpdWarnaSediaanList[/{id}]', NpdWarnaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdWarnaSediaanList-npd_warna_sediaan-list'); // list
+    $app->any('/NpdWarnaSediaanAdd[/{id}]', NpdWarnaSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdWarnaSediaanAdd-npd_warna_sediaan-add'); // add
+    $app->any('/NpdWarnaSediaanEdit[/{id}]', NpdWarnaSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdWarnaSediaanEdit-npd_warna_sediaan-edit'); // edit
+    $app->any('/NpdWarnaSediaanDelete[/{id}]', NpdWarnaSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdWarnaSediaanDelete-npd_warna_sediaan-delete'); // delete
     $app->group(
         '/npd_warna_sediaan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdWarnaSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_warna_sediaan/list-npd_warna_sediaan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdWarnaSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_warna_sediaan/add-npd_warna_sediaan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdWarnaSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_warna_sediaan/edit-npd_warna_sediaan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdWarnaSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_warna_sediaan/delete-npd_warna_sediaan-delete-2'); // delete
         }
     );
 
@@ -1231,46 +1306,76 @@ return function (App $app) {
 
     // npd_kemasan_bahan
     $app->any('/NpdKemasanBahanList[/{id}]', NpdKemasanBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdKemasanBahanList-npd_kemasan_bahan-list'); // list
+    $app->any('/NpdKemasanBahanAdd[/{id}]', NpdKemasanBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdKemasanBahanAdd-npd_kemasan_bahan-add'); // add
+    $app->any('/NpdKemasanBahanEdit[/{id}]', NpdKemasanBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdKemasanBahanEdit-npd_kemasan_bahan-edit'); // edit
+    $app->any('/NpdKemasanBahanDelete[/{id}]', NpdKemasanBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdKemasanBahanDelete-npd_kemasan_bahan-delete'); // delete
     $app->group(
         '/npd_kemasan_bahan',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdKemasanBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_kemasan_bahan/list-npd_kemasan_bahan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdKemasanBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_kemasan_bahan/add-npd_kemasan_bahan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdKemasanBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_kemasan_bahan/edit-npd_kemasan_bahan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdKemasanBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_kemasan_bahan/delete-npd_kemasan_bahan-delete-2'); // delete
         }
     );
 
     // npd_kemasan_bentuk
     $app->any('/NpdKemasanBentukList[/{id}]', NpdKemasanBentukController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdKemasanBentukList-npd_kemasan_bentuk-list'); // list
+    $app->any('/NpdKemasanBentukAdd[/{id}]', NpdKemasanBentukController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdKemasanBentukAdd-npd_kemasan_bentuk-add'); // add
+    $app->any('/NpdKemasanBentukEdit[/{id}]', NpdKemasanBentukController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdKemasanBentukEdit-npd_kemasan_bentuk-edit'); // edit
+    $app->any('/NpdKemasanBentukDelete[/{id}]', NpdKemasanBentukController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdKemasanBentukDelete-npd_kemasan_bentuk-delete'); // delete
     $app->group(
         '/npd_kemasan_bentuk',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdKemasanBentukController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_kemasan_bentuk/list-npd_kemasan_bentuk-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdKemasanBentukController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_kemasan_bentuk/add-npd_kemasan_bentuk-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdKemasanBentukController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_kemasan_bentuk/edit-npd_kemasan_bentuk-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdKemasanBentukController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_kemasan_bentuk/delete-npd_kemasan_bentuk-delete-2'); // delete
         }
     );
 
     // npd_kemasan_komposisi
     $app->any('/NpdKemasanKomposisiList[/{id}]', NpdKemasanKomposisiController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdKemasanKomposisiList-npd_kemasan_komposisi-list'); // list
+    $app->any('/NpdKemasanKomposisiAdd[/{id}]', NpdKemasanKomposisiController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdKemasanKomposisiAdd-npd_kemasan_komposisi-add'); // add
+    $app->any('/NpdKemasanKomposisiEdit[/{id}]', NpdKemasanKomposisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdKemasanKomposisiEdit-npd_kemasan_komposisi-edit'); // edit
+    $app->any('/NpdKemasanKomposisiDelete[/{id}]', NpdKemasanKomposisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdKemasanKomposisiDelete-npd_kemasan_komposisi-delete'); // delete
     $app->group(
         '/npd_kemasan_komposisi',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdKemasanKomposisiController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_kemasan_komposisi/list-npd_kemasan_komposisi-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdKemasanKomposisiController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_kemasan_komposisi/add-npd_kemasan_komposisi-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdKemasanKomposisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_kemasan_komposisi/edit-npd_kemasan_komposisi-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdKemasanKomposisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_kemasan_komposisi/delete-npd_kemasan_komposisi-delete-2'); // delete
         }
     );
 
     // npd_label_print
     $app->any('/NpdLabelPrintList[/{id}]', NpdLabelPrintController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelPrintList-npd_label_print-list'); // list
+    $app->any('/NpdLabelPrintAdd[/{id}]', NpdLabelPrintController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelPrintAdd-npd_label_print-add'); // add
+    $app->any('/NpdLabelPrintEdit[/{id}]', NpdLabelPrintController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelPrintEdit-npd_label_print-edit'); // edit
+    $app->any('/NpdLabelPrintDelete[/{id}]', NpdLabelPrintController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelPrintDelete-npd_label_print-delete'); // delete
     $app->group(
         '/npd_label_print',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_print/list-npd_label_print-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_print/add-npd_label_print-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_print/edit-npd_label_print-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_print/delete-npd_label_print-delete-2'); // delete
         }
     );
 
     // npd_label_tekstur
     $app->any('/NpdLabelTeksturList[/{id}]', NpdLabelTeksturController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturList-npd_label_tekstur-list'); // list
+    $app->any('/NpdLabelTeksturAdd[/{id}]', NpdLabelTeksturController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturAdd-npd_label_tekstur-add'); // add
+    $app->any('/NpdLabelTeksturEdit[/{id}]', NpdLabelTeksturController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturEdit-npd_label_tekstur-edit'); // edit
+    $app->any('/NpdLabelTeksturDelete[/{id}]', NpdLabelTeksturController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturDelete-npd_label_tekstur-delete'); // delete
     $app->group(
         '/npd_label_tekstur',
         function (RouteCollectorProxy $group) {
             $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/list-npd_label_tekstur-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/add-npd_label_tekstur-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/edit-npd_label_tekstur-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/delete-npd_label_tekstur-delete-2'); // delete
         }
     );
 

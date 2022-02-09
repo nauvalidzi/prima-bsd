@@ -13,4 +13,22 @@ class NpdAplikasiSediaanController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdAplikasiSediaanList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdAplikasiSediaanAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdAplikasiSediaanEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdAplikasiSediaanDelete");
+    }
 }

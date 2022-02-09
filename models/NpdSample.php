@@ -97,10 +97,10 @@ class NpdSample extends DbTable
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["warna","parfum"], ["x_warna","x_bau"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["ukuransediaan","warna","parfum","fungsiproduk"], ["x_ukuran","x_warna","x_bau","x_fungsi"], '', '');
                 break;
             default:
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["warna","parfum"], ["x_warna","x_bau"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["ukuransediaan","warna","parfum","fungsiproduk"], ["x_ukuran","x_warna","x_bau","x_fungsi"], '', '');
                 break;
         }
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

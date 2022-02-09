@@ -13,4 +13,22 @@ class NpdBentukSediaanController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdBentukSediaanList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdBentukSediaanAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdBentukSediaanEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdBentukSediaanDelete");
+    }
 }

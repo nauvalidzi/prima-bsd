@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -575,10 +575,10 @@ class VOrderCustomerList extends VOrderCustomer
         $this->idorder->setVisibility();
         $this->kodeorder->setVisibility();
         $this->tanggalorder->setVisibility();
+        $this->aktif->setVisibility();
         $this->idcustomer->setVisibility();
         $this->kodecustomer->setVisibility();
         $this->namacustomer->setVisibility();
-        $this->aktif->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -872,10 +872,10 @@ class VOrderCustomerList extends VOrderCustomer
         $filterList = Concat($filterList, $this->idorder->AdvancedSearch->toJson(), ","); // Field idorder
         $filterList = Concat($filterList, $this->kodeorder->AdvancedSearch->toJson(), ","); // Field kodeorder
         $filterList = Concat($filterList, $this->tanggalorder->AdvancedSearch->toJson(), ","); // Field tanggalorder
+        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
         $filterList = Concat($filterList, $this->kodecustomer->AdvancedSearch->toJson(), ","); // Field kodecustomer
         $filterList = Concat($filterList, $this->namacustomer->AdvancedSearch->toJson(), ","); // Field namacustomer
-        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -940,6 +940,14 @@ class VOrderCustomerList extends VOrderCustomer
         $this->tanggalorder->AdvancedSearch->SearchOperator2 = @$filter["w_tanggalorder"];
         $this->tanggalorder->AdvancedSearch->save();
 
+        // Field aktif
+        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
+        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
+        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
+        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
+        $this->aktif->AdvancedSearch->save();
+
         // Field idcustomer
         $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
         $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
@@ -963,14 +971,6 @@ class VOrderCustomerList extends VOrderCustomer
         $this->namacustomer->AdvancedSearch->SearchValue2 = @$filter["y_namacustomer"];
         $this->namacustomer->AdvancedSearch->SearchOperator2 = @$filter["w_namacustomer"];
         $this->namacustomer->AdvancedSearch->save();
-
-        // Field aktif
-        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
-        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
-        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
-        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
-        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
-        $this->aktif->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1147,10 +1147,10 @@ class VOrderCustomerList extends VOrderCustomer
             $this->updateSort($this->idorder); // idorder
             $this->updateSort($this->kodeorder); // kodeorder
             $this->updateSort($this->tanggalorder); // tanggalorder
+            $this->updateSort($this->aktif); // aktif
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->kodecustomer); // kodecustomer
             $this->updateSort($this->namacustomer); // namacustomer
-            $this->updateSort($this->aktif); // aktif
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1193,10 +1193,10 @@ class VOrderCustomerList extends VOrderCustomer
                 $this->idorder->setSort("");
                 $this->kodeorder->setSort("");
                 $this->tanggalorder->setSort("");
+                $this->aktif->setSort("");
                 $this->idcustomer->setSort("");
                 $this->kodecustomer->setSort("");
                 $this->namacustomer->setSort("");
-                $this->aktif->setSort("");
             }
 
             // Reset start position
@@ -1543,10 +1543,10 @@ class VOrderCustomerList extends VOrderCustomer
         $this->idorder->setDbValue($row['idorder']);
         $this->kodeorder->setDbValue($row['kodeorder']);
         $this->tanggalorder->setDbValue($row['tanggalorder']);
+        $this->aktif->setDbValue($row['aktif']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kodecustomer->setDbValue($row['kodecustomer']);
         $this->namacustomer->setDbValue($row['namacustomer']);
-        $this->aktif->setDbValue($row['aktif']);
     }
 
     // Return a row with default values
@@ -1556,10 +1556,10 @@ class VOrderCustomerList extends VOrderCustomer
         $row['idorder'] = null;
         $row['kodeorder'] = null;
         $row['tanggalorder'] = null;
+        $row['aktif'] = null;
         $row['idcustomer'] = null;
         $row['kodecustomer'] = null;
         $row['namacustomer'] = null;
-        $row['aktif'] = null;
         return $row;
     }
 
@@ -1603,13 +1603,13 @@ class VOrderCustomerList extends VOrderCustomer
 
         // tanggalorder
 
+        // aktif
+
         // idcustomer
 
         // kodecustomer
 
         // namacustomer
-
-        // aktif
         if ($this->RowType == ROWTYPE_VIEW) {
             // idorder
             $this->idorder->ViewValue = $this->idorder->CurrentValue;
@@ -1624,6 +1624,14 @@ class VOrderCustomerList extends VOrderCustomer
             $this->tanggalorder->ViewValue = FormatDateTime($this->tanggalorder->ViewValue, 0);
             $this->tanggalorder->ViewCustomAttributes = "";
 
+            // aktif
+            if (ConvertToBool($this->aktif->CurrentValue)) {
+                $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
+            } else {
+                $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
+            }
+            $this->aktif->ViewCustomAttributes = "";
+
             // idcustomer
             $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
             $this->idcustomer->ViewCustomAttributes = "";
@@ -1635,14 +1643,6 @@ class VOrderCustomerList extends VOrderCustomer
             // namacustomer
             $this->namacustomer->ViewValue = $this->namacustomer->CurrentValue;
             $this->namacustomer->ViewCustomAttributes = "";
-
-            // aktif
-            if (ConvertToBool($this->aktif->CurrentValue)) {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
-            } else {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
-            }
-            $this->aktif->ViewCustomAttributes = "";
 
             // idorder
             $this->idorder->LinkCustomAttributes = "";
@@ -1659,6 +1659,11 @@ class VOrderCustomerList extends VOrderCustomer
             $this->tanggalorder->HrefValue = "";
             $this->tanggalorder->TooltipValue = "";
 
+            // aktif
+            $this->aktif->LinkCustomAttributes = "";
+            $this->aktif->HrefValue = "";
+            $this->aktif->TooltipValue = "";
+
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
             $this->idcustomer->HrefValue = "";
@@ -1673,11 +1678,6 @@ class VOrderCustomerList extends VOrderCustomer
             $this->namacustomer->LinkCustomAttributes = "";
             $this->namacustomer->HrefValue = "";
             $this->namacustomer->TooltipValue = "";
-
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
         }
 
         // Call Row Rendered event

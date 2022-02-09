@@ -370,7 +370,7 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{B32B7005-E649-463B-A
     ["v_bonuscustomer_detail","v_bonuscustomer_detail","List Invoice",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","VBonuscustomerDetailList"],
     ["laporansales.php","laporansales","Laporan Sales",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","Laporansales"],
     ["v_npd_customer","v_npd_customer","v npd customer",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}",""],
-    ["v_order_customer","v_order_customer","v order customer",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}",""],
+    ["v_order_customer","v_order_customer","v order customer",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","VOrderCustomerList"],
     ["laporan_delivery_order.php","laporan_delivery_order","Laporan Delivery Order",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","LaporanDeliveryOrder"],
     ["laporan_invoice.php","laporan_invoice","Laporan Invoice",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","LaporanInvoice"],
     ["laporan_surat_jalan.php","laporan_surat_jalan","Laporan Surat Jalan",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","LaporanSuratJalan"],
@@ -427,6 +427,6 @@ $USER_LEVEL_TABLES = [["pegawai","pegawai","Pegawai",true,"{B32B7005-E649-463B-A
     ["brandcustomer_delete.php","brandcustomer_delete2","Brand Customer Delete",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","BrandcustomerDelete2"],
     ["npd_kemasan_bahan","npd_kemasan_bahan","Kemasan Bahan",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","NpdKemasanBahanList"],
     ["npd_kemasan_bentuk","npd_kemasan_bentuk","Kemasan Bentuk",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","NpdKemasanBentukList"],
-    ["npd_kemasan_komposisi","npd_kemasan_komposisi","npd kemasan komposisi",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","NpdKemasanKomposisiList"],
+    ["npd_kemasan_komposisi","npd_kemasan_komposisi","Kemasan Komposisi",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","NpdKemasanKomposisiList"],
     ["npd_label_print","npd_label_print","Label Print",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","NpdLabelPrintList"],
     ["npd_label_tekstur","npd_label_tekstur","Label Tekstur",true,"{B32B7005-E649-463B-AEE9-0CDA6C0094D3}","NpdLabelTeksturList"]];

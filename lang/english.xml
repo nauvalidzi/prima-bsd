@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/2/8" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/2/9" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -924,7 +924,7 @@
   </global>
   <project>
     <phrase id="bodytitle" value="SIM BSD" />
-    <phrase id="footertext" value="&amp;copy;2021 PT. Prima Visi Globalindo" />
+    <phrase id="footertext" value="&amp;copy;2022 PT. Prima Visi Globalindo" />
     <menu id="1058">
       <phrase id="menutext" value="Brand Customer Edit" />
     </menu>
@@ -998,7 +998,7 @@
       <phrase id="menutext" value="Review Sampel" />
     </menu>
     <menu id="470">
-      <phrase id="menutext" value="Confirm Sample" />
+      <phrase id="menutext" value="Konfirmasi Sampel" />
     </menu>
     <menu id="406">
       <phrase id="menutext" value="Permintaan Harga" />
@@ -4258,7 +4258,7 @@
       </field>
     </table>
     <table id="npd_kemasan_komposisi">
-      <phrase id="tblcaption" value="npd kemasan komposisi" />
+      <phrase id="tblcaption" value="Kemasan Komposisi" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>

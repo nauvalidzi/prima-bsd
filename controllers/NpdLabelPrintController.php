@@ -13,4 +13,22 @@ class NpdLabelPrintController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdLabelPrintList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelPrintAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelPrintEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelPrintDelete");
+    }
 }

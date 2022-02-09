@@ -13,4 +13,22 @@ class NpdKemasanTutupController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdKemasanTutupList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanTutupAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanTutupEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanTutupDelete");
+    }
 }

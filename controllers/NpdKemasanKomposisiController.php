@@ -13,4 +13,22 @@ class NpdKemasanKomposisiController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdKemasanKomposisiList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanKomposisiAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanKomposisiEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanKomposisiDelete");
+    }
 }

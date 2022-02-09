@@ -13,4 +13,22 @@ class NpdParfumSediaanController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdParfumSediaanList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdParfumSediaanAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdParfumSediaanEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdParfumSediaanDelete");
+    }
 }

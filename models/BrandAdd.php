@@ -1695,11 +1695,10 @@ class BrandAdd extends Brand
     // Form Custom Validate event
     public function formCustomValidate(&$customError)
     {
-        // Return error message in CustomError
-        $count = ExecuteScalar("SELECT COUNT(*) FROM brand WHERE kode='".$this->kode->FormValue."'");
-        if ($count>0) {
+        // CEK EXISTING KODE BRAND
+        $count = ExecuteScalar("SELECT COUNT(*) FROM brand WHERE kode = '{$this->kode->FormValue}'");
+        if ($count > 0) {
         	$customError = "Kode Brand sudah terpakai.";
-    //        $this->kode->addErrorMessage("Kode Brand sudah terpakai.");
             return false;
         }
         return true;

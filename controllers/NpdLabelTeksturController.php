@@ -13,4 +13,22 @@ class NpdLabelTeksturController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdLabelTeksturList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelTeksturAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelTeksturEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelTeksturDelete");
+    }
 }

@@ -13,4 +13,22 @@ class NpdLabelBahanController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdLabelBahanList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelBahanAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelBahanEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelBahanDelete");
+    }
 }

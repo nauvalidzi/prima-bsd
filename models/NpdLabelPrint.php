@@ -71,7 +71,7 @@ class NpdLabelPrint extends DbTable
         $this->id = new DbField('npd_label_print', 'npd_label_print', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Sortable = true; // Allow sort
+        $this->id->Sortable = false; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
@@ -80,7 +80,7 @@ class NpdLabelPrint extends DbTable
         $this->parent = new DbField('npd_label_print', 'npd_label_print', 'x_parent', 'parent', '`parent`', '`parent`', 200, 50, -1, false, '`parent`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->parent->Nullable = false; // NOT NULL field
         $this->parent->Required = true; // Required field
-        $this->parent->Sortable = true; // Allow sort
+        $this->parent->Sortable = false; // Allow sort
         $this->parent->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->parent->Param, "CustomMsg");
         $this->Fields['parent'] = &$this->parent;
 
@@ -843,8 +843,10 @@ SORTHTML;
         // Common render codes
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // parent
+        $this->parent->CellCssStyle = "white-space: nowrap;";
 
         // value
 
@@ -943,11 +945,8 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->parent);
                     $doc->exportCaption($this->value);
                 } else {
-                    $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->parent);
                     $doc->exportCaption($this->value);
                 }
                 $doc->endExportRow();
@@ -979,11 +978,8 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->parent);
                         $doc->exportField($this->value);
                     } else {
-                        $doc->exportField($this->id);
-                        $doc->exportField($this->parent);
                         $doc->exportField($this->value);
                     }
                     $doc->endExportRow($rowCnt);
@@ -1052,6 +1048,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['parent'] = 'label-print';
         return true;
     }
 
@@ -1066,6 +1063,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['parent'] = $rsold['parent'];
         return true;
     }
 

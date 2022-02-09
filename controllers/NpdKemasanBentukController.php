@@ -13,4 +13,22 @@ class NpdKemasanBentukController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdKemasanBentukList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanBentukAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanBentukEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdKemasanBentukDelete");
+    }
 }

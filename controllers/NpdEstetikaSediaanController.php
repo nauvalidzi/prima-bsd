@@ -13,4 +13,22 @@ class NpdEstetikaSediaanController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdEstetikaSediaanList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdEstetikaSediaanAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdEstetikaSediaanEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdEstetikaSediaanDelete");
+    }
 }

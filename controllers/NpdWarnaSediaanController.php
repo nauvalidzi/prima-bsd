@@ -13,4 +13,22 @@ class NpdWarnaSediaanController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdWarnaSediaanList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdWarnaSediaanAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdWarnaSediaanEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdWarnaSediaanDelete");
+    }
 }

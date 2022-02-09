@@ -13,4 +13,22 @@ class NpdLabelKualitasController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdLabelKualitasList");
     }
+
+    // add
+    public function add(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelKualitasAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelKualitasEdit");
+    }
+
+    // delete
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdLabelKualitasDelete");
+    }
 }

@@ -568,8 +568,8 @@ class NpdLabelTeksturList extends NpdLabelTekstur
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
-        $this->parent->setVisibility();
+        $this->id->Visible = false;
+        $this->parent->Visible = false;
         $this->value->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -861,8 +861,6 @@ class NpdLabelTeksturList extends NpdLabelTekstur
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->parent->AdvancedSearch->toJson(), ","); // Field parent
         $filterList = Concat($filterList, $this->value->AdvancedSearch->toJson(), ","); // Field value
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -904,22 +902,6 @@ class NpdLabelTeksturList extends NpdLabelTekstur
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
-
-        // Field parent
-        $this->parent->AdvancedSearch->SearchValue = @$filter["x_parent"];
-        $this->parent->AdvancedSearch->SearchOperator = @$filter["z_parent"];
-        $this->parent->AdvancedSearch->SearchCondition = @$filter["v_parent"];
-        $this->parent->AdvancedSearch->SearchValue2 = @$filter["y_parent"];
-        $this->parent->AdvancedSearch->SearchOperator2 = @$filter["w_parent"];
-        $this->parent->AdvancedSearch->save();
-
         // Field value
         $this->value->AdvancedSearch->SearchValue = @$filter["x_value"];
         $this->value->AdvancedSearch->SearchOperator = @$filter["z_value"];
@@ -935,7 +917,6 @@ class NpdLabelTeksturList extends NpdLabelTekstur
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->parent, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->value, $arKeywords, $type);
         return $where;
     }
@@ -1099,8 +1080,6 @@ class NpdLabelTeksturList extends NpdLabelTekstur
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
-            $this->updateSort($this->parent); // parent
             $this->updateSort($this->value); // value
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1163,6 +1142,24 @@ class NpdLabelTeksturList extends NpdLabelTekstur
         $item->OnLeft = false;
         $item->Visible = false;
 
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "copy"
+        $item = &$this->ListOptions->add("copy");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canAdd();
+        $item->OnLeft = false;
+
+        // "delete"
+        $item = &$this->ListOptions->add("delete");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canDelete();
+        $item->OnLeft = false;
+
         // List actions
         $item = &$this->ListOptions->add("listactions");
         $item->CssClass = "text-nowrap";
@@ -1176,6 +1173,14 @@ class NpdLabelTeksturList extends NpdLabelTekstur
         $item->Visible = false;
         $item->OnLeft = false;
         $item->Header = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"custom-control-input\" onclick=\"ew.selectAllKey(this);\"><label class=\"custom-control-label\" for=\"key\"></label></div>";
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
@@ -1204,8 +1209,37 @@ class NpdLabelTeksturList extends NpdLabelTekstur
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") { // View mode
+        if ($this->CurrentMode == "view") {
+            // "edit"
+            $opt = $this->ListOptions["edit"];
+            $editcaption = HtmlTitle($Language->phrase("EditLink"));
+            if ($Security->canEdit()) {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "copy"
+            $opt = $this->ListOptions["copy"];
+            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
+            if ($Security->canAdd()) {
+                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "delete"
+            $opt = $this->ListOptions["delete"];
+            if ($Security->canDelete()) {
+            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
         } // End View mode
 
         // Set up list action buttons
@@ -1253,6 +1287,13 @@ class NpdLabelTeksturList extends NpdLabelTekstur
     {
         global $Language, $Security;
         $options = &$this->OtherOptions;
+        $option = $options["addedit"];
+
+        // Add
+        $item = &$option->add("add");
+        $addcaption = HtmlTitle($Language->phrase("AddLink"));
+        $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
+        $item->Visible = $this->AddUrl != "" && $Security->canAdd();
         $option = $options["action"];
 
         // Set up options default
@@ -1537,32 +1578,16 @@ class NpdLabelTeksturList extends NpdLabelTekstur
         // Common render codes for all row types
 
         // id
+        $this->id->CellCssStyle = "white-space: nowrap;";
 
         // parent
+        $this->parent->CellCssStyle = "white-space: nowrap;";
 
         // value
         if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
-            // parent
-            $this->parent->ViewValue = $this->parent->CurrentValue;
-            $this->parent->ViewCustomAttributes = "";
-
             // value
             $this->value->ViewValue = $this->value->CurrentValue;
             $this->value->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
-            // parent
-            $this->parent->LinkCustomAttributes = "";
-            $this->parent->HrefValue = "";
-            $this->parent->TooltipValue = "";
 
             // value
             $this->value->LinkCustomAttributes = "";

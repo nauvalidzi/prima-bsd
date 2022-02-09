@@ -135,12 +135,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_npd_kemasan_bentuk_id" class="npd_kemasan_bentuk_id"><?= $Page->renderSort($Page->id) ?></div></th>
-<?php } ?>
-<?php if ($Page->parent->Visible) { // parent ?>
-        <th data-name="parent" class="<?= $Page->parent->headerCellClass() ?>"><div id="elh_npd_kemasan_bentuk_parent" class="npd_kemasan_bentuk_parent"><?= $Page->renderSort($Page->parent) ?></div></th>
-<?php } ?>
 <?php if ($Page->value->Visible) { // value ?>
         <th data-name="value" class="<?= $Page->value->headerCellClass() ?>"><div id="elh_npd_kemasan_bentuk_value" class="npd_kemasan_bentuk_value"><?= $Page->renderSort($Page->value) ?></div></th>
 <?php } ?>
@@ -211,22 +205,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_kemasan_bentuk_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->parent->Visible) { // parent ?>
-        <td data-name="parent" <?= $Page->parent->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_kemasan_bentuk_parent">
-<span<?= $Page->parent->viewAttributes() ?>>
-<?= $Page->parent->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->value->Visible) { // value ?>
         <td data-name="value" <?= $Page->value->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_kemasan_bentuk_value">

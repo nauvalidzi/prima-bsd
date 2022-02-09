@@ -26,16 +26,16 @@ $query_kpi = "SELECT p.id as idpegawai, p.nama AS namapegawai,
 $query_kpi = ExecuteQuery($query_kpi)->fetchAll();
 
 // ORDERS PENDING & UNCOMPLETE
-$orders_unprocess = ExecuteRow("SELECT COUNT(DISTINCT idorder) AS total FROM order_detail WHERE sisa > 0")['total'];
+$orders_unprocess = ExecuteScalar("SELECT COUNT(DISTINCT idorder) FROM order_detail WHERE sisa > 0");
 
 // UNCOMPLETE / PENDING DELIVERY ORDER
-$do_uncomplete = ExecuteRow("SELECT COUNT(DISTINCT dd.iddeliveryorder) as total FROM deliveryorder_detail dd JOIN order_detail od ON od.id = dd.idorder_detail WHERE od.sisa > 0")['total'];
+$do_uncomplete = ExecuteScalar("SELECT COUNT(DISTINCT dd.iddeliveryorder) FROM deliveryorder_detail dd JOIN order_detail od ON od.id = dd.idorder_detail WHERE od.sisa > 0");
 
 // INVOICE UNPAID
-$invoice_unpaid = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sisabayar > 0")['total'];
+$invoice_unpaid = ExecuteScalar("SELECT COUNT(*) FROM invoice WHERE sisabayar > 0");
 
 // INVOICE UNSENT
-$invoice_unsent = ExecuteRow("SELECT COUNT(*) AS total FROM invoice WHERE sent < 1")['total'];
+$invoice_unsent = ExecuteScalar("SELECT COUNT(*) FROM invoice WHERE sent < 1");
 ?>
 <div class="row">
     <div class="col-lg-3 col-xs-6">
