@@ -23,6 +23,7 @@ loadjs.ready("head", function () {
         ["idcustomer", [fields.idcustomer.visible && fields.idcustomer.required ? ew.Validators.required(fields.idcustomer.caption) : null], fields.idcustomer.isInvalid],
         ["tgl_request", [fields.tgl_request.visible && fields.tgl_request.required ? ew.Validators.required(fields.tgl_request.caption) : null, ew.Validators.datetime(0)], fields.tgl_request.isInvalid],
         ["tgl_serahterima", [fields.tgl_serahterima.visible && fields.tgl_serahterima.required ? ew.Validators.required(fields.tgl_serahterima.caption) : null, ew.Validators.datetime(0)], fields.tgl_serahterima.isInvalid],
+        ["submitted_by", [fields.submitted_by.visible && fields.submitted_by.required ? ew.Validators.required(fields.submitted_by.caption) : null], fields.submitted_by.isInvalid],
         ["receipt_by", [fields.receipt_by.visible && fields.receipt_by.required ? ew.Validators.required(fields.receipt_by.caption) : null], fields.receipt_by.isInvalid]
     ]);
 
@@ -91,7 +92,7 @@ loadjs.ready("head", function () {
 
     // Dynamic selection lists
     fnpd_serahterimaadd.lists.idcustomer = <?= $Page->idcustomer->toClientList($Page) ?>;
-    fnpd_serahterimaadd.lists.receipt_by = <?= $Page->receipt_by->toClientList($Page) ?>;
+    fnpd_serahterimaadd.lists.submitted_by = <?= $Page->submitted_by->toClientList($Page) ?>;
     loadjs.done("fnpd_serahterimaadd");
 });
 </script>
@@ -119,6 +120,7 @@ $Page->showMessage();
         <label id="elh_npd_serahterima_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
 <span id="el_npd_serahterima_idcustomer">
+<?php $Page->idcustomer->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x_idcustomer"
         name="x_idcustomer"
@@ -185,35 +187,47 @@ loadjs.ready(["fnpd_serahterimaadd", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+    <div id="r_submitted_by" class="form-group row">
+        <label id="elh_npd_serahterima_submitted_by" for="x_submitted_by" class="<?= $Page->LeftColumnClass ?>"><?= $Page->submitted_by->caption() ?><?= $Page->submitted_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el_npd_serahterima_submitted_by">
+    <select
+        id="x_submitted_by"
+        name="x_submitted_by"
+        class="form-control ew-select<?= $Page->submitted_by->isInvalidClass() ?>"
+        data-select2-id="npd_serahterima_x_submitted_by"
+        data-table="npd_serahterima"
+        data-field="x_submitted_by"
+        data-value-separator="<?= $Page->submitted_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->submitted_by->getPlaceHolder()) ?>"
+        <?= $Page->submitted_by->editAttributes() ?>>
+        <?= $Page->submitted_by->selectOptionListHtml("x_submitted_by") ?>
+    </select>
+    <?= $Page->submitted_by->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->submitted_by->getErrorMessage() ?></div>
+<?= $Page->submitted_by->Lookup->getParamTag($Page, "p_x_submitted_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_serahterima_x_submitted_by']"),
+        options = { name: "x_submitted_by", selectId: "npd_serahterima_x_submitted_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_serahterima.fields.submitted_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->receipt_by->Visible) { // receipt_by ?>
     <div id="r_receipt_by" class="form-group row">
         <label id="elh_npd_serahterima_receipt_by" for="x_receipt_by" class="<?= $Page->LeftColumnClass ?>"><?= $Page->receipt_by->caption() ?><?= $Page->receipt_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->receipt_by->cellAttributes() ?>>
 <span id="el_npd_serahterima_receipt_by">
-    <select
-        id="x_receipt_by"
-        name="x_receipt_by"
-        class="form-control ew-select<?= $Page->receipt_by->isInvalidClass() ?>"
-        data-select2-id="npd_serahterima_x_receipt_by"
-        data-table="npd_serahterima"
-        data-field="x_receipt_by"
-        data-value-separator="<?= $Page->receipt_by->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->receipt_by->getPlaceHolder()) ?>"
-        <?= $Page->receipt_by->editAttributes() ?>>
-        <?= $Page->receipt_by->selectOptionListHtml("x_receipt_by") ?>
-    </select>
-    <?= $Page->receipt_by->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->receipt_by->getErrorMessage() ?></div>
-<?= $Page->receipt_by->Lookup->getParamTag($Page, "p_x_receipt_by") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_serahterima_x_receipt_by']"),
-        options = { name: "x_receipt_by", selectId: "npd_serahterima_x_receipt_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_serahterima.fields.receipt_by.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<input type="<?= $Page->receipt_by->getInputTextType() ?>" data-table="npd_serahterima" data-field="x_receipt_by" name="x_receipt_by" id="x_receipt_by" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->receipt_by->getPlaceHolder()) ?>" value="<?= $Page->receipt_by->EditValue ?>"<?= $Page->receipt_by->editAttributes() ?> aria-describedby="x_receipt_by_help">
+<?= $Page->receipt_by->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->receipt_by->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

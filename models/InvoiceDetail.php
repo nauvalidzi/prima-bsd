@@ -1711,6 +1711,11 @@ SORTHTML;
     {
         // update perhitungan invoice
         updateInvoice($rsold['idinvoice']);
+
+        // UPDATE STOK KELUAR
+        //$idproduct = ExecuteRow("SELECT idproduct FROM order_detail WHERE id = {$rsnew['idorder_detail']}")['idproduct'];
+        //$jumlah = $rsnew['jumlahkirim'] + $rsnew['jumlahbonus'];
+        //stok_trx($rsnew['id'], 'detailinvoice-out', $idproduct, $jumlah, 'keluar');
     }
 
     // Row Update Conflict event

@@ -100,10 +100,11 @@ class Npd extends DbTable
     public $delivery_termlain;
     public $status;
     public $readonly;
-    public $created_at;
-    public $updated_at;
     public $receipt_by;
     public $approve_by;
+    public $created_at;
+    public $updated_at;
+    public $selesai;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -837,12 +838,9 @@ class Npd extends DbTable
         $this->Fields['delivery_termlain'] = &$this->delivery_termlain;
 
         // status
-        $this->status = new DbField('npd', 'npd', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->status = new DbField('npd', 'npd', 'x_status', 'status', '`status`', '`status`', 16, 1, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'RADIO');
         $this->status->Nullable = false; // NOT NULL field
-        $this->status->Required = true; // Required field
         $this->status->Sortable = true; // Allow sort
-        $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->status->Lookup = new Lookup('status', 'npd', false, '', ["","","",""], [], [], [], [], [], [], '', '');
@@ -852,6 +850,7 @@ class Npd extends DbTable
                 break;
         }
         $this->status->OptionCount = 2;
+        $this->status->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
 
@@ -871,6 +870,30 @@ class Npd extends DbTable
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
         $this->Fields['readonly'] = &$this->readonly;
 
+        // receipt_by
+        $this->receipt_by = new DbField('npd', 'npd', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 3, 11, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->receipt_by->Sortable = true; // Allow sort
+        $this->receipt_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
+        $this->Fields['receipt_by'] = &$this->receipt_by;
+
+        // approve_by
+        $this->approve_by = new DbField('npd', 'npd', 'x_approve_by', 'approve_by', '`approve_by`', '`approve_by`', 3, 11, -1, false, '`approve_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->approve_by->Sortable = true; // Allow sort
+        $this->approve_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->approve_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->approve_by->Lookup = new Lookup('approve_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->approve_by->Lookup = new Lookup('approve_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->approve_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->approve_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approve_by->Param, "CustomMsg");
+        $this->Fields['approve_by'] = &$this->approve_by;
+
         // created_at
         $this->created_at = new DbField('npd', 'npd', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 11, "DB"), 135, 19, 11, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Nullable = false; // NOT NULL field
@@ -889,19 +912,22 @@ class Npd extends DbTable
         $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
         $this->Fields['updated_at'] = &$this->updated_at;
 
-        // receipt_by
-        $this->receipt_by = new DbField('npd', 'npd', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 3, 11, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->receipt_by->Sortable = true; // Allow sort
-        $this->receipt_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
-        $this->Fields['receipt_by'] = &$this->receipt_by;
-
-        // approve_by
-        $this->approve_by = new DbField('npd', 'npd', 'x_approve_by', 'approve_by', '`approve_by`', '`approve_by`', 3, 11, -1, false, '`approve_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->approve_by->Sortable = true; // Allow sort
-        $this->approve_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->approve_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approve_by->Param, "CustomMsg");
-        $this->Fields['approve_by'] = &$this->approve_by;
+        // selesai
+        $this->selesai = new DbField('npd', 'npd', 'x_selesai', 'selesai', '`selesai`', '`selesai`', 16, 1, -1, false, '`selesai`', false, false, false, 'FORMATTED TEXT', 'RADIO');
+        $this->selesai->Nullable = false; // NOT NULL field
+        $this->selesai->Sortable = true; // Allow sort
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->selesai->Lookup = new Lookup('selesai', 'npd', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->selesai->Lookup = new Lookup('selesai', 'npd', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->selesai->OptionCount = 2;
+        $this->selesai->DefaultErrorMessage = $Language->phrase("IncorrectField");
+        $this->selesai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->selesai->Param, "CustomMsg");
+        $this->Fields['selesai'] = &$this->selesai;
     }
 
     // Field Visibility
@@ -965,8 +991,8 @@ class Npd extends DbTable
             $detailUrl = Container("npd_review")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
-        if ($this->getCurrentDetailTable() == "npd_confirm") {
-            $detailUrl = Container("npd_confirm")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
+        if ($this->getCurrentDetailTable() == "npd_confirmsample") {
+            $detailUrl = Container("npd_confirmsample")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($this->getCurrentDetailTable() == "npd_harga") {
@@ -1364,7 +1390,7 @@ class Npd extends DbTable
             }
         }
 
-        // Cascade Update detail table 'npd_confirm'
+        // Cascade Update detail table 'npd_confirmsample'
         $cascadeUpdate = false;
         $rscascade = [];
         if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idnpd'
@@ -1372,22 +1398,22 @@ class Npd extends DbTable
             $rscascade['idnpd'] = $rs['id'];
         }
         if ($cascadeUpdate) {
-            $rswrk = Container("npd_confirm")->loadRs("`idnpd` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
+            $rswrk = Container("npd_confirmsample")->loadRs("`idnpd` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($rswrk as $rsdtlold) {
                 $rskey = [];
                 $fldname = 'id';
                 $rskey[$fldname] = $rsdtlold[$fldname];
                 $rsdtlnew = array_merge($rsdtlold, $rscascade);
                 // Call Row_Updating event
-                $success = Container("npd_confirm")->rowUpdating($rsdtlold, $rsdtlnew);
+                $success = Container("npd_confirmsample")->rowUpdating($rsdtlold, $rsdtlnew);
                 if ($success) {
-                    $success = Container("npd_confirm")->update($rscascade, $rskey, $rsdtlold);
+                    $success = Container("npd_confirmsample")->update($rscascade, $rskey, $rsdtlold);
                 }
                 if (!$success) {
                     return false;
                 }
                 // Call Row_Updated event
-                Container("npd_confirm")->rowUpdated($rsdtlold, $rsdtlnew);
+                Container("npd_confirmsample")->rowUpdated($rsdtlold, $rsdtlnew);
             }
         }
 
@@ -1529,18 +1555,18 @@ class Npd extends DbTable
             }
         }
 
-        // Cascade delete detail table 'npd_confirm'
-        $dtlrows = Container("npd_confirm")->loadRs("`idnpd` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
+        // Cascade delete detail table 'npd_confirmsample'
+        $dtlrows = Container("npd_confirmsample")->loadRs("`idnpd` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
         // Call Row Deleting event
         foreach ($dtlrows as $dtlrow) {
-            $success = Container("npd_confirm")->rowDeleting($dtlrow);
+            $success = Container("npd_confirmsample")->rowDeleting($dtlrow);
             if (!$success) {
                 break;
             }
         }
         if ($success) {
             foreach ($dtlrows as $dtlrow) {
-                $success = Container("npd_confirm")->delete($dtlrow); // Delete
+                $success = Container("npd_confirmsample")->delete($dtlrow); // Delete
                 if (!$success) {
                     break;
                 }
@@ -1549,7 +1575,7 @@ class Npd extends DbTable
         // Call Row Deleted event
         if ($success) {
             foreach ($dtlrows as $dtlrow) {
-                Container("npd_confirm")->rowDeleted($dtlrow);
+                Container("npd_confirmsample")->rowDeleted($dtlrow);
             }
         }
 
@@ -1684,10 +1710,11 @@ class Npd extends DbTable
         $this->delivery_termlain->DbValue = $row['delivery_termlain'];
         $this->status->DbValue = $row['status'];
         $this->readonly->DbValue = $row['readonly'];
-        $this->created_at->DbValue = $row['created_at'];
-        $this->updated_at->DbValue = $row['updated_at'];
         $this->receipt_by->DbValue = $row['receipt_by'];
         $this->approve_by->DbValue = $row['approve_by'];
+        $this->created_at->DbValue = $row['created_at'];
+        $this->updated_at->DbValue = $row['updated_at'];
+        $this->selesai->DbValue = $row['selesai'];
     }
 
     // Delete uploaded files
@@ -2088,10 +2115,11 @@ SORTHTML;
         $this->delivery_termlain->setDbValue($row['delivery_termlain']);
         $this->status->setDbValue($row['status']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->updated_at->setDbValue($row['updated_at']);
         $this->receipt_by->setDbValue($row['receipt_by']);
         $this->approve_by->setDbValue($row['approve_by']);
+        $this->created_at->setDbValue($row['created_at']);
+        $this->updated_at->setDbValue($row['updated_at']);
+        $this->selesai->setDbValue($row['selesai']);
     }
 
     // Render list row values
@@ -2249,13 +2277,15 @@ SORTHTML;
 
         // readonly
 
+        // receipt_by
+
+        // approve_by
+
         // created_at
 
         // updated_at
 
-        // receipt_by
-
-        // approve_by
+        // selesai
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -3012,6 +3042,32 @@ SORTHTML;
         }
         $this->readonly->ViewCustomAttributes = "";
 
+        // receipt_by
+        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+        $this->receipt_by->ViewValue = FormatNumber($this->receipt_by->ViewValue, 0, -2, -2, -2);
+        $this->receipt_by->ViewCustomAttributes = "";
+
+        // approve_by
+        $curVal = trim(strval($this->approve_by->CurrentValue));
+        if ($curVal != "") {
+            $this->approve_by->ViewValue = $this->approve_by->lookupCacheOption($curVal);
+            if ($this->approve_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->approve_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->approve_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->approve_by->ViewValue = $this->approve_by->displayValue($arwrk);
+                } else {
+                    $this->approve_by->ViewValue = $this->approve_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->approve_by->ViewValue = null;
+        }
+        $this->approve_by->ViewCustomAttributes = "";
+
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
@@ -3022,15 +3078,13 @@ SORTHTML;
         $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
         $this->updated_at->ViewCustomAttributes = "";
 
-        // receipt_by
-        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
-        $this->receipt_by->ViewValue = FormatNumber($this->receipt_by->ViewValue, 0, -2, -2, -2);
-        $this->receipt_by->ViewCustomAttributes = "";
-
-        // approve_by
-        $this->approve_by->ViewValue = $this->approve_by->CurrentValue;
-        $this->approve_by->ViewValue = FormatNumber($this->approve_by->ViewValue, 0, -2, -2, -2);
-        $this->approve_by->ViewCustomAttributes = "";
+        // selesai
+        if (strval($this->selesai->CurrentValue) != "") {
+            $this->selesai->ViewValue = $this->selesai->optionCaption($this->selesai->CurrentValue);
+        } else {
+            $this->selesai->ViewValue = null;
+        }
+        $this->selesai->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -3392,6 +3446,16 @@ SORTHTML;
         $this->readonly->HrefValue = "";
         $this->readonly->TooltipValue = "";
 
+        // receipt_by
+        $this->receipt_by->LinkCustomAttributes = "";
+        $this->receipt_by->HrefValue = "";
+        $this->receipt_by->TooltipValue = "";
+
+        // approve_by
+        $this->approve_by->LinkCustomAttributes = "";
+        $this->approve_by->HrefValue = "";
+        $this->approve_by->TooltipValue = "";
+
         // created_at
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
@@ -3402,15 +3466,10 @@ SORTHTML;
         $this->updated_at->HrefValue = "";
         $this->updated_at->TooltipValue = "";
 
-        // receipt_by
-        $this->receipt_by->LinkCustomAttributes = "";
-        $this->receipt_by->HrefValue = "";
-        $this->receipt_by->TooltipValue = "";
-
-        // approve_by
-        $this->approve_by->LinkCustomAttributes = "";
-        $this->approve_by->HrefValue = "";
-        $this->approve_by->TooltipValue = "";
+        // selesai
+        $this->selesai->LinkCustomAttributes = "";
+        $this->selesai->HrefValue = "";
+        $this->selesai->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -3878,15 +3937,25 @@ SORTHTML;
         $this->delivery_termlain->PlaceHolder = RemoveHtml($this->delivery_termlain->caption());
 
         // status
-        $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
-        $this->status->EditValue = $this->status->options(true);
+        $this->status->EditValue = $this->status->options(false);
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // readonly
         $this->readonly->EditCustomAttributes = "";
         $this->readonly->EditValue = $this->readonly->options(false);
         $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
+
+        // receipt_by
+        $this->receipt_by->EditAttrs["class"] = "form-control";
+        $this->receipt_by->EditCustomAttributes = "";
+        $this->receipt_by->EditValue = $this->receipt_by->CurrentValue;
+        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
+
+        // approve_by
+        $this->approve_by->EditAttrs["class"] = "form-control";
+        $this->approve_by->EditCustomAttributes = "";
+        $this->approve_by->PlaceHolder = RemoveHtml($this->approve_by->caption());
 
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
@@ -3900,17 +3969,10 @@ SORTHTML;
         $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 17);
         $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
-        // receipt_by
-        $this->receipt_by->EditAttrs["class"] = "form-control";
-        $this->receipt_by->EditCustomAttributes = "";
-        $this->receipt_by->EditValue = $this->receipt_by->CurrentValue;
-        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
-
-        // approve_by
-        $this->approve_by->EditAttrs["class"] = "form-control";
-        $this->approve_by->EditCustomAttributes = "";
-        $this->approve_by->EditValue = $this->approve_by->CurrentValue;
-        $this->approve_by->PlaceHolder = RemoveHtml($this->approve_by->caption());
+        // selesai
+        $this->selesai->EditCustomAttributes = "";
+        $this->selesai->EditValue = $this->selesai->options(false);
+        $this->selesai->PlaceHolder = RemoveHtml($this->selesai->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -4010,10 +4072,11 @@ SORTHTML;
                     $doc->exportCaption($this->delivery_multipoint);
                     $doc->exportCaption($this->delivery_termlain);
                     $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->updated_at);
                     $doc->exportCaption($this->receipt_by);
                     $doc->exportCaption($this->approve_by);
+                    $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->updated_at);
+                    $doc->exportCaption($this->selesai);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idpegawai);
@@ -4082,10 +4145,11 @@ SORTHTML;
                     $doc->exportCaption($this->delivery_termlain);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->readonly);
-                    $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->updated_at);
                     $doc->exportCaption($this->receipt_by);
                     $doc->exportCaption($this->approve_by);
+                    $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->updated_at);
+                    $doc->exportCaption($this->selesai);
                 }
                 $doc->endExportRow();
             }
@@ -4185,10 +4249,11 @@ SORTHTML;
                         $doc->exportField($this->delivery_multipoint);
                         $doc->exportField($this->delivery_termlain);
                         $doc->exportField($this->status);
-                        $doc->exportField($this->created_at);
-                        $doc->exportField($this->updated_at);
                         $doc->exportField($this->receipt_by);
                         $doc->exportField($this->approve_by);
+                        $doc->exportField($this->created_at);
+                        $doc->exportField($this->updated_at);
+                        $doc->exportField($this->selesai);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idpegawai);
@@ -4257,10 +4322,11 @@ SORTHTML;
                         $doc->exportField($this->delivery_termlain);
                         $doc->exportField($this->status);
                         $doc->exportField($this->readonly);
-                        $doc->exportField($this->created_at);
-                        $doc->exportField($this->updated_at);
                         $doc->exportField($this->receipt_by);
                         $doc->exportField($this->approve_by);
+                        $doc->exportField($this->created_at);
+                        $doc->exportField($this->updated_at);
+                        $doc->exportField($this->selesai);
                     }
                     $doc->endExportRow($rowCnt);
                 }

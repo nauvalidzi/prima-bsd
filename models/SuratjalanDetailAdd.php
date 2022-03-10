@@ -902,6 +902,8 @@ class SuratjalanDetailAdd extends SuratjalanDetail
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
+                foreach ($arwrk as &$row)
+                    $row = $this->idinvoice->Lookup->renderViewRow($row);
                 $this->idinvoice->EditValue = $arwrk;
             }
             $this->idinvoice->PlaceHolder = RemoveHtml($this->idinvoice->caption());

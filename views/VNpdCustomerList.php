@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $VNpdCustomerList = &$Page;
@@ -135,11 +135,8 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_v_npd_customer_id" class="v_npd_customer_id"><?= $Page->renderSort($Page->id) ?></div></th>
-<?php } ?>
-<?php if ($Page->statuskategori->Visible) { // statuskategori ?>
-        <th data-name="statuskategori" class="<?= $Page->statuskategori->headerCellClass() ?>"><div id="elh_v_npd_customer_statuskategori" class="v_npd_customer_statuskategori"><?= $Page->renderSort($Page->statuskategori) ?></div></th>
+<?php if ($Page->idnpd->Visible) { // idnpd ?>
+        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_v_npd_customer_idnpd" class="v_npd_customer_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
 <?php } ?>
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
         <th data-name="idpegawai" class="<?= $Page->idpegawai->headerCellClass() ?>"><div id="elh_v_npd_customer_idpegawai" class="v_npd_customer_idpegawai"><?= $Page->renderSort($Page->idpegawai) ?></div></th>
@@ -150,35 +147,17 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->kodeorder->Visible) { // kodeorder ?>
         <th data-name="kodeorder" class="<?= $Page->kodeorder->headerCellClass() ?>"><div id="elh_v_npd_customer_kodeorder" class="v_npd_customer_kodeorder"><?= $Page->renderSort($Page->kodeorder) ?></div></th>
 <?php } ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_v_npd_customer_idbrand" class="v_npd_customer_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
+<?php if ($Page->kategoriproduk->Visible) { // kategoriproduk ?>
+        <th data-name="kategoriproduk" class="<?= $Page->kategoriproduk->headerCellClass() ?>"><div id="elh_v_npd_customer_kategoriproduk" class="v_npd_customer_kategoriproduk"><?= $Page->renderSort($Page->kategoriproduk) ?></div></th>
 <?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_v_npd_customer_nama" class="v_npd_customer_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
-<?php } ?>
-<?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-        <th data-name="idkategoribarang" class="<?= $Page->idkategoribarang->headerCellClass() ?>"><div id="elh_v_npd_customer_idkategoribarang" class="v_npd_customer_idkategoribarang"><?= $Page->renderSort($Page->idkategoribarang) ?></div></th>
-<?php } ?>
-<?php if ($Page->idjenisbarang->Visible) { // idjenisbarang ?>
-        <th data-name="idjenisbarang" class="<?= $Page->idjenisbarang->headerCellClass() ?>"><div id="elh_v_npd_customer_idjenisbarang" class="v_npd_customer_idjenisbarang"><?= $Page->renderSort($Page->idjenisbarang) ?></div></th>
+<?php if ($Page->jenisproduk->Visible) { // jenisproduk ?>
+        <th data-name="jenisproduk" class="<?= $Page->jenisproduk->headerCellClass() ?>"><div id="elh_v_npd_customer_jenisproduk" class="v_npd_customer_jenisproduk"><?= $Page->renderSort($Page->jenisproduk) ?></div></th>
 <?php } ?>
 <?php if ($Page->idproduct_acuan->Visible) { // idproduct_acuan ?>
         <th data-name="idproduct_acuan" class="<?= $Page->idproduct_acuan->headerCellClass() ?>"><div id="elh_v_npd_customer_idproduct_acuan" class="v_npd_customer_idproduct_acuan"><?= $Page->renderSort($Page->idproduct_acuan) ?></div></th>
 <?php } ?>
-<?php if ($Page->idkualitasbarang->Visible) { // idkualitasbarang ?>
-        <th data-name="idkualitasbarang" class="<?= $Page->idkualitasbarang->headerCellClass() ?>"><div id="elh_v_npd_customer_idkualitasbarang" class="v_npd_customer_idkualitasbarang"><?= $Page->renderSort($Page->idkualitasbarang) ?></div></th>
-<?php } ?>
-<?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
-        <th data-name="kemasanbarang" class="<?= $Page->kemasanbarang->headerCellClass() ?>"><div id="elh_v_npd_customer_kemasanbarang" class="v_npd_customer_kemasanbarang"><?= $Page->renderSort($Page->kemasanbarang) ?></div></th>
-<?php } ?>
-<?php if ($Page->label->Visible) { // label ?>
-        <th data-name="label" class="<?= $Page->label->headerCellClass() ?>"><div id="elh_v_npd_customer_label" class="v_npd_customer_label"><?= $Page->renderSort($Page->label) ?></div></th>
-<?php } ?>
-<?php if ($Page->bahan->Visible) { // bahan ?>
-        <th data-name="bahan" class="<?= $Page->bahan->headerCellClass() ?>"><div id="elh_v_npd_customer_bahan" class="v_npd_customer_bahan"><?= $Page->renderSort($Page->bahan) ?></div></th>
-<?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_v_npd_customer_ukuran" class="v_npd_customer_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
+<?php if ($Page->kualitasproduk->Visible) { // kualitasproduk ?>
+        <th data-name="kualitasproduk" class="<?= $Page->kualitasproduk->headerCellClass() ?>"><div id="elh_v_npd_customer_kualitasproduk" class="v_npd_customer_kualitasproduk"><?= $Page->renderSort($Page->kualitasproduk) ?></div></th>
 <?php } ?>
 <?php if ($Page->warna->Visible) { // warna ?>
         <th data-name="warna" class="<?= $Page->warna->headerCellClass() ?>"><div id="elh_v_npd_customer_warna" class="v_npd_customer_warna"><?= $Page->renderSort($Page->warna) ?></div></th>
@@ -186,32 +165,11 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->parfum->Visible) { // parfum ?>
         <th data-name="parfum" class="<?= $Page->parfum->headerCellClass() ?>"><div id="elh_v_npd_customer_parfum" class="v_npd_customer_parfum"><?= $Page->renderSort($Page->parfum) ?></div></th>
 <?php } ?>
-<?php if ($Page->harga->Visible) { // harga ?>
-        <th data-name="harga" class="<?= $Page->harga->headerCellClass() ?>"><div id="elh_v_npd_customer_harga" class="v_npd_customer_harga"><?= $Page->renderSort($Page->harga) ?></div></th>
-<?php } ?>
-<?php if ($Page->tambahan->Visible) { // tambahan ?>
-        <th data-name="tambahan" class="<?= $Page->tambahan->headerCellClass() ?>"><div id="elh_v_npd_customer_tambahan" class="v_npd_customer_tambahan"><?= $Page->renderSort($Page->tambahan) ?></div></th>
-<?php } ?>
-<?php if ($Page->orderperdana->Visible) { // orderperdana ?>
-        <th data-name="orderperdana" class="<?= $Page->orderperdana->headerCellClass() ?>"><div id="elh_v_npd_customer_orderperdana" class="v_npd_customer_orderperdana"><?= $Page->renderSort($Page->orderperdana) ?></div></th>
-<?php } ?>
-<?php if ($Page->orderreguler->Visible) { // orderreguler ?>
-        <th data-name="orderreguler" class="<?= $Page->orderreguler->headerCellClass() ?>"><div id="elh_v_npd_customer_orderreguler" class="v_npd_customer_orderreguler"><?= $Page->renderSort($Page->orderreguler) ?></div></th>
-<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_v_npd_customer_status" class="v_npd_customer_status"><?= $Page->renderSort($Page->status) ?></div></th>
 <?php } ?>
-<?php if ($Page->idproduct->Visible) { // idproduct ?>
-        <th data-name="idproduct" class="<?= $Page->idproduct->headerCellClass() ?>"><div id="elh_v_npd_customer_idproduct" class="v_npd_customer_idproduct"><?= $Page->renderSort($Page->idproduct) ?></div></th>
-<?php } ?>
 <?php if ($Page->created_at->Visible) { // created_at ?>
         <th data-name="created_at" class="<?= $Page->created_at->headerCellClass() ?>"><div id="elh_v_npd_customer_created_at" class="v_npd_customer_created_at"><?= $Page->renderSort($Page->created_at) ?></div></th>
-<?php } ?>
-<?php if ($Page->created_by->Visible) { // created_by ?>
-        <th data-name="created_by" class="<?= $Page->created_by->headerCellClass() ?>"><div id="elh_v_npd_customer_created_by" class="v_npd_customer_created_by"><?= $Page->renderSort($Page->created_by) ?></div></th>
-<?php } ?>
-<?php if ($Page->selesai->Visible) { // selesai ?>
-        <th data-name="selesai" class="<?= $Page->selesai->headerCellClass() ?>"><div id="elh_v_npd_customer_selesai" class="v_npd_customer_selesai"><?= $Page->renderSort($Page->selesai) ?></div></th>
 <?php } ?>
 <?php if ($Page->readonly->Visible) { // readonly ?>
         <th data-name="readonly" class="<?= $Page->readonly->headerCellClass() ?>"><div id="elh_v_npd_customer_readonly" class="v_npd_customer_readonly"><?= $Page->renderSort($Page->readonly) ?></div></th>
@@ -219,14 +177,20 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nama_pemesan->Visible) { // nama_pemesan ?>
         <th data-name="nama_pemesan" class="<?= $Page->nama_pemesan->headerCellClass() ?>"><div id="elh_v_npd_customer_nama_pemesan" class="v_npd_customer_nama_pemesan"><?= $Page->renderSort($Page->nama_pemesan) ?></div></th>
 <?php } ?>
-<?php if ($Page->alamat_pemesan->Visible) { // alamat_pemesan ?>
-        <th data-name="alamat_pemesan" class="<?= $Page->alamat_pemesan->headerCellClass() ?>"><div id="elh_v_npd_customer_alamat_pemesan" class="v_npd_customer_alamat_pemesan"><?= $Page->renderSort($Page->alamat_pemesan) ?></div></th>
-<?php } ?>
 <?php if ($Page->jabatan_pemesan->Visible) { // jabatan_pemesan ?>
         <th data-name="jabatan_pemesan" class="<?= $Page->jabatan_pemesan->headerCellClass() ?>"><div id="elh_v_npd_customer_jabatan_pemesan" class="v_npd_customer_jabatan_pemesan"><?= $Page->renderSort($Page->jabatan_pemesan) ?></div></th>
 <?php } ?>
 <?php if ($Page->hp_pemesan->Visible) { // hp_pemesan ?>
         <th data-name="hp_pemesan" class="<?= $Page->hp_pemesan->headerCellClass() ?>"><div id="elh_v_npd_customer_hp_pemesan" class="v_npd_customer_hp_pemesan"><?= $Page->renderSort($Page->hp_pemesan) ?></div></th>
+<?php } ?>
+<?php if ($Page->kodeproduk->Visible) { // kodeproduk ?>
+        <th data-name="kodeproduk" class="<?= $Page->kodeproduk->headerCellClass() ?>"><div id="elh_v_npd_customer_kodeproduk" class="v_npd_customer_kodeproduk"><?= $Page->renderSort($Page->kodeproduk) ?></div></th>
+<?php } ?>
+<?php if ($Page->namaproduk->Visible) { // namaproduk ?>
+        <th data-name="namaproduk" class="<?= $Page->namaproduk->headerCellClass() ?>"><div id="elh_v_npd_customer_namaproduk" class="v_npd_customer_namaproduk"><?= $Page->renderSort($Page->namaproduk) ?></div></th>
+<?php } ?>
+<?php if ($Page->kode_pemesan->Visible) { // kode_pemesan ?>
+        <th data-name="kode_pemesan" class="<?= $Page->kode_pemesan->headerCellClass() ?>"><div id="elh_v_npd_customer_kode_pemesan" class="v_npd_customer_kode_pemesan"><?= $Page->renderSort($Page->kode_pemesan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -295,19 +259,11 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->statuskategori->Visible) { // statuskategori ?>
-        <td data-name="statuskategori" <?= $Page->statuskategori->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_statuskategori">
-<span<?= $Page->statuskategori->viewAttributes() ?>>
-<?= $Page->statuskategori->getViewValue() ?></span>
+    <?php if ($Page->idnpd->Visible) { // idnpd ?>
+        <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_npd_customer_idnpd">
+<span<?= $Page->idnpd->viewAttributes() ?>>
+<?= $Page->idnpd->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -335,35 +291,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
+    <?php if ($Page->kategoriproduk->Visible) { // kategoriproduk ?>
+        <td data-name="kategoriproduk" <?= $Page->kategoriproduk->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_npd_customer_kategoriproduk">
+<span<?= $Page->kategoriproduk->viewAttributes() ?>>
+<?= $Page->kategoriproduk->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->nama->Visible) { // nama ?>
-        <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_nama">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->idkategoribarang->Visible) { // idkategoribarang ?>
-        <td data-name="idkategoribarang" <?= $Page->idkategoribarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_idkategoribarang">
-<span<?= $Page->idkategoribarang->viewAttributes() ?>>
-<?= $Page->idkategoribarang->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->idjenisbarang->Visible) { // idjenisbarang ?>
-        <td data-name="idjenisbarang" <?= $Page->idjenisbarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_idjenisbarang">
-<span<?= $Page->idjenisbarang->viewAttributes() ?>>
-<?= $Page->idjenisbarang->getViewValue() ?></span>
+    <?php if ($Page->jenisproduk->Visible) { // jenisproduk ?>
+        <td data-name="jenisproduk" <?= $Page->jenisproduk->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_npd_customer_jenisproduk">
+<span<?= $Page->jenisproduk->viewAttributes() ?>>
+<?= $Page->jenisproduk->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -375,43 +315,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idkualitasbarang->Visible) { // idkualitasbarang ?>
-        <td data-name="idkualitasbarang" <?= $Page->idkualitasbarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_idkualitasbarang">
-<span<?= $Page->idkualitasbarang->viewAttributes() ?>>
-<?= $Page->idkualitasbarang->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->kemasanbarang->Visible) { // kemasanbarang ?>
-        <td data-name="kemasanbarang" <?= $Page->kemasanbarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_kemasanbarang">
-<span<?= $Page->kemasanbarang->viewAttributes() ?>>
-<?= $Page->kemasanbarang->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->label->Visible) { // label ?>
-        <td data-name="label" <?= $Page->label->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_label">
-<span<?= $Page->label->viewAttributes() ?>>
-<?= $Page->label->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->bahan->Visible) { // bahan ?>
-        <td data-name="bahan" <?= $Page->bahan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_bahan">
-<span<?= $Page->bahan->viewAttributes() ?>>
-<?= $Page->bahan->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
+    <?php if ($Page->kualitasproduk->Visible) { // kualitasproduk ?>
+        <td data-name="kualitasproduk" <?= $Page->kualitasproduk->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_npd_customer_kualitasproduk">
+<span<?= $Page->kualitasproduk->viewAttributes() ?>>
+<?= $Page->kualitasproduk->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -431,51 +339,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->harga->Visible) { // harga ?>
-        <td data-name="harga" <?= $Page->harga->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_harga">
-<span<?= $Page->harga->viewAttributes() ?>>
-<?= $Page->harga->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->tambahan->Visible) { // tambahan ?>
-        <td data-name="tambahan" <?= $Page->tambahan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_tambahan">
-<span<?= $Page->tambahan->viewAttributes() ?>>
-<?= $Page->tambahan->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->orderperdana->Visible) { // orderperdana ?>
-        <td data-name="orderperdana" <?= $Page->orderperdana->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_orderperdana">
-<span<?= $Page->orderperdana->viewAttributes() ?>>
-<?= $Page->orderperdana->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->orderreguler->Visible) { // orderreguler ?>
-        <td data-name="orderreguler" <?= $Page->orderreguler->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_orderreguler">
-<span<?= $Page->orderreguler->viewAttributes() ?>>
-<?= $Page->orderreguler->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->status->Visible) { // status ?>
         <td data-name="status" <?= $Page->status->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_v_npd_customer_status">
 <span<?= $Page->status->viewAttributes() ?>>
-<?= $Page->status->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->idproduct->Visible) { // idproduct ?>
-        <td data-name="idproduct" <?= $Page->idproduct->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_idproduct">
-<span<?= $Page->idproduct->viewAttributes() ?>>
-<?= $Page->idproduct->getViewValue() ?></span>
+<div class="custom-control custom-checkbox d-inline-block">
+    <input type="checkbox" id="x_status_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->status->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->status->CurrentValue)) { ?> checked<?php } ?>>
+    <label class="custom-control-label" for="x_status_<?= $Page->RowCount ?>"></label>
+</div></span>
 </span>
 </td>
     <?php } ?>
@@ -484,25 +355,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_npd_customer_created_at">
 <span<?= $Page->created_at->viewAttributes() ?>>
 <?= $Page->created_at->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->created_by->Visible) { // created_by ?>
-        <td data-name="created_by" <?= $Page->created_by->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_created_by">
-<span<?= $Page->created_by->viewAttributes() ?>>
-<?= $Page->created_by->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->selesai->Visible) { // selesai ?>
-        <td data-name="selesai" <?= $Page->selesai->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_selesai">
-<span<?= $Page->selesai->viewAttributes() ?>>
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" id="x_selesai_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->selesai->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->selesai->CurrentValue)) { ?> checked<?php } ?>>
-    <label class="custom-control-label" for="x_selesai_<?= $Page->RowCount ?>"></label>
-</div></span>
 </span>
 </td>
     <?php } ?>
@@ -525,14 +377,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->alamat_pemesan->Visible) { // alamat_pemesan ?>
-        <td data-name="alamat_pemesan" <?= $Page->alamat_pemesan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_npd_customer_alamat_pemesan">
-<span<?= $Page->alamat_pemesan->viewAttributes() ?>>
-<?= $Page->alamat_pemesan->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->jabatan_pemesan->Visible) { // jabatan_pemesan ?>
         <td data-name="jabatan_pemesan" <?= $Page->jabatan_pemesan->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_v_npd_customer_jabatan_pemesan">
@@ -546,6 +390,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_npd_customer_hp_pemesan">
 <span<?= $Page->hp_pemesan->viewAttributes() ?>>
 <?= $Page->hp_pemesan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kodeproduk->Visible) { // kodeproduk ?>
+        <td data-name="kodeproduk" <?= $Page->kodeproduk->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_npd_customer_kodeproduk">
+<span<?= $Page->kodeproduk->viewAttributes() ?>>
+<?= $Page->kodeproduk->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->namaproduk->Visible) { // namaproduk ?>
+        <td data-name="namaproduk" <?= $Page->namaproduk->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_npd_customer_namaproduk">
+<span<?= $Page->namaproduk->viewAttributes() ?>>
+<?= $Page->namaproduk->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->kode_pemesan->Visible) { // kode_pemesan ?>
+        <td data-name="kode_pemesan" <?= $Page->kode_pemesan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_npd_customer_kode_pemesan">
+<span<?= $Page->kode_pemesan->viewAttributes() ?>>
+<?= $Page->kode_pemesan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

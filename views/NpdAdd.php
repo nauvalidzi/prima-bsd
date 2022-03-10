@@ -91,7 +91,7 @@ loadjs.ready("head", function () {
         ["delivery_termlain", [fields.delivery_termlain.visible && fields.delivery_termlain.required ? ew.Validators.required(fields.delivery_termlain.caption) : null], fields.delivery_termlain.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["receipt_by", [fields.receipt_by.visible && fields.receipt_by.required ? ew.Validators.required(fields.receipt_by.caption) : null, ew.Validators.integer], fields.receipt_by.isInvalid],
-        ["approve_by", [fields.approve_by.visible && fields.approve_by.required ? ew.Validators.required(fields.approve_by.caption) : null, ew.Validators.integer], fields.approve_by.isInvalid]
+        ["approve_by", [fields.approve_by.visible && fields.approve_by.required ? ew.Validators.required(fields.approve_by.caption) : null], fields.approve_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -186,6 +186,7 @@ loadjs.ready("head", function () {
     fnpdadd.lists.labeltekstur = <?= $Page->labeltekstur->toClientList($Page) ?>;
     fnpdadd.lists.labelprint = <?= $Page->labelprint->toClientList($Page) ?>;
     fnpdadd.lists.status = <?= $Page->status->toClientList($Page) ?>;
+    fnpdadd.lists.approve_by = <?= $Page->approve_by->toClientList($Page) ?>;
     loadjs.done("fnpdadd");
 });
 </script>
@@ -1647,34 +1648,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <div id="r_status" class="form-group row">
-        <label id="elh_npd_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
 <template id="tpx_npd_status"><span id="el_npd_status">
-    <select
-        id="x_status"
-        name="x_status"
-        class="form-control ew-select<?= $Page->status->isInvalidClass() ?>"
-        data-select2-id="npd_x_status"
-        data-table="npd"
-        data-field="x_status"
-        data-page="1"
-        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
-        <?= $Page->status->editAttributes() ?>>
-        <?= $Page->status->selectOptionListHtml("x_status") ?>
-    </select>
-    <?= $Page->status->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_status']"),
-        options = { name: "x_status", selectId: "npd_x_status", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.data = ew.vars.tables.npd.fields.status.lookupOptions;
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.status.selectOptions);
-    ew.createSelect(options);
-});
-</script>
+<template id="tp_x_status">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_status" name="x_status" id="x_status"<?= $Page->status->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_status" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_status"
+    name="x_status"
+    value="<?= HtmlEncode($Page->status->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_status"
+    data-target="dsl_x_status"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->status->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_status"
+    data-page="1"
+    data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+    <?= $Page->status->editAttributes() ?>>
+<?= $Page->status->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
@@ -1696,9 +1696,31 @@ loadjs.ready("head", function() {
         <label id="elh_npd_approve_by" for="x_approve_by" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_approve_by"><?= $Page->approve_by->caption() ?><?= $Page->approve_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->approve_by->cellAttributes() ?>>
 <template id="tpx_npd_approve_by"><span id="el_npd_approve_by">
-<input type="<?= $Page->approve_by->getInputTextType() ?>" data-table="npd" data-field="x_approve_by" data-page="1" name="x_approve_by" id="x_approve_by" size="30" placeholder="<?= HtmlEncode($Page->approve_by->getPlaceHolder()) ?>" value="<?= $Page->approve_by->EditValue ?>"<?= $Page->approve_by->editAttributes() ?> aria-describedby="x_approve_by_help">
-<?= $Page->approve_by->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->approve_by->getErrorMessage() ?></div>
+    <select
+        id="x_approve_by"
+        name="x_approve_by"
+        class="form-control ew-select<?= $Page->approve_by->isInvalidClass() ?>"
+        data-select2-id="npd_x_approve_by"
+        data-table="npd"
+        data-field="x_approve_by"
+        data-page="1"
+        data-value-separator="<?= $Page->approve_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->approve_by->getPlaceHolder()) ?>"
+        <?= $Page->approve_by->editAttributes() ?>>
+        <?= $Page->approve_by->selectOptionListHtml("x_approve_by") ?>
+    </select>
+    <?= $Page->approve_by->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->approve_by->getErrorMessage() ?></div>
+<?= $Page->approve_by->Lookup->getParamTag($Page, "p_x_approve_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_x_approve_by']"),
+        options = { name: "x_approve_by", selectId: "npd_x_approve_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd.fields.approve_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span></template>
 </div></div>
     </div>
@@ -1706,12 +1728,12 @@ loadjs.ready("head", function() {
 </div><!-- /page* -->
 <div id="tpd_npdadd" class="ew-custom-template"></div>
 <template id="tpm_npdadd">
-<div id="ct_NpdAdd"><div class="container form-horizontal">
+<div id="ct_NpdAdd"><div class="form-horizontal">
     <div class="card">
         <div class="card-body row">
             <div class="col-4">
                 <div class="form-group row">
-                    <label class="col-4 col-form-label text-right"><?= $Page->kodeorder->caption() ?></label>
+                    <label class="col-4 col-form-label text-right"><?= $Page->kodeorder->caption() ?> <i data-phrase="FieldRequiredIndicator" class="fas fa-asterisk ew-required" data-caption=""></i></label>
                     <div class="col-7"><slot class="ew-slot" name="tpx_npd_kodeorder"></slot></div>
                 </div>
                 <div class="form-group row">
@@ -1737,7 +1759,7 @@ loadjs.ready("head", function() {
             </div>
         </div>
     </div>
-        <div class="card">
+    <div class="card">
         <div class="card-body row">
             <div class="col-6">
                 <div class="form-group row mb-3">
@@ -1745,7 +1767,7 @@ loadjs.ready("head", function() {
                     <div class="col-4"><slot class="ew-slot" name="tpx_npd_idpegawai"></slot></div>
                 </div>
                 <div class="form-group row mb-3">
-                    <label class="col-4 col-form-label text-right"><?= $Page->idcustomer->caption() ?></label>
+                    <label class="col-4 col-form-label text-right"><?= $Page->idcustomer->caption() ?> <i data-phrase="FieldRequiredIndicator" class="fas fa-asterisk ew-required" data-caption=""></i></label>
                     <div class="col-4"><slot class="ew-slot" name="tpx_npd_idcustomer"></slot></div>
                 </div>
                 <div class="form-group row mb-3">
@@ -1807,10 +1829,6 @@ loadjs.ready("head", function() {
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->parfum->caption() ?></label>
                 <div class="col-8"><slot class="ew-slot" name="tpx_npd_parfum"></slot></div>
-            </div>
-            <div class="form-group row">
-                <label class="col-2 col-form-label text-right"></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_npd_aroma"></slot></div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->aplikasi->caption() ?></label>
@@ -2033,7 +2051,7 @@ loadjs.ready("head", function() {
     <div class="card">
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right">Status Dokumen</label>
+                <label class="col-2 col-form-label text-right">Status Dokumen <i data-phrase="FieldRequiredIndicator" class="fas fa-asterisk ew-required" data-caption=""></i></label>
                 <div class="col-8"><slot class="ew-slot" name="tpx_npd_status"></slot></div>
             </div>
         </div>
@@ -2070,12 +2088,12 @@ loadjs.ready("head", function() {
     }
 ?>
 <?php
-    if (in_array("npd_confirm", explode(",", $Page->getCurrentDetailTable())) && $npd_confirm->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_confirm") {
-            $firstActiveDetailTable = "npd_confirm";
+    if (in_array("npd_confirmsample", explode(",", $Page->getCurrentDetailTable())) && $npd_confirmsample->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_confirmsample") {
+            $firstActiveDetailTable = "npd_confirmsample";
         }
 ?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("npd_confirm") ?>" href="#tab_npd_confirm" data-toggle="tab"><?= $Language->tablePhrase("npd_confirm", "TblCaption") ?></a></li>
+        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("npd_confirmsample") ?>" href="#tab_npd_confirmsample" data-toggle="tab"><?= $Language->tablePhrase("npd_confirmsample", "TblCaption") ?></a></li>
 <?php
     }
 ?>
@@ -2122,13 +2140,13 @@ loadjs.ready("head", function() {
         </div><!-- /page* -->
 <?php } ?>
 <?php
-    if (in_array("npd_confirm", explode(",", $Page->getCurrentDetailTable())) && $npd_confirm->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_confirm") {
-            $firstActiveDetailTable = "npd_confirm";
+    if (in_array("npd_confirmsample", explode(",", $Page->getCurrentDetailTable())) && $npd_confirmsample->DetailAdd) {
+        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_confirmsample") {
+            $firstActiveDetailTable = "npd_confirmsample";
         }
 ?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_confirm") ?>" id="tab_npd_confirm"><!-- page* -->
-<?php include_once "NpdConfirmGrid.php" ?>
+        <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_confirmsample") ?>" id="tab_npd_confirmsample"><!-- page* -->
+<?php include_once "NpdConfirmsampleGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
 <?php

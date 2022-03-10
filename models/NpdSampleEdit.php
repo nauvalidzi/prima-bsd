@@ -473,11 +473,11 @@ class NpdSampleEdit extends NpdSample
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->sediaan->setVisibility();
-        $this->ukuran->setVisibility();
         $this->warna->setVisibility();
-        $this->bau->setVisibility();
         $this->fungsi->setVisibility();
         $this->jumlah->setVisibility();
+        $this->volume->setVisibility();
+        $this->bau->setVisibility();
         $this->status->Visible = false;
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
@@ -695,16 +695,6 @@ class NpdSampleEdit extends NpdSample
             }
         }
 
-        // Check field name 'ukuran' first before field var 'x_ukuran'
-        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
-        if (!$this->ukuran->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->ukuran->Visible = false; // Disable update for API request
-            } else {
-                $this->ukuran->setFormValue($val);
-            }
-        }
-
         // Check field name 'warna' first before field var 'x_warna'
         $val = $CurrentForm->hasValue("warna") ? $CurrentForm->getValue("warna") : $CurrentForm->getValue("x_warna");
         if (!$this->warna->IsDetailKey) {
@@ -712,16 +702,6 @@ class NpdSampleEdit extends NpdSample
                 $this->warna->Visible = false; // Disable update for API request
             } else {
                 $this->warna->setFormValue($val);
-            }
-        }
-
-        // Check field name 'bau' first before field var 'x_bau'
-        $val = $CurrentForm->hasValue("bau") ? $CurrentForm->getValue("bau") : $CurrentForm->getValue("x_bau");
-        if (!$this->bau->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->bau->Visible = false; // Disable update for API request
-            } else {
-                $this->bau->setFormValue($val);
             }
         }
 
@@ -745,6 +725,26 @@ class NpdSampleEdit extends NpdSample
             }
         }
 
+        // Check field name 'volume' first before field var 'x_volume'
+        $val = $CurrentForm->hasValue("volume") ? $CurrentForm->getValue("volume") : $CurrentForm->getValue("x_volume");
+        if (!$this->volume->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->volume->Visible = false; // Disable update for API request
+            } else {
+                $this->volume->setFormValue($val);
+            }
+        }
+
+        // Check field name 'bau' first before field var 'x_bau'
+        $val = $CurrentForm->hasValue("bau") ? $CurrentForm->getValue("bau") : $CurrentForm->getValue("x_bau");
+        if (!$this->bau->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->bau->Visible = false; // Disable update for API request
+            } else {
+                $this->bau->setFormValue($val);
+            }
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey) {
@@ -760,11 +760,11 @@ class NpdSampleEdit extends NpdSample
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
         $this->sediaan->CurrentValue = $this->sediaan->FormValue;
-        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
         $this->warna->CurrentValue = $this->warna->FormValue;
-        $this->bau->CurrentValue = $this->bau->FormValue;
         $this->fungsi->CurrentValue = $this->fungsi->FormValue;
         $this->jumlah->CurrentValue = $this->jumlah->FormValue;
+        $this->volume->CurrentValue = $this->volume->FormValue;
+        $this->bau->CurrentValue = $this->bau->FormValue;
     }
 
     /**
@@ -820,11 +820,11 @@ class NpdSampleEdit extends NpdSample
         $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
         $this->sediaan->setDbValue($row['sediaan']);
-        $this->ukuran->setDbValue($row['ukuran']);
         $this->warna->setDbValue($row['warna']);
-        $this->bau->setDbValue($row['bau']);
         $this->fungsi->setDbValue($row['fungsi']);
         $this->jumlah->setDbValue($row['jumlah']);
+        $this->volume->setDbValue($row['volume']);
+        $this->bau->setDbValue($row['bau']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
@@ -840,11 +840,11 @@ class NpdSampleEdit extends NpdSample
         $row['kode'] = null;
         $row['nama'] = null;
         $row['sediaan'] = null;
-        $row['ukuran'] = null;
         $row['warna'] = null;
-        $row['bau'] = null;
         $row['fungsi'] = null;
         $row['jumlah'] = null;
+        $row['volume'] = null;
+        $row['bau'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
         $row['readonly'] = null;
@@ -891,15 +891,15 @@ class NpdSampleEdit extends NpdSample
 
         // sediaan
 
-        // ukuran
-
         // warna
-
-        // bau
 
         // fungsi
 
         // jumlah
+
+        // volume
+
+        // bau
 
         // status
 
@@ -949,17 +949,9 @@ class NpdSampleEdit extends NpdSample
             $this->sediaan->ViewValue = $this->sediaan->CurrentValue;
             $this->sediaan->ViewCustomAttributes = "";
 
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
-
             // warna
             $this->warna->ViewValue = $this->warna->CurrentValue;
             $this->warna->ViewCustomAttributes = "";
-
-            // bau
-            $this->bau->ViewValue = $this->bau->CurrentValue;
-            $this->bau->ViewCustomAttributes = "";
 
             // fungsi
             $this->fungsi->ViewValue = $this->fungsi->CurrentValue;
@@ -969,6 +961,14 @@ class NpdSampleEdit extends NpdSample
             $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
             $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
             $this->jumlah->ViewCustomAttributes = "";
+
+            // volume
+            $this->volume->ViewValue = $this->volume->CurrentValue;
+            $this->volume->ViewCustomAttributes = "";
+
+            // bau
+            $this->bau->ViewValue = $this->bau->CurrentValue;
+            $this->bau->ViewCustomAttributes = "";
 
             // status
             if (strval($this->status->CurrentValue) != "") {
@@ -1006,20 +1006,10 @@ class NpdSampleEdit extends NpdSample
             $this->sediaan->HrefValue = "";
             $this->sediaan->TooltipValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
-
             // warna
             $this->warna->LinkCustomAttributes = "";
             $this->warna->HrefValue = "";
             $this->warna->TooltipValue = "";
-
-            // bau
-            $this->bau->LinkCustomAttributes = "";
-            $this->bau->HrefValue = "";
-            $this->bau->TooltipValue = "";
 
             // fungsi
             $this->fungsi->LinkCustomAttributes = "";
@@ -1030,6 +1020,16 @@ class NpdSampleEdit extends NpdSample
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
             $this->jumlah->TooltipValue = "";
+
+            // volume
+            $this->volume->LinkCustomAttributes = "";
+            $this->volume->HrefValue = "";
+            $this->volume->TooltipValue = "";
+
+            // bau
+            $this->bau->LinkCustomAttributes = "";
+            $this->bau->HrefValue = "";
+            $this->bau->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -1058,15 +1058,6 @@ class NpdSampleEdit extends NpdSample
             $this->sediaan->EditValue = HtmlEncode($this->sediaan->CurrentValue);
             $this->sediaan->PlaceHolder = RemoveHtml($this->sediaan->caption());
 
-            // ukuran
-            $this->ukuran->EditAttrs["class"] = "form-control";
-            $this->ukuran->EditCustomAttributes = "";
-            if (!$this->ukuran->Raw) {
-                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-            }
-            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
-            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
-
             // warna
             $this->warna->EditAttrs["class"] = "form-control";
             $this->warna->EditCustomAttributes = "";
@@ -1075,15 +1066,6 @@ class NpdSampleEdit extends NpdSample
             }
             $this->warna->EditValue = HtmlEncode($this->warna->CurrentValue);
             $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
-
-            // bau
-            $this->bau->EditAttrs["class"] = "form-control";
-            $this->bau->EditCustomAttributes = "";
-            if (!$this->bau->Raw) {
-                $this->bau->CurrentValue = HtmlDecode($this->bau->CurrentValue);
-            }
-            $this->bau->EditValue = HtmlEncode($this->bau->CurrentValue);
-            $this->bau->PlaceHolder = RemoveHtml($this->bau->caption());
 
             // fungsi
             $this->fungsi->EditAttrs["class"] = "form-control";
@@ -1100,6 +1082,24 @@ class NpdSampleEdit extends NpdSample
             $this->jumlah->EditValue = HtmlEncode($this->jumlah->CurrentValue);
             $this->jumlah->PlaceHolder = RemoveHtml($this->jumlah->caption());
 
+            // volume
+            $this->volume->EditAttrs["class"] = "form-control";
+            $this->volume->EditCustomAttributes = "";
+            if (!$this->volume->Raw) {
+                $this->volume->CurrentValue = HtmlDecode($this->volume->CurrentValue);
+            }
+            $this->volume->EditValue = HtmlEncode($this->volume->CurrentValue);
+            $this->volume->PlaceHolder = RemoveHtml($this->volume->caption());
+
+            // bau
+            $this->bau->EditAttrs["class"] = "form-control";
+            $this->bau->EditCustomAttributes = "";
+            if (!$this->bau->Raw) {
+                $this->bau->CurrentValue = HtmlDecode($this->bau->CurrentValue);
+            }
+            $this->bau->EditValue = HtmlEncode($this->bau->CurrentValue);
+            $this->bau->PlaceHolder = RemoveHtml($this->bau->caption());
+
             // Edit refer script
 
             // kode
@@ -1114,17 +1114,9 @@ class NpdSampleEdit extends NpdSample
             $this->sediaan->LinkCustomAttributes = "";
             $this->sediaan->HrefValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-
             // warna
             $this->warna->LinkCustomAttributes = "";
             $this->warna->HrefValue = "";
-
-            // bau
-            $this->bau->LinkCustomAttributes = "";
-            $this->bau->HrefValue = "";
 
             // fungsi
             $this->fungsi->LinkCustomAttributes = "";
@@ -1133,6 +1125,14 @@ class NpdSampleEdit extends NpdSample
             // jumlah
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
+
+            // volume
+            $this->volume->LinkCustomAttributes = "";
+            $this->volume->HrefValue = "";
+
+            // bau
+            $this->bau->LinkCustomAttributes = "";
+            $this->bau->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1168,19 +1168,9 @@ class NpdSampleEdit extends NpdSample
                 $this->sediaan->addErrorMessage(str_replace("%s", $this->sediaan->caption(), $this->sediaan->RequiredErrorMessage));
             }
         }
-        if ($this->ukuran->Required) {
-            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
-                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
-            }
-        }
         if ($this->warna->Required) {
             if (!$this->warna->IsDetailKey && EmptyValue($this->warna->FormValue)) {
                 $this->warna->addErrorMessage(str_replace("%s", $this->warna->caption(), $this->warna->RequiredErrorMessage));
-            }
-        }
-        if ($this->bau->Required) {
-            if (!$this->bau->IsDetailKey && EmptyValue($this->bau->FormValue)) {
-                $this->bau->addErrorMessage(str_replace("%s", $this->bau->caption(), $this->bau->RequiredErrorMessage));
             }
         }
         if ($this->fungsi->Required) {
@@ -1195,6 +1185,16 @@ class NpdSampleEdit extends NpdSample
         }
         if (!CheckInteger($this->jumlah->FormValue)) {
             $this->jumlah->addErrorMessage($this->jumlah->getErrorMessage(false));
+        }
+        if ($this->volume->Required) {
+            if (!$this->volume->IsDetailKey && EmptyValue($this->volume->FormValue)) {
+                $this->volume->addErrorMessage(str_replace("%s", $this->volume->caption(), $this->volume->RequiredErrorMessage));
+            }
+        }
+        if ($this->bau->Required) {
+            if (!$this->bau->IsDetailKey && EmptyValue($this->bau->FormValue)) {
+                $this->bau->addErrorMessage(str_replace("%s", $this->bau->caption(), $this->bau->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -1237,20 +1237,20 @@ class NpdSampleEdit extends NpdSample
             // sediaan
             $this->sediaan->setDbValueDef($rsnew, $this->sediaan->CurrentValue, null, $this->sediaan->ReadOnly);
 
-            // ukuran
-            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
-
             // warna
             $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, null, $this->warna->ReadOnly);
-
-            // bau
-            $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, null, $this->bau->ReadOnly);
 
             // fungsi
             $this->fungsi->setDbValueDef($rsnew, $this->fungsi->CurrentValue, null, $this->fungsi->ReadOnly);
 
             // jumlah
             $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, $this->jumlah->ReadOnly);
+
+            // volume
+            $this->volume->setDbValueDef($rsnew, $this->volume->CurrentValue, null, $this->volume->ReadOnly);
+
+            // bau
+            $this->bau->setDbValueDef($rsnew, $this->bau->CurrentValue, null, $this->bau->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;

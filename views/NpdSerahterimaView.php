@@ -92,13 +92,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->created_at->Visible) { // created_at ?>
-    <tr id="r_created_at">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_created_at"><?= $Page->created_at->caption() ?></span></td>
-        <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
-<span id="el_npd_serahterima_created_at">
-<span<?= $Page->created_at->viewAttributes() ?>>
-<?= $Page->created_at->getViewValue() ?></span>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+    <tr id="r_submitted_by">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_submitted_by"><?= $Page->submitted_by->caption() ?></span></td>
+        <td data-name="submitted_by" <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el_npd_serahterima_submitted_by">
+<span<?= $Page->submitted_by->viewAttributes() ?>>
+<?= $Page->submitted_by->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -110,6 +110,17 @@ $Page->showMessage();
 <span id="el_npd_serahterima_receipt_by">
 <span<?= $Page->receipt_by->viewAttributes() ?>>
 <?= $Page->receipt_by->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->created_at->Visible) { // created_at ?>
+    <tr id="r_created_at">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_serahterima_created_at"><?= $Page->created_at->caption() ?></span></td>
+        <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
+<span id="el_npd_serahterima_created_at">
+<span<?= $Page->created_at->viewAttributes() ?>>
+<?= $Page->created_at->getViewValue() ?></span>
 </span>
 </td>
     </tr>

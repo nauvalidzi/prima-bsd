@@ -23,11 +23,11 @@ loadjs.ready("head", function () {
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["sediaan", [fields.sediaan.visible && fields.sediaan.required ? ew.Validators.required(fields.sediaan.caption) : null], fields.sediaan.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
-        ["bau", [fields.bau.visible && fields.bau.required ? ew.Validators.required(fields.bau.caption) : null], fields.bau.isInvalid],
         ["fungsi", [fields.fungsi.visible && fields.fungsi.required ? ew.Validators.required(fields.fungsi.caption) : null], fields.fungsi.isInvalid],
-        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid]
+        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
+        ["volume", [fields.volume.visible && fields.volume.required ? ew.Validators.required(fields.volume.caption) : null], fields.volume.isInvalid],
+        ["bau", [fields.bau.visible && fields.bau.required ? ew.Validators.required(fields.bau.caption) : null], fields.bau.isInvalid]
     ]);
 
     // Set invalid fields
@@ -160,18 +160,6 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <div id="r_ukuran" class="form-group row">
-        <label id="elh_npd_sample_ukuran" for="x_ukuran" class="<?= $Page->LeftColumnClass ?>"><?= $Page->ukuran->caption() ?><?= $Page->ukuran->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el_npd_sample_ukuran">
-<input type="<?= $Page->ukuran->getInputTextType() ?>" data-table="npd_sample" data-field="x_ukuran" name="x_ukuran" id="x_ukuran" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->ukuran->getPlaceHolder()) ?>" value="<?= $Page->ukuran->EditValue ?>"<?= $Page->ukuran->editAttributes() ?> aria-describedby="x_ukuran_help">
-<?= $Page->ukuran->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->ukuran->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->warna->Visible) { // warna ?>
     <div id="r_warna" class="form-group row">
         <label id="elh_npd_sample_warna" for="x_warna" class="<?= $Page->LeftColumnClass ?>"><?= $Page->warna->caption() ?><?= $Page->warna->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -180,18 +168,6 @@ $Page->showMessage();
 <input type="<?= $Page->warna->getInputTextType() ?>" data-table="npd_sample" data-field="x_warna" name="x_warna" id="x_warna" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->warna->getPlaceHolder()) ?>" value="<?= $Page->warna->EditValue ?>"<?= $Page->warna->editAttributes() ?> aria-describedby="x_warna_help">
 <?= $Page->warna->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->warna->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->bau->Visible) { // bau ?>
-    <div id="r_bau" class="form-group row">
-        <label id="elh_npd_sample_bau" for="x_bau" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bau->caption() ?><?= $Page->bau->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bau->cellAttributes() ?>>
-<span id="el_npd_sample_bau">
-<input type="<?= $Page->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x_bau" id="x_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->bau->getPlaceHolder()) ?>" value="<?= $Page->bau->EditValue ?>"<?= $Page->bau->editAttributes() ?> aria-describedby="x_bau_help">
-<?= $Page->bau->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->bau->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -216,6 +192,30 @@ $Page->showMessage();
 <input type="<?= $Page->jumlah->getInputTextType() ?>" data-table="npd_sample" data-field="x_jumlah" name="x_jumlah" id="x_jumlah" size="30" placeholder="<?= HtmlEncode($Page->jumlah->getPlaceHolder()) ?>" value="<?= $Page->jumlah->EditValue ?>"<?= $Page->jumlah->editAttributes() ?> aria-describedby="x_jumlah_help">
 <?= $Page->jumlah->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->jumlah->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->volume->Visible) { // volume ?>
+    <div id="r_volume" class="form-group row">
+        <label id="elh_npd_sample_volume" for="x_volume" class="<?= $Page->LeftColumnClass ?>"><?= $Page->volume->caption() ?><?= $Page->volume->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->volume->cellAttributes() ?>>
+<span id="el_npd_sample_volume">
+<input type="<?= $Page->volume->getInputTextType() ?>" data-table="npd_sample" data-field="x_volume" name="x_volume" id="x_volume" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->volume->getPlaceHolder()) ?>" value="<?= $Page->volume->EditValue ?>"<?= $Page->volume->editAttributes() ?> aria-describedby="x_volume_help">
+<?= $Page->volume->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->volume->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->bau->Visible) { // bau ?>
+    <div id="r_bau" class="form-group row">
+        <label id="elh_npd_sample_bau" for="x_bau" class="<?= $Page->LeftColumnClass ?>"><?= $Page->bau->caption() ?><?= $Page->bau->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bau->cellAttributes() ?>>
+<span id="el_npd_sample_bau">
+<input type="<?= $Page->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x_bau" id="x_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->bau->getPlaceHolder()) ?>" value="<?= $Page->bau->EditValue ?>"<?= $Page->bau->editAttributes() ?> aria-describedby="x_bau_help">
+<?= $Page->bau->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->bau->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

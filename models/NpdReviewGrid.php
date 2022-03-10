@@ -510,7 +510,6 @@ class NpdReviewGrid extends NpdReview
         $this->idnpd_sample->setVisibility();
         $this->tanggal_review->setVisibility();
         $this->tanggal_submit->setVisibility();
-        $this->ukuran->setVisibility();
         $this->wadah->Visible = false;
         $this->bentuk_opsi->Visible = false;
         $this->bentuk_revisi->Visible = false;
@@ -539,6 +538,8 @@ class NpdReviewGrid extends NpdReview
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
         $this->review_by->setVisibility();
+        $this->receipt_by->setVisibility();
+        $this->checked_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -559,6 +560,8 @@ class NpdReviewGrid extends NpdReview
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
         $this->setupLookupOptions($this->review_by);
+        $this->setupLookupOptions($this->receipt_by);
+        $this->setupLookupOptions($this->checked_by);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -976,13 +979,16 @@ class NpdReviewGrid extends NpdReview
         if ($CurrentForm->hasValue("x_tanggal_submit") && $CurrentForm->hasValue("o_tanggal_submit") && $this->tanggal_submit->CurrentValue != $this->tanggal_submit->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_ukuran") && $CurrentForm->hasValue("o_ukuran") && $this->ukuran->CurrentValue != $this->ukuran->OldValue) {
-            return false;
-        }
         if ($CurrentForm->hasValue("x_status") && $CurrentForm->hasValue("o_status") && $this->status->CurrentValue != $this->status->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_review_by") && $CurrentForm->hasValue("o_review_by") && $this->review_by->CurrentValue != $this->review_by->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_receipt_by") && $CurrentForm->hasValue("o_receipt_by") && $this->receipt_by->CurrentValue != $this->receipt_by->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_checked_by") && $CurrentForm->hasValue("o_checked_by") && $this->checked_by->CurrentValue != $this->checked_by->OldValue) {
             return false;
         }
         return true;
@@ -1070,9 +1076,10 @@ class NpdReviewGrid extends NpdReview
         $this->idnpd_sample->clearErrorMessage();
         $this->tanggal_review->clearErrorMessage();
         $this->tanggal_submit->clearErrorMessage();
-        $this->ukuran->clearErrorMessage();
         $this->status->clearErrorMessage();
         $this->review_by->clearErrorMessage();
+        $this->receipt_by->clearErrorMessage();
+        $this->checked_by->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1169,6 +1176,14 @@ class NpdReviewGrid extends NpdReview
         $item->Visible = $Security->canDelete();
         $item->OnLeft = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1225,6 +1240,10 @@ class NpdReviewGrid extends NpdReview
                 }
             }
         }
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         if ($this->CurrentMode == "view") {
             // "view"
             $opt = $this->ListOptions["view"];
@@ -1335,8 +1354,6 @@ class NpdReviewGrid extends NpdReview
         $this->tanggal_review->OldValue = $this->tanggal_review->CurrentValue;
         $this->tanggal_submit->CurrentValue = null;
         $this->tanggal_submit->OldValue = $this->tanggal_submit->CurrentValue;
-        $this->ukuran->CurrentValue = null;
-        $this->ukuran->OldValue = $this->ukuran->CurrentValue;
         $this->wadah->CurrentValue = null;
         $this->wadah->OldValue = $this->wadah->CurrentValue;
         $this->bentuk_opsi->CurrentValue = 1;
@@ -1385,7 +1402,7 @@ class NpdReviewGrid extends NpdReview
         $this->efeknegatif_revisi->OldValue = $this->efeknegatif_revisi->CurrentValue;
         $this->kesimpulan->CurrentValue = null;
         $this->kesimpulan->OldValue = $this->kesimpulan->CurrentValue;
-        $this->status->CurrentValue = 1;
+        $this->status->CurrentValue = null;
         $this->status->OldValue = $this->status->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
@@ -1393,6 +1410,10 @@ class NpdReviewGrid extends NpdReview
         $this->readonly->OldValue = $this->readonly->CurrentValue;
         $this->review_by->CurrentValue = 0;
         $this->review_by->OldValue = $this->review_by->CurrentValue;
+        $this->receipt_by->CurrentValue = null;
+        $this->receipt_by->OldValue = $this->receipt_by->CurrentValue;
+        $this->checked_by->CurrentValue = null;
+        $this->checked_by->OldValue = $this->checked_by->CurrentValue;
     }
 
     // Load form values
@@ -1456,19 +1477,6 @@ class NpdReviewGrid extends NpdReview
             $this->tanggal_submit->setOldValue($CurrentForm->getValue("o_tanggal_submit"));
         }
 
-        // Check field name 'ukuran' first before field var 'x_ukuran'
-        $val = $CurrentForm->hasValue("ukuran") ? $CurrentForm->getValue("ukuran") : $CurrentForm->getValue("x_ukuran");
-        if (!$this->ukuran->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->ukuran->Visible = false; // Disable update for API request
-            } else {
-                $this->ukuran->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_ukuran")) {
-            $this->ukuran->setOldValue($CurrentForm->getValue("o_ukuran"));
-        }
-
         // Check field name 'status' first before field var 'x_status'
         $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
         if (!$this->status->IsDetailKey) {
@@ -1495,6 +1503,32 @@ class NpdReviewGrid extends NpdReview
             $this->review_by->setOldValue($CurrentForm->getValue("o_review_by"));
         }
 
+        // Check field name 'receipt_by' first before field var 'x_receipt_by'
+        $val = $CurrentForm->hasValue("receipt_by") ? $CurrentForm->getValue("receipt_by") : $CurrentForm->getValue("x_receipt_by");
+        if (!$this->receipt_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->receipt_by->Visible = false; // Disable update for API request
+            } else {
+                $this->receipt_by->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_receipt_by")) {
+            $this->receipt_by->setOldValue($CurrentForm->getValue("o_receipt_by"));
+        }
+
+        // Check field name 'checked_by' first before field var 'x_checked_by'
+        $val = $CurrentForm->hasValue("checked_by") ? $CurrentForm->getValue("checked_by") : $CurrentForm->getValue("x_checked_by");
+        if (!$this->checked_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->checked_by->Visible = false; // Disable update for API request
+            } else {
+                $this->checked_by->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_checked_by")) {
+            $this->checked_by->setOldValue($CurrentForm->getValue("o_checked_by"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1515,9 +1549,10 @@ class NpdReviewGrid extends NpdReview
         $this->tanggal_review->CurrentValue = UnFormatDateTime($this->tanggal_review->CurrentValue, 0);
         $this->tanggal_submit->CurrentValue = $this->tanggal_submit->FormValue;
         $this->tanggal_submit->CurrentValue = UnFormatDateTime($this->tanggal_submit->CurrentValue, 0);
-        $this->ukuran->CurrentValue = $this->ukuran->FormValue;
         $this->status->CurrentValue = $this->status->FormValue;
         $this->review_by->CurrentValue = $this->review_by->FormValue;
+        $this->receipt_by->CurrentValue = $this->receipt_by->FormValue;
+        $this->checked_by->CurrentValue = $this->checked_by->FormValue;
     }
 
     // Load recordset
@@ -1593,7 +1628,6 @@ class NpdReviewGrid extends NpdReview
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->tanggal_review->setDbValue($row['tanggal_review']);
         $this->tanggal_submit->setDbValue($row['tanggal_submit']);
-        $this->ukuran->setDbValue($row['ukuran']);
         $this->wadah->setDbValue($row['wadah']);
         $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
         $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
@@ -1622,6 +1656,8 @@ class NpdReviewGrid extends NpdReview
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
         $this->review_by->setDbValue($row['review_by']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->checked_by->setDbValue($row['checked_by']);
     }
 
     // Return a row with default values
@@ -1634,7 +1670,6 @@ class NpdReviewGrid extends NpdReview
         $row['idnpd_sample'] = $this->idnpd_sample->CurrentValue;
         $row['tanggal_review'] = $this->tanggal_review->CurrentValue;
         $row['tanggal_submit'] = $this->tanggal_submit->CurrentValue;
-        $row['ukuran'] = $this->ukuran->CurrentValue;
         $row['wadah'] = $this->wadah->CurrentValue;
         $row['bentuk_opsi'] = $this->bentuk_opsi->CurrentValue;
         $row['bentuk_revisi'] = $this->bentuk_revisi->CurrentValue;
@@ -1663,6 +1698,8 @@ class NpdReviewGrid extends NpdReview
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
         $row['review_by'] = $this->review_by->CurrentValue;
+        $row['receipt_by'] = $this->receipt_by->CurrentValue;
+        $row['checked_by'] = $this->checked_by->CurrentValue;
         return $row;
     }
 
@@ -1707,8 +1744,6 @@ class NpdReviewGrid extends NpdReview
         // tanggal_review
 
         // tanggal_submit
-
-        // ukuran
 
         // wadah
 
@@ -1765,6 +1800,10 @@ class NpdReviewGrid extends NpdReview
         // readonly
 
         // review_by
+
+        // receipt_by
+
+        // checked_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1775,9 +1814,9 @@ class NpdReviewGrid extends NpdReview
             if ($curVal != "") {
                 $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
                 if ($this->idnpd->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idnpd`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1829,10 +1868,6 @@ class NpdReviewGrid extends NpdReview
             $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
             $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
             $this->tanggal_submit->ViewCustomAttributes = "";
-
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
 
             // wadah
             $this->wadah->ViewValue = $this->wadah->CurrentValue;
@@ -2016,6 +2051,48 @@ class NpdReviewGrid extends NpdReview
             }
             $this->review_by->ViewCustomAttributes = "";
 
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
+
+            // checked_by
+            $curVal = trim(strval($this->checked_by->CurrentValue));
+            if ($curVal != "") {
+                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
+                if ($this->checked_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
+                    } else {
+                        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->checked_by->ViewValue = null;
+            }
+            $this->checked_by->ViewCustomAttributes = "";
+
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
@@ -2036,11 +2113,6 @@ class NpdReviewGrid extends NpdReview
             $this->tanggal_submit->HrefValue = "";
             $this->tanggal_submit->TooltipValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
-
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
@@ -2050,6 +2122,16 @@ class NpdReviewGrid extends NpdReview
             $this->review_by->LinkCustomAttributes = "";
             $this->review_by->HrefValue = "";
             $this->review_by->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
+
+            // checked_by
+            $this->checked_by->LinkCustomAttributes = "";
+            $this->checked_by->HrefValue = "";
+            $this->checked_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -2061,9 +2143,9 @@ class NpdReviewGrid extends NpdReview
                 if ($curVal != "") {
                     $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
                     if ($this->idnpd->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $filterWrk = "`idnpd`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                         $lookupFilter = function() {
-                            return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                            return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                         };
                         $lookupFilter = $lookupFilter->bindTo($this);
                         $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -2093,10 +2175,10 @@ class NpdReviewGrid extends NpdReview
                     if ($curVal == "") {
                         $filterWrk = "0=1";
                     } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idnpd->CurrentValue, DATATYPE_NUMBER, "");
+                        $filterWrk = "`idnpd`" . SearchString("=", $this->idnpd->CurrentValue, DATATYPE_NUMBER, "");
                     }
                     $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -2149,15 +2231,6 @@ class NpdReviewGrid extends NpdReview
             $this->tanggal_submit->EditValue = HtmlEncode(FormatDateTime($this->tanggal_submit->CurrentValue, 8));
             $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
 
-            // ukuran
-            $this->ukuran->EditAttrs["class"] = "form-control";
-            $this->ukuran->EditCustomAttributes = "";
-            if (!$this->ukuran->Raw) {
-                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-            }
-            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
-            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
-
             // status
             $this->status->EditCustomAttributes = "";
             $this->status->EditValue = $this->status->options(false);
@@ -2187,6 +2260,56 @@ class NpdReviewGrid extends NpdReview
                 $this->review_by->EditValue = $arwrk;
             }
             $this->review_by->PlaceHolder = RemoveHtml($this->review_by->caption());
+
+            // receipt_by
+            $this->receipt_by->EditAttrs["class"] = "form-control";
+            $this->receipt_by->EditCustomAttributes = "";
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+            } else {
+                $this->receipt_by->ViewValue = $this->receipt_by->Lookup !== null && is_array($this->receipt_by->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->receipt_by->ViewValue !== null) { // Load from cache
+                $this->receipt_by->EditValue = array_values($this->receipt_by->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->receipt_by->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->receipt_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->receipt_by->EditValue = $arwrk;
+            }
+            $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
+
+            // checked_by
+            $this->checked_by->EditAttrs["class"] = "form-control";
+            $this->checked_by->EditCustomAttributes = "";
+            $curVal = trim(strval($this->checked_by->CurrentValue));
+            if ($curVal != "") {
+                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
+            } else {
+                $this->checked_by->ViewValue = $this->checked_by->Lookup !== null && is_array($this->checked_by->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->checked_by->ViewValue !== null) { // Load from cache
+                $this->checked_by->EditValue = array_values($this->checked_by->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->checked_by->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->checked_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->checked_by->EditValue = $arwrk;
+            }
+            $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
 
             // Add refer script
 
@@ -2206,10 +2329,6 @@ class NpdReviewGrid extends NpdReview
             $this->tanggal_submit->LinkCustomAttributes = "";
             $this->tanggal_submit->HrefValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
@@ -2217,6 +2336,14 @@ class NpdReviewGrid extends NpdReview
             // review_by
             $this->review_by->LinkCustomAttributes = "";
             $this->review_by->HrefValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+
+            // checked_by
+            $this->checked_by->LinkCustomAttributes = "";
+            $this->checked_by->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -2228,9 +2355,9 @@ class NpdReviewGrid extends NpdReview
                 if ($curVal != "") {
                     $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
                     if ($this->idnpd->ViewValue === null) { // Lookup from database
-                        $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                        $filterWrk = "`idnpd`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                         $lookupFilter = function() {
-                            return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                            return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                         };
                         $lookupFilter = $lookupFilter->bindTo($this);
                         $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -2260,10 +2387,10 @@ class NpdReviewGrid extends NpdReview
                     if ($curVal == "") {
                         $filterWrk = "0=1";
                     } else {
-                        $filterWrk = "`id`" . SearchString("=", $this->idnpd->CurrentValue, DATATYPE_NUMBER, "");
+                        $filterWrk = "`idnpd`" . SearchString("=", $this->idnpd->CurrentValue, DATATYPE_NUMBER, "");
                     }
                     $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -2316,15 +2443,6 @@ class NpdReviewGrid extends NpdReview
             $this->tanggal_submit->EditValue = HtmlEncode(FormatDateTime($this->tanggal_submit->CurrentValue, 8));
             $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
 
-            // ukuran
-            $this->ukuran->EditAttrs["class"] = "form-control";
-            $this->ukuran->EditCustomAttributes = "";
-            if (!$this->ukuran->Raw) {
-                $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-            }
-            $this->ukuran->EditValue = HtmlEncode($this->ukuran->CurrentValue);
-            $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
-
             // status
             $this->status->EditCustomAttributes = "";
             $this->status->EditValue = $this->status->options(false);
@@ -2355,6 +2473,56 @@ class NpdReviewGrid extends NpdReview
             }
             $this->review_by->PlaceHolder = RemoveHtml($this->review_by->caption());
 
+            // receipt_by
+            $this->receipt_by->EditAttrs["class"] = "form-control";
+            $this->receipt_by->EditCustomAttributes = "";
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+            } else {
+                $this->receipt_by->ViewValue = $this->receipt_by->Lookup !== null && is_array($this->receipt_by->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->receipt_by->ViewValue !== null) { // Load from cache
+                $this->receipt_by->EditValue = array_values($this->receipt_by->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->receipt_by->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->receipt_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->receipt_by->EditValue = $arwrk;
+            }
+            $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
+
+            // checked_by
+            $this->checked_by->EditAttrs["class"] = "form-control";
+            $this->checked_by->EditCustomAttributes = "";
+            $curVal = trim(strval($this->checked_by->CurrentValue));
+            if ($curVal != "") {
+                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
+            } else {
+                $this->checked_by->ViewValue = $this->checked_by->Lookup !== null && is_array($this->checked_by->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->checked_by->ViewValue !== null) { // Load from cache
+                $this->checked_by->EditValue = array_values($this->checked_by->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->checked_by->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->checked_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->checked_by->EditValue = $arwrk;
+            }
+            $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
+
             // Edit refer script
 
             // idnpd
@@ -2373,10 +2541,6 @@ class NpdReviewGrid extends NpdReview
             $this->tanggal_submit->LinkCustomAttributes = "";
             $this->tanggal_submit->HrefValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
@@ -2384,6 +2548,14 @@ class NpdReviewGrid extends NpdReview
             // review_by
             $this->review_by->LinkCustomAttributes = "";
             $this->review_by->HrefValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+
+            // checked_by
+            $this->checked_by->LinkCustomAttributes = "";
+            $this->checked_by->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2430,11 +2602,6 @@ class NpdReviewGrid extends NpdReview
         if (!CheckDate($this->tanggal_submit->FormValue)) {
             $this->tanggal_submit->addErrorMessage($this->tanggal_submit->getErrorMessage(false));
         }
-        if ($this->ukuran->Required) {
-            if (!$this->ukuran->IsDetailKey && EmptyValue($this->ukuran->FormValue)) {
-                $this->ukuran->addErrorMessage(str_replace("%s", $this->ukuran->caption(), $this->ukuran->RequiredErrorMessage));
-            }
-        }
         if ($this->status->Required) {
             if ($this->status->FormValue == "") {
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
@@ -2443,6 +2610,16 @@ class NpdReviewGrid extends NpdReview
         if ($this->review_by->Required) {
             if (!$this->review_by->IsDetailKey && EmptyValue($this->review_by->FormValue)) {
                 $this->review_by->addErrorMessage(str_replace("%s", $this->review_by->caption(), $this->review_by->RequiredErrorMessage));
+            }
+        }
+        if ($this->receipt_by->Required) {
+            if (!$this->receipt_by->IsDetailKey && EmptyValue($this->receipt_by->FormValue)) {
+                $this->receipt_by->addErrorMessage(str_replace("%s", $this->receipt_by->caption(), $this->receipt_by->RequiredErrorMessage));
+            }
+        }
+        if ($this->checked_by->Required) {
+            if (!$this->checked_by->IsDetailKey && EmptyValue($this->checked_by->FormValue)) {
+                $this->checked_by->addErrorMessage(str_replace("%s", $this->checked_by->caption(), $this->checked_by->RequiredErrorMessage));
             }
         }
 
@@ -2569,14 +2746,17 @@ class NpdReviewGrid extends NpdReview
             // tanggal_submit
             $this->tanggal_submit->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_submit->CurrentValue, 0), CurrentDate(), $this->tanggal_submit->ReadOnly);
 
-            // ukuran
-            $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, $this->ukuran->ReadOnly);
-
             // status
             $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, 0, $this->status->ReadOnly);
 
             // review_by
             $this->review_by->setDbValueDef($rsnew, $this->review_by->CurrentValue, null, $this->review_by->ReadOnly);
+
+            // receipt_by
+            $this->receipt_by->setDbValueDef($rsnew, $this->receipt_by->CurrentValue, null, $this->receipt_by->ReadOnly);
+
+            // checked_by
+            $this->checked_by->setDbValueDef($rsnew, $this->checked_by->CurrentValue, null, $this->checked_by->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
@@ -2688,14 +2868,17 @@ class NpdReviewGrid extends NpdReview
         // tanggal_submit
         $this->tanggal_submit->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_submit->CurrentValue, 0), CurrentDate(), false);
 
-        // ukuran
-        $this->ukuran->setDbValueDef($rsnew, $this->ukuran->CurrentValue, null, false);
-
         // status
         $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, 0, false);
 
         // review_by
         $this->review_by->setDbValueDef($rsnew, $this->review_by->CurrentValue, null, false);
+
+        // receipt_by
+        $this->receipt_by->setDbValueDef($rsnew, $this->receipt_by->CurrentValue, null, false);
+
+        // checked_by
+        $this->checked_by->setDbValueDef($rsnew, $this->checked_by->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
@@ -2766,7 +2949,7 @@ class NpdReviewGrid extends NpdReview
             switch ($fld->FieldVar) {
                 case "x_idnpd":
                     $lookupFilter = function () {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
@@ -2803,6 +2986,10 @@ class NpdReviewGrid extends NpdReview
                 case "x_readonly":
                     break;
                 case "x_review_by":
+                    break;
+                case "x_receipt_by":
+                    break;
+                case "x_checked_by":
                     break;
                 default:
                     $lookupFilter = "";

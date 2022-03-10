@@ -44,10 +44,10 @@ class NpdReviewView extends NpdReview
     public $ExportPdfUrl;
 
     // Custom export
-    public $ExportExcelCustom = false;
-    public $ExportWordCustom = false;
-    public $ExportPdfCustom = false;
-    public $ExportEmailCustom = false;
+    public $ExportExcelCustom = true;
+    public $ExportWordCustom = true;
+    public $ExportPdfCustom = true;
+    public $ExportEmailCustom = true;
 
     // Update URLs
     public $InlineAddUrl;
@@ -149,6 +149,9 @@ class NpdReviewView extends NpdReview
     {
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
+
+        // Custom template
+        $this->UseCustomTemplate = true;
 
         // Initialize
         $GLOBALS["Page"] = &$this;
@@ -260,18 +263,25 @@ class NpdReviewView extends NpdReview
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -286,6 +296,11 @@ class NpdReviewView extends NpdReview
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -424,9 +439,6 @@ class NpdReviewView extends NpdReview
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -523,7 +535,6 @@ class NpdReviewView extends NpdReview
         $this->idnpd_sample->setVisibility();
         $this->tanggal_review->setVisibility();
         $this->tanggal_submit->setVisibility();
-        $this->ukuran->setVisibility();
         $this->wadah->setVisibility();
         $this->bentuk_opsi->setVisibility();
         $this->bentuk_revisi->setVisibility();
@@ -552,6 +563,8 @@ class NpdReviewView extends NpdReview
         $this->created_at->setVisibility();
         $this->readonly->setVisibility();
         $this->review_by->setVisibility();
+        $this->receipt_by->setVisibility();
+        $this->checked_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -569,6 +582,8 @@ class NpdReviewView extends NpdReview
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
         $this->setupLookupOptions($this->review_by);
+        $this->setupLookupOptions($this->receipt_by);
+        $this->setupLookupOptions($this->checked_by);
 
         // Check modal
         if ($this->IsModal) {
@@ -766,7 +781,6 @@ class NpdReviewView extends NpdReview
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->tanggal_review->setDbValue($row['tanggal_review']);
         $this->tanggal_submit->setDbValue($row['tanggal_submit']);
-        $this->ukuran->setDbValue($row['ukuran']);
         $this->wadah->setDbValue($row['wadah']);
         $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
         $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
@@ -795,6 +809,8 @@ class NpdReviewView extends NpdReview
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
         $this->review_by->setDbValue($row['review_by']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->checked_by->setDbValue($row['checked_by']);
     }
 
     // Return a row with default values
@@ -806,7 +822,6 @@ class NpdReviewView extends NpdReview
         $row['idnpd_sample'] = null;
         $row['tanggal_review'] = null;
         $row['tanggal_submit'] = null;
-        $row['ukuran'] = null;
         $row['wadah'] = null;
         $row['bentuk_opsi'] = null;
         $row['bentuk_revisi'] = null;
@@ -835,6 +850,8 @@ class NpdReviewView extends NpdReview
         $row['created_at'] = null;
         $row['readonly'] = null;
         $row['review_by'] = null;
+        $row['receipt_by'] = null;
+        $row['checked_by'] = null;
         return $row;
     }
 
@@ -865,8 +882,6 @@ class NpdReviewView extends NpdReview
         // tanggal_review
 
         // tanggal_submit
-
-        // ukuran
 
         // wadah
 
@@ -923,6 +938,10 @@ class NpdReviewView extends NpdReview
         // readonly
 
         // review_by
+
+        // receipt_by
+
+        // checked_by
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -933,9 +952,9 @@ class NpdReviewView extends NpdReview
             if ($curVal != "") {
                 $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
                 if ($this->idnpd->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idnpd`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -987,10 +1006,6 @@ class NpdReviewView extends NpdReview
             $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
             $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
             $this->tanggal_submit->ViewCustomAttributes = "";
-
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
 
             // wadah
             $this->wadah->ViewValue = $this->wadah->CurrentValue;
@@ -1174,6 +1189,48 @@ class NpdReviewView extends NpdReview
             }
             $this->review_by->ViewCustomAttributes = "";
 
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
+
+            // checked_by
+            $curVal = trim(strval($this->checked_by->CurrentValue));
+            if ($curVal != "") {
+                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
+                if ($this->checked_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
+                    } else {
+                        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->checked_by->ViewValue = null;
+            }
+            $this->checked_by->ViewCustomAttributes = "";
+
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
@@ -1193,11 +1250,6 @@ class NpdReviewView extends NpdReview
             $this->tanggal_submit->LinkCustomAttributes = "";
             $this->tanggal_submit->HrefValue = "";
             $this->tanggal_submit->TooltipValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
 
             // wadah
             $this->wadah->LinkCustomAttributes = "";
@@ -1328,11 +1380,26 @@ class NpdReviewView extends NpdReview
             $this->review_by->LinkCustomAttributes = "";
             $this->review_by->HrefValue = "";
             $this->review_by->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
+
+            // checked_by
+            $this->checked_by->LinkCustomAttributes = "";
+            $this->checked_by->HrefValue = "";
+            $this->checked_by->TooltipValue = "";
         }
 
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
         }
     }
 
@@ -1432,7 +1499,7 @@ class NpdReviewView extends NpdReview
             switch ($fld->FieldVar) {
                 case "x_idnpd":
                     $lookupFilter = function () {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
@@ -1469,6 +1536,10 @@ class NpdReviewView extends NpdReview
                 case "x_readonly":
                     break;
                 case "x_review_by":
+                    break;
+                case "x_receipt_by":
+                    break;
+                case "x_checked_by":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1572,8 +1643,8 @@ class NpdReviewView extends NpdReview
     public function pageRender()
     {
         //Log("Page Render");
-        $this->OtherOptions["action"]->Items["add"]->Visible = false;
-        if ($this->readonly->CurrentValue) {
+        //$this->OtherOptions["action"]->Items["add"]->Visible = false;
+        if ($this->readonly->CurrentValue == 1) {
         	$this->OtherOptions["action"]->Items["edit"]->Visible = false;
         	$this->OtherOptions["action"]->Items["delete"]->Visible = false;
         }
@@ -1584,38 +1655,38 @@ class NpdReviewView extends NpdReview
     {
         // Example:
         //$header = "your header";
-    	if ($this->bentukok->CurrentValue == 1) {
-        	$this->bentukrevisi->Visible = false;
+    	if ($this->bentuk_opsi->CurrentValue > 1) {
+        	$this->be_ntukrevisi->Visible = false;
     	}
-    	if ($this->viskositasok->CurrentValue == 1) {
-        	$this->viskositasrevisi->Visible = false;
+    	if ($this->viskositas_opsi->CurrentValue > 1) {
+        	$this->viskositas_revisi->Visible = false;
     	}
-    	if ($this->jeniswarnaok->CurrentValue == 1) {
-        	$this->jeniswarnarevisi->Visible = false;
+    	if ($this->jeniswarna_opsi->CurrentValue > 1) {
+        	$this->jeniswarna_revisi->Visible = false;
     	}
-    	if ($this->tonewarnaok->CurrentValue == 1) {
-        	$this->tonewarnarevisi->Visible = false;
+    	if ($this->tonewarna_opsi->CurrentValue > 1) {
+        	$this->tonewarna_revisi->Visible = false;
     	}
-    	if ($this->gradasiwarnaok->CurrentValue == 1) {
-        	$this->gradasiwarnarevisi->Visible = false;
+    	if ($this->gradasiwarna_opsi->CurrentValue > 1) {
+        	$this->gradasiwarna_revisi->Visible = false;
     	}
-    	if ($this->bauok->CurrentValue == 1) {
-        	$this->baurevisi->Visible = false;
+    	if ($this->bauparfum_opsi->CurrentValue > 1) {
+        	$this->bauparfum_revisi->Visible = false;
     	}
-    	if ($this->estetikaok->CurrentValue == 1) {
-        	$this->estetikarevisi->Visible = false;
+    	if ($this->estetika_opsi->CurrentValue > 1) {
+        	$this->estetika_revisi->Visible = false;
     	}
-    	if ($this->aplikasiawalok->CurrentValue == 1) {
-        	$this->aplikasiawalrevisi->Visible = false;
+    	if ($this->aplikasiawal_opsi->CurrentValue > 1) {
+        	$this->aplikasiawal_revisi->Visible = false;
     	}
-    	if ($this->aplikasilamaok->CurrentValue == 1) {
-        	$this->aplikasilamarevisi->Visible = false;
+    	if ($this->aplikasilama_opsi->CurrentValue > 1) {
+        	$this->aplikasilama_revisi->Visible = false;
     	}
-    	if ($this->efekpositifok->CurrentValue == 1) {
-        	$this->efekpositifrevisi->Visible = false;
+    	if ($this->efekpositif_opsi->CurrentValue > 1) {
+        	$this->efekpositif_revisi->Visible = false;
     	}
-    	if ($this->efeknegatifok->CurrentValue == 1) {
-        	$this->efeknegatifrevisi->Visible = false;
+    	if ($this->efeknegatif_opsi->CurrentValue > 1) {
+        	$this->efeknegatif_revisi->Visible = false;
     	}
     }
 

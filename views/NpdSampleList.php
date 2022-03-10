@@ -159,9 +159,6 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_sample_idnpd" class="npd_sample_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_npd_sample_kode" class="npd_sample_kode"><?= $Page->renderSort($Page->kode) ?></div></th>
 <?php } ?>
@@ -171,20 +168,23 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->sediaan->Visible) { // sediaan ?>
         <th data-name="sediaan" class="<?= $Page->sediaan->headerCellClass() ?>"><div id="elh_npd_sample_sediaan" class="npd_sample_sediaan"><?= $Page->renderSort($Page->sediaan) ?></div></th>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Page->ukuran->headerCellClass() ?>"><div id="elh_npd_sample_ukuran" class="npd_sample_ukuran"><?= $Page->renderSort($Page->ukuran) ?></div></th>
-<?php } ?>
 <?php if ($Page->warna->Visible) { // warna ?>
         <th data-name="warna" class="<?= $Page->warna->headerCellClass() ?>"><div id="elh_npd_sample_warna" class="npd_sample_warna"><?= $Page->renderSort($Page->warna) ?></div></th>
-<?php } ?>
-<?php if ($Page->bau->Visible) { // bau ?>
-        <th data-name="bau" class="<?= $Page->bau->headerCellClass() ?>"><div id="elh_npd_sample_bau" class="npd_sample_bau"><?= $Page->renderSort($Page->bau) ?></div></th>
 <?php } ?>
 <?php if ($Page->fungsi->Visible) { // fungsi ?>
         <th data-name="fungsi" class="<?= $Page->fungsi->headerCellClass() ?>"><div id="elh_npd_sample_fungsi" class="npd_sample_fungsi"><?= $Page->renderSort($Page->fungsi) ?></div></th>
 <?php } ?>
 <?php if ($Page->jumlah->Visible) { // jumlah ?>
         <th data-name="jumlah" class="<?= $Page->jumlah->headerCellClass() ?>"><div id="elh_npd_sample_jumlah" class="npd_sample_jumlah"><?= $Page->renderSort($Page->jumlah) ?></div></th>
+<?php } ?>
+<?php if ($Page->volume->Visible) { // volume ?>
+        <th data-name="volume" class="<?= $Page->volume->headerCellClass() ?>"><div id="elh_npd_sample_volume" class="npd_sample_volume"><?= $Page->renderSort($Page->volume) ?></div></th>
+<?php } ?>
+<?php if ($Page->bau->Visible) { // bau ?>
+        <th data-name="bau" class="<?= $Page->bau->headerCellClass() ?>"><div id="elh_npd_sample_bau" class="npd_sample_bau"><?= $Page->renderSort($Page->bau) ?></div></th>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_npd_sample_status" class="npd_sample_status"><?= $Page->renderSort($Page->status) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -253,14 +253,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_sample_idnpd">
-<span<?= $Page->idnpd->viewAttributes() ?>>
-<?= $Page->idnpd->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->kode->Visible) { // kode ?>
         <td data-name="kode" <?= $Page->kode->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_sample_kode">
@@ -285,27 +277,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_sample_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->warna->Visible) { // warna ?>
         <td data-name="warna" <?= $Page->warna->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_sample_warna">
 <span<?= $Page->warna->viewAttributes() ?>>
 <?= $Page->warna->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->bau->Visible) { // bau ?>
-        <td data-name="bau" <?= $Page->bau->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_sample_bau">
-<span<?= $Page->bau->viewAttributes() ?>>
-<?= $Page->bau->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -322,6 +298,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_sample_jumlah">
 <span<?= $Page->jumlah->viewAttributes() ?>>
 <?= $Page->jumlah->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->volume->Visible) { // volume ?>
+        <td data-name="volume" <?= $Page->volume->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_sample_volume">
+<span<?= $Page->volume->viewAttributes() ?>>
+<?= $Page->volume->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->bau->Visible) { // bau ?>
+        <td data-name="bau" <?= $Page->bau->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_sample_bau">
+<span<?= $Page->bau->viewAttributes() ?>>
+<?= $Page->bau->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_sample_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

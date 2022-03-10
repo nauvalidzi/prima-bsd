@@ -549,10 +549,11 @@ class NpdAdd extends Npd
         $this->delivery_termlain->setVisibility();
         $this->status->setVisibility();
         $this->readonly->Visible = false;
-        $this->created_at->Visible = false;
-        $this->updated_at->Visible = false;
         $this->receipt_by->setVisibility();
         $this->approve_by->setVisibility();
+        $this->created_at->Visible = false;
+        $this->updated_at->Visible = false;
+        $this->selesai->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -595,6 +596,7 @@ class NpdAdd extends Npd
         $this->setupLookupOptions($this->labelposisi);
         $this->setupLookupOptions($this->labeltekstur);
         $this->setupLookupOptions($this->labelprint);
+        $this->setupLookupOptions($this->approve_by);
 
         // Check modal
         if ($this->IsModal) {
@@ -882,12 +884,13 @@ class NpdAdd extends Npd
         $this->status->CurrentValue = null;
         $this->status->OldValue = $this->status->CurrentValue;
         $this->readonly->CurrentValue = 0;
+        $this->receipt_by->CurrentValue = 0;
+        $this->approve_by->CurrentValue = 0;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->updated_at->CurrentValue = null;
         $this->updated_at->OldValue = $this->updated_at->CurrentValue;
-        $this->receipt_by->CurrentValue = 0;
-        $this->approve_by->CurrentValue = 0;
+        $this->selesai->CurrentValue = 0;
     }
 
     // Load form values
@@ -1821,10 +1824,11 @@ class NpdAdd extends Npd
         $this->delivery_termlain->setDbValue($row['delivery_termlain']);
         $this->status->setDbValue($row['status']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->created_at->setDbValue($row['created_at']);
-        $this->updated_at->setDbValue($row['updated_at']);
         $this->receipt_by->setDbValue($row['receipt_by']);
         $this->approve_by->setDbValue($row['approve_by']);
+        $this->created_at->setDbValue($row['created_at']);
+        $this->updated_at->setDbValue($row['updated_at']);
+        $this->selesai->setDbValue($row['selesai']);
     }
 
     // Return a row with default values
@@ -1904,10 +1908,11 @@ class NpdAdd extends Npd
         $row['delivery_termlain'] = $this->delivery_termlain->CurrentValue;
         $row['status'] = $this->status->CurrentValue;
         $row['readonly'] = $this->readonly->CurrentValue;
-        $row['created_at'] = $this->created_at->CurrentValue;
-        $row['updated_at'] = $this->updated_at->CurrentValue;
         $row['receipt_by'] = $this->receipt_by->CurrentValue;
         $row['approve_by'] = $this->approve_by->CurrentValue;
+        $row['created_at'] = $this->created_at->CurrentValue;
+        $row['updated_at'] = $this->updated_at->CurrentValue;
+        $row['selesai'] = $this->selesai->CurrentValue;
         return $row;
     }
 
@@ -2083,13 +2088,15 @@ class NpdAdd extends Npd
 
         // readonly
 
+        // receipt_by
+
+        // approve_by
+
         // created_at
 
         // updated_at
 
-        // receipt_by
-
-        // approve_by
+        // selesai
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -2846,6 +2853,32 @@ class NpdAdd extends Npd
             }
             $this->readonly->ViewCustomAttributes = "";
 
+            // receipt_by
+            $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+            $this->receipt_by->ViewValue = FormatNumber($this->receipt_by->ViewValue, 0, -2, -2, -2);
+            $this->receipt_by->ViewCustomAttributes = "";
+
+            // approve_by
+            $curVal = trim(strval($this->approve_by->CurrentValue));
+            if ($curVal != "") {
+                $this->approve_by->ViewValue = $this->approve_by->lookupCacheOption($curVal);
+                if ($this->approve_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->approve_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->approve_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->approve_by->ViewValue = $this->approve_by->displayValue($arwrk);
+                    } else {
+                        $this->approve_by->ViewValue = $this->approve_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->approve_by->ViewValue = null;
+            }
+            $this->approve_by->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
@@ -2856,15 +2889,13 @@ class NpdAdd extends Npd
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 17);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // receipt_by
-            $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
-            $this->receipt_by->ViewValue = FormatNumber($this->receipt_by->ViewValue, 0, -2, -2, -2);
-            $this->receipt_by->ViewCustomAttributes = "";
-
-            // approve_by
-            $this->approve_by->ViewValue = $this->approve_by->CurrentValue;
-            $this->approve_by->ViewValue = FormatNumber($this->approve_by->ViewValue, 0, -2, -2, -2);
-            $this->approve_by->ViewCustomAttributes = "";
+            // selesai
+            if (strval($this->selesai->CurrentValue) != "") {
+                $this->selesai->ViewValue = $this->selesai->optionCaption($this->selesai->CurrentValue);
+            } else {
+                $this->selesai->ViewValue = null;
+            }
+            $this->selesai->ViewCustomAttributes = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -4142,9 +4173,8 @@ class NpdAdd extends Npd
             $this->delivery_termlain->PlaceHolder = RemoveHtml($this->delivery_termlain->caption());
 
             // status
-            $this->status->EditAttrs["class"] = "form-control";
             $this->status->EditCustomAttributes = "";
-            $this->status->EditValue = $this->status->options(true);
+            $this->status->EditValue = $this->status->options(false);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
             // receipt_by
@@ -4156,7 +4186,26 @@ class NpdAdd extends Npd
             // approve_by
             $this->approve_by->EditAttrs["class"] = "form-control";
             $this->approve_by->EditCustomAttributes = "";
-            $this->approve_by->EditValue = HtmlEncode($this->approve_by->CurrentValue);
+            $curVal = trim(strval($this->approve_by->CurrentValue));
+            if ($curVal != "") {
+                $this->approve_by->ViewValue = $this->approve_by->lookupCacheOption($curVal);
+            } else {
+                $this->approve_by->ViewValue = $this->approve_by->Lookup !== null && is_array($this->approve_by->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->approve_by->ViewValue !== null) { // Load from cache
+                $this->approve_by->EditValue = array_values($this->approve_by->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->approve_by->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->approve_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->approve_by->EditValue = $arwrk;
+            }
             $this->approve_by->PlaceHolder = RemoveHtml($this->approve_by->caption());
 
             // Add refer script
@@ -4888,7 +4937,7 @@ class NpdAdd extends Npd
             }
         }
         if ($this->status->Required) {
-            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
+            if ($this->status->FormValue == "") {
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
@@ -4905,9 +4954,6 @@ class NpdAdd extends Npd
                 $this->approve_by->addErrorMessage(str_replace("%s", $this->approve_by->caption(), $this->approve_by->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->approve_by->FormValue)) {
-            $this->approve_by->addErrorMessage($this->approve_by->getErrorMessage(false));
-        }
 
         // Validate detail grid
         $detailTblVar = explode(",", $this->getCurrentDetailTable());
@@ -4919,8 +4965,8 @@ class NpdAdd extends Npd
         if (in_array("npd_review", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("NpdConfirmGrid");
-        if (in_array("npd_confirm", $detailTblVar) && $detailPage->DetailAdd) {
+        $detailPage = Container("NpdConfirmsampleGrid");
+        if (in_array("npd_confirmsample", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
         $detailPage = Container("NpdHargaGrid");
@@ -5179,7 +5225,7 @@ class NpdAdd extends Npd
         $this->delivery_termlain->setDbValueDef($rsnew, $this->delivery_termlain->CurrentValue, null, false);
 
         // status
-        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", false);
+        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, 0, strval($this->status->CurrentValue) == "");
 
         // receipt_by
         $this->receipt_by->setDbValueDef($rsnew, $this->receipt_by->CurrentValue, null, false);
@@ -5233,10 +5279,10 @@ class NpdAdd extends Npd
                 $detailPage->idnpd->setSessionValue(""); // Clear master key if insert failed
                 }
             }
-            $detailPage = Container("NpdConfirmGrid");
-            if (in_array("npd_confirm", $detailTblVar) && $detailPage->DetailAdd) {
+            $detailPage = Container("NpdConfirmsampleGrid");
+            if (in_array("npd_confirmsample", $detailTblVar) && $detailPage->DetailAdd) {
                 $detailPage->idnpd->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "npd_confirm"); // Load user level of detail table
+                $Security->loadCurrentUserLevel($this->ProjectID . "npd_confirmsample"); // Load user level of detail table
                 $addRow = $detailPage->gridInsert();
                 $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
                 if (!$addRow) {
@@ -5339,8 +5385,8 @@ class NpdAdd extends Npd
                     $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
                 }
             }
-            if (in_array("npd_confirm", $detailTblVar)) {
-                $detailPageObj = Container("NpdConfirmGrid");
+            if (in_array("npd_confirmsample", $detailTblVar)) {
+                $detailPageObj = Container("NpdConfirmsampleGrid");
                 if ($detailPageObj->DetailAdd) {
                     if ($this->CopyRecord) {
                         $detailPageObj->CurrentMode = "copy";
@@ -5414,7 +5460,7 @@ class NpdAdd extends Npd
         $pages->Style = "tabs";
         $pages->add('npd_sample');
         $pages->add('npd_review');
-        $pages->add('npd_confirm');
+        $pages->add('npd_confirmsample');
         $pages->add('npd_harga');
         $pages->add('npd_desain');
         $this->DetailPages = $pages;
@@ -5494,6 +5540,10 @@ class NpdAdd extends Npd
                 case "x_status":
                     break;
                 case "x_readonly":
+                    break;
+                case "x_approve_by":
+                    break;
+                case "x_selesai":
                     break;
                 default:
                     $lookupFilter = "";

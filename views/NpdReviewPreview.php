@@ -58,15 +58,6 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <?php if ($Page->SortUrl($Page->ukuran) == "") { ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><?= $Page->ukuran->caption() ?></th>
-    <?php } else { ?>
-        <th class="<?= $Page->ukuran->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->ukuran->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->ukuran->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->ukuran->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->ukuran->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->ukuran->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
-        </div></div></th>
-    <?php } ?>
-<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <?php if ($Page->SortUrl($Page->status) == "") { ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><?= $Page->status->caption() ?></th>
@@ -82,6 +73,24 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->review_by->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->review_by->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->review_by->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->review_by->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->review_by->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->review_by->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+    <?php if ($Page->SortUrl($Page->receipt_by) == "") { ?>
+        <th class="<?= $Page->receipt_by->headerCellClass() ?>"><?= $Page->receipt_by->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->receipt_by->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->receipt_by->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->receipt_by->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->receipt_by->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->receipt_by->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->receipt_by->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->checked_by->Visible) { // checked_by ?>
+    <?php if ($Page->SortUrl($Page->checked_by) == "") { ?>
+        <th class="<?= $Page->checked_by->headerCellClass() ?>"><?= $Page->checked_by->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->checked_by->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->checked_by->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->checked_by->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->checked_by->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->checked_by->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->checked_by->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -143,13 +152,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->tanggal_submit->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-        <!-- ukuran -->
-        <td<?= $Page->ukuran->cellAttributes() ?>>
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
-</td>
-<?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <!-- status -->
         <td<?= $Page->status->cellAttributes() ?>>
@@ -162,6 +164,20 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->review_by->cellAttributes() ?>>
 <span<?= $Page->review_by->viewAttributes() ?>>
 <?= $Page->review_by->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <!-- receipt_by -->
+        <td<?= $Page->receipt_by->cellAttributes() ?>>
+<span<?= $Page->receipt_by->viewAttributes() ?>>
+<?= $Page->receipt_by->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->checked_by->Visible) { // checked_by ?>
+        <!-- checked_by -->
+        <td<?= $Page->checked_by->cellAttributes() ?>>
+<span<?= $Page->checked_by->viewAttributes() ?>>
+<?= $Page->checked_by->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

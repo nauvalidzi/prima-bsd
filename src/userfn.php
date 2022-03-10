@@ -506,6 +506,13 @@ function url_integrasi() {
     return "http://13.213.61.244/sinergi/api/";
 }
 
+function url_integrasi_auth($username, $password) {
+    if (!empty($username) && !empty($password)) {
+        return url_integrasi() . "?action=login&username={$username}&password={$password}";
+    }
+    return false;
+}
+
 function status_delivery($iddeliveryorder, $detail = "undetail") {
     $conditions = ($detail != "detail") ? " AND dd.iddeliveryorder = '{$iddeliveryorder}'" : " AND dd.id = '{$iddeliveryorder}'";
     $row = ExecuteRow("SELECT SUM(od.sisa) AS totalsisa FROM deliveryorder_detail dd JOIN order_detail od ON od.id = dd.idorder_detail WHERE 1=1 {$conditions}");
@@ -560,6 +567,29 @@ function check_duplicate($data) {
         return true;
     }
     return false;
+}
+
+// transaksi stok
+function stok_trx($prop_id, $prop_code, $idproduct, $jumlah, $jenis) {
+    $laststok = ExecuteRow("SELECT stok_akhir FROM stocks WHERE idproduct = {$idproduct} AND id IN (SELECT MAX(id) FROM stocks GROUP BY idproduct)")['stok_akhir'];
+    $stok_masuk=0;
+    $stok_keluar=0;
+    $stok_akhir=0;
+    if ($jenis == 'masuk') {
+        $stok_masuk = $jumlah;
+        $stok_akhir = $laststok + $stok_masuk;
+    }
+    if ($jenis == 'keluar') {
+        $stok_keluar = $jumlah;
+        $stok_akhir = $laststok - $stok_keluar;
+    }
+
+    // Stok transaction
+    $execute = Execute("INSERT INTO `stocks` (prop_id, prop_code, idproduct, stok_masuk, stok_keluar, stok_akhir, aktif, keterangan, created_at) VALUES ({$prop_id}, '{$prop_code}', {$idproduct}, {$stok_masuk}, {$stok_keluar}, {$stok_akhir}, 1, NULL, ".date('Y-m-d H:i:s').")");
+    if (!$execute) {
+        return false;
+    }
+    return true;
 }
 
 //-- FUNGSI TERBILANG --//
@@ -1058,6 +1088,37 @@ function curl_get($url){
 
     // return the transfer as a string 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+
+    // $output contains the output string 
+    $output = curl_exec($ch); 
+
+    // tutup curl 
+    curl_close($ch);      
+
+    // menampilkan hasil curl
+    return $output;
+}
+
+function curl_get_auth($url, $url_auth){
+    // persiapan curl
+    $ch = curl_init(); 
+
+    // set url 
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    // return the transfer as a string 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+    $token = null;
+    if (!empty($url_auth)) {
+        $token = json_decode(curl_get($url_auth), true)['JWT'];
+        $token = "X-Authorization: {$token}";
+    }
+
+    // Set HTTP Header for POST request
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Content-Type: application/json",
+        $token
+    ));
 
     // $output contains the output string 
     $output = curl_exec($ch); 

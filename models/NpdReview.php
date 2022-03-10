@@ -33,7 +33,6 @@ class NpdReview extends DbTable
     public $idnpd_sample;
     public $tanggal_review;
     public $tanggal_submit;
-    public $ukuran;
     public $wadah;
     public $bentuk_opsi;
     public $bentuk_revisi;
@@ -62,6 +61,8 @@ class NpdReview extends DbTable
     public $created_at;
     public $readonly;
     public $review_by;
+    public $receipt_by;
+    public $checked_by;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -116,10 +117,10 @@ class NpdReview extends DbTable
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], ["x_idnpd_sample"], [], [], [], [], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'v_npd_customer', false, 'idnpd', ["kodeorder","nama_pemesan","",""], [], ["x_idnpd_sample"], [], [], ["idcustomer"], ["x_review_by"], '', '');
                 break;
             default:
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], ["x_idnpd_sample"], [], [], [], [], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'v_npd_customer', false, 'idnpd', ["kodeorder","nama_pemesan","",""], [], ["x_idnpd_sample"], [], [], ["idcustomer"], ["x_review_by"], '', '');
                 break;
         }
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -161,12 +162,6 @@ class NpdReview extends DbTable
         $this->tanggal_submit->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->tanggal_submit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_submit->Param, "CustomMsg");
         $this->Fields['tanggal_submit'] = &$this->tanggal_submit;
-
-        // ukuran
-        $this->ukuran = new DbField('npd_review', 'npd_review', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 50, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->ukuran->Sortable = true; // Allow sort
-        $this->ukuran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuran->Param, "CustomMsg");
-        $this->Fields['ukuran'] = &$this->ukuran;
 
         // wadah
         $this->wadah = new DbField('npd_review', 'npd_review', 'x_wadah', 'wadah', '`wadah`', '`wadah`', 200, 50, -1, false, '`wadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -504,6 +499,40 @@ class NpdReview extends DbTable
         $this->review_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->review_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->review_by->Param, "CustomMsg");
         $this->Fields['review_by'] = &$this->review_by;
+
+        // receipt_by
+        $this->receipt_by = new DbField('npd_review', 'npd_review', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 3, 11, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->receipt_by->Sortable = true; // Allow sort
+        $this->receipt_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->receipt_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->receipt_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
+        $this->Fields['receipt_by'] = &$this->receipt_by;
+
+        // checked_by
+        $this->checked_by = new DbField('npd_review', 'npd_review', 'x_checked_by', 'checked_by', '`checked_by`', '`checked_by`', 3, 11, -1, false, '`checked_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->checked_by->Sortable = true; // Allow sort
+        $this->checked_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->checked_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->checked_by->Lookup = new Lookup('checked_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->checked_by->Lookup = new Lookup('checked_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->checked_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked_by->Param, "CustomMsg");
+        $this->Fields['checked_by'] = &$this->checked_by;
     }
 
     // Field Visibility
@@ -974,7 +1003,6 @@ class NpdReview extends DbTable
         $this->idnpd_sample->DbValue = $row['idnpd_sample'];
         $this->tanggal_review->DbValue = $row['tanggal_review'];
         $this->tanggal_submit->DbValue = $row['tanggal_submit'];
-        $this->ukuran->DbValue = $row['ukuran'];
         $this->wadah->DbValue = $row['wadah'];
         $this->bentuk_opsi->DbValue = $row['bentuk_opsi'];
         $this->bentuk_revisi->DbValue = $row['bentuk_revisi'];
@@ -1003,6 +1031,8 @@ class NpdReview extends DbTable
         $this->created_at->DbValue = $row['created_at'];
         $this->readonly->DbValue = $row['readonly'];
         $this->review_by->DbValue = $row['review_by'];
+        $this->receipt_by->DbValue = $row['receipt_by'];
+        $this->checked_by->DbValue = $row['checked_by'];
     }
 
     // Delete uploaded files
@@ -1332,7 +1362,6 @@ SORTHTML;
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->tanggal_review->setDbValue($row['tanggal_review']);
         $this->tanggal_submit->setDbValue($row['tanggal_submit']);
-        $this->ukuran->setDbValue($row['ukuran']);
         $this->wadah->setDbValue($row['wadah']);
         $this->bentuk_opsi->setDbValue($row['bentuk_opsi']);
         $this->bentuk_revisi->setDbValue($row['bentuk_revisi']);
@@ -1361,6 +1390,8 @@ SORTHTML;
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
         $this->review_by->setDbValue($row['review_by']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->checked_by->setDbValue($row['checked_by']);
     }
 
     // Render list row values
@@ -1382,8 +1413,6 @@ SORTHTML;
         // tanggal_review
 
         // tanggal_submit
-
-        // ukuran
 
         // wadah
 
@@ -1441,6 +1470,10 @@ SORTHTML;
 
         // review_by
 
+        // receipt_by
+
+        // checked_by
+
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
@@ -1450,9 +1483,9 @@ SORTHTML;
         if ($curVal != "") {
             $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
             if ($this->idnpd->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $filterWrk = "`idnpd`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                    return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1504,10 +1537,6 @@ SORTHTML;
         $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
         $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
         $this->tanggal_submit->ViewCustomAttributes = "";
-
-        // ukuran
-        $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-        $this->ukuran->ViewCustomAttributes = "";
 
         // wadah
         $this->wadah->ViewValue = $this->wadah->CurrentValue;
@@ -1691,6 +1720,48 @@ SORTHTML;
         }
         $this->review_by->ViewCustomAttributes = "";
 
+        // receipt_by
+        $curVal = trim(strval($this->receipt_by->CurrentValue));
+        if ($curVal != "") {
+            $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+            if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                } else {
+                    $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->receipt_by->ViewValue = null;
+        }
+        $this->receipt_by->ViewCustomAttributes = "";
+
+        // checked_by
+        $curVal = trim(strval($this->checked_by->CurrentValue));
+        if ($curVal != "") {
+            $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
+            if ($this->checked_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
+                } else {
+                    $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->checked_by->ViewValue = null;
+        }
+        $this->checked_by->ViewCustomAttributes = "";
+
         // id
         $this->id->LinkCustomAttributes = "";
         $this->id->HrefValue = "";
@@ -1715,11 +1786,6 @@ SORTHTML;
         $this->tanggal_submit->LinkCustomAttributes = "";
         $this->tanggal_submit->HrefValue = "";
         $this->tanggal_submit->TooltipValue = "";
-
-        // ukuran
-        $this->ukuran->LinkCustomAttributes = "";
-        $this->ukuran->HrefValue = "";
-        $this->ukuran->TooltipValue = "";
 
         // wadah
         $this->wadah->LinkCustomAttributes = "";
@@ -1861,6 +1927,16 @@ SORTHTML;
         $this->review_by->HrefValue = "";
         $this->review_by->TooltipValue = "";
 
+        // receipt_by
+        $this->receipt_by->LinkCustomAttributes = "";
+        $this->receipt_by->HrefValue = "";
+        $this->receipt_by->TooltipValue = "";
+
+        // checked_by
+        $this->checked_by->LinkCustomAttributes = "";
+        $this->checked_by->HrefValue = "";
+        $this->checked_by->TooltipValue = "";
+
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1891,9 +1967,9 @@ SORTHTML;
             if ($curVal != "") {
                 $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
                 if ($this->idnpd->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idnpd`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1930,15 +2006,6 @@ SORTHTML;
         $this->tanggal_submit->EditCustomAttributes = "";
         $this->tanggal_submit->EditValue = FormatDateTime($this->tanggal_submit->CurrentValue, 8);
         $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
-
-        // ukuran
-        $this->ukuran->EditAttrs["class"] = "form-control";
-        $this->ukuran->EditCustomAttributes = "";
-        if (!$this->ukuran->Raw) {
-            $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-        }
-        $this->ukuran->EditValue = $this->ukuran->CurrentValue;
-        $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
 
         // wadah
         $this->wadah->EditAttrs["class"] = "form-control";
@@ -2130,6 +2197,16 @@ SORTHTML;
         $this->review_by->EditCustomAttributes = "";
         $this->review_by->PlaceHolder = RemoveHtml($this->review_by->caption());
 
+        // receipt_by
+        $this->receipt_by->EditAttrs["class"] = "form-control";
+        $this->receipt_by->EditCustomAttributes = "";
+        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
+
+        // checked_by
+        $this->checked_by->EditAttrs["class"] = "form-control";
+        $this->checked_by->EditCustomAttributes = "";
+        $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -2162,7 +2239,6 @@ SORTHTML;
                     $doc->exportCaption($this->idnpd_sample);
                     $doc->exportCaption($this->tanggal_review);
                     $doc->exportCaption($this->tanggal_submit);
-                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->wadah);
                     $doc->exportCaption($this->bentuk_opsi);
                     $doc->exportCaption($this->bentuk_revisi);
@@ -2189,13 +2265,14 @@ SORTHTML;
                     $doc->exportCaption($this->kesimpulan);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->review_by);
+                    $doc->exportCaption($this->receipt_by);
+                    $doc->exportCaption($this->checked_by);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->idnpd_sample);
                     $doc->exportCaption($this->tanggal_review);
                     $doc->exportCaption($this->tanggal_submit);
-                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->wadah);
                     $doc->exportCaption($this->bentuk_opsi);
                     $doc->exportCaption($this->bentuk_revisi);
@@ -2224,6 +2301,8 @@ SORTHTML;
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->readonly);
                     $doc->exportCaption($this->review_by);
+                    $doc->exportCaption($this->receipt_by);
+                    $doc->exportCaption($this->checked_by);
                 }
                 $doc->endExportRow();
             }
@@ -2257,7 +2336,6 @@ SORTHTML;
                         $doc->exportField($this->idnpd_sample);
                         $doc->exportField($this->tanggal_review);
                         $doc->exportField($this->tanggal_submit);
-                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->wadah);
                         $doc->exportField($this->bentuk_opsi);
                         $doc->exportField($this->bentuk_revisi);
@@ -2284,13 +2362,14 @@ SORTHTML;
                         $doc->exportField($this->kesimpulan);
                         $doc->exportField($this->status);
                         $doc->exportField($this->review_by);
+                        $doc->exportField($this->receipt_by);
+                        $doc->exportField($this->checked_by);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
                         $doc->exportField($this->idnpd_sample);
                         $doc->exportField($this->tanggal_review);
                         $doc->exportField($this->tanggal_submit);
-                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->wadah);
                         $doc->exportField($this->bentuk_opsi);
                         $doc->exportField($this->bentuk_revisi);
@@ -2319,6 +2398,8 @@ SORTHTML;
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->readonly);
                         $doc->exportField($this->review_by);
+                        $doc->exportField($this->receipt_by);
+                        $doc->exportField($this->checked_by);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -2386,8 +2467,6 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        $status = ($rsnew['status'] == 1) ? 1 : -1;
-        $myResult = ExecuteUpdate("UPDATE npd_sample SET `status`=".$status.", readonly=1 WHERE id=".$rsnew['idnpd_sample']);
         return true;
     }
 
@@ -2395,9 +2474,14 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        $idst = ExecuteScalar("SELECT idserahterima FROM npd_sample WHERE id=".$rsnew['idnpd_sample']);
-        $updatest = ExecuteUpdate("UPDATE serahterima SET readonly=1 WHERE id=".$idst);
-        updateStatus("npd", $rsnew['idnpd']);
+        $status = ($rsnew['status'] == 1) ? 1 : -1;
+        ExecuteUpdate("UPDATE npd_sample SET `status` = {$status}, readonly = 1 WHERE id = {$rsnew['idnpd_sample']}");
+
+        //$idst = ExecuteScalar("SELECT idserahterima FROM npd_sample WHERE id=".$rsnew['idnpd_sample']);
+        $idserahterima = ExecuteScalar("SELECT idserahterima FROM npd_sample WHERE id = {$rsnew['idnpd_sample']}");
+        ExecuteUpdate("UPDATE npd_serahterima SET readonly=1 WHERE id = {$idserahterima}");
+
+        //updateStatus("npd", $rsnew['idnpd']);
     }
 
     // Row Updating event
@@ -2405,8 +2489,6 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        $status = ($rsnew['status'] == 1) ? 1 : -1;
-        $myResult = ExecuteUpdate("UPDATE npd_sample SET `status`=".$status." WHERE id=".$rsold['idnpd_sample']);
         return true;
     }
 
@@ -2414,7 +2496,9 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
-        updateStatus("npd", $rsold['idnpd']);
+        $status = ($rsnew['status'] == 1) ? 1 : -1;
+        ExecuteUpdate("UPDATE npd_sample SET `status` = {$status} WHERE id = {$rsold['idnpd_sample']}");
+        //updateStatus("npd", $rsold['idnpd']);
     }
 
     // Row Update Conflict event
@@ -2458,7 +2542,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
-        $myResult = ExecuteUpdate("UPDATE npd_sample SET `status`=0, readonly=0 WHERE id=".$rs['idnpd_sample']);
+        ExecuteUpdate("UPDATE npd_sample SET `status` = 0, readonly = 0 WHERE id = {$rs['idnpd_sample']}");
         return true;
     }
 
@@ -2469,7 +2553,8 @@ SORTHTML;
     	$idst = ExecuteScalar("SELECT idserahterima FROM npd_sample WHERE id=".$rs['idnpd_sample']);
     	$count = ExecuteScalar("SELECT COUNT(*) FROM npd_sample WHERE readonly=1 AND idserahterima=".$idst);
         $updatest = ExecuteUpdate("UPDATE serahterima SET readonly=".($count > 1 ? 1 : 0)." WHERE id=".$idst);
-        updateStatus("npd", $rs['idnpd']);
+
+        //updateStatus("npd", $rs['idnpd']);
     }
 
     // Email Sending event

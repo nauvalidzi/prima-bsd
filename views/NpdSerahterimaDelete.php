@@ -53,11 +53,8 @@ $Page->showMessage();
 <?php if ($Page->tgl_serahterima->Visible) { // tgl_serahterima ?>
         <th class="<?= $Page->tgl_serahterima->headerCellClass() ?>"><span id="elh_npd_serahterima_tgl_serahterima" class="npd_serahterima_tgl_serahterima"><?= $Page->tgl_serahterima->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->readonly->Visible) { // readonly ?>
-        <th class="<?= $Page->readonly->headerCellClass() ?>"><span id="elh_npd_serahterima_readonly" class="npd_serahterima_readonly"><?= $Page->readonly->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->created_at->Visible) { // created_at ?>
-        <th class="<?= $Page->created_at->headerCellClass() ?>"><span id="elh_npd_serahterima_created_at" class="npd_serahterima_created_at"><?= $Page->created_at->caption() ?></span></th>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <th class="<?= $Page->submitted_by->headerCellClass() ?>"><span id="elh_npd_serahterima_submitted_by" class="npd_serahterima_submitted_by"><?= $Page->submitted_by->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->receipt_by->Visible) { // receipt_by ?>
         <th class="<?= $Page->receipt_by->headerCellClass() ?>"><span id="elh_npd_serahterima_receipt_by" class="npd_serahterima_receipt_by"><?= $Page->receipt_by->caption() ?></span></th>
@@ -107,22 +104,11 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->readonly->Visible) { // readonly ?>
-        <td <?= $Page->readonly->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_readonly" class="npd_serahterima_readonly">
-<span<?= $Page->readonly->viewAttributes() ?>>
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" id="x_readonly_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->readonly->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->readonly->CurrentValue)) { ?> checked<?php } ?>>
-    <label class="custom-control-label" for="x_readonly_<?= $Page->RowCount ?>"></label>
-</div></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->created_at->Visible) { // created_at ?>
-        <td <?= $Page->created_at->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_created_at" class="npd_serahterima_created_at">
-<span<?= $Page->created_at->viewAttributes() ?>>
-<?= $Page->created_at->getViewValue() ?></span>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <td <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_serahterima_submitted_by" class="npd_serahterima_submitted_by">
+<span<?= $Page->submitted_by->viewAttributes() ?>>
+<?= $Page->submitted_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

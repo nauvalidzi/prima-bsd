@@ -22,15 +22,15 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.npd_sample)
         ew.vars.tables.npd_sample = currentTable;
     fnpd_samplegrid.addFields([
-        ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null], fields.idnpd.isInvalid],
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["sediaan", [fields.sediaan.visible && fields.sediaan.required ? ew.Validators.required(fields.sediaan.caption) : null], fields.sediaan.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
-        ["bau", [fields.bau.visible && fields.bau.required ? ew.Validators.required(fields.bau.caption) : null], fields.bau.isInvalid],
         ["fungsi", [fields.fungsi.visible && fields.fungsi.required ? ew.Validators.required(fields.fungsi.caption) : null], fields.fungsi.isInvalid],
-        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid]
+        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
+        ["volume", [fields.volume.visible && fields.volume.required ? ew.Validators.required(fields.volume.caption) : null], fields.volume.isInvalid],
+        ["bau", [fields.bau.visible && fields.bau.required ? ew.Validators.required(fields.bau.caption) : null], fields.bau.isInvalid],
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid]
     ]);
 
     // Set invalid fields
@@ -84,23 +84,23 @@ loadjs.ready("head", function () {
     // Check empty row
     fnpd_samplegrid.emptyRow = function (rowIndex) {
         var fobj = this.getForm();
-        if (ew.valueChanged(fobj, rowIndex, "idnpd", false))
-            return false;
         if (ew.valueChanged(fobj, rowIndex, "kode", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "nama", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "sediaan", false))
             return false;
-        if (ew.valueChanged(fobj, rowIndex, "ukuran", false))
-            return false;
         if (ew.valueChanged(fobj, rowIndex, "warna", false))
-            return false;
-        if (ew.valueChanged(fobj, rowIndex, "bau", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "fungsi", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "jumlah", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "volume", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "bau", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "status", false))
             return false;
         return true;
     }
@@ -115,7 +115,7 @@ loadjs.ready("head", function () {
     fnpd_samplegrid.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fnpd_samplegrid.lists.idnpd = <?= $Grid->idnpd->toClientList($Grid) ?>;
+    fnpd_samplegrid.lists.status = <?= $Grid->status->toClientList($Grid) ?>;
     loadjs.done("fnpd_samplegrid");
 });
 </script>
@@ -140,9 +140,6 @@ $Grid->renderListOptions();
 // Render list options (header, left)
 $Grid->ListOptions->render("header", "left");
 ?>
-<?php if ($Grid->idnpd->Visible) { // idnpd ?>
-        <th data-name="idnpd" class="<?= $Grid->idnpd->headerCellClass() ?>"><div id="elh_npd_sample_idnpd" class="npd_sample_idnpd"><?= $Grid->renderSort($Grid->idnpd) ?></div></th>
-<?php } ?>
 <?php if ($Grid->kode->Visible) { // kode ?>
         <th data-name="kode" class="<?= $Grid->kode->headerCellClass() ?>"><div id="elh_npd_sample_kode" class="npd_sample_kode"><?= $Grid->renderSort($Grid->kode) ?></div></th>
 <?php } ?>
@@ -152,20 +149,23 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->sediaan->Visible) { // sediaan ?>
         <th data-name="sediaan" class="<?= $Grid->sediaan->headerCellClass() ?>"><div id="elh_npd_sample_sediaan" class="npd_sample_sediaan"><?= $Grid->renderSort($Grid->sediaan) ?></div></th>
 <?php } ?>
-<?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Grid->ukuran->headerCellClass() ?>"><div id="elh_npd_sample_ukuran" class="npd_sample_ukuran"><?= $Grid->renderSort($Grid->ukuran) ?></div></th>
-<?php } ?>
 <?php if ($Grid->warna->Visible) { // warna ?>
         <th data-name="warna" class="<?= $Grid->warna->headerCellClass() ?>"><div id="elh_npd_sample_warna" class="npd_sample_warna"><?= $Grid->renderSort($Grid->warna) ?></div></th>
-<?php } ?>
-<?php if ($Grid->bau->Visible) { // bau ?>
-        <th data-name="bau" class="<?= $Grid->bau->headerCellClass() ?>"><div id="elh_npd_sample_bau" class="npd_sample_bau"><?= $Grid->renderSort($Grid->bau) ?></div></th>
 <?php } ?>
 <?php if ($Grid->fungsi->Visible) { // fungsi ?>
         <th data-name="fungsi" class="<?= $Grid->fungsi->headerCellClass() ?>"><div id="elh_npd_sample_fungsi" class="npd_sample_fungsi"><?= $Grid->renderSort($Grid->fungsi) ?></div></th>
 <?php } ?>
 <?php if ($Grid->jumlah->Visible) { // jumlah ?>
         <th data-name="jumlah" class="<?= $Grid->jumlah->headerCellClass() ?>"><div id="elh_npd_sample_jumlah" class="npd_sample_jumlah"><?= $Grid->renderSort($Grid->jumlah) ?></div></th>
+<?php } ?>
+<?php if ($Grid->volume->Visible) { // volume ?>
+        <th data-name="volume" class="<?= $Grid->volume->headerCellClass() ?>"><div id="elh_npd_sample_volume" class="npd_sample_volume"><?= $Grid->renderSort($Grid->volume) ?></div></th>
+<?php } ?>
+<?php if ($Grid->bau->Visible) { // bau ?>
+        <th data-name="bau" class="<?= $Grid->bau->headerCellClass() ?>"><div id="elh_npd_sample_bau" class="npd_sample_bau"><?= $Grid->renderSort($Grid->bau) ?></div></th>
+<?php } ?>
+<?php if ($Grid->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Grid->status->headerCellClass() ?>"><div id="elh_npd_sample_status" class="npd_sample_status"><?= $Grid->renderSort($Grid->status) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -280,93 +280,6 @@ while ($Grid->RecordCount < $Grid->StopRecord) {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowCount);
 ?>
-    <?php if ($Grid->idnpd->Visible) { // idnpd ?>
-        <td data-name="idnpd" <?= $Grid->idnpd->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<?php if ($Grid->idnpd->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_idnpd" class="form-group">
-<span<?= $Grid->idnpd->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idnpd->getDisplayValue($Grid->idnpd->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idnpd" name="x<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_idnpd" class="form-group">
-<?php $Grid->idnpd->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idnpd"
-        name="x<?= $Grid->RowIndex ?>_idnpd"
-        class="form-control ew-select<?= $Grid->idnpd->isInvalidClass() ?>"
-        data-select2-id="npd_sample_x<?= $Grid->RowIndex ?>_idnpd"
-        data-table="npd_sample"
-        data-field="x_idnpd"
-        data-value-separator="<?= $Grid->idnpd->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idnpd->getPlaceHolder()) ?>"
-        <?= $Grid->idnpd->editAttributes() ?>>
-        <?= $Grid->idnpd->selectOptionListHtml("x{$Grid->RowIndex}_idnpd") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idnpd->getErrorMessage() ?></div>
-<?= $Grid->idnpd->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idnpd") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_sample_x<?= $Grid->RowIndex ?>_idnpd']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idnpd", selectId: "npd_sample_x<?= $Grid->RowIndex ?>_idnpd", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_sample.fields.idnpd.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } ?>
-<input type="hidden" data-table="npd_sample" data-field="x_idnpd" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idnpd" id="o<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($Grid->idnpd->getSessionValue() != "") { ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_idnpd" class="form-group">
-<span<?= $Grid->idnpd->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idnpd->getDisplayValue($Grid->idnpd->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idnpd" name="x<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_idnpd" class="form-group">
-<?php $Grid->idnpd->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idnpd"
-        name="x<?= $Grid->RowIndex ?>_idnpd"
-        class="form-control ew-select<?= $Grid->idnpd->isInvalidClass() ?>"
-        data-select2-id="npd_sample_x<?= $Grid->RowIndex ?>_idnpd"
-        data-table="npd_sample"
-        data-field="x_idnpd"
-        data-value-separator="<?= $Grid->idnpd->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idnpd->getPlaceHolder()) ?>"
-        <?= $Grid->idnpd->editAttributes() ?>>
-        <?= $Grid->idnpd->selectOptionListHtml("x{$Grid->RowIndex}_idnpd") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idnpd->getErrorMessage() ?></div>
-<?= $Grid->idnpd->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idnpd") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_sample_x<?= $Grid->RowIndex ?>_idnpd']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idnpd", selectId: "npd_sample_x<?= $Grid->RowIndex ?>_idnpd", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_sample.fields.idnpd.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } ?>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_idnpd">
-<span<?= $Grid->idnpd->viewAttributes() ?>>
-<?= $Grid->idnpd->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="npd_sample" data-field="x_idnpd" data-hidden="1" name="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_idnpd" id="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->FormValue) ?>">
-<input type="hidden" data-table="npd_sample" data-field="x_idnpd" data-hidden="1" name="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_idnpd" id="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
     <?php if ($Grid->kode->Visible) { // kode ?>
         <td data-name="kode" <?= $Grid->kode->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -448,33 +361,6 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Grid->ukuran->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_sample" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="npd_sample" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_sample" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<?= $Grid->ukuran->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="npd_sample" data-field="x_ukuran" data-hidden="1" name="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_ukuran" id="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
-<input type="hidden" data-table="npd_sample" data-field="x_ukuran" data-hidden="1" name="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_ukuran" id="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
     <?php if ($Grid->warna->Visible) { // warna ?>
         <td data-name="warna" <?= $Grid->warna->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -498,33 +384,6 @@ loadjs.ready("head", function() {
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="npd_sample" data-field="x_warna" data-hidden="1" name="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_warna" id="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->FormValue) ?>">
 <input type="hidden" data-table="npd_sample" data-field="x_warna" data-hidden="1" name="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_warna" id="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
-    <?php if ($Grid->bau->Visible) { // bau ?>
-        <td data-name="bau" <?= $Grid->bau->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_bau" class="form-group">
-<input type="<?= $Grid->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->bau->getPlaceHolder()) ?>" value="<?= $Grid->bau->EditValue ?>"<?= $Grid->bau->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->bau->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="o<?= $Grid->RowIndex ?>_bau" id="o<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_bau" class="form-group">
-<input type="<?= $Grid->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->bau->getPlaceHolder()) ?>" value="<?= $Grid->bau->EditValue ?>"<?= $Grid->bau->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->bau->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_sample_bau">
-<span<?= $Grid->bau->viewAttributes() ?>>
-<?= $Grid->bau->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_bau" id="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->FormValue) ?>">
-<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_bau" id="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -583,6 +442,127 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->volume->Visible) { // volume ?>
+        <td data-name="volume" <?= $Grid->volume->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_volume" class="form-group">
+<input type="<?= $Grid->volume->getInputTextType() ?>" data-table="npd_sample" data-field="x_volume" name="x<?= $Grid->RowIndex ?>_volume" id="x<?= $Grid->RowIndex ?>_volume" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->volume->getPlaceHolder()) ?>" value="<?= $Grid->volume->EditValue ?>"<?= $Grid->volume->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->volume->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="npd_sample" data-field="x_volume" data-hidden="1" name="o<?= $Grid->RowIndex ?>_volume" id="o<?= $Grid->RowIndex ?>_volume" value="<?= HtmlEncode($Grid->volume->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_volume" class="form-group">
+<input type="<?= $Grid->volume->getInputTextType() ?>" data-table="npd_sample" data-field="x_volume" name="x<?= $Grid->RowIndex ?>_volume" id="x<?= $Grid->RowIndex ?>_volume" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->volume->getPlaceHolder()) ?>" value="<?= $Grid->volume->EditValue ?>"<?= $Grid->volume->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->volume->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_volume">
+<span<?= $Grid->volume->viewAttributes() ?>>
+<?= $Grid->volume->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_sample" data-field="x_volume" data-hidden="1" name="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_volume" id="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_volume" value="<?= HtmlEncode($Grid->volume->FormValue) ?>">
+<input type="hidden" data-table="npd_sample" data-field="x_volume" data-hidden="1" name="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_volume" id="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_volume" value="<?= HtmlEncode($Grid->volume->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->bau->Visible) { // bau ?>
+        <td data-name="bau" <?= $Grid->bau->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_bau" class="form-group">
+<input type="<?= $Grid->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->bau->getPlaceHolder()) ?>" value="<?= $Grid->bau->EditValue ?>"<?= $Grid->bau->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->bau->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="o<?= $Grid->RowIndex ?>_bau" id="o<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_bau" class="form-group">
+<input type="<?= $Grid->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->bau->getPlaceHolder()) ?>" value="<?= $Grid->bau->EditValue ?>"<?= $Grid->bau->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->bau->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_bau">
+<span<?= $Grid->bau->viewAttributes() ?>>
+<?= $Grid->bau->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_bau" id="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->FormValue) ?>">
+<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_bau" id="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->status->Visible) { // status ?>
+        <td data-name="status" <?= $Grid->status->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_status" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_status">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_sample" data-field="x_status" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status"<?= $Grid->status->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_status" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_status"
+    name="x<?= $Grid->RowIndex ?>_status"
+    value="<?= HtmlEncode($Grid->status->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_status"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_status"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->status->isInvalidClass() ?>"
+    data-table="npd_sample"
+    data-field="x_status"
+    data-value-separator="<?= $Grid->status->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->status->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="npd_sample" data-field="x_status" data-hidden="1" name="o<?= $Grid->RowIndex ?>_status" id="o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_status" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_status">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_sample" data-field="x_status" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status"<?= $Grid->status->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_status" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_status"
+    name="x<?= $Grid->RowIndex ?>_status"
+    value="<?= HtmlEncode($Grid->status->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_status"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_status"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->status->isInvalidClass() ?>"
+    data-table="npd_sample"
+    data-field="x_status"
+    data-value-separator="<?= $Grid->status->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->status->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_sample_status">
+<span<?= $Grid->status->viewAttributes() ?>>
+<?= $Grid->status->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_sample" data-field="x_status" data-hidden="1" name="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_status" id="fnpd_samplegrid$x<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->FormValue) ?>">
+<input type="hidden" data-table="npd_sample" data-field="x_status" data-hidden="1" name="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_status" id="fnpd_samplegrid$o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -627,53 +607,6 @@ loadjs.ready(["fnpd_samplegrid","load"], function () {
 // Render list options (body, left)
 $Grid->ListOptions->render("body", "left", $Grid->RowIndex);
 ?>
-    <?php if ($Grid->idnpd->Visible) { // idnpd ?>
-        <td data-name="idnpd">
-<?php if (!$Grid->isConfirm()) { ?>
-<?php if ($Grid->idnpd->getSessionValue() != "") { ?>
-<span id="el$rowindex$_npd_sample_idnpd" class="form-group npd_sample_idnpd">
-<span<?= $Grid->idnpd->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idnpd->getDisplayValue($Grid->idnpd->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x<?= $Grid->RowIndex ?>_idnpd" name="x<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el$rowindex$_npd_sample_idnpd" class="form-group npd_sample_idnpd">
-<?php $Grid->idnpd->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
-    <select
-        id="x<?= $Grid->RowIndex ?>_idnpd"
-        name="x<?= $Grid->RowIndex ?>_idnpd"
-        class="form-control ew-select<?= $Grid->idnpd->isInvalidClass() ?>"
-        data-select2-id="npd_sample_x<?= $Grid->RowIndex ?>_idnpd"
-        data-table="npd_sample"
-        data-field="x_idnpd"
-        data-value-separator="<?= $Grid->idnpd->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Grid->idnpd->getPlaceHolder()) ?>"
-        <?= $Grid->idnpd->editAttributes() ?>>
-        <?= $Grid->idnpd->selectOptionListHtml("x{$Grid->RowIndex}_idnpd") ?>
-    </select>
-    <div class="invalid-feedback"><?= $Grid->idnpd->getErrorMessage() ?></div>
-<?= $Grid->idnpd->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_idnpd") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_sample_x<?= $Grid->RowIndex ?>_idnpd']"),
-        options = { name: "x<?= $Grid->RowIndex ?>_idnpd", selectId: "npd_sample_x<?= $Grid->RowIndex ?>_idnpd", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd_sample.fields.idnpd.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-<?php } ?>
-<?php } else { ?>
-<span id="el$rowindex$_npd_sample_idnpd" class="form-group npd_sample_idnpd">
-<span<?= $Grid->idnpd->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->idnpd->getDisplayValue($Grid->idnpd->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd_sample" data-field="x_idnpd" data-hidden="1" name="x<?= $Grid->RowIndex ?>_idnpd" id="x<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="npd_sample" data-field="x_idnpd" data-hidden="1" name="o<?= $Grid->RowIndex ?>_idnpd" id="o<?= $Grid->RowIndex ?>_idnpd" value="<?= HtmlEncode($Grid->idnpd->OldValue) ?>">
-</td>
-    <?php } ?>
     <?php if ($Grid->kode->Visible) { // kode ?>
         <td data-name="kode">
 <?php if (!$Grid->isConfirm()) { ?>
@@ -725,23 +658,6 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="npd_sample" data-field="x_sediaan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_sediaan" id="o<?= $Grid->RowIndex ?>_sediaan" value="<?= HtmlEncode($Grid->sediaan->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_npd_sample_ukuran" class="form-group npd_sample_ukuran">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_sample" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_npd_sample_ukuran" class="form-group npd_sample_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->ukuran->getDisplayValue($Grid->ukuran->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd_sample" data-field="x_ukuran" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="npd_sample" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-</td>
-    <?php } ?>
     <?php if ($Grid->warna->Visible) { // warna ?>
         <td data-name="warna">
 <?php if (!$Grid->isConfirm()) { ?>
@@ -757,23 +673,6 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="npd_sample" data-field="x_warna" data-hidden="1" name="x<?= $Grid->RowIndex ?>_warna" id="x<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="npd_sample" data-field="x_warna" data-hidden="1" name="o<?= $Grid->RowIndex ?>_warna" id="o<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->OldValue) ?>">
-</td>
-    <?php } ?>
-    <?php if ($Grid->bau->Visible) { // bau ?>
-        <td data-name="bau">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_npd_sample_bau" class="form-group npd_sample_bau">
-<input type="<?= $Grid->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->bau->getPlaceHolder()) ?>" value="<?= $Grid->bau->EditValue ?>"<?= $Grid->bau->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->bau->getErrorMessage() ?></div>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_npd_sample_bau" class="form-group npd_sample_bau">
-<span<?= $Grid->bau->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->bau->getDisplayValue($Grid->bau->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="o<?= $Grid->RowIndex ?>_bau" id="o<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->OldValue) ?>">
 </td>
     <?php } ?>
     <?php if ($Grid->fungsi->Visible) { // fungsi ?>
@@ -808,6 +707,77 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="npd_sample" data-field="x_jumlah" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlah" id="x<?= $Grid->RowIndex ?>_jumlah" value="<?= HtmlEncode($Grid->jumlah->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="npd_sample" data-field="x_jumlah" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlah" id="o<?= $Grid->RowIndex ?>_jumlah" value="<?= HtmlEncode($Grid->jumlah->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->volume->Visible) { // volume ?>
+        <td data-name="volume">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_sample_volume" class="form-group npd_sample_volume">
+<input type="<?= $Grid->volume->getInputTextType() ?>" data-table="npd_sample" data-field="x_volume" name="x<?= $Grid->RowIndex ?>_volume" id="x<?= $Grid->RowIndex ?>_volume" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->volume->getPlaceHolder()) ?>" value="<?= $Grid->volume->EditValue ?>"<?= $Grid->volume->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->volume->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_sample_volume" class="form-group npd_sample_volume">
+<span<?= $Grid->volume->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->volume->getDisplayValue($Grid->volume->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_sample" data-field="x_volume" data-hidden="1" name="x<?= $Grid->RowIndex ?>_volume" id="x<?= $Grid->RowIndex ?>_volume" value="<?= HtmlEncode($Grid->volume->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_sample" data-field="x_volume" data-hidden="1" name="o<?= $Grid->RowIndex ?>_volume" id="o<?= $Grid->RowIndex ?>_volume" value="<?= HtmlEncode($Grid->volume->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->bau->Visible) { // bau ?>
+        <td data-name="bau">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_sample_bau" class="form-group npd_sample_bau">
+<input type="<?= $Grid->bau->getInputTextType() ?>" data-table="npd_sample" data-field="x_bau" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" size="30" maxlength="100" placeholder="<?= HtmlEncode($Grid->bau->getPlaceHolder()) ?>" value="<?= $Grid->bau->EditValue ?>"<?= $Grid->bau->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->bau->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_sample_bau" class="form-group npd_sample_bau">
+<span<?= $Grid->bau->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->bau->getDisplayValue($Grid->bau->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="x<?= $Grid->RowIndex ?>_bau" id="x<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_sample" data-field="x_bau" data-hidden="1" name="o<?= $Grid->RowIndex ?>_bau" id="o<?= $Grid->RowIndex ?>_bau" value="<?= HtmlEncode($Grid->bau->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->status->Visible) { // status ?>
+        <td data-name="status">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_sample_status" class="form-group npd_sample_status">
+<template id="tp_x<?= $Grid->RowIndex ?>_status">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_sample" data-field="x_status" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status"<?= $Grid->status->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_status" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_status"
+    name="x<?= $Grid->RowIndex ?>_status"
+    value="<?= HtmlEncode($Grid->status->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_status"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_status"
+    data-repeatcolumn="5"
+    class="form-control<?= $Grid->status->isInvalidClass() ?>"
+    data-table="npd_sample"
+    data-field="x_status"
+    data-value-separator="<?= $Grid->status->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->status->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_sample_status" class="form-group npd_sample_status">
+<span<?= $Grid->status->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->status->getDisplayValue($Grid->status->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_sample" data-field="x_status" data-hidden="1" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_sample" data-field="x_status" data-hidden="1" name="o<?= $Grid->RowIndex ?>_status" id="o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

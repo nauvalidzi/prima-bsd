@@ -472,8 +472,9 @@ class NpdSerahterimaEdit extends NpdSerahterima
         $this->tgl_request->setVisibility();
         $this->tgl_serahterima->setVisibility();
         $this->readonly->Visible = false;
-        $this->created_at->Visible = false;
+        $this->submitted_by->setVisibility();
         $this->receipt_by->setVisibility();
+        $this->created_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -489,7 +490,7 @@ class NpdSerahterimaEdit extends NpdSerahterima
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->receipt_by);
+        $this->setupLookupOptions($this->submitted_by);
 
         // Check modal
         if ($this->IsModal) {
@@ -701,6 +702,16 @@ class NpdSerahterimaEdit extends NpdSerahterima
             $this->tgl_serahterima->CurrentValue = UnFormatDateTime($this->tgl_serahterima->CurrentValue, 0);
         }
 
+        // Check field name 'submitted_by' first before field var 'x_submitted_by'
+        $val = $CurrentForm->hasValue("submitted_by") ? $CurrentForm->getValue("submitted_by") : $CurrentForm->getValue("x_submitted_by");
+        if (!$this->submitted_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->submitted_by->Visible = false; // Disable update for API request
+            } else {
+                $this->submitted_by->setFormValue($val);
+            }
+        }
+
         // Check field name 'receipt_by' first before field var 'x_receipt_by'
         $val = $CurrentForm->hasValue("receipt_by") ? $CurrentForm->getValue("receipt_by") : $CurrentForm->getValue("x_receipt_by");
         if (!$this->receipt_by->IsDetailKey) {
@@ -728,6 +739,7 @@ class NpdSerahterimaEdit extends NpdSerahterima
         $this->tgl_request->CurrentValue = UnFormatDateTime($this->tgl_request->CurrentValue, 0);
         $this->tgl_serahterima->CurrentValue = $this->tgl_serahterima->FormValue;
         $this->tgl_serahterima->CurrentValue = UnFormatDateTime($this->tgl_serahterima->CurrentValue, 0);
+        $this->submitted_by->CurrentValue = $this->submitted_by->FormValue;
         $this->receipt_by->CurrentValue = $this->receipt_by->FormValue;
     }
 
@@ -783,8 +795,9 @@ class NpdSerahterimaEdit extends NpdSerahterima
         $this->tgl_request->setDbValue($row['tgl_request']);
         $this->tgl_serahterima->setDbValue($row['tgl_serahterima']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->created_at->setDbValue($row['created_at']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
         $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->created_at->setDbValue($row['created_at']);
     }
 
     // Return a row with default values
@@ -796,8 +809,9 @@ class NpdSerahterimaEdit extends NpdSerahterima
         $row['tgl_request'] = null;
         $row['tgl_serahterima'] = null;
         $row['readonly'] = null;
-        $row['created_at'] = null;
+        $row['submitted_by'] = null;
         $row['receipt_by'] = null;
+        $row['created_at'] = null;
         return $row;
     }
 
@@ -839,17 +853,23 @@ class NpdSerahterimaEdit extends NpdSerahterima
 
         // readonly
 
-        // created_at
+        // submitted_by
 
         // receipt_by
+
+        // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // idcustomer
             $curVal = trim(strval($this->idcustomer->CurrentValue));
             if ($curVal != "") {
                 $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
                 if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $lookupFilter = function() {
+                        return "status < 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -882,31 +902,35 @@ class NpdSerahterimaEdit extends NpdSerahterima
             }
             $this->readonly->ViewCustomAttributes = "";
 
+            // submitted_by
+            $curVal = trim(strval($this->submitted_by->CurrentValue));
+            if ($curVal != "") {
+                $this->submitted_by->ViewValue = $this->submitted_by->lookupCacheOption($curVal);
+                if ($this->submitted_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->submitted_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->submitted_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->submitted_by->ViewValue = $this->submitted_by->displayValue($arwrk);
+                    } else {
+                        $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->submitted_by->ViewValue = null;
+            }
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // receipt_by
+            $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+            $this->receipt_by->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // receipt_by
-            $curVal = trim(strval($this->receipt_by->CurrentValue));
-            if ($curVal != "") {
-                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
-                if ($this->receipt_by->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
-                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
-                    } else {
-                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
-                    }
-                }
-            } else {
-                $this->receipt_by->ViewValue = null;
-            }
-            $this->receipt_by->ViewCustomAttributes = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";
@@ -922,6 +946,11 @@ class NpdSerahterimaEdit extends NpdSerahterima
             $this->tgl_serahterima->LinkCustomAttributes = "";
             $this->tgl_serahterima->HrefValue = "";
             $this->tgl_serahterima->TooltipValue = "";
+
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
 
             // receipt_by
             $this->receipt_by->LinkCustomAttributes = "";
@@ -943,9 +972,13 @@ class NpdSerahterimaEdit extends NpdSerahterima
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idcustomer`" . SearchString("=", $this->idcustomer->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $lookupFilter = function() {
+                    return "status < 1";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
@@ -965,29 +998,38 @@ class NpdSerahterimaEdit extends NpdSerahterima
             $this->tgl_serahterima->EditValue = HtmlEncode(FormatDateTime($this->tgl_serahterima->CurrentValue, 8));
             $this->tgl_serahterima->PlaceHolder = RemoveHtml($this->tgl_serahterima->caption());
 
-            // receipt_by
-            $this->receipt_by->EditAttrs["class"] = "form-control";
-            $this->receipt_by->EditCustomAttributes = "";
-            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            // submitted_by
+            $this->submitted_by->EditAttrs["class"] = "form-control";
+            $this->submitted_by->EditCustomAttributes = "";
+            $curVal = trim(strval($this->submitted_by->CurrentValue));
             if ($curVal != "") {
-                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                $this->submitted_by->ViewValue = $this->submitted_by->lookupCacheOption($curVal);
             } else {
-                $this->receipt_by->ViewValue = $this->receipt_by->Lookup !== null && is_array($this->receipt_by->Lookup->Options) ? $curVal : null;
+                $this->submitted_by->ViewValue = $this->submitted_by->Lookup !== null && is_array($this->submitted_by->Lookup->Options) ? $curVal : null;
             }
-            if ($this->receipt_by->ViewValue !== null) { // Load from cache
-                $this->receipt_by->EditValue = array_values($this->receipt_by->Lookup->Options);
+            if ($this->submitted_by->ViewValue !== null) { // Load from cache
+                $this->submitted_by->EditValue = array_values($this->submitted_by->Lookup->Options);
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->receipt_by->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->submitted_by->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $sqlWrk = $this->receipt_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $sqlWrk = $this->submitted_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                $this->receipt_by->EditValue = $arwrk;
+                $this->submitted_by->EditValue = $arwrk;
             }
+            $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
+
+            // receipt_by
+            $this->receipt_by->EditAttrs["class"] = "form-control";
+            $this->receipt_by->EditCustomAttributes = "";
+            if (!$this->receipt_by->Raw) {
+                $this->receipt_by->CurrentValue = HtmlDecode($this->receipt_by->CurrentValue);
+            }
+            $this->receipt_by->EditValue = HtmlEncode($this->receipt_by->CurrentValue);
             $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
 
             // Edit refer script
@@ -1003,6 +1045,10 @@ class NpdSerahterimaEdit extends NpdSerahterima
             // tgl_serahterima
             $this->tgl_serahterima->LinkCustomAttributes = "";
             $this->tgl_serahterima->HrefValue = "";
+
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
 
             // receipt_by
             $this->receipt_by->LinkCustomAttributes = "";
@@ -1047,6 +1093,11 @@ class NpdSerahterimaEdit extends NpdSerahterima
         }
         if (!CheckDate($this->tgl_serahterima->FormValue)) {
             $this->tgl_serahterima->addErrorMessage($this->tgl_serahterima->getErrorMessage(false));
+        }
+        if ($this->submitted_by->Required) {
+            if (!$this->submitted_by->IsDetailKey && EmptyValue($this->submitted_by->FormValue)) {
+                $this->submitted_by->addErrorMessage(str_replace("%s", $this->submitted_by->caption(), $this->submitted_by->RequiredErrorMessage));
+            }
         }
         if ($this->receipt_by->Required) {
             if (!$this->receipt_by->IsDetailKey && EmptyValue($this->receipt_by->FormValue)) {
@@ -1105,6 +1156,9 @@ class NpdSerahterimaEdit extends NpdSerahterima
 
             // tgl_serahterima
             $this->tgl_serahterima->setDbValueDef($rsnew, UnFormatDateTime($this->tgl_serahterima->CurrentValue, 0), CurrentDate(), $this->tgl_serahterima->ReadOnly);
+
+            // submitted_by
+            $this->submitted_by->setDbValueDef($rsnew, $this->submitted_by->CurrentValue, null, $this->submitted_by->ReadOnly);
 
             // receipt_by
             $this->receipt_by->setDbValueDef($rsnew, $this->receipt_by->CurrentValue, null, $this->receipt_by->ReadOnly);
@@ -1228,10 +1282,14 @@ class NpdSerahterimaEdit extends NpdSerahterima
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idcustomer":
+                    $lookupFilter = function () {
+                        return "status < 1";
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_readonly":
                     break;
-                case "x_receipt_by":
+                case "x_submitted_by":
                     break;
                 default:
                     $lookupFilter = "";

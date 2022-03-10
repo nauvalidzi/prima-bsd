@@ -569,17 +569,17 @@ class NpdSampleList extends NpdSample
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idnpd->setVisibility();
+        $this->idnpd->Visible = false;
         $this->idserahterima->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->sediaan->setVisibility();
-        $this->ukuran->setVisibility();
         $this->warna->setVisibility();
-        $this->bau->setVisibility();
         $this->fungsi->setVisibility();
         $this->jumlah->setVisibility();
-        $this->status->Visible = false;
+        $this->volume->setVisibility();
+        $this->bau->setVisibility();
+        $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
@@ -918,11 +918,11 @@ class NpdSampleList extends NpdSample
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
         $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
         $filterList = Concat($filterList, $this->sediaan->AdvancedSearch->toJson(), ","); // Field sediaan
-        $filterList = Concat($filterList, $this->ukuran->AdvancedSearch->toJson(), ","); // Field ukuran
         $filterList = Concat($filterList, $this->warna->AdvancedSearch->toJson(), ","); // Field warna
-        $filterList = Concat($filterList, $this->bau->AdvancedSearch->toJson(), ","); // Field bau
         $filterList = Concat($filterList, $this->fungsi->AdvancedSearch->toJson(), ","); // Field fungsi
         $filterList = Concat($filterList, $this->jumlah->AdvancedSearch->toJson(), ","); // Field jumlah
+        $filterList = Concat($filterList, $this->volume->AdvancedSearch->toJson(), ","); // Field volume
+        $filterList = Concat($filterList, $this->bau->AdvancedSearch->toJson(), ","); // Field bau
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
@@ -1014,14 +1014,6 @@ class NpdSampleList extends NpdSample
         $this->sediaan->AdvancedSearch->SearchOperator2 = @$filter["w_sediaan"];
         $this->sediaan->AdvancedSearch->save();
 
-        // Field ukuran
-        $this->ukuran->AdvancedSearch->SearchValue = @$filter["x_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchOperator = @$filter["z_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchCondition = @$filter["v_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchValue2 = @$filter["y_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchOperator2 = @$filter["w_ukuran"];
-        $this->ukuran->AdvancedSearch->save();
-
         // Field warna
         $this->warna->AdvancedSearch->SearchValue = @$filter["x_warna"];
         $this->warna->AdvancedSearch->SearchOperator = @$filter["z_warna"];
@@ -1029,14 +1021,6 @@ class NpdSampleList extends NpdSample
         $this->warna->AdvancedSearch->SearchValue2 = @$filter["y_warna"];
         $this->warna->AdvancedSearch->SearchOperator2 = @$filter["w_warna"];
         $this->warna->AdvancedSearch->save();
-
-        // Field bau
-        $this->bau->AdvancedSearch->SearchValue = @$filter["x_bau"];
-        $this->bau->AdvancedSearch->SearchOperator = @$filter["z_bau"];
-        $this->bau->AdvancedSearch->SearchCondition = @$filter["v_bau"];
-        $this->bau->AdvancedSearch->SearchValue2 = @$filter["y_bau"];
-        $this->bau->AdvancedSearch->SearchOperator2 = @$filter["w_bau"];
-        $this->bau->AdvancedSearch->save();
 
         // Field fungsi
         $this->fungsi->AdvancedSearch->SearchValue = @$filter["x_fungsi"];
@@ -1053,6 +1037,22 @@ class NpdSampleList extends NpdSample
         $this->jumlah->AdvancedSearch->SearchValue2 = @$filter["y_jumlah"];
         $this->jumlah->AdvancedSearch->SearchOperator2 = @$filter["w_jumlah"];
         $this->jumlah->AdvancedSearch->save();
+
+        // Field volume
+        $this->volume->AdvancedSearch->SearchValue = @$filter["x_volume"];
+        $this->volume->AdvancedSearch->SearchOperator = @$filter["z_volume"];
+        $this->volume->AdvancedSearch->SearchCondition = @$filter["v_volume"];
+        $this->volume->AdvancedSearch->SearchValue2 = @$filter["y_volume"];
+        $this->volume->AdvancedSearch->SearchOperator2 = @$filter["w_volume"];
+        $this->volume->AdvancedSearch->save();
+
+        // Field bau
+        $this->bau->AdvancedSearch->SearchValue = @$filter["x_bau"];
+        $this->bau->AdvancedSearch->SearchOperator = @$filter["z_bau"];
+        $this->bau->AdvancedSearch->SearchCondition = @$filter["v_bau"];
+        $this->bau->AdvancedSearch->SearchValue2 = @$filter["y_bau"];
+        $this->bau->AdvancedSearch->SearchOperator2 = @$filter["w_bau"];
+        $this->bau->AdvancedSearch->save();
 
         // Field status
         $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
@@ -1088,10 +1088,10 @@ class NpdSampleList extends NpdSample
         $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->nama, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->sediaan, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->ukuran, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->warna, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bau, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->fungsi, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->volume, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->bau, $arKeywords, $type);
         return $where;
     }
 
@@ -1254,15 +1254,15 @@ class NpdSampleList extends NpdSample
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->sediaan); // sediaan
-            $this->updateSort($this->ukuran); // ukuran
             $this->updateSort($this->warna); // warna
-            $this->updateSort($this->bau); // bau
             $this->updateSort($this->fungsi); // fungsi
             $this->updateSort($this->jumlah); // jumlah
+            $this->updateSort($this->volume); // volume
+            $this->updateSort($this->bau); // bau
+            $this->updateSort($this->status); // status
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1317,11 +1317,11 @@ class NpdSampleList extends NpdSample
                 $this->kode->setSort("");
                 $this->nama->setSort("");
                 $this->sediaan->setSort("");
-                $this->ukuran->setSort("");
                 $this->warna->setSort("");
-                $this->bau->setSort("");
                 $this->fungsi->setSort("");
                 $this->jumlah->setSort("");
+                $this->volume->setSort("");
+                $this->bau->setSort("");
                 $this->status->setSort("");
                 $this->created_at->setSort("");
                 $this->readonly->setSort("");
@@ -1724,11 +1724,11 @@ class NpdSampleList extends NpdSample
         $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
         $this->sediaan->setDbValue($row['sediaan']);
-        $this->ukuran->setDbValue($row['ukuran']);
         $this->warna->setDbValue($row['warna']);
-        $this->bau->setDbValue($row['bau']);
         $this->fungsi->setDbValue($row['fungsi']);
         $this->jumlah->setDbValue($row['jumlah']);
+        $this->volume->setDbValue($row['volume']);
+        $this->bau->setDbValue($row['bau']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
@@ -1744,11 +1744,11 @@ class NpdSampleList extends NpdSample
         $row['kode'] = null;
         $row['nama'] = null;
         $row['sediaan'] = null;
-        $row['ukuran'] = null;
         $row['warna'] = null;
-        $row['bau'] = null;
         $row['fungsi'] = null;
         $row['jumlah'] = null;
+        $row['volume'] = null;
+        $row['bau'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
         $row['readonly'] = null;
@@ -1801,15 +1801,15 @@ class NpdSampleList extends NpdSample
 
         // sediaan
 
-        // ukuran
-
         // warna
-
-        // bau
 
         // fungsi
 
         // jumlah
+
+        // volume
+
+        // bau
 
         // status
 
@@ -1859,17 +1859,9 @@ class NpdSampleList extends NpdSample
             $this->sediaan->ViewValue = $this->sediaan->CurrentValue;
             $this->sediaan->ViewCustomAttributes = "";
 
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
-
             // warna
             $this->warna->ViewValue = $this->warna->CurrentValue;
             $this->warna->ViewCustomAttributes = "";
-
-            // bau
-            $this->bau->ViewValue = $this->bau->CurrentValue;
-            $this->bau->ViewCustomAttributes = "";
 
             // fungsi
             $this->fungsi->ViewValue = $this->fungsi->CurrentValue;
@@ -1879,6 +1871,14 @@ class NpdSampleList extends NpdSample
             $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
             $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
             $this->jumlah->ViewCustomAttributes = "";
+
+            // volume
+            $this->volume->ViewValue = $this->volume->CurrentValue;
+            $this->volume->ViewCustomAttributes = "";
+
+            // bau
+            $this->bau->ViewValue = $this->bau->CurrentValue;
+            $this->bau->ViewCustomAttributes = "";
 
             // status
             if (strval($this->status->CurrentValue) != "") {
@@ -1901,11 +1901,6 @@ class NpdSampleList extends NpdSample
             }
             $this->readonly->ViewCustomAttributes = "";
 
-            // idnpd
-            $this->idnpd->LinkCustomAttributes = "";
-            $this->idnpd->HrefValue = "";
-            $this->idnpd->TooltipValue = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1921,20 +1916,10 @@ class NpdSampleList extends NpdSample
             $this->sediaan->HrefValue = "";
             $this->sediaan->TooltipValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
-
             // warna
             $this->warna->LinkCustomAttributes = "";
             $this->warna->HrefValue = "";
             $this->warna->TooltipValue = "";
-
-            // bau
-            $this->bau->LinkCustomAttributes = "";
-            $this->bau->HrefValue = "";
-            $this->bau->TooltipValue = "";
 
             // fungsi
             $this->fungsi->LinkCustomAttributes = "";
@@ -1945,6 +1930,21 @@ class NpdSampleList extends NpdSample
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
             $this->jumlah->TooltipValue = "";
+
+            // volume
+            $this->volume->LinkCustomAttributes = "";
+            $this->volume->HrefValue = "";
+            $this->volume->TooltipValue = "";
+
+            // bau
+            $this->bau->LinkCustomAttributes = "";
+            $this->bau->HrefValue = "";
+            $this->bau->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
         }
 
         // Call Row Rendered event

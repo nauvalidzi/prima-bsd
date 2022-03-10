@@ -33,8 +33,9 @@ class NpdSerahterima extends DbTable
     public $tgl_request;
     public $tgl_serahterima;
     public $readonly;
-    public $created_at;
+    public $submitted_by;
     public $receipt_by;
+    public $created_at;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -90,10 +91,10 @@ class NpdSerahterima extends DbTable
         $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_npd_customer', false, 'idcustomer', ["kode_pemesan","nama_pemesan","",""], [], ["npd_sample x_idnpd"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                $this->idcustomer->Lookup = new Lookup('idcustomer', 'v_npd_customer', false, 'idcustomer', ["kode_pemesan","nama_pemesan","",""], [], ["npd_sample x_idnpd"], [], [], [], [], '', '');
                 break;
         }
         $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -137,31 +138,36 @@ class NpdSerahterima extends DbTable
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
         $this->Fields['readonly'] = &$this->readonly;
 
+        // submitted_by
+        $this->submitted_by = new DbField('npd_serahterima', 'npd_serahterima', 'x_submitted_by', 'submitted_by', '`submitted_by`', '`submitted_by`', 3, 11, -1, false, '`submitted_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->submitted_by->Sortable = true; // Allow sort
+        $this->submitted_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->submitted_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->submitted_by->Lookup = new Lookup('submitted_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->submitted_by->Lookup = new Lookup('submitted_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->submitted_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->submitted_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->submitted_by->Param, "CustomMsg");
+        $this->Fields['submitted_by'] = &$this->submitted_by;
+
+        // receipt_by
+        $this->receipt_by = new DbField('npd_serahterima', 'npd_serahterima', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 200, 50, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->receipt_by->Sortable = true; // Allow sort
+        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
+        $this->Fields['receipt_by'] = &$this->receipt_by;
+
         // created_at
         $this->created_at = new DbField('npd_serahterima', 'npd_serahterima', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->created_at->Nullable = false; // NOT NULL field
         $this->created_at->Required = true; // Required field
         $this->created_at->Sortable = true; // Allow sort
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
-
-        // receipt_by
-        $this->receipt_by = new DbField('npd_serahterima', 'npd_serahterima', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 3, 11, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->receipt_by->Sortable = true; // Allow sort
-        $this->receipt_by->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->receipt_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->receipt_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
-        $this->Fields['receipt_by'] = &$this->receipt_by;
     }
 
     // Field Visibility
@@ -606,8 +612,9 @@ class NpdSerahterima extends DbTable
         $this->tgl_request->DbValue = $row['tgl_request'];
         $this->tgl_serahterima->DbValue = $row['tgl_serahterima'];
         $this->readonly->DbValue = $row['readonly'];
-        $this->created_at->DbValue = $row['created_at'];
+        $this->submitted_by->DbValue = $row['submitted_by'];
         $this->receipt_by->DbValue = $row['receipt_by'];
+        $this->created_at->DbValue = $row['created_at'];
     }
 
     // Delete uploaded files
@@ -941,8 +948,9 @@ SORTHTML;
         $this->tgl_request->setDbValue($row['tgl_request']);
         $this->tgl_serahterima->setDbValue($row['tgl_serahterima']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->created_at->setDbValue($row['created_at']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
         $this->receipt_by->setDbValue($row['receipt_by']);
+        $this->created_at->setDbValue($row['created_at']);
     }
 
     // Render list row values
@@ -965,9 +973,11 @@ SORTHTML;
 
         // readonly
 
-        // created_at
+        // submitted_by
 
         // receipt_by
+
+        // created_at
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -978,8 +988,12 @@ SORTHTML;
         if ($curVal != "") {
             $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
             if ($this->idcustomer->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $filterWrk = "`idcustomer`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $lookupFilter = function() {
+                    return "status < 1";
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
@@ -1012,31 +1026,35 @@ SORTHTML;
         }
         $this->readonly->ViewCustomAttributes = "";
 
+        // submitted_by
+        $curVal = trim(strval($this->submitted_by->CurrentValue));
+        if ($curVal != "") {
+            $this->submitted_by->ViewValue = $this->submitted_by->lookupCacheOption($curVal);
+            if ($this->submitted_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->submitted_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->submitted_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->submitted_by->ViewValue = $this->submitted_by->displayValue($arwrk);
+                } else {
+                    $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->submitted_by->ViewValue = null;
+        }
+        $this->submitted_by->ViewCustomAttributes = "";
+
+        // receipt_by
+        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+        $this->receipt_by->ViewCustomAttributes = "";
+
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
-
-        // receipt_by
-        $curVal = trim(strval($this->receipt_by->CurrentValue));
-        if ($curVal != "") {
-            $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
-            if ($this->receipt_by->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
-                    $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
-                } else {
-                    $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
-                }
-            }
-        } else {
-            $this->receipt_by->ViewValue = null;
-        }
-        $this->receipt_by->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1063,15 +1081,20 @@ SORTHTML;
         $this->readonly->HrefValue = "";
         $this->readonly->TooltipValue = "";
 
-        // created_at
-        $this->created_at->LinkCustomAttributes = "";
-        $this->created_at->HrefValue = "";
-        $this->created_at->TooltipValue = "";
+        // submitted_by
+        $this->submitted_by->LinkCustomAttributes = "";
+        $this->submitted_by->HrefValue = "";
+        $this->submitted_by->TooltipValue = "";
 
         // receipt_by
         $this->receipt_by->LinkCustomAttributes = "";
         $this->receipt_by->HrefValue = "";
         $this->receipt_by->TooltipValue = "";
+
+        // created_at
+        $this->created_at->LinkCustomAttributes = "";
+        $this->created_at->HrefValue = "";
+        $this->created_at->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1116,16 +1139,25 @@ SORTHTML;
         $this->readonly->EditValue = $this->readonly->options(false);
         $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
 
+        // submitted_by
+        $this->submitted_by->EditAttrs["class"] = "form-control";
+        $this->submitted_by->EditCustomAttributes = "";
+        $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
+
+        // receipt_by
+        $this->receipt_by->EditAttrs["class"] = "form-control";
+        $this->receipt_by->EditCustomAttributes = "";
+        if (!$this->receipt_by->Raw) {
+            $this->receipt_by->CurrentValue = HtmlDecode($this->receipt_by->CurrentValue);
+        }
+        $this->receipt_by->EditValue = $this->receipt_by->CurrentValue;
+        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
+
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
-
-        // receipt_by
-        $this->receipt_by->EditAttrs["class"] = "form-control";
-        $this->receipt_by->EditCustomAttributes = "";
-        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1159,15 +1191,17 @@ SORTHTML;
                     $doc->exportCaption($this->tgl_request);
                     $doc->exportCaption($this->tgl_serahterima);
                     $doc->exportCaption($this->readonly);
-                    $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->submitted_by);
                     $doc->exportCaption($this->receipt_by);
+                    $doc->exportCaption($this->created_at);
                 } else {
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->tgl_request);
                     $doc->exportCaption($this->tgl_serahterima);
                     $doc->exportCaption($this->readonly);
-                    $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->submitted_by);
                     $doc->exportCaption($this->receipt_by);
+                    $doc->exportCaption($this->created_at);
                 }
                 $doc->endExportRow();
             }
@@ -1201,15 +1235,17 @@ SORTHTML;
                         $doc->exportField($this->tgl_request);
                         $doc->exportField($this->tgl_serahterima);
                         $doc->exportField($this->readonly);
-                        $doc->exportField($this->created_at);
+                        $doc->exportField($this->submitted_by);
                         $doc->exportField($this->receipt_by);
+                        $doc->exportField($this->created_at);
                     } else {
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->tgl_request);
                         $doc->exportField($this->tgl_serahterima);
                         $doc->exportField($this->readonly);
-                        $doc->exportField($this->created_at);
+                        $doc->exportField($this->submitted_by);
                         $doc->exportField($this->receipt_by);
+                        $doc->exportField($this->created_at);
                     }
                     $doc->endExportRow($rowCnt);
                 }

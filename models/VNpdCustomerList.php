@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -426,7 +426,7 @@ class VNpdCustomerList extends VNpdCustomer
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
+            $key .= @$ar['idnpd'];
         }
         return $key;
     }
@@ -439,7 +439,7 @@ class VNpdCustomerList extends VNpdCustomer
     protected function hideFieldsForAddEdit()
     {
         if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
+            $this->idnpd->Visible = false;
         }
     }
 
@@ -568,37 +568,28 @@ class VNpdCustomerList extends VNpdCustomer
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
-        $this->statuskategori->setVisibility();
+        $this->idnpd->setVisibility();
         $this->idpegawai->setVisibility();
         $this->idcustomer->setVisibility();
         $this->kodeorder->setVisibility();
-        $this->idbrand->setVisibility();
-        $this->nama->setVisibility();
-        $this->idkategoribarang->setVisibility();
-        $this->idjenisbarang->setVisibility();
+        $this->kategoriproduk->setVisibility();
+        $this->jenisproduk->setVisibility();
         $this->idproduct_acuan->setVisibility();
-        $this->idkualitasbarang->setVisibility();
-        $this->kemasanbarang->setVisibility();
-        $this->label->setVisibility();
-        $this->bahan->setVisibility();
-        $this->ukuran->setVisibility();
+        $this->kualitasproduk->setVisibility();
+        $this->bahan_campaign->Visible = false;
         $this->warna->setVisibility();
         $this->parfum->setVisibility();
-        $this->harga->setVisibility();
-        $this->tambahan->setVisibility();
-        $this->orderperdana->setVisibility();
-        $this->orderreguler->setVisibility();
+        $this->tambahan->Visible = false;
         $this->status->setVisibility();
-        $this->idproduct->setVisibility();
         $this->created_at->setVisibility();
-        $this->created_by->setVisibility();
-        $this->selesai->setVisibility();
         $this->readonly->setVisibility();
         $this->nama_pemesan->setVisibility();
-        $this->alamat_pemesan->setVisibility();
+        $this->alamat_pemesan->Visible = false;
         $this->jabatan_pemesan->setVisibility();
         $this->hp_pemesan->setVisibility();
+        $this->kodeproduk->setVisibility();
+        $this->namaproduk->setVisibility();
+        $this->kode_pemesan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -889,37 +880,28 @@ class VNpdCustomerList extends VNpdCustomer
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->statuskategori->AdvancedSearch->toJson(), ","); // Field statuskategori
+        $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
         $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
         $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
         $filterList = Concat($filterList, $this->kodeorder->AdvancedSearch->toJson(), ","); // Field kodeorder
-        $filterList = Concat($filterList, $this->idbrand->AdvancedSearch->toJson(), ","); // Field idbrand
-        $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
-        $filterList = Concat($filterList, $this->idkategoribarang->AdvancedSearch->toJson(), ","); // Field idkategoribarang
-        $filterList = Concat($filterList, $this->idjenisbarang->AdvancedSearch->toJson(), ","); // Field idjenisbarang
+        $filterList = Concat($filterList, $this->kategoriproduk->AdvancedSearch->toJson(), ","); // Field kategoriproduk
+        $filterList = Concat($filterList, $this->jenisproduk->AdvancedSearch->toJson(), ","); // Field jenisproduk
         $filterList = Concat($filterList, $this->idproduct_acuan->AdvancedSearch->toJson(), ","); // Field idproduct_acuan
-        $filterList = Concat($filterList, $this->idkualitasbarang->AdvancedSearch->toJson(), ","); // Field idkualitasbarang
-        $filterList = Concat($filterList, $this->kemasanbarang->AdvancedSearch->toJson(), ","); // Field kemasanbarang
-        $filterList = Concat($filterList, $this->label->AdvancedSearch->toJson(), ","); // Field label
-        $filterList = Concat($filterList, $this->bahan->AdvancedSearch->toJson(), ","); // Field bahan
-        $filterList = Concat($filterList, $this->ukuran->AdvancedSearch->toJson(), ","); // Field ukuran
+        $filterList = Concat($filterList, $this->kualitasproduk->AdvancedSearch->toJson(), ","); // Field kualitasproduk
+        $filterList = Concat($filterList, $this->bahan_campaign->AdvancedSearch->toJson(), ","); // Field bahan_campaign
         $filterList = Concat($filterList, $this->warna->AdvancedSearch->toJson(), ","); // Field warna
         $filterList = Concat($filterList, $this->parfum->AdvancedSearch->toJson(), ","); // Field parfum
-        $filterList = Concat($filterList, $this->harga->AdvancedSearch->toJson(), ","); // Field harga
         $filterList = Concat($filterList, $this->tambahan->AdvancedSearch->toJson(), ","); // Field tambahan
-        $filterList = Concat($filterList, $this->orderperdana->AdvancedSearch->toJson(), ","); // Field orderperdana
-        $filterList = Concat($filterList, $this->orderreguler->AdvancedSearch->toJson(), ","); // Field orderreguler
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
-        $filterList = Concat($filterList, $this->idproduct->AdvancedSearch->toJson(), ","); // Field idproduct
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
-        $filterList = Concat($filterList, $this->selesai->AdvancedSearch->toJson(), ","); // Field selesai
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
         $filterList = Concat($filterList, $this->nama_pemesan->AdvancedSearch->toJson(), ","); // Field nama_pemesan
         $filterList = Concat($filterList, $this->alamat_pemesan->AdvancedSearch->toJson(), ","); // Field alamat_pemesan
         $filterList = Concat($filterList, $this->jabatan_pemesan->AdvancedSearch->toJson(), ","); // Field jabatan_pemesan
         $filterList = Concat($filterList, $this->hp_pemesan->AdvancedSearch->toJson(), ","); // Field hp_pemesan
+        $filterList = Concat($filterList, $this->kodeproduk->AdvancedSearch->toJson(), ","); // Field kodeproduk
+        $filterList = Concat($filterList, $this->namaproduk->AdvancedSearch->toJson(), ","); // Field namaproduk
+        $filterList = Concat($filterList, $this->kode_pemesan->AdvancedSearch->toJson(), ","); // Field kode_pemesan
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -960,21 +942,13 @@ class VNpdCustomerList extends VNpdCustomer
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
-
-        // Field statuskategori
-        $this->statuskategori->AdvancedSearch->SearchValue = @$filter["x_statuskategori"];
-        $this->statuskategori->AdvancedSearch->SearchOperator = @$filter["z_statuskategori"];
-        $this->statuskategori->AdvancedSearch->SearchCondition = @$filter["v_statuskategori"];
-        $this->statuskategori->AdvancedSearch->SearchValue2 = @$filter["y_statuskategori"];
-        $this->statuskategori->AdvancedSearch->SearchOperator2 = @$filter["w_statuskategori"];
-        $this->statuskategori->AdvancedSearch->save();
+        // Field idnpd
+        $this->idnpd->AdvancedSearch->SearchValue = @$filter["x_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator = @$filter["z_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchCondition = @$filter["v_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchValue2 = @$filter["y_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
+        $this->idnpd->AdvancedSearch->save();
 
         // Field idpegawai
         $this->idpegawai->AdvancedSearch->SearchValue = @$filter["x_idpegawai"];
@@ -1000,37 +974,21 @@ class VNpdCustomerList extends VNpdCustomer
         $this->kodeorder->AdvancedSearch->SearchOperator2 = @$filter["w_kodeorder"];
         $this->kodeorder->AdvancedSearch->save();
 
-        // Field idbrand
-        $this->idbrand->AdvancedSearch->SearchValue = @$filter["x_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchOperator = @$filter["z_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchCondition = @$filter["v_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchValue2 = @$filter["y_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchOperator2 = @$filter["w_idbrand"];
-        $this->idbrand->AdvancedSearch->save();
+        // Field kategoriproduk
+        $this->kategoriproduk->AdvancedSearch->SearchValue = @$filter["x_kategoriproduk"];
+        $this->kategoriproduk->AdvancedSearch->SearchOperator = @$filter["z_kategoriproduk"];
+        $this->kategoriproduk->AdvancedSearch->SearchCondition = @$filter["v_kategoriproduk"];
+        $this->kategoriproduk->AdvancedSearch->SearchValue2 = @$filter["y_kategoriproduk"];
+        $this->kategoriproduk->AdvancedSearch->SearchOperator2 = @$filter["w_kategoriproduk"];
+        $this->kategoriproduk->AdvancedSearch->save();
 
-        // Field nama
-        $this->nama->AdvancedSearch->SearchValue = @$filter["x_nama"];
-        $this->nama->AdvancedSearch->SearchOperator = @$filter["z_nama"];
-        $this->nama->AdvancedSearch->SearchCondition = @$filter["v_nama"];
-        $this->nama->AdvancedSearch->SearchValue2 = @$filter["y_nama"];
-        $this->nama->AdvancedSearch->SearchOperator2 = @$filter["w_nama"];
-        $this->nama->AdvancedSearch->save();
-
-        // Field idkategoribarang
-        $this->idkategoribarang->AdvancedSearch->SearchValue = @$filter["x_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchOperator = @$filter["z_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchCondition = @$filter["v_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchValue2 = @$filter["y_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->SearchOperator2 = @$filter["w_idkategoribarang"];
-        $this->idkategoribarang->AdvancedSearch->save();
-
-        // Field idjenisbarang
-        $this->idjenisbarang->AdvancedSearch->SearchValue = @$filter["x_idjenisbarang"];
-        $this->idjenisbarang->AdvancedSearch->SearchOperator = @$filter["z_idjenisbarang"];
-        $this->idjenisbarang->AdvancedSearch->SearchCondition = @$filter["v_idjenisbarang"];
-        $this->idjenisbarang->AdvancedSearch->SearchValue2 = @$filter["y_idjenisbarang"];
-        $this->idjenisbarang->AdvancedSearch->SearchOperator2 = @$filter["w_idjenisbarang"];
-        $this->idjenisbarang->AdvancedSearch->save();
+        // Field jenisproduk
+        $this->jenisproduk->AdvancedSearch->SearchValue = @$filter["x_jenisproduk"];
+        $this->jenisproduk->AdvancedSearch->SearchOperator = @$filter["z_jenisproduk"];
+        $this->jenisproduk->AdvancedSearch->SearchCondition = @$filter["v_jenisproduk"];
+        $this->jenisproduk->AdvancedSearch->SearchValue2 = @$filter["y_jenisproduk"];
+        $this->jenisproduk->AdvancedSearch->SearchOperator2 = @$filter["w_jenisproduk"];
+        $this->jenisproduk->AdvancedSearch->save();
 
         // Field idproduct_acuan
         $this->idproduct_acuan->AdvancedSearch->SearchValue = @$filter["x_idproduct_acuan"];
@@ -1040,45 +998,21 @@ class VNpdCustomerList extends VNpdCustomer
         $this->idproduct_acuan->AdvancedSearch->SearchOperator2 = @$filter["w_idproduct_acuan"];
         $this->idproduct_acuan->AdvancedSearch->save();
 
-        // Field idkualitasbarang
-        $this->idkualitasbarang->AdvancedSearch->SearchValue = @$filter["x_idkualitasbarang"];
-        $this->idkualitasbarang->AdvancedSearch->SearchOperator = @$filter["z_idkualitasbarang"];
-        $this->idkualitasbarang->AdvancedSearch->SearchCondition = @$filter["v_idkualitasbarang"];
-        $this->idkualitasbarang->AdvancedSearch->SearchValue2 = @$filter["y_idkualitasbarang"];
-        $this->idkualitasbarang->AdvancedSearch->SearchOperator2 = @$filter["w_idkualitasbarang"];
-        $this->idkualitasbarang->AdvancedSearch->save();
+        // Field kualitasproduk
+        $this->kualitasproduk->AdvancedSearch->SearchValue = @$filter["x_kualitasproduk"];
+        $this->kualitasproduk->AdvancedSearch->SearchOperator = @$filter["z_kualitasproduk"];
+        $this->kualitasproduk->AdvancedSearch->SearchCondition = @$filter["v_kualitasproduk"];
+        $this->kualitasproduk->AdvancedSearch->SearchValue2 = @$filter["y_kualitasproduk"];
+        $this->kualitasproduk->AdvancedSearch->SearchOperator2 = @$filter["w_kualitasproduk"];
+        $this->kualitasproduk->AdvancedSearch->save();
 
-        // Field kemasanbarang
-        $this->kemasanbarang->AdvancedSearch->SearchValue = @$filter["x_kemasanbarang"];
-        $this->kemasanbarang->AdvancedSearch->SearchOperator = @$filter["z_kemasanbarang"];
-        $this->kemasanbarang->AdvancedSearch->SearchCondition = @$filter["v_kemasanbarang"];
-        $this->kemasanbarang->AdvancedSearch->SearchValue2 = @$filter["y_kemasanbarang"];
-        $this->kemasanbarang->AdvancedSearch->SearchOperator2 = @$filter["w_kemasanbarang"];
-        $this->kemasanbarang->AdvancedSearch->save();
-
-        // Field label
-        $this->label->AdvancedSearch->SearchValue = @$filter["x_label"];
-        $this->label->AdvancedSearch->SearchOperator = @$filter["z_label"];
-        $this->label->AdvancedSearch->SearchCondition = @$filter["v_label"];
-        $this->label->AdvancedSearch->SearchValue2 = @$filter["y_label"];
-        $this->label->AdvancedSearch->SearchOperator2 = @$filter["w_label"];
-        $this->label->AdvancedSearch->save();
-
-        // Field bahan
-        $this->bahan->AdvancedSearch->SearchValue = @$filter["x_bahan"];
-        $this->bahan->AdvancedSearch->SearchOperator = @$filter["z_bahan"];
-        $this->bahan->AdvancedSearch->SearchCondition = @$filter["v_bahan"];
-        $this->bahan->AdvancedSearch->SearchValue2 = @$filter["y_bahan"];
-        $this->bahan->AdvancedSearch->SearchOperator2 = @$filter["w_bahan"];
-        $this->bahan->AdvancedSearch->save();
-
-        // Field ukuran
-        $this->ukuran->AdvancedSearch->SearchValue = @$filter["x_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchOperator = @$filter["z_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchCondition = @$filter["v_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchValue2 = @$filter["y_ukuran"];
-        $this->ukuran->AdvancedSearch->SearchOperator2 = @$filter["w_ukuran"];
-        $this->ukuran->AdvancedSearch->save();
+        // Field bahan_campaign
+        $this->bahan_campaign->AdvancedSearch->SearchValue = @$filter["x_bahan_campaign"];
+        $this->bahan_campaign->AdvancedSearch->SearchOperator = @$filter["z_bahan_campaign"];
+        $this->bahan_campaign->AdvancedSearch->SearchCondition = @$filter["v_bahan_campaign"];
+        $this->bahan_campaign->AdvancedSearch->SearchValue2 = @$filter["y_bahan_campaign"];
+        $this->bahan_campaign->AdvancedSearch->SearchOperator2 = @$filter["w_bahan_campaign"];
+        $this->bahan_campaign->AdvancedSearch->save();
 
         // Field warna
         $this->warna->AdvancedSearch->SearchValue = @$filter["x_warna"];
@@ -1096,14 +1030,6 @@ class VNpdCustomerList extends VNpdCustomer
         $this->parfum->AdvancedSearch->SearchOperator2 = @$filter["w_parfum"];
         $this->parfum->AdvancedSearch->save();
 
-        // Field harga
-        $this->harga->AdvancedSearch->SearchValue = @$filter["x_harga"];
-        $this->harga->AdvancedSearch->SearchOperator = @$filter["z_harga"];
-        $this->harga->AdvancedSearch->SearchCondition = @$filter["v_harga"];
-        $this->harga->AdvancedSearch->SearchValue2 = @$filter["y_harga"];
-        $this->harga->AdvancedSearch->SearchOperator2 = @$filter["w_harga"];
-        $this->harga->AdvancedSearch->save();
-
         // Field tambahan
         $this->tambahan->AdvancedSearch->SearchValue = @$filter["x_tambahan"];
         $this->tambahan->AdvancedSearch->SearchOperator = @$filter["z_tambahan"];
@@ -1111,22 +1037,6 @@ class VNpdCustomerList extends VNpdCustomer
         $this->tambahan->AdvancedSearch->SearchValue2 = @$filter["y_tambahan"];
         $this->tambahan->AdvancedSearch->SearchOperator2 = @$filter["w_tambahan"];
         $this->tambahan->AdvancedSearch->save();
-
-        // Field orderperdana
-        $this->orderperdana->AdvancedSearch->SearchValue = @$filter["x_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchOperator = @$filter["z_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchCondition = @$filter["v_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchValue2 = @$filter["y_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchOperator2 = @$filter["w_orderperdana"];
-        $this->orderperdana->AdvancedSearch->save();
-
-        // Field orderreguler
-        $this->orderreguler->AdvancedSearch->SearchValue = @$filter["x_orderreguler"];
-        $this->orderreguler->AdvancedSearch->SearchOperator = @$filter["z_orderreguler"];
-        $this->orderreguler->AdvancedSearch->SearchCondition = @$filter["v_orderreguler"];
-        $this->orderreguler->AdvancedSearch->SearchValue2 = @$filter["y_orderreguler"];
-        $this->orderreguler->AdvancedSearch->SearchOperator2 = @$filter["w_orderreguler"];
-        $this->orderreguler->AdvancedSearch->save();
 
         // Field status
         $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
@@ -1136,14 +1046,6 @@ class VNpdCustomerList extends VNpdCustomer
         $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
         $this->status->AdvancedSearch->save();
 
-        // Field idproduct
-        $this->idproduct->AdvancedSearch->SearchValue = @$filter["x_idproduct"];
-        $this->idproduct->AdvancedSearch->SearchOperator = @$filter["z_idproduct"];
-        $this->idproduct->AdvancedSearch->SearchCondition = @$filter["v_idproduct"];
-        $this->idproduct->AdvancedSearch->SearchValue2 = @$filter["y_idproduct"];
-        $this->idproduct->AdvancedSearch->SearchOperator2 = @$filter["w_idproduct"];
-        $this->idproduct->AdvancedSearch->save();
-
         // Field created_at
         $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
@@ -1151,22 +1053,6 @@ class VNpdCustomerList extends VNpdCustomer
         $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
-
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
-
-        // Field selesai
-        $this->selesai->AdvancedSearch->SearchValue = @$filter["x_selesai"];
-        $this->selesai->AdvancedSearch->SearchOperator = @$filter["z_selesai"];
-        $this->selesai->AdvancedSearch->SearchCondition = @$filter["v_selesai"];
-        $this->selesai->AdvancedSearch->SearchValue2 = @$filter["y_selesai"];
-        $this->selesai->AdvancedSearch->SearchOperator2 = @$filter["w_selesai"];
-        $this->selesai->AdvancedSearch->save();
 
         // Field readonly
         $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
@@ -1207,6 +1093,30 @@ class VNpdCustomerList extends VNpdCustomer
         $this->hp_pemesan->AdvancedSearch->SearchValue2 = @$filter["y_hp_pemesan"];
         $this->hp_pemesan->AdvancedSearch->SearchOperator2 = @$filter["w_hp_pemesan"];
         $this->hp_pemesan->AdvancedSearch->save();
+
+        // Field kodeproduk
+        $this->kodeproduk->AdvancedSearch->SearchValue = @$filter["x_kodeproduk"];
+        $this->kodeproduk->AdvancedSearch->SearchOperator = @$filter["z_kodeproduk"];
+        $this->kodeproduk->AdvancedSearch->SearchCondition = @$filter["v_kodeproduk"];
+        $this->kodeproduk->AdvancedSearch->SearchValue2 = @$filter["y_kodeproduk"];
+        $this->kodeproduk->AdvancedSearch->SearchOperator2 = @$filter["w_kodeproduk"];
+        $this->kodeproduk->AdvancedSearch->save();
+
+        // Field namaproduk
+        $this->namaproduk->AdvancedSearch->SearchValue = @$filter["x_namaproduk"];
+        $this->namaproduk->AdvancedSearch->SearchOperator = @$filter["z_namaproduk"];
+        $this->namaproduk->AdvancedSearch->SearchCondition = @$filter["v_namaproduk"];
+        $this->namaproduk->AdvancedSearch->SearchValue2 = @$filter["y_namaproduk"];
+        $this->namaproduk->AdvancedSearch->SearchOperator2 = @$filter["w_namaproduk"];
+        $this->namaproduk->AdvancedSearch->save();
+
+        // Field kode_pemesan
+        $this->kode_pemesan->AdvancedSearch->SearchValue = @$filter["x_kode_pemesan"];
+        $this->kode_pemesan->AdvancedSearch->SearchOperator = @$filter["z_kode_pemesan"];
+        $this->kode_pemesan->AdvancedSearch->SearchCondition = @$filter["v_kode_pemesan"];
+        $this->kode_pemesan->AdvancedSearch->SearchValue2 = @$filter["y_kode_pemesan"];
+        $this->kode_pemesan->AdvancedSearch->SearchOperator2 = @$filter["w_kode_pemesan"];
+        $this->kode_pemesan->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1215,22 +1125,22 @@ class VNpdCustomerList extends VNpdCustomer
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->statuskategori, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->kodeorder, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->nama, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->kemasanbarang, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->label, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bahan, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->ukuran, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kategoriproduk, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->jenisproduk, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kualitasproduk, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->bahan_campaign, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->warna, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->parfum, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->tambahan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->status, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->idproduct, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->nama_pemesan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->alamat_pemesan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->jabatan_pemesan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->hp_pemesan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kodeproduk, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->namaproduk, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kode_pemesan, $arKeywords, $type);
         return $where;
     }
 
@@ -1393,37 +1303,25 @@ class VNpdCustomerList extends VNpdCustomer
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
-            $this->updateSort($this->statuskategori); // statuskategori
+            $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->kodeorder); // kodeorder
-            $this->updateSort($this->idbrand); // idbrand
-            $this->updateSort($this->nama); // nama
-            $this->updateSort($this->idkategoribarang); // idkategoribarang
-            $this->updateSort($this->idjenisbarang); // idjenisbarang
+            $this->updateSort($this->kategoriproduk); // kategoriproduk
+            $this->updateSort($this->jenisproduk); // jenisproduk
             $this->updateSort($this->idproduct_acuan); // idproduct_acuan
-            $this->updateSort($this->idkualitasbarang); // idkualitasbarang
-            $this->updateSort($this->kemasanbarang); // kemasanbarang
-            $this->updateSort($this->label); // label
-            $this->updateSort($this->bahan); // bahan
-            $this->updateSort($this->ukuran); // ukuran
+            $this->updateSort($this->kualitasproduk); // kualitasproduk
             $this->updateSort($this->warna); // warna
             $this->updateSort($this->parfum); // parfum
-            $this->updateSort($this->harga); // harga
-            $this->updateSort($this->tambahan); // tambahan
-            $this->updateSort($this->orderperdana); // orderperdana
-            $this->updateSort($this->orderreguler); // orderreguler
             $this->updateSort($this->status); // status
-            $this->updateSort($this->idproduct); // idproduct
             $this->updateSort($this->created_at); // created_at
-            $this->updateSort($this->created_by); // created_by
-            $this->updateSort($this->selesai); // selesai
             $this->updateSort($this->readonly); // readonly
             $this->updateSort($this->nama_pemesan); // nama_pemesan
-            $this->updateSort($this->alamat_pemesan); // alamat_pemesan
             $this->updateSort($this->jabatan_pemesan); // jabatan_pemesan
             $this->updateSort($this->hp_pemesan); // hp_pemesan
+            $this->updateSort($this->kodeproduk); // kodeproduk
+            $this->updateSort($this->namaproduk); // namaproduk
+            $this->updateSort($this->kode_pemesan); // kode_pemesan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1463,37 +1361,28 @@ class VNpdCustomerList extends VNpdCustomer
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->id->setSort("");
-                $this->statuskategori->setSort("");
+                $this->idnpd->setSort("");
                 $this->idpegawai->setSort("");
                 $this->idcustomer->setSort("");
                 $this->kodeorder->setSort("");
-                $this->idbrand->setSort("");
-                $this->nama->setSort("");
-                $this->idkategoribarang->setSort("");
-                $this->idjenisbarang->setSort("");
+                $this->kategoriproduk->setSort("");
+                $this->jenisproduk->setSort("");
                 $this->idproduct_acuan->setSort("");
-                $this->idkualitasbarang->setSort("");
-                $this->kemasanbarang->setSort("");
-                $this->label->setSort("");
-                $this->bahan->setSort("");
-                $this->ukuran->setSort("");
+                $this->kualitasproduk->setSort("");
+                $this->bahan_campaign->setSort("");
                 $this->warna->setSort("");
                 $this->parfum->setSort("");
-                $this->harga->setSort("");
                 $this->tambahan->setSort("");
-                $this->orderperdana->setSort("");
-                $this->orderreguler->setSort("");
                 $this->status->setSort("");
-                $this->idproduct->setSort("");
                 $this->created_at->setSort("");
-                $this->created_by->setSort("");
-                $this->selesai->setSort("");
                 $this->readonly->setSort("");
                 $this->nama_pemesan->setSort("");
                 $this->alamat_pemesan->setSort("");
                 $this->jabatan_pemesan->setSort("");
                 $this->hp_pemesan->setSort("");
+                $this->kodeproduk->setSort("");
+                $this->namaproduk->setSort("");
+                $this->kode_pemesan->setSort("");
             }
 
             // Reset start position
@@ -1591,7 +1480,7 @@ class VNpdCustomerList extends VNpdCustomer
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
+        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->idnpd->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1837,74 +1726,56 @@ class VNpdCustomerList extends VNpdCustomer
         if (!$rs) {
             return;
         }
-        $this->id->setDbValue($row['id']);
-        $this->statuskategori->setDbValue($row['statuskategori']);
+        $this->idnpd->setDbValue($row['idnpd']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kodeorder->setDbValue($row['kodeorder']);
-        $this->idbrand->setDbValue($row['idbrand']);
-        $this->nama->setDbValue($row['nama']);
-        $this->idkategoribarang->setDbValue($row['idkategoribarang']);
-        $this->idjenisbarang->setDbValue($row['idjenisbarang']);
+        $this->kategoriproduk->setDbValue($row['kategoriproduk']);
+        $this->jenisproduk->setDbValue($row['jenisproduk']);
         $this->idproduct_acuan->setDbValue($row['idproduct_acuan']);
-        $this->idkualitasbarang->setDbValue($row['idkualitasbarang']);
-        $this->kemasanbarang->setDbValue($row['kemasanbarang']);
-        $this->label->setDbValue($row['label']);
-        $this->bahan->setDbValue($row['bahan']);
-        $this->ukuran->setDbValue($row['ukuran']);
+        $this->kualitasproduk->setDbValue($row['kualitasproduk']);
+        $this->bahan_campaign->setDbValue($row['bahan_campaign']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
-        $this->harga->setDbValue($row['harga']);
         $this->tambahan->setDbValue($row['tambahan']);
-        $this->orderperdana->setDbValue($row['orderperdana']);
-        $this->orderreguler->setDbValue($row['orderreguler']);
         $this->status->setDbValue($row['status']);
-        $this->idproduct->setDbValue($row['idproduct']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
-        $this->selesai->setDbValue($row['selesai']);
         $this->readonly->setDbValue($row['readonly']);
         $this->nama_pemesan->setDbValue($row['nama_pemesan']);
         $this->alamat_pemesan->setDbValue($row['alamat_pemesan']);
         $this->jabatan_pemesan->setDbValue($row['jabatan_pemesan']);
         $this->hp_pemesan->setDbValue($row['hp_pemesan']);
+        $this->kodeproduk->setDbValue($row['kodeproduk']);
+        $this->namaproduk->setDbValue($row['namaproduk']);
+        $this->kode_pemesan->setDbValue($row['kode_pemesan']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['id'] = null;
-        $row['statuskategori'] = null;
+        $row['idnpd'] = null;
         $row['idpegawai'] = null;
         $row['idcustomer'] = null;
         $row['kodeorder'] = null;
-        $row['idbrand'] = null;
-        $row['nama'] = null;
-        $row['idkategoribarang'] = null;
-        $row['idjenisbarang'] = null;
+        $row['kategoriproduk'] = null;
+        $row['jenisproduk'] = null;
         $row['idproduct_acuan'] = null;
-        $row['idkualitasbarang'] = null;
-        $row['kemasanbarang'] = null;
-        $row['label'] = null;
-        $row['bahan'] = null;
-        $row['ukuran'] = null;
+        $row['kualitasproduk'] = null;
+        $row['bahan_campaign'] = null;
         $row['warna'] = null;
         $row['parfum'] = null;
-        $row['harga'] = null;
         $row['tambahan'] = null;
-        $row['orderperdana'] = null;
-        $row['orderreguler'] = null;
         $row['status'] = null;
-        $row['idproduct'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
-        $row['selesai'] = null;
         $row['readonly'] = null;
         $row['nama_pemesan'] = null;
         $row['alamat_pemesan'] = null;
         $row['jabatan_pemesan'] = null;
         $row['hp_pemesan'] = null;
+        $row['kodeproduk'] = null;
+        $row['namaproduk'] = null;
+        $row['kode_pemesan'] = null;
         return $row;
     }
 
@@ -1942,9 +1813,7 @@ class VNpdCustomerList extends VNpdCustomer
 
         // Common render codes for all row types
 
-        // id
-
-        // statuskategori
+        // idnpd
 
         // idpegawai
 
@@ -1952,47 +1821,25 @@ class VNpdCustomerList extends VNpdCustomer
 
         // kodeorder
 
-        // idbrand
+        // kategoriproduk
 
-        // nama
-
-        // idkategoribarang
-
-        // idjenisbarang
+        // jenisproduk
 
         // idproduct_acuan
 
-        // idkualitasbarang
+        // kualitasproduk
 
-        // kemasanbarang
-
-        // label
-
-        // bahan
-
-        // ukuran
+        // bahan_campaign
 
         // warna
 
         // parfum
 
-        // harga
-
         // tambahan
-
-        // orderperdana
-
-        // orderreguler
 
         // status
 
-        // idproduct
-
         // created_at
-
-        // created_by
-
-        // selesai
 
         // readonly
 
@@ -2003,14 +1850,16 @@ class VNpdCustomerList extends VNpdCustomer
         // jabatan_pemesan
 
         // hp_pemesan
-        if ($this->RowType == ROWTYPE_VIEW) {
-            // id
-            $this->id->ViewValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
 
-            // statuskategori
-            $this->statuskategori->ViewValue = $this->statuskategori->CurrentValue;
-            $this->statuskategori->ViewCustomAttributes = "";
+        // kodeproduk
+
+        // namaproduk
+
+        // kode_pemesan
+        if ($this->RowType == ROWTYPE_VIEW) {
+            // idnpd
+            $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
+            $this->idnpd->ViewCustomAttributes = "";
 
             // idpegawai
             $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
@@ -2026,50 +1875,22 @@ class VNpdCustomerList extends VNpdCustomer
             $this->kodeorder->ViewValue = $this->kodeorder->CurrentValue;
             $this->kodeorder->ViewCustomAttributes = "";
 
-            // idbrand
-            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-            $this->idbrand->ViewValue = FormatNumber($this->idbrand->ViewValue, 0, -2, -2, -2);
-            $this->idbrand->ViewCustomAttributes = "";
+            // kategoriproduk
+            $this->kategoriproduk->ViewValue = $this->kategoriproduk->CurrentValue;
+            $this->kategoriproduk->ViewCustomAttributes = "";
 
-            // nama
-            $this->nama->ViewValue = $this->nama->CurrentValue;
-            $this->nama->ViewCustomAttributes = "";
-
-            // idkategoribarang
-            $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
-            $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
-            $this->idkategoribarang->ViewCustomAttributes = "";
-
-            // idjenisbarang
-            $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
-            $this->idjenisbarang->ViewValue = FormatNumber($this->idjenisbarang->ViewValue, 0, -2, -2, -2);
-            $this->idjenisbarang->ViewCustomAttributes = "";
+            // jenisproduk
+            $this->jenisproduk->ViewValue = $this->jenisproduk->CurrentValue;
+            $this->jenisproduk->ViewCustomAttributes = "";
 
             // idproduct_acuan
             $this->idproduct_acuan->ViewValue = $this->idproduct_acuan->CurrentValue;
             $this->idproduct_acuan->ViewValue = FormatNumber($this->idproduct_acuan->ViewValue, 0, -2, -2, -2);
             $this->idproduct_acuan->ViewCustomAttributes = "";
 
-            // idkualitasbarang
-            $this->idkualitasbarang->ViewValue = $this->idkualitasbarang->CurrentValue;
-            $this->idkualitasbarang->ViewValue = FormatNumber($this->idkualitasbarang->ViewValue, 0, -2, -2, -2);
-            $this->idkualitasbarang->ViewCustomAttributes = "";
-
-            // kemasanbarang
-            $this->kemasanbarang->ViewValue = $this->kemasanbarang->CurrentValue;
-            $this->kemasanbarang->ViewCustomAttributes = "";
-
-            // label
-            $this->label->ViewValue = $this->label->CurrentValue;
-            $this->label->ViewCustomAttributes = "";
-
-            // bahan
-            $this->bahan->ViewValue = $this->bahan->CurrentValue;
-            $this->bahan->ViewCustomAttributes = "";
-
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
+            // kualitasproduk
+            $this->kualitasproduk->ViewValue = $this->kualitasproduk->CurrentValue;
+            $this->kualitasproduk->ViewCustomAttributes = "";
 
             // warna
             $this->warna->ViewValue = $this->warna->CurrentValue;
@@ -2079,50 +1900,18 @@ class VNpdCustomerList extends VNpdCustomer
             $this->parfum->ViewValue = $this->parfum->CurrentValue;
             $this->parfum->ViewCustomAttributes = "";
 
-            // harga
-            $this->harga->ViewValue = $this->harga->CurrentValue;
-            $this->harga->ViewValue = FormatNumber($this->harga->ViewValue, 0, -2, -2, -2);
-            $this->harga->ViewCustomAttributes = "";
-
-            // tambahan
-            $this->tambahan->ViewValue = $this->tambahan->CurrentValue;
-            $this->tambahan->ViewCustomAttributes = "";
-
-            // orderperdana
-            $this->orderperdana->ViewValue = $this->orderperdana->CurrentValue;
-            $this->orderperdana->ViewValue = FormatNumber($this->orderperdana->ViewValue, 0, -2, -2, -2);
-            $this->orderperdana->ViewCustomAttributes = "";
-
-            // orderreguler
-            $this->orderreguler->ViewValue = $this->orderreguler->CurrentValue;
-            $this->orderreguler->ViewValue = FormatNumber($this->orderreguler->ViewValue, 0, -2, -2, -2);
-            $this->orderreguler->ViewCustomAttributes = "";
-
             // status
-            $this->status->ViewValue = $this->status->CurrentValue;
+            if (ConvertToBool($this->status->CurrentValue)) {
+                $this->status->ViewValue = $this->status->tagCaption(1) != "" ? $this->status->tagCaption(1) : "Yes";
+            } else {
+                $this->status->ViewValue = $this->status->tagCaption(2) != "" ? $this->status->tagCaption(2) : "No";
+            }
             $this->status->ViewCustomAttributes = "";
-
-            // idproduct
-            $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
-            $this->idproduct->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
-
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
-            // selesai
-            if (ConvertToBool($this->selesai->CurrentValue)) {
-                $this->selesai->ViewValue = $this->selesai->tagCaption(1) != "" ? $this->selesai->tagCaption(1) : "Yes";
-            } else {
-                $this->selesai->ViewValue = $this->selesai->tagCaption(2) != "" ? $this->selesai->tagCaption(2) : "No";
-            }
-            $this->selesai->ViewCustomAttributes = "";
 
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
@@ -2136,10 +1925,6 @@ class VNpdCustomerList extends VNpdCustomer
             $this->nama_pemesan->ViewValue = $this->nama_pemesan->CurrentValue;
             $this->nama_pemesan->ViewCustomAttributes = "";
 
-            // alamat_pemesan
-            $this->alamat_pemesan->ViewValue = $this->alamat_pemesan->CurrentValue;
-            $this->alamat_pemesan->ViewCustomAttributes = "";
-
             // jabatan_pemesan
             $this->jabatan_pemesan->ViewValue = $this->jabatan_pemesan->CurrentValue;
             $this->jabatan_pemesan->ViewCustomAttributes = "";
@@ -2148,15 +1933,22 @@ class VNpdCustomerList extends VNpdCustomer
             $this->hp_pemesan->ViewValue = $this->hp_pemesan->CurrentValue;
             $this->hp_pemesan->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
+            // kodeproduk
+            $this->kodeproduk->ViewValue = $this->kodeproduk->CurrentValue;
+            $this->kodeproduk->ViewCustomAttributes = "";
 
-            // statuskategori
-            $this->statuskategori->LinkCustomAttributes = "";
-            $this->statuskategori->HrefValue = "";
-            $this->statuskategori->TooltipValue = "";
+            // namaproduk
+            $this->namaproduk->ViewValue = $this->namaproduk->CurrentValue;
+            $this->namaproduk->ViewCustomAttributes = "";
+
+            // kode_pemesan
+            $this->kode_pemesan->ViewValue = $this->kode_pemesan->CurrentValue;
+            $this->kode_pemesan->ViewCustomAttributes = "";
+
+            // idnpd
+            $this->idnpd->LinkCustomAttributes = "";
+            $this->idnpd->HrefValue = "";
+            $this->idnpd->TooltipValue = "";
 
             // idpegawai
             $this->idpegawai->LinkCustomAttributes = "";
@@ -2173,55 +1965,25 @@ class VNpdCustomerList extends VNpdCustomer
             $this->kodeorder->HrefValue = "";
             $this->kodeorder->TooltipValue = "";
 
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
+            // kategoriproduk
+            $this->kategoriproduk->LinkCustomAttributes = "";
+            $this->kategoriproduk->HrefValue = "";
+            $this->kategoriproduk->TooltipValue = "";
 
-            // nama
-            $this->nama->LinkCustomAttributes = "";
-            $this->nama->HrefValue = "";
-            $this->nama->TooltipValue = "";
-
-            // idkategoribarang
-            $this->idkategoribarang->LinkCustomAttributes = "";
-            $this->idkategoribarang->HrefValue = "";
-            $this->idkategoribarang->TooltipValue = "";
-
-            // idjenisbarang
-            $this->idjenisbarang->LinkCustomAttributes = "";
-            $this->idjenisbarang->HrefValue = "";
-            $this->idjenisbarang->TooltipValue = "";
+            // jenisproduk
+            $this->jenisproduk->LinkCustomAttributes = "";
+            $this->jenisproduk->HrefValue = "";
+            $this->jenisproduk->TooltipValue = "";
 
             // idproduct_acuan
             $this->idproduct_acuan->LinkCustomAttributes = "";
             $this->idproduct_acuan->HrefValue = "";
             $this->idproduct_acuan->TooltipValue = "";
 
-            // idkualitasbarang
-            $this->idkualitasbarang->LinkCustomAttributes = "";
-            $this->idkualitasbarang->HrefValue = "";
-            $this->idkualitasbarang->TooltipValue = "";
-
-            // kemasanbarang
-            $this->kemasanbarang->LinkCustomAttributes = "";
-            $this->kemasanbarang->HrefValue = "";
-            $this->kemasanbarang->TooltipValue = "";
-
-            // label
-            $this->label->LinkCustomAttributes = "";
-            $this->label->HrefValue = "";
-            $this->label->TooltipValue = "";
-
-            // bahan
-            $this->bahan->LinkCustomAttributes = "";
-            $this->bahan->HrefValue = "";
-            $this->bahan->TooltipValue = "";
-
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
+            // kualitasproduk
+            $this->kualitasproduk->LinkCustomAttributes = "";
+            $this->kualitasproduk->HrefValue = "";
+            $this->kualitasproduk->TooltipValue = "";
 
             // warna
             $this->warna->LinkCustomAttributes = "";
@@ -2233,50 +1995,15 @@ class VNpdCustomerList extends VNpdCustomer
             $this->parfum->HrefValue = "";
             $this->parfum->TooltipValue = "";
 
-            // harga
-            $this->harga->LinkCustomAttributes = "";
-            $this->harga->HrefValue = "";
-            $this->harga->TooltipValue = "";
-
-            // tambahan
-            $this->tambahan->LinkCustomAttributes = "";
-            $this->tambahan->HrefValue = "";
-            $this->tambahan->TooltipValue = "";
-
-            // orderperdana
-            $this->orderperdana->LinkCustomAttributes = "";
-            $this->orderperdana->HrefValue = "";
-            $this->orderperdana->TooltipValue = "";
-
-            // orderreguler
-            $this->orderreguler->LinkCustomAttributes = "";
-            $this->orderreguler->HrefValue = "";
-            $this->orderreguler->TooltipValue = "";
-
             // status
             $this->status->LinkCustomAttributes = "";
             $this->status->HrefValue = "";
             $this->status->TooltipValue = "";
 
-            // idproduct
-            $this->idproduct->LinkCustomAttributes = "";
-            $this->idproduct->HrefValue = "";
-            $this->idproduct->TooltipValue = "";
-
             // created_at
             $this->created_at->LinkCustomAttributes = "";
             $this->created_at->HrefValue = "";
             $this->created_at->TooltipValue = "";
-
-            // created_by
-            $this->created_by->LinkCustomAttributes = "";
-            $this->created_by->HrefValue = "";
-            $this->created_by->TooltipValue = "";
-
-            // selesai
-            $this->selesai->LinkCustomAttributes = "";
-            $this->selesai->HrefValue = "";
-            $this->selesai->TooltipValue = "";
 
             // readonly
             $this->readonly->LinkCustomAttributes = "";
@@ -2288,11 +2015,6 @@ class VNpdCustomerList extends VNpdCustomer
             $this->nama_pemesan->HrefValue = "";
             $this->nama_pemesan->TooltipValue = "";
 
-            // alamat_pemesan
-            $this->alamat_pemesan->LinkCustomAttributes = "";
-            $this->alamat_pemesan->HrefValue = "";
-            $this->alamat_pemesan->TooltipValue = "";
-
             // jabatan_pemesan
             $this->jabatan_pemesan->LinkCustomAttributes = "";
             $this->jabatan_pemesan->HrefValue = "";
@@ -2302,6 +2024,21 @@ class VNpdCustomerList extends VNpdCustomer
             $this->hp_pemesan->LinkCustomAttributes = "";
             $this->hp_pemesan->HrefValue = "";
             $this->hp_pemesan->TooltipValue = "";
+
+            // kodeproduk
+            $this->kodeproduk->LinkCustomAttributes = "";
+            $this->kodeproduk->HrefValue = "";
+            $this->kodeproduk->TooltipValue = "";
+
+            // namaproduk
+            $this->namaproduk->LinkCustomAttributes = "";
+            $this->namaproduk->HrefValue = "";
+            $this->namaproduk->TooltipValue = "";
+
+            // kode_pemesan
+            $this->kode_pemesan->LinkCustomAttributes = "";
+            $this->kode_pemesan->HrefValue = "";
+            $this->kode_pemesan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2372,7 +2109,7 @@ class VNpdCustomerList extends VNpdCustomer
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_selesai":
+                case "x_status":
                     break;
                 case "x_readonly":
                     break;

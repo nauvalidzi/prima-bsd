@@ -2677,7 +2677,6 @@ class CustomerAdd extends Customer
         $count = ExecuteScalar("SELECT COUNT(*) FROM customer WHERE kodenpd='".$this->kodenpd->FormValue."'");
         if ($count>0) {
         	$customError = "Kode NPD sudah terpakai.";
-    //        $this->kodenpd->addErrorMessage("Kode NPD sudah terpakai.");
             return false;
         }
         return true;

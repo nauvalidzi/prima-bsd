@@ -28,7 +28,7 @@ class VNpdCustomer extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $id;
+    public $idnpd;
     public $idpegawai;
     public $idcustomer;
     public $kodeorder;
@@ -47,6 +47,9 @@ class VNpdCustomer extends DbTable
     public $alamat_pemesan;
     public $jabatan_pemesan;
     public $hp_pemesan;
+    public $kodeproduk;
+    public $namaproduk;
+    public $kode_pemesan;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -83,14 +86,14 @@ class VNpdCustomer extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // id
-        $this->id = new DbField('v_npd_customer', 'v_npd_customer', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
-        $this->id->Sortable = true; // Allow sort
-        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
-        $this->Fields['id'] = &$this->id;
+        // idnpd
+        $this->idnpd = new DbField('v_npd_customer', 'v_npd_customer', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->idnpd->IsAutoIncrement = true; // Autoincrement field
+        $this->idnpd->IsPrimaryKey = true; // Primary key field
+        $this->idnpd->Sortable = true; // Allow sort
+        $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
+        $this->Fields['idnpd'] = &$this->idnpd;
 
         // idpegawai
         $this->idpegawai = new DbField('v_npd_customer', 'v_npd_customer', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -113,16 +116,14 @@ class VNpdCustomer extends DbTable
         $this->Fields['kodeorder'] = &$this->kodeorder;
 
         // kategoriproduk
-        $this->kategoriproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_kategoriproduk', 'kategoriproduk', '`kategoriproduk`', '`kategoriproduk`', 3, 11, -1, false, '`kategoriproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kategoriproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_kategoriproduk', 'kategoriproduk', '`kategoriproduk`', '`kategoriproduk`', 200, 50, -1, false, '`kategoriproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kategoriproduk->Sortable = true; // Allow sort
-        $this->kategoriproduk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->kategoriproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kategoriproduk->Param, "CustomMsg");
         $this->Fields['kategoriproduk'] = &$this->kategoriproduk;
 
         // jenisproduk
-        $this->jenisproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_jenisproduk', 'jenisproduk', '`jenisproduk`', '`jenisproduk`', 3, 11, -1, false, '`jenisproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jenisproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_jenisproduk', 'jenisproduk', '`jenisproduk`', '`jenisproduk`', 200, 50, -1, false, '`jenisproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->jenisproduk->Sortable = true; // Allow sort
-        $this->jenisproduk->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->jenisproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jenisproduk->Param, "CustomMsg");
         $this->Fields['jenisproduk'] = &$this->jenisproduk;
 
@@ -164,10 +165,20 @@ class VNpdCustomer extends DbTable
         $this->Fields['tambahan'] = &$this->tambahan;
 
         // status
-        $this->status = new DbField('v_npd_customer', 'v_npd_customer', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->status = new DbField('v_npd_customer', 'v_npd_customer', 'x_status', 'status', '`status`', '`status`', 16, 1, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
         $this->status->Nullable = false; // NOT NULL field
-        $this->status->Required = true; // Required field
         $this->status->Sortable = true; // Allow sort
+        $this->status->DataType = DATATYPE_BOOLEAN;
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->status->Lookup = new Lookup('status', 'v_npd_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->status->Lookup = new Lookup('status', 'v_npd_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->status->OptionCount = 2;
+        $this->status->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
 
@@ -221,6 +232,26 @@ class VNpdCustomer extends DbTable
         $this->hp_pemesan->Sortable = true; // Allow sort
         $this->hp_pemesan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hp_pemesan->Param, "CustomMsg");
         $this->Fields['hp_pemesan'] = &$this->hp_pemesan;
+
+        // kodeproduk
+        $this->kodeproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_kodeproduk', 'kodeproduk', '`kodeproduk`', '`kodeproduk`', 200, 50, -1, false, '`kodeproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kodeproduk->Sortable = true; // Allow sort
+        $this->kodeproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kodeproduk->Param, "CustomMsg");
+        $this->Fields['kodeproduk'] = &$this->kodeproduk;
+
+        // namaproduk
+        $this->namaproduk = new DbField('v_npd_customer', 'v_npd_customer', 'x_namaproduk', 'namaproduk', '`namaproduk`', '`namaproduk`', 200, 255, -1, false, '`namaproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->namaproduk->Sortable = true; // Allow sort
+        $this->namaproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->namaproduk->Param, "CustomMsg");
+        $this->Fields['namaproduk'] = &$this->namaproduk;
+
+        // kode_pemesan
+        $this->kode_pemesan = new DbField('v_npd_customer', 'v_npd_customer', 'x_kode_pemesan', 'kode_pemesan', '`kode_pemesan`', '`kode_pemesan`', 200, 50, -1, false, '`kode_pemesan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode_pemesan->Nullable = false; // NOT NULL field
+        $this->kode_pemesan->Required = true; // Required field
+        $this->kode_pemesan->Sortable = true; // Allow sort
+        $this->kode_pemesan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_pemesan->Param, "CustomMsg");
+        $this->Fields['kode_pemesan'] = &$this->kode_pemesan;
     }
 
     // Field Visibility
@@ -548,8 +579,8 @@ class VNpdCustomer extends DbTable
         $success = $this->insertSql($rs)->execute();
         if ($success) {
             // Get insert id if necessary
-            $this->id->setDbValue($conn->lastInsertId());
-            $rs['id'] = $this->id->DbValue;
+            $this->idnpd->setDbValue($conn->lastInsertId());
+            $rs['idnpd'] = $this->idnpd->DbValue;
         }
         return $success;
     }
@@ -609,8 +640,8 @@ class VNpdCustomer extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
+            if (array_key_exists('idnpd', $rs)) {
+                AddFilter($where, QuotedName('idnpd', $this->Dbid) . '=' . QuotedValue($rs['idnpd'], $this->idnpd->DataType, $this->Dbid));
             }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
@@ -634,7 +665,7 @@ class VNpdCustomer extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->id->DbValue = $row['id'];
+        $this->idnpd->DbValue = $row['idnpd'];
         $this->idpegawai->DbValue = $row['idpegawai'];
         $this->idcustomer->DbValue = $row['idcustomer'];
         $this->kodeorder->DbValue = $row['kodeorder'];
@@ -653,6 +684,9 @@ class VNpdCustomer extends DbTable
         $this->alamat_pemesan->DbValue = $row['alamat_pemesan'];
         $this->jabatan_pemesan->DbValue = $row['jabatan_pemesan'];
         $this->hp_pemesan->DbValue = $row['hp_pemesan'];
+        $this->kodeproduk->DbValue = $row['kodeproduk'];
+        $this->namaproduk->DbValue = $row['namaproduk'];
+        $this->kode_pemesan->DbValue = $row['kode_pemesan'];
     }
 
     // Delete uploaded files
@@ -664,14 +698,14 @@ class VNpdCustomer extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "`idnpd` = @idnpd@";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
+        $val = $current ? $this->idnpd->CurrentValue : $this->idnpd->OldValue;
         if (EmptyValue($val)) {
             return "";
         } else {
@@ -687,9 +721,9 @@ class VNpdCustomer extends DbTable
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
         if (count($keys) == 1) {
             if ($current) {
-                $this->id->CurrentValue = $keys[0];
+                $this->idnpd->CurrentValue = $keys[0];
             } else {
-                $this->id->OldValue = $keys[0];
+                $this->idnpd->OldValue = $keys[0];
             }
         }
     }
@@ -699,9 +733,9 @@ class VNpdCustomer extends DbTable
     {
         $keyFilter = $this->sqlKeyFilter();
         if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
+            $val = array_key_exists('idnpd', $row) ? $row['idnpd'] : null;
         } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
+            $val = $this->idnpd->OldValue !== null ? $this->idnpd->OldValue : $this->idnpd->CurrentValue;
         }
         if (!is_numeric($val)) {
             return "0=1"; // Invalid key
@@ -709,7 +743,7 @@ class VNpdCustomer extends DbTable
         if ($val === null) {
             return "0=1"; // Invalid key
         } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
+            $keyFilter = str_replace("@idnpd@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
         }
         return $keyFilter;
     }
@@ -838,7 +872,7 @@ class VNpdCustomer extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
+        $json .= "idnpd:" . JsonEncode($this->idnpd->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -849,8 +883,8 @@ class VNpdCustomer extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->id->CurrentValue);
+        if ($this->idnpd->CurrentValue !== null) {
+            $url .= "/" . rawurlencode($this->idnpd->CurrentValue);
         } else {
             return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
         }
@@ -912,7 +946,7 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
+            if (($keyValue = Param("idnpd") ?? Route("idnpd")) !== null) {
                 $arKeys[] = $keyValue;
             } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
                 $arKeys[] = $keyValue;
@@ -945,9 +979,9 @@ SORTHTML;
                 $keyFilter .= " OR ";
             }
             if ($setCurrent) {
-                $this->id->CurrentValue = $key;
+                $this->idnpd->CurrentValue = $key;
             } else {
-                $this->id->OldValue = $key;
+                $this->idnpd->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -973,7 +1007,7 @@ SORTHTML;
         } else {
             return;
         }
-        $this->id->setDbValue($row['id']);
+        $this->idnpd->setDbValue($row['idnpd']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->idcustomer->setDbValue($row['idcustomer']);
         $this->kodeorder->setDbValue($row['kodeorder']);
@@ -992,6 +1026,9 @@ SORTHTML;
         $this->alamat_pemesan->setDbValue($row['alamat_pemesan']);
         $this->jabatan_pemesan->setDbValue($row['jabatan_pemesan']);
         $this->hp_pemesan->setDbValue($row['hp_pemesan']);
+        $this->kodeproduk->setDbValue($row['kodeproduk']);
+        $this->namaproduk->setDbValue($row['namaproduk']);
+        $this->kode_pemesan->setDbValue($row['kode_pemesan']);
     }
 
     // Render list row values
@@ -1004,7 +1041,7 @@ SORTHTML;
 
         // Common render codes
 
-        // id
+        // idnpd
 
         // idpegawai
 
@@ -1042,9 +1079,15 @@ SORTHTML;
 
         // hp_pemesan
 
-        // id
-        $this->id->ViewValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        // kodeproduk
+
+        // namaproduk
+
+        // kode_pemesan
+
+        // idnpd
+        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
+        $this->idnpd->ViewCustomAttributes = "";
 
         // idpegawai
         $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
@@ -1062,12 +1105,10 @@ SORTHTML;
 
         // kategoriproduk
         $this->kategoriproduk->ViewValue = $this->kategoriproduk->CurrentValue;
-        $this->kategoriproduk->ViewValue = FormatNumber($this->kategoriproduk->ViewValue, 0, -2, -2, -2);
         $this->kategoriproduk->ViewCustomAttributes = "";
 
         // jenisproduk
         $this->jenisproduk->ViewValue = $this->jenisproduk->CurrentValue;
-        $this->jenisproduk->ViewValue = FormatNumber($this->jenisproduk->ViewValue, 0, -2, -2, -2);
         $this->jenisproduk->ViewCustomAttributes = "";
 
         // idproduct_acuan
@@ -1096,7 +1137,11 @@ SORTHTML;
         $this->tambahan->ViewCustomAttributes = "";
 
         // status
-        $this->status->ViewValue = $this->status->CurrentValue;
+        if (ConvertToBool($this->status->CurrentValue)) {
+            $this->status->ViewValue = $this->status->tagCaption(1) != "" ? $this->status->tagCaption(1) : "Yes";
+        } else {
+            $this->status->ViewValue = $this->status->tagCaption(2) != "" ? $this->status->tagCaption(2) : "No";
+        }
         $this->status->ViewCustomAttributes = "";
 
         // created_at
@@ -1128,10 +1173,22 @@ SORTHTML;
         $this->hp_pemesan->ViewValue = $this->hp_pemesan->CurrentValue;
         $this->hp_pemesan->ViewCustomAttributes = "";
 
-        // id
-        $this->id->LinkCustomAttributes = "";
-        $this->id->HrefValue = "";
-        $this->id->TooltipValue = "";
+        // kodeproduk
+        $this->kodeproduk->ViewValue = $this->kodeproduk->CurrentValue;
+        $this->kodeproduk->ViewCustomAttributes = "";
+
+        // namaproduk
+        $this->namaproduk->ViewValue = $this->namaproduk->CurrentValue;
+        $this->namaproduk->ViewCustomAttributes = "";
+
+        // kode_pemesan
+        $this->kode_pemesan->ViewValue = $this->kode_pemesan->CurrentValue;
+        $this->kode_pemesan->ViewCustomAttributes = "";
+
+        // idnpd
+        $this->idnpd->LinkCustomAttributes = "";
+        $this->idnpd->HrefValue = "";
+        $this->idnpd->TooltipValue = "";
 
         // idpegawai
         $this->idpegawai->LinkCustomAttributes = "";
@@ -1223,6 +1280,21 @@ SORTHTML;
         $this->hp_pemesan->HrefValue = "";
         $this->hp_pemesan->TooltipValue = "";
 
+        // kodeproduk
+        $this->kodeproduk->LinkCustomAttributes = "";
+        $this->kodeproduk->HrefValue = "";
+        $this->kodeproduk->TooltipValue = "";
+
+        // namaproduk
+        $this->namaproduk->LinkCustomAttributes = "";
+        $this->namaproduk->HrefValue = "";
+        $this->namaproduk->TooltipValue = "";
+
+        // kode_pemesan
+        $this->kode_pemesan->LinkCustomAttributes = "";
+        $this->kode_pemesan->HrefValue = "";
+        $this->kode_pemesan->TooltipValue = "";
+
         // Call Row Rendered event
         $this->rowRendered();
 
@@ -1238,11 +1310,11 @@ SORTHTML;
         // Call Row Rendering event
         $this->rowRendering();
 
-        // id
-        $this->id->EditAttrs["class"] = "form-control";
-        $this->id->EditCustomAttributes = "";
-        $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        // idnpd
+        $this->idnpd->EditAttrs["class"] = "form-control";
+        $this->idnpd->EditCustomAttributes = "";
+        $this->idnpd->EditValue = $this->idnpd->CurrentValue;
+        $this->idnpd->ViewCustomAttributes = "";
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -1268,12 +1340,18 @@ SORTHTML;
         // kategoriproduk
         $this->kategoriproduk->EditAttrs["class"] = "form-control";
         $this->kategoriproduk->EditCustomAttributes = "";
+        if (!$this->kategoriproduk->Raw) {
+            $this->kategoriproduk->CurrentValue = HtmlDecode($this->kategoriproduk->CurrentValue);
+        }
         $this->kategoriproduk->EditValue = $this->kategoriproduk->CurrentValue;
         $this->kategoriproduk->PlaceHolder = RemoveHtml($this->kategoriproduk->caption());
 
         // jenisproduk
         $this->jenisproduk->EditAttrs["class"] = "form-control";
         $this->jenisproduk->EditCustomAttributes = "";
+        if (!$this->jenisproduk->Raw) {
+            $this->jenisproduk->CurrentValue = HtmlDecode($this->jenisproduk->CurrentValue);
+        }
         $this->jenisproduk->EditValue = $this->jenisproduk->CurrentValue;
         $this->jenisproduk->PlaceHolder = RemoveHtml($this->jenisproduk->caption());
 
@@ -1323,12 +1401,8 @@ SORTHTML;
         $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
 
         // status
-        $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
-        if (!$this->status->Raw) {
-            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-        }
-        $this->status->EditValue = $this->status->CurrentValue;
+        $this->status->EditValue = $this->status->options(false);
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // created_at
@@ -1375,6 +1449,33 @@ SORTHTML;
         $this->hp_pemesan->EditValue = $this->hp_pemesan->CurrentValue;
         $this->hp_pemesan->PlaceHolder = RemoveHtml($this->hp_pemesan->caption());
 
+        // kodeproduk
+        $this->kodeproduk->EditAttrs["class"] = "form-control";
+        $this->kodeproduk->EditCustomAttributes = "";
+        if (!$this->kodeproduk->Raw) {
+            $this->kodeproduk->CurrentValue = HtmlDecode($this->kodeproduk->CurrentValue);
+        }
+        $this->kodeproduk->EditValue = $this->kodeproduk->CurrentValue;
+        $this->kodeproduk->PlaceHolder = RemoveHtml($this->kodeproduk->caption());
+
+        // namaproduk
+        $this->namaproduk->EditAttrs["class"] = "form-control";
+        $this->namaproduk->EditCustomAttributes = "";
+        if (!$this->namaproduk->Raw) {
+            $this->namaproduk->CurrentValue = HtmlDecode($this->namaproduk->CurrentValue);
+        }
+        $this->namaproduk->EditValue = $this->namaproduk->CurrentValue;
+        $this->namaproduk->PlaceHolder = RemoveHtml($this->namaproduk->caption());
+
+        // kode_pemesan
+        $this->kode_pemesan->EditAttrs["class"] = "form-control";
+        $this->kode_pemesan->EditCustomAttributes = "";
+        if (!$this->kode_pemesan->Raw) {
+            $this->kode_pemesan->CurrentValue = HtmlDecode($this->kode_pemesan->CurrentValue);
+        }
+        $this->kode_pemesan->EditValue = $this->kode_pemesan->CurrentValue;
+        $this->kode_pemesan->PlaceHolder = RemoveHtml($this->kode_pemesan->caption());
+
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1403,7 +1504,7 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kodeorder);
@@ -1422,8 +1523,11 @@ SORTHTML;
                     $doc->exportCaption($this->alamat_pemesan);
                     $doc->exportCaption($this->jabatan_pemesan);
                     $doc->exportCaption($this->hp_pemesan);
+                    $doc->exportCaption($this->kodeproduk);
+                    $doc->exportCaption($this->namaproduk);
+                    $doc->exportCaption($this->kode_pemesan);
                 } else {
-                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->idcustomer);
                     $doc->exportCaption($this->kodeorder);
@@ -1439,6 +1543,9 @@ SORTHTML;
                     $doc->exportCaption($this->nama_pemesan);
                     $doc->exportCaption($this->jabatan_pemesan);
                     $doc->exportCaption($this->hp_pemesan);
+                    $doc->exportCaption($this->kodeproduk);
+                    $doc->exportCaption($this->namaproduk);
+                    $doc->exportCaption($this->kode_pemesan);
                 }
                 $doc->endExportRow();
             }
@@ -1468,7 +1575,7 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->idnpd);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kodeorder);
@@ -1487,8 +1594,11 @@ SORTHTML;
                         $doc->exportField($this->alamat_pemesan);
                         $doc->exportField($this->jabatan_pemesan);
                         $doc->exportField($this->hp_pemesan);
+                        $doc->exportField($this->kodeproduk);
+                        $doc->exportField($this->namaproduk);
+                        $doc->exportField($this->kode_pemesan);
                     } else {
-                        $doc->exportField($this->id);
+                        $doc->exportField($this->idnpd);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->idcustomer);
                         $doc->exportField($this->kodeorder);
@@ -1504,6 +1614,9 @@ SORTHTML;
                         $doc->exportField($this->nama_pemesan);
                         $doc->exportField($this->jabatan_pemesan);
                         $doc->exportField($this->hp_pemesan);
+                        $doc->exportField($this->kodeproduk);
+                        $doc->exportField($this->namaproduk);
+                        $doc->exportField($this->kode_pemesan);
                     }
                     $doc->endExportRow($rowCnt);
                 }

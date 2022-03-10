@@ -391,17 +391,17 @@ class NpdSamplePreview extends NpdSample
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idnpd->setVisibility();
+        $this->idnpd->Visible = false;
         $this->idserahterima->Visible = false;
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->sediaan->setVisibility();
-        $this->ukuran->setVisibility();
         $this->warna->setVisibility();
-        $this->bau->setVisibility();
         $this->fungsi->setVisibility();
         $this->jumlah->setVisibility();
-        $this->status->Visible = false;
+        $this->volume->setVisibility();
+        $this->bau->setVisibility();
+        $this->status->setVisibility();
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
@@ -496,11 +496,11 @@ class NpdSamplePreview extends NpdSample
             $this->kode->setSort("");
             $this->nama->setSort("");
             $this->sediaan->setSort("");
-            $this->ukuran->setSort("");
             $this->warna->setSort("");
-            $this->bau->setSort("");
             $this->fungsi->setSort("");
             $this->jumlah->setSort("");
+            $this->volume->setSort("");
+            $this->bau->setSort("");
             $this->status->setSort("");
             $this->created_at->setSort("");
             $this->readonly->setSort("");
@@ -515,15 +515,15 @@ class NpdSamplePreview extends NpdSample
 
         // Check for sort field
         if ($this->CurrentOrder !== "") {
-            $this->updateSort($this->idnpd); // idnpd
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->nama); // nama
             $this->updateSort($this->sediaan); // sediaan
-            $this->updateSort($this->ukuran); // ukuran
             $this->updateSort($this->warna); // warna
-            $this->updateSort($this->bau); // bau
             $this->updateSort($this->fungsi); // fungsi
             $this->updateSort($this->jumlah); // jumlah
+            $this->updateSort($this->volume); // volume
+            $this->updateSort($this->bau); // bau
+            $this->updateSort($this->status); // status
         }
     }
 

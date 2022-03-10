@@ -98,11 +98,8 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->tgl_serahterima->Visible) { // tgl_serahterima ?>
         <th data-name="tgl_serahterima" class="<?= $Page->tgl_serahterima->headerCellClass() ?>"><div id="elh_npd_serahterima_tgl_serahterima" class="npd_serahterima_tgl_serahterima"><?= $Page->renderSort($Page->tgl_serahterima) ?></div></th>
 <?php } ?>
-<?php if ($Page->readonly->Visible) { // readonly ?>
-        <th data-name="readonly" class="<?= $Page->readonly->headerCellClass() ?>"><div id="elh_npd_serahterima_readonly" class="npd_serahterima_readonly"><?= $Page->renderSort($Page->readonly) ?></div></th>
-<?php } ?>
-<?php if ($Page->created_at->Visible) { // created_at ?>
-        <th data-name="created_at" class="<?= $Page->created_at->headerCellClass() ?>"><div id="elh_npd_serahterima_created_at" class="npd_serahterima_created_at"><?= $Page->renderSort($Page->created_at) ?></div></th>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <th data-name="submitted_by" class="<?= $Page->submitted_by->headerCellClass() ?>"><div id="elh_npd_serahterima_submitted_by" class="npd_serahterima_submitted_by"><?= $Page->renderSort($Page->submitted_by) ?></div></th>
 <?php } ?>
 <?php if ($Page->receipt_by->Visible) { // receipt_by ?>
         <th data-name="receipt_by" class="<?= $Page->receipt_by->headerCellClass() ?>"><div id="elh_npd_serahterima_receipt_by" class="npd_serahterima_receipt_by"><?= $Page->renderSort($Page->receipt_by) ?></div></th>
@@ -198,22 +195,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->readonly->Visible) { // readonly ?>
-        <td data-name="readonly" <?= $Page->readonly->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_readonly">
-<span<?= $Page->readonly->viewAttributes() ?>>
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" id="x_readonly_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->readonly->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->readonly->CurrentValue)) { ?> checked<?php } ?>>
-    <label class="custom-control-label" for="x_readonly_<?= $Page->RowCount ?>"></label>
-</div></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->created_at->Visible) { // created_at ?>
-        <td data-name="created_at" <?= $Page->created_at->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_serahterima_created_at">
-<span<?= $Page->created_at->viewAttributes() ?>>
-<?= $Page->created_at->getViewValue() ?></span>
+    <?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <td data-name="submitted_by" <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_serahterima_submitted_by">
+<span<?= $Page->submitted_by->viewAttributes() ?>>
+<?= $Page->submitted_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -524,11 +524,11 @@ class NpdSampleView extends NpdSample
         $this->kode->setVisibility();
         $this->nama->setVisibility();
         $this->sediaan->setVisibility();
-        $this->ukuran->setVisibility();
         $this->warna->setVisibility();
-        $this->bau->setVisibility();
         $this->fungsi->setVisibility();
         $this->jumlah->setVisibility();
+        $this->volume->setVisibility();
+        $this->bau->setVisibility();
         $this->status->setVisibility();
         $this->created_at->setVisibility();
         $this->readonly->setVisibility();
@@ -745,11 +745,11 @@ class NpdSampleView extends NpdSample
         $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
         $this->sediaan->setDbValue($row['sediaan']);
-        $this->ukuran->setDbValue($row['ukuran']);
         $this->warna->setDbValue($row['warna']);
-        $this->bau->setDbValue($row['bau']);
         $this->fungsi->setDbValue($row['fungsi']);
         $this->jumlah->setDbValue($row['jumlah']);
+        $this->volume->setDbValue($row['volume']);
+        $this->bau->setDbValue($row['bau']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
@@ -765,11 +765,11 @@ class NpdSampleView extends NpdSample
         $row['kode'] = null;
         $row['nama'] = null;
         $row['sediaan'] = null;
-        $row['ukuran'] = null;
         $row['warna'] = null;
-        $row['bau'] = null;
         $row['fungsi'] = null;
         $row['jumlah'] = null;
+        $row['volume'] = null;
+        $row['bau'] = null;
         $row['status'] = null;
         $row['created_at'] = null;
         $row['readonly'] = null;
@@ -806,15 +806,15 @@ class NpdSampleView extends NpdSample
 
         // sediaan
 
-        // ukuran
-
         // warna
-
-        // bau
 
         // fungsi
 
         // jumlah
+
+        // volume
+
+        // bau
 
         // status
 
@@ -864,17 +864,9 @@ class NpdSampleView extends NpdSample
             $this->sediaan->ViewValue = $this->sediaan->CurrentValue;
             $this->sediaan->ViewCustomAttributes = "";
 
-            // ukuran
-            $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-            $this->ukuran->ViewCustomAttributes = "";
-
             // warna
             $this->warna->ViewValue = $this->warna->CurrentValue;
             $this->warna->ViewCustomAttributes = "";
-
-            // bau
-            $this->bau->ViewValue = $this->bau->CurrentValue;
-            $this->bau->ViewCustomAttributes = "";
 
             // fungsi
             $this->fungsi->ViewValue = $this->fungsi->CurrentValue;
@@ -884,6 +876,14 @@ class NpdSampleView extends NpdSample
             $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
             $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
             $this->jumlah->ViewCustomAttributes = "";
+
+            // volume
+            $this->volume->ViewValue = $this->volume->CurrentValue;
+            $this->volume->ViewCustomAttributes = "";
+
+            // bau
+            $this->bau->ViewValue = $this->bau->CurrentValue;
+            $this->bau->ViewCustomAttributes = "";
 
             // status
             if (strval($this->status->CurrentValue) != "") {
@@ -926,20 +926,10 @@ class NpdSampleView extends NpdSample
             $this->sediaan->HrefValue = "";
             $this->sediaan->TooltipValue = "";
 
-            // ukuran
-            $this->ukuran->LinkCustomAttributes = "";
-            $this->ukuran->HrefValue = "";
-            $this->ukuran->TooltipValue = "";
-
             // warna
             $this->warna->LinkCustomAttributes = "";
             $this->warna->HrefValue = "";
             $this->warna->TooltipValue = "";
-
-            // bau
-            $this->bau->LinkCustomAttributes = "";
-            $this->bau->HrefValue = "";
-            $this->bau->TooltipValue = "";
 
             // fungsi
             $this->fungsi->LinkCustomAttributes = "";
@@ -950,6 +940,16 @@ class NpdSampleView extends NpdSample
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
             $this->jumlah->TooltipValue = "";
+
+            // volume
+            $this->volume->LinkCustomAttributes = "";
+            $this->volume->HrefValue = "";
+            $this->volume->TooltipValue = "";
+
+            // bau
+            $this->bau->LinkCustomAttributes = "";
+            $this->bau->HrefValue = "";
+            $this->bau->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";

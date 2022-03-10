@@ -98,10 +98,10 @@ class SuratjalanDetail extends DbTable
         $this->idinvoice->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","","",""], ["suratjalan x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], ["suratjalan x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
             default:
-                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","","",""], ["suratjalan x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
+                $this->idinvoice->Lookup = new Lookup('idinvoice', 'invoice', false, 'id', ["kode","tglinvoice","",""], ["suratjalan x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], [], [], '', '');
                 break;
         }
         $this->idinvoice->DefaultErrorMessage = $Language->phrase("IncorrectInteger");

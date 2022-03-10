@@ -34,11 +34,11 @@ class NpdSample extends DbTable
     public $kode;
     public $nama;
     public $sediaan;
-    public $ukuran;
     public $warna;
-    public $bau;
     public $fungsi;
     public $jumlah;
+    public $volume;
+    public $bau;
     public $status;
     public $created_at;
     public $readonly;
@@ -97,10 +97,10 @@ class NpdSample extends DbTable
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["ukuransediaan","warna","parfum","fungsiproduk"], ["x_ukuran","x_warna","x_bau","x_fungsi"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], ["npd_serahterima x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["bentuk","warna","parfum","fungsiproduk"], ["x_sediaan","x_warna","x_bau","x_fungsi"], '', '');
                 break;
             default:
-                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], ["ukuransediaan","warna","parfum","fungsiproduk"], ["x_ukuran","x_warna","x_bau","x_fungsi"], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], ["npd_serahterima x_idcustomer"], [], ["idcustomer"], ["x_idcustomer"], ["bentuk","warna","parfum","fungsiproduk"], ["x_sediaan","x_warna","x_bau","x_fungsi"], '', '');
                 break;
         }
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -139,23 +139,11 @@ class NpdSample extends DbTable
         $this->sediaan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sediaan->Param, "CustomMsg");
         $this->Fields['sediaan'] = &$this->sediaan;
 
-        // ukuran
-        $this->ukuran = new DbField('npd_sample', 'npd_sample', 'x_ukuran', 'ukuran', '`ukuran`', '`ukuran`', 200, 50, -1, false, '`ukuran`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->ukuran->Sortable = true; // Allow sort
-        $this->ukuran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuran->Param, "CustomMsg");
-        $this->Fields['ukuran'] = &$this->ukuran;
-
         // warna
         $this->warna = new DbField('npd_sample', 'npd_sample', 'x_warna', 'warna', '`warna`', '`warna`', 200, 50, -1, false, '`warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->warna->Sortable = true; // Allow sort
         $this->warna->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->warna->Param, "CustomMsg");
         $this->Fields['warna'] = &$this->warna;
-
-        // bau
-        $this->bau = new DbField('npd_sample', 'npd_sample', 'x_bau', 'bau', '`bau`', '`bau`', 200, 50, -1, false, '`bau`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bau->Sortable = true; // Allow sort
-        $this->bau->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bau->Param, "CustomMsg");
-        $this->Fields['bau'] = &$this->bau;
 
         // fungsi
         $this->fungsi = new DbField('npd_sample', 'npd_sample', 'x_fungsi', 'fungsi', '`fungsi`', '`fungsi`', 200, 50, -1, false, '`fungsi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -170,6 +158,18 @@ class NpdSample extends DbTable
         $this->jumlah->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->jumlah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah->Param, "CustomMsg");
         $this->Fields['jumlah'] = &$this->jumlah;
+
+        // volume
+        $this->volume = new DbField('npd_sample', 'npd_sample', 'x_volume', 'volume', '`volume`', '`volume`', 200, 50, -1, false, '`volume`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->volume->Sortable = true; // Allow sort
+        $this->volume->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->volume->Param, "CustomMsg");
+        $this->Fields['volume'] = &$this->volume;
+
+        // bau
+        $this->bau = new DbField('npd_sample', 'npd_sample', 'x_bau', 'bau', '`bau`', '`bau`', 200, 50, -1, false, '`bau`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bau->Sortable = true; // Allow sort
+        $this->bau->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bau->Param, "CustomMsg");
+        $this->Fields['bau'] = &$this->bau;
 
         // status
         $this->status = new DbField('npd_sample', 'npd_sample', 'x_status', 'status', '`status`', '`status`', 16, 1, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'RADIO');
@@ -710,11 +710,11 @@ class NpdSample extends DbTable
         $this->kode->DbValue = $row['kode'];
         $this->nama->DbValue = $row['nama'];
         $this->sediaan->DbValue = $row['sediaan'];
-        $this->ukuran->DbValue = $row['ukuran'];
         $this->warna->DbValue = $row['warna'];
-        $this->bau->DbValue = $row['bau'];
         $this->fungsi->DbValue = $row['fungsi'];
         $this->jumlah->DbValue = $row['jumlah'];
+        $this->volume->DbValue = $row['volume'];
+        $this->bau->DbValue = $row['bau'];
         $this->status->DbValue = $row['status'];
         $this->created_at->DbValue = $row['created_at'];
         $this->readonly->DbValue = $row['readonly'];
@@ -1052,11 +1052,11 @@ SORTHTML;
         $this->kode->setDbValue($row['kode']);
         $this->nama->setDbValue($row['nama']);
         $this->sediaan->setDbValue($row['sediaan']);
-        $this->ukuran->setDbValue($row['ukuran']);
         $this->warna->setDbValue($row['warna']);
-        $this->bau->setDbValue($row['bau']);
         $this->fungsi->setDbValue($row['fungsi']);
         $this->jumlah->setDbValue($row['jumlah']);
+        $this->volume->setDbValue($row['volume']);
+        $this->bau->setDbValue($row['bau']);
         $this->status->setDbValue($row['status']);
         $this->created_at->setDbValue($row['created_at']);
         $this->readonly->setDbValue($row['readonly']);
@@ -1084,15 +1084,15 @@ SORTHTML;
 
         // sediaan
 
-        // ukuran
-
         // warna
-
-        // bau
 
         // fungsi
 
         // jumlah
+
+        // volume
+
+        // bau
 
         // status
 
@@ -1142,17 +1142,9 @@ SORTHTML;
         $this->sediaan->ViewValue = $this->sediaan->CurrentValue;
         $this->sediaan->ViewCustomAttributes = "";
 
-        // ukuran
-        $this->ukuran->ViewValue = $this->ukuran->CurrentValue;
-        $this->ukuran->ViewCustomAttributes = "";
-
         // warna
         $this->warna->ViewValue = $this->warna->CurrentValue;
         $this->warna->ViewCustomAttributes = "";
-
-        // bau
-        $this->bau->ViewValue = $this->bau->CurrentValue;
-        $this->bau->ViewCustomAttributes = "";
 
         // fungsi
         $this->fungsi->ViewValue = $this->fungsi->CurrentValue;
@@ -1162,6 +1154,14 @@ SORTHTML;
         $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
         $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
         $this->jumlah->ViewCustomAttributes = "";
+
+        // volume
+        $this->volume->ViewValue = $this->volume->CurrentValue;
+        $this->volume->ViewCustomAttributes = "";
+
+        // bau
+        $this->bau->ViewValue = $this->bau->CurrentValue;
+        $this->bau->ViewCustomAttributes = "";
 
         // status
         if (strval($this->status->CurrentValue) != "") {
@@ -1214,20 +1214,10 @@ SORTHTML;
         $this->sediaan->HrefValue = "";
         $this->sediaan->TooltipValue = "";
 
-        // ukuran
-        $this->ukuran->LinkCustomAttributes = "";
-        $this->ukuran->HrefValue = "";
-        $this->ukuran->TooltipValue = "";
-
         // warna
         $this->warna->LinkCustomAttributes = "";
         $this->warna->HrefValue = "";
         $this->warna->TooltipValue = "";
-
-        // bau
-        $this->bau->LinkCustomAttributes = "";
-        $this->bau->HrefValue = "";
-        $this->bau->TooltipValue = "";
 
         // fungsi
         $this->fungsi->LinkCustomAttributes = "";
@@ -1238,6 +1228,16 @@ SORTHTML;
         $this->jumlah->LinkCustomAttributes = "";
         $this->jumlah->HrefValue = "";
         $this->jumlah->TooltipValue = "";
+
+        // volume
+        $this->volume->LinkCustomAttributes = "";
+        $this->volume->HrefValue = "";
+        $this->volume->TooltipValue = "";
+
+        // bau
+        $this->bau->LinkCustomAttributes = "";
+        $this->bau->HrefValue = "";
+        $this->bau->TooltipValue = "";
 
         // status
         $this->status->LinkCustomAttributes = "";
@@ -1343,15 +1343,6 @@ SORTHTML;
         $this->sediaan->EditValue = $this->sediaan->CurrentValue;
         $this->sediaan->PlaceHolder = RemoveHtml($this->sediaan->caption());
 
-        // ukuran
-        $this->ukuran->EditAttrs["class"] = "form-control";
-        $this->ukuran->EditCustomAttributes = "";
-        if (!$this->ukuran->Raw) {
-            $this->ukuran->CurrentValue = HtmlDecode($this->ukuran->CurrentValue);
-        }
-        $this->ukuran->EditValue = $this->ukuran->CurrentValue;
-        $this->ukuran->PlaceHolder = RemoveHtml($this->ukuran->caption());
-
         // warna
         $this->warna->EditAttrs["class"] = "form-control";
         $this->warna->EditCustomAttributes = "";
@@ -1360,15 +1351,6 @@ SORTHTML;
         }
         $this->warna->EditValue = $this->warna->CurrentValue;
         $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
-
-        // bau
-        $this->bau->EditAttrs["class"] = "form-control";
-        $this->bau->EditCustomAttributes = "";
-        if (!$this->bau->Raw) {
-            $this->bau->CurrentValue = HtmlDecode($this->bau->CurrentValue);
-        }
-        $this->bau->EditValue = $this->bau->CurrentValue;
-        $this->bau->PlaceHolder = RemoveHtml($this->bau->caption());
 
         // fungsi
         $this->fungsi->EditAttrs["class"] = "form-control";
@@ -1384,6 +1366,24 @@ SORTHTML;
         $this->jumlah->EditCustomAttributes = "";
         $this->jumlah->EditValue = $this->jumlah->CurrentValue;
         $this->jumlah->PlaceHolder = RemoveHtml($this->jumlah->caption());
+
+        // volume
+        $this->volume->EditAttrs["class"] = "form-control";
+        $this->volume->EditCustomAttributes = "";
+        if (!$this->volume->Raw) {
+            $this->volume->CurrentValue = HtmlDecode($this->volume->CurrentValue);
+        }
+        $this->volume->EditValue = $this->volume->CurrentValue;
+        $this->volume->PlaceHolder = RemoveHtml($this->volume->caption());
+
+        // bau
+        $this->bau->EditAttrs["class"] = "form-control";
+        $this->bau->EditCustomAttributes = "";
+        if (!$this->bau->Raw) {
+            $this->bau->CurrentValue = HtmlDecode($this->bau->CurrentValue);
+        }
+        $this->bau->EditValue = $this->bau->CurrentValue;
+        $this->bau->PlaceHolder = RemoveHtml($this->bau->caption());
 
         // status
         $this->status->EditCustomAttributes = "";
@@ -1433,11 +1433,11 @@ SORTHTML;
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->sediaan);
-                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->warna);
-                    $doc->exportCaption($this->bau);
                     $doc->exportCaption($this->fungsi);
                     $doc->exportCaption($this->jumlah);
+                    $doc->exportCaption($this->volume);
+                    $doc->exportCaption($this->bau);
                     $doc->exportCaption($this->status);
                 } else {
                     $doc->exportCaption($this->id);
@@ -1446,11 +1446,11 @@ SORTHTML;
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->sediaan);
-                    $doc->exportCaption($this->ukuran);
                     $doc->exportCaption($this->warna);
-                    $doc->exportCaption($this->bau);
                     $doc->exportCaption($this->fungsi);
                     $doc->exportCaption($this->jumlah);
+                    $doc->exportCaption($this->volume);
+                    $doc->exportCaption($this->bau);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->readonly);
@@ -1487,11 +1487,11 @@ SORTHTML;
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
                         $doc->exportField($this->sediaan);
-                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->warna);
-                        $doc->exportField($this->bau);
                         $doc->exportField($this->fungsi);
                         $doc->exportField($this->jumlah);
+                        $doc->exportField($this->volume);
+                        $doc->exportField($this->bau);
                         $doc->exportField($this->status);
                     } else {
                         $doc->exportField($this->id);
@@ -1500,11 +1500,11 @@ SORTHTML;
                         $doc->exportField($this->kode);
                         $doc->exportField($this->nama);
                         $doc->exportField($this->sediaan);
-                        $doc->exportField($this->ukuran);
                         $doc->exportField($this->warna);
-                        $doc->exportField($this->bau);
                         $doc->exportField($this->fungsi);
                         $doc->exportField($this->jumlah);
+                        $doc->exportField($this->volume);
+                        $doc->exportField($this->bau);
                         $doc->exportField($this->status);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->readonly);
@@ -1582,7 +1582,7 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        updateStatus("npd", $rsnew['idnpd']);
+        //updateStatus("npd", $rsnew['idnpd']);
     }
 
     // Row Updating event
@@ -1597,7 +1597,7 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
-        updateStatus("npd", $rsold['idnpd']);
+        //updateStatus("npd", $rsold['idnpd']);
     }
 
     // Row Update Conflict event

@@ -42,27 +42,13 @@ $npd_serahterima = Container("npd_serahterima");
 </td>
         </tr>
 <?php } ?>
-<?php if ($npd_serahterima->readonly->Visible) { // readonly ?>
-        <tr id="r_readonly">
-            <td class="<?= $npd_serahterima->TableLeftColumnClass ?>"><?= $npd_serahterima->readonly->caption() ?></td>
-            <td <?= $npd_serahterima->readonly->cellAttributes() ?>>
-<span id="el_npd_serahterima_readonly">
-<span<?= $npd_serahterima->readonly->viewAttributes() ?>>
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" id="x_readonly_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $npd_serahterima->readonly->getViewValue() ?>" disabled<?php if (ConvertToBool($npd_serahterima->readonly->CurrentValue)) { ?> checked<?php } ?>>
-    <label class="custom-control-label" for="x_readonly_<?= $Page->RowCount ?>"></label>
-</div></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($npd_serahterima->created_at->Visible) { // created_at ?>
-        <tr id="r_created_at">
-            <td class="<?= $npd_serahterima->TableLeftColumnClass ?>"><?= $npd_serahterima->created_at->caption() ?></td>
-            <td <?= $npd_serahterima->created_at->cellAttributes() ?>>
-<span id="el_npd_serahterima_created_at">
-<span<?= $npd_serahterima->created_at->viewAttributes() ?>>
-<?= $npd_serahterima->created_at->getViewValue() ?></span>
+<?php if ($npd_serahterima->submitted_by->Visible) { // submitted_by ?>
+        <tr id="r_submitted_by">
+            <td class="<?= $npd_serahterima->TableLeftColumnClass ?>"><?= $npd_serahterima->submitted_by->caption() ?></td>
+            <td <?= $npd_serahterima->submitted_by->cellAttributes() ?>>
+<span id="el_npd_serahterima_submitted_by">
+<span<?= $npd_serahterima->submitted_by->viewAttributes() ?>>
+<?= $npd_serahterima->submitted_by->getViewValue() ?></span>
 </span>
 </td>
         </tr>

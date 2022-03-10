@@ -1875,7 +1875,7 @@ SORTHTML;
         $brand = ExecuteRow("SELECT kode_sip FROM brand WHERE id = {$rsnew['idbrand']}")['kode_sip'];
         $query = curl_get(url_integrasi() . "?action=getKodeKonsumen&kode={$brand}");
         $konsumen = json_decode($query, true)['data'];
-        $url_auth = url_integrasi() . "?action=login&username=bsd&password=bsdabc";
+        $url_auth = url_integrasi_auth('bsd', 'bsdabc');
         $orders = [
             'no_penjualan' => $rsnew['kode'],
             'tgl' => date('Y-m-d', strtotime($rsnew['tanggal'])),

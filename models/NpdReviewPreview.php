@@ -395,7 +395,6 @@ class NpdReviewPreview extends NpdReview
         $this->idnpd_sample->setVisibility();
         $this->tanggal_review->setVisibility();
         $this->tanggal_submit->setVisibility();
-        $this->ukuran->setVisibility();
         $this->wadah->Visible = false;
         $this->bentuk_opsi->Visible = false;
         $this->bentuk_revisi->Visible = false;
@@ -424,6 +423,8 @@ class NpdReviewPreview extends NpdReview
         $this->created_at->Visible = false;
         $this->readonly->Visible = false;
         $this->review_by->setVisibility();
+        $this->receipt_by->setVisibility();
+        $this->checked_by->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -444,6 +445,8 @@ class NpdReviewPreview extends NpdReview
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
         $this->setupLookupOptions($this->review_by);
+        $this->setupLookupOptions($this->receipt_by);
+        $this->setupLookupOptions($this->checked_by);
 
         // Load filter
         $filter = Get("f", "");
@@ -517,7 +520,6 @@ class NpdReviewPreview extends NpdReview
             $this->idnpd_sample->setSort("");
             $this->tanggal_review->setSort("");
             $this->tanggal_submit->setSort("");
-            $this->ukuran->setSort("");
             $this->wadah->setSort("");
             $this->bentuk_opsi->setSort("");
             $this->bentuk_revisi->setSort("");
@@ -546,6 +548,8 @@ class NpdReviewPreview extends NpdReview
             $this->created_at->setSort("");
             $this->readonly->setSort("");
             $this->review_by->setSort("");
+            $this->receipt_by->setSort("");
+            $this->checked_by->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -561,9 +565,10 @@ class NpdReviewPreview extends NpdReview
             $this->updateSort($this->idnpd_sample); // idnpd_sample
             $this->updateSort($this->tanggal_review); // tanggal_review
             $this->updateSort($this->tanggal_submit); // tanggal_submit
-            $this->updateSort($this->ukuran); // ukuran
             $this->updateSort($this->status); // status
             $this->updateSort($this->review_by); // review_by
+            $this->updateSort($this->receipt_by); // receipt_by
+            $this->updateSort($this->checked_by); // checked_by
         }
     }
 
@@ -800,7 +805,7 @@ class NpdReviewPreview extends NpdReview
             switch ($fld->FieldVar) {
                 case "x_idnpd":
                     $lookupFilter = function () {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_sample`)";
+                        return "`idnpd` IN (SELECT `idnpd` FROM `npd_sample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
@@ -837,6 +842,10 @@ class NpdReviewPreview extends NpdReview
                 case "x_readonly":
                     break;
                 case "x_review_by":
+                    break;
+                case "x_receipt_by":
+                    break;
+                case "x_checked_by":
                     break;
                 default:
                     $lookupFilter = "";

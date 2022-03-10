@@ -26,9 +26,10 @@ loadjs.ready("head", function () {
         ["idnpd_sample", [fields.idnpd_sample.visible && fields.idnpd_sample.required ? ew.Validators.required(fields.idnpd_sample.caption) : null], fields.idnpd_sample.isInvalid],
         ["tanggal_review", [fields.tanggal_review.visible && fields.tanggal_review.required ? ew.Validators.required(fields.tanggal_review.caption) : null, ew.Validators.datetime(0)], fields.tanggal_review.isInvalid],
         ["tanggal_submit", [fields.tanggal_submit.visible && fields.tanggal_submit.required ? ew.Validators.required(fields.tanggal_submit.caption) : null, ew.Validators.datetime(0)], fields.tanggal_submit.isInvalid],
-        ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
         ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
-        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null], fields.review_by.isInvalid]
+        ["review_by", [fields.review_by.visible && fields.review_by.required ? ew.Validators.required(fields.review_by.caption) : null], fields.review_by.isInvalid],
+        ["receipt_by", [fields.receipt_by.visible && fields.receipt_by.required ? ew.Validators.required(fields.receipt_by.caption) : null], fields.receipt_by.isInvalid],
+        ["checked_by", [fields.checked_by.visible && fields.checked_by.required ? ew.Validators.required(fields.checked_by.caption) : null], fields.checked_by.isInvalid]
     ]);
 
     // Set invalid fields
@@ -90,11 +91,13 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "tanggal_submit", false))
             return false;
-        if (ew.valueChanged(fobj, rowIndex, "ukuran", false))
-            return false;
         if (ew.valueChanged(fobj, rowIndex, "status", false))
             return false;
         if (ew.valueChanged(fobj, rowIndex, "review_by", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "receipt_by", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "checked_by", false))
             return false;
         return true;
     }
@@ -113,6 +116,8 @@ loadjs.ready("head", function () {
     fnpd_reviewgrid.lists.idnpd_sample = <?= $Grid->idnpd_sample->toClientList($Grid) ?>;
     fnpd_reviewgrid.lists.status = <?= $Grid->status->toClientList($Grid) ?>;
     fnpd_reviewgrid.lists.review_by = <?= $Grid->review_by->toClientList($Grid) ?>;
+    fnpd_reviewgrid.lists.receipt_by = <?= $Grid->receipt_by->toClientList($Grid) ?>;
+    fnpd_reviewgrid.lists.checked_by = <?= $Grid->checked_by->toClientList($Grid) ?>;
     loadjs.done("fnpd_reviewgrid");
 });
 </script>
@@ -149,14 +154,17 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->tanggal_submit->Visible) { // tanggal_submit ?>
         <th data-name="tanggal_submit" class="<?= $Grid->tanggal_submit->headerCellClass() ?>"><div id="elh_npd_review_tanggal_submit" class="npd_review_tanggal_submit"><?= $Grid->renderSort($Grid->tanggal_submit) ?></div></th>
 <?php } ?>
-<?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <th data-name="ukuran" class="<?= $Grid->ukuran->headerCellClass() ?>"><div id="elh_npd_review_ukuran" class="npd_review_ukuran"><?= $Grid->renderSort($Grid->ukuran) ?></div></th>
-<?php } ?>
 <?php if ($Grid->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Grid->status->headerCellClass() ?>"><div id="elh_npd_review_status" class="npd_review_status"><?= $Grid->renderSort($Grid->status) ?></div></th>
 <?php } ?>
 <?php if ($Grid->review_by->Visible) { // review_by ?>
         <th data-name="review_by" class="<?= $Grid->review_by->headerCellClass() ?>"><div id="elh_npd_review_review_by" class="npd_review_review_by"><?= $Grid->renderSort($Grid->review_by) ?></div></th>
+<?php } ?>
+<?php if ($Grid->receipt_by->Visible) { // receipt_by ?>
+        <th data-name="receipt_by" class="<?= $Grid->receipt_by->headerCellClass() ?>"><div id="elh_npd_review_receipt_by" class="npd_review_receipt_by"><?= $Grid->renderSort($Grid->receipt_by) ?></div></th>
+<?php } ?>
+<?php if ($Grid->checked_by->Visible) { // checked_by ?>
+        <th data-name="checked_by" class="<?= $Grid->checked_by->headerCellClass() ?>"><div id="elh_npd_review_checked_by" class="npd_review_checked_by"><?= $Grid->renderSort($Grid->checked_by) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -509,33 +517,6 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran" <?= $Grid->ukuran->cellAttributes() ?>>
-<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran" class="form-group">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_npd_review_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<?= $Grid->ukuran->getViewValue() ?></span>
-</span>
-<?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_ukuran" id="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_ukuran" id="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-<?php } ?>
-<?php } ?>
-</td>
-    <?php } ?>
     <?php if ($Grid->status->Visible) { // status ?>
         <td data-name="status" <?= $Grid->status->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -668,6 +649,144 @@ loadjs.ready("head", function() {
 <?php if ($Grid->isConfirm()) { ?>
 <input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_review_by" id="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->FormValue) ?>">
 <input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_review_by" id="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->receipt_by->Visible) { // receipt_by ?>
+        <td data-name="receipt_by" <?= $Grid->receipt_by->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_receipt_by" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_receipt_by"
+        name="x<?= $Grid->RowIndex ?>_receipt_by"
+        class="form-control ew-select<?= $Grid->receipt_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_receipt_by"
+        data-table="npd_review"
+        data-field="x_receipt_by"
+        data-value-separator="<?= $Grid->receipt_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->receipt_by->getPlaceHolder()) ?>"
+        <?= $Grid->receipt_by->editAttributes() ?>>
+        <?= $Grid->receipt_by->selectOptionListHtml("x{$Grid->RowIndex}_receipt_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->receipt_by->getErrorMessage() ?></div>
+<?= $Grid->receipt_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_receipt_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_receipt_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_receipt_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_receipt_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.receipt_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<input type="hidden" data-table="npd_review" data-field="x_receipt_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_receipt_by" id="o<?= $Grid->RowIndex ?>_receipt_by" value="<?= HtmlEncode($Grid->receipt_by->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_receipt_by" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_receipt_by"
+        name="x<?= $Grid->RowIndex ?>_receipt_by"
+        class="form-control ew-select<?= $Grid->receipt_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_receipt_by"
+        data-table="npd_review"
+        data-field="x_receipt_by"
+        data-value-separator="<?= $Grid->receipt_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->receipt_by->getPlaceHolder()) ?>"
+        <?= $Grid->receipt_by->editAttributes() ?>>
+        <?= $Grid->receipt_by->selectOptionListHtml("x{$Grid->RowIndex}_receipt_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->receipt_by->getErrorMessage() ?></div>
+<?= $Grid->receipt_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_receipt_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_receipt_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_receipt_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_receipt_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.receipt_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_receipt_by">
+<span<?= $Grid->receipt_by->viewAttributes() ?>>
+<?= $Grid->receipt_by->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_review" data-field="x_receipt_by" data-hidden="1" name="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_receipt_by" id="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_receipt_by" value="<?= HtmlEncode($Grid->receipt_by->FormValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_receipt_by" data-hidden="1" name="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_receipt_by" id="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_receipt_by" value="<?= HtmlEncode($Grid->receipt_by->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->checked_by->Visible) { // checked_by ?>
+        <td data-name="checked_by" <?= $Grid->checked_by->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_checked_by" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_checked_by"
+        name="x<?= $Grid->RowIndex ?>_checked_by"
+        class="form-control ew-select<?= $Grid->checked_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_checked_by"
+        data-table="npd_review"
+        data-field="x_checked_by"
+        data-value-separator="<?= $Grid->checked_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->checked_by->getPlaceHolder()) ?>"
+        <?= $Grid->checked_by->editAttributes() ?>>
+        <?= $Grid->checked_by->selectOptionListHtml("x{$Grid->RowIndex}_checked_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->checked_by->getErrorMessage() ?></div>
+<?= $Grid->checked_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_checked_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_checked_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_checked_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_checked_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.checked_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<input type="hidden" data-table="npd_review" data-field="x_checked_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_checked_by" id="o<?= $Grid->RowIndex ?>_checked_by" value="<?= HtmlEncode($Grid->checked_by->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_checked_by" class="form-group">
+    <select
+        id="x<?= $Grid->RowIndex ?>_checked_by"
+        name="x<?= $Grid->RowIndex ?>_checked_by"
+        class="form-control ew-select<?= $Grid->checked_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_checked_by"
+        data-table="npd_review"
+        data-field="x_checked_by"
+        data-value-separator="<?= $Grid->checked_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->checked_by->getPlaceHolder()) ?>"
+        <?= $Grid->checked_by->editAttributes() ?>>
+        <?= $Grid->checked_by->selectOptionListHtml("x{$Grid->RowIndex}_checked_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->checked_by->getErrorMessage() ?></div>
+<?= $Grid->checked_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_checked_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_checked_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_checked_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_checked_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.checked_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_review_checked_by">
+<span<?= $Grid->checked_by->viewAttributes() ?>>
+<?= $Grid->checked_by->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_review" data-field="x_checked_by" data-hidden="1" name="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_checked_by" id="fnpd_reviewgrid$x<?= $Grid->RowIndex ?>_checked_by" value="<?= HtmlEncode($Grid->checked_by->FormValue) ?>">
+<input type="hidden" data-table="npd_review" data-field="x_checked_by" data-hidden="1" name="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_checked_by" id="fnpd_reviewgrid$o<?= $Grid->RowIndex ?>_checked_by" value="<?= HtmlEncode($Grid->checked_by->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -849,23 +968,6 @@ loadjs.ready(["fnpd_reviewgrid", "datetimepicker"], function() {
 <input type="hidden" data-table="npd_review" data-field="x_tanggal_submit" data-hidden="1" name="o<?= $Grid->RowIndex ?>_tanggal_submit" id="o<?= $Grid->RowIndex ?>_tanggal_submit" value="<?= HtmlEncode($Grid->tanggal_submit->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->ukuran->Visible) { // ukuran ?>
-        <td data-name="ukuran">
-<?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_npd_review_ukuran" class="form-group npd_review_ukuran">
-<input type="<?= $Grid->ukuran->getInputTextType() ?>" data-table="npd_review" data-field="x_ukuran" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->ukuran->getPlaceHolder()) ?>" value="<?= $Grid->ukuran->EditValue ?>"<?= $Grid->ukuran->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->ukuran->getErrorMessage() ?></div>
-</span>
-<?php } else { ?>
-<span id="el$rowindex$_npd_review_ukuran" class="form-group npd_review_ukuran">
-<span<?= $Grid->ukuran->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->ukuran->getDisplayValue($Grid->ukuran->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="x<?= $Grid->RowIndex ?>_ukuran" id="x<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->FormValue) ?>">
-<?php } ?>
-<input type="hidden" data-table="npd_review" data-field="x_ukuran" data-hidden="1" name="o<?= $Grid->RowIndex ?>_ukuran" id="o<?= $Grid->RowIndex ?>_ukuran" value="<?= HtmlEncode($Grid->ukuran->OldValue) ?>">
-</td>
-    <?php } ?>
     <?php if ($Grid->status->Visible) { // status ?>
         <td data-name="status">
 <?php if (!$Grid->isConfirm()) { ?>
@@ -939,6 +1041,82 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="x<?= $Grid->RowIndex ?>_review_by" id="x<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="npd_review" data-field="x_review_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_review_by" id="o<?= $Grid->RowIndex ?>_review_by" value="<?= HtmlEncode($Grid->review_by->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->receipt_by->Visible) { // receipt_by ?>
+        <td data-name="receipt_by">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_review_receipt_by" class="form-group npd_review_receipt_by">
+    <select
+        id="x<?= $Grid->RowIndex ?>_receipt_by"
+        name="x<?= $Grid->RowIndex ?>_receipt_by"
+        class="form-control ew-select<?= $Grid->receipt_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_receipt_by"
+        data-table="npd_review"
+        data-field="x_receipt_by"
+        data-value-separator="<?= $Grid->receipt_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->receipt_by->getPlaceHolder()) ?>"
+        <?= $Grid->receipt_by->editAttributes() ?>>
+        <?= $Grid->receipt_by->selectOptionListHtml("x{$Grid->RowIndex}_receipt_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->receipt_by->getErrorMessage() ?></div>
+<?= $Grid->receipt_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_receipt_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_receipt_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_receipt_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_receipt_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.receipt_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_review_receipt_by" class="form-group npd_review_receipt_by">
+<span<?= $Grid->receipt_by->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->receipt_by->getDisplayValue($Grid->receipt_by->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_review" data-field="x_receipt_by" data-hidden="1" name="x<?= $Grid->RowIndex ?>_receipt_by" id="x<?= $Grid->RowIndex ?>_receipt_by" value="<?= HtmlEncode($Grid->receipt_by->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_review" data-field="x_receipt_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_receipt_by" id="o<?= $Grid->RowIndex ?>_receipt_by" value="<?= HtmlEncode($Grid->receipt_by->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->checked_by->Visible) { // checked_by ?>
+        <td data-name="checked_by">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_review_checked_by" class="form-group npd_review_checked_by">
+    <select
+        id="x<?= $Grid->RowIndex ?>_checked_by"
+        name="x<?= $Grid->RowIndex ?>_checked_by"
+        class="form-control ew-select<?= $Grid->checked_by->isInvalidClass() ?>"
+        data-select2-id="npd_review_x<?= $Grid->RowIndex ?>_checked_by"
+        data-table="npd_review"
+        data-field="x_checked_by"
+        data-value-separator="<?= $Grid->checked_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->checked_by->getPlaceHolder()) ?>"
+        <?= $Grid->checked_by->editAttributes() ?>>
+        <?= $Grid->checked_by->selectOptionListHtml("x{$Grid->RowIndex}_checked_by") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->checked_by->getErrorMessage() ?></div>
+<?= $Grid->checked_by->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_checked_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_review_x<?= $Grid->RowIndex ?>_checked_by']"),
+        options = { name: "x<?= $Grid->RowIndex ?>_checked_by", selectId: "npd_review_x<?= $Grid->RowIndex ?>_checked_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd_review.fields.checked_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_review_checked_by" class="form-group npd_review_checked_by">
+<span<?= $Grid->checked_by->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->checked_by->getDisplayValue($Grid->checked_by->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_review" data-field="x_checked_by" data-hidden="1" name="x<?= $Grid->RowIndex ?>_checked_by" id="x<?= $Grid->RowIndex ?>_checked_by" value="<?= HtmlEncode($Grid->checked_by->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_review" data-field="x_checked_by" data-hidden="1" name="o<?= $Grid->RowIndex ?>_checked_by" id="o<?= $Grid->RowIndex ?>_checked_by" value="<?= HtmlEncode($Grid->checked_by->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

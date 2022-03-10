@@ -1505,6 +1505,8 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
+        //$idproduct = ExecuteRow("SELECT idproduct FROM order_detail WHERE id = {$rsnew['idorder_detail']}")['idproduct'];
+        //stok_trx($rsnew['id'], 'detaildelivery-in', $idproduct, $rsnew['jumlahkirim'], 'masuk');
     }
 
     // Row Update Conflict event

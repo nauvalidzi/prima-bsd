@@ -89,17 +89,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->ukuran->Visible) { // ukuran ?>
-    <tr id="r_ukuran">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_sample_ukuran"><?= $Page->ukuran->caption() ?></span></td>
-        <td data-name="ukuran" <?= $Page->ukuran->cellAttributes() ?>>
-<span id="el_npd_sample_ukuran">
-<span<?= $Page->ukuran->viewAttributes() ?>>
-<?= $Page->ukuran->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->warna->Visible) { // warna ?>
     <tr id="r_warna">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_sample_warna"><?= $Page->warna->caption() ?></span></td>
@@ -107,17 +96,6 @@ $Page->showMessage();
 <span id="el_npd_sample_warna">
 <span<?= $Page->warna->viewAttributes() ?>>
 <?= $Page->warna->getViewValue() ?></span>
-</span>
-</td>
-    </tr>
-<?php } ?>
-<?php if ($Page->bau->Visible) { // bau ?>
-    <tr id="r_bau">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_sample_bau"><?= $Page->bau->caption() ?></span></td>
-        <td data-name="bau" <?= $Page->bau->cellAttributes() ?>>
-<span id="el_npd_sample_bau">
-<span<?= $Page->bau->viewAttributes() ?>>
-<?= $Page->bau->getViewValue() ?></span>
 </span>
 </td>
     </tr>
@@ -140,6 +118,28 @@ $Page->showMessage();
 <span id="el_npd_sample_jumlah">
 <span<?= $Page->jumlah->viewAttributes() ?>>
 <?= $Page->jumlah->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->volume->Visible) { // volume ?>
+    <tr id="r_volume">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_sample_volume"><?= $Page->volume->caption() ?></span></td>
+        <td data-name="volume" <?= $Page->volume->cellAttributes() ?>>
+<span id="el_npd_sample_volume">
+<span<?= $Page->volume->viewAttributes() ?>>
+<?= $Page->volume->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->bau->Visible) { // bau ?>
+    <tr id="r_bau">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_sample_bau"><?= $Page->bau->caption() ?></span></td>
+        <td data-name="bau" <?= $Page->bau->cellAttributes() ?>>
+<span id="el_npd_sample_bau">
+<span<?= $Page->bau->viewAttributes() ?>>
+<?= $Page->bau->getViewValue() ?></span>
 </span>
 </td>
     </tr>
