@@ -654,7 +654,7 @@ class NpdSampleAdd extends NpdSample
         $this->status->CurrentValue = 0;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->readonly->CurrentValue = 0;
+        $this->readonly->CurrentValue = CurrentDate();
     }
 
     // Load form values

@@ -1356,7 +1356,7 @@ class NpdHargaEdit extends NpdHarga
                 if ($this->idnpd->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_confirm`)";
+                        return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -2776,7 +2776,7 @@ class NpdHargaEdit extends NpdHarga
             switch ($fld->FieldVar) {
                 case "x_idnpd":
                     $lookupFilter = function () {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_confirm`)";
+                        return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;

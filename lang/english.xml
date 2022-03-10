@@ -2271,7 +2271,7 @@
         <phrase id="fldcaption" value="Diterima oleh" />
       </field>
       <field id="checked_by">
-        <phrase id="fldcaption" value="Diperiksa oleh" />
+        <phrase id="fldcaption" value="Diterima oleh" />
       </field>
     </table>
     <table id="npd_confirmsample">
@@ -2280,13 +2280,40 @@
         <phrase id="fldcaption" value="ID" />
       </field>
       <field id="idnpd">
-        <phrase id="fldcaption" value="Kode Pengajuan" />
+        <phrase id="fldcaption" value="Kode Order" />
       </field>
       <field id="tglkonfirmasi">
         <phrase id="fldcaption" value="Tgl. Konfirmasi" />
       </field>
       <field id="idnpd_sample">
         <phrase id="fldcaption" value="Kode Sample" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama Produk" />
+      </field>
+      <field id="bentuk">
+        <phrase id="fldcaption" value="Bentuk" />
+      </field>
+      <field id="viskositas">
+        <phrase id="fldcaption" value="Viskositas" />
+      </field>
+      <field id="warna">
+        <phrase id="fldcaption" value="Warna" />
+      </field>
+      <field id="bauparfum">
+        <phrase id="fldcaption" value="Bau/Parfum" />
+      </field>
+      <field id="aplikasisediaan">
+        <phrase id="fldcaption" value="Aplikasi Sediaan" />
+      </field>
+      <field id="volume">
+        <phrase id="fldcaption" value="Volume" />
+      </field>
+      <field id="campaign">
+        <phrase id="fldcaption" value="Klaim Bahan Aktif/Campaign" />
+      </field>
+      <field id="alasansetuju">
+        <phrase id="fldcaption" value="Alasan Utama Setuju" />
       </field>
       <field id="foto">
         <phrase id="fldcaption" value="Foto Sample" />
@@ -2309,8 +2336,8 @@
       <field id="created_at">
         <phrase id="fldcaption" value="Created at" />
       </field>
-      <field id="confirm_by">
-        <phrase id="fldcaption" value="Created by" />
+      <field id="receipt_by">
+        <phrase id="fldcaption" value="Diterima oleh" />
       </field>
       <field id="readonly">
         <phrase id="fldcaption" value="Readonly" />

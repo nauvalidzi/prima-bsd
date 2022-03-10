@@ -749,10 +749,8 @@ class NpdAdd extends Npd
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
         $this->idbrand->CurrentValue = null;
         $this->idbrand->OldValue = $this->idbrand->CurrentValue;
-        $this->tanggal_order->CurrentValue = null;
-        $this->tanggal_order->OldValue = $this->tanggal_order->CurrentValue;
-        $this->target_selesai->CurrentValue = null;
-        $this->target_selesai->OldValue = $this->target_selesai->CurrentValue;
+        $this->tanggal_order->CurrentValue = CurrentDate();
+        $this->target_selesai->CurrentValue = CurrentDate();
         $this->sifatorder->CurrentValue = null;
         $this->sifatorder->OldValue = $this->sifatorder->CurrentValue;
         $this->kodeorder->CurrentValue = null;
@@ -890,7 +888,7 @@ class NpdAdd extends Npd
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->updated_at->CurrentValue = null;
         $this->updated_at->OldValue = $this->updated_at->CurrentValue;
-        $this->selesai->CurrentValue = 0;
+        $this->selesai->CurrentValue = CurrentDate();
     }
 
     // Load form values

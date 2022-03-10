@@ -639,8 +639,7 @@ class NpdSerahterimaAdd extends NpdSerahterima
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
         $this->tgl_request->CurrentValue = null;
         $this->tgl_request->OldValue = $this->tgl_request->CurrentValue;
-        $this->tgl_serahterima->CurrentValue = null;
-        $this->tgl_serahterima->OldValue = $this->tgl_serahterima->CurrentValue;
+        $this->tgl_serahterima->CurrentValue = CurrentDate();
         $this->readonly->CurrentValue = 0;
         $this->submitted_by->CurrentValue = null;
         $this->submitted_by->OldValue = $this->submitted_by->CurrentValue;

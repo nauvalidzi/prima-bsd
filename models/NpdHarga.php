@@ -1450,7 +1450,7 @@ SORTHTML;
             if ($this->idnpd->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return "`id` IN (SELECT `idnpd` FROM `npd_confirm`)";
+                    return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1910,7 +1910,7 @@ SORTHTML;
                 if ($this->idnpd->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_confirm`)";
+                        return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -2661,7 +2661,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        $myResult = ExecuteUpdate("UPDATE npd_confirm SET readonly=1 WHERE idnpd_sample=".$rsnew['idnpd_sample']);
+        ExecuteUpdate("UPDATE npd_confirmsample SET readonly=1 WHERE idnpd_sample=".$rsnew['idnpd_sample']);
         return true;
     }
 
@@ -2669,7 +2669,7 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
-        updateStatus("npd", $rsnew['idnpd']);
+        //updateStatus("npd", $rsnew['idnpd']);
     }
 
     // Row Updating event
@@ -2684,7 +2684,7 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
-        updateStatus("npd", $rsold['idnpd']);
+        //updateStatus("npd", $rsold['idnpd']);
     }
 
     // Row Update Conflict event

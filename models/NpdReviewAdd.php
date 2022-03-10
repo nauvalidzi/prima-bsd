@@ -672,8 +672,7 @@ class NpdReviewAdd extends NpdReview
         $this->idnpd->OldValue = $this->idnpd->CurrentValue;
         $this->idnpd_sample->CurrentValue = null;
         $this->idnpd_sample->OldValue = $this->idnpd_sample->CurrentValue;
-        $this->tanggal_review->CurrentValue = null;
-        $this->tanggal_review->OldValue = $this->tanggal_review->CurrentValue;
+        $this->tanggal_review->CurrentValue = CurrentDate();
         $this->tanggal_submit->CurrentValue = null;
         $this->tanggal_submit->OldValue = $this->tanggal_submit->CurrentValue;
         $this->wadah->CurrentValue = null;

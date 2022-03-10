@@ -1354,7 +1354,7 @@ class NpdSampleGrid extends NpdSample
         $this->status->OldValue = $this->status->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->readonly->CurrentValue = 0;
+        $this->readonly->CurrentValue = CurrentDate();
         $this->readonly->OldValue = $this->readonly->CurrentValue;
     }
 

@@ -813,7 +813,7 @@ class NpdHargaPreview extends NpdHarga
             switch ($fld->FieldVar) {
                 case "x_idnpd":
                     $lookupFilter = function () {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_confirm`)";
+                        return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
