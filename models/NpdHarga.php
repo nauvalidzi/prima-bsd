@@ -32,10 +32,13 @@ class NpdHarga extends DbTable
     public $idnpd;
     public $tglpengajuan;
     public $idnpd_sample;
+    public $nama;
     public $bentuk;
-    public $viskositasbarang;
-    public $idaplikasibarang;
-    public $ukuranwadah;
+    public $viskositas;
+    public $aplikasisediaan;
+    public $volume;
+    public $bahanaktif;
+    public $volumewadah;
     public $bahanwadah;
     public $warnawadah;
     public $bentukwadah;
@@ -45,10 +48,11 @@ class NpdHarga extends DbTable
     public $bentuktutup;
     public $segel;
     public $catatanprimer;
-    public $packingkarton;
+    public $packingproduk;
     public $keteranganpacking;
     public $beltkarton;
     public $keteranganbelt;
+    public $kartonluar;
     public $bariskarton;
     public $kolomkarton;
     public $stackkarton;
@@ -57,18 +61,24 @@ class NpdHarga extends DbTable
     public $keteranganjenislabel;
     public $kualitaslabel;
     public $jumlahwarnalabel;
+    public $metaliklabel;
     public $etiketlabel;
-    public $keteranganetiket;
+    public $keteranganlabel;
     public $kategoridelivery;
     public $alamatpengiriman;
     public $orderperdana;
     public $orderkontrak;
-    public $hargapcs;
+    public $hargaperpcs;
+    public $hargaperkarton;
     public $lampiran;
+    public $prepared_by;
+    public $checked_by;
+    public $approved_by;
+    public $approved_date;
     public $disetujui;
     public $created_at;
-    public $created_by;
     public $readonly;
+    public $updated_at;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -102,6 +112,7 @@ class NpdHarga extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
@@ -159,6 +170,14 @@ class NpdHarga extends DbTable
         $this->idnpd_sample->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd_sample->Param, "CustomMsg");
         $this->Fields['idnpd_sample'] = &$this->idnpd_sample;
 
+        // nama
+        $this->nama = new DbField('npd_harga', 'npd_harga', 'x_nama', 'nama', '`nama`', '`nama`', 200, 50, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama->Nullable = false; // NOT NULL field
+        $this->nama->Required = true; // Required field
+        $this->nama->Sortable = true; // Allow sort
+        $this->nama->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama->Param, "CustomMsg");
+        $this->Fields['nama'] = &$this->nama;
+
         // bentuk
         $this->bentuk = new DbField('npd_harga', 'npd_harga', 'x_bentuk', 'bentuk', '`bentuk`', '`bentuk`', 200, 50, -1, false, '`bentuk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bentuk->Nullable = false; // NOT NULL field
@@ -167,33 +186,49 @@ class NpdHarga extends DbTable
         $this->bentuk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bentuk->Param, "CustomMsg");
         $this->Fields['bentuk'] = &$this->bentuk;
 
-        // viskositasbarang
-        $this->viskositasbarang = new DbField('npd_harga', 'npd_harga', 'x_viskositasbarang', 'viskositasbarang', '`viskositasbarang`', '`viskositasbarang`', 200, 100, -1, false, '`viskositasbarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->viskositasbarang->Nullable = false; // NOT NULL field
-        $this->viskositasbarang->Required = true; // Required field
-        $this->viskositasbarang->Sortable = true; // Allow sort
-        $this->viskositasbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->viskositasbarang->Param, "CustomMsg");
-        $this->Fields['viskositasbarang'] = &$this->viskositasbarang;
+        // viskositas
+        $this->viskositas = new DbField('npd_harga', 'npd_harga', 'x_viskositas', 'viskositas', '`viskositas`', '`viskositas`', 200, 50, -1, false, '`viskositas`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->viskositas->Nullable = false; // NOT NULL field
+        $this->viskositas->Required = true; // Required field
+        $this->viskositas->Sortable = true; // Allow sort
+        $this->viskositas->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->viskositas->Param, "CustomMsg");
+        $this->Fields['viskositas'] = &$this->viskositas;
 
-        // idaplikasibarang
-        $this->idaplikasibarang = new DbField('npd_harga', 'npd_harga', 'x_idaplikasibarang', 'idaplikasibarang', '`idaplikasibarang`', '`idaplikasibarang`', 3, 11, -1, false, '`idaplikasibarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idaplikasibarang->Nullable = false; // NOT NULL field
-        $this->idaplikasibarang->Required = true; // Required field
-        $this->idaplikasibarang->Sortable = true; // Allow sort
-        $this->idaplikasibarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idaplikasibarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idaplikasibarang->Param, "CustomMsg");
-        $this->Fields['idaplikasibarang'] = &$this->idaplikasibarang;
+        // aplikasisediaan
+        $this->aplikasisediaan = new DbField('npd_harga', 'npd_harga', 'x_aplikasisediaan', 'aplikasisediaan', '`aplikasisediaan`', '`aplikasisediaan`', 3, 11, -1, false, '`aplikasisediaan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->aplikasisediaan->Nullable = false; // NOT NULL field
+        $this->aplikasisediaan->Required = true; // Required field
+        $this->aplikasisediaan->Sortable = true; // Allow sort
+        $this->aplikasisediaan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->aplikasisediaan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aplikasisediaan->Param, "CustomMsg");
+        $this->Fields['aplikasisediaan'] = &$this->aplikasisediaan;
 
-        // ukuranwadah
-        $this->ukuranwadah = new DbField('npd_harga', 'npd_harga', 'x_ukuranwadah', 'ukuranwadah', '`ukuranwadah`', '`ukuranwadah`', 200, 100, -1, false, '`ukuranwadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->ukuranwadah->Nullable = false; // NOT NULL field
-        $this->ukuranwadah->Required = true; // Required field
-        $this->ukuranwadah->Sortable = true; // Allow sort
-        $this->ukuranwadah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ukuranwadah->Param, "CustomMsg");
-        $this->Fields['ukuranwadah'] = &$this->ukuranwadah;
+        // volume
+        $this->volume = new DbField('npd_harga', 'npd_harga', 'x_volume', 'volume', '`volume`', '`volume`', 200, 50, -1, false, '`volume`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->volume->Nullable = false; // NOT NULL field
+        $this->volume->Required = true; // Required field
+        $this->volume->Sortable = true; // Allow sort
+        $this->volume->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->volume->Param, "CustomMsg");
+        $this->Fields['volume'] = &$this->volume;
+
+        // bahanaktif
+        $this->bahanaktif = new DbField('npd_harga', 'npd_harga', 'x_bahanaktif', 'bahanaktif', '`bahanaktif`', '`bahanaktif`', 201, 65535, -1, false, '`bahanaktif`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->bahanaktif->Nullable = false; // NOT NULL field
+        $this->bahanaktif->Required = true; // Required field
+        $this->bahanaktif->Sortable = true; // Allow sort
+        $this->bahanaktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bahanaktif->Param, "CustomMsg");
+        $this->Fields['bahanaktif'] = &$this->bahanaktif;
+
+        // volumewadah
+        $this->volumewadah = new DbField('npd_harga', 'npd_harga', 'x_volumewadah', 'volumewadah', '`volumewadah`', '`volumewadah`', 200, 50, -1, false, '`volumewadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->volumewadah->Nullable = false; // NOT NULL field
+        $this->volumewadah->Required = true; // Required field
+        $this->volumewadah->Sortable = true; // Allow sort
+        $this->volumewadah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->volumewadah->Param, "CustomMsg");
+        $this->Fields['volumewadah'] = &$this->volumewadah;
 
         // bahanwadah
-        $this->bahanwadah = new DbField('npd_harga', 'npd_harga', 'x_bahanwadah', 'bahanwadah', '`bahanwadah`', '`bahanwadah`', 200, 100, -1, false, '`bahanwadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bahanwadah = new DbField('npd_harga', 'npd_harga', 'x_bahanwadah', 'bahanwadah', '`bahanwadah`', '`bahanwadah`', 200, 50, -1, false, '`bahanwadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bahanwadah->Nullable = false; // NOT NULL field
         $this->bahanwadah->Required = true; // Required field
         $this->bahanwadah->Sortable = true; // Allow sort
@@ -201,7 +236,7 @@ class NpdHarga extends DbTable
         $this->Fields['bahanwadah'] = &$this->bahanwadah;
 
         // warnawadah
-        $this->warnawadah = new DbField('npd_harga', 'npd_harga', 'x_warnawadah', 'warnawadah', '`warnawadah`', '`warnawadah`', 200, 100, -1, false, '`warnawadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->warnawadah = new DbField('npd_harga', 'npd_harga', 'x_warnawadah', 'warnawadah', '`warnawadah`', '`warnawadah`', 200, 50, -1, false, '`warnawadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->warnawadah->Nullable = false; // NOT NULL field
         $this->warnawadah->Required = true; // Required field
         $this->warnawadah->Sortable = true; // Allow sort
@@ -209,7 +244,7 @@ class NpdHarga extends DbTable
         $this->Fields['warnawadah'] = &$this->warnawadah;
 
         // bentukwadah
-        $this->bentukwadah = new DbField('npd_harga', 'npd_harga', 'x_bentukwadah', 'bentukwadah', '`bentukwadah`', '`bentukwadah`', 200, 100, -1, false, '`bentukwadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bentukwadah = new DbField('npd_harga', 'npd_harga', 'x_bentukwadah', 'bentukwadah', '`bentukwadah`', '`bentukwadah`', 200, 50, -1, false, '`bentukwadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bentukwadah->Nullable = false; // NOT NULL field
         $this->bentukwadah->Required = true; // Required field
         $this->bentukwadah->Sortable = true; // Allow sort
@@ -217,7 +252,7 @@ class NpdHarga extends DbTable
         $this->Fields['bentukwadah'] = &$this->bentukwadah;
 
         // jenistutup
-        $this->jenistutup = new DbField('npd_harga', 'npd_harga', 'x_jenistutup', 'jenistutup', '`jenistutup`', '`jenistutup`', 200, 100, -1, false, '`jenistutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jenistutup = new DbField('npd_harga', 'npd_harga', 'x_jenistutup', 'jenistutup', '`jenistutup`', '`jenistutup`', 200, 50, -1, false, '`jenistutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->jenistutup->Nullable = false; // NOT NULL field
         $this->jenistutup->Required = true; // Required field
         $this->jenistutup->Sortable = true; // Allow sort
@@ -225,7 +260,7 @@ class NpdHarga extends DbTable
         $this->Fields['jenistutup'] = &$this->jenistutup;
 
         // bahantutup
-        $this->bahantutup = new DbField('npd_harga', 'npd_harga', 'x_bahantutup', 'bahantutup', '`bahantutup`', '`bahantutup`', 200, 100, -1, false, '`bahantutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bahantutup = new DbField('npd_harga', 'npd_harga', 'x_bahantutup', 'bahantutup', '`bahantutup`', '`bahantutup`', 200, 50, -1, false, '`bahantutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bahantutup->Nullable = false; // NOT NULL field
         $this->bahantutup->Required = true; // Required field
         $this->bahantutup->Sortable = true; // Allow sort
@@ -233,7 +268,7 @@ class NpdHarga extends DbTable
         $this->Fields['bahantutup'] = &$this->bahantutup;
 
         // warnatutup
-        $this->warnatutup = new DbField('npd_harga', 'npd_harga', 'x_warnatutup', 'warnatutup', '`warnatutup`', '`warnatutup`', 200, 100, -1, false, '`warnatutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->warnatutup = new DbField('npd_harga', 'npd_harga', 'x_warnatutup', 'warnatutup', '`warnatutup`', '`warnatutup`', 200, 50, -1, false, '`warnatutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->warnatutup->Nullable = false; // NOT NULL field
         $this->warnatutup->Required = true; // Required field
         $this->warnatutup->Sortable = true; // Allow sort
@@ -241,7 +276,7 @@ class NpdHarga extends DbTable
         $this->Fields['warnatutup'] = &$this->warnatutup;
 
         // bentuktutup
-        $this->bentuktutup = new DbField('npd_harga', 'npd_harga', 'x_bentuktutup', 'bentuktutup', '`bentuktutup`', '`bentuktutup`', 200, 100, -1, false, '`bentuktutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bentuktutup = new DbField('npd_harga', 'npd_harga', 'x_bentuktutup', 'bentuktutup', '`bentuktutup`', '`bentuktutup`', 200, 50, -1, false, '`bentuktutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bentuktutup->Nullable = false; // NOT NULL field
         $this->bentuktutup->Required = true; // Required field
         $this->bentuktutup->Sortable = true; // Allow sort
@@ -266,27 +301,27 @@ class NpdHarga extends DbTable
         $this->Fields['segel'] = &$this->segel;
 
         // catatanprimer
-        $this->catatanprimer = new DbField('npd_harga', 'npd_harga', 'x_catatanprimer', 'catatanprimer', '`catatanprimer`', '`catatanprimer`', 200, 100, -1, false, '`catatanprimer`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->catatanprimer = new DbField('npd_harga', 'npd_harga', 'x_catatanprimer', 'catatanprimer', '`catatanprimer`', '`catatanprimer`', 201, 65535, -1, false, '`catatanprimer`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->catatanprimer->Sortable = true; // Allow sort
         $this->catatanprimer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->catatanprimer->Param, "CustomMsg");
         $this->Fields['catatanprimer'] = &$this->catatanprimer;
 
-        // packingkarton
-        $this->packingkarton = new DbField('npd_harga', 'npd_harga', 'x_packingkarton', 'packingkarton', '`packingkarton`', '`packingkarton`', 200, 100, -1, false, '`packingkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->packingkarton->Nullable = false; // NOT NULL field
-        $this->packingkarton->Required = true; // Required field
-        $this->packingkarton->Sortable = true; // Allow sort
-        $this->packingkarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->packingkarton->Param, "CustomMsg");
-        $this->Fields['packingkarton'] = &$this->packingkarton;
+        // packingproduk
+        $this->packingproduk = new DbField('npd_harga', 'npd_harga', 'x_packingproduk', 'packingproduk', '`packingproduk`', '`packingproduk`', 200, 50, -1, false, '`packingproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->packingproduk->Nullable = false; // NOT NULL field
+        $this->packingproduk->Required = true; // Required field
+        $this->packingproduk->Sortable = true; // Allow sort
+        $this->packingproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->packingproduk->Param, "CustomMsg");
+        $this->Fields['packingproduk'] = &$this->packingproduk;
 
         // keteranganpacking
-        $this->keteranganpacking = new DbField('npd_harga', 'npd_harga', 'x_keteranganpacking', 'keteranganpacking', '`keteranganpacking`', '`keteranganpacking`', 200, 100, -1, false, '`keteranganpacking`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keteranganpacking = new DbField('npd_harga', 'npd_harga', 'x_keteranganpacking', 'keteranganpacking', '`keteranganpacking`', '`keteranganpacking`', 201, 65535, -1, false, '`keteranganpacking`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->keteranganpacking->Sortable = true; // Allow sort
         $this->keteranganpacking->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keteranganpacking->Param, "CustomMsg");
         $this->Fields['keteranganpacking'] = &$this->keteranganpacking;
 
         // beltkarton
-        $this->beltkarton = new DbField('npd_harga', 'npd_harga', 'x_beltkarton', 'beltkarton', '`beltkarton`', '`beltkarton`', 200, 100, -1, false, '`beltkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->beltkarton = new DbField('npd_harga', 'npd_harga', 'x_beltkarton', 'beltkarton', '`beltkarton`', '`beltkarton`', 200, 50, -1, false, '`beltkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->beltkarton->Nullable = false; // NOT NULL field
         $this->beltkarton->Required = true; // Required field
         $this->beltkarton->Sortable = true; // Allow sort
@@ -294,36 +329,40 @@ class NpdHarga extends DbTable
         $this->Fields['beltkarton'] = &$this->beltkarton;
 
         // keteranganbelt
-        $this->keteranganbelt = new DbField('npd_harga', 'npd_harga', 'x_keteranganbelt', 'keteranganbelt', '`keteranganbelt`', '`keteranganbelt`', 200, 100, -1, false, '`keteranganbelt`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keteranganbelt = new DbField('npd_harga', 'npd_harga', 'x_keteranganbelt', 'keteranganbelt', '`keteranganbelt`', '`keteranganbelt`', 201, 65535, -1, false, '`keteranganbelt`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->keteranganbelt->Sortable = true; // Allow sort
         $this->keteranganbelt->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keteranganbelt->Param, "CustomMsg");
         $this->Fields['keteranganbelt'] = &$this->keteranganbelt;
 
+        // kartonluar
+        $this->kartonluar = new DbField('npd_harga', 'npd_harga', 'x_kartonluar', 'kartonluar', '`kartonluar`', '`kartonluar`', 200, 50, -1, false, '`kartonluar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kartonluar->Nullable = false; // NOT NULL field
+        $this->kartonluar->Required = true; // Required field
+        $this->kartonluar->Sortable = true; // Allow sort
+        $this->kartonluar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kartonluar->Param, "CustomMsg");
+        $this->Fields['kartonluar'] = &$this->kartonluar;
+
         // bariskarton
-        $this->bariskarton = new DbField('npd_harga', 'npd_harga', 'x_bariskarton', 'bariskarton', '`bariskarton`', '`bariskarton`', 16, 4, -1, false, '`bariskarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->bariskarton = new DbField('npd_harga', 'npd_harga', 'x_bariskarton', 'bariskarton', '`bariskarton`', '`bariskarton`', 200, 50, -1, false, '`bariskarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->bariskarton->Sortable = true; // Allow sort
-        $this->bariskarton->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->bariskarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bariskarton->Param, "CustomMsg");
         $this->Fields['bariskarton'] = &$this->bariskarton;
 
         // kolomkarton
-        $this->kolomkarton = new DbField('npd_harga', 'npd_harga', 'x_kolomkarton', 'kolomkarton', '`kolomkarton`', '`kolomkarton`', 16, 4, -1, false, '`kolomkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kolomkarton = new DbField('npd_harga', 'npd_harga', 'x_kolomkarton', 'kolomkarton', '`kolomkarton`', '`kolomkarton`', 200, 50, -1, false, '`kolomkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->kolomkarton->Sortable = true; // Allow sort
-        $this->kolomkarton->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->kolomkarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kolomkarton->Param, "CustomMsg");
         $this->Fields['kolomkarton'] = &$this->kolomkarton;
 
         // stackkarton
-        $this->stackkarton = new DbField('npd_harga', 'npd_harga', 'x_stackkarton', 'stackkarton', '`stackkarton`', '`stackkarton`', 16, 4, -1, false, '`stackkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->stackkarton = new DbField('npd_harga', 'npd_harga', 'x_stackkarton', 'stackkarton', '`stackkarton`', '`stackkarton`', 200, 50, -1, false, '`stackkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->stackkarton->Sortable = true; // Allow sort
-        $this->stackkarton->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->stackkarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->stackkarton->Param, "CustomMsg");
         $this->Fields['stackkarton'] = &$this->stackkarton;
 
         // isikarton
-        $this->isikarton = new DbField('npd_harga', 'npd_harga', 'x_isikarton', 'isikarton', '`isikarton`', '`isikarton`', 16, 4, -1, false, '`isikarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->isikarton = new DbField('npd_harga', 'npd_harga', 'x_isikarton', 'isikarton', '`isikarton`', '`isikarton`', 200, 50, -1, false, '`isikarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->isikarton->Sortable = true; // Allow sort
-        $this->isikarton->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->isikarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->isikarton->Param, "CustomMsg");
         $this->Fields['isikarton'] = &$this->isikarton;
 
@@ -336,7 +375,7 @@ class NpdHarga extends DbTable
         $this->Fields['jenislabel'] = &$this->jenislabel;
 
         // keteranganjenislabel
-        $this->keteranganjenislabel = new DbField('npd_harga', 'npd_harga', 'x_keteranganjenislabel', 'keteranganjenislabel', '`keteranganjenislabel`', '`keteranganjenislabel`', 200, 50, -1, false, '`keteranganjenislabel`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keteranganjenislabel = new DbField('npd_harga', 'npd_harga', 'x_keteranganjenislabel', 'keteranganjenislabel', '`keteranganjenislabel`', '`keteranganjenislabel`', 201, 65535, -1, false, '`keteranganjenislabel`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
         $this->keteranganjenislabel->Sortable = true; // Allow sort
         $this->keteranganjenislabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keteranganjenislabel->Param, "CustomMsg");
         $this->Fields['keteranganjenislabel'] = &$this->keteranganjenislabel;
@@ -357,6 +396,14 @@ class NpdHarga extends DbTable
         $this->jumlahwarnalabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahwarnalabel->Param, "CustomMsg");
         $this->Fields['jumlahwarnalabel'] = &$this->jumlahwarnalabel;
 
+        // metaliklabel
+        $this->metaliklabel = new DbField('npd_harga', 'npd_harga', 'x_metaliklabel', 'metaliklabel', '`metaliklabel`', '`metaliklabel`', 200, 50, -1, false, '`metaliklabel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->metaliklabel->Nullable = false; // NOT NULL field
+        $this->metaliklabel->Required = true; // Required field
+        $this->metaliklabel->Sortable = true; // Allow sort
+        $this->metaliklabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->metaliklabel->Param, "CustomMsg");
+        $this->Fields['metaliklabel'] = &$this->metaliklabel;
+
         // etiketlabel
         $this->etiketlabel = new DbField('npd_harga', 'npd_harga', 'x_etiketlabel', 'etiketlabel', '`etiketlabel`', '`etiketlabel`', 200, 50, -1, false, '`etiketlabel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->etiketlabel->Nullable = false; // NOT NULL field
@@ -365,11 +412,11 @@ class NpdHarga extends DbTable
         $this->etiketlabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->etiketlabel->Param, "CustomMsg");
         $this->Fields['etiketlabel'] = &$this->etiketlabel;
 
-        // keteranganetiket
-        $this->keteranganetiket = new DbField('npd_harga', 'npd_harga', 'x_keteranganetiket', 'keteranganetiket', '`keteranganetiket`', '`keteranganetiket`', 200, 50, -1, false, '`keteranganetiket`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keteranganetiket->Sortable = true; // Allow sort
-        $this->keteranganetiket->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keteranganetiket->Param, "CustomMsg");
-        $this->Fields['keteranganetiket'] = &$this->keteranganetiket;
+        // keteranganlabel
+        $this->keteranganlabel = new DbField('npd_harga', 'npd_harga', 'x_keteranganlabel', 'keteranganlabel', '`keteranganlabel`', '`keteranganlabel`', 201, 65535, -1, false, '`keteranganlabel`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->keteranganlabel->Sortable = true; // Allow sort
+        $this->keteranganlabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keteranganlabel->Param, "CustomMsg");
+        $this->Fields['keteranganlabel'] = &$this->keteranganlabel;
 
         // kategoridelivery
         $this->kategoridelivery = new DbField('npd_harga', 'npd_harga', 'x_kategoridelivery', 'kategoridelivery', '`kategoridelivery`', '`kategoridelivery`', 200, 50, -1, false, '`kategoridelivery`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -378,7 +425,7 @@ class NpdHarga extends DbTable
         $this->Fields['kategoridelivery'] = &$this->kategoridelivery;
 
         // alamatpengiriman
-        $this->alamatpengiriman = new DbField('npd_harga', 'npd_harga', 'x_alamatpengiriman', 'alamatpengiriman', '`alamatpengiriman`', '`alamatpengiriman`', 200, 50, -1, false, '`alamatpengiriman`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->alamatpengiriman = new DbField('npd_harga', 'npd_harga', 'x_alamatpengiriman', 'alamatpengiriman', '`alamatpengiriman`', '`alamatpengiriman`', 200, 255, -1, false, '`alamatpengiriman`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->alamatpengiriman->Sortable = true; // Allow sort
         $this->alamatpengiriman->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alamatpengiriman->Param, "CustomMsg");
         $this->Fields['alamatpengiriman'] = &$this->alamatpengiriman;
@@ -397,20 +444,65 @@ class NpdHarga extends DbTable
         $this->orderkontrak->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->orderkontrak->Param, "CustomMsg");
         $this->Fields['orderkontrak'] = &$this->orderkontrak;
 
-        // hargapcs
-        $this->hargapcs = new DbField('npd_harga', 'npd_harga', 'x_hargapcs', 'hargapcs', '`hargapcs`', '`hargapcs`', 20, 20, -1, false, '`hargapcs`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->hargapcs->Nullable = false; // NOT NULL field
-        $this->hargapcs->Required = true; // Required field
-        $this->hargapcs->Sortable = true; // Allow sort
-        $this->hargapcs->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->hargapcs->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hargapcs->Param, "CustomMsg");
-        $this->Fields['hargapcs'] = &$this->hargapcs;
+        // hargaperpcs
+        $this->hargaperpcs = new DbField('npd_harga', 'npd_harga', 'x_hargaperpcs', 'hargaperpcs', '`hargaperpcs`', '`hargaperpcs`', 20, 20, -1, false, '`hargaperpcs`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->hargaperpcs->Nullable = false; // NOT NULL field
+        $this->hargaperpcs->Required = true; // Required field
+        $this->hargaperpcs->Sortable = true; // Allow sort
+        $this->hargaperpcs->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->hargaperpcs->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hargaperpcs->Param, "CustomMsg");
+        $this->Fields['hargaperpcs'] = &$this->hargaperpcs;
+
+        // hargaperkarton
+        $this->hargaperkarton = new DbField('npd_harga', 'npd_harga', 'x_hargaperkarton', 'hargaperkarton', '`hargaperkarton`', '`hargaperkarton`', 20, 20, -1, false, '`hargaperkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->hargaperkarton->Nullable = false; // NOT NULL field
+        $this->hargaperkarton->Required = true; // Required field
+        $this->hargaperkarton->Sortable = true; // Allow sort
+        $this->hargaperkarton->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->hargaperkarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hargaperkarton->Param, "CustomMsg");
+        $this->Fields['hargaperkarton'] = &$this->hargaperkarton;
 
         // lampiran
         $this->lampiran = new DbField('npd_harga', 'npd_harga', 'x_lampiran', 'lampiran', '`lampiran`', '`lampiran`', 200, 255, -1, true, '`lampiran`', false, false, false, 'FORMATTED TEXT', 'FILE');
         $this->lampiran->Sortable = true; // Allow sort
         $this->lampiran->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->lampiran->Param, "CustomMsg");
         $this->Fields['lampiran'] = &$this->lampiran;
+
+        // prepared_by
+        $this->prepared_by = new DbField('npd_harga', 'npd_harga', 'x_prepared_by', 'prepared_by', '`prepared_by`', '`prepared_by`', 20, 20, -1, false, '`prepared_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->prepared_by->Nullable = false; // NOT NULL field
+        $this->prepared_by->Required = true; // Required field
+        $this->prepared_by->Sortable = true; // Allow sort
+        $this->prepared_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->prepared_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->prepared_by->Param, "CustomMsg");
+        $this->Fields['prepared_by'] = &$this->prepared_by;
+
+        // checked_by
+        $this->checked_by = new DbField('npd_harga', 'npd_harga', 'x_checked_by', 'checked_by', '`checked_by`', '`checked_by`', 20, 20, -1, false, '`checked_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->checked_by->Nullable = false; // NOT NULL field
+        $this->checked_by->Required = true; // Required field
+        $this->checked_by->Sortable = true; // Allow sort
+        $this->checked_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked_by->Param, "CustomMsg");
+        $this->Fields['checked_by'] = &$this->checked_by;
+
+        // approved_by
+        $this->approved_by = new DbField('npd_harga', 'npd_harga', 'x_approved_by', 'approved_by', '`approved_by`', '`approved_by`', 20, 20, -1, false, '`approved_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->approved_by->Nullable = false; // NOT NULL field
+        $this->approved_by->Required = true; // Required field
+        $this->approved_by->Sortable = true; // Allow sort
+        $this->approved_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->approved_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approved_by->Param, "CustomMsg");
+        $this->Fields['approved_by'] = &$this->approved_by;
+
+        // approved_date
+        $this->approved_date = new DbField('npd_harga', 'npd_harga', 'x_approved_date', 'approved_date', '`approved_date`', '`approved_date`', 20, 20, -1, false, '`approved_date`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->approved_date->Nullable = false; // NOT NULL field
+        $this->approved_date->Required = true; // Required field
+        $this->approved_date->Sortable = true; // Allow sort
+        $this->approved_date->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->approved_date->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approved_date->Param, "CustomMsg");
+        $this->Fields['approved_date'] = &$this->approved_date;
 
         // disetujui
         $this->disetujui = new DbField('npd_harga', 'npd_harga', 'x_disetujui', 'disetujui', '`disetujui`', '`disetujui`', 16, 1, -1, false, '`disetujui`', false, false, false, 'FORMATTED TEXT', 'RADIO');
@@ -438,13 +530,6 @@ class NpdHarga extends DbTable
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
 
-        // created_by
-        $this->created_by = new DbField('npd_harga', 'npd_harga', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
-
         // readonly
         $this->readonly = new DbField('npd_harga', 'npd_harga', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
         $this->readonly->Nullable = false; // NOT NULL field
@@ -462,6 +547,15 @@ class NpdHarga extends DbTable
         $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
         $this->Fields['readonly'] = &$this->readonly;
+
+        // updated_at
+        $this->updated_at = new DbField('npd_harga', 'npd_harga', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at->Nullable = false; // NOT NULL field
+        $this->updated_at->Required = true; // Required field
+        $this->updated_at->Sortable = true; // Allow sort
+        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
+        $this->Fields['updated_at'] = &$this->updated_at;
     }
 
     // Field Visibility
@@ -650,11 +744,6 @@ class NpdHarga extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -936,10 +1025,13 @@ class NpdHarga extends DbTable
         $this->idnpd->DbValue = $row['idnpd'];
         $this->tglpengajuan->DbValue = $row['tglpengajuan'];
         $this->idnpd_sample->DbValue = $row['idnpd_sample'];
+        $this->nama->DbValue = $row['nama'];
         $this->bentuk->DbValue = $row['bentuk'];
-        $this->viskositasbarang->DbValue = $row['viskositasbarang'];
-        $this->idaplikasibarang->DbValue = $row['idaplikasibarang'];
-        $this->ukuranwadah->DbValue = $row['ukuranwadah'];
+        $this->viskositas->DbValue = $row['viskositas'];
+        $this->aplikasisediaan->DbValue = $row['aplikasisediaan'];
+        $this->volume->DbValue = $row['volume'];
+        $this->bahanaktif->DbValue = $row['bahanaktif'];
+        $this->volumewadah->DbValue = $row['volumewadah'];
         $this->bahanwadah->DbValue = $row['bahanwadah'];
         $this->warnawadah->DbValue = $row['warnawadah'];
         $this->bentukwadah->DbValue = $row['bentukwadah'];
@@ -949,10 +1041,11 @@ class NpdHarga extends DbTable
         $this->bentuktutup->DbValue = $row['bentuktutup'];
         $this->segel->DbValue = $row['segel'];
         $this->catatanprimer->DbValue = $row['catatanprimer'];
-        $this->packingkarton->DbValue = $row['packingkarton'];
+        $this->packingproduk->DbValue = $row['packingproduk'];
         $this->keteranganpacking->DbValue = $row['keteranganpacking'];
         $this->beltkarton->DbValue = $row['beltkarton'];
         $this->keteranganbelt->DbValue = $row['keteranganbelt'];
+        $this->kartonluar->DbValue = $row['kartonluar'];
         $this->bariskarton->DbValue = $row['bariskarton'];
         $this->kolomkarton->DbValue = $row['kolomkarton'];
         $this->stackkarton->DbValue = $row['stackkarton'];
@@ -961,18 +1054,24 @@ class NpdHarga extends DbTable
         $this->keteranganjenislabel->DbValue = $row['keteranganjenislabel'];
         $this->kualitaslabel->DbValue = $row['kualitaslabel'];
         $this->jumlahwarnalabel->DbValue = $row['jumlahwarnalabel'];
+        $this->metaliklabel->DbValue = $row['metaliklabel'];
         $this->etiketlabel->DbValue = $row['etiketlabel'];
-        $this->keteranganetiket->DbValue = $row['keteranganetiket'];
+        $this->keteranganlabel->DbValue = $row['keteranganlabel'];
         $this->kategoridelivery->DbValue = $row['kategoridelivery'];
         $this->alamatpengiriman->DbValue = $row['alamatpengiriman'];
         $this->orderperdana->DbValue = $row['orderperdana'];
         $this->orderkontrak->DbValue = $row['orderkontrak'];
-        $this->hargapcs->DbValue = $row['hargapcs'];
+        $this->hargaperpcs->DbValue = $row['hargaperpcs'];
+        $this->hargaperkarton->DbValue = $row['hargaperkarton'];
         $this->lampiran->Upload->DbValue = $row['lampiran'];
+        $this->prepared_by->DbValue = $row['prepared_by'];
+        $this->checked_by->DbValue = $row['checked_by'];
+        $this->approved_by->DbValue = $row['approved_by'];
+        $this->approved_date->DbValue = $row['approved_date'];
         $this->disetujui->DbValue = $row['disetujui'];
         $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
         $this->readonly->DbValue = $row['readonly'];
+        $this->updated_at->DbValue = $row['updated_at'];
     }
 
     // Delete uploaded files
@@ -1307,10 +1406,13 @@ SORTHTML;
         $this->idnpd->setDbValue($row['idnpd']);
         $this->tglpengajuan->setDbValue($row['tglpengajuan']);
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
+        $this->nama->setDbValue($row['nama']);
         $this->bentuk->setDbValue($row['bentuk']);
-        $this->viskositasbarang->setDbValue($row['viskositasbarang']);
-        $this->idaplikasibarang->setDbValue($row['idaplikasibarang']);
-        $this->ukuranwadah->setDbValue($row['ukuranwadah']);
+        $this->viskositas->setDbValue($row['viskositas']);
+        $this->aplikasisediaan->setDbValue($row['aplikasisediaan']);
+        $this->volume->setDbValue($row['volume']);
+        $this->bahanaktif->setDbValue($row['bahanaktif']);
+        $this->volumewadah->setDbValue($row['volumewadah']);
         $this->bahanwadah->setDbValue($row['bahanwadah']);
         $this->warnawadah->setDbValue($row['warnawadah']);
         $this->bentukwadah->setDbValue($row['bentukwadah']);
@@ -1320,10 +1422,11 @@ SORTHTML;
         $this->bentuktutup->setDbValue($row['bentuktutup']);
         $this->segel->setDbValue($row['segel']);
         $this->catatanprimer->setDbValue($row['catatanprimer']);
-        $this->packingkarton->setDbValue($row['packingkarton']);
+        $this->packingproduk->setDbValue($row['packingproduk']);
         $this->keteranganpacking->setDbValue($row['keteranganpacking']);
         $this->beltkarton->setDbValue($row['beltkarton']);
         $this->keteranganbelt->setDbValue($row['keteranganbelt']);
+        $this->kartonluar->setDbValue($row['kartonluar']);
         $this->bariskarton->setDbValue($row['bariskarton']);
         $this->kolomkarton->setDbValue($row['kolomkarton']);
         $this->stackkarton->setDbValue($row['stackkarton']);
@@ -1332,19 +1435,25 @@ SORTHTML;
         $this->keteranganjenislabel->setDbValue($row['keteranganjenislabel']);
         $this->kualitaslabel->setDbValue($row['kualitaslabel']);
         $this->jumlahwarnalabel->setDbValue($row['jumlahwarnalabel']);
+        $this->metaliklabel->setDbValue($row['metaliklabel']);
         $this->etiketlabel->setDbValue($row['etiketlabel']);
-        $this->keteranganetiket->setDbValue($row['keteranganetiket']);
+        $this->keteranganlabel->setDbValue($row['keteranganlabel']);
         $this->kategoridelivery->setDbValue($row['kategoridelivery']);
         $this->alamatpengiriman->setDbValue($row['alamatpengiriman']);
         $this->orderperdana->setDbValue($row['orderperdana']);
         $this->orderkontrak->setDbValue($row['orderkontrak']);
-        $this->hargapcs->setDbValue($row['hargapcs']);
+        $this->hargaperpcs->setDbValue($row['hargaperpcs']);
+        $this->hargaperkarton->setDbValue($row['hargaperkarton']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
+        $this->prepared_by->setDbValue($row['prepared_by']);
+        $this->checked_by->setDbValue($row['checked_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
+        $this->approved_date->setDbValue($row['approved_date']);
         $this->disetujui->setDbValue($row['disetujui']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Render list row values
@@ -1365,13 +1474,19 @@ SORTHTML;
 
         // idnpd_sample
 
+        // nama
+
         // bentuk
 
-        // viskositasbarang
+        // viskositas
 
-        // idaplikasibarang
+        // aplikasisediaan
 
-        // ukuranwadah
+        // volume
+
+        // bahanaktif
+
+        // volumewadah
 
         // bahanwadah
 
@@ -1391,13 +1506,15 @@ SORTHTML;
 
         // catatanprimer
 
-        // packingkarton
+        // packingproduk
 
         // keteranganpacking
 
         // beltkarton
 
         // keteranganbelt
+
+        // kartonluar
 
         // bariskarton
 
@@ -1415,9 +1532,11 @@ SORTHTML;
 
         // jumlahwarnalabel
 
+        // metaliklabel
+
         // etiketlabel
 
-        // keteranganetiket
+        // keteranganlabel
 
         // kategoridelivery
 
@@ -1427,17 +1546,27 @@ SORTHTML;
 
         // orderkontrak
 
-        // hargapcs
+        // hargaperpcs
+
+        // hargaperkarton
 
         // lampiran
+
+        // prepared_by
+
+        // checked_by
+
+        // approved_by
+
+        // approved_date
 
         // disetujui
 
         // created_at
 
-        // created_by
-
         // readonly
+
+        // updated_at
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1498,22 +1627,34 @@ SORTHTML;
         }
         $this->idnpd_sample->ViewCustomAttributes = "";
 
+        // nama
+        $this->nama->ViewValue = $this->nama->CurrentValue;
+        $this->nama->ViewCustomAttributes = "";
+
         // bentuk
         $this->bentuk->ViewValue = $this->bentuk->CurrentValue;
         $this->bentuk->ViewCustomAttributes = "";
 
-        // viskositasbarang
-        $this->viskositasbarang->ViewValue = $this->viskositasbarang->CurrentValue;
-        $this->viskositasbarang->ViewCustomAttributes = "";
+        // viskositas
+        $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
+        $this->viskositas->ViewCustomAttributes = "";
 
-        // idaplikasibarang
-        $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->CurrentValue;
-        $this->idaplikasibarang->ViewValue = FormatNumber($this->idaplikasibarang->ViewValue, 0, -2, -2, -2);
-        $this->idaplikasibarang->ViewCustomAttributes = "";
+        // aplikasisediaan
+        $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
+        $this->aplikasisediaan->ViewValue = FormatNumber($this->aplikasisediaan->ViewValue, 0, -2, -2, -2);
+        $this->aplikasisediaan->ViewCustomAttributes = "";
 
-        // ukuranwadah
-        $this->ukuranwadah->ViewValue = $this->ukuranwadah->CurrentValue;
-        $this->ukuranwadah->ViewCustomAttributes = "";
+        // volume
+        $this->volume->ViewValue = $this->volume->CurrentValue;
+        $this->volume->ViewCustomAttributes = "";
+
+        // bahanaktif
+        $this->bahanaktif->ViewValue = $this->bahanaktif->CurrentValue;
+        $this->bahanaktif->ViewCustomAttributes = "";
+
+        // volumewadah
+        $this->volumewadah->ViewValue = $this->volumewadah->CurrentValue;
+        $this->volumewadah->ViewCustomAttributes = "";
 
         // bahanwadah
         $this->bahanwadah->ViewValue = $this->bahanwadah->CurrentValue;
@@ -1555,9 +1696,9 @@ SORTHTML;
         $this->catatanprimer->ViewValue = $this->catatanprimer->CurrentValue;
         $this->catatanprimer->ViewCustomAttributes = "";
 
-        // packingkarton
-        $this->packingkarton->ViewValue = $this->packingkarton->CurrentValue;
-        $this->packingkarton->ViewCustomAttributes = "";
+        // packingproduk
+        $this->packingproduk->ViewValue = $this->packingproduk->CurrentValue;
+        $this->packingproduk->ViewCustomAttributes = "";
 
         // keteranganpacking
         $this->keteranganpacking->ViewValue = $this->keteranganpacking->CurrentValue;
@@ -1571,24 +1712,24 @@ SORTHTML;
         $this->keteranganbelt->ViewValue = $this->keteranganbelt->CurrentValue;
         $this->keteranganbelt->ViewCustomAttributes = "";
 
+        // kartonluar
+        $this->kartonluar->ViewValue = $this->kartonluar->CurrentValue;
+        $this->kartonluar->ViewCustomAttributes = "";
+
         // bariskarton
         $this->bariskarton->ViewValue = $this->bariskarton->CurrentValue;
-        $this->bariskarton->ViewValue = FormatNumber($this->bariskarton->ViewValue, 0, -2, -2, -2);
         $this->bariskarton->ViewCustomAttributes = "";
 
         // kolomkarton
         $this->kolomkarton->ViewValue = $this->kolomkarton->CurrentValue;
-        $this->kolomkarton->ViewValue = FormatNumber($this->kolomkarton->ViewValue, 0, -2, -2, -2);
         $this->kolomkarton->ViewCustomAttributes = "";
 
         // stackkarton
         $this->stackkarton->ViewValue = $this->stackkarton->CurrentValue;
-        $this->stackkarton->ViewValue = FormatNumber($this->stackkarton->ViewValue, 0, -2, -2, -2);
         $this->stackkarton->ViewCustomAttributes = "";
 
         // isikarton
         $this->isikarton->ViewValue = $this->isikarton->CurrentValue;
-        $this->isikarton->ViewValue = FormatNumber($this->isikarton->ViewValue, 0, -2, -2, -2);
         $this->isikarton->ViewCustomAttributes = "";
 
         // jenislabel
@@ -1607,13 +1748,17 @@ SORTHTML;
         $this->jumlahwarnalabel->ViewValue = $this->jumlahwarnalabel->CurrentValue;
         $this->jumlahwarnalabel->ViewCustomAttributes = "";
 
+        // metaliklabel
+        $this->metaliklabel->ViewValue = $this->metaliklabel->CurrentValue;
+        $this->metaliklabel->ViewCustomAttributes = "";
+
         // etiketlabel
         $this->etiketlabel->ViewValue = $this->etiketlabel->CurrentValue;
         $this->etiketlabel->ViewCustomAttributes = "";
 
-        // keteranganetiket
-        $this->keteranganetiket->ViewValue = $this->keteranganetiket->CurrentValue;
-        $this->keteranganetiket->ViewCustomAttributes = "";
+        // keteranganlabel
+        $this->keteranganlabel->ViewValue = $this->keteranganlabel->CurrentValue;
+        $this->keteranganlabel->ViewCustomAttributes = "";
 
         // kategoridelivery
         $this->kategoridelivery->ViewValue = $this->kategoridelivery->CurrentValue;
@@ -1633,10 +1778,15 @@ SORTHTML;
         $this->orderkontrak->ViewValue = FormatNumber($this->orderkontrak->ViewValue, 0, -2, -2, -2);
         $this->orderkontrak->ViewCustomAttributes = "";
 
-        // hargapcs
-        $this->hargapcs->ViewValue = $this->hargapcs->CurrentValue;
-        $this->hargapcs->ViewValue = FormatCurrency($this->hargapcs->ViewValue, 2, -2, -2, -2);
-        $this->hargapcs->ViewCustomAttributes = "";
+        // hargaperpcs
+        $this->hargaperpcs->ViewValue = $this->hargaperpcs->CurrentValue;
+        $this->hargaperpcs->ViewValue = FormatCurrency($this->hargaperpcs->ViewValue, 2, -2, -2, -2);
+        $this->hargaperpcs->ViewCustomAttributes = "";
+
+        // hargaperkarton
+        $this->hargaperkarton->ViewValue = $this->hargaperkarton->CurrentValue;
+        $this->hargaperkarton->ViewValue = FormatNumber($this->hargaperkarton->ViewValue, 0, -2, -2, -2);
+        $this->hargaperkarton->ViewCustomAttributes = "";
 
         // lampiran
         if (!EmptyValue($this->lampiran->Upload->DbValue)) {
@@ -1645,6 +1795,26 @@ SORTHTML;
             $this->lampiran->ViewValue = "";
         }
         $this->lampiran->ViewCustomAttributes = "";
+
+        // prepared_by
+        $this->prepared_by->ViewValue = $this->prepared_by->CurrentValue;
+        $this->prepared_by->ViewValue = FormatNumber($this->prepared_by->ViewValue, 0, -2, -2, -2);
+        $this->prepared_by->ViewCustomAttributes = "";
+
+        // checked_by
+        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
+        $this->checked_by->ViewValue = FormatNumber($this->checked_by->ViewValue, 0, -2, -2, -2);
+        $this->checked_by->ViewCustomAttributes = "";
+
+        // approved_by
+        $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+        $this->approved_by->ViewValue = FormatNumber($this->approved_by->ViewValue, 0, -2, -2, -2);
+        $this->approved_by->ViewCustomAttributes = "";
+
+        // approved_date
+        $this->approved_date->ViewValue = $this->approved_date->CurrentValue;
+        $this->approved_date->ViewValue = FormatNumber($this->approved_date->ViewValue, 0, -2, -2, -2);
+        $this->approved_date->ViewCustomAttributes = "";
 
         // disetujui
         if (strval($this->disetujui->CurrentValue) != "") {
@@ -1659,11 +1829,6 @@ SORTHTML;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
-
         // readonly
         if (ConvertToBool($this->readonly->CurrentValue)) {
             $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -1671,6 +1836,11 @@ SORTHTML;
             $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
         }
         $this->readonly->ViewCustomAttributes = "";
+
+        // updated_at
+        $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1692,25 +1862,40 @@ SORTHTML;
         $this->idnpd_sample->HrefValue = "";
         $this->idnpd_sample->TooltipValue = "";
 
+        // nama
+        $this->nama->LinkCustomAttributes = "";
+        $this->nama->HrefValue = "";
+        $this->nama->TooltipValue = "";
+
         // bentuk
         $this->bentuk->LinkCustomAttributes = "";
         $this->bentuk->HrefValue = "";
         $this->bentuk->TooltipValue = "";
 
-        // viskositasbarang
-        $this->viskositasbarang->LinkCustomAttributes = "";
-        $this->viskositasbarang->HrefValue = "";
-        $this->viskositasbarang->TooltipValue = "";
+        // viskositas
+        $this->viskositas->LinkCustomAttributes = "";
+        $this->viskositas->HrefValue = "";
+        $this->viskositas->TooltipValue = "";
 
-        // idaplikasibarang
-        $this->idaplikasibarang->LinkCustomAttributes = "";
-        $this->idaplikasibarang->HrefValue = "";
-        $this->idaplikasibarang->TooltipValue = "";
+        // aplikasisediaan
+        $this->aplikasisediaan->LinkCustomAttributes = "";
+        $this->aplikasisediaan->HrefValue = "";
+        $this->aplikasisediaan->TooltipValue = "";
 
-        // ukuranwadah
-        $this->ukuranwadah->LinkCustomAttributes = "";
-        $this->ukuranwadah->HrefValue = "";
-        $this->ukuranwadah->TooltipValue = "";
+        // volume
+        $this->volume->LinkCustomAttributes = "";
+        $this->volume->HrefValue = "";
+        $this->volume->TooltipValue = "";
+
+        // bahanaktif
+        $this->bahanaktif->LinkCustomAttributes = "";
+        $this->bahanaktif->HrefValue = "";
+        $this->bahanaktif->TooltipValue = "";
+
+        // volumewadah
+        $this->volumewadah->LinkCustomAttributes = "";
+        $this->volumewadah->HrefValue = "";
+        $this->volumewadah->TooltipValue = "";
 
         // bahanwadah
         $this->bahanwadah->LinkCustomAttributes = "";
@@ -1757,10 +1942,10 @@ SORTHTML;
         $this->catatanprimer->HrefValue = "";
         $this->catatanprimer->TooltipValue = "";
 
-        // packingkarton
-        $this->packingkarton->LinkCustomAttributes = "";
-        $this->packingkarton->HrefValue = "";
-        $this->packingkarton->TooltipValue = "";
+        // packingproduk
+        $this->packingproduk->LinkCustomAttributes = "";
+        $this->packingproduk->HrefValue = "";
+        $this->packingproduk->TooltipValue = "";
 
         // keteranganpacking
         $this->keteranganpacking->LinkCustomAttributes = "";
@@ -1776,6 +1961,11 @@ SORTHTML;
         $this->keteranganbelt->LinkCustomAttributes = "";
         $this->keteranganbelt->HrefValue = "";
         $this->keteranganbelt->TooltipValue = "";
+
+        // kartonluar
+        $this->kartonluar->LinkCustomAttributes = "";
+        $this->kartonluar->HrefValue = "";
+        $this->kartonluar->TooltipValue = "";
 
         // bariskarton
         $this->bariskarton->LinkCustomAttributes = "";
@@ -1817,15 +2007,20 @@ SORTHTML;
         $this->jumlahwarnalabel->HrefValue = "";
         $this->jumlahwarnalabel->TooltipValue = "";
 
+        // metaliklabel
+        $this->metaliklabel->LinkCustomAttributes = "";
+        $this->metaliklabel->HrefValue = "";
+        $this->metaliklabel->TooltipValue = "";
+
         // etiketlabel
         $this->etiketlabel->LinkCustomAttributes = "";
         $this->etiketlabel->HrefValue = "";
         $this->etiketlabel->TooltipValue = "";
 
-        // keteranganetiket
-        $this->keteranganetiket->LinkCustomAttributes = "";
-        $this->keteranganetiket->HrefValue = "";
-        $this->keteranganetiket->TooltipValue = "";
+        // keteranganlabel
+        $this->keteranganlabel->LinkCustomAttributes = "";
+        $this->keteranganlabel->HrefValue = "";
+        $this->keteranganlabel->TooltipValue = "";
 
         // kategoridelivery
         $this->kategoridelivery->LinkCustomAttributes = "";
@@ -1847,16 +2042,41 @@ SORTHTML;
         $this->orderkontrak->HrefValue = "";
         $this->orderkontrak->TooltipValue = "";
 
-        // hargapcs
-        $this->hargapcs->LinkCustomAttributes = "";
-        $this->hargapcs->HrefValue = "";
-        $this->hargapcs->TooltipValue = "";
+        // hargaperpcs
+        $this->hargaperpcs->LinkCustomAttributes = "";
+        $this->hargaperpcs->HrefValue = "";
+        $this->hargaperpcs->TooltipValue = "";
+
+        // hargaperkarton
+        $this->hargaperkarton->LinkCustomAttributes = "";
+        $this->hargaperkarton->HrefValue = "";
+        $this->hargaperkarton->TooltipValue = "";
 
         // lampiran
         $this->lampiran->LinkCustomAttributes = "";
         $this->lampiran->HrefValue = "";
         $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
         $this->lampiran->TooltipValue = "";
+
+        // prepared_by
+        $this->prepared_by->LinkCustomAttributes = "";
+        $this->prepared_by->HrefValue = "";
+        $this->prepared_by->TooltipValue = "";
+
+        // checked_by
+        $this->checked_by->LinkCustomAttributes = "";
+        $this->checked_by->HrefValue = "";
+        $this->checked_by->TooltipValue = "";
+
+        // approved_by
+        $this->approved_by->LinkCustomAttributes = "";
+        $this->approved_by->HrefValue = "";
+        $this->approved_by->TooltipValue = "";
+
+        // approved_date
+        $this->approved_date->LinkCustomAttributes = "";
+        $this->approved_date->HrefValue = "";
+        $this->approved_date->TooltipValue = "";
 
         // disetujui
         $this->disetujui->LinkCustomAttributes = "";
@@ -1868,15 +2088,15 @@ SORTHTML;
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
 
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
-
         // readonly
         $this->readonly->LinkCustomAttributes = "";
         $this->readonly->HrefValue = "";
         $this->readonly->TooltipValue = "";
+
+        // updated_at
+        $this->updated_at->LinkCustomAttributes = "";
+        $this->updated_at->HrefValue = "";
+        $this->updated_at->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1942,6 +2162,15 @@ SORTHTML;
         $this->idnpd_sample->EditCustomAttributes = "";
         $this->idnpd_sample->PlaceHolder = RemoveHtml($this->idnpd_sample->caption());
 
+        // nama
+        $this->nama->EditAttrs["class"] = "form-control";
+        $this->nama->EditCustomAttributes = "";
+        if (!$this->nama->Raw) {
+            $this->nama->CurrentValue = HtmlDecode($this->nama->CurrentValue);
+        }
+        $this->nama->EditValue = $this->nama->CurrentValue;
+        $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
+
         // bentuk
         $this->bentuk->EditAttrs["class"] = "form-control";
         $this->bentuk->EditCustomAttributes = "";
@@ -1951,29 +2180,44 @@ SORTHTML;
         $this->bentuk->EditValue = $this->bentuk->CurrentValue;
         $this->bentuk->PlaceHolder = RemoveHtml($this->bentuk->caption());
 
-        // viskositasbarang
-        $this->viskositasbarang->EditAttrs["class"] = "form-control";
-        $this->viskositasbarang->EditCustomAttributes = "";
-        if (!$this->viskositasbarang->Raw) {
-            $this->viskositasbarang->CurrentValue = HtmlDecode($this->viskositasbarang->CurrentValue);
+        // viskositas
+        $this->viskositas->EditAttrs["class"] = "form-control";
+        $this->viskositas->EditCustomAttributes = "";
+        if (!$this->viskositas->Raw) {
+            $this->viskositas->CurrentValue = HtmlDecode($this->viskositas->CurrentValue);
         }
-        $this->viskositasbarang->EditValue = $this->viskositasbarang->CurrentValue;
-        $this->viskositasbarang->PlaceHolder = RemoveHtml($this->viskositasbarang->caption());
+        $this->viskositas->EditValue = $this->viskositas->CurrentValue;
+        $this->viskositas->PlaceHolder = RemoveHtml($this->viskositas->caption());
 
-        // idaplikasibarang
-        $this->idaplikasibarang->EditAttrs["class"] = "form-control";
-        $this->idaplikasibarang->EditCustomAttributes = "";
-        $this->idaplikasibarang->EditValue = $this->idaplikasibarang->CurrentValue;
-        $this->idaplikasibarang->PlaceHolder = RemoveHtml($this->idaplikasibarang->caption());
+        // aplikasisediaan
+        $this->aplikasisediaan->EditAttrs["class"] = "form-control";
+        $this->aplikasisediaan->EditCustomAttributes = "";
+        $this->aplikasisediaan->EditValue = $this->aplikasisediaan->CurrentValue;
+        $this->aplikasisediaan->PlaceHolder = RemoveHtml($this->aplikasisediaan->caption());
 
-        // ukuranwadah
-        $this->ukuranwadah->EditAttrs["class"] = "form-control";
-        $this->ukuranwadah->EditCustomAttributes = "";
-        if (!$this->ukuranwadah->Raw) {
-            $this->ukuranwadah->CurrentValue = HtmlDecode($this->ukuranwadah->CurrentValue);
+        // volume
+        $this->volume->EditAttrs["class"] = "form-control";
+        $this->volume->EditCustomAttributes = "";
+        if (!$this->volume->Raw) {
+            $this->volume->CurrentValue = HtmlDecode($this->volume->CurrentValue);
         }
-        $this->ukuranwadah->EditValue = $this->ukuranwadah->CurrentValue;
-        $this->ukuranwadah->PlaceHolder = RemoveHtml($this->ukuranwadah->caption());
+        $this->volume->EditValue = $this->volume->CurrentValue;
+        $this->volume->PlaceHolder = RemoveHtml($this->volume->caption());
+
+        // bahanaktif
+        $this->bahanaktif->EditAttrs["class"] = "form-control";
+        $this->bahanaktif->EditCustomAttributes = "";
+        $this->bahanaktif->EditValue = $this->bahanaktif->CurrentValue;
+        $this->bahanaktif->PlaceHolder = RemoveHtml($this->bahanaktif->caption());
+
+        // volumewadah
+        $this->volumewadah->EditAttrs["class"] = "form-control";
+        $this->volumewadah->EditCustomAttributes = "";
+        if (!$this->volumewadah->Raw) {
+            $this->volumewadah->CurrentValue = HtmlDecode($this->volumewadah->CurrentValue);
+        }
+        $this->volumewadah->EditValue = $this->volumewadah->CurrentValue;
+        $this->volumewadah->PlaceHolder = RemoveHtml($this->volumewadah->caption());
 
         // bahanwadah
         $this->bahanwadah->EditAttrs["class"] = "form-control";
@@ -2049,14 +2293,14 @@ SORTHTML;
         $this->catatanprimer->EditValue = $this->catatanprimer->CurrentValue;
         $this->catatanprimer->PlaceHolder = RemoveHtml($this->catatanprimer->caption());
 
-        // packingkarton
-        $this->packingkarton->EditAttrs["class"] = "form-control";
-        $this->packingkarton->EditCustomAttributes = "";
-        if (!$this->packingkarton->Raw) {
-            $this->packingkarton->CurrentValue = HtmlDecode($this->packingkarton->CurrentValue);
+        // packingproduk
+        $this->packingproduk->EditAttrs["class"] = "form-control";
+        $this->packingproduk->EditCustomAttributes = "";
+        if (!$this->packingproduk->Raw) {
+            $this->packingproduk->CurrentValue = HtmlDecode($this->packingproduk->CurrentValue);
         }
-        $this->packingkarton->EditValue = $this->packingkarton->CurrentValue;
-        $this->packingkarton->PlaceHolder = RemoveHtml($this->packingkarton->caption());
+        $this->packingproduk->EditValue = $this->packingproduk->CurrentValue;
+        $this->packingproduk->PlaceHolder = RemoveHtml($this->packingproduk->caption());
 
         // keteranganpacking
         $this->keteranganpacking->EditAttrs["class"] = "form-control";
@@ -2079,27 +2323,48 @@ SORTHTML;
         $this->keteranganbelt->EditValue = $this->keteranganbelt->CurrentValue;
         $this->keteranganbelt->PlaceHolder = RemoveHtml($this->keteranganbelt->caption());
 
+        // kartonluar
+        $this->kartonluar->EditAttrs["class"] = "form-control";
+        $this->kartonluar->EditCustomAttributes = "";
+        if (!$this->kartonluar->Raw) {
+            $this->kartonluar->CurrentValue = HtmlDecode($this->kartonluar->CurrentValue);
+        }
+        $this->kartonluar->EditValue = $this->kartonluar->CurrentValue;
+        $this->kartonluar->PlaceHolder = RemoveHtml($this->kartonluar->caption());
+
         // bariskarton
         $this->bariskarton->EditAttrs["class"] = "form-control";
         $this->bariskarton->EditCustomAttributes = "";
+        if (!$this->bariskarton->Raw) {
+            $this->bariskarton->CurrentValue = HtmlDecode($this->bariskarton->CurrentValue);
+        }
         $this->bariskarton->EditValue = $this->bariskarton->CurrentValue;
         $this->bariskarton->PlaceHolder = RemoveHtml($this->bariskarton->caption());
 
         // kolomkarton
         $this->kolomkarton->EditAttrs["class"] = "form-control";
         $this->kolomkarton->EditCustomAttributes = "";
+        if (!$this->kolomkarton->Raw) {
+            $this->kolomkarton->CurrentValue = HtmlDecode($this->kolomkarton->CurrentValue);
+        }
         $this->kolomkarton->EditValue = $this->kolomkarton->CurrentValue;
         $this->kolomkarton->PlaceHolder = RemoveHtml($this->kolomkarton->caption());
 
         // stackkarton
         $this->stackkarton->EditAttrs["class"] = "form-control";
         $this->stackkarton->EditCustomAttributes = "";
+        if (!$this->stackkarton->Raw) {
+            $this->stackkarton->CurrentValue = HtmlDecode($this->stackkarton->CurrentValue);
+        }
         $this->stackkarton->EditValue = $this->stackkarton->CurrentValue;
         $this->stackkarton->PlaceHolder = RemoveHtml($this->stackkarton->caption());
 
         // isikarton
         $this->isikarton->EditAttrs["class"] = "form-control";
         $this->isikarton->EditCustomAttributes = "";
+        if (!$this->isikarton->Raw) {
+            $this->isikarton->CurrentValue = HtmlDecode($this->isikarton->CurrentValue);
+        }
         $this->isikarton->EditValue = $this->isikarton->CurrentValue;
         $this->isikarton->PlaceHolder = RemoveHtml($this->isikarton->caption());
 
@@ -2136,6 +2401,15 @@ SORTHTML;
         $this->jumlahwarnalabel->EditValue = $this->jumlahwarnalabel->CurrentValue;
         $this->jumlahwarnalabel->PlaceHolder = RemoveHtml($this->jumlahwarnalabel->caption());
 
+        // metaliklabel
+        $this->metaliklabel->EditAttrs["class"] = "form-control";
+        $this->metaliklabel->EditCustomAttributes = "";
+        if (!$this->metaliklabel->Raw) {
+            $this->metaliklabel->CurrentValue = HtmlDecode($this->metaliklabel->CurrentValue);
+        }
+        $this->metaliklabel->EditValue = $this->metaliklabel->CurrentValue;
+        $this->metaliklabel->PlaceHolder = RemoveHtml($this->metaliklabel->caption());
+
         // etiketlabel
         $this->etiketlabel->EditAttrs["class"] = "form-control";
         $this->etiketlabel->EditCustomAttributes = "";
@@ -2145,11 +2419,11 @@ SORTHTML;
         $this->etiketlabel->EditValue = $this->etiketlabel->CurrentValue;
         $this->etiketlabel->PlaceHolder = RemoveHtml($this->etiketlabel->caption());
 
-        // keteranganetiket
-        $this->keteranganetiket->EditAttrs["class"] = "form-control";
-        $this->keteranganetiket->EditCustomAttributes = "";
-        $this->keteranganetiket->EditValue = $this->keteranganetiket->CurrentValue;
-        $this->keteranganetiket->PlaceHolder = RemoveHtml($this->keteranganetiket->caption());
+        // keteranganlabel
+        $this->keteranganlabel->EditAttrs["class"] = "form-control";
+        $this->keteranganlabel->EditCustomAttributes = "";
+        $this->keteranganlabel->EditValue = $this->keteranganlabel->CurrentValue;
+        $this->keteranganlabel->PlaceHolder = RemoveHtml($this->keteranganlabel->caption());
 
         // kategoridelivery
         $this->kategoridelivery->EditAttrs["class"] = "form-control";
@@ -2181,11 +2455,17 @@ SORTHTML;
         $this->orderkontrak->EditValue = $this->orderkontrak->CurrentValue;
         $this->orderkontrak->PlaceHolder = RemoveHtml($this->orderkontrak->caption());
 
-        // hargapcs
-        $this->hargapcs->EditAttrs["class"] = "form-control";
-        $this->hargapcs->EditCustomAttributes = "";
-        $this->hargapcs->EditValue = $this->hargapcs->CurrentValue;
-        $this->hargapcs->PlaceHolder = RemoveHtml($this->hargapcs->caption());
+        // hargaperpcs
+        $this->hargaperpcs->EditAttrs["class"] = "form-control";
+        $this->hargaperpcs->EditCustomAttributes = "";
+        $this->hargaperpcs->EditValue = $this->hargaperpcs->CurrentValue;
+        $this->hargaperpcs->PlaceHolder = RemoveHtml($this->hargaperpcs->caption());
+
+        // hargaperkarton
+        $this->hargaperkarton->EditAttrs["class"] = "form-control";
+        $this->hargaperkarton->EditCustomAttributes = "";
+        $this->hargaperkarton->EditValue = $this->hargaperkarton->CurrentValue;
+        $this->hargaperkarton->PlaceHolder = RemoveHtml($this->hargaperkarton->caption());
 
         // lampiran
         $this->lampiran->EditAttrs["class"] = "form-control";
@@ -2199,6 +2479,30 @@ SORTHTML;
             $this->lampiran->Upload->FileName = $this->lampiran->CurrentValue;
         }
 
+        // prepared_by
+        $this->prepared_by->EditAttrs["class"] = "form-control";
+        $this->prepared_by->EditCustomAttributes = "";
+        $this->prepared_by->EditValue = $this->prepared_by->CurrentValue;
+        $this->prepared_by->PlaceHolder = RemoveHtml($this->prepared_by->caption());
+
+        // checked_by
+        $this->checked_by->EditAttrs["class"] = "form-control";
+        $this->checked_by->EditCustomAttributes = "";
+        $this->checked_by->EditValue = $this->checked_by->CurrentValue;
+        $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
+
+        // approved_by
+        $this->approved_by->EditAttrs["class"] = "form-control";
+        $this->approved_by->EditCustomAttributes = "";
+        $this->approved_by->EditValue = $this->approved_by->CurrentValue;
+        $this->approved_by->PlaceHolder = RemoveHtml($this->approved_by->caption());
+
+        // approved_date
+        $this->approved_date->EditAttrs["class"] = "form-control";
+        $this->approved_date->EditCustomAttributes = "";
+        $this->approved_date->EditValue = $this->approved_date->CurrentValue;
+        $this->approved_date->PlaceHolder = RemoveHtml($this->approved_date->caption());
+
         // disetujui
         $this->disetujui->EditCustomAttributes = "";
         $this->disetujui->EditValue = $this->disetujui->options(false);
@@ -2210,14 +2514,16 @@ SORTHTML;
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
 
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
-
         // readonly
         $this->readonly->EditCustomAttributes = "";
         $this->readonly->EditValue = $this->readonly->options(false);
         $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
+
+        // updated_at
+        $this->updated_at->EditAttrs["class"] = "form-control";
+        $this->updated_at->EditCustomAttributes = "";
+        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
+        $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2250,10 +2556,13 @@ SORTHTML;
                     $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->tglpengajuan);
                     $doc->exportCaption($this->idnpd_sample);
+                    $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->bentuk);
-                    $doc->exportCaption($this->viskositasbarang);
-                    $doc->exportCaption($this->idaplikasibarang);
-                    $doc->exportCaption($this->ukuranwadah);
+                    $doc->exportCaption($this->viskositas);
+                    $doc->exportCaption($this->aplikasisediaan);
+                    $doc->exportCaption($this->volume);
+                    $doc->exportCaption($this->bahanaktif);
+                    $doc->exportCaption($this->volumewadah);
                     $doc->exportCaption($this->bahanwadah);
                     $doc->exportCaption($this->warnawadah);
                     $doc->exportCaption($this->bentukwadah);
@@ -2263,10 +2572,11 @@ SORTHTML;
                     $doc->exportCaption($this->bentuktutup);
                     $doc->exportCaption($this->segel);
                     $doc->exportCaption($this->catatanprimer);
-                    $doc->exportCaption($this->packingkarton);
+                    $doc->exportCaption($this->packingproduk);
                     $doc->exportCaption($this->keteranganpacking);
                     $doc->exportCaption($this->beltkarton);
                     $doc->exportCaption($this->keteranganbelt);
+                    $doc->exportCaption($this->kartonluar);
                     $doc->exportCaption($this->bariskarton);
                     $doc->exportCaption($this->kolomkarton);
                     $doc->exportCaption($this->stackkarton);
@@ -2275,24 +2585,33 @@ SORTHTML;
                     $doc->exportCaption($this->keteranganjenislabel);
                     $doc->exportCaption($this->kualitaslabel);
                     $doc->exportCaption($this->jumlahwarnalabel);
+                    $doc->exportCaption($this->metaliklabel);
                     $doc->exportCaption($this->etiketlabel);
-                    $doc->exportCaption($this->keteranganetiket);
+                    $doc->exportCaption($this->keteranganlabel);
                     $doc->exportCaption($this->kategoridelivery);
                     $doc->exportCaption($this->alamatpengiriman);
                     $doc->exportCaption($this->orderperdana);
                     $doc->exportCaption($this->orderkontrak);
-                    $doc->exportCaption($this->hargapcs);
+                    $doc->exportCaption($this->hargaperpcs);
+                    $doc->exportCaption($this->hargaperkarton);
                     $doc->exportCaption($this->lampiran);
+                    $doc->exportCaption($this->prepared_by);
+                    $doc->exportCaption($this->checked_by);
+                    $doc->exportCaption($this->approved_by);
+                    $doc->exportCaption($this->approved_date);
                     $doc->exportCaption($this->disetujui);
+                    $doc->exportCaption($this->updated_at);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
                     $doc->exportCaption($this->tglpengajuan);
                     $doc->exportCaption($this->idnpd_sample);
+                    $doc->exportCaption($this->nama);
                     $doc->exportCaption($this->bentuk);
-                    $doc->exportCaption($this->viskositasbarang);
-                    $doc->exportCaption($this->idaplikasibarang);
-                    $doc->exportCaption($this->ukuranwadah);
+                    $doc->exportCaption($this->viskositas);
+                    $doc->exportCaption($this->aplikasisediaan);
+                    $doc->exportCaption($this->volume);
+                    $doc->exportCaption($this->volumewadah);
                     $doc->exportCaption($this->bahanwadah);
                     $doc->exportCaption($this->warnawadah);
                     $doc->exportCaption($this->bentukwadah);
@@ -2302,10 +2621,11 @@ SORTHTML;
                     $doc->exportCaption($this->bentuktutup);
                     $doc->exportCaption($this->segel);
                     $doc->exportCaption($this->catatanprimer);
-                    $doc->exportCaption($this->packingkarton);
+                    $doc->exportCaption($this->packingproduk);
                     $doc->exportCaption($this->keteranganpacking);
                     $doc->exportCaption($this->beltkarton);
                     $doc->exportCaption($this->keteranganbelt);
+                    $doc->exportCaption($this->kartonluar);
                     $doc->exportCaption($this->bariskarton);
                     $doc->exportCaption($this->kolomkarton);
                     $doc->exportCaption($this->stackkarton);
@@ -2314,18 +2634,24 @@ SORTHTML;
                     $doc->exportCaption($this->keteranganjenislabel);
                     $doc->exportCaption($this->kualitaslabel);
                     $doc->exportCaption($this->jumlahwarnalabel);
+                    $doc->exportCaption($this->metaliklabel);
                     $doc->exportCaption($this->etiketlabel);
-                    $doc->exportCaption($this->keteranganetiket);
+                    $doc->exportCaption($this->keteranganlabel);
                     $doc->exportCaption($this->kategoridelivery);
                     $doc->exportCaption($this->alamatpengiriman);
                     $doc->exportCaption($this->orderperdana);
                     $doc->exportCaption($this->orderkontrak);
-                    $doc->exportCaption($this->hargapcs);
+                    $doc->exportCaption($this->hargaperpcs);
+                    $doc->exportCaption($this->hargaperkarton);
                     $doc->exportCaption($this->lampiran);
+                    $doc->exportCaption($this->prepared_by);
+                    $doc->exportCaption($this->checked_by);
+                    $doc->exportCaption($this->approved_by);
+                    $doc->exportCaption($this->approved_date);
                     $doc->exportCaption($this->disetujui);
                     $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
                     $doc->exportCaption($this->readonly);
+                    $doc->exportCaption($this->updated_at);
                 }
                 $doc->endExportRow();
             }
@@ -2358,10 +2684,13 @@ SORTHTML;
                         $doc->exportField($this->idnpd);
                         $doc->exportField($this->tglpengajuan);
                         $doc->exportField($this->idnpd_sample);
+                        $doc->exportField($this->nama);
                         $doc->exportField($this->bentuk);
-                        $doc->exportField($this->viskositasbarang);
-                        $doc->exportField($this->idaplikasibarang);
-                        $doc->exportField($this->ukuranwadah);
+                        $doc->exportField($this->viskositas);
+                        $doc->exportField($this->aplikasisediaan);
+                        $doc->exportField($this->volume);
+                        $doc->exportField($this->bahanaktif);
+                        $doc->exportField($this->volumewadah);
                         $doc->exportField($this->bahanwadah);
                         $doc->exportField($this->warnawadah);
                         $doc->exportField($this->bentukwadah);
@@ -2371,10 +2700,11 @@ SORTHTML;
                         $doc->exportField($this->bentuktutup);
                         $doc->exportField($this->segel);
                         $doc->exportField($this->catatanprimer);
-                        $doc->exportField($this->packingkarton);
+                        $doc->exportField($this->packingproduk);
                         $doc->exportField($this->keteranganpacking);
                         $doc->exportField($this->beltkarton);
                         $doc->exportField($this->keteranganbelt);
+                        $doc->exportField($this->kartonluar);
                         $doc->exportField($this->bariskarton);
                         $doc->exportField($this->kolomkarton);
                         $doc->exportField($this->stackkarton);
@@ -2383,24 +2713,33 @@ SORTHTML;
                         $doc->exportField($this->keteranganjenislabel);
                         $doc->exportField($this->kualitaslabel);
                         $doc->exportField($this->jumlahwarnalabel);
+                        $doc->exportField($this->metaliklabel);
                         $doc->exportField($this->etiketlabel);
-                        $doc->exportField($this->keteranganetiket);
+                        $doc->exportField($this->keteranganlabel);
                         $doc->exportField($this->kategoridelivery);
                         $doc->exportField($this->alamatpengiriman);
                         $doc->exportField($this->orderperdana);
                         $doc->exportField($this->orderkontrak);
-                        $doc->exportField($this->hargapcs);
+                        $doc->exportField($this->hargaperpcs);
+                        $doc->exportField($this->hargaperkarton);
                         $doc->exportField($this->lampiran);
+                        $doc->exportField($this->prepared_by);
+                        $doc->exportField($this->checked_by);
+                        $doc->exportField($this->approved_by);
+                        $doc->exportField($this->approved_date);
                         $doc->exportField($this->disetujui);
+                        $doc->exportField($this->updated_at);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
                         $doc->exportField($this->tglpengajuan);
                         $doc->exportField($this->idnpd_sample);
+                        $doc->exportField($this->nama);
                         $doc->exportField($this->bentuk);
-                        $doc->exportField($this->viskositasbarang);
-                        $doc->exportField($this->idaplikasibarang);
-                        $doc->exportField($this->ukuranwadah);
+                        $doc->exportField($this->viskositas);
+                        $doc->exportField($this->aplikasisediaan);
+                        $doc->exportField($this->volume);
+                        $doc->exportField($this->volumewadah);
                         $doc->exportField($this->bahanwadah);
                         $doc->exportField($this->warnawadah);
                         $doc->exportField($this->bentukwadah);
@@ -2410,10 +2749,11 @@ SORTHTML;
                         $doc->exportField($this->bentuktutup);
                         $doc->exportField($this->segel);
                         $doc->exportField($this->catatanprimer);
-                        $doc->exportField($this->packingkarton);
+                        $doc->exportField($this->packingproduk);
                         $doc->exportField($this->keteranganpacking);
                         $doc->exportField($this->beltkarton);
                         $doc->exportField($this->keteranganbelt);
+                        $doc->exportField($this->kartonluar);
                         $doc->exportField($this->bariskarton);
                         $doc->exportField($this->kolomkarton);
                         $doc->exportField($this->stackkarton);
@@ -2422,18 +2762,24 @@ SORTHTML;
                         $doc->exportField($this->keteranganjenislabel);
                         $doc->exportField($this->kualitaslabel);
                         $doc->exportField($this->jumlahwarnalabel);
+                        $doc->exportField($this->metaliklabel);
                         $doc->exportField($this->etiketlabel);
-                        $doc->exportField($this->keteranganetiket);
+                        $doc->exportField($this->keteranganlabel);
                         $doc->exportField($this->kategoridelivery);
                         $doc->exportField($this->alamatpengiriman);
                         $doc->exportField($this->orderperdana);
                         $doc->exportField($this->orderkontrak);
-                        $doc->exportField($this->hargapcs);
+                        $doc->exportField($this->hargaperpcs);
+                        $doc->exportField($this->hargaperkarton);
                         $doc->exportField($this->lampiran);
+                        $doc->exportField($this->prepared_by);
+                        $doc->exportField($this->checked_by);
+                        $doc->exportField($this->approved_by);
+                        $doc->exportField($this->approved_date);
                         $doc->exportField($this->disetujui);
                         $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
                         $doc->exportField($this->readonly);
+                        $doc->exportField($this->updated_at);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -2448,53 +2794,6 @@ SORTHTML;
         if (!$doc->ExportCustom) {
             $doc->exportTableFooter();
         }
-    }
-
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `npd_harga`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
     }
 
     // Get file data
@@ -2661,7 +2960,10 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        ExecuteUpdate("UPDATE npd_confirmsample SET readonly=1 WHERE idnpd_sample=".$rsnew['idnpd_sample']);
+        ExecuteUpdate("UPDATE npd_confirmsample SET readonly=1 WHERE idnpd_sample={$rsnew['idnpd_sample']}");
+        if ($rsnew['disetujui'] > 0) {
+        	$rsnew['approved_date'] = date('Y-m-d H:i:s');
+        }
         return true;
     }
 
@@ -2677,6 +2979,9 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        if ($rsnew['disetujui'] > 0 && empty($rsold['approved_date'])) {
+        	$rsnew['approved_date'] = date('Y-m-d H:i:s');
+        }
         return true;
     }
 
@@ -2728,7 +3033,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
-        $myResult = ExecuteUpdate("UPDATE npd_confirm SET readonly=0 WHERE idnpd_sample=".$rs['idnpd_sample']);
+        ExecuteUpdate("UPDATE npd_confirmsample SET readonly=0 WHERE idnpd_sample={$rs['idnpd_sample']}");
         return true;
     }
 
@@ -2736,7 +3041,7 @@ SORTHTML;
     public function rowDeleted(&$rs)
     {
         //Log("Row Deleted");
-        updateStatus("npd", $rs['idnpd']);
+        //updateStatus("npd", $rs['idnpd']);
     }
 
     // Email Sending event

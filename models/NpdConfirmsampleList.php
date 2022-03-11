@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class NpdHargaList extends NpdHarga
+class NpdConfirmsampleList extends NpdConfirmsample
 {
     use MessagesTrait;
 
@@ -18,16 +18,16 @@ class NpdHargaList extends NpdHarga
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'npd_harga';
+    public $TableName = 'npd_confirmsample';
 
     // Page object name
-    public $PageObjName = "NpdHargaList";
+    public $PageObjName = "NpdConfirmsampleList";
 
     // Rendering View
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fnpd_hargalist";
+    public $FormName = "fnpd_confirmsamplelist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -165,9 +165,9 @@ class NpdHargaList extends NpdHarga
         // Parent constuctor
         parent::__construct();
 
-        // Table object (npd_harga)
-        if (!isset($GLOBALS["npd_harga"]) || get_class($GLOBALS["npd_harga"]) == PROJECT_NAMESPACE . "npd_harga") {
-            $GLOBALS["npd_harga"] = &$this;
+        // Table object (npd_confirmsample)
+        if (!isset($GLOBALS["npd_confirmsample"]) || get_class($GLOBALS["npd_confirmsample"]) == PROJECT_NAMESPACE . "npd_confirmsample") {
+            $GLOBALS["npd_confirmsample"] = &$this;
         }
 
         // Page URL
@@ -181,16 +181,16 @@ class NpdHargaList extends NpdHarga
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "NpdHargaAdd";
+        $this->AddUrl = "NpdConfirmsampleAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "NpdHargaDelete";
-        $this->MultiUpdateUrl = "NpdHargaUpdate";
+        $this->MultiDeleteUrl = "NpdConfirmsampleDelete";
+        $this->MultiUpdateUrl = "NpdConfirmsampleUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'npd_harga');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'npd_confirmsample');
         }
 
         // Start timer
@@ -230,7 +230,7 @@ class NpdHargaList extends NpdHarga
 
         // Filter options
         $this->FilterOptions = new ListOptions("div");
-        $this->FilterOptions->TagClassName = "ew-filter-option fnpd_hargalistsrch";
+        $this->FilterOptions->TagClassName = "ew-filter-option fnpd_confirmsamplelistsrch";
 
         // List actions
         $this->ListActions = new ListActions();
@@ -305,7 +305,7 @@ class NpdHargaList extends NpdHarga
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("npd_harga"));
+                $doc = new $class(Container("npd_confirmsample"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -570,55 +570,26 @@ class NpdHargaList extends NpdHarga
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
-        $this->tglpengajuan->setVisibility();
+        $this->tglkonfirmasi->setVisibility();
         $this->idnpd_sample->setVisibility();
         $this->nama->setVisibility();
         $this->bentuk->Visible = false;
         $this->viskositas->Visible = false;
+        $this->warna->Visible = false;
+        $this->bauparfum->Visible = false;
         $this->aplikasisediaan->Visible = false;
-        $this->volume->Visible = false;
-        $this->bahanaktif->Visible = false;
-        $this->volumewadah->Visible = false;
-        $this->bahanwadah->Visible = false;
-        $this->warnawadah->Visible = false;
-        $this->bentukwadah->Visible = false;
-        $this->jenistutup->Visible = false;
-        $this->bahantutup->Visible = false;
-        $this->warnatutup->Visible = false;
-        $this->bentuktutup->Visible = false;
-        $this->segel->Visible = false;
-        $this->catatanprimer->Visible = false;
-        $this->packingproduk->Visible = false;
-        $this->keteranganpacking->Visible = false;
-        $this->beltkarton->Visible = false;
-        $this->keteranganbelt->Visible = false;
-        $this->kartonluar->Visible = false;
-        $this->bariskarton->Visible = false;
-        $this->kolomkarton->Visible = false;
-        $this->stackkarton->Visible = false;
-        $this->isikarton->Visible = false;
-        $this->jenislabel->Visible = false;
-        $this->keteranganjenislabel->Visible = false;
-        $this->kualitaslabel->Visible = false;
-        $this->jumlahwarnalabel->Visible = false;
-        $this->metaliklabel->Visible = false;
-        $this->etiketlabel->Visible = false;
-        $this->keteranganlabel->Visible = false;
-        $this->kategoridelivery->Visible = false;
-        $this->alamatpengiriman->Visible = false;
-        $this->orderperdana->Visible = false;
-        $this->orderkontrak->Visible = false;
-        $this->hargaperpcs->Visible = false;
-        $this->hargaperkarton->Visible = false;
-        $this->lampiran->Visible = false;
-        $this->prepared_by->Visible = false;
-        $this->checked_by->Visible = false;
-        $this->approved_by->Visible = false;
-        $this->approved_date->Visible = false;
-        $this->disetujui->Visible = false;
+        $this->volume->setVisibility();
+        $this->campaign->Visible = false;
+        $this->alasansetuju->Visible = false;
+        $this->foto->Visible = false;
+        $this->namapemesan->setVisibility();
+        $this->alamatpemesan->Visible = false;
+        $this->personincharge->Visible = false;
+        $this->jabatan->Visible = false;
+        $this->notelp->Visible = false;
         $this->created_at->Visible = false;
+        $this->receipt_by->Visible = false;
         $this->readonly->Visible = false;
-        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -651,6 +622,12 @@ class NpdHargaList extends NpdHarga
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
+        $this->setupLookupOptions($this->bentuk);
+        $this->setupLookupOptions($this->viskositas);
+        $this->setupLookupOptions($this->warna);
+        $this->setupLookupOptions($this->bauparfum);
+        $this->setupLookupOptions($this->aplikasisediaan);
+        $this->setupLookupOptions($this->receipt_by);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -936,55 +913,26 @@ class NpdHargaList extends NpdHarga
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
-        $filterList = Concat($filterList, $this->tglpengajuan->AdvancedSearch->toJson(), ","); // Field tglpengajuan
+        $filterList = Concat($filterList, $this->tglkonfirmasi->AdvancedSearch->toJson(), ","); // Field tglkonfirmasi
         $filterList = Concat($filterList, $this->idnpd_sample->AdvancedSearch->toJson(), ","); // Field idnpd_sample
         $filterList = Concat($filterList, $this->nama->AdvancedSearch->toJson(), ","); // Field nama
         $filterList = Concat($filterList, $this->bentuk->AdvancedSearch->toJson(), ","); // Field bentuk
         $filterList = Concat($filterList, $this->viskositas->AdvancedSearch->toJson(), ","); // Field viskositas
+        $filterList = Concat($filterList, $this->warna->AdvancedSearch->toJson(), ","); // Field warna
+        $filterList = Concat($filterList, $this->bauparfum->AdvancedSearch->toJson(), ","); // Field bauparfum
         $filterList = Concat($filterList, $this->aplikasisediaan->AdvancedSearch->toJson(), ","); // Field aplikasisediaan
         $filterList = Concat($filterList, $this->volume->AdvancedSearch->toJson(), ","); // Field volume
-        $filterList = Concat($filterList, $this->bahanaktif->AdvancedSearch->toJson(), ","); // Field bahanaktif
-        $filterList = Concat($filterList, $this->volumewadah->AdvancedSearch->toJson(), ","); // Field volumewadah
-        $filterList = Concat($filterList, $this->bahanwadah->AdvancedSearch->toJson(), ","); // Field bahanwadah
-        $filterList = Concat($filterList, $this->warnawadah->AdvancedSearch->toJson(), ","); // Field warnawadah
-        $filterList = Concat($filterList, $this->bentukwadah->AdvancedSearch->toJson(), ","); // Field bentukwadah
-        $filterList = Concat($filterList, $this->jenistutup->AdvancedSearch->toJson(), ","); // Field jenistutup
-        $filterList = Concat($filterList, $this->bahantutup->AdvancedSearch->toJson(), ","); // Field bahantutup
-        $filterList = Concat($filterList, $this->warnatutup->AdvancedSearch->toJson(), ","); // Field warnatutup
-        $filterList = Concat($filterList, $this->bentuktutup->AdvancedSearch->toJson(), ","); // Field bentuktutup
-        $filterList = Concat($filterList, $this->segel->AdvancedSearch->toJson(), ","); // Field segel
-        $filterList = Concat($filterList, $this->catatanprimer->AdvancedSearch->toJson(), ","); // Field catatanprimer
-        $filterList = Concat($filterList, $this->packingproduk->AdvancedSearch->toJson(), ","); // Field packingproduk
-        $filterList = Concat($filterList, $this->keteranganpacking->AdvancedSearch->toJson(), ","); // Field keteranganpacking
-        $filterList = Concat($filterList, $this->beltkarton->AdvancedSearch->toJson(), ","); // Field beltkarton
-        $filterList = Concat($filterList, $this->keteranganbelt->AdvancedSearch->toJson(), ","); // Field keteranganbelt
-        $filterList = Concat($filterList, $this->kartonluar->AdvancedSearch->toJson(), ","); // Field kartonluar
-        $filterList = Concat($filterList, $this->bariskarton->AdvancedSearch->toJson(), ","); // Field bariskarton
-        $filterList = Concat($filterList, $this->kolomkarton->AdvancedSearch->toJson(), ","); // Field kolomkarton
-        $filterList = Concat($filterList, $this->stackkarton->AdvancedSearch->toJson(), ","); // Field stackkarton
-        $filterList = Concat($filterList, $this->isikarton->AdvancedSearch->toJson(), ","); // Field isikarton
-        $filterList = Concat($filterList, $this->jenislabel->AdvancedSearch->toJson(), ","); // Field jenislabel
-        $filterList = Concat($filterList, $this->keteranganjenislabel->AdvancedSearch->toJson(), ","); // Field keteranganjenislabel
-        $filterList = Concat($filterList, $this->kualitaslabel->AdvancedSearch->toJson(), ","); // Field kualitaslabel
-        $filterList = Concat($filterList, $this->jumlahwarnalabel->AdvancedSearch->toJson(), ","); // Field jumlahwarnalabel
-        $filterList = Concat($filterList, $this->metaliklabel->AdvancedSearch->toJson(), ","); // Field metaliklabel
-        $filterList = Concat($filterList, $this->etiketlabel->AdvancedSearch->toJson(), ","); // Field etiketlabel
-        $filterList = Concat($filterList, $this->keteranganlabel->AdvancedSearch->toJson(), ","); // Field keteranganlabel
-        $filterList = Concat($filterList, $this->kategoridelivery->AdvancedSearch->toJson(), ","); // Field kategoridelivery
-        $filterList = Concat($filterList, $this->alamatpengiriman->AdvancedSearch->toJson(), ","); // Field alamatpengiriman
-        $filterList = Concat($filterList, $this->orderperdana->AdvancedSearch->toJson(), ","); // Field orderperdana
-        $filterList = Concat($filterList, $this->orderkontrak->AdvancedSearch->toJson(), ","); // Field orderkontrak
-        $filterList = Concat($filterList, $this->hargaperpcs->AdvancedSearch->toJson(), ","); // Field hargaperpcs
-        $filterList = Concat($filterList, $this->hargaperkarton->AdvancedSearch->toJson(), ","); // Field hargaperkarton
-        $filterList = Concat($filterList, $this->lampiran->AdvancedSearch->toJson(), ","); // Field lampiran
-        $filterList = Concat($filterList, $this->prepared_by->AdvancedSearch->toJson(), ","); // Field prepared_by
-        $filterList = Concat($filterList, $this->checked_by->AdvancedSearch->toJson(), ","); // Field checked_by
-        $filterList = Concat($filterList, $this->approved_by->AdvancedSearch->toJson(), ","); // Field approved_by
-        $filterList = Concat($filterList, $this->approved_date->AdvancedSearch->toJson(), ","); // Field approved_date
-        $filterList = Concat($filterList, $this->disetujui->AdvancedSearch->toJson(), ","); // Field disetujui
+        $filterList = Concat($filterList, $this->campaign->AdvancedSearch->toJson(), ","); // Field campaign
+        $filterList = Concat($filterList, $this->alasansetuju->AdvancedSearch->toJson(), ","); // Field alasansetuju
+        $filterList = Concat($filterList, $this->foto->AdvancedSearch->toJson(), ","); // Field foto
+        $filterList = Concat($filterList, $this->namapemesan->AdvancedSearch->toJson(), ","); // Field namapemesan
+        $filterList = Concat($filterList, $this->alamatpemesan->AdvancedSearch->toJson(), ","); // Field alamatpemesan
+        $filterList = Concat($filterList, $this->personincharge->AdvancedSearch->toJson(), ","); // Field personincharge
+        $filterList = Concat($filterList, $this->jabatan->AdvancedSearch->toJson(), ","); // Field jabatan
+        $filterList = Concat($filterList, $this->notelp->AdvancedSearch->toJson(), ","); // Field notelp
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
+        $filterList = Concat($filterList, $this->receipt_by->AdvancedSearch->toJson(), ","); // Field receipt_by
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
-        $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -1006,7 +954,7 @@ class NpdHargaList extends NpdHarga
         global $UserProfile;
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fnpd_hargalistsrch", $filters);
+            $UserProfile->setSearchFilters(CurrentUserName(), "fnpd_confirmsamplelistsrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -1041,13 +989,13 @@ class NpdHargaList extends NpdHarga
         $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
         $this->idnpd->AdvancedSearch->save();
 
-        // Field tglpengajuan
-        $this->tglpengajuan->AdvancedSearch->SearchValue = @$filter["x_tglpengajuan"];
-        $this->tglpengajuan->AdvancedSearch->SearchOperator = @$filter["z_tglpengajuan"];
-        $this->tglpengajuan->AdvancedSearch->SearchCondition = @$filter["v_tglpengajuan"];
-        $this->tglpengajuan->AdvancedSearch->SearchValue2 = @$filter["y_tglpengajuan"];
-        $this->tglpengajuan->AdvancedSearch->SearchOperator2 = @$filter["w_tglpengajuan"];
-        $this->tglpengajuan->AdvancedSearch->save();
+        // Field tglkonfirmasi
+        $this->tglkonfirmasi->AdvancedSearch->SearchValue = @$filter["x_tglkonfirmasi"];
+        $this->tglkonfirmasi->AdvancedSearch->SearchOperator = @$filter["z_tglkonfirmasi"];
+        $this->tglkonfirmasi->AdvancedSearch->SearchCondition = @$filter["v_tglkonfirmasi"];
+        $this->tglkonfirmasi->AdvancedSearch->SearchValue2 = @$filter["y_tglkonfirmasi"];
+        $this->tglkonfirmasi->AdvancedSearch->SearchOperator2 = @$filter["w_tglkonfirmasi"];
+        $this->tglkonfirmasi->AdvancedSearch->save();
 
         // Field idnpd_sample
         $this->idnpd_sample->AdvancedSearch->SearchValue = @$filter["x_idnpd_sample"];
@@ -1081,6 +1029,22 @@ class NpdHargaList extends NpdHarga
         $this->viskositas->AdvancedSearch->SearchOperator2 = @$filter["w_viskositas"];
         $this->viskositas->AdvancedSearch->save();
 
+        // Field warna
+        $this->warna->AdvancedSearch->SearchValue = @$filter["x_warna"];
+        $this->warna->AdvancedSearch->SearchOperator = @$filter["z_warna"];
+        $this->warna->AdvancedSearch->SearchCondition = @$filter["v_warna"];
+        $this->warna->AdvancedSearch->SearchValue2 = @$filter["y_warna"];
+        $this->warna->AdvancedSearch->SearchOperator2 = @$filter["w_warna"];
+        $this->warna->AdvancedSearch->save();
+
+        // Field bauparfum
+        $this->bauparfum->AdvancedSearch->SearchValue = @$filter["x_bauparfum"];
+        $this->bauparfum->AdvancedSearch->SearchOperator = @$filter["z_bauparfum"];
+        $this->bauparfum->AdvancedSearch->SearchCondition = @$filter["v_bauparfum"];
+        $this->bauparfum->AdvancedSearch->SearchValue2 = @$filter["y_bauparfum"];
+        $this->bauparfum->AdvancedSearch->SearchOperator2 = @$filter["w_bauparfum"];
+        $this->bauparfum->AdvancedSearch->save();
+
         // Field aplikasisediaan
         $this->aplikasisediaan->AdvancedSearch->SearchValue = @$filter["x_aplikasisediaan"];
         $this->aplikasisediaan->AdvancedSearch->SearchOperator = @$filter["z_aplikasisediaan"];
@@ -1097,317 +1061,69 @@ class NpdHargaList extends NpdHarga
         $this->volume->AdvancedSearch->SearchOperator2 = @$filter["w_volume"];
         $this->volume->AdvancedSearch->save();
 
-        // Field bahanaktif
-        $this->bahanaktif->AdvancedSearch->SearchValue = @$filter["x_bahanaktif"];
-        $this->bahanaktif->AdvancedSearch->SearchOperator = @$filter["z_bahanaktif"];
-        $this->bahanaktif->AdvancedSearch->SearchCondition = @$filter["v_bahanaktif"];
-        $this->bahanaktif->AdvancedSearch->SearchValue2 = @$filter["y_bahanaktif"];
-        $this->bahanaktif->AdvancedSearch->SearchOperator2 = @$filter["w_bahanaktif"];
-        $this->bahanaktif->AdvancedSearch->save();
+        // Field campaign
+        $this->campaign->AdvancedSearch->SearchValue = @$filter["x_campaign"];
+        $this->campaign->AdvancedSearch->SearchOperator = @$filter["z_campaign"];
+        $this->campaign->AdvancedSearch->SearchCondition = @$filter["v_campaign"];
+        $this->campaign->AdvancedSearch->SearchValue2 = @$filter["y_campaign"];
+        $this->campaign->AdvancedSearch->SearchOperator2 = @$filter["w_campaign"];
+        $this->campaign->AdvancedSearch->save();
 
-        // Field volumewadah
-        $this->volumewadah->AdvancedSearch->SearchValue = @$filter["x_volumewadah"];
-        $this->volumewadah->AdvancedSearch->SearchOperator = @$filter["z_volumewadah"];
-        $this->volumewadah->AdvancedSearch->SearchCondition = @$filter["v_volumewadah"];
-        $this->volumewadah->AdvancedSearch->SearchValue2 = @$filter["y_volumewadah"];
-        $this->volumewadah->AdvancedSearch->SearchOperator2 = @$filter["w_volumewadah"];
-        $this->volumewadah->AdvancedSearch->save();
+        // Field alasansetuju
+        $this->alasansetuju->AdvancedSearch->SearchValue = @$filter["x_alasansetuju"];
+        $this->alasansetuju->AdvancedSearch->SearchOperator = @$filter["z_alasansetuju"];
+        $this->alasansetuju->AdvancedSearch->SearchCondition = @$filter["v_alasansetuju"];
+        $this->alasansetuju->AdvancedSearch->SearchValue2 = @$filter["y_alasansetuju"];
+        $this->alasansetuju->AdvancedSearch->SearchOperator2 = @$filter["w_alasansetuju"];
+        $this->alasansetuju->AdvancedSearch->save();
 
-        // Field bahanwadah
-        $this->bahanwadah->AdvancedSearch->SearchValue = @$filter["x_bahanwadah"];
-        $this->bahanwadah->AdvancedSearch->SearchOperator = @$filter["z_bahanwadah"];
-        $this->bahanwadah->AdvancedSearch->SearchCondition = @$filter["v_bahanwadah"];
-        $this->bahanwadah->AdvancedSearch->SearchValue2 = @$filter["y_bahanwadah"];
-        $this->bahanwadah->AdvancedSearch->SearchOperator2 = @$filter["w_bahanwadah"];
-        $this->bahanwadah->AdvancedSearch->save();
+        // Field foto
+        $this->foto->AdvancedSearch->SearchValue = @$filter["x_foto"];
+        $this->foto->AdvancedSearch->SearchOperator = @$filter["z_foto"];
+        $this->foto->AdvancedSearch->SearchCondition = @$filter["v_foto"];
+        $this->foto->AdvancedSearch->SearchValue2 = @$filter["y_foto"];
+        $this->foto->AdvancedSearch->SearchOperator2 = @$filter["w_foto"];
+        $this->foto->AdvancedSearch->save();
 
-        // Field warnawadah
-        $this->warnawadah->AdvancedSearch->SearchValue = @$filter["x_warnawadah"];
-        $this->warnawadah->AdvancedSearch->SearchOperator = @$filter["z_warnawadah"];
-        $this->warnawadah->AdvancedSearch->SearchCondition = @$filter["v_warnawadah"];
-        $this->warnawadah->AdvancedSearch->SearchValue2 = @$filter["y_warnawadah"];
-        $this->warnawadah->AdvancedSearch->SearchOperator2 = @$filter["w_warnawadah"];
-        $this->warnawadah->AdvancedSearch->save();
+        // Field namapemesan
+        $this->namapemesan->AdvancedSearch->SearchValue = @$filter["x_namapemesan"];
+        $this->namapemesan->AdvancedSearch->SearchOperator = @$filter["z_namapemesan"];
+        $this->namapemesan->AdvancedSearch->SearchCondition = @$filter["v_namapemesan"];
+        $this->namapemesan->AdvancedSearch->SearchValue2 = @$filter["y_namapemesan"];
+        $this->namapemesan->AdvancedSearch->SearchOperator2 = @$filter["w_namapemesan"];
+        $this->namapemesan->AdvancedSearch->save();
 
-        // Field bentukwadah
-        $this->bentukwadah->AdvancedSearch->SearchValue = @$filter["x_bentukwadah"];
-        $this->bentukwadah->AdvancedSearch->SearchOperator = @$filter["z_bentukwadah"];
-        $this->bentukwadah->AdvancedSearch->SearchCondition = @$filter["v_bentukwadah"];
-        $this->bentukwadah->AdvancedSearch->SearchValue2 = @$filter["y_bentukwadah"];
-        $this->bentukwadah->AdvancedSearch->SearchOperator2 = @$filter["w_bentukwadah"];
-        $this->bentukwadah->AdvancedSearch->save();
+        // Field alamatpemesan
+        $this->alamatpemesan->AdvancedSearch->SearchValue = @$filter["x_alamatpemesan"];
+        $this->alamatpemesan->AdvancedSearch->SearchOperator = @$filter["z_alamatpemesan"];
+        $this->alamatpemesan->AdvancedSearch->SearchCondition = @$filter["v_alamatpemesan"];
+        $this->alamatpemesan->AdvancedSearch->SearchValue2 = @$filter["y_alamatpemesan"];
+        $this->alamatpemesan->AdvancedSearch->SearchOperator2 = @$filter["w_alamatpemesan"];
+        $this->alamatpemesan->AdvancedSearch->save();
 
-        // Field jenistutup
-        $this->jenistutup->AdvancedSearch->SearchValue = @$filter["x_jenistutup"];
-        $this->jenistutup->AdvancedSearch->SearchOperator = @$filter["z_jenistutup"];
-        $this->jenistutup->AdvancedSearch->SearchCondition = @$filter["v_jenistutup"];
-        $this->jenistutup->AdvancedSearch->SearchValue2 = @$filter["y_jenistutup"];
-        $this->jenistutup->AdvancedSearch->SearchOperator2 = @$filter["w_jenistutup"];
-        $this->jenistutup->AdvancedSearch->save();
+        // Field personincharge
+        $this->personincharge->AdvancedSearch->SearchValue = @$filter["x_personincharge"];
+        $this->personincharge->AdvancedSearch->SearchOperator = @$filter["z_personincharge"];
+        $this->personincharge->AdvancedSearch->SearchCondition = @$filter["v_personincharge"];
+        $this->personincharge->AdvancedSearch->SearchValue2 = @$filter["y_personincharge"];
+        $this->personincharge->AdvancedSearch->SearchOperator2 = @$filter["w_personincharge"];
+        $this->personincharge->AdvancedSearch->save();
 
-        // Field bahantutup
-        $this->bahantutup->AdvancedSearch->SearchValue = @$filter["x_bahantutup"];
-        $this->bahantutup->AdvancedSearch->SearchOperator = @$filter["z_bahantutup"];
-        $this->bahantutup->AdvancedSearch->SearchCondition = @$filter["v_bahantutup"];
-        $this->bahantutup->AdvancedSearch->SearchValue2 = @$filter["y_bahantutup"];
-        $this->bahantutup->AdvancedSearch->SearchOperator2 = @$filter["w_bahantutup"];
-        $this->bahantutup->AdvancedSearch->save();
+        // Field jabatan
+        $this->jabatan->AdvancedSearch->SearchValue = @$filter["x_jabatan"];
+        $this->jabatan->AdvancedSearch->SearchOperator = @$filter["z_jabatan"];
+        $this->jabatan->AdvancedSearch->SearchCondition = @$filter["v_jabatan"];
+        $this->jabatan->AdvancedSearch->SearchValue2 = @$filter["y_jabatan"];
+        $this->jabatan->AdvancedSearch->SearchOperator2 = @$filter["w_jabatan"];
+        $this->jabatan->AdvancedSearch->save();
 
-        // Field warnatutup
-        $this->warnatutup->AdvancedSearch->SearchValue = @$filter["x_warnatutup"];
-        $this->warnatutup->AdvancedSearch->SearchOperator = @$filter["z_warnatutup"];
-        $this->warnatutup->AdvancedSearch->SearchCondition = @$filter["v_warnatutup"];
-        $this->warnatutup->AdvancedSearch->SearchValue2 = @$filter["y_warnatutup"];
-        $this->warnatutup->AdvancedSearch->SearchOperator2 = @$filter["w_warnatutup"];
-        $this->warnatutup->AdvancedSearch->save();
-
-        // Field bentuktutup
-        $this->bentuktutup->AdvancedSearch->SearchValue = @$filter["x_bentuktutup"];
-        $this->bentuktutup->AdvancedSearch->SearchOperator = @$filter["z_bentuktutup"];
-        $this->bentuktutup->AdvancedSearch->SearchCondition = @$filter["v_bentuktutup"];
-        $this->bentuktutup->AdvancedSearch->SearchValue2 = @$filter["y_bentuktutup"];
-        $this->bentuktutup->AdvancedSearch->SearchOperator2 = @$filter["w_bentuktutup"];
-        $this->bentuktutup->AdvancedSearch->save();
-
-        // Field segel
-        $this->segel->AdvancedSearch->SearchValue = @$filter["x_segel"];
-        $this->segel->AdvancedSearch->SearchOperator = @$filter["z_segel"];
-        $this->segel->AdvancedSearch->SearchCondition = @$filter["v_segel"];
-        $this->segel->AdvancedSearch->SearchValue2 = @$filter["y_segel"];
-        $this->segel->AdvancedSearch->SearchOperator2 = @$filter["w_segel"];
-        $this->segel->AdvancedSearch->save();
-
-        // Field catatanprimer
-        $this->catatanprimer->AdvancedSearch->SearchValue = @$filter["x_catatanprimer"];
-        $this->catatanprimer->AdvancedSearch->SearchOperator = @$filter["z_catatanprimer"];
-        $this->catatanprimer->AdvancedSearch->SearchCondition = @$filter["v_catatanprimer"];
-        $this->catatanprimer->AdvancedSearch->SearchValue2 = @$filter["y_catatanprimer"];
-        $this->catatanprimer->AdvancedSearch->SearchOperator2 = @$filter["w_catatanprimer"];
-        $this->catatanprimer->AdvancedSearch->save();
-
-        // Field packingproduk
-        $this->packingproduk->AdvancedSearch->SearchValue = @$filter["x_packingproduk"];
-        $this->packingproduk->AdvancedSearch->SearchOperator = @$filter["z_packingproduk"];
-        $this->packingproduk->AdvancedSearch->SearchCondition = @$filter["v_packingproduk"];
-        $this->packingproduk->AdvancedSearch->SearchValue2 = @$filter["y_packingproduk"];
-        $this->packingproduk->AdvancedSearch->SearchOperator2 = @$filter["w_packingproduk"];
-        $this->packingproduk->AdvancedSearch->save();
-
-        // Field keteranganpacking
-        $this->keteranganpacking->AdvancedSearch->SearchValue = @$filter["x_keteranganpacking"];
-        $this->keteranganpacking->AdvancedSearch->SearchOperator = @$filter["z_keteranganpacking"];
-        $this->keteranganpacking->AdvancedSearch->SearchCondition = @$filter["v_keteranganpacking"];
-        $this->keteranganpacking->AdvancedSearch->SearchValue2 = @$filter["y_keteranganpacking"];
-        $this->keteranganpacking->AdvancedSearch->SearchOperator2 = @$filter["w_keteranganpacking"];
-        $this->keteranganpacking->AdvancedSearch->save();
-
-        // Field beltkarton
-        $this->beltkarton->AdvancedSearch->SearchValue = @$filter["x_beltkarton"];
-        $this->beltkarton->AdvancedSearch->SearchOperator = @$filter["z_beltkarton"];
-        $this->beltkarton->AdvancedSearch->SearchCondition = @$filter["v_beltkarton"];
-        $this->beltkarton->AdvancedSearch->SearchValue2 = @$filter["y_beltkarton"];
-        $this->beltkarton->AdvancedSearch->SearchOperator2 = @$filter["w_beltkarton"];
-        $this->beltkarton->AdvancedSearch->save();
-
-        // Field keteranganbelt
-        $this->keteranganbelt->AdvancedSearch->SearchValue = @$filter["x_keteranganbelt"];
-        $this->keteranganbelt->AdvancedSearch->SearchOperator = @$filter["z_keteranganbelt"];
-        $this->keteranganbelt->AdvancedSearch->SearchCondition = @$filter["v_keteranganbelt"];
-        $this->keteranganbelt->AdvancedSearch->SearchValue2 = @$filter["y_keteranganbelt"];
-        $this->keteranganbelt->AdvancedSearch->SearchOperator2 = @$filter["w_keteranganbelt"];
-        $this->keteranganbelt->AdvancedSearch->save();
-
-        // Field kartonluar
-        $this->kartonluar->AdvancedSearch->SearchValue = @$filter["x_kartonluar"];
-        $this->kartonluar->AdvancedSearch->SearchOperator = @$filter["z_kartonluar"];
-        $this->kartonluar->AdvancedSearch->SearchCondition = @$filter["v_kartonluar"];
-        $this->kartonluar->AdvancedSearch->SearchValue2 = @$filter["y_kartonluar"];
-        $this->kartonluar->AdvancedSearch->SearchOperator2 = @$filter["w_kartonluar"];
-        $this->kartonluar->AdvancedSearch->save();
-
-        // Field bariskarton
-        $this->bariskarton->AdvancedSearch->SearchValue = @$filter["x_bariskarton"];
-        $this->bariskarton->AdvancedSearch->SearchOperator = @$filter["z_bariskarton"];
-        $this->bariskarton->AdvancedSearch->SearchCondition = @$filter["v_bariskarton"];
-        $this->bariskarton->AdvancedSearch->SearchValue2 = @$filter["y_bariskarton"];
-        $this->bariskarton->AdvancedSearch->SearchOperator2 = @$filter["w_bariskarton"];
-        $this->bariskarton->AdvancedSearch->save();
-
-        // Field kolomkarton
-        $this->kolomkarton->AdvancedSearch->SearchValue = @$filter["x_kolomkarton"];
-        $this->kolomkarton->AdvancedSearch->SearchOperator = @$filter["z_kolomkarton"];
-        $this->kolomkarton->AdvancedSearch->SearchCondition = @$filter["v_kolomkarton"];
-        $this->kolomkarton->AdvancedSearch->SearchValue2 = @$filter["y_kolomkarton"];
-        $this->kolomkarton->AdvancedSearch->SearchOperator2 = @$filter["w_kolomkarton"];
-        $this->kolomkarton->AdvancedSearch->save();
-
-        // Field stackkarton
-        $this->stackkarton->AdvancedSearch->SearchValue = @$filter["x_stackkarton"];
-        $this->stackkarton->AdvancedSearch->SearchOperator = @$filter["z_stackkarton"];
-        $this->stackkarton->AdvancedSearch->SearchCondition = @$filter["v_stackkarton"];
-        $this->stackkarton->AdvancedSearch->SearchValue2 = @$filter["y_stackkarton"];
-        $this->stackkarton->AdvancedSearch->SearchOperator2 = @$filter["w_stackkarton"];
-        $this->stackkarton->AdvancedSearch->save();
-
-        // Field isikarton
-        $this->isikarton->AdvancedSearch->SearchValue = @$filter["x_isikarton"];
-        $this->isikarton->AdvancedSearch->SearchOperator = @$filter["z_isikarton"];
-        $this->isikarton->AdvancedSearch->SearchCondition = @$filter["v_isikarton"];
-        $this->isikarton->AdvancedSearch->SearchValue2 = @$filter["y_isikarton"];
-        $this->isikarton->AdvancedSearch->SearchOperator2 = @$filter["w_isikarton"];
-        $this->isikarton->AdvancedSearch->save();
-
-        // Field jenislabel
-        $this->jenislabel->AdvancedSearch->SearchValue = @$filter["x_jenislabel"];
-        $this->jenislabel->AdvancedSearch->SearchOperator = @$filter["z_jenislabel"];
-        $this->jenislabel->AdvancedSearch->SearchCondition = @$filter["v_jenislabel"];
-        $this->jenislabel->AdvancedSearch->SearchValue2 = @$filter["y_jenislabel"];
-        $this->jenislabel->AdvancedSearch->SearchOperator2 = @$filter["w_jenislabel"];
-        $this->jenislabel->AdvancedSearch->save();
-
-        // Field keteranganjenislabel
-        $this->keteranganjenislabel->AdvancedSearch->SearchValue = @$filter["x_keteranganjenislabel"];
-        $this->keteranganjenislabel->AdvancedSearch->SearchOperator = @$filter["z_keteranganjenislabel"];
-        $this->keteranganjenislabel->AdvancedSearch->SearchCondition = @$filter["v_keteranganjenislabel"];
-        $this->keteranganjenislabel->AdvancedSearch->SearchValue2 = @$filter["y_keteranganjenislabel"];
-        $this->keteranganjenislabel->AdvancedSearch->SearchOperator2 = @$filter["w_keteranganjenislabel"];
-        $this->keteranganjenislabel->AdvancedSearch->save();
-
-        // Field kualitaslabel
-        $this->kualitaslabel->AdvancedSearch->SearchValue = @$filter["x_kualitaslabel"];
-        $this->kualitaslabel->AdvancedSearch->SearchOperator = @$filter["z_kualitaslabel"];
-        $this->kualitaslabel->AdvancedSearch->SearchCondition = @$filter["v_kualitaslabel"];
-        $this->kualitaslabel->AdvancedSearch->SearchValue2 = @$filter["y_kualitaslabel"];
-        $this->kualitaslabel->AdvancedSearch->SearchOperator2 = @$filter["w_kualitaslabel"];
-        $this->kualitaslabel->AdvancedSearch->save();
-
-        // Field jumlahwarnalabel
-        $this->jumlahwarnalabel->AdvancedSearch->SearchValue = @$filter["x_jumlahwarnalabel"];
-        $this->jumlahwarnalabel->AdvancedSearch->SearchOperator = @$filter["z_jumlahwarnalabel"];
-        $this->jumlahwarnalabel->AdvancedSearch->SearchCondition = @$filter["v_jumlahwarnalabel"];
-        $this->jumlahwarnalabel->AdvancedSearch->SearchValue2 = @$filter["y_jumlahwarnalabel"];
-        $this->jumlahwarnalabel->AdvancedSearch->SearchOperator2 = @$filter["w_jumlahwarnalabel"];
-        $this->jumlahwarnalabel->AdvancedSearch->save();
-
-        // Field metaliklabel
-        $this->metaliklabel->AdvancedSearch->SearchValue = @$filter["x_metaliklabel"];
-        $this->metaliklabel->AdvancedSearch->SearchOperator = @$filter["z_metaliklabel"];
-        $this->metaliklabel->AdvancedSearch->SearchCondition = @$filter["v_metaliklabel"];
-        $this->metaliklabel->AdvancedSearch->SearchValue2 = @$filter["y_metaliklabel"];
-        $this->metaliklabel->AdvancedSearch->SearchOperator2 = @$filter["w_metaliklabel"];
-        $this->metaliklabel->AdvancedSearch->save();
-
-        // Field etiketlabel
-        $this->etiketlabel->AdvancedSearch->SearchValue = @$filter["x_etiketlabel"];
-        $this->etiketlabel->AdvancedSearch->SearchOperator = @$filter["z_etiketlabel"];
-        $this->etiketlabel->AdvancedSearch->SearchCondition = @$filter["v_etiketlabel"];
-        $this->etiketlabel->AdvancedSearch->SearchValue2 = @$filter["y_etiketlabel"];
-        $this->etiketlabel->AdvancedSearch->SearchOperator2 = @$filter["w_etiketlabel"];
-        $this->etiketlabel->AdvancedSearch->save();
-
-        // Field keteranganlabel
-        $this->keteranganlabel->AdvancedSearch->SearchValue = @$filter["x_keteranganlabel"];
-        $this->keteranganlabel->AdvancedSearch->SearchOperator = @$filter["z_keteranganlabel"];
-        $this->keteranganlabel->AdvancedSearch->SearchCondition = @$filter["v_keteranganlabel"];
-        $this->keteranganlabel->AdvancedSearch->SearchValue2 = @$filter["y_keteranganlabel"];
-        $this->keteranganlabel->AdvancedSearch->SearchOperator2 = @$filter["w_keteranganlabel"];
-        $this->keteranganlabel->AdvancedSearch->save();
-
-        // Field kategoridelivery
-        $this->kategoridelivery->AdvancedSearch->SearchValue = @$filter["x_kategoridelivery"];
-        $this->kategoridelivery->AdvancedSearch->SearchOperator = @$filter["z_kategoridelivery"];
-        $this->kategoridelivery->AdvancedSearch->SearchCondition = @$filter["v_kategoridelivery"];
-        $this->kategoridelivery->AdvancedSearch->SearchValue2 = @$filter["y_kategoridelivery"];
-        $this->kategoridelivery->AdvancedSearch->SearchOperator2 = @$filter["w_kategoridelivery"];
-        $this->kategoridelivery->AdvancedSearch->save();
-
-        // Field alamatpengiriman
-        $this->alamatpengiriman->AdvancedSearch->SearchValue = @$filter["x_alamatpengiriman"];
-        $this->alamatpengiriman->AdvancedSearch->SearchOperator = @$filter["z_alamatpengiriman"];
-        $this->alamatpengiriman->AdvancedSearch->SearchCondition = @$filter["v_alamatpengiriman"];
-        $this->alamatpengiriman->AdvancedSearch->SearchValue2 = @$filter["y_alamatpengiriman"];
-        $this->alamatpengiriman->AdvancedSearch->SearchOperator2 = @$filter["w_alamatpengiriman"];
-        $this->alamatpengiriman->AdvancedSearch->save();
-
-        // Field orderperdana
-        $this->orderperdana->AdvancedSearch->SearchValue = @$filter["x_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchOperator = @$filter["z_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchCondition = @$filter["v_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchValue2 = @$filter["y_orderperdana"];
-        $this->orderperdana->AdvancedSearch->SearchOperator2 = @$filter["w_orderperdana"];
-        $this->orderperdana->AdvancedSearch->save();
-
-        // Field orderkontrak
-        $this->orderkontrak->AdvancedSearch->SearchValue = @$filter["x_orderkontrak"];
-        $this->orderkontrak->AdvancedSearch->SearchOperator = @$filter["z_orderkontrak"];
-        $this->orderkontrak->AdvancedSearch->SearchCondition = @$filter["v_orderkontrak"];
-        $this->orderkontrak->AdvancedSearch->SearchValue2 = @$filter["y_orderkontrak"];
-        $this->orderkontrak->AdvancedSearch->SearchOperator2 = @$filter["w_orderkontrak"];
-        $this->orderkontrak->AdvancedSearch->save();
-
-        // Field hargaperpcs
-        $this->hargaperpcs->AdvancedSearch->SearchValue = @$filter["x_hargaperpcs"];
-        $this->hargaperpcs->AdvancedSearch->SearchOperator = @$filter["z_hargaperpcs"];
-        $this->hargaperpcs->AdvancedSearch->SearchCondition = @$filter["v_hargaperpcs"];
-        $this->hargaperpcs->AdvancedSearch->SearchValue2 = @$filter["y_hargaperpcs"];
-        $this->hargaperpcs->AdvancedSearch->SearchOperator2 = @$filter["w_hargaperpcs"];
-        $this->hargaperpcs->AdvancedSearch->save();
-
-        // Field hargaperkarton
-        $this->hargaperkarton->AdvancedSearch->SearchValue = @$filter["x_hargaperkarton"];
-        $this->hargaperkarton->AdvancedSearch->SearchOperator = @$filter["z_hargaperkarton"];
-        $this->hargaperkarton->AdvancedSearch->SearchCondition = @$filter["v_hargaperkarton"];
-        $this->hargaperkarton->AdvancedSearch->SearchValue2 = @$filter["y_hargaperkarton"];
-        $this->hargaperkarton->AdvancedSearch->SearchOperator2 = @$filter["w_hargaperkarton"];
-        $this->hargaperkarton->AdvancedSearch->save();
-
-        // Field lampiran
-        $this->lampiran->AdvancedSearch->SearchValue = @$filter["x_lampiran"];
-        $this->lampiran->AdvancedSearch->SearchOperator = @$filter["z_lampiran"];
-        $this->lampiran->AdvancedSearch->SearchCondition = @$filter["v_lampiran"];
-        $this->lampiran->AdvancedSearch->SearchValue2 = @$filter["y_lampiran"];
-        $this->lampiran->AdvancedSearch->SearchOperator2 = @$filter["w_lampiran"];
-        $this->lampiran->AdvancedSearch->save();
-
-        // Field prepared_by
-        $this->prepared_by->AdvancedSearch->SearchValue = @$filter["x_prepared_by"];
-        $this->prepared_by->AdvancedSearch->SearchOperator = @$filter["z_prepared_by"];
-        $this->prepared_by->AdvancedSearch->SearchCondition = @$filter["v_prepared_by"];
-        $this->prepared_by->AdvancedSearch->SearchValue2 = @$filter["y_prepared_by"];
-        $this->prepared_by->AdvancedSearch->SearchOperator2 = @$filter["w_prepared_by"];
-        $this->prepared_by->AdvancedSearch->save();
-
-        // Field checked_by
-        $this->checked_by->AdvancedSearch->SearchValue = @$filter["x_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchOperator = @$filter["z_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchCondition = @$filter["v_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchValue2 = @$filter["y_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked_by"];
-        $this->checked_by->AdvancedSearch->save();
-
-        // Field approved_by
-        $this->approved_by->AdvancedSearch->SearchValue = @$filter["x_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchOperator = @$filter["z_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchCondition = @$filter["v_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchValue2 = @$filter["y_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchOperator2 = @$filter["w_approved_by"];
-        $this->approved_by->AdvancedSearch->save();
-
-        // Field approved_date
-        $this->approved_date->AdvancedSearch->SearchValue = @$filter["x_approved_date"];
-        $this->approved_date->AdvancedSearch->SearchOperator = @$filter["z_approved_date"];
-        $this->approved_date->AdvancedSearch->SearchCondition = @$filter["v_approved_date"];
-        $this->approved_date->AdvancedSearch->SearchValue2 = @$filter["y_approved_date"];
-        $this->approved_date->AdvancedSearch->SearchOperator2 = @$filter["w_approved_date"];
-        $this->approved_date->AdvancedSearch->save();
-
-        // Field disetujui
-        $this->disetujui->AdvancedSearch->SearchValue = @$filter["x_disetujui"];
-        $this->disetujui->AdvancedSearch->SearchOperator = @$filter["z_disetujui"];
-        $this->disetujui->AdvancedSearch->SearchCondition = @$filter["v_disetujui"];
-        $this->disetujui->AdvancedSearch->SearchValue2 = @$filter["y_disetujui"];
-        $this->disetujui->AdvancedSearch->SearchOperator2 = @$filter["w_disetujui"];
-        $this->disetujui->AdvancedSearch->save();
+        // Field notelp
+        $this->notelp->AdvancedSearch->SearchValue = @$filter["x_notelp"];
+        $this->notelp->AdvancedSearch->SearchOperator = @$filter["z_notelp"];
+        $this->notelp->AdvancedSearch->SearchCondition = @$filter["v_notelp"];
+        $this->notelp->AdvancedSearch->SearchValue2 = @$filter["y_notelp"];
+        $this->notelp->AdvancedSearch->SearchOperator2 = @$filter["w_notelp"];
+        $this->notelp->AdvancedSearch->save();
 
         // Field created_at
         $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
@@ -1417,6 +1133,14 @@ class NpdHargaList extends NpdHarga
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
 
+        // Field receipt_by
+        $this->receipt_by->AdvancedSearch->SearchValue = @$filter["x_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchOperator = @$filter["z_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchCondition = @$filter["v_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchValue2 = @$filter["y_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchOperator2 = @$filter["w_receipt_by"];
+        $this->receipt_by->AdvancedSearch->save();
+
         // Field readonly
         $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
         $this->readonly->AdvancedSearch->SearchOperator = @$filter["z_readonly"];
@@ -1424,14 +1148,6 @@ class NpdHargaList extends NpdHarga
         $this->readonly->AdvancedSearch->SearchValue2 = @$filter["y_readonly"];
         $this->readonly->AdvancedSearch->SearchOperator2 = @$filter["w_readonly"];
         $this->readonly->AdvancedSearch->save();
-
-        // Field updated_at
-        $this->updated_at->AdvancedSearch->SearchValue = @$filter["x_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchOperator = @$filter["z_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchCondition = @$filter["v_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchValue2 = @$filter["y_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchOperator2 = @$filter["w_updated_at"];
-        $this->updated_at->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1443,32 +1159,18 @@ class NpdHargaList extends NpdHarga
         $this->buildBasicSearchSql($where, $this->nama, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->bentuk, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->viskositas, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->warna, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->bauparfum, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->aplikasisediaan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->volume, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bahanaktif, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->volumewadah, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bahanwadah, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->warnawadah, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bentukwadah, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->jenistutup, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bahantutup, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->warnatutup, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->bentuktutup, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->catatanprimer, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->packingproduk, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->keteranganpacking, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->beltkarton, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->keteranganbelt, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->kartonluar, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->jenislabel, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->keteranganjenislabel, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->kualitaslabel, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->jumlahwarnalabel, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->metaliklabel, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->etiketlabel, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->keteranganlabel, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->kategoridelivery, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->alamatpengiriman, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->lampiran, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->campaign, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->alasansetuju, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->foto, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->namapemesan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->alamatpemesan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->personincharge, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->jabatan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->notelp, $arKeywords, $type);
         return $where;
     }
 
@@ -1632,9 +1334,11 @@ class NpdHargaList extends NpdHarga
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->idnpd); // idnpd
-            $this->updateSort($this->tglpengajuan); // tglpengajuan
+            $this->updateSort($this->tglkonfirmasi); // tglkonfirmasi
             $this->updateSort($this->idnpd_sample); // idnpd_sample
             $this->updateSort($this->nama); // nama
+            $this->updateSort($this->volume); // volume
+            $this->updateSort($this->namapemesan); // namapemesan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1684,55 +1388,26 @@ class NpdHargaList extends NpdHarga
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->idnpd->setSort("");
-                $this->tglpengajuan->setSort("");
+                $this->tglkonfirmasi->setSort("");
                 $this->idnpd_sample->setSort("");
                 $this->nama->setSort("");
                 $this->bentuk->setSort("");
                 $this->viskositas->setSort("");
+                $this->warna->setSort("");
+                $this->bauparfum->setSort("");
                 $this->aplikasisediaan->setSort("");
                 $this->volume->setSort("");
-                $this->bahanaktif->setSort("");
-                $this->volumewadah->setSort("");
-                $this->bahanwadah->setSort("");
-                $this->warnawadah->setSort("");
-                $this->bentukwadah->setSort("");
-                $this->jenistutup->setSort("");
-                $this->bahantutup->setSort("");
-                $this->warnatutup->setSort("");
-                $this->bentuktutup->setSort("");
-                $this->segel->setSort("");
-                $this->catatanprimer->setSort("");
-                $this->packingproduk->setSort("");
-                $this->keteranganpacking->setSort("");
-                $this->beltkarton->setSort("");
-                $this->keteranganbelt->setSort("");
-                $this->kartonluar->setSort("");
-                $this->bariskarton->setSort("");
-                $this->kolomkarton->setSort("");
-                $this->stackkarton->setSort("");
-                $this->isikarton->setSort("");
-                $this->jenislabel->setSort("");
-                $this->keteranganjenislabel->setSort("");
-                $this->kualitaslabel->setSort("");
-                $this->jumlahwarnalabel->setSort("");
-                $this->metaliklabel->setSort("");
-                $this->etiketlabel->setSort("");
-                $this->keteranganlabel->setSort("");
-                $this->kategoridelivery->setSort("");
-                $this->alamatpengiriman->setSort("");
-                $this->orderperdana->setSort("");
-                $this->orderkontrak->setSort("");
-                $this->hargaperpcs->setSort("");
-                $this->hargaperkarton->setSort("");
-                $this->lampiran->setSort("");
-                $this->prepared_by->setSort("");
-                $this->checked_by->setSort("");
-                $this->approved_by->setSort("");
-                $this->approved_date->setSort("");
-                $this->disetujui->setSort("");
+                $this->campaign->setSort("");
+                $this->alasansetuju->setSort("");
+                $this->foto->setSort("");
+                $this->namapemesan->setSort("");
+                $this->alamatpemesan->setSort("");
+                $this->personincharge->setSort("");
+                $this->jabatan->setSort("");
+                $this->notelp->setSort("");
                 $this->created_at->setSort("");
+                $this->receipt_by->setSort("");
                 $this->readonly->setSort("");
-                $this->updated_at->setSort("");
             }
 
             // Reset start position
@@ -1786,6 +1461,14 @@ class NpdHargaList extends NpdHarga
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1811,6 +1494,10 @@ class NpdHargaList extends NpdHarga
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") {
             // "view"
@@ -1909,10 +1596,10 @@ class NpdHargaList extends NpdHarga
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fnpd_hargalistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fnpd_confirmsamplelistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fnpd_hargalistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fnpd_confirmsamplelistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1936,7 +1623,7 @@ class NpdHargaList extends NpdHarga
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fnpd_hargalist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
+                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fnpd_confirmsamplelist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -2128,56 +1815,27 @@ class NpdHargaList extends NpdHarga
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
-        $this->tglpengajuan->setDbValue($row['tglpengajuan']);
+        $this->tglkonfirmasi->setDbValue($row['tglkonfirmasi']);
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
         $this->nama->setDbValue($row['nama']);
         $this->bentuk->setDbValue($row['bentuk']);
         $this->viskositas->setDbValue($row['viskositas']);
+        $this->warna->setDbValue($row['warna']);
+        $this->bauparfum->setDbValue($row['bauparfum']);
         $this->aplikasisediaan->setDbValue($row['aplikasisediaan']);
         $this->volume->setDbValue($row['volume']);
-        $this->bahanaktif->setDbValue($row['bahanaktif']);
-        $this->volumewadah->setDbValue($row['volumewadah']);
-        $this->bahanwadah->setDbValue($row['bahanwadah']);
-        $this->warnawadah->setDbValue($row['warnawadah']);
-        $this->bentukwadah->setDbValue($row['bentukwadah']);
-        $this->jenistutup->setDbValue($row['jenistutup']);
-        $this->bahantutup->setDbValue($row['bahantutup']);
-        $this->warnatutup->setDbValue($row['warnatutup']);
-        $this->bentuktutup->setDbValue($row['bentuktutup']);
-        $this->segel->setDbValue($row['segel']);
-        $this->catatanprimer->setDbValue($row['catatanprimer']);
-        $this->packingproduk->setDbValue($row['packingproduk']);
-        $this->keteranganpacking->setDbValue($row['keteranganpacking']);
-        $this->beltkarton->setDbValue($row['beltkarton']);
-        $this->keteranganbelt->setDbValue($row['keteranganbelt']);
-        $this->kartonluar->setDbValue($row['kartonluar']);
-        $this->bariskarton->setDbValue($row['bariskarton']);
-        $this->kolomkarton->setDbValue($row['kolomkarton']);
-        $this->stackkarton->setDbValue($row['stackkarton']);
-        $this->isikarton->setDbValue($row['isikarton']);
-        $this->jenislabel->setDbValue($row['jenislabel']);
-        $this->keteranganjenislabel->setDbValue($row['keteranganjenislabel']);
-        $this->kualitaslabel->setDbValue($row['kualitaslabel']);
-        $this->jumlahwarnalabel->setDbValue($row['jumlahwarnalabel']);
-        $this->metaliklabel->setDbValue($row['metaliklabel']);
-        $this->etiketlabel->setDbValue($row['etiketlabel']);
-        $this->keteranganlabel->setDbValue($row['keteranganlabel']);
-        $this->kategoridelivery->setDbValue($row['kategoridelivery']);
-        $this->alamatpengiriman->setDbValue($row['alamatpengiriman']);
-        $this->orderperdana->setDbValue($row['orderperdana']);
-        $this->orderkontrak->setDbValue($row['orderkontrak']);
-        $this->hargaperpcs->setDbValue($row['hargaperpcs']);
-        $this->hargaperkarton->setDbValue($row['hargaperkarton']);
-        $this->lampiran->Upload->DbValue = $row['lampiran'];
-        $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
-        $this->prepared_by->setDbValue($row['prepared_by']);
-        $this->checked_by->setDbValue($row['checked_by']);
-        $this->approved_by->setDbValue($row['approved_by']);
-        $this->approved_date->setDbValue($row['approved_date']);
-        $this->disetujui->setDbValue($row['disetujui']);
+        $this->campaign->setDbValue($row['campaign']);
+        $this->alasansetuju->setDbValue($row['alasansetuju']);
+        $this->foto->Upload->DbValue = $row['foto'];
+        $this->foto->setDbValue($this->foto->Upload->DbValue);
+        $this->namapemesan->setDbValue($row['namapemesan']);
+        $this->alamatpemesan->setDbValue($row['alamatpemesan']);
+        $this->personincharge->setDbValue($row['personincharge']);
+        $this->jabatan->setDbValue($row['jabatan']);
+        $this->notelp->setDbValue($row['notelp']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
         $this->readonly->setDbValue($row['readonly']);
-        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -2186,55 +1844,26 @@ class NpdHargaList extends NpdHarga
         $row = [];
         $row['id'] = null;
         $row['idnpd'] = null;
-        $row['tglpengajuan'] = null;
+        $row['tglkonfirmasi'] = null;
         $row['idnpd_sample'] = null;
         $row['nama'] = null;
         $row['bentuk'] = null;
         $row['viskositas'] = null;
+        $row['warna'] = null;
+        $row['bauparfum'] = null;
         $row['aplikasisediaan'] = null;
         $row['volume'] = null;
-        $row['bahanaktif'] = null;
-        $row['volumewadah'] = null;
-        $row['bahanwadah'] = null;
-        $row['warnawadah'] = null;
-        $row['bentukwadah'] = null;
-        $row['jenistutup'] = null;
-        $row['bahantutup'] = null;
-        $row['warnatutup'] = null;
-        $row['bentuktutup'] = null;
-        $row['segel'] = null;
-        $row['catatanprimer'] = null;
-        $row['packingproduk'] = null;
-        $row['keteranganpacking'] = null;
-        $row['beltkarton'] = null;
-        $row['keteranganbelt'] = null;
-        $row['kartonluar'] = null;
-        $row['bariskarton'] = null;
-        $row['kolomkarton'] = null;
-        $row['stackkarton'] = null;
-        $row['isikarton'] = null;
-        $row['jenislabel'] = null;
-        $row['keteranganjenislabel'] = null;
-        $row['kualitaslabel'] = null;
-        $row['jumlahwarnalabel'] = null;
-        $row['metaliklabel'] = null;
-        $row['etiketlabel'] = null;
-        $row['keteranganlabel'] = null;
-        $row['kategoridelivery'] = null;
-        $row['alamatpengiriman'] = null;
-        $row['orderperdana'] = null;
-        $row['orderkontrak'] = null;
-        $row['hargaperpcs'] = null;
-        $row['hargaperkarton'] = null;
-        $row['lampiran'] = null;
-        $row['prepared_by'] = null;
-        $row['checked_by'] = null;
-        $row['approved_by'] = null;
-        $row['approved_date'] = null;
-        $row['disetujui'] = null;
+        $row['campaign'] = null;
+        $row['alasansetuju'] = null;
+        $row['foto'] = null;
+        $row['namapemesan'] = null;
+        $row['alamatpemesan'] = null;
+        $row['personincharge'] = null;
+        $row['jabatan'] = null;
+        $row['notelp'] = null;
         $row['created_at'] = null;
+        $row['receipt_by'] = null;
         $row['readonly'] = null;
-        $row['updated_at'] = null;
         return $row;
     }
 
@@ -2276,7 +1905,7 @@ class NpdHargaList extends NpdHarga
 
         // idnpd
 
-        // tglpengajuan
+        // tglkonfirmasi
 
         // idnpd_sample
 
@@ -2286,93 +1915,35 @@ class NpdHargaList extends NpdHarga
 
         // viskositas
 
+        // warna
+
+        // bauparfum
+
         // aplikasisediaan
 
         // volume
 
-        // bahanaktif
+        // campaign
 
-        // volumewadah
+        // alasansetuju
 
-        // bahanwadah
+        // foto
 
-        // warnawadah
+        // namapemesan
 
-        // bentukwadah
+        // alamatpemesan
 
-        // jenistutup
+        // personincharge
 
-        // bahantutup
+        // jabatan
 
-        // warnatutup
-
-        // bentuktutup
-
-        // segel
-
-        // catatanprimer
-
-        // packingproduk
-
-        // keteranganpacking
-
-        // beltkarton
-
-        // keteranganbelt
-
-        // kartonluar
-
-        // bariskarton
-
-        // kolomkarton
-
-        // stackkarton
-
-        // isikarton
-
-        // jenislabel
-
-        // keteranganjenislabel
-
-        // kualitaslabel
-
-        // jumlahwarnalabel
-
-        // metaliklabel
-
-        // etiketlabel
-
-        // keteranganlabel
-
-        // kategoridelivery
-
-        // alamatpengiriman
-
-        // orderperdana
-
-        // orderkontrak
-
-        // hargaperpcs
-
-        // hargaperkarton
-
-        // lampiran
-
-        // prepared_by
-
-        // checked_by
-
-        // approved_by
-
-        // approved_date
-
-        // disetujui
+        // notelp
 
         // created_at
 
-        // readonly
+        // receipt_by
 
-        // updated_at
+        // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -2384,11 +1955,7 @@ class NpdHargaList extends NpdHarga
                 $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
                 if ($this->idnpd->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -2403,10 +1970,10 @@ class NpdHargaList extends NpdHarga
             }
             $this->idnpd->ViewCustomAttributes = "";
 
-            // tglpengajuan
-            $this->tglpengajuan->ViewValue = $this->tglpengajuan->CurrentValue;
-            $this->tglpengajuan->ViewValue = FormatDateTime($this->tglpengajuan->ViewValue, 0);
-            $this->tglpengajuan->ViewCustomAttributes = "";
+            // tglkonfirmasi
+            $this->tglkonfirmasi->ViewValue = $this->tglkonfirmasi->CurrentValue;
+            $this->tglkonfirmasi->ViewValue = FormatDateTime($this->tglkonfirmasi->ViewValue, 0);
+            $this->tglkonfirmasi->ViewCustomAttributes = "";
 
             // idnpd_sample
             $curVal = trim(strval($this->idnpd_sample->CurrentValue));
@@ -2415,7 +1982,7 @@ class NpdHargaList extends NpdHarga
                 if ($this->idnpd_sample->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_review WHERE `status`=1 AND readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd_sample->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -2438,221 +2005,189 @@ class NpdHargaList extends NpdHarga
             $this->nama->ViewCustomAttributes = "";
 
             // bentuk
-            $this->bentuk->ViewValue = $this->bentuk->CurrentValue;
+            $curVal = trim(strval($this->bentuk->CurrentValue));
+            if ($curVal != "") {
+                $this->bentuk->ViewValue = $this->bentuk->lookupCacheOption($curVal);
+                if ($this->bentuk->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->bentuk->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->bentuk->Lookup->renderViewRow($rswrk[0]);
+                        $this->bentuk->ViewValue = $this->bentuk->displayValue($arwrk);
+                    } else {
+                        $this->bentuk->ViewValue = $this->bentuk->CurrentValue;
+                    }
+                }
+            } else {
+                $this->bentuk->ViewValue = null;
+            }
             $this->bentuk->ViewCustomAttributes = "";
 
             // viskositas
-            $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
+            $curVal = trim(strval($this->viskositas->CurrentValue));
+            if ($curVal != "") {
+                $this->viskositas->ViewValue = $this->viskositas->lookupCacheOption($curVal);
+                if ($this->viskositas->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->viskositas->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->viskositas->Lookup->renderViewRow($rswrk[0]);
+                        $this->viskositas->ViewValue = $this->viskositas->displayValue($arwrk);
+                    } else {
+                        $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
+                    }
+                }
+            } else {
+                $this->viskositas->ViewValue = null;
+            }
             $this->viskositas->ViewCustomAttributes = "";
 
+            // warna
+            $curVal = trim(strval($this->warna->CurrentValue));
+            if ($curVal != "") {
+                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
+                if ($this->warna->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->warna->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->warna->Lookup->renderViewRow($rswrk[0]);
+                        $this->warna->ViewValue = $this->warna->displayValue($arwrk);
+                    } else {
+                        $this->warna->ViewValue = $this->warna->CurrentValue;
+                    }
+                }
+            } else {
+                $this->warna->ViewValue = null;
+            }
+            $this->warna->ViewCustomAttributes = "";
+
+            // bauparfum
+            $curVal = trim(strval($this->bauparfum->CurrentValue));
+            if ($curVal != "") {
+                $this->bauparfum->ViewValue = $this->bauparfum->lookupCacheOption($curVal);
+                if ($this->bauparfum->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->bauparfum->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->bauparfum->Lookup->renderViewRow($rswrk[0]);
+                        $this->bauparfum->ViewValue = $this->bauparfum->displayValue($arwrk);
+                    } else {
+                        $this->bauparfum->ViewValue = $this->bauparfum->CurrentValue;
+                    }
+                }
+            } else {
+                $this->bauparfum->ViewValue = null;
+            }
+            $this->bauparfum->ViewCustomAttributes = "";
+
             // aplikasisediaan
-            $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
-            $this->aplikasisediaan->ViewValue = FormatNumber($this->aplikasisediaan->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->aplikasisediaan->CurrentValue));
+            if ($curVal != "") {
+                $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->lookupCacheOption($curVal);
+                if ($this->aplikasisediaan->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->aplikasisediaan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->aplikasisediaan->Lookup->renderViewRow($rswrk[0]);
+                        $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->displayValue($arwrk);
+                    } else {
+                        $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
+                    }
+                }
+            } else {
+                $this->aplikasisediaan->ViewValue = null;
+            }
             $this->aplikasisediaan->ViewCustomAttributes = "";
 
             // volume
             $this->volume->ViewValue = $this->volume->CurrentValue;
             $this->volume->ViewCustomAttributes = "";
 
-            // volumewadah
-            $this->volumewadah->ViewValue = $this->volumewadah->CurrentValue;
-            $this->volumewadah->ViewCustomAttributes = "";
+            // campaign
+            $this->campaign->ViewValue = $this->campaign->CurrentValue;
+            $this->campaign->ViewCustomAttributes = "";
 
-            // bahanwadah
-            $this->bahanwadah->ViewValue = $this->bahanwadah->CurrentValue;
-            $this->bahanwadah->ViewCustomAttributes = "";
-
-            // warnawadah
-            $this->warnawadah->ViewValue = $this->warnawadah->CurrentValue;
-            $this->warnawadah->ViewCustomAttributes = "";
-
-            // bentukwadah
-            $this->bentukwadah->ViewValue = $this->bentukwadah->CurrentValue;
-            $this->bentukwadah->ViewCustomAttributes = "";
-
-            // jenistutup
-            $this->jenistutup->ViewValue = $this->jenistutup->CurrentValue;
-            $this->jenistutup->ViewCustomAttributes = "";
-
-            // bahantutup
-            $this->bahantutup->ViewValue = $this->bahantutup->CurrentValue;
-            $this->bahantutup->ViewCustomAttributes = "";
-
-            // warnatutup
-            $this->warnatutup->ViewValue = $this->warnatutup->CurrentValue;
-            $this->warnatutup->ViewCustomAttributes = "";
-
-            // bentuktutup
-            $this->bentuktutup->ViewValue = $this->bentuktutup->CurrentValue;
-            $this->bentuktutup->ViewCustomAttributes = "";
-
-            // segel
-            if (strval($this->segel->CurrentValue) != "") {
-                $this->segel->ViewValue = $this->segel->optionCaption($this->segel->CurrentValue);
+            // foto
+            if (!EmptyValue($this->foto->Upload->DbValue)) {
+                $this->foto->ViewValue = $this->foto->Upload->DbValue;
             } else {
-                $this->segel->ViewValue = null;
+                $this->foto->ViewValue = "";
             }
-            $this->segel->ViewCustomAttributes = "";
+            $this->foto->ViewCustomAttributes = "";
 
-            // catatanprimer
-            $this->catatanprimer->ViewValue = $this->catatanprimer->CurrentValue;
-            $this->catatanprimer->ViewCustomAttributes = "";
+            // namapemesan
+            $this->namapemesan->ViewValue = $this->namapemesan->CurrentValue;
+            $this->namapemesan->ViewCustomAttributes = "";
 
-            // packingproduk
-            $this->packingproduk->ViewValue = $this->packingproduk->CurrentValue;
-            $this->packingproduk->ViewCustomAttributes = "";
+            // alamatpemesan
+            $this->alamatpemesan->ViewValue = $this->alamatpemesan->CurrentValue;
+            $this->alamatpemesan->ViewCustomAttributes = "";
 
-            // keteranganpacking
-            $this->keteranganpacking->ViewValue = $this->keteranganpacking->CurrentValue;
-            $this->keteranganpacking->ViewCustomAttributes = "";
+            // personincharge
+            $this->personincharge->ViewValue = $this->personincharge->CurrentValue;
+            $this->personincharge->ViewCustomAttributes = "";
 
-            // beltkarton
-            $this->beltkarton->ViewValue = $this->beltkarton->CurrentValue;
-            $this->beltkarton->ViewCustomAttributes = "";
+            // jabatan
+            $this->jabatan->ViewValue = $this->jabatan->CurrentValue;
+            $this->jabatan->ViewCustomAttributes = "";
 
-            // keteranganbelt
-            $this->keteranganbelt->ViewValue = $this->keteranganbelt->CurrentValue;
-            $this->keteranganbelt->ViewCustomAttributes = "";
-
-            // kartonluar
-            $this->kartonluar->ViewValue = $this->kartonluar->CurrentValue;
-            $this->kartonluar->ViewCustomAttributes = "";
-
-            // bariskarton
-            $this->bariskarton->ViewValue = $this->bariskarton->CurrentValue;
-            $this->bariskarton->ViewCustomAttributes = "";
-
-            // kolomkarton
-            $this->kolomkarton->ViewValue = $this->kolomkarton->CurrentValue;
-            $this->kolomkarton->ViewCustomAttributes = "";
-
-            // stackkarton
-            $this->stackkarton->ViewValue = $this->stackkarton->CurrentValue;
-            $this->stackkarton->ViewCustomAttributes = "";
-
-            // isikarton
-            $this->isikarton->ViewValue = $this->isikarton->CurrentValue;
-            $this->isikarton->ViewCustomAttributes = "";
-
-            // jenislabel
-            $this->jenislabel->ViewValue = $this->jenislabel->CurrentValue;
-            $this->jenislabel->ViewCustomAttributes = "";
-
-            // keteranganjenislabel
-            $this->keteranganjenislabel->ViewValue = $this->keteranganjenislabel->CurrentValue;
-            $this->keteranganjenislabel->ViewCustomAttributes = "";
-
-            // kualitaslabel
-            $this->kualitaslabel->ViewValue = $this->kualitaslabel->CurrentValue;
-            $this->kualitaslabel->ViewCustomAttributes = "";
-
-            // jumlahwarnalabel
-            $this->jumlahwarnalabel->ViewValue = $this->jumlahwarnalabel->CurrentValue;
-            $this->jumlahwarnalabel->ViewCustomAttributes = "";
-
-            // metaliklabel
-            $this->metaliklabel->ViewValue = $this->metaliklabel->CurrentValue;
-            $this->metaliklabel->ViewCustomAttributes = "";
-
-            // etiketlabel
-            $this->etiketlabel->ViewValue = $this->etiketlabel->CurrentValue;
-            $this->etiketlabel->ViewCustomAttributes = "";
-
-            // keteranganlabel
-            $this->keteranganlabel->ViewValue = $this->keteranganlabel->CurrentValue;
-            $this->keteranganlabel->ViewCustomAttributes = "";
-
-            // kategoridelivery
-            $this->kategoridelivery->ViewValue = $this->kategoridelivery->CurrentValue;
-            $this->kategoridelivery->ViewCustomAttributes = "";
-
-            // alamatpengiriman
-            $this->alamatpengiriman->ViewValue = $this->alamatpengiriman->CurrentValue;
-            $this->alamatpengiriman->ViewCustomAttributes = "";
-
-            // orderperdana
-            $this->orderperdana->ViewValue = $this->orderperdana->CurrentValue;
-            $this->orderperdana->ViewValue = FormatNumber($this->orderperdana->ViewValue, 0, -2, -2, -2);
-            $this->orderperdana->ViewCustomAttributes = "";
-
-            // orderkontrak
-            $this->orderkontrak->ViewValue = $this->orderkontrak->CurrentValue;
-            $this->orderkontrak->ViewValue = FormatNumber($this->orderkontrak->ViewValue, 0, -2, -2, -2);
-            $this->orderkontrak->ViewCustomAttributes = "";
-
-            // hargaperpcs
-            $this->hargaperpcs->ViewValue = $this->hargaperpcs->CurrentValue;
-            $this->hargaperpcs->ViewValue = FormatCurrency($this->hargaperpcs->ViewValue, 2, -2, -2, -2);
-            $this->hargaperpcs->ViewCustomAttributes = "";
-
-            // hargaperkarton
-            $this->hargaperkarton->ViewValue = $this->hargaperkarton->CurrentValue;
-            $this->hargaperkarton->ViewValue = FormatNumber($this->hargaperkarton->ViewValue, 0, -2, -2, -2);
-            $this->hargaperkarton->ViewCustomAttributes = "";
-
-            // lampiran
-            if (!EmptyValue($this->lampiran->Upload->DbValue)) {
-                $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
-            } else {
-                $this->lampiran->ViewValue = "";
-            }
-            $this->lampiran->ViewCustomAttributes = "";
-
-            // prepared_by
-            $this->prepared_by->ViewValue = $this->prepared_by->CurrentValue;
-            $this->prepared_by->ViewValue = FormatNumber($this->prepared_by->ViewValue, 0, -2, -2, -2);
-            $this->prepared_by->ViewCustomAttributes = "";
-
-            // checked_by
-            $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
-            $this->checked_by->ViewValue = FormatNumber($this->checked_by->ViewValue, 0, -2, -2, -2);
-            $this->checked_by->ViewCustomAttributes = "";
-
-            // approved_by
-            $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
-            $this->approved_by->ViewValue = FormatNumber($this->approved_by->ViewValue, 0, -2, -2, -2);
-            $this->approved_by->ViewCustomAttributes = "";
-
-            // approved_date
-            $this->approved_date->ViewValue = $this->approved_date->CurrentValue;
-            $this->approved_date->ViewValue = FormatNumber($this->approved_date->ViewValue, 0, -2, -2, -2);
-            $this->approved_date->ViewCustomAttributes = "";
-
-            // disetujui
-            if (strval($this->disetujui->CurrentValue) != "") {
-                $this->disetujui->ViewValue = $this->disetujui->optionCaption($this->disetujui->CurrentValue);
-            } else {
-                $this->disetujui->ViewValue = null;
-            }
-            $this->disetujui->ViewCustomAttributes = "";
+            // notelp
+            $this->notelp->ViewValue = $this->notelp->CurrentValue;
+            $this->notelp->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // readonly
-            if (ConvertToBool($this->readonly->CurrentValue)) {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
             } else {
-                $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
+
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
+            } else {
+                $this->readonly->ViewValue = null;
             }
             $this->readonly->ViewCustomAttributes = "";
-
-            // updated_at
-            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
-            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
-            $this->updated_at->ViewCustomAttributes = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
 
-            // tglpengajuan
-            $this->tglpengajuan->LinkCustomAttributes = "";
-            $this->tglpengajuan->HrefValue = "";
-            $this->tglpengajuan->TooltipValue = "";
+            // tglkonfirmasi
+            $this->tglkonfirmasi->LinkCustomAttributes = "";
+            $this->tglkonfirmasi->HrefValue = "";
+            $this->tglkonfirmasi->TooltipValue = "";
 
             // idnpd_sample
             $this->idnpd_sample->LinkCustomAttributes = "";
@@ -2663,6 +2198,16 @@ class NpdHargaList extends NpdHarga
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
+
+            // volume
+            $this->volume->LinkCustomAttributes = "";
+            $this->volume->HrefValue = "";
+            $this->volume->TooltipValue = "";
+
+            // namapemesan
+            $this->namapemesan->LinkCustomAttributes = "";
+            $this->namapemesan->HrefValue = "";
+            $this->namapemesan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -2682,7 +2227,7 @@ class NpdHargaList extends NpdHarga
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fnpd_hargalistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fnpd_confirmsamplelistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button
@@ -2809,20 +2354,24 @@ class NpdHargaList extends NpdHarga
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idnpd":
-                    $lookupFilter = function () {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idnpd_sample":
                     $lookupFilter = function () {
-                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_review WHERE `status`=1 AND readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_segel":
+                case "x_bentuk":
                     break;
-                case "x_disetujui":
+                case "x_viskositas":
+                    break;
+                case "x_warna":
+                    break;
+                case "x_bauparfum":
+                    break;
+                case "x_aplikasisediaan":
+                    break;
+                case "x_receipt_by":
                     break;
                 case "x_readonly":
                     break;

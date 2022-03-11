@@ -53,17 +53,8 @@ $Page->showMessage();
 <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
         <th class="<?= $Page->idnpd_sample->headerCellClass() ?>"><span id="elh_npd_harga_idnpd_sample" class="npd_harga_idnpd_sample"><?= $Page->idnpd_sample->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->viskositasbarang->Visible) { // viskositasbarang ?>
-        <th class="<?= $Page->viskositasbarang->headerCellClass() ?>"><span id="elh_npd_harga_viskositasbarang" class="npd_harga_viskositasbarang"><?= $Page->viskositasbarang->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->idaplikasibarang->Visible) { // idaplikasibarang ?>
-        <th class="<?= $Page->idaplikasibarang->headerCellClass() ?>"><span id="elh_npd_harga_idaplikasibarang" class="npd_harga_idaplikasibarang"><?= $Page->idaplikasibarang->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->hargapcs->Visible) { // hargapcs ?>
-        <th class="<?= $Page->hargapcs->headerCellClass() ?>"><span id="elh_npd_harga_hargapcs" class="npd_harga_hargapcs"><?= $Page->hargapcs->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->disetujui->Visible) { // disetujui ?>
-        <th class="<?= $Page->disetujui->headerCellClass() ?>"><span id="elh_npd_harga_disetujui" class="npd_harga_disetujui"><?= $Page->disetujui->caption() ?></span></th>
+<?php if ($Page->nama->Visible) { // nama ?>
+        <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_npd_harga_nama" class="npd_harga_nama"><?= $Page->nama->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -110,35 +101,11 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->viskositasbarang->Visible) { // viskositasbarang ?>
-        <td <?= $Page->viskositasbarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_viskositasbarang" class="npd_harga_viskositasbarang">
-<span<?= $Page->viskositasbarang->viewAttributes() ?>>
-<?= $Page->viskositasbarang->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->idaplikasibarang->Visible) { // idaplikasibarang ?>
-        <td <?= $Page->idaplikasibarang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idaplikasibarang" class="npd_harga_idaplikasibarang">
-<span<?= $Page->idaplikasibarang->viewAttributes() ?>>
-<?= $Page->idaplikasibarang->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->hargapcs->Visible) { // hargapcs ?>
-        <td <?= $Page->hargapcs->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_hargapcs" class="npd_harga_hargapcs">
-<span<?= $Page->hargapcs->viewAttributes() ?>>
-<?= $Page->hargapcs->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->disetujui->Visible) { // disetujui ?>
-        <td <?= $Page->disetujui->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_disetujui" class="npd_harga_disetujui">
-<span<?= $Page->disetujui->viewAttributes() ?>>
-<?= $Page->disetujui->getViewValue() ?></span>
+<?php if ($Page->nama->Visible) { // nama ?>
+        <td <?= $Page->nama->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_harga_nama" class="npd_harga_nama">
+<span<?= $Page->nama->viewAttributes() ?>>
+<?= $Page->nama->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

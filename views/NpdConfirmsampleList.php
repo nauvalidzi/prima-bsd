@@ -3,31 +3,31 @@
 namespace PHPMaker2021\production2;
 
 // Page object
-$NpdHargaList = &$Page;
+$NpdConfirmsampleList = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentForm, currentPageID;
-var fnpd_hargalist;
+var fnpd_confirmsamplelist;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object
     currentPageID = ew.PAGE_ID = "list";
-    fnpd_hargalist = currentForm = new ew.Form("fnpd_hargalist", "list");
-    fnpd_hargalist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
-    loadjs.done("fnpd_hargalist");
+    fnpd_confirmsamplelist = currentForm = new ew.Form("fnpd_confirmsamplelist", "list");
+    fnpd_confirmsamplelist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
+    loadjs.done("fnpd_confirmsamplelist");
 });
-var fnpd_hargalistsrch, currentSearchForm, currentAdvancedSearchForm;
+var fnpd_confirmsamplelistsrch, currentSearchForm, currentAdvancedSearchForm;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object for search
-    fnpd_hargalistsrch = currentSearchForm = new ew.Form("fnpd_hargalistsrch");
+    fnpd_confirmsamplelistsrch = currentSearchForm = new ew.Form("fnpd_confirmsamplelistsrch");
 
     // Dynamic selection lists
 
     // Filters
-    fnpd_hargalistsrch.filterList = <?= $Page->getFilterList() ?>;
-    loadjs.done("fnpd_hargalistsrch");
+    fnpd_confirmsamplelistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fnpd_confirmsamplelistsrch");
 });
 </script>
 <style>
@@ -91,10 +91,10 @@ $Page->renderOtherOptions();
 ?>
 <?php if ($Security->canSearch()) { ?>
 <?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
-<form name="fnpd_hargalistsrch" id="fnpd_hargalistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
-<div id="fnpd_hargalistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<form name="fnpd_confirmsamplelistsrch" id="fnpd_confirmsamplelistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fnpd_confirmsamplelistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="npd_harga">
+<input type="hidden" name="t" value="npd_confirmsample">
     <div class="ew-extended-search">
 <div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
     <div class="ew-quick-search input-group">
@@ -122,20 +122,20 @@ $Page->renderOtherOptions();
 $Page->showMessage();
 ?>
 <?php if ($Page->TotalRecords > 0 || $Page->CurrentAction) { ?>
-<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> npd_harga">
-<form name="fnpd_hargalist" id="fnpd_hargalist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> npd_confirmsample">
+<form name="fnpd_confirmsamplelist" id="fnpd_confirmsamplelist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="npd_harga">
+<input type="hidden" name="t" value="npd_confirmsample">
 <?php if ($Page->getCurrentMasterTable() == "npd" && $Page->CurrentAction) { ?>
 <input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
 <?php } ?>
-<div id="gmp_npd_harga" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<div id="gmp_npd_confirmsample" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_npd_hargalist" class="table ew-table"><!-- .ew-table -->
+<table id="tbl_npd_confirmsamplelist" class="table ew-table"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -149,16 +149,22 @@ $Page->renderListOptions();
 $Page->ListOptions->render("header", "left");
 ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_harga_idnpd" class="npd_harga_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
+        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_confirmsample_idnpd" class="npd_confirmsample_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
 <?php } ?>
-<?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <th data-name="tglpengajuan" class="<?= $Page->tglpengajuan->headerCellClass() ?>"><div id="elh_npd_harga_tglpengajuan" class="npd_harga_tglpengajuan"><?= $Page->renderSort($Page->tglpengajuan) ?></div></th>
+<?php if ($Page->tglkonfirmasi->Visible) { // tglkonfirmasi ?>
+        <th data-name="tglkonfirmasi" class="<?= $Page->tglkonfirmasi->headerCellClass() ?>"><div id="elh_npd_confirmsample_tglkonfirmasi" class="npd_confirmsample_tglkonfirmasi"><?= $Page->renderSort($Page->tglkonfirmasi) ?></div></th>
 <?php } ?>
 <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
-        <th data-name="idnpd_sample" class="<?= $Page->idnpd_sample->headerCellClass() ?>"><div id="elh_npd_harga_idnpd_sample" class="npd_harga_idnpd_sample"><?= $Page->renderSort($Page->idnpd_sample) ?></div></th>
+        <th data-name="idnpd_sample" class="<?= $Page->idnpd_sample->headerCellClass() ?>"><div id="elh_npd_confirmsample_idnpd_sample" class="npd_confirmsample_idnpd_sample"><?= $Page->renderSort($Page->idnpd_sample) ?></div></th>
 <?php } ?>
 <?php if ($Page->nama->Visible) { // nama ?>
-        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_npd_harga_nama" class="npd_harga_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
+        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_npd_confirmsample_nama" class="npd_confirmsample_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
+<?php } ?>
+<?php if ($Page->volume->Visible) { // volume ?>
+        <th data-name="volume" class="<?= $Page->volume->headerCellClass() ?>"><div id="elh_npd_confirmsample_volume" class="npd_confirmsample_volume"><?= $Page->renderSort($Page->volume) ?></div></th>
+<?php } ?>
+<?php if ($Page->namapemesan->Visible) { // namapemesan ?>
+        <th data-name="namapemesan" class="<?= $Page->namapemesan->headerCellClass() ?>"><div id="elh_npd_confirmsample_namapemesan" class="npd_confirmsample_namapemesan"><?= $Page->renderSort($Page->namapemesan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -214,7 +220,7 @@ while ($Page->RecordCount < $Page->StopRecord) {
         $Page->RowType = ROWTYPE_VIEW; // Render view
 
         // Set up row id / data-rowindex
-        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_npd_harga", "data-rowtype" => $Page->RowType]);
+        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_npd_confirmsample", "data-rowtype" => $Page->RowType]);
 
         // Render row
         $Page->renderRow();
@@ -229,23 +235,23 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
     <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd">
+<span id="el<?= $Page->RowCount ?>_npd_confirmsample_idnpd">
 <span<?= $Page->idnpd->viewAttributes() ?>>
 <?= $Page->idnpd->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <td data-name="tglpengajuan" <?= $Page->tglpengajuan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_tglpengajuan">
-<span<?= $Page->tglpengajuan->viewAttributes() ?>>
-<?= $Page->tglpengajuan->getViewValue() ?></span>
+    <?php if ($Page->tglkonfirmasi->Visible) { // tglkonfirmasi ?>
+        <td data-name="tglkonfirmasi" <?= $Page->tglkonfirmasi->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmsample_tglkonfirmasi">
+<span<?= $Page->tglkonfirmasi->viewAttributes() ?>>
+<?= $Page->tglkonfirmasi->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
     <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
         <td data-name="idnpd_sample" <?= $Page->idnpd_sample->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd_sample">
+<span id="el<?= $Page->RowCount ?>_npd_confirmsample_idnpd_sample">
 <span<?= $Page->idnpd_sample->viewAttributes() ?>>
 <?= $Page->idnpd_sample->getViewValue() ?></span>
 </span>
@@ -253,9 +259,25 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
     <?php } ?>
     <?php if ($Page->nama->Visible) { // nama ?>
         <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_nama">
+<span id="el<?= $Page->RowCount ?>_npd_confirmsample_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->volume->Visible) { // volume ?>
+        <td data-name="volume" <?= $Page->volume->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmsample_volume">
+<span<?= $Page->volume->viewAttributes() ?>>
+<?= $Page->volume->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->namapemesan->Visible) { // namapemesan ?>
+        <td data-name="namapemesan" <?= $Page->namapemesan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmsample_namapemesan">
+<span<?= $Page->namapemesan->viewAttributes() ?>>
+<?= $Page->namapemesan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -314,7 +336,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("npd_harga");
+    ew.addEventHandlers("npd_confirmsample");
 });
 </script>
 <script>

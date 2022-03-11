@@ -3,31 +3,31 @@
 namespace PHPMaker2021\production2;
 
 // Page object
-$NpdHargaList = &$Page;
+$VKartuStokList = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentForm, currentPageID;
-var fnpd_hargalist;
+var fv_kartu_stoklist;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object
     currentPageID = ew.PAGE_ID = "list";
-    fnpd_hargalist = currentForm = new ew.Form("fnpd_hargalist", "list");
-    fnpd_hargalist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
-    loadjs.done("fnpd_hargalist");
+    fv_kartu_stoklist = currentForm = new ew.Form("fv_kartu_stoklist", "list");
+    fv_kartu_stoklist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
+    loadjs.done("fv_kartu_stoklist");
 });
-var fnpd_hargalistsrch, currentSearchForm, currentAdvancedSearchForm;
+var fv_kartu_stoklistsrch, currentSearchForm, currentAdvancedSearchForm;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object for search
-    fnpd_hargalistsrch = currentSearchForm = new ew.Form("fnpd_hargalistsrch");
+    fv_kartu_stoklistsrch = currentSearchForm = new ew.Form("fv_kartu_stoklistsrch");
 
     // Dynamic selection lists
 
     // Filters
-    fnpd_hargalistsrch.filterList = <?= $Page->getFilterList() ?>;
-    loadjs.done("fnpd_hargalistsrch");
+    fv_kartu_stoklistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fv_kartu_stoklistsrch");
 });
 </script>
 <style>
@@ -77,24 +77,15 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
-<?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/NpdMaster.php";
-    }
-}
-?>
-<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
 <?php if ($Security->canSearch()) { ?>
 <?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
-<form name="fnpd_hargalistsrch" id="fnpd_hargalistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
-<div id="fnpd_hargalistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<form name="fv_kartu_stoklistsrch" id="fv_kartu_stoklistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fv_kartu_stoklistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="npd_harga">
+<input type="hidden" name="t" value="v_kartu_stok">
     <div class="ew-extended-search">
 <div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
     <div class="ew-quick-search input-group">
@@ -122,20 +113,16 @@ $Page->renderOtherOptions();
 $Page->showMessage();
 ?>
 <?php if ($Page->TotalRecords > 0 || $Page->CurrentAction) { ?>
-<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> npd_harga">
-<form name="fnpd_hargalist" id="fnpd_hargalist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> v_kartu_stok">
+<form name="fv_kartu_stoklist" id="fv_kartu_stoklist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="npd_harga">
-<?php if ($Page->getCurrentMasterTable() == "npd" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
-<?php } ?>
-<div id="gmp_npd_harga" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<input type="hidden" name="t" value="v_kartu_stok">
+<div id="gmp_v_kartu_stok" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_npd_hargalist" class="table ew-table"><!-- .ew-table -->
+<table id="tbl_v_kartu_stoklist" class="table ew-table"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -148,17 +135,14 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_harga_idnpd" class="npd_harga_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
+<?php if ($Page->kodeproduct->Visible) { // kodeproduct ?>
+        <th data-name="kodeproduct" class="<?= $Page->kodeproduct->headerCellClass() ?>"><div id="elh_v_kartu_stok_kodeproduct" class="v_kartu_stok_kodeproduct"><?= $Page->renderSort($Page->kodeproduct) ?></div></th>
 <?php } ?>
-<?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <th data-name="tglpengajuan" class="<?= $Page->tglpengajuan->headerCellClass() ?>"><div id="elh_npd_harga_tglpengajuan" class="npd_harga_tglpengajuan"><?= $Page->renderSort($Page->tglpengajuan) ?></div></th>
+<?php if ($Page->namaproduct->Visible) { // namaproduct ?>
+        <th data-name="namaproduct" class="<?= $Page->namaproduct->headerCellClass() ?>"><div id="elh_v_kartu_stok_namaproduct" class="v_kartu_stok_namaproduct"><?= $Page->renderSort($Page->namaproduct) ?></div></th>
 <?php } ?>
-<?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
-        <th data-name="idnpd_sample" class="<?= $Page->idnpd_sample->headerCellClass() ?>"><div id="elh_npd_harga_idnpd_sample" class="npd_harga_idnpd_sample"><?= $Page->renderSort($Page->idnpd_sample) ?></div></th>
-<?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_npd_harga_nama" class="npd_harga_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
+<?php if ($Page->stok->Visible) { // stok ?>
+        <th data-name="stok" class="<?= $Page->stok->headerCellClass() ?>"><div id="elh_v_kartu_stok_stok" class="v_kartu_stok_stok"><?= $Page->renderSort($Page->stok) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -214,7 +198,7 @@ while ($Page->RecordCount < $Page->StopRecord) {
         $Page->RowType = ROWTYPE_VIEW; // Render view
 
         // Set up row id / data-rowindex
-        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_npd_harga", "data-rowtype" => $Page->RowType]);
+        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_v_kartu_stok", "data-rowtype" => $Page->RowType]);
 
         // Render row
         $Page->renderRow();
@@ -227,35 +211,27 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd">
-<span<?= $Page->idnpd->viewAttributes() ?>>
-<?= $Page->idnpd->getViewValue() ?></span>
+    <?php if ($Page->kodeproduct->Visible) { // kodeproduct ?>
+        <td data-name="kodeproduct" <?= $Page->kodeproduct->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_kartu_stok_kodeproduct">
+<span<?= $Page->kodeproduct->viewAttributes() ?>>
+<?= $Page->kodeproduct->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <td data-name="tglpengajuan" <?= $Page->tglpengajuan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_tglpengajuan">
-<span<?= $Page->tglpengajuan->viewAttributes() ?>>
-<?= $Page->tglpengajuan->getViewValue() ?></span>
+    <?php if ($Page->namaproduct->Visible) { // namaproduct ?>
+        <td data-name="namaproduct" <?= $Page->namaproduct->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_kartu_stok_namaproduct">
+<span<?= $Page->namaproduct->viewAttributes() ?>>
+<?= $Page->namaproduct->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
-        <td data-name="idnpd_sample" <?= $Page->idnpd_sample->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd_sample">
-<span<?= $Page->idnpd_sample->viewAttributes() ?>>
-<?= $Page->idnpd_sample->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->nama->Visible) { // nama ?>
-        <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_nama">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
+    <?php if ($Page->stok->Visible) { // stok ?>
+        <td data-name="stok" <?= $Page->stok->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_kartu_stok_stok">
+<span<?= $Page->stok->viewAttributes() ?>>
+<?= $Page->stok->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -314,7 +290,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("npd_harga");
+    ew.addEventHandlers("v_kartu_stok");
 });
 </script>
 <script>

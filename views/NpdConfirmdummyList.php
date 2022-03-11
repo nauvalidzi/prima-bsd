@@ -3,31 +3,31 @@
 namespace PHPMaker2021\production2;
 
 // Page object
-$NpdHargaList = &$Page;
+$NpdConfirmdummyList = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentForm, currentPageID;
-var fnpd_hargalist;
+var fnpd_confirmdummylist;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object
     currentPageID = ew.PAGE_ID = "list";
-    fnpd_hargalist = currentForm = new ew.Form("fnpd_hargalist", "list");
-    fnpd_hargalist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
-    loadjs.done("fnpd_hargalist");
+    fnpd_confirmdummylist = currentForm = new ew.Form("fnpd_confirmdummylist", "list");
+    fnpd_confirmdummylist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
+    loadjs.done("fnpd_confirmdummylist");
 });
-var fnpd_hargalistsrch, currentSearchForm, currentAdvancedSearchForm;
+var fnpd_confirmdummylistsrch, currentSearchForm, currentAdvancedSearchForm;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object for search
-    fnpd_hargalistsrch = currentSearchForm = new ew.Form("fnpd_hargalistsrch");
+    fnpd_confirmdummylistsrch = currentSearchForm = new ew.Form("fnpd_confirmdummylistsrch");
 
     // Dynamic selection lists
 
     // Filters
-    fnpd_hargalistsrch.filterList = <?= $Page->getFilterList() ?>;
-    loadjs.done("fnpd_hargalistsrch");
+    fnpd_confirmdummylistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fnpd_confirmdummylistsrch");
 });
 </script>
 <style>
@@ -77,24 +77,15 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
-<?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/NpdMaster.php";
-    }
-}
-?>
-<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
 <?php if ($Security->canSearch()) { ?>
 <?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
-<form name="fnpd_hargalistsrch" id="fnpd_hargalistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
-<div id="fnpd_hargalistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<form name="fnpd_confirmdummylistsrch" id="fnpd_confirmdummylistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fnpd_confirmdummylistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="npd_harga">
+<input type="hidden" name="t" value="npd_confirmdummy">
     <div class="ew-extended-search">
 <div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
     <div class="ew-quick-search input-group">
@@ -122,20 +113,16 @@ $Page->renderOtherOptions();
 $Page->showMessage();
 ?>
 <?php if ($Page->TotalRecords > 0 || $Page->CurrentAction) { ?>
-<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> npd_harga">
-<form name="fnpd_hargalist" id="fnpd_hargalist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> npd_confirmdummy">
+<form name="fnpd_confirmdummylist" id="fnpd_confirmdummylist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="npd_harga">
-<?php if ($Page->getCurrentMasterTable() == "npd" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
-<?php } ?>
-<div id="gmp_npd_harga" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<input type="hidden" name="t" value="npd_confirmdummy">
+<div id="gmp_npd_confirmdummy" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_npd_hargalist" class="table ew-table"><!-- .ew-table -->
+<table id="tbl_npd_confirmdummylist" class="table ew-table"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -148,17 +135,26 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->id->Visible) { // id ?>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_npd_confirmdummy_id" class="npd_confirmdummy_id"><?= $Page->renderSort($Page->id) ?></div></th>
+<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_harga_idnpd" class="npd_harga_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
+        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_confirmdummy_idnpd" class="npd_confirmdummy_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
 <?php } ?>
-<?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <th data-name="tglpengajuan" class="<?= $Page->tglpengajuan->headerCellClass() ?>"><div id="elh_npd_harga_tglpengajuan" class="npd_harga_tglpengajuan"><?= $Page->renderSort($Page->tglpengajuan) ?></div></th>
+<?php if ($Page->dummydepan->Visible) { // dummydepan ?>
+        <th data-name="dummydepan" class="<?= $Page->dummydepan->headerCellClass() ?>"><div id="elh_npd_confirmdummy_dummydepan" class="npd_confirmdummy_dummydepan"><?= $Page->renderSort($Page->dummydepan) ?></div></th>
 <?php } ?>
-<?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
-        <th data-name="idnpd_sample" class="<?= $Page->idnpd_sample->headerCellClass() ?>"><div id="elh_npd_harga_idnpd_sample" class="npd_harga_idnpd_sample"><?= $Page->renderSort($Page->idnpd_sample) ?></div></th>
+<?php if ($Page->dummybelakang->Visible) { // dummybelakang ?>
+        <th data-name="dummybelakang" class="<?= $Page->dummybelakang->headerCellClass() ?>"><div id="elh_npd_confirmdummy_dummybelakang" class="npd_confirmdummy_dummybelakang"><?= $Page->renderSort($Page->dummybelakang) ?></div></th>
 <?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_npd_harga_nama" class="npd_harga_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
+<?php if ($Page->dummyatas->Visible) { // dummyatas ?>
+        <th data-name="dummyatas" class="<?= $Page->dummyatas->headerCellClass() ?>"><div id="elh_npd_confirmdummy_dummyatas" class="npd_confirmdummy_dummyatas"><?= $Page->renderSort($Page->dummyatas) ?></div></th>
+<?php } ?>
+<?php if ($Page->dummysamping->Visible) { // dummysamping ?>
+        <th data-name="dummysamping" class="<?= $Page->dummysamping->headerCellClass() ?>"><div id="elh_npd_confirmdummy_dummysamping" class="npd_confirmdummy_dummysamping"><?= $Page->renderSort($Page->dummysamping) ?></div></th>
+<?php } ?>
+<?php if ($Page->ttd->Visible) { // ttd ?>
+        <th data-name="ttd" class="<?= $Page->ttd->headerCellClass() ?>"><div id="elh_npd_confirmdummy_ttd" class="npd_confirmdummy_ttd"><?= $Page->renderSort($Page->ttd) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -214,7 +210,7 @@ while ($Page->RecordCount < $Page->StopRecord) {
         $Page->RowType = ROWTYPE_VIEW; // Render view
 
         // Set up row id / data-rowindex
-        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_npd_harga", "data-rowtype" => $Page->RowType]);
+        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_npd_confirmdummy", "data-rowtype" => $Page->RowType]);
 
         // Render row
         $Page->renderRow();
@@ -227,35 +223,59 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->id->Visible) { // id ?>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd">
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_idnpd">
 <span<?= $Page->idnpd->viewAttributes() ?>>
 <?= $Page->idnpd->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <td data-name="tglpengajuan" <?= $Page->tglpengajuan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_tglpengajuan">
-<span<?= $Page->tglpengajuan->viewAttributes() ?>>
-<?= $Page->tglpengajuan->getViewValue() ?></span>
+    <?php if ($Page->dummydepan->Visible) { // dummydepan ?>
+        <td data-name="dummydepan" <?= $Page->dummydepan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummydepan">
+<span<?= $Page->dummydepan->viewAttributes() ?>>
+<?= $Page->dummydepan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
-        <td data-name="idnpd_sample" <?= $Page->idnpd_sample->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd_sample">
-<span<?= $Page->idnpd_sample->viewAttributes() ?>>
-<?= $Page->idnpd_sample->getViewValue() ?></span>
+    <?php if ($Page->dummybelakang->Visible) { // dummybelakang ?>
+        <td data-name="dummybelakang" <?= $Page->dummybelakang->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummybelakang">
+<span<?= $Page->dummybelakang->viewAttributes() ?>>
+<?= $Page->dummybelakang->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->nama->Visible) { // nama ?>
-        <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_nama">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
+    <?php if ($Page->dummyatas->Visible) { // dummyatas ?>
+        <td data-name="dummyatas" <?= $Page->dummyatas->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummyatas">
+<span<?= $Page->dummyatas->viewAttributes() ?>>
+<?= $Page->dummyatas->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->dummysamping->Visible) { // dummysamping ?>
+        <td data-name="dummysamping" <?= $Page->dummysamping->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummysamping">
+<span<?= $Page->dummysamping->viewAttributes() ?>>
+<?= $Page->dummysamping->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->ttd->Visible) { // ttd ?>
+        <td data-name="ttd" <?= $Page->ttd->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_ttd">
+<span<?= $Page->ttd->viewAttributes() ?>>
+<?= $Page->ttd->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -314,7 +334,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("npd_harga");
+    ew.addEventHandlers("npd_confirmdummy");
 });
 </script>
 <script>

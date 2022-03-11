@@ -3,14 +3,14 @@
 namespace PHPMaker2021\production2;
 
 // Page object
-$NpdHargaPreview = &$Page;
+$NpdConfirmsamplePreview = &$Page;
 ?>
 <script>
-if (!ew.vars.tables.npd_harga) ew.vars.tables.npd_harga = <?= JsonEncode(GetClientVar("tables", "npd_harga")) ?>;
+if (!ew.vars.tables.npd_confirmsample) ew.vars.tables.npd_confirmsample = <?= JsonEncode(GetClientVar("tables", "npd_confirmsample")) ?>;
 </script>
 <?php $Page->showPageHeader(); ?>
 <?php if ($Page->TotalRecords > 0) { ?>
-<div class="card ew-grid npd_harga"><!-- .card -->
+<div class="card ew-grid npd_confirmsample"><!-- .card -->
 <div class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel ew-preview-middle-panel"><!-- .table-responsive -->
 <table class="table ew-table ew-preview-table"><!-- .table -->
     <thead><!-- Table header -->
@@ -31,12 +31,12 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-    <?php if ($Page->SortUrl($Page->tglpengajuan) == "") { ?>
-        <th class="<?= $Page->tglpengajuan->headerCellClass() ?>"><?= $Page->tglpengajuan->caption() ?></th>
+<?php if ($Page->tglkonfirmasi->Visible) { // tglkonfirmasi ?>
+    <?php if ($Page->SortUrl($Page->tglkonfirmasi) == "") { ?>
+        <th class="<?= $Page->tglkonfirmasi->headerCellClass() ?>"><?= $Page->tglkonfirmasi->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->tglpengajuan->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->tglpengajuan->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->tglpengajuan->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->tglpengajuan->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->tglpengajuan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->tglpengajuan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->tglkonfirmasi->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->tglkonfirmasi->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->tglkonfirmasi->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->tglkonfirmasi->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->tglkonfirmasi->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->tglkonfirmasi->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -55,6 +55,24 @@ $Page->ListOptions->render("header", "left");
     <?php } else { ?>
         <th class="<?= $Page->nama->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->nama->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->nama->getNextSort() ?>">
             <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->nama->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->nama->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->nama->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->volume->Visible) { // volume ?>
+    <?php if ($Page->SortUrl($Page->volume) == "") { ?>
+        <th class="<?= $Page->volume->headerCellClass() ?>"><?= $Page->volume->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->volume->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->volume->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->volume->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->volume->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->volume->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->volume->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->namapemesan->Visible) { // namapemesan ?>
+    <?php if ($Page->SortUrl($Page->namapemesan) == "") { ?>
+        <th class="<?= $Page->namapemesan->headerCellClass() ?>"><?= $Page->namapemesan->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->namapemesan->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->namapemesan->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->namapemesan->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->namapemesan->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->namapemesan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->namapemesan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -95,11 +113,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->idnpd->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <!-- tglpengajuan -->
-        <td<?= $Page->tglpengajuan->cellAttributes() ?>>
-<span<?= $Page->tglpengajuan->viewAttributes() ?>>
-<?= $Page->tglpengajuan->getViewValue() ?></span>
+<?php if ($Page->tglkonfirmasi->Visible) { // tglkonfirmasi ?>
+        <!-- tglkonfirmasi -->
+        <td<?= $Page->tglkonfirmasi->cellAttributes() ?>>
+<span<?= $Page->tglkonfirmasi->viewAttributes() ?>>
+<?= $Page->tglkonfirmasi->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
@@ -114,6 +132,20 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->nama->cellAttributes() ?>>
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->volume->Visible) { // volume ?>
+        <!-- volume -->
+        <td<?= $Page->volume->cellAttributes() ?>>
+<span<?= $Page->volume->viewAttributes() ?>>
+<?= $Page->volume->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->namapemesan->Visible) { // namapemesan ?>
+        <!-- namapemesan -->
+        <td<?= $Page->namapemesan->cellAttributes() ?>>
+<span<?= $Page->namapemesan->viewAttributes() ?>>
+<?= $Page->namapemesan->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

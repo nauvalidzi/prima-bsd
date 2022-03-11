@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class NpdHargaPreview extends NpdHarga
+class NpdConfirmsamplePreview extends NpdConfirmsample
 {
     use MessagesTrait;
 
@@ -18,10 +18,10 @@ class NpdHargaPreview extends NpdHarga
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'npd_harga';
+    public $TableName = 'npd_confirmsample';
 
     // Page object name
-    public $PageObjName = "NpdHargaPreview";
+    public $PageObjName = "NpdConfirmsamplePreview";
 
     // Rendering View
     public $RenderingView = false;
@@ -127,9 +127,9 @@ class NpdHargaPreview extends NpdHarga
         // Parent constuctor
         parent::__construct();
 
-        // Table object (npd_harga)
-        if (!isset($GLOBALS["npd_harga"]) || get_class($GLOBALS["npd_harga"]) == PROJECT_NAMESPACE . "npd_harga") {
-            $GLOBALS["npd_harga"] = &$this;
+        // Table object (npd_confirmsample)
+        if (!isset($GLOBALS["npd_confirmsample"]) || get_class($GLOBALS["npd_confirmsample"]) == PROJECT_NAMESPACE . "npd_confirmsample") {
+            $GLOBALS["npd_confirmsample"] = &$this;
         }
 
         // Page URL
@@ -137,7 +137,7 @@ class NpdHargaPreview extends NpdHarga
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'npd_harga');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'npd_confirmsample');
         }
 
         // Start timer
@@ -233,7 +233,7 @@ class NpdHargaPreview extends NpdHarga
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("npd_harga"));
+                $doc = new $class(Container("npd_confirmsample"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -392,55 +392,26 @@ class NpdHargaPreview extends NpdHarga
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
-        $this->tglpengajuan->setVisibility();
+        $this->tglkonfirmasi->setVisibility();
         $this->idnpd_sample->setVisibility();
         $this->nama->setVisibility();
         $this->bentuk->Visible = false;
         $this->viskositas->Visible = false;
+        $this->warna->Visible = false;
+        $this->bauparfum->Visible = false;
         $this->aplikasisediaan->Visible = false;
-        $this->volume->Visible = false;
-        $this->bahanaktif->Visible = false;
-        $this->volumewadah->Visible = false;
-        $this->bahanwadah->Visible = false;
-        $this->warnawadah->Visible = false;
-        $this->bentukwadah->Visible = false;
-        $this->jenistutup->Visible = false;
-        $this->bahantutup->Visible = false;
-        $this->warnatutup->Visible = false;
-        $this->bentuktutup->Visible = false;
-        $this->segel->Visible = false;
-        $this->catatanprimer->Visible = false;
-        $this->packingproduk->Visible = false;
-        $this->keteranganpacking->Visible = false;
-        $this->beltkarton->Visible = false;
-        $this->keteranganbelt->Visible = false;
-        $this->kartonluar->Visible = false;
-        $this->bariskarton->Visible = false;
-        $this->kolomkarton->Visible = false;
-        $this->stackkarton->Visible = false;
-        $this->isikarton->Visible = false;
-        $this->jenislabel->Visible = false;
-        $this->keteranganjenislabel->Visible = false;
-        $this->kualitaslabel->Visible = false;
-        $this->jumlahwarnalabel->Visible = false;
-        $this->metaliklabel->Visible = false;
-        $this->etiketlabel->Visible = false;
-        $this->keteranganlabel->Visible = false;
-        $this->kategoridelivery->Visible = false;
-        $this->alamatpengiriman->Visible = false;
-        $this->orderperdana->Visible = false;
-        $this->orderkontrak->Visible = false;
-        $this->hargaperpcs->Visible = false;
-        $this->hargaperkarton->Visible = false;
-        $this->lampiran->Visible = false;
-        $this->prepared_by->Visible = false;
-        $this->checked_by->Visible = false;
-        $this->approved_by->Visible = false;
-        $this->approved_date->Visible = false;
-        $this->disetujui->Visible = false;
+        $this->volume->setVisibility();
+        $this->campaign->Visible = false;
+        $this->alasansetuju->Visible = false;
+        $this->foto->Visible = false;
+        $this->namapemesan->setVisibility();
+        $this->alamatpemesan->Visible = false;
+        $this->personincharge->Visible = false;
+        $this->jabatan->Visible = false;
+        $this->notelp->Visible = false;
         $this->created_at->Visible = false;
+        $this->receipt_by->Visible = false;
         $this->readonly->Visible = false;
-        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -460,6 +431,12 @@ class NpdHargaPreview extends NpdHarga
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
+        $this->setupLookupOptions($this->bentuk);
+        $this->setupLookupOptions($this->viskositas);
+        $this->setupLookupOptions($this->warna);
+        $this->setupLookupOptions($this->bauparfum);
+        $this->setupLookupOptions($this->aplikasisediaan);
+        $this->setupLookupOptions($this->receipt_by);
 
         // Load filter
         $filter = Get("f", "");
@@ -530,55 +507,26 @@ class NpdHargaPreview extends NpdHarga
             $this->CurrentOrderType = "";
             $this->id->setSort("");
             $this->idnpd->setSort("");
-            $this->tglpengajuan->setSort("");
+            $this->tglkonfirmasi->setSort("");
             $this->idnpd_sample->setSort("");
             $this->nama->setSort("");
             $this->bentuk->setSort("");
             $this->viskositas->setSort("");
+            $this->warna->setSort("");
+            $this->bauparfum->setSort("");
             $this->aplikasisediaan->setSort("");
             $this->volume->setSort("");
-            $this->bahanaktif->setSort("");
-            $this->volumewadah->setSort("");
-            $this->bahanwadah->setSort("");
-            $this->warnawadah->setSort("");
-            $this->bentukwadah->setSort("");
-            $this->jenistutup->setSort("");
-            $this->bahantutup->setSort("");
-            $this->warnatutup->setSort("");
-            $this->bentuktutup->setSort("");
-            $this->segel->setSort("");
-            $this->catatanprimer->setSort("");
-            $this->packingproduk->setSort("");
-            $this->keteranganpacking->setSort("");
-            $this->beltkarton->setSort("");
-            $this->keteranganbelt->setSort("");
-            $this->kartonluar->setSort("");
-            $this->bariskarton->setSort("");
-            $this->kolomkarton->setSort("");
-            $this->stackkarton->setSort("");
-            $this->isikarton->setSort("");
-            $this->jenislabel->setSort("");
-            $this->keteranganjenislabel->setSort("");
-            $this->kualitaslabel->setSort("");
-            $this->jumlahwarnalabel->setSort("");
-            $this->metaliklabel->setSort("");
-            $this->etiketlabel->setSort("");
-            $this->keteranganlabel->setSort("");
-            $this->kategoridelivery->setSort("");
-            $this->alamatpengiriman->setSort("");
-            $this->orderperdana->setSort("");
-            $this->orderkontrak->setSort("");
-            $this->hargaperpcs->setSort("");
-            $this->hargaperkarton->setSort("");
-            $this->lampiran->setSort("");
-            $this->prepared_by->setSort("");
-            $this->checked_by->setSort("");
-            $this->approved_by->setSort("");
-            $this->approved_date->setSort("");
-            $this->disetujui->setSort("");
+            $this->campaign->setSort("");
+            $this->alasansetuju->setSort("");
+            $this->foto->setSort("");
+            $this->namapemesan->setSort("");
+            $this->alamatpemesan->setSort("");
+            $this->personincharge->setSort("");
+            $this->jabatan->setSort("");
+            $this->notelp->setSort("");
             $this->created_at->setSort("");
+            $this->receipt_by->setSort("");
             $this->readonly->setSort("");
-            $this->updated_at->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -591,9 +539,11 @@ class NpdHargaPreview extends NpdHarga
         // Check for sort field
         if ($this->CurrentOrder !== "") {
             $this->updateSort($this->idnpd); // idnpd
-            $this->updateSort($this->tglpengajuan); // tglpengajuan
+            $this->updateSort($this->tglkonfirmasi); // tglkonfirmasi
             $this->updateSort($this->idnpd_sample); // idnpd_sample
             $this->updateSort($this->nama); // nama
+            $this->updateSort($this->volume); // volume
+            $this->updateSort($this->namapemesan); // namapemesan
         }
     }
 
@@ -810,7 +760,7 @@ class NpdHargaPreview extends NpdHarga
         global $Breadcrumb, $Language;
         $Breadcrumb = new Breadcrumb("index");
         $url = CurrentUrl();
-        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("NpdHargaList"), "", $this->TableVar, true);
+        $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("NpdConfirmsampleList"), "", $this->TableVar, true);
         $pageId = "preview";
         $Breadcrumb->add("preview", $pageId, $url);
     }
@@ -829,20 +779,24 @@ class NpdHargaPreview extends NpdHarga
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
                 case "x_idnpd":
-                    $lookupFilter = function () {
-                        return "`id` IN (SELECT `idnpd` FROM `npd_confirmsample`)";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idnpd_sample":
                     $lookupFilter = function () {
-                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_review WHERE `status`=1 AND readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
-                case "x_segel":
+                case "x_bentuk":
                     break;
-                case "x_disetujui":
+                case "x_viskositas":
+                    break;
+                case "x_warna":
+                    break;
+                case "x_bauparfum":
+                    break;
+                case "x_aplikasisediaan":
+                    break;
+                case "x_receipt_by":
                     break;
                 case "x_readonly":
                     break;
@@ -916,9 +870,9 @@ class NpdHargaPreview extends NpdHarga
     {
         // Example:
         //$header = "your header";
-        $confirm = ExecuteScalar("SELECT COUNT(*) FROM npd_confirmsample WHERE readonly=0 AND idnpd={$this->idnpd->CurrentValue}");
-        $selesai = ExecuteScalar("SELECT selesai FROM npd WHERE id={$this->idnpd->CurrentValue}");
-        if(empty($confirm) || $selesai) {
+        $review = ExecuteScalar("SELECT COUNT(*) FROM npd_review WHERE `status`=1 AND readonly=0 AND idnpd=".$this->idnpd->CurrentValue);
+        $selesai = ExecuteScalar("SELECT selesai FROM npd WHERE id=".$this->idnpd->CurrentValue);
+        if(empty($review) || $selesai) {
         	$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
         }
     }

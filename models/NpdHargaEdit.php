@@ -118,6 +118,9 @@ class NpdHargaEdit extends NpdHarga
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
 
+        // Custom template
+        $this->UseCustomTemplate = true;
+
         // Initialize
         $GLOBALS["Page"] = &$this;
 
@@ -205,18 +208,25 @@ class NpdHargaEdit extends NpdHarga
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -231,6 +241,11 @@ class NpdHargaEdit extends NpdHarga
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -369,9 +384,6 @@ class NpdHargaEdit extends NpdHarga
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -471,10 +483,13 @@ class NpdHargaEdit extends NpdHarga
         $this->idnpd->Visible = false;
         $this->tglpengajuan->setVisibility();
         $this->idnpd_sample->Visible = false;
+        $this->nama->setVisibility();
         $this->bentuk->setVisibility();
-        $this->viskositasbarang->setVisibility();
-        $this->idaplikasibarang->setVisibility();
-        $this->ukuranwadah->setVisibility();
+        $this->viskositas->setVisibility();
+        $this->aplikasisediaan->setVisibility();
+        $this->volume->setVisibility();
+        $this->bahanaktif->setVisibility();
+        $this->volumewadah->setVisibility();
         $this->bahanwadah->setVisibility();
         $this->warnawadah->setVisibility();
         $this->bentukwadah->setVisibility();
@@ -484,10 +499,11 @@ class NpdHargaEdit extends NpdHarga
         $this->bentuktutup->setVisibility();
         $this->segel->setVisibility();
         $this->catatanprimer->setVisibility();
-        $this->packingkarton->setVisibility();
+        $this->packingproduk->setVisibility();
         $this->keteranganpacking->setVisibility();
         $this->beltkarton->setVisibility();
         $this->keteranganbelt->setVisibility();
+        $this->kartonluar->setVisibility();
         $this->bariskarton->setVisibility();
         $this->kolomkarton->setVisibility();
         $this->stackkarton->setVisibility();
@@ -496,18 +512,24 @@ class NpdHargaEdit extends NpdHarga
         $this->keteranganjenislabel->setVisibility();
         $this->kualitaslabel->setVisibility();
         $this->jumlahwarnalabel->setVisibility();
+        $this->metaliklabel->setVisibility();
         $this->etiketlabel->setVisibility();
-        $this->keteranganetiket->setVisibility();
+        $this->keteranganlabel->setVisibility();
         $this->kategoridelivery->setVisibility();
         $this->alamatpengiriman->setVisibility();
         $this->orderperdana->setVisibility();
         $this->orderkontrak->setVisibility();
-        $this->hargapcs->setVisibility();
+        $this->hargaperpcs->setVisibility();
+        $this->hargaperkarton->setVisibility();
         $this->lampiran->setVisibility();
+        $this->prepared_by->setVisibility();
+        $this->checked_by->setVisibility();
+        $this->approved_by->setVisibility();
+        $this->approved_date->Visible = false;
         $this->disetujui->setVisibility();
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
+        $this->updated_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -707,6 +729,16 @@ class NpdHargaEdit extends NpdHarga
             $this->tglpengajuan->CurrentValue = UnFormatDateTime($this->tglpengajuan->CurrentValue, 0);
         }
 
+        // Check field name 'nama' first before field var 'x_nama'
+        $val = $CurrentForm->hasValue("nama") ? $CurrentForm->getValue("nama") : $CurrentForm->getValue("x_nama");
+        if (!$this->nama->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->nama->Visible = false; // Disable update for API request
+            } else {
+                $this->nama->setFormValue($val);
+            }
+        }
+
         // Check field name 'bentuk' first before field var 'x_bentuk'
         $val = $CurrentForm->hasValue("bentuk") ? $CurrentForm->getValue("bentuk") : $CurrentForm->getValue("x_bentuk");
         if (!$this->bentuk->IsDetailKey) {
@@ -717,33 +749,53 @@ class NpdHargaEdit extends NpdHarga
             }
         }
 
-        // Check field name 'viskositasbarang' first before field var 'x_viskositasbarang'
-        $val = $CurrentForm->hasValue("viskositasbarang") ? $CurrentForm->getValue("viskositasbarang") : $CurrentForm->getValue("x_viskositasbarang");
-        if (!$this->viskositasbarang->IsDetailKey) {
+        // Check field name 'viskositas' first before field var 'x_viskositas'
+        $val = $CurrentForm->hasValue("viskositas") ? $CurrentForm->getValue("viskositas") : $CurrentForm->getValue("x_viskositas");
+        if (!$this->viskositas->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->viskositasbarang->Visible = false; // Disable update for API request
+                $this->viskositas->Visible = false; // Disable update for API request
             } else {
-                $this->viskositasbarang->setFormValue($val);
+                $this->viskositas->setFormValue($val);
             }
         }
 
-        // Check field name 'idaplikasibarang' first before field var 'x_idaplikasibarang'
-        $val = $CurrentForm->hasValue("idaplikasibarang") ? $CurrentForm->getValue("idaplikasibarang") : $CurrentForm->getValue("x_idaplikasibarang");
-        if (!$this->idaplikasibarang->IsDetailKey) {
+        // Check field name 'aplikasisediaan' first before field var 'x_aplikasisediaan'
+        $val = $CurrentForm->hasValue("aplikasisediaan") ? $CurrentForm->getValue("aplikasisediaan") : $CurrentForm->getValue("x_aplikasisediaan");
+        if (!$this->aplikasisediaan->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->idaplikasibarang->Visible = false; // Disable update for API request
+                $this->aplikasisediaan->Visible = false; // Disable update for API request
             } else {
-                $this->idaplikasibarang->setFormValue($val);
+                $this->aplikasisediaan->setFormValue($val);
             }
         }
 
-        // Check field name 'ukuranwadah' first before field var 'x_ukuranwadah'
-        $val = $CurrentForm->hasValue("ukuranwadah") ? $CurrentForm->getValue("ukuranwadah") : $CurrentForm->getValue("x_ukuranwadah");
-        if (!$this->ukuranwadah->IsDetailKey) {
+        // Check field name 'volume' first before field var 'x_volume'
+        $val = $CurrentForm->hasValue("volume") ? $CurrentForm->getValue("volume") : $CurrentForm->getValue("x_volume");
+        if (!$this->volume->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->ukuranwadah->Visible = false; // Disable update for API request
+                $this->volume->Visible = false; // Disable update for API request
             } else {
-                $this->ukuranwadah->setFormValue($val);
+                $this->volume->setFormValue($val);
+            }
+        }
+
+        // Check field name 'bahanaktif' first before field var 'x_bahanaktif'
+        $val = $CurrentForm->hasValue("bahanaktif") ? $CurrentForm->getValue("bahanaktif") : $CurrentForm->getValue("x_bahanaktif");
+        if (!$this->bahanaktif->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->bahanaktif->Visible = false; // Disable update for API request
+            } else {
+                $this->bahanaktif->setFormValue($val);
+            }
+        }
+
+        // Check field name 'volumewadah' first before field var 'x_volumewadah'
+        $val = $CurrentForm->hasValue("volumewadah") ? $CurrentForm->getValue("volumewadah") : $CurrentForm->getValue("x_volumewadah");
+        if (!$this->volumewadah->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->volumewadah->Visible = false; // Disable update for API request
+            } else {
+                $this->volumewadah->setFormValue($val);
             }
         }
 
@@ -837,13 +889,13 @@ class NpdHargaEdit extends NpdHarga
             }
         }
 
-        // Check field name 'packingkarton' first before field var 'x_packingkarton'
-        $val = $CurrentForm->hasValue("packingkarton") ? $CurrentForm->getValue("packingkarton") : $CurrentForm->getValue("x_packingkarton");
-        if (!$this->packingkarton->IsDetailKey) {
+        // Check field name 'packingproduk' first before field var 'x_packingproduk'
+        $val = $CurrentForm->hasValue("packingproduk") ? $CurrentForm->getValue("packingproduk") : $CurrentForm->getValue("x_packingproduk");
+        if (!$this->packingproduk->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->packingkarton->Visible = false; // Disable update for API request
+                $this->packingproduk->Visible = false; // Disable update for API request
             } else {
-                $this->packingkarton->setFormValue($val);
+                $this->packingproduk->setFormValue($val);
             }
         }
 
@@ -874,6 +926,16 @@ class NpdHargaEdit extends NpdHarga
                 $this->keteranganbelt->Visible = false; // Disable update for API request
             } else {
                 $this->keteranganbelt->setFormValue($val);
+            }
+        }
+
+        // Check field name 'kartonluar' first before field var 'x_kartonluar'
+        $val = $CurrentForm->hasValue("kartonluar") ? $CurrentForm->getValue("kartonluar") : $CurrentForm->getValue("x_kartonluar");
+        if (!$this->kartonluar->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->kartonluar->Visible = false; // Disable update for API request
+            } else {
+                $this->kartonluar->setFormValue($val);
             }
         }
 
@@ -957,6 +1019,16 @@ class NpdHargaEdit extends NpdHarga
             }
         }
 
+        // Check field name 'metaliklabel' first before field var 'x_metaliklabel'
+        $val = $CurrentForm->hasValue("metaliklabel") ? $CurrentForm->getValue("metaliklabel") : $CurrentForm->getValue("x_metaliklabel");
+        if (!$this->metaliklabel->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->metaliklabel->Visible = false; // Disable update for API request
+            } else {
+                $this->metaliklabel->setFormValue($val);
+            }
+        }
+
         // Check field name 'etiketlabel' first before field var 'x_etiketlabel'
         $val = $CurrentForm->hasValue("etiketlabel") ? $CurrentForm->getValue("etiketlabel") : $CurrentForm->getValue("x_etiketlabel");
         if (!$this->etiketlabel->IsDetailKey) {
@@ -967,13 +1039,13 @@ class NpdHargaEdit extends NpdHarga
             }
         }
 
-        // Check field name 'keteranganetiket' first before field var 'x_keteranganetiket'
-        $val = $CurrentForm->hasValue("keteranganetiket") ? $CurrentForm->getValue("keteranganetiket") : $CurrentForm->getValue("x_keteranganetiket");
-        if (!$this->keteranganetiket->IsDetailKey) {
+        // Check field name 'keteranganlabel' first before field var 'x_keteranganlabel'
+        $val = $CurrentForm->hasValue("keteranganlabel") ? $CurrentForm->getValue("keteranganlabel") : $CurrentForm->getValue("x_keteranganlabel");
+        if (!$this->keteranganlabel->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->keteranganetiket->Visible = false; // Disable update for API request
+                $this->keteranganlabel->Visible = false; // Disable update for API request
             } else {
-                $this->keteranganetiket->setFormValue($val);
+                $this->keteranganlabel->setFormValue($val);
             }
         }
 
@@ -1017,13 +1089,53 @@ class NpdHargaEdit extends NpdHarga
             }
         }
 
-        // Check field name 'hargapcs' first before field var 'x_hargapcs'
-        $val = $CurrentForm->hasValue("hargapcs") ? $CurrentForm->getValue("hargapcs") : $CurrentForm->getValue("x_hargapcs");
-        if (!$this->hargapcs->IsDetailKey) {
+        // Check field name 'hargaperpcs' first before field var 'x_hargaperpcs'
+        $val = $CurrentForm->hasValue("hargaperpcs") ? $CurrentForm->getValue("hargaperpcs") : $CurrentForm->getValue("x_hargaperpcs");
+        if (!$this->hargaperpcs->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->hargapcs->Visible = false; // Disable update for API request
+                $this->hargaperpcs->Visible = false; // Disable update for API request
             } else {
-                $this->hargapcs->setFormValue($val);
+                $this->hargaperpcs->setFormValue($val);
+            }
+        }
+
+        // Check field name 'hargaperkarton' first before field var 'x_hargaperkarton'
+        $val = $CurrentForm->hasValue("hargaperkarton") ? $CurrentForm->getValue("hargaperkarton") : $CurrentForm->getValue("x_hargaperkarton");
+        if (!$this->hargaperkarton->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->hargaperkarton->Visible = false; // Disable update for API request
+            } else {
+                $this->hargaperkarton->setFormValue($val);
+            }
+        }
+
+        // Check field name 'prepared_by' first before field var 'x_prepared_by'
+        $val = $CurrentForm->hasValue("prepared_by") ? $CurrentForm->getValue("prepared_by") : $CurrentForm->getValue("x_prepared_by");
+        if (!$this->prepared_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->prepared_by->Visible = false; // Disable update for API request
+            } else {
+                $this->prepared_by->setFormValue($val);
+            }
+        }
+
+        // Check field name 'checked_by' first before field var 'x_checked_by'
+        $val = $CurrentForm->hasValue("checked_by") ? $CurrentForm->getValue("checked_by") : $CurrentForm->getValue("x_checked_by");
+        if (!$this->checked_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->checked_by->Visible = false; // Disable update for API request
+            } else {
+                $this->checked_by->setFormValue($val);
+            }
+        }
+
+        // Check field name 'approved_by' first before field var 'x_approved_by'
+        $val = $CurrentForm->hasValue("approved_by") ? $CurrentForm->getValue("approved_by") : $CurrentForm->getValue("x_approved_by");
+        if (!$this->approved_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->approved_by->Visible = false; // Disable update for API request
+            } else {
+                $this->approved_by->setFormValue($val);
             }
         }
 
@@ -1035,6 +1147,17 @@ class NpdHargaEdit extends NpdHarga
             } else {
                 $this->disetujui->setFormValue($val);
             }
+        }
+
+        // Check field name 'updated_at' first before field var 'x_updated_at'
+        $val = $CurrentForm->hasValue("updated_at") ? $CurrentForm->getValue("updated_at") : $CurrentForm->getValue("x_updated_at");
+        if (!$this->updated_at->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->updated_at->Visible = false; // Disable update for API request
+            } else {
+                $this->updated_at->setFormValue($val);
+            }
+            $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
         }
 
         // Check field name 'id' first before field var 'x_id'
@@ -1052,10 +1175,13 @@ class NpdHargaEdit extends NpdHarga
         $this->id->CurrentValue = $this->id->FormValue;
         $this->tglpengajuan->CurrentValue = $this->tglpengajuan->FormValue;
         $this->tglpengajuan->CurrentValue = UnFormatDateTime($this->tglpengajuan->CurrentValue, 0);
+        $this->nama->CurrentValue = $this->nama->FormValue;
         $this->bentuk->CurrentValue = $this->bentuk->FormValue;
-        $this->viskositasbarang->CurrentValue = $this->viskositasbarang->FormValue;
-        $this->idaplikasibarang->CurrentValue = $this->idaplikasibarang->FormValue;
-        $this->ukuranwadah->CurrentValue = $this->ukuranwadah->FormValue;
+        $this->viskositas->CurrentValue = $this->viskositas->FormValue;
+        $this->aplikasisediaan->CurrentValue = $this->aplikasisediaan->FormValue;
+        $this->volume->CurrentValue = $this->volume->FormValue;
+        $this->bahanaktif->CurrentValue = $this->bahanaktif->FormValue;
+        $this->volumewadah->CurrentValue = $this->volumewadah->FormValue;
         $this->bahanwadah->CurrentValue = $this->bahanwadah->FormValue;
         $this->warnawadah->CurrentValue = $this->warnawadah->FormValue;
         $this->bentukwadah->CurrentValue = $this->bentukwadah->FormValue;
@@ -1065,10 +1191,11 @@ class NpdHargaEdit extends NpdHarga
         $this->bentuktutup->CurrentValue = $this->bentuktutup->FormValue;
         $this->segel->CurrentValue = $this->segel->FormValue;
         $this->catatanprimer->CurrentValue = $this->catatanprimer->FormValue;
-        $this->packingkarton->CurrentValue = $this->packingkarton->FormValue;
+        $this->packingproduk->CurrentValue = $this->packingproduk->FormValue;
         $this->keteranganpacking->CurrentValue = $this->keteranganpacking->FormValue;
         $this->beltkarton->CurrentValue = $this->beltkarton->FormValue;
         $this->keteranganbelt->CurrentValue = $this->keteranganbelt->FormValue;
+        $this->kartonluar->CurrentValue = $this->kartonluar->FormValue;
         $this->bariskarton->CurrentValue = $this->bariskarton->FormValue;
         $this->kolomkarton->CurrentValue = $this->kolomkarton->FormValue;
         $this->stackkarton->CurrentValue = $this->stackkarton->FormValue;
@@ -1077,14 +1204,21 @@ class NpdHargaEdit extends NpdHarga
         $this->keteranganjenislabel->CurrentValue = $this->keteranganjenislabel->FormValue;
         $this->kualitaslabel->CurrentValue = $this->kualitaslabel->FormValue;
         $this->jumlahwarnalabel->CurrentValue = $this->jumlahwarnalabel->FormValue;
+        $this->metaliklabel->CurrentValue = $this->metaliklabel->FormValue;
         $this->etiketlabel->CurrentValue = $this->etiketlabel->FormValue;
-        $this->keteranganetiket->CurrentValue = $this->keteranganetiket->FormValue;
+        $this->keteranganlabel->CurrentValue = $this->keteranganlabel->FormValue;
         $this->kategoridelivery->CurrentValue = $this->kategoridelivery->FormValue;
         $this->alamatpengiriman->CurrentValue = $this->alamatpengiriman->FormValue;
         $this->orderperdana->CurrentValue = $this->orderperdana->FormValue;
         $this->orderkontrak->CurrentValue = $this->orderkontrak->FormValue;
-        $this->hargapcs->CurrentValue = $this->hargapcs->FormValue;
+        $this->hargaperpcs->CurrentValue = $this->hargaperpcs->FormValue;
+        $this->hargaperkarton->CurrentValue = $this->hargaperkarton->FormValue;
+        $this->prepared_by->CurrentValue = $this->prepared_by->FormValue;
+        $this->checked_by->CurrentValue = $this->checked_by->FormValue;
+        $this->approved_by->CurrentValue = $this->approved_by->FormValue;
         $this->disetujui->CurrentValue = $this->disetujui->FormValue;
+        $this->updated_at->CurrentValue = $this->updated_at->FormValue;
+        $this->updated_at->CurrentValue = UnFormatDateTime($this->updated_at->CurrentValue, 0);
     }
 
     /**
@@ -1109,15 +1243,6 @@ class NpdHargaEdit extends NpdHarga
         if ($row) {
             $res = true;
             $this->loadRowValues($row); // Load row values
-        }
-
-        // Check if valid User ID
-        if ($res) {
-            $res = $this->showOptionLink("edit");
-            if (!$res) {
-                $userIdMsg = DeniedMessage();
-                $this->setFailureMessage($userIdMsg);
-            }
         }
         return $res;
     }
@@ -1147,10 +1272,13 @@ class NpdHargaEdit extends NpdHarga
         $this->idnpd->setDbValue($row['idnpd']);
         $this->tglpengajuan->setDbValue($row['tglpengajuan']);
         $this->idnpd_sample->setDbValue($row['idnpd_sample']);
+        $this->nama->setDbValue($row['nama']);
         $this->bentuk->setDbValue($row['bentuk']);
-        $this->viskositasbarang->setDbValue($row['viskositasbarang']);
-        $this->idaplikasibarang->setDbValue($row['idaplikasibarang']);
-        $this->ukuranwadah->setDbValue($row['ukuranwadah']);
+        $this->viskositas->setDbValue($row['viskositas']);
+        $this->aplikasisediaan->setDbValue($row['aplikasisediaan']);
+        $this->volume->setDbValue($row['volume']);
+        $this->bahanaktif->setDbValue($row['bahanaktif']);
+        $this->volumewadah->setDbValue($row['volumewadah']);
         $this->bahanwadah->setDbValue($row['bahanwadah']);
         $this->warnawadah->setDbValue($row['warnawadah']);
         $this->bentukwadah->setDbValue($row['bentukwadah']);
@@ -1160,10 +1288,11 @@ class NpdHargaEdit extends NpdHarga
         $this->bentuktutup->setDbValue($row['bentuktutup']);
         $this->segel->setDbValue($row['segel']);
         $this->catatanprimer->setDbValue($row['catatanprimer']);
-        $this->packingkarton->setDbValue($row['packingkarton']);
+        $this->packingproduk->setDbValue($row['packingproduk']);
         $this->keteranganpacking->setDbValue($row['keteranganpacking']);
         $this->beltkarton->setDbValue($row['beltkarton']);
         $this->keteranganbelt->setDbValue($row['keteranganbelt']);
+        $this->kartonluar->setDbValue($row['kartonluar']);
         $this->bariskarton->setDbValue($row['bariskarton']);
         $this->kolomkarton->setDbValue($row['kolomkarton']);
         $this->stackkarton->setDbValue($row['stackkarton']);
@@ -1172,19 +1301,25 @@ class NpdHargaEdit extends NpdHarga
         $this->keteranganjenislabel->setDbValue($row['keteranganjenislabel']);
         $this->kualitaslabel->setDbValue($row['kualitaslabel']);
         $this->jumlahwarnalabel->setDbValue($row['jumlahwarnalabel']);
+        $this->metaliklabel->setDbValue($row['metaliklabel']);
         $this->etiketlabel->setDbValue($row['etiketlabel']);
-        $this->keteranganetiket->setDbValue($row['keteranganetiket']);
+        $this->keteranganlabel->setDbValue($row['keteranganlabel']);
         $this->kategoridelivery->setDbValue($row['kategoridelivery']);
         $this->alamatpengiriman->setDbValue($row['alamatpengiriman']);
         $this->orderperdana->setDbValue($row['orderperdana']);
         $this->orderkontrak->setDbValue($row['orderkontrak']);
-        $this->hargapcs->setDbValue($row['hargapcs']);
+        $this->hargaperpcs->setDbValue($row['hargaperpcs']);
+        $this->hargaperkarton->setDbValue($row['hargaperkarton']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
+        $this->prepared_by->setDbValue($row['prepared_by']);
+        $this->checked_by->setDbValue($row['checked_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
+        $this->approved_date->setDbValue($row['approved_date']);
         $this->disetujui->setDbValue($row['disetujui']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -1195,10 +1330,13 @@ class NpdHargaEdit extends NpdHarga
         $row['idnpd'] = null;
         $row['tglpengajuan'] = null;
         $row['idnpd_sample'] = null;
+        $row['nama'] = null;
         $row['bentuk'] = null;
-        $row['viskositasbarang'] = null;
-        $row['idaplikasibarang'] = null;
-        $row['ukuranwadah'] = null;
+        $row['viskositas'] = null;
+        $row['aplikasisediaan'] = null;
+        $row['volume'] = null;
+        $row['bahanaktif'] = null;
+        $row['volumewadah'] = null;
         $row['bahanwadah'] = null;
         $row['warnawadah'] = null;
         $row['bentukwadah'] = null;
@@ -1208,10 +1346,11 @@ class NpdHargaEdit extends NpdHarga
         $row['bentuktutup'] = null;
         $row['segel'] = null;
         $row['catatanprimer'] = null;
-        $row['packingkarton'] = null;
+        $row['packingproduk'] = null;
         $row['keteranganpacking'] = null;
         $row['beltkarton'] = null;
         $row['keteranganbelt'] = null;
+        $row['kartonluar'] = null;
         $row['bariskarton'] = null;
         $row['kolomkarton'] = null;
         $row['stackkarton'] = null;
@@ -1220,18 +1359,24 @@ class NpdHargaEdit extends NpdHarga
         $row['keteranganjenislabel'] = null;
         $row['kualitaslabel'] = null;
         $row['jumlahwarnalabel'] = null;
+        $row['metaliklabel'] = null;
         $row['etiketlabel'] = null;
-        $row['keteranganetiket'] = null;
+        $row['keteranganlabel'] = null;
         $row['kategoridelivery'] = null;
         $row['alamatpengiriman'] = null;
         $row['orderperdana'] = null;
         $row['orderkontrak'] = null;
-        $row['hargapcs'] = null;
+        $row['hargaperpcs'] = null;
+        $row['hargaperkarton'] = null;
         $row['lampiran'] = null;
+        $row['prepared_by'] = null;
+        $row['checked_by'] = null;
+        $row['approved_by'] = null;
+        $row['approved_date'] = null;
         $row['disetujui'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -1271,13 +1416,19 @@ class NpdHargaEdit extends NpdHarga
 
         // idnpd_sample
 
+        // nama
+
         // bentuk
 
-        // viskositasbarang
+        // viskositas
 
-        // idaplikasibarang
+        // aplikasisediaan
 
-        // ukuranwadah
+        // volume
+
+        // bahanaktif
+
+        // volumewadah
 
         // bahanwadah
 
@@ -1297,13 +1448,15 @@ class NpdHargaEdit extends NpdHarga
 
         // catatanprimer
 
-        // packingkarton
+        // packingproduk
 
         // keteranganpacking
 
         // beltkarton
 
         // keteranganbelt
+
+        // kartonluar
 
         // bariskarton
 
@@ -1321,9 +1474,11 @@ class NpdHargaEdit extends NpdHarga
 
         // jumlahwarnalabel
 
+        // metaliklabel
+
         // etiketlabel
 
-        // keteranganetiket
+        // keteranganlabel
 
         // kategoridelivery
 
@@ -1333,17 +1488,27 @@ class NpdHargaEdit extends NpdHarga
 
         // orderkontrak
 
-        // hargapcs
+        // hargaperpcs
+
+        // hargaperkarton
 
         // lampiran
+
+        // prepared_by
+
+        // checked_by
+
+        // approved_by
+
+        // approved_date
 
         // disetujui
 
         // created_at
 
-        // created_by
-
         // readonly
+
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
@@ -1404,22 +1569,34 @@ class NpdHargaEdit extends NpdHarga
             }
             $this->idnpd_sample->ViewCustomAttributes = "";
 
+            // nama
+            $this->nama->ViewValue = $this->nama->CurrentValue;
+            $this->nama->ViewCustomAttributes = "";
+
             // bentuk
             $this->bentuk->ViewValue = $this->bentuk->CurrentValue;
             $this->bentuk->ViewCustomAttributes = "";
 
-            // viskositasbarang
-            $this->viskositasbarang->ViewValue = $this->viskositasbarang->CurrentValue;
-            $this->viskositasbarang->ViewCustomAttributes = "";
+            // viskositas
+            $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
+            $this->viskositas->ViewCustomAttributes = "";
 
-            // idaplikasibarang
-            $this->idaplikasibarang->ViewValue = $this->idaplikasibarang->CurrentValue;
-            $this->idaplikasibarang->ViewValue = FormatNumber($this->idaplikasibarang->ViewValue, 0, -2, -2, -2);
-            $this->idaplikasibarang->ViewCustomAttributes = "";
+            // aplikasisediaan
+            $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
+            $this->aplikasisediaan->ViewValue = FormatNumber($this->aplikasisediaan->ViewValue, 0, -2, -2, -2);
+            $this->aplikasisediaan->ViewCustomAttributes = "";
 
-            // ukuranwadah
-            $this->ukuranwadah->ViewValue = $this->ukuranwadah->CurrentValue;
-            $this->ukuranwadah->ViewCustomAttributes = "";
+            // volume
+            $this->volume->ViewValue = $this->volume->CurrentValue;
+            $this->volume->ViewCustomAttributes = "";
+
+            // bahanaktif
+            $this->bahanaktif->ViewValue = $this->bahanaktif->CurrentValue;
+            $this->bahanaktif->ViewCustomAttributes = "";
+
+            // volumewadah
+            $this->volumewadah->ViewValue = $this->volumewadah->CurrentValue;
+            $this->volumewadah->ViewCustomAttributes = "";
 
             // bahanwadah
             $this->bahanwadah->ViewValue = $this->bahanwadah->CurrentValue;
@@ -1461,9 +1638,9 @@ class NpdHargaEdit extends NpdHarga
             $this->catatanprimer->ViewValue = $this->catatanprimer->CurrentValue;
             $this->catatanprimer->ViewCustomAttributes = "";
 
-            // packingkarton
-            $this->packingkarton->ViewValue = $this->packingkarton->CurrentValue;
-            $this->packingkarton->ViewCustomAttributes = "";
+            // packingproduk
+            $this->packingproduk->ViewValue = $this->packingproduk->CurrentValue;
+            $this->packingproduk->ViewCustomAttributes = "";
 
             // keteranganpacking
             $this->keteranganpacking->ViewValue = $this->keteranganpacking->CurrentValue;
@@ -1477,24 +1654,24 @@ class NpdHargaEdit extends NpdHarga
             $this->keteranganbelt->ViewValue = $this->keteranganbelt->CurrentValue;
             $this->keteranganbelt->ViewCustomAttributes = "";
 
+            // kartonluar
+            $this->kartonluar->ViewValue = $this->kartonluar->CurrentValue;
+            $this->kartonluar->ViewCustomAttributes = "";
+
             // bariskarton
             $this->bariskarton->ViewValue = $this->bariskarton->CurrentValue;
-            $this->bariskarton->ViewValue = FormatNumber($this->bariskarton->ViewValue, 0, -2, -2, -2);
             $this->bariskarton->ViewCustomAttributes = "";
 
             // kolomkarton
             $this->kolomkarton->ViewValue = $this->kolomkarton->CurrentValue;
-            $this->kolomkarton->ViewValue = FormatNumber($this->kolomkarton->ViewValue, 0, -2, -2, -2);
             $this->kolomkarton->ViewCustomAttributes = "";
 
             // stackkarton
             $this->stackkarton->ViewValue = $this->stackkarton->CurrentValue;
-            $this->stackkarton->ViewValue = FormatNumber($this->stackkarton->ViewValue, 0, -2, -2, -2);
             $this->stackkarton->ViewCustomAttributes = "";
 
             // isikarton
             $this->isikarton->ViewValue = $this->isikarton->CurrentValue;
-            $this->isikarton->ViewValue = FormatNumber($this->isikarton->ViewValue, 0, -2, -2, -2);
             $this->isikarton->ViewCustomAttributes = "";
 
             // jenislabel
@@ -1513,13 +1690,17 @@ class NpdHargaEdit extends NpdHarga
             $this->jumlahwarnalabel->ViewValue = $this->jumlahwarnalabel->CurrentValue;
             $this->jumlahwarnalabel->ViewCustomAttributes = "";
 
+            // metaliklabel
+            $this->metaliklabel->ViewValue = $this->metaliklabel->CurrentValue;
+            $this->metaliklabel->ViewCustomAttributes = "";
+
             // etiketlabel
             $this->etiketlabel->ViewValue = $this->etiketlabel->CurrentValue;
             $this->etiketlabel->ViewCustomAttributes = "";
 
-            // keteranganetiket
-            $this->keteranganetiket->ViewValue = $this->keteranganetiket->CurrentValue;
-            $this->keteranganetiket->ViewCustomAttributes = "";
+            // keteranganlabel
+            $this->keteranganlabel->ViewValue = $this->keteranganlabel->CurrentValue;
+            $this->keteranganlabel->ViewCustomAttributes = "";
 
             // kategoridelivery
             $this->kategoridelivery->ViewValue = $this->kategoridelivery->CurrentValue;
@@ -1539,10 +1720,15 @@ class NpdHargaEdit extends NpdHarga
             $this->orderkontrak->ViewValue = FormatNumber($this->orderkontrak->ViewValue, 0, -2, -2, -2);
             $this->orderkontrak->ViewCustomAttributes = "";
 
-            // hargapcs
-            $this->hargapcs->ViewValue = $this->hargapcs->CurrentValue;
-            $this->hargapcs->ViewValue = FormatCurrency($this->hargapcs->ViewValue, 2, -2, -2, -2);
-            $this->hargapcs->ViewCustomAttributes = "";
+            // hargaperpcs
+            $this->hargaperpcs->ViewValue = $this->hargaperpcs->CurrentValue;
+            $this->hargaperpcs->ViewValue = FormatCurrency($this->hargaperpcs->ViewValue, 2, -2, -2, -2);
+            $this->hargaperpcs->ViewCustomAttributes = "";
+
+            // hargaperkarton
+            $this->hargaperkarton->ViewValue = $this->hargaperkarton->CurrentValue;
+            $this->hargaperkarton->ViewValue = FormatNumber($this->hargaperkarton->ViewValue, 0, -2, -2, -2);
+            $this->hargaperkarton->ViewCustomAttributes = "";
 
             // lampiran
             if (!EmptyValue($this->lampiran->Upload->DbValue)) {
@@ -1551,6 +1737,26 @@ class NpdHargaEdit extends NpdHarga
                 $this->lampiran->ViewValue = "";
             }
             $this->lampiran->ViewCustomAttributes = "";
+
+            // prepared_by
+            $this->prepared_by->ViewValue = $this->prepared_by->CurrentValue;
+            $this->prepared_by->ViewValue = FormatNumber($this->prepared_by->ViewValue, 0, -2, -2, -2);
+            $this->prepared_by->ViewCustomAttributes = "";
+
+            // checked_by
+            $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
+            $this->checked_by->ViewValue = FormatNumber($this->checked_by->ViewValue, 0, -2, -2, -2);
+            $this->checked_by->ViewCustomAttributes = "";
+
+            // approved_by
+            $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+            $this->approved_by->ViewValue = FormatNumber($this->approved_by->ViewValue, 0, -2, -2, -2);
+            $this->approved_by->ViewCustomAttributes = "";
+
+            // approved_date
+            $this->approved_date->ViewValue = $this->approved_date->CurrentValue;
+            $this->approved_date->ViewValue = FormatNumber($this->approved_date->ViewValue, 0, -2, -2, -2);
+            $this->approved_date->ViewCustomAttributes = "";
 
             // disetujui
             if (strval($this->disetujui->CurrentValue) != "") {
@@ -1565,11 +1771,6 @@ class NpdHargaEdit extends NpdHarga
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
                 $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -1578,30 +1779,50 @@ class NpdHargaEdit extends NpdHarga
             }
             $this->readonly->ViewCustomAttributes = "";
 
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
+
             // tglpengajuan
             $this->tglpengajuan->LinkCustomAttributes = "";
             $this->tglpengajuan->HrefValue = "";
             $this->tglpengajuan->TooltipValue = "";
+
+            // nama
+            $this->nama->LinkCustomAttributes = "";
+            $this->nama->HrefValue = "";
+            $this->nama->TooltipValue = "";
 
             // bentuk
             $this->bentuk->LinkCustomAttributes = "";
             $this->bentuk->HrefValue = "";
             $this->bentuk->TooltipValue = "";
 
-            // viskositasbarang
-            $this->viskositasbarang->LinkCustomAttributes = "";
-            $this->viskositasbarang->HrefValue = "";
-            $this->viskositasbarang->TooltipValue = "";
+            // viskositas
+            $this->viskositas->LinkCustomAttributes = "";
+            $this->viskositas->HrefValue = "";
+            $this->viskositas->TooltipValue = "";
 
-            // idaplikasibarang
-            $this->idaplikasibarang->LinkCustomAttributes = "";
-            $this->idaplikasibarang->HrefValue = "";
-            $this->idaplikasibarang->TooltipValue = "";
+            // aplikasisediaan
+            $this->aplikasisediaan->LinkCustomAttributes = "";
+            $this->aplikasisediaan->HrefValue = "";
+            $this->aplikasisediaan->TooltipValue = "";
 
-            // ukuranwadah
-            $this->ukuranwadah->LinkCustomAttributes = "";
-            $this->ukuranwadah->HrefValue = "";
-            $this->ukuranwadah->TooltipValue = "";
+            // volume
+            $this->volume->LinkCustomAttributes = "";
+            $this->volume->HrefValue = "";
+            $this->volume->TooltipValue = "";
+
+            // bahanaktif
+            $this->bahanaktif->LinkCustomAttributes = "";
+            $this->bahanaktif->HrefValue = "";
+            $this->bahanaktif->TooltipValue = "";
+
+            // volumewadah
+            $this->volumewadah->LinkCustomAttributes = "";
+            $this->volumewadah->HrefValue = "";
+            $this->volumewadah->TooltipValue = "";
 
             // bahanwadah
             $this->bahanwadah->LinkCustomAttributes = "";
@@ -1648,10 +1869,10 @@ class NpdHargaEdit extends NpdHarga
             $this->catatanprimer->HrefValue = "";
             $this->catatanprimer->TooltipValue = "";
 
-            // packingkarton
-            $this->packingkarton->LinkCustomAttributes = "";
-            $this->packingkarton->HrefValue = "";
-            $this->packingkarton->TooltipValue = "";
+            // packingproduk
+            $this->packingproduk->LinkCustomAttributes = "";
+            $this->packingproduk->HrefValue = "";
+            $this->packingproduk->TooltipValue = "";
 
             // keteranganpacking
             $this->keteranganpacking->LinkCustomAttributes = "";
@@ -1667,6 +1888,11 @@ class NpdHargaEdit extends NpdHarga
             $this->keteranganbelt->LinkCustomAttributes = "";
             $this->keteranganbelt->HrefValue = "";
             $this->keteranganbelt->TooltipValue = "";
+
+            // kartonluar
+            $this->kartonluar->LinkCustomAttributes = "";
+            $this->kartonluar->HrefValue = "";
+            $this->kartonluar->TooltipValue = "";
 
             // bariskarton
             $this->bariskarton->LinkCustomAttributes = "";
@@ -1708,15 +1934,20 @@ class NpdHargaEdit extends NpdHarga
             $this->jumlahwarnalabel->HrefValue = "";
             $this->jumlahwarnalabel->TooltipValue = "";
 
+            // metaliklabel
+            $this->metaliklabel->LinkCustomAttributes = "";
+            $this->metaliklabel->HrefValue = "";
+            $this->metaliklabel->TooltipValue = "";
+
             // etiketlabel
             $this->etiketlabel->LinkCustomAttributes = "";
             $this->etiketlabel->HrefValue = "";
             $this->etiketlabel->TooltipValue = "";
 
-            // keteranganetiket
-            $this->keteranganetiket->LinkCustomAttributes = "";
-            $this->keteranganetiket->HrefValue = "";
-            $this->keteranganetiket->TooltipValue = "";
+            // keteranganlabel
+            $this->keteranganlabel->LinkCustomAttributes = "";
+            $this->keteranganlabel->HrefValue = "";
+            $this->keteranganlabel->TooltipValue = "";
 
             // kategoridelivery
             $this->kategoridelivery->LinkCustomAttributes = "";
@@ -1738,10 +1969,15 @@ class NpdHargaEdit extends NpdHarga
             $this->orderkontrak->HrefValue = "";
             $this->orderkontrak->TooltipValue = "";
 
-            // hargapcs
-            $this->hargapcs->LinkCustomAttributes = "";
-            $this->hargapcs->HrefValue = "";
-            $this->hargapcs->TooltipValue = "";
+            // hargaperpcs
+            $this->hargaperpcs->LinkCustomAttributes = "";
+            $this->hargaperpcs->HrefValue = "";
+            $this->hargaperpcs->TooltipValue = "";
+
+            // hargaperkarton
+            $this->hargaperkarton->LinkCustomAttributes = "";
+            $this->hargaperkarton->HrefValue = "";
+            $this->hargaperkarton->TooltipValue = "";
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
@@ -1749,16 +1985,45 @@ class NpdHargaEdit extends NpdHarga
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
             $this->lampiran->TooltipValue = "";
 
+            // prepared_by
+            $this->prepared_by->LinkCustomAttributes = "";
+            $this->prepared_by->HrefValue = "";
+            $this->prepared_by->TooltipValue = "";
+
+            // checked_by
+            $this->checked_by->LinkCustomAttributes = "";
+            $this->checked_by->HrefValue = "";
+            $this->checked_by->TooltipValue = "";
+
+            // approved_by
+            $this->approved_by->LinkCustomAttributes = "";
+            $this->approved_by->HrefValue = "";
+            $this->approved_by->TooltipValue = "";
+
             // disetujui
             $this->disetujui->LinkCustomAttributes = "";
             $this->disetujui->HrefValue = "";
             $this->disetujui->TooltipValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
+            $this->updated_at->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // tglpengajuan
             $this->tglpengajuan->EditAttrs["class"] = "form-control";
             $this->tglpengajuan->EditCustomAttributes = "";
             $this->tglpengajuan->EditValue = HtmlEncode(FormatDateTime($this->tglpengajuan->CurrentValue, 8));
             $this->tglpengajuan->PlaceHolder = RemoveHtml($this->tglpengajuan->caption());
+
+            // nama
+            $this->nama->EditAttrs["class"] = "form-control";
+            $this->nama->EditCustomAttributes = "";
+            if (!$this->nama->Raw) {
+                $this->nama->CurrentValue = HtmlDecode($this->nama->CurrentValue);
+            }
+            $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
+            $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
             // bentuk
             $this->bentuk->EditAttrs["class"] = "form-control";
@@ -1769,29 +2034,44 @@ class NpdHargaEdit extends NpdHarga
             $this->bentuk->EditValue = HtmlEncode($this->bentuk->CurrentValue);
             $this->bentuk->PlaceHolder = RemoveHtml($this->bentuk->caption());
 
-            // viskositasbarang
-            $this->viskositasbarang->EditAttrs["class"] = "form-control";
-            $this->viskositasbarang->EditCustomAttributes = "";
-            if (!$this->viskositasbarang->Raw) {
-                $this->viskositasbarang->CurrentValue = HtmlDecode($this->viskositasbarang->CurrentValue);
+            // viskositas
+            $this->viskositas->EditAttrs["class"] = "form-control";
+            $this->viskositas->EditCustomAttributes = "";
+            if (!$this->viskositas->Raw) {
+                $this->viskositas->CurrentValue = HtmlDecode($this->viskositas->CurrentValue);
             }
-            $this->viskositasbarang->EditValue = HtmlEncode($this->viskositasbarang->CurrentValue);
-            $this->viskositasbarang->PlaceHolder = RemoveHtml($this->viskositasbarang->caption());
+            $this->viskositas->EditValue = HtmlEncode($this->viskositas->CurrentValue);
+            $this->viskositas->PlaceHolder = RemoveHtml($this->viskositas->caption());
 
-            // idaplikasibarang
-            $this->idaplikasibarang->EditAttrs["class"] = "form-control";
-            $this->idaplikasibarang->EditCustomAttributes = "";
-            $this->idaplikasibarang->EditValue = HtmlEncode($this->idaplikasibarang->CurrentValue);
-            $this->idaplikasibarang->PlaceHolder = RemoveHtml($this->idaplikasibarang->caption());
+            // aplikasisediaan
+            $this->aplikasisediaan->EditAttrs["class"] = "form-control";
+            $this->aplikasisediaan->EditCustomAttributes = "";
+            $this->aplikasisediaan->EditValue = HtmlEncode($this->aplikasisediaan->CurrentValue);
+            $this->aplikasisediaan->PlaceHolder = RemoveHtml($this->aplikasisediaan->caption());
 
-            // ukuranwadah
-            $this->ukuranwadah->EditAttrs["class"] = "form-control";
-            $this->ukuranwadah->EditCustomAttributes = "";
-            if (!$this->ukuranwadah->Raw) {
-                $this->ukuranwadah->CurrentValue = HtmlDecode($this->ukuranwadah->CurrentValue);
+            // volume
+            $this->volume->EditAttrs["class"] = "form-control";
+            $this->volume->EditCustomAttributes = "";
+            if (!$this->volume->Raw) {
+                $this->volume->CurrentValue = HtmlDecode($this->volume->CurrentValue);
             }
-            $this->ukuranwadah->EditValue = HtmlEncode($this->ukuranwadah->CurrentValue);
-            $this->ukuranwadah->PlaceHolder = RemoveHtml($this->ukuranwadah->caption());
+            $this->volume->EditValue = HtmlEncode($this->volume->CurrentValue);
+            $this->volume->PlaceHolder = RemoveHtml($this->volume->caption());
+
+            // bahanaktif
+            $this->bahanaktif->EditAttrs["class"] = "form-control";
+            $this->bahanaktif->EditCustomAttributes = "";
+            $this->bahanaktif->EditValue = HtmlEncode($this->bahanaktif->CurrentValue);
+            $this->bahanaktif->PlaceHolder = RemoveHtml($this->bahanaktif->caption());
+
+            // volumewadah
+            $this->volumewadah->EditAttrs["class"] = "form-control";
+            $this->volumewadah->EditCustomAttributes = "";
+            if (!$this->volumewadah->Raw) {
+                $this->volumewadah->CurrentValue = HtmlDecode($this->volumewadah->CurrentValue);
+            }
+            $this->volumewadah->EditValue = HtmlEncode($this->volumewadah->CurrentValue);
+            $this->volumewadah->PlaceHolder = RemoveHtml($this->volumewadah->caption());
 
             // bahanwadah
             $this->bahanwadah->EditAttrs["class"] = "form-control";
@@ -1867,14 +2147,14 @@ class NpdHargaEdit extends NpdHarga
             $this->catatanprimer->EditValue = HtmlEncode($this->catatanprimer->CurrentValue);
             $this->catatanprimer->PlaceHolder = RemoveHtml($this->catatanprimer->caption());
 
-            // packingkarton
-            $this->packingkarton->EditAttrs["class"] = "form-control";
-            $this->packingkarton->EditCustomAttributes = "";
-            if (!$this->packingkarton->Raw) {
-                $this->packingkarton->CurrentValue = HtmlDecode($this->packingkarton->CurrentValue);
+            // packingproduk
+            $this->packingproduk->EditAttrs["class"] = "form-control";
+            $this->packingproduk->EditCustomAttributes = "";
+            if (!$this->packingproduk->Raw) {
+                $this->packingproduk->CurrentValue = HtmlDecode($this->packingproduk->CurrentValue);
             }
-            $this->packingkarton->EditValue = HtmlEncode($this->packingkarton->CurrentValue);
-            $this->packingkarton->PlaceHolder = RemoveHtml($this->packingkarton->caption());
+            $this->packingproduk->EditValue = HtmlEncode($this->packingproduk->CurrentValue);
+            $this->packingproduk->PlaceHolder = RemoveHtml($this->packingproduk->caption());
 
             // keteranganpacking
             $this->keteranganpacking->EditAttrs["class"] = "form-control";
@@ -1897,27 +2177,48 @@ class NpdHargaEdit extends NpdHarga
             $this->keteranganbelt->EditValue = HtmlEncode($this->keteranganbelt->CurrentValue);
             $this->keteranganbelt->PlaceHolder = RemoveHtml($this->keteranganbelt->caption());
 
+            // kartonluar
+            $this->kartonluar->EditAttrs["class"] = "form-control";
+            $this->kartonluar->EditCustomAttributes = "";
+            if (!$this->kartonluar->Raw) {
+                $this->kartonluar->CurrentValue = HtmlDecode($this->kartonluar->CurrentValue);
+            }
+            $this->kartonluar->EditValue = HtmlEncode($this->kartonluar->CurrentValue);
+            $this->kartonluar->PlaceHolder = RemoveHtml($this->kartonluar->caption());
+
             // bariskarton
             $this->bariskarton->EditAttrs["class"] = "form-control";
             $this->bariskarton->EditCustomAttributes = "";
+            if (!$this->bariskarton->Raw) {
+                $this->bariskarton->CurrentValue = HtmlDecode($this->bariskarton->CurrentValue);
+            }
             $this->bariskarton->EditValue = HtmlEncode($this->bariskarton->CurrentValue);
             $this->bariskarton->PlaceHolder = RemoveHtml($this->bariskarton->caption());
 
             // kolomkarton
             $this->kolomkarton->EditAttrs["class"] = "form-control";
             $this->kolomkarton->EditCustomAttributes = "";
+            if (!$this->kolomkarton->Raw) {
+                $this->kolomkarton->CurrentValue = HtmlDecode($this->kolomkarton->CurrentValue);
+            }
             $this->kolomkarton->EditValue = HtmlEncode($this->kolomkarton->CurrentValue);
             $this->kolomkarton->PlaceHolder = RemoveHtml($this->kolomkarton->caption());
 
             // stackkarton
             $this->stackkarton->EditAttrs["class"] = "form-control";
             $this->stackkarton->EditCustomAttributes = "";
+            if (!$this->stackkarton->Raw) {
+                $this->stackkarton->CurrentValue = HtmlDecode($this->stackkarton->CurrentValue);
+            }
             $this->stackkarton->EditValue = HtmlEncode($this->stackkarton->CurrentValue);
             $this->stackkarton->PlaceHolder = RemoveHtml($this->stackkarton->caption());
 
             // isikarton
             $this->isikarton->EditAttrs["class"] = "form-control";
             $this->isikarton->EditCustomAttributes = "";
+            if (!$this->isikarton->Raw) {
+                $this->isikarton->CurrentValue = HtmlDecode($this->isikarton->CurrentValue);
+            }
             $this->isikarton->EditValue = HtmlEncode($this->isikarton->CurrentValue);
             $this->isikarton->PlaceHolder = RemoveHtml($this->isikarton->caption());
 
@@ -1954,6 +2255,15 @@ class NpdHargaEdit extends NpdHarga
             $this->jumlahwarnalabel->EditValue = HtmlEncode($this->jumlahwarnalabel->CurrentValue);
             $this->jumlahwarnalabel->PlaceHolder = RemoveHtml($this->jumlahwarnalabel->caption());
 
+            // metaliklabel
+            $this->metaliklabel->EditAttrs["class"] = "form-control";
+            $this->metaliklabel->EditCustomAttributes = "";
+            if (!$this->metaliklabel->Raw) {
+                $this->metaliklabel->CurrentValue = HtmlDecode($this->metaliklabel->CurrentValue);
+            }
+            $this->metaliklabel->EditValue = HtmlEncode($this->metaliklabel->CurrentValue);
+            $this->metaliklabel->PlaceHolder = RemoveHtml($this->metaliklabel->caption());
+
             // etiketlabel
             $this->etiketlabel->EditAttrs["class"] = "form-control";
             $this->etiketlabel->EditCustomAttributes = "";
@@ -1963,11 +2273,11 @@ class NpdHargaEdit extends NpdHarga
             $this->etiketlabel->EditValue = HtmlEncode($this->etiketlabel->CurrentValue);
             $this->etiketlabel->PlaceHolder = RemoveHtml($this->etiketlabel->caption());
 
-            // keteranganetiket
-            $this->keteranganetiket->EditAttrs["class"] = "form-control";
-            $this->keteranganetiket->EditCustomAttributes = "";
-            $this->keteranganetiket->EditValue = HtmlEncode($this->keteranganetiket->CurrentValue);
-            $this->keteranganetiket->PlaceHolder = RemoveHtml($this->keteranganetiket->caption());
+            // keteranganlabel
+            $this->keteranganlabel->EditAttrs["class"] = "form-control";
+            $this->keteranganlabel->EditCustomAttributes = "";
+            $this->keteranganlabel->EditValue = HtmlEncode($this->keteranganlabel->CurrentValue);
+            $this->keteranganlabel->PlaceHolder = RemoveHtml($this->keteranganlabel->caption());
 
             // kategoridelivery
             $this->kategoridelivery->EditAttrs["class"] = "form-control";
@@ -1999,11 +2309,17 @@ class NpdHargaEdit extends NpdHarga
             $this->orderkontrak->EditValue = HtmlEncode($this->orderkontrak->CurrentValue);
             $this->orderkontrak->PlaceHolder = RemoveHtml($this->orderkontrak->caption());
 
-            // hargapcs
-            $this->hargapcs->EditAttrs["class"] = "form-control";
-            $this->hargapcs->EditCustomAttributes = "";
-            $this->hargapcs->EditValue = HtmlEncode($this->hargapcs->CurrentValue);
-            $this->hargapcs->PlaceHolder = RemoveHtml($this->hargapcs->caption());
+            // hargaperpcs
+            $this->hargaperpcs->EditAttrs["class"] = "form-control";
+            $this->hargaperpcs->EditCustomAttributes = "";
+            $this->hargaperpcs->EditValue = HtmlEncode($this->hargaperpcs->CurrentValue);
+            $this->hargaperpcs->PlaceHolder = RemoveHtml($this->hargaperpcs->caption());
+
+            // hargaperkarton
+            $this->hargaperkarton->EditAttrs["class"] = "form-control";
+            $this->hargaperkarton->EditCustomAttributes = "";
+            $this->hargaperkarton->EditValue = HtmlEncode($this->hargaperkarton->CurrentValue);
+            $this->hargaperkarton->PlaceHolder = RemoveHtml($this->hargaperkarton->caption());
 
             // lampiran
             $this->lampiran->EditAttrs["class"] = "form-control";
@@ -2020,10 +2336,34 @@ class NpdHargaEdit extends NpdHarga
                 RenderUploadField($this->lampiran);
             }
 
+            // prepared_by
+            $this->prepared_by->EditAttrs["class"] = "form-control";
+            $this->prepared_by->EditCustomAttributes = "";
+            $this->prepared_by->EditValue = HtmlEncode($this->prepared_by->CurrentValue);
+            $this->prepared_by->PlaceHolder = RemoveHtml($this->prepared_by->caption());
+
+            // checked_by
+            $this->checked_by->EditAttrs["class"] = "form-control";
+            $this->checked_by->EditCustomAttributes = "";
+            $this->checked_by->EditValue = HtmlEncode($this->checked_by->CurrentValue);
+            $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
+
+            // approved_by
+            $this->approved_by->EditAttrs["class"] = "form-control";
+            $this->approved_by->EditCustomAttributes = "";
+            $this->approved_by->EditValue = HtmlEncode($this->approved_by->CurrentValue);
+            $this->approved_by->PlaceHolder = RemoveHtml($this->approved_by->caption());
+
             // disetujui
             $this->disetujui->EditCustomAttributes = "";
             $this->disetujui->EditValue = $this->disetujui->options(false);
             $this->disetujui->PlaceHolder = RemoveHtml($this->disetujui->caption());
+
+            // updated_at
+            $this->updated_at->EditAttrs["class"] = "form-control";
+            $this->updated_at->EditCustomAttributes = "";
+            $this->updated_at->EditValue = HtmlEncode(FormatDateTime($this->updated_at->CurrentValue, 8));
+            $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
             // Edit refer script
 
@@ -2031,21 +2371,33 @@ class NpdHargaEdit extends NpdHarga
             $this->tglpengajuan->LinkCustomAttributes = "";
             $this->tglpengajuan->HrefValue = "";
 
+            // nama
+            $this->nama->LinkCustomAttributes = "";
+            $this->nama->HrefValue = "";
+
             // bentuk
             $this->bentuk->LinkCustomAttributes = "";
             $this->bentuk->HrefValue = "";
 
-            // viskositasbarang
-            $this->viskositasbarang->LinkCustomAttributes = "";
-            $this->viskositasbarang->HrefValue = "";
+            // viskositas
+            $this->viskositas->LinkCustomAttributes = "";
+            $this->viskositas->HrefValue = "";
 
-            // idaplikasibarang
-            $this->idaplikasibarang->LinkCustomAttributes = "";
-            $this->idaplikasibarang->HrefValue = "";
+            // aplikasisediaan
+            $this->aplikasisediaan->LinkCustomAttributes = "";
+            $this->aplikasisediaan->HrefValue = "";
 
-            // ukuranwadah
-            $this->ukuranwadah->LinkCustomAttributes = "";
-            $this->ukuranwadah->HrefValue = "";
+            // volume
+            $this->volume->LinkCustomAttributes = "";
+            $this->volume->HrefValue = "";
+
+            // bahanaktif
+            $this->bahanaktif->LinkCustomAttributes = "";
+            $this->bahanaktif->HrefValue = "";
+
+            // volumewadah
+            $this->volumewadah->LinkCustomAttributes = "";
+            $this->volumewadah->HrefValue = "";
 
             // bahanwadah
             $this->bahanwadah->LinkCustomAttributes = "";
@@ -2083,9 +2435,9 @@ class NpdHargaEdit extends NpdHarga
             $this->catatanprimer->LinkCustomAttributes = "";
             $this->catatanprimer->HrefValue = "";
 
-            // packingkarton
-            $this->packingkarton->LinkCustomAttributes = "";
-            $this->packingkarton->HrefValue = "";
+            // packingproduk
+            $this->packingproduk->LinkCustomAttributes = "";
+            $this->packingproduk->HrefValue = "";
 
             // keteranganpacking
             $this->keteranganpacking->LinkCustomAttributes = "";
@@ -2098,6 +2450,10 @@ class NpdHargaEdit extends NpdHarga
             // keteranganbelt
             $this->keteranganbelt->LinkCustomAttributes = "";
             $this->keteranganbelt->HrefValue = "";
+
+            // kartonluar
+            $this->kartonluar->LinkCustomAttributes = "";
+            $this->kartonluar->HrefValue = "";
 
             // bariskarton
             $this->bariskarton->LinkCustomAttributes = "";
@@ -2131,13 +2487,17 @@ class NpdHargaEdit extends NpdHarga
             $this->jumlahwarnalabel->LinkCustomAttributes = "";
             $this->jumlahwarnalabel->HrefValue = "";
 
+            // metaliklabel
+            $this->metaliklabel->LinkCustomAttributes = "";
+            $this->metaliklabel->HrefValue = "";
+
             // etiketlabel
             $this->etiketlabel->LinkCustomAttributes = "";
             $this->etiketlabel->HrefValue = "";
 
-            // keteranganetiket
-            $this->keteranganetiket->LinkCustomAttributes = "";
-            $this->keteranganetiket->HrefValue = "";
+            // keteranganlabel
+            $this->keteranganlabel->LinkCustomAttributes = "";
+            $this->keteranganlabel->HrefValue = "";
 
             // kategoridelivery
             $this->kategoridelivery->LinkCustomAttributes = "";
@@ -2155,18 +2515,38 @@ class NpdHargaEdit extends NpdHarga
             $this->orderkontrak->LinkCustomAttributes = "";
             $this->orderkontrak->HrefValue = "";
 
-            // hargapcs
-            $this->hargapcs->LinkCustomAttributes = "";
-            $this->hargapcs->HrefValue = "";
+            // hargaperpcs
+            $this->hargaperpcs->LinkCustomAttributes = "";
+            $this->hargaperpcs->HrefValue = "";
+
+            // hargaperkarton
+            $this->hargaperkarton->LinkCustomAttributes = "";
+            $this->hargaperkarton->HrefValue = "";
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
             $this->lampiran->HrefValue = "";
             $this->lampiran->ExportHrefValue = $this->lampiran->UploadPath . $this->lampiran->Upload->DbValue;
 
+            // prepared_by
+            $this->prepared_by->LinkCustomAttributes = "";
+            $this->prepared_by->HrefValue = "";
+
+            // checked_by
+            $this->checked_by->LinkCustomAttributes = "";
+            $this->checked_by->HrefValue = "";
+
+            // approved_by
+            $this->approved_by->LinkCustomAttributes = "";
+            $this->approved_by->HrefValue = "";
+
             // disetujui
             $this->disetujui->LinkCustomAttributes = "";
             $this->disetujui->HrefValue = "";
+
+            // updated_at
+            $this->updated_at->LinkCustomAttributes = "";
+            $this->updated_at->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2175,6 +2555,11 @@ class NpdHargaEdit extends NpdHarga
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
         }
     }
 
@@ -2195,27 +2580,42 @@ class NpdHargaEdit extends NpdHarga
         if (!CheckDate($this->tglpengajuan->FormValue)) {
             $this->tglpengajuan->addErrorMessage($this->tglpengajuan->getErrorMessage(false));
         }
+        if ($this->nama->Required) {
+            if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
+                $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
+            }
+        }
         if ($this->bentuk->Required) {
             if (!$this->bentuk->IsDetailKey && EmptyValue($this->bentuk->FormValue)) {
                 $this->bentuk->addErrorMessage(str_replace("%s", $this->bentuk->caption(), $this->bentuk->RequiredErrorMessage));
             }
         }
-        if ($this->viskositasbarang->Required) {
-            if (!$this->viskositasbarang->IsDetailKey && EmptyValue($this->viskositasbarang->FormValue)) {
-                $this->viskositasbarang->addErrorMessage(str_replace("%s", $this->viskositasbarang->caption(), $this->viskositasbarang->RequiredErrorMessage));
+        if ($this->viskositas->Required) {
+            if (!$this->viskositas->IsDetailKey && EmptyValue($this->viskositas->FormValue)) {
+                $this->viskositas->addErrorMessage(str_replace("%s", $this->viskositas->caption(), $this->viskositas->RequiredErrorMessage));
             }
         }
-        if ($this->idaplikasibarang->Required) {
-            if (!$this->idaplikasibarang->IsDetailKey && EmptyValue($this->idaplikasibarang->FormValue)) {
-                $this->idaplikasibarang->addErrorMessage(str_replace("%s", $this->idaplikasibarang->caption(), $this->idaplikasibarang->RequiredErrorMessage));
+        if ($this->aplikasisediaan->Required) {
+            if (!$this->aplikasisediaan->IsDetailKey && EmptyValue($this->aplikasisediaan->FormValue)) {
+                $this->aplikasisediaan->addErrorMessage(str_replace("%s", $this->aplikasisediaan->caption(), $this->aplikasisediaan->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idaplikasibarang->FormValue)) {
-            $this->idaplikasibarang->addErrorMessage($this->idaplikasibarang->getErrorMessage(false));
+        if (!CheckInteger($this->aplikasisediaan->FormValue)) {
+            $this->aplikasisediaan->addErrorMessage($this->aplikasisediaan->getErrorMessage(false));
         }
-        if ($this->ukuranwadah->Required) {
-            if (!$this->ukuranwadah->IsDetailKey && EmptyValue($this->ukuranwadah->FormValue)) {
-                $this->ukuranwadah->addErrorMessage(str_replace("%s", $this->ukuranwadah->caption(), $this->ukuranwadah->RequiredErrorMessage));
+        if ($this->volume->Required) {
+            if (!$this->volume->IsDetailKey && EmptyValue($this->volume->FormValue)) {
+                $this->volume->addErrorMessage(str_replace("%s", $this->volume->caption(), $this->volume->RequiredErrorMessage));
+            }
+        }
+        if ($this->bahanaktif->Required) {
+            if (!$this->bahanaktif->IsDetailKey && EmptyValue($this->bahanaktif->FormValue)) {
+                $this->bahanaktif->addErrorMessage(str_replace("%s", $this->bahanaktif->caption(), $this->bahanaktif->RequiredErrorMessage));
+            }
+        }
+        if ($this->volumewadah->Required) {
+            if (!$this->volumewadah->IsDetailKey && EmptyValue($this->volumewadah->FormValue)) {
+                $this->volumewadah->addErrorMessage(str_replace("%s", $this->volumewadah->caption(), $this->volumewadah->RequiredErrorMessage));
             }
         }
         if ($this->bahanwadah->Required) {
@@ -2263,9 +2663,9 @@ class NpdHargaEdit extends NpdHarga
                 $this->catatanprimer->addErrorMessage(str_replace("%s", $this->catatanprimer->caption(), $this->catatanprimer->RequiredErrorMessage));
             }
         }
-        if ($this->packingkarton->Required) {
-            if (!$this->packingkarton->IsDetailKey && EmptyValue($this->packingkarton->FormValue)) {
-                $this->packingkarton->addErrorMessage(str_replace("%s", $this->packingkarton->caption(), $this->packingkarton->RequiredErrorMessage));
+        if ($this->packingproduk->Required) {
+            if (!$this->packingproduk->IsDetailKey && EmptyValue($this->packingproduk->FormValue)) {
+                $this->packingproduk->addErrorMessage(str_replace("%s", $this->packingproduk->caption(), $this->packingproduk->RequiredErrorMessage));
             }
         }
         if ($this->keteranganpacking->Required) {
@@ -2283,37 +2683,30 @@ class NpdHargaEdit extends NpdHarga
                 $this->keteranganbelt->addErrorMessage(str_replace("%s", $this->keteranganbelt->caption(), $this->keteranganbelt->RequiredErrorMessage));
             }
         }
+        if ($this->kartonluar->Required) {
+            if (!$this->kartonluar->IsDetailKey && EmptyValue($this->kartonluar->FormValue)) {
+                $this->kartonluar->addErrorMessage(str_replace("%s", $this->kartonluar->caption(), $this->kartonluar->RequiredErrorMessage));
+            }
+        }
         if ($this->bariskarton->Required) {
             if (!$this->bariskarton->IsDetailKey && EmptyValue($this->bariskarton->FormValue)) {
                 $this->bariskarton->addErrorMessage(str_replace("%s", $this->bariskarton->caption(), $this->bariskarton->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->bariskarton->FormValue)) {
-            $this->bariskarton->addErrorMessage($this->bariskarton->getErrorMessage(false));
         }
         if ($this->kolomkarton->Required) {
             if (!$this->kolomkarton->IsDetailKey && EmptyValue($this->kolomkarton->FormValue)) {
                 $this->kolomkarton->addErrorMessage(str_replace("%s", $this->kolomkarton->caption(), $this->kolomkarton->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->kolomkarton->FormValue)) {
-            $this->kolomkarton->addErrorMessage($this->kolomkarton->getErrorMessage(false));
-        }
         if ($this->stackkarton->Required) {
             if (!$this->stackkarton->IsDetailKey && EmptyValue($this->stackkarton->FormValue)) {
                 $this->stackkarton->addErrorMessage(str_replace("%s", $this->stackkarton->caption(), $this->stackkarton->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->stackkarton->FormValue)) {
-            $this->stackkarton->addErrorMessage($this->stackkarton->getErrorMessage(false));
-        }
         if ($this->isikarton->Required) {
             if (!$this->isikarton->IsDetailKey && EmptyValue($this->isikarton->FormValue)) {
                 $this->isikarton->addErrorMessage(str_replace("%s", $this->isikarton->caption(), $this->isikarton->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->isikarton->FormValue)) {
-            $this->isikarton->addErrorMessage($this->isikarton->getErrorMessage(false));
         }
         if ($this->jenislabel->Required) {
             if (!$this->jenislabel->IsDetailKey && EmptyValue($this->jenislabel->FormValue)) {
@@ -2335,14 +2728,19 @@ class NpdHargaEdit extends NpdHarga
                 $this->jumlahwarnalabel->addErrorMessage(str_replace("%s", $this->jumlahwarnalabel->caption(), $this->jumlahwarnalabel->RequiredErrorMessage));
             }
         }
+        if ($this->metaliklabel->Required) {
+            if (!$this->metaliklabel->IsDetailKey && EmptyValue($this->metaliklabel->FormValue)) {
+                $this->metaliklabel->addErrorMessage(str_replace("%s", $this->metaliklabel->caption(), $this->metaliklabel->RequiredErrorMessage));
+            }
+        }
         if ($this->etiketlabel->Required) {
             if (!$this->etiketlabel->IsDetailKey && EmptyValue($this->etiketlabel->FormValue)) {
                 $this->etiketlabel->addErrorMessage(str_replace("%s", $this->etiketlabel->caption(), $this->etiketlabel->RequiredErrorMessage));
             }
         }
-        if ($this->keteranganetiket->Required) {
-            if (!$this->keteranganetiket->IsDetailKey && EmptyValue($this->keteranganetiket->FormValue)) {
-                $this->keteranganetiket->addErrorMessage(str_replace("%s", $this->keteranganetiket->caption(), $this->keteranganetiket->RequiredErrorMessage));
+        if ($this->keteranganlabel->Required) {
+            if (!$this->keteranganlabel->IsDetailKey && EmptyValue($this->keteranganlabel->FormValue)) {
+                $this->keteranganlabel->addErrorMessage(str_replace("%s", $this->keteranganlabel->caption(), $this->keteranganlabel->RequiredErrorMessage));
             }
         }
         if ($this->kategoridelivery->Required) {
@@ -2371,23 +2769,63 @@ class NpdHargaEdit extends NpdHarga
         if (!CheckInteger($this->orderkontrak->FormValue)) {
             $this->orderkontrak->addErrorMessage($this->orderkontrak->getErrorMessage(false));
         }
-        if ($this->hargapcs->Required) {
-            if (!$this->hargapcs->IsDetailKey && EmptyValue($this->hargapcs->FormValue)) {
-                $this->hargapcs->addErrorMessage(str_replace("%s", $this->hargapcs->caption(), $this->hargapcs->RequiredErrorMessage));
+        if ($this->hargaperpcs->Required) {
+            if (!$this->hargaperpcs->IsDetailKey && EmptyValue($this->hargaperpcs->FormValue)) {
+                $this->hargaperpcs->addErrorMessage(str_replace("%s", $this->hargaperpcs->caption(), $this->hargaperpcs->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->hargapcs->FormValue)) {
-            $this->hargapcs->addErrorMessage($this->hargapcs->getErrorMessage(false));
+        if (!CheckInteger($this->hargaperpcs->FormValue)) {
+            $this->hargaperpcs->addErrorMessage($this->hargaperpcs->getErrorMessage(false));
+        }
+        if ($this->hargaperkarton->Required) {
+            if (!$this->hargaperkarton->IsDetailKey && EmptyValue($this->hargaperkarton->FormValue)) {
+                $this->hargaperkarton->addErrorMessage(str_replace("%s", $this->hargaperkarton->caption(), $this->hargaperkarton->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->hargaperkarton->FormValue)) {
+            $this->hargaperkarton->addErrorMessage($this->hargaperkarton->getErrorMessage(false));
         }
         if ($this->lampiran->Required) {
             if ($this->lampiran->Upload->FileName == "" && !$this->lampiran->Upload->KeepFile) {
                 $this->lampiran->addErrorMessage(str_replace("%s", $this->lampiran->caption(), $this->lampiran->RequiredErrorMessage));
             }
         }
+        if ($this->prepared_by->Required) {
+            if (!$this->prepared_by->IsDetailKey && EmptyValue($this->prepared_by->FormValue)) {
+                $this->prepared_by->addErrorMessage(str_replace("%s", $this->prepared_by->caption(), $this->prepared_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->prepared_by->FormValue)) {
+            $this->prepared_by->addErrorMessage($this->prepared_by->getErrorMessage(false));
+        }
+        if ($this->checked_by->Required) {
+            if (!$this->checked_by->IsDetailKey && EmptyValue($this->checked_by->FormValue)) {
+                $this->checked_by->addErrorMessage(str_replace("%s", $this->checked_by->caption(), $this->checked_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->checked_by->FormValue)) {
+            $this->checked_by->addErrorMessage($this->checked_by->getErrorMessage(false));
+        }
+        if ($this->approved_by->Required) {
+            if (!$this->approved_by->IsDetailKey && EmptyValue($this->approved_by->FormValue)) {
+                $this->approved_by->addErrorMessage(str_replace("%s", $this->approved_by->caption(), $this->approved_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->approved_by->FormValue)) {
+            $this->approved_by->addErrorMessage($this->approved_by->getErrorMessage(false));
+        }
         if ($this->disetujui->Required) {
             if ($this->disetujui->FormValue == "") {
                 $this->disetujui->addErrorMessage(str_replace("%s", $this->disetujui->caption(), $this->disetujui->RequiredErrorMessage));
             }
+        }
+        if ($this->updated_at->Required) {
+            if (!$this->updated_at->IsDetailKey && EmptyValue($this->updated_at->FormValue)) {
+                $this->updated_at->addErrorMessage(str_replace("%s", $this->updated_at->caption(), $this->updated_at->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->updated_at->FormValue)) {
+            $this->updated_at->addErrorMessage($this->updated_at->getErrorMessage(false));
         }
 
         // Return validate result
@@ -2424,17 +2862,26 @@ class NpdHargaEdit extends NpdHarga
             // tglpengajuan
             $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), CurrentDate(), $this->tglpengajuan->ReadOnly);
 
+            // nama
+            $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);
+
             // bentuk
             $this->bentuk->setDbValueDef($rsnew, $this->bentuk->CurrentValue, "", $this->bentuk->ReadOnly);
 
-            // viskositasbarang
-            $this->viskositasbarang->setDbValueDef($rsnew, $this->viskositasbarang->CurrentValue, "", $this->viskositasbarang->ReadOnly);
+            // viskositas
+            $this->viskositas->setDbValueDef($rsnew, $this->viskositas->CurrentValue, "", $this->viskositas->ReadOnly);
 
-            // idaplikasibarang
-            $this->idaplikasibarang->setDbValueDef($rsnew, $this->idaplikasibarang->CurrentValue, 0, $this->idaplikasibarang->ReadOnly);
+            // aplikasisediaan
+            $this->aplikasisediaan->setDbValueDef($rsnew, $this->aplikasisediaan->CurrentValue, 0, $this->aplikasisediaan->ReadOnly);
 
-            // ukuranwadah
-            $this->ukuranwadah->setDbValueDef($rsnew, $this->ukuranwadah->CurrentValue, "", $this->ukuranwadah->ReadOnly);
+            // volume
+            $this->volume->setDbValueDef($rsnew, $this->volume->CurrentValue, "", $this->volume->ReadOnly);
+
+            // bahanaktif
+            $this->bahanaktif->setDbValueDef($rsnew, $this->bahanaktif->CurrentValue, "", $this->bahanaktif->ReadOnly);
+
+            // volumewadah
+            $this->volumewadah->setDbValueDef($rsnew, $this->volumewadah->CurrentValue, "", $this->volumewadah->ReadOnly);
 
             // bahanwadah
             $this->bahanwadah->setDbValueDef($rsnew, $this->bahanwadah->CurrentValue, "", $this->bahanwadah->ReadOnly);
@@ -2463,8 +2910,8 @@ class NpdHargaEdit extends NpdHarga
             // catatanprimer
             $this->catatanprimer->setDbValueDef($rsnew, $this->catatanprimer->CurrentValue, null, $this->catatanprimer->ReadOnly);
 
-            // packingkarton
-            $this->packingkarton->setDbValueDef($rsnew, $this->packingkarton->CurrentValue, "", $this->packingkarton->ReadOnly);
+            // packingproduk
+            $this->packingproduk->setDbValueDef($rsnew, $this->packingproduk->CurrentValue, "", $this->packingproduk->ReadOnly);
 
             // keteranganpacking
             $this->keteranganpacking->setDbValueDef($rsnew, $this->keteranganpacking->CurrentValue, null, $this->keteranganpacking->ReadOnly);
@@ -2474,6 +2921,9 @@ class NpdHargaEdit extends NpdHarga
 
             // keteranganbelt
             $this->keteranganbelt->setDbValueDef($rsnew, $this->keteranganbelt->CurrentValue, null, $this->keteranganbelt->ReadOnly);
+
+            // kartonluar
+            $this->kartonluar->setDbValueDef($rsnew, $this->kartonluar->CurrentValue, "", $this->kartonluar->ReadOnly);
 
             // bariskarton
             $this->bariskarton->setDbValueDef($rsnew, $this->bariskarton->CurrentValue, null, $this->bariskarton->ReadOnly);
@@ -2499,11 +2949,14 @@ class NpdHargaEdit extends NpdHarga
             // jumlahwarnalabel
             $this->jumlahwarnalabel->setDbValueDef($rsnew, $this->jumlahwarnalabel->CurrentValue, "", $this->jumlahwarnalabel->ReadOnly);
 
+            // metaliklabel
+            $this->metaliklabel->setDbValueDef($rsnew, $this->metaliklabel->CurrentValue, "", $this->metaliklabel->ReadOnly);
+
             // etiketlabel
             $this->etiketlabel->setDbValueDef($rsnew, $this->etiketlabel->CurrentValue, "", $this->etiketlabel->ReadOnly);
 
-            // keteranganetiket
-            $this->keteranganetiket->setDbValueDef($rsnew, $this->keteranganetiket->CurrentValue, null, $this->keteranganetiket->ReadOnly);
+            // keteranganlabel
+            $this->keteranganlabel->setDbValueDef($rsnew, $this->keteranganlabel->CurrentValue, null, $this->keteranganlabel->ReadOnly);
 
             // kategoridelivery
             $this->kategoridelivery->setDbValueDef($rsnew, $this->kategoridelivery->CurrentValue, null, $this->kategoridelivery->ReadOnly);
@@ -2517,8 +2970,11 @@ class NpdHargaEdit extends NpdHarga
             // orderkontrak
             $this->orderkontrak->setDbValueDef($rsnew, $this->orderkontrak->CurrentValue, null, $this->orderkontrak->ReadOnly);
 
-            // hargapcs
-            $this->hargapcs->setDbValueDef($rsnew, $this->hargapcs->CurrentValue, 0, $this->hargapcs->ReadOnly);
+            // hargaperpcs
+            $this->hargaperpcs->setDbValueDef($rsnew, $this->hargaperpcs->CurrentValue, 0, $this->hargaperpcs->ReadOnly);
+
+            // hargaperkarton
+            $this->hargaperkarton->setDbValueDef($rsnew, $this->hargaperkarton->CurrentValue, 0, $this->hargaperkarton->ReadOnly);
 
             // lampiran
             if ($this->lampiran->Visible && !$this->lampiran->ReadOnly && !$this->lampiran->Upload->KeepFile) {
@@ -2530,8 +2986,20 @@ class NpdHargaEdit extends NpdHarga
                 }
             }
 
+            // prepared_by
+            $this->prepared_by->setDbValueDef($rsnew, $this->prepared_by->CurrentValue, 0, $this->prepared_by->ReadOnly);
+
+            // checked_by
+            $this->checked_by->setDbValueDef($rsnew, $this->checked_by->CurrentValue, 0, $this->checked_by->ReadOnly);
+
+            // approved_by
+            $this->approved_by->setDbValueDef($rsnew, $this->approved_by->CurrentValue, 0, $this->approved_by->ReadOnly);
+
             // disetujui
             $this->disetujui->setDbValueDef($rsnew, $this->disetujui->CurrentValue, 0, $this->disetujui->ReadOnly);
+
+            // updated_at
+            $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), $this->updated_at->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
@@ -2668,16 +3136,6 @@ class NpdHargaEdit extends NpdHarga
             WriteJson(["success" => true, $this->TableVar => $row]);
         }
         return $editRow;
-    }
-
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
     }
 
     // Set up master/detail based on QueryString

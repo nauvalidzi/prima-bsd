@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/3/10" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/3/12" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1819,14 +1819,11 @@
       <field id="parfum">
         <phrase id="fldcaption" value="Parfum" />
       </field>
-      <field id="aroma">
-        <phrase id="fldcaption" value="Aroma" />
-      </field>
       <field id="aplikasi">
         <phrase id="fldcaption" value="Aplikasi" />
       </field>
       <field id="estetika">
-        <phrase id="fldcaption" value="Aksesoris" />
+        <phrase id="fldcaption" value="Estetika" />
       </field>
       <field id="tambahan">
         <phrase id="fldcaption" value="Tambahan Lain-lain" />
@@ -2353,25 +2350,34 @@
         <phrase id="fldcaption" value="ID" />
       </field>
       <field id="idnpd">
-        <phrase id="fldcaption" value="Kode Pengajuan" />
+        <phrase id="fldcaption" value="Kode Order" />
       </field>
       <field id="tglpengajuan">
-        <phrase id="fldcaption" value="Tanggal Pengajuan" />
+        <phrase id="fldcaption" value="Tgl. Pengajuan" />
       </field>
       <field id="idnpd_sample">
         <phrase id="fldcaption" value="Kode Sample" />
       </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama Produk" />
+      </field>
       <field id="bentuk">
-        <phrase id="fldcaption" value="Bentuk Sediaan" />
+        <phrase id="fldcaption" value="Bentuk" />
       </field>
-      <field id="viskositasbarang">
-        <phrase id="fldcaption" value="Viskositas Barang" />
+      <field id="viskositas">
+        <phrase id="fldcaption" value="Viskositas" />
       </field>
-      <field id="idaplikasibarang">
-        <phrase id="fldcaption" value="Aplikasi" />
+      <field id="aplikasisediaan">
+        <phrase id="fldcaption" value="Aplikasi Sediaan" />
       </field>
-      <field id="ukuranwadah">
-        <phrase id="fldcaption" value="Ukuran" />
+      <field id="volume">
+        <phrase id="fldcaption" value="Volume" />
+      </field>
+      <field id="bahanaktif">
+        <phrase id="fldcaption" value="Bahan Aktif" />
+      </field>
+      <field id="volumewadah">
+        <phrase id="fldcaption" value="Volume" />
       </field>
       <field id="bahanwadah">
         <phrase id="fldcaption" value="Bahan" />
@@ -2404,17 +2410,20 @@
       <field id="catatanprimer">
         <phrase id="fldcaption" value="Catatan" />
       </field>
-      <field id="packingkarton">
-        <phrase id="fldcaption" value="Packing Product" />
+      <field id="packingproduk">
+        <phrase id="fldcaption" value="Packing Produk" />
       </field>
       <field id="keteranganpacking">
         <phrase id="fldcaption" value="Keterangan" />
       </field>
       <field id="beltkarton">
-        <phrase id="fldcaption" value="Belt / Shrink / Banded" />
+        <phrase id="fldcaption" value="Belt/Shrink/Banded" />
       </field>
       <field id="keteranganbelt">
         <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="kartonluar">
+        <phrase id="fldcaption" value="Karton Luar" />
       </field>
       <field id="bariskarton">
         <phrase id="fldcaption" value="Baris" />
@@ -2440,10 +2449,13 @@
       <field id="jumlahwarnalabel">
         <phrase id="fldcaption" value="Jumlah Warna" />
       </field>
+      <field id="metaliklabel">
+        <phrase id="fldcaption" value="Metalik" />
+      </field>
       <field id="etiketlabel">
         <phrase id="fldcaption" value="Etiket" />
       </field>
-      <field id="keteranganetiket">
+      <field id="keteranganlabel">
         <phrase id="fldcaption" value="Keterangan" />
       </field>
       <field id="kategoridelivery">
@@ -2458,11 +2470,26 @@
       <field id="orderkontrak">
         <phrase id="fldcaption" value="Plan Order Kontrak" />
       </field>
-      <field id="hargapcs">
+      <field id="hargaperpcs">
         <phrase id="fldcaption" value="Harga" />
+      </field>
+      <field id="hargaperkarton">
+        <phrase id="fldcaption" value="Harga per Karton" />
       </field>
       <field id="lampiran">
         <phrase id="fldcaption" value="Lampiran" />
+      </field>
+      <field id="prepared_by">
+        <phrase id="fldcaption" value="Disiapkan oleh" />
+      </field>
+      <field id="checked_by">
+        <phrase id="fldcaption" value="Diketahui oleh" />
+      </field>
+      <field id="approved_by">
+        <phrase id="fldcaption" value="Disetujui oleh" />
+      </field>
+      <field id="approved_date">
+        <phrase id="fldcaption" value="Approved Date" />
       </field>
       <field id="disetujui">
         <phrase id="fldcaption" value="Disetujui" />
@@ -2474,15 +2501,15 @@
       <field id="created_at">
         <phrase id="fldcaption" value="Created at" />
       </field>
-      <field id="created_by">
-        <phrase id="fldcaption" value="Created by" />
-      </field>
       <field id="readonly">
         <phrase id="fldcaption" value="Readonly" />
         <phrase id="fldtagvalue1" value="1" />
         <phrase id="fldtagcaption1" value="Yes" />
         <phrase id="fldtagvalue2" value="0" />
         <phrase id="fldtagcaption2" value="No" />
+      </field>
+      <field id="updated_at">
+        <phrase id="fldcaption" value="updated at" />
       </field>
     </table>
     <table id="ijinhaki">
