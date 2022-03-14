@@ -1333,7 +1333,7 @@ class NpdHargaGrid extends NpdHarga
         $this->id->OldValue = $this->id->CurrentValue;
         $this->idnpd->CurrentValue = null;
         $this->idnpd->OldValue = $this->idnpd->CurrentValue;
-        $this->tglpengajuan->CurrentValue = null;
+        $this->tglpengajuan->CurrentValue = CurrentDate();
         $this->tglpengajuan->OldValue = $this->tglpengajuan->CurrentValue;
         $this->idnpd_sample->CurrentValue = null;
         $this->idnpd_sample->OldValue = $this->idnpd_sample->CurrentValue;
@@ -1904,7 +1904,6 @@ class NpdHargaGrid extends NpdHarga
 
             // aplikasisediaan
             $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
-            $this->aplikasisediaan->ViewValue = FormatNumber($this->aplikasisediaan->ViewValue, 0, -2, -2, -2);
             $this->aplikasisediaan->ViewCustomAttributes = "";
 
             // volume
@@ -2517,13 +2516,13 @@ class NpdHargaGrid extends NpdHarga
             $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, $this->idnpd->ReadOnly);
 
             // tglpengajuan
-            $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), CurrentDate(), $this->tglpengajuan->ReadOnly);
+            $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), null, $this->tglpengajuan->ReadOnly);
 
             // idnpd_sample
             $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, $this->idnpd_sample->ReadOnly);
 
             // nama
-            $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);
+            $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, null, $this->nama->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
@@ -2624,16 +2623,16 @@ class NpdHargaGrid extends NpdHarga
         $rsnew = [];
 
         // idnpd
-        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, strval($this->idnpd->CurrentValue) == "");
+        $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
 
         // tglpengajuan
-        $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), CurrentDate(), false);
+        $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), null, false);
 
         // idnpd_sample
-        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, strval($this->idnpd_sample->CurrentValue) == "");
+        $this->idnpd_sample->setDbValueDef($rsnew, $this->idnpd_sample->CurrentValue, 0, false);
 
         // nama
-        $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", false);
+        $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, null, false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

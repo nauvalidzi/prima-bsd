@@ -128,6 +128,7 @@ class NpdHarga extends DbTable
         $this->idnpd = new DbField('npd_harga', 'npd_harga', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Nullable = false; // NOT NULL field
+        $this->idnpd->Required = true; // Required field
         $this->idnpd->Sortable = true; // Allow sort
         $this->idnpd->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -145,8 +146,6 @@ class NpdHarga extends DbTable
 
         // tglpengajuan
         $this->tglpengajuan = new DbField('npd_harga', 'npd_harga', 'x_tglpengajuan', 'tglpengajuan', '`tglpengajuan`', CastDateFieldForLike("`tglpengajuan`", 0, "DB"), 135, 19, 0, false, '`tglpengajuan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tglpengajuan->Nullable = false; // NOT NULL field
-        $this->tglpengajuan->Required = true; // Required field
         $this->tglpengajuan->Sortable = true; // Allow sort
         $this->tglpengajuan->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->tglpengajuan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglpengajuan->Param, "CustomMsg");
@@ -155,6 +154,7 @@ class NpdHarga extends DbTable
         // idnpd_sample
         $this->idnpd_sample = new DbField('npd_harga', 'npd_harga', 'x_idnpd_sample', 'idnpd_sample', '`idnpd_sample`', '`idnpd_sample`', 20, 20, -1, false, '`idnpd_sample`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idnpd_sample->Nullable = false; // NOT NULL field
+        $this->idnpd_sample->Required = true; // Required field
         $this->idnpd_sample->Sortable = true; // Allow sort
         $this->idnpd_sample->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idnpd_sample->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
@@ -172,120 +172,90 @@ class NpdHarga extends DbTable
 
         // nama
         $this->nama = new DbField('npd_harga', 'npd_harga', 'x_nama', 'nama', '`nama`', '`nama`', 200, 50, -1, false, '`nama`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->nama->Nullable = false; // NOT NULL field
-        $this->nama->Required = true; // Required field
         $this->nama->Sortable = true; // Allow sort
         $this->nama->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama->Param, "CustomMsg");
         $this->Fields['nama'] = &$this->nama;
 
         // bentuk
         $this->bentuk = new DbField('npd_harga', 'npd_harga', 'x_bentuk', 'bentuk', '`bentuk`', '`bentuk`', 200, 50, -1, false, '`bentuk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bentuk->Nullable = false; // NOT NULL field
-        $this->bentuk->Required = true; // Required field
         $this->bentuk->Sortable = true; // Allow sort
         $this->bentuk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bentuk->Param, "CustomMsg");
         $this->Fields['bentuk'] = &$this->bentuk;
 
         // viskositas
         $this->viskositas = new DbField('npd_harga', 'npd_harga', 'x_viskositas', 'viskositas', '`viskositas`', '`viskositas`', 200, 50, -1, false, '`viskositas`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->viskositas->Nullable = false; // NOT NULL field
-        $this->viskositas->Required = true; // Required field
         $this->viskositas->Sortable = true; // Allow sort
         $this->viskositas->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->viskositas->Param, "CustomMsg");
         $this->Fields['viskositas'] = &$this->viskositas;
 
         // aplikasisediaan
-        $this->aplikasisediaan = new DbField('npd_harga', 'npd_harga', 'x_aplikasisediaan', 'aplikasisediaan', '`aplikasisediaan`', '`aplikasisediaan`', 3, 11, -1, false, '`aplikasisediaan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->aplikasisediaan->Nullable = false; // NOT NULL field
-        $this->aplikasisediaan->Required = true; // Required field
+        $this->aplikasisediaan = new DbField('npd_harga', 'npd_harga', 'x_aplikasisediaan', 'aplikasisediaan', '`aplikasisediaan`', '`aplikasisediaan`', 200, 50, -1, false, '`aplikasisediaan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->aplikasisediaan->Sortable = true; // Allow sort
-        $this->aplikasisediaan->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->aplikasisediaan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aplikasisediaan->Param, "CustomMsg");
         $this->Fields['aplikasisediaan'] = &$this->aplikasisediaan;
 
         // volume
         $this->volume = new DbField('npd_harga', 'npd_harga', 'x_volume', 'volume', '`volume`', '`volume`', 200, 50, -1, false, '`volume`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->volume->Nullable = false; // NOT NULL field
-        $this->volume->Required = true; // Required field
         $this->volume->Sortable = true; // Allow sort
         $this->volume->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->volume->Param, "CustomMsg");
         $this->Fields['volume'] = &$this->volume;
 
         // bahanaktif
         $this->bahanaktif = new DbField('npd_harga', 'npd_harga', 'x_bahanaktif', 'bahanaktif', '`bahanaktif`', '`bahanaktif`', 201, 65535, -1, false, '`bahanaktif`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->bahanaktif->Nullable = false; // NOT NULL field
-        $this->bahanaktif->Required = true; // Required field
         $this->bahanaktif->Sortable = true; // Allow sort
         $this->bahanaktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bahanaktif->Param, "CustomMsg");
         $this->Fields['bahanaktif'] = &$this->bahanaktif;
 
         // volumewadah
         $this->volumewadah = new DbField('npd_harga', 'npd_harga', 'x_volumewadah', 'volumewadah', '`volumewadah`', '`volumewadah`', 200, 50, -1, false, '`volumewadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->volumewadah->Nullable = false; // NOT NULL field
-        $this->volumewadah->Required = true; // Required field
         $this->volumewadah->Sortable = true; // Allow sort
         $this->volumewadah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->volumewadah->Param, "CustomMsg");
         $this->Fields['volumewadah'] = &$this->volumewadah;
 
         // bahanwadah
         $this->bahanwadah = new DbField('npd_harga', 'npd_harga', 'x_bahanwadah', 'bahanwadah', '`bahanwadah`', '`bahanwadah`', 200, 50, -1, false, '`bahanwadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bahanwadah->Nullable = false; // NOT NULL field
-        $this->bahanwadah->Required = true; // Required field
         $this->bahanwadah->Sortable = true; // Allow sort
         $this->bahanwadah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bahanwadah->Param, "CustomMsg");
         $this->Fields['bahanwadah'] = &$this->bahanwadah;
 
         // warnawadah
         $this->warnawadah = new DbField('npd_harga', 'npd_harga', 'x_warnawadah', 'warnawadah', '`warnawadah`', '`warnawadah`', 200, 50, -1, false, '`warnawadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->warnawadah->Nullable = false; // NOT NULL field
-        $this->warnawadah->Required = true; // Required field
         $this->warnawadah->Sortable = true; // Allow sort
         $this->warnawadah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->warnawadah->Param, "CustomMsg");
         $this->Fields['warnawadah'] = &$this->warnawadah;
 
         // bentukwadah
         $this->bentukwadah = new DbField('npd_harga', 'npd_harga', 'x_bentukwadah', 'bentukwadah', '`bentukwadah`', '`bentukwadah`', 200, 50, -1, false, '`bentukwadah`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bentukwadah->Nullable = false; // NOT NULL field
-        $this->bentukwadah->Required = true; // Required field
         $this->bentukwadah->Sortable = true; // Allow sort
         $this->bentukwadah->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bentukwadah->Param, "CustomMsg");
         $this->Fields['bentukwadah'] = &$this->bentukwadah;
 
         // jenistutup
         $this->jenistutup = new DbField('npd_harga', 'npd_harga', 'x_jenistutup', 'jenistutup', '`jenistutup`', '`jenistutup`', 200, 50, -1, false, '`jenistutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jenistutup->Nullable = false; // NOT NULL field
-        $this->jenistutup->Required = true; // Required field
         $this->jenistutup->Sortable = true; // Allow sort
         $this->jenistutup->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jenistutup->Param, "CustomMsg");
         $this->Fields['jenistutup'] = &$this->jenistutup;
 
         // bahantutup
         $this->bahantutup = new DbField('npd_harga', 'npd_harga', 'x_bahantutup', 'bahantutup', '`bahantutup`', '`bahantutup`', 200, 50, -1, false, '`bahantutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bahantutup->Nullable = false; // NOT NULL field
-        $this->bahantutup->Required = true; // Required field
         $this->bahantutup->Sortable = true; // Allow sort
         $this->bahantutup->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bahantutup->Param, "CustomMsg");
         $this->Fields['bahantutup'] = &$this->bahantutup;
 
         // warnatutup
         $this->warnatutup = new DbField('npd_harga', 'npd_harga', 'x_warnatutup', 'warnatutup', '`warnatutup`', '`warnatutup`', 200, 50, -1, false, '`warnatutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->warnatutup->Nullable = false; // NOT NULL field
-        $this->warnatutup->Required = true; // Required field
         $this->warnatutup->Sortable = true; // Allow sort
         $this->warnatutup->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->warnatutup->Param, "CustomMsg");
         $this->Fields['warnatutup'] = &$this->warnatutup;
 
         // bentuktutup
         $this->bentuktutup = new DbField('npd_harga', 'npd_harga', 'x_bentuktutup', 'bentuktutup', '`bentuktutup`', '`bentuktutup`', 200, 50, -1, false, '`bentuktutup`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->bentuktutup->Nullable = false; // NOT NULL field
-        $this->bentuktutup->Required = true; // Required field
         $this->bentuktutup->Sortable = true; // Allow sort
         $this->bentuktutup->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->bentuktutup->Param, "CustomMsg");
         $this->Fields['bentuktutup'] = &$this->bentuktutup;
 
         // segel
         $this->segel = new DbField('npd_harga', 'npd_harga', 'x_segel', 'segel', '`segel`', '`segel`', 16, 1, -1, false, '`segel`', false, false, false, 'FORMATTED TEXT', 'RADIO');
-        $this->segel->Nullable = false; // NOT NULL field
         $this->segel->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -308,8 +278,6 @@ class NpdHarga extends DbTable
 
         // packingproduk
         $this->packingproduk = new DbField('npd_harga', 'npd_harga', 'x_packingproduk', 'packingproduk', '`packingproduk`', '`packingproduk`', 200, 50, -1, false, '`packingproduk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->packingproduk->Nullable = false; // NOT NULL field
-        $this->packingproduk->Required = true; // Required field
         $this->packingproduk->Sortable = true; // Allow sort
         $this->packingproduk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->packingproduk->Param, "CustomMsg");
         $this->Fields['packingproduk'] = &$this->packingproduk;
@@ -322,8 +290,6 @@ class NpdHarga extends DbTable
 
         // beltkarton
         $this->beltkarton = new DbField('npd_harga', 'npd_harga', 'x_beltkarton', 'beltkarton', '`beltkarton`', '`beltkarton`', 200, 50, -1, false, '`beltkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->beltkarton->Nullable = false; // NOT NULL field
-        $this->beltkarton->Required = true; // Required field
         $this->beltkarton->Sortable = true; // Allow sort
         $this->beltkarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->beltkarton->Param, "CustomMsg");
         $this->Fields['beltkarton'] = &$this->beltkarton;
@@ -336,8 +302,6 @@ class NpdHarga extends DbTable
 
         // kartonluar
         $this->kartonluar = new DbField('npd_harga', 'npd_harga', 'x_kartonluar', 'kartonluar', '`kartonluar`', '`kartonluar`', 200, 50, -1, false, '`kartonluar`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kartonluar->Nullable = false; // NOT NULL field
-        $this->kartonluar->Required = true; // Required field
         $this->kartonluar->Sortable = true; // Allow sort
         $this->kartonluar->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kartonluar->Param, "CustomMsg");
         $this->Fields['kartonluar'] = &$this->kartonluar;
@@ -368,8 +332,6 @@ class NpdHarga extends DbTable
 
         // jenislabel
         $this->jenislabel = new DbField('npd_harga', 'npd_harga', 'x_jenislabel', 'jenislabel', '`jenislabel`', '`jenislabel`', 200, 50, -1, false, '`jenislabel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jenislabel->Nullable = false; // NOT NULL field
-        $this->jenislabel->Required = true; // Required field
         $this->jenislabel->Sortable = true; // Allow sort
         $this->jenislabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jenislabel->Param, "CustomMsg");
         $this->Fields['jenislabel'] = &$this->jenislabel;
@@ -382,32 +344,24 @@ class NpdHarga extends DbTable
 
         // kualitaslabel
         $this->kualitaslabel = new DbField('npd_harga', 'npd_harga', 'x_kualitaslabel', 'kualitaslabel', '`kualitaslabel`', '`kualitaslabel`', 200, 50, -1, false, '`kualitaslabel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kualitaslabel->Nullable = false; // NOT NULL field
-        $this->kualitaslabel->Required = true; // Required field
         $this->kualitaslabel->Sortable = true; // Allow sort
         $this->kualitaslabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kualitaslabel->Param, "CustomMsg");
         $this->Fields['kualitaslabel'] = &$this->kualitaslabel;
 
         // jumlahwarnalabel
         $this->jumlahwarnalabel = new DbField('npd_harga', 'npd_harga', 'x_jumlahwarnalabel', 'jumlahwarnalabel', '`jumlahwarnalabel`', '`jumlahwarnalabel`', 200, 50, -1, false, '`jumlahwarnalabel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jumlahwarnalabel->Nullable = false; // NOT NULL field
-        $this->jumlahwarnalabel->Required = true; // Required field
         $this->jumlahwarnalabel->Sortable = true; // Allow sort
         $this->jumlahwarnalabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahwarnalabel->Param, "CustomMsg");
         $this->Fields['jumlahwarnalabel'] = &$this->jumlahwarnalabel;
 
         // metaliklabel
         $this->metaliklabel = new DbField('npd_harga', 'npd_harga', 'x_metaliklabel', 'metaliklabel', '`metaliklabel`', '`metaliklabel`', 200, 50, -1, false, '`metaliklabel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->metaliklabel->Nullable = false; // NOT NULL field
-        $this->metaliklabel->Required = true; // Required field
         $this->metaliklabel->Sortable = true; // Allow sort
         $this->metaliklabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->metaliklabel->Param, "CustomMsg");
         $this->Fields['metaliklabel'] = &$this->metaliklabel;
 
         // etiketlabel
         $this->etiketlabel = new DbField('npd_harga', 'npd_harga', 'x_etiketlabel', 'etiketlabel', '`etiketlabel`', '`etiketlabel`', 200, 50, -1, false, '`etiketlabel`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->etiketlabel->Nullable = false; // NOT NULL field
-        $this->etiketlabel->Required = true; // Required field
         $this->etiketlabel->Sortable = true; // Allow sort
         $this->etiketlabel->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->etiketlabel->Param, "CustomMsg");
         $this->Fields['etiketlabel'] = &$this->etiketlabel;
@@ -425,7 +379,7 @@ class NpdHarga extends DbTable
         $this->Fields['kategoridelivery'] = &$this->kategoridelivery;
 
         // alamatpengiriman
-        $this->alamatpengiriman = new DbField('npd_harga', 'npd_harga', 'x_alamatpengiriman', 'alamatpengiriman', '`alamatpengiriman`', '`alamatpengiriman`', 200, 255, -1, false, '`alamatpengiriman`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->alamatpengiriman = new DbField('npd_harga', 'npd_harga', 'x_alamatpengiriman', 'alamatpengiriman', '`alamatpengiriman`', '`alamatpengiriman`', 201, 65535, -1, false, '`alamatpengiriman`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->alamatpengiriman->Sortable = true; // Allow sort
         $this->alamatpengiriman->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->alamatpengiriman->Param, "CustomMsg");
         $this->Fields['alamatpengiriman'] = &$this->alamatpengiriman;
@@ -446,8 +400,6 @@ class NpdHarga extends DbTable
 
         // hargaperpcs
         $this->hargaperpcs = new DbField('npd_harga', 'npd_harga', 'x_hargaperpcs', 'hargaperpcs', '`hargaperpcs`', '`hargaperpcs`', 20, 20, -1, false, '`hargaperpcs`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->hargaperpcs->Nullable = false; // NOT NULL field
-        $this->hargaperpcs->Required = true; // Required field
         $this->hargaperpcs->Sortable = true; // Allow sort
         $this->hargaperpcs->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->hargaperpcs->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hargaperpcs->Param, "CustomMsg");
@@ -455,8 +407,6 @@ class NpdHarga extends DbTable
 
         // hargaperkarton
         $this->hargaperkarton = new DbField('npd_harga', 'npd_harga', 'x_hargaperkarton', 'hargaperkarton', '`hargaperkarton`', '`hargaperkarton`', 20, 20, -1, false, '`hargaperkarton`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->hargaperkarton->Nullable = false; // NOT NULL field
-        $this->hargaperkarton->Required = true; // Required field
         $this->hargaperkarton->Sortable = true; // Allow sort
         $this->hargaperkarton->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->hargaperkarton->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->hargaperkarton->Param, "CustomMsg");
@@ -470,8 +420,6 @@ class NpdHarga extends DbTable
 
         // prepared_by
         $this->prepared_by = new DbField('npd_harga', 'npd_harga', 'x_prepared_by', 'prepared_by', '`prepared_by`', '`prepared_by`', 20, 20, -1, false, '`prepared_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->prepared_by->Nullable = false; // NOT NULL field
-        $this->prepared_by->Required = true; // Required field
         $this->prepared_by->Sortable = true; // Allow sort
         $this->prepared_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->prepared_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->prepared_by->Param, "CustomMsg");
@@ -479,8 +427,6 @@ class NpdHarga extends DbTable
 
         // checked_by
         $this->checked_by = new DbField('npd_harga', 'npd_harga', 'x_checked_by', 'checked_by', '`checked_by`', '`checked_by`', 20, 20, -1, false, '`checked_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->checked_by->Nullable = false; // NOT NULL field
-        $this->checked_by->Required = true; // Required field
         $this->checked_by->Sortable = true; // Allow sort
         $this->checked_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->checked_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked_by->Param, "CustomMsg");
@@ -488,8 +434,6 @@ class NpdHarga extends DbTable
 
         // approved_by
         $this->approved_by = new DbField('npd_harga', 'npd_harga', 'x_approved_by', 'approved_by', '`approved_by`', '`approved_by`', 20, 20, -1, false, '`approved_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->approved_by->Nullable = false; // NOT NULL field
-        $this->approved_by->Required = true; // Required field
         $this->approved_by->Sortable = true; // Allow sort
         $this->approved_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->approved_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approved_by->Param, "CustomMsg");
@@ -497,8 +441,6 @@ class NpdHarga extends DbTable
 
         // approved_date
         $this->approved_date = new DbField('npd_harga', 'npd_harga', 'x_approved_date', 'approved_date', '`approved_date`', '`approved_date`', 20, 20, -1, false, '`approved_date`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->approved_date->Nullable = false; // NOT NULL field
-        $this->approved_date->Required = true; // Required field
         $this->approved_date->Sortable = true; // Allow sort
         $this->approved_date->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->approved_date->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approved_date->Param, "CustomMsg");
@@ -506,7 +448,6 @@ class NpdHarga extends DbTable
 
         // disetujui
         $this->disetujui = new DbField('npd_harga', 'npd_harga', 'x_disetujui', 'disetujui', '`disetujui`', '`disetujui`', 16, 1, -1, false, '`disetujui`', false, false, false, 'FORMATTED TEXT', 'RADIO');
-        $this->disetujui->Nullable = false; // NOT NULL field
         $this->disetujui->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -1641,7 +1582,6 @@ SORTHTML;
 
         // aplikasisediaan
         $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
-        $this->aplikasisediaan->ViewValue = FormatNumber($this->aplikasisediaan->ViewValue, 0, -2, -2, -2);
         $this->aplikasisediaan->ViewCustomAttributes = "";
 
         // volume
@@ -2192,6 +2132,9 @@ SORTHTML;
         // aplikasisediaan
         $this->aplikasisediaan->EditAttrs["class"] = "form-control";
         $this->aplikasisediaan->EditCustomAttributes = "";
+        if (!$this->aplikasisediaan->Raw) {
+            $this->aplikasisediaan->CurrentValue = HtmlDecode($this->aplikasisediaan->CurrentValue);
+        }
         $this->aplikasisediaan->EditValue = $this->aplikasisediaan->CurrentValue;
         $this->aplikasisediaan->PlaceHolder = RemoveHtml($this->aplikasisediaan->caption());
 

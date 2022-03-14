@@ -1583,7 +1583,6 @@ class NpdHargaEdit extends NpdHarga
 
             // aplikasisediaan
             $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
-            $this->aplikasisediaan->ViewValue = FormatNumber($this->aplikasisediaan->ViewValue, 0, -2, -2, -2);
             $this->aplikasisediaan->ViewCustomAttributes = "";
 
             // volume
@@ -2046,6 +2045,9 @@ class NpdHargaEdit extends NpdHarga
             // aplikasisediaan
             $this->aplikasisediaan->EditAttrs["class"] = "form-control";
             $this->aplikasisediaan->EditCustomAttributes = "";
+            if (!$this->aplikasisediaan->Raw) {
+                $this->aplikasisediaan->CurrentValue = HtmlDecode($this->aplikasisediaan->CurrentValue);
+            }
             $this->aplikasisediaan->EditValue = HtmlEncode($this->aplikasisediaan->CurrentValue);
             $this->aplikasisediaan->PlaceHolder = RemoveHtml($this->aplikasisediaan->caption());
 
@@ -2600,9 +2602,6 @@ class NpdHargaEdit extends NpdHarga
                 $this->aplikasisediaan->addErrorMessage(str_replace("%s", $this->aplikasisediaan->caption(), $this->aplikasisediaan->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->aplikasisediaan->FormValue)) {
-            $this->aplikasisediaan->addErrorMessage($this->aplikasisediaan->getErrorMessage(false));
-        }
         if ($this->volume->Required) {
             if (!$this->volume->IsDetailKey && EmptyValue($this->volume->FormValue)) {
                 $this->volume->addErrorMessage(str_replace("%s", $this->volume->caption(), $this->volume->RequiredErrorMessage));
@@ -2860,70 +2859,70 @@ class NpdHargaEdit extends NpdHarga
             $rsnew = [];
 
             // tglpengajuan
-            $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), CurrentDate(), $this->tglpengajuan->ReadOnly);
+            $this->tglpengajuan->setDbValueDef($rsnew, UnFormatDateTime($this->tglpengajuan->CurrentValue, 0), null, $this->tglpengajuan->ReadOnly);
 
             // nama
-            $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, "", $this->nama->ReadOnly);
+            $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, null, $this->nama->ReadOnly);
 
             // bentuk
-            $this->bentuk->setDbValueDef($rsnew, $this->bentuk->CurrentValue, "", $this->bentuk->ReadOnly);
+            $this->bentuk->setDbValueDef($rsnew, $this->bentuk->CurrentValue, null, $this->bentuk->ReadOnly);
 
             // viskositas
-            $this->viskositas->setDbValueDef($rsnew, $this->viskositas->CurrentValue, "", $this->viskositas->ReadOnly);
+            $this->viskositas->setDbValueDef($rsnew, $this->viskositas->CurrentValue, null, $this->viskositas->ReadOnly);
 
             // aplikasisediaan
-            $this->aplikasisediaan->setDbValueDef($rsnew, $this->aplikasisediaan->CurrentValue, 0, $this->aplikasisediaan->ReadOnly);
+            $this->aplikasisediaan->setDbValueDef($rsnew, $this->aplikasisediaan->CurrentValue, null, $this->aplikasisediaan->ReadOnly);
 
             // volume
-            $this->volume->setDbValueDef($rsnew, $this->volume->CurrentValue, "", $this->volume->ReadOnly);
+            $this->volume->setDbValueDef($rsnew, $this->volume->CurrentValue, null, $this->volume->ReadOnly);
 
             // bahanaktif
-            $this->bahanaktif->setDbValueDef($rsnew, $this->bahanaktif->CurrentValue, "", $this->bahanaktif->ReadOnly);
+            $this->bahanaktif->setDbValueDef($rsnew, $this->bahanaktif->CurrentValue, null, $this->bahanaktif->ReadOnly);
 
             // volumewadah
-            $this->volumewadah->setDbValueDef($rsnew, $this->volumewadah->CurrentValue, "", $this->volumewadah->ReadOnly);
+            $this->volumewadah->setDbValueDef($rsnew, $this->volumewadah->CurrentValue, null, $this->volumewadah->ReadOnly);
 
             // bahanwadah
-            $this->bahanwadah->setDbValueDef($rsnew, $this->bahanwadah->CurrentValue, "", $this->bahanwadah->ReadOnly);
+            $this->bahanwadah->setDbValueDef($rsnew, $this->bahanwadah->CurrentValue, null, $this->bahanwadah->ReadOnly);
 
             // warnawadah
-            $this->warnawadah->setDbValueDef($rsnew, $this->warnawadah->CurrentValue, "", $this->warnawadah->ReadOnly);
+            $this->warnawadah->setDbValueDef($rsnew, $this->warnawadah->CurrentValue, null, $this->warnawadah->ReadOnly);
 
             // bentukwadah
-            $this->bentukwadah->setDbValueDef($rsnew, $this->bentukwadah->CurrentValue, "", $this->bentukwadah->ReadOnly);
+            $this->bentukwadah->setDbValueDef($rsnew, $this->bentukwadah->CurrentValue, null, $this->bentukwadah->ReadOnly);
 
             // jenistutup
-            $this->jenistutup->setDbValueDef($rsnew, $this->jenistutup->CurrentValue, "", $this->jenistutup->ReadOnly);
+            $this->jenistutup->setDbValueDef($rsnew, $this->jenistutup->CurrentValue, null, $this->jenistutup->ReadOnly);
 
             // bahantutup
-            $this->bahantutup->setDbValueDef($rsnew, $this->bahantutup->CurrentValue, "", $this->bahantutup->ReadOnly);
+            $this->bahantutup->setDbValueDef($rsnew, $this->bahantutup->CurrentValue, null, $this->bahantutup->ReadOnly);
 
             // warnatutup
-            $this->warnatutup->setDbValueDef($rsnew, $this->warnatutup->CurrentValue, "", $this->warnatutup->ReadOnly);
+            $this->warnatutup->setDbValueDef($rsnew, $this->warnatutup->CurrentValue, null, $this->warnatutup->ReadOnly);
 
             // bentuktutup
-            $this->bentuktutup->setDbValueDef($rsnew, $this->bentuktutup->CurrentValue, "", $this->bentuktutup->ReadOnly);
+            $this->bentuktutup->setDbValueDef($rsnew, $this->bentuktutup->CurrentValue, null, $this->bentuktutup->ReadOnly);
 
             // segel
-            $this->segel->setDbValueDef($rsnew, $this->segel->CurrentValue, 0, $this->segel->ReadOnly);
+            $this->segel->setDbValueDef($rsnew, $this->segel->CurrentValue, null, $this->segel->ReadOnly);
 
             // catatanprimer
             $this->catatanprimer->setDbValueDef($rsnew, $this->catatanprimer->CurrentValue, null, $this->catatanprimer->ReadOnly);
 
             // packingproduk
-            $this->packingproduk->setDbValueDef($rsnew, $this->packingproduk->CurrentValue, "", $this->packingproduk->ReadOnly);
+            $this->packingproduk->setDbValueDef($rsnew, $this->packingproduk->CurrentValue, null, $this->packingproduk->ReadOnly);
 
             // keteranganpacking
             $this->keteranganpacking->setDbValueDef($rsnew, $this->keteranganpacking->CurrentValue, null, $this->keteranganpacking->ReadOnly);
 
             // beltkarton
-            $this->beltkarton->setDbValueDef($rsnew, $this->beltkarton->CurrentValue, "", $this->beltkarton->ReadOnly);
+            $this->beltkarton->setDbValueDef($rsnew, $this->beltkarton->CurrentValue, null, $this->beltkarton->ReadOnly);
 
             // keteranganbelt
             $this->keteranganbelt->setDbValueDef($rsnew, $this->keteranganbelt->CurrentValue, null, $this->keteranganbelt->ReadOnly);
 
             // kartonluar
-            $this->kartonluar->setDbValueDef($rsnew, $this->kartonluar->CurrentValue, "", $this->kartonluar->ReadOnly);
+            $this->kartonluar->setDbValueDef($rsnew, $this->kartonluar->CurrentValue, null, $this->kartonluar->ReadOnly);
 
             // bariskarton
             $this->bariskarton->setDbValueDef($rsnew, $this->bariskarton->CurrentValue, null, $this->bariskarton->ReadOnly);
@@ -2938,22 +2937,22 @@ class NpdHargaEdit extends NpdHarga
             $this->isikarton->setDbValueDef($rsnew, $this->isikarton->CurrentValue, null, $this->isikarton->ReadOnly);
 
             // jenislabel
-            $this->jenislabel->setDbValueDef($rsnew, $this->jenislabel->CurrentValue, "", $this->jenislabel->ReadOnly);
+            $this->jenislabel->setDbValueDef($rsnew, $this->jenislabel->CurrentValue, null, $this->jenislabel->ReadOnly);
 
             // keteranganjenislabel
             $this->keteranganjenislabel->setDbValueDef($rsnew, $this->keteranganjenislabel->CurrentValue, null, $this->keteranganjenislabel->ReadOnly);
 
             // kualitaslabel
-            $this->kualitaslabel->setDbValueDef($rsnew, $this->kualitaslabel->CurrentValue, "", $this->kualitaslabel->ReadOnly);
+            $this->kualitaslabel->setDbValueDef($rsnew, $this->kualitaslabel->CurrentValue, null, $this->kualitaslabel->ReadOnly);
 
             // jumlahwarnalabel
-            $this->jumlahwarnalabel->setDbValueDef($rsnew, $this->jumlahwarnalabel->CurrentValue, "", $this->jumlahwarnalabel->ReadOnly);
+            $this->jumlahwarnalabel->setDbValueDef($rsnew, $this->jumlahwarnalabel->CurrentValue, null, $this->jumlahwarnalabel->ReadOnly);
 
             // metaliklabel
-            $this->metaliklabel->setDbValueDef($rsnew, $this->metaliklabel->CurrentValue, "", $this->metaliklabel->ReadOnly);
+            $this->metaliklabel->setDbValueDef($rsnew, $this->metaliklabel->CurrentValue, null, $this->metaliklabel->ReadOnly);
 
             // etiketlabel
-            $this->etiketlabel->setDbValueDef($rsnew, $this->etiketlabel->CurrentValue, "", $this->etiketlabel->ReadOnly);
+            $this->etiketlabel->setDbValueDef($rsnew, $this->etiketlabel->CurrentValue, null, $this->etiketlabel->ReadOnly);
 
             // keteranganlabel
             $this->keteranganlabel->setDbValueDef($rsnew, $this->keteranganlabel->CurrentValue, null, $this->keteranganlabel->ReadOnly);
@@ -2971,10 +2970,10 @@ class NpdHargaEdit extends NpdHarga
             $this->orderkontrak->setDbValueDef($rsnew, $this->orderkontrak->CurrentValue, null, $this->orderkontrak->ReadOnly);
 
             // hargaperpcs
-            $this->hargaperpcs->setDbValueDef($rsnew, $this->hargaperpcs->CurrentValue, 0, $this->hargaperpcs->ReadOnly);
+            $this->hargaperpcs->setDbValueDef($rsnew, $this->hargaperpcs->CurrentValue, null, $this->hargaperpcs->ReadOnly);
 
             // hargaperkarton
-            $this->hargaperkarton->setDbValueDef($rsnew, $this->hargaperkarton->CurrentValue, 0, $this->hargaperkarton->ReadOnly);
+            $this->hargaperkarton->setDbValueDef($rsnew, $this->hargaperkarton->CurrentValue, null, $this->hargaperkarton->ReadOnly);
 
             // lampiran
             if ($this->lampiran->Visible && !$this->lampiran->ReadOnly && !$this->lampiran->Upload->KeepFile) {
@@ -2987,16 +2986,16 @@ class NpdHargaEdit extends NpdHarga
             }
 
             // prepared_by
-            $this->prepared_by->setDbValueDef($rsnew, $this->prepared_by->CurrentValue, 0, $this->prepared_by->ReadOnly);
+            $this->prepared_by->setDbValueDef($rsnew, $this->prepared_by->CurrentValue, null, $this->prepared_by->ReadOnly);
 
             // checked_by
-            $this->checked_by->setDbValueDef($rsnew, $this->checked_by->CurrentValue, 0, $this->checked_by->ReadOnly);
+            $this->checked_by->setDbValueDef($rsnew, $this->checked_by->CurrentValue, null, $this->checked_by->ReadOnly);
 
             // approved_by
-            $this->approved_by->setDbValueDef($rsnew, $this->approved_by->CurrentValue, 0, $this->approved_by->ReadOnly);
+            $this->approved_by->setDbValueDef($rsnew, $this->approved_by->CurrentValue, null, $this->approved_by->ReadOnly);
 
             // disetujui
-            $this->disetujui->setDbValueDef($rsnew, $this->disetujui->CurrentValue, 0, $this->disetujui->ReadOnly);
+            $this->disetujui->setDbValueDef($rsnew, $this->disetujui->CurrentValue, null, $this->disetujui->ReadOnly);
 
             // updated_at
             $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 0), CurrentDate(), $this->updated_at->ReadOnly);

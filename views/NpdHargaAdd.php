@@ -26,7 +26,7 @@ loadjs.ready("head", function () {
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["bentuk", [fields.bentuk.visible && fields.bentuk.required ? ew.Validators.required(fields.bentuk.caption) : null], fields.bentuk.isInvalid],
         ["viskositas", [fields.viskositas.visible && fields.viskositas.required ? ew.Validators.required(fields.viskositas.caption) : null], fields.viskositas.isInvalid],
-        ["aplikasisediaan", [fields.aplikasisediaan.visible && fields.aplikasisediaan.required ? ew.Validators.required(fields.aplikasisediaan.caption) : null, ew.Validators.integer], fields.aplikasisediaan.isInvalid],
+        ["aplikasisediaan", [fields.aplikasisediaan.visible && fields.aplikasisediaan.required ? ew.Validators.required(fields.aplikasisediaan.caption) : null], fields.aplikasisediaan.isInvalid],
         ["volume", [fields.volume.visible && fields.volume.required ? ew.Validators.required(fields.volume.caption) : null], fields.volume.isInvalid],
         ["bahanaktif", [fields.bahanaktif.visible && fields.bahanaktif.required ? ew.Validators.required(fields.bahanaktif.caption) : null], fields.bahanaktif.isInvalid],
         ["volumewadah", [fields.volumewadah.visible && fields.volumewadah.required ? ew.Validators.required(fields.volumewadah.caption) : null], fields.volumewadah.isInvalid],
@@ -299,7 +299,7 @@ loadjs.ready("head", function() {
         <label id="elh_npd_harga_aplikasisediaan" for="x_aplikasisediaan" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_aplikasisediaan"><?= $Page->aplikasisediaan->caption() ?><?= $Page->aplikasisediaan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasisediaan->cellAttributes() ?>>
 <template id="tpx_npd_harga_aplikasisediaan"><span id="el_npd_harga_aplikasisediaan">
-<input type="<?= $Page->aplikasisediaan->getInputTextType() ?>" data-table="npd_harga" data-field="x_aplikasisediaan" name="x_aplikasisediaan" id="x_aplikasisediaan" size="30" placeholder="<?= HtmlEncode($Page->aplikasisediaan->getPlaceHolder()) ?>" value="<?= $Page->aplikasisediaan->EditValue ?>"<?= $Page->aplikasisediaan->editAttributes() ?> aria-describedby="x_aplikasisediaan_help">
+<input type="<?= $Page->aplikasisediaan->getInputTextType() ?>" data-table="npd_harga" data-field="x_aplikasisediaan" name="x_aplikasisediaan" id="x_aplikasisediaan" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->aplikasisediaan->getPlaceHolder()) ?>" value="<?= $Page->aplikasisediaan->EditValue ?>"<?= $Page->aplikasisediaan->editAttributes() ?> aria-describedby="x_aplikasisediaan_help">
 <?= $Page->aplikasisediaan->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->aplikasisediaan->getErrorMessage() ?></div>
 </span></template>
@@ -873,23 +873,33 @@ loadjs.ready(["fnpd_hargaadd", "datetimepicker"], function() {
         <div class="card-body">
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right">Nama Pemesan</label>
-                <div class="col-8"><input type="text" class="form-control" id="c_namapemesan"></div>
+                <div class="col-8">
+                    <input type="text" class="form-control" id="c_namapemesan" placeholder="Nama Pemesan" disabled>
+                </div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right">Alamat</label>
-                <div class="col-8"><input type="text" class="form-control" id="c_alamat"></div>
+                <div class="col-8">
+                    <input type="text" class="form-control" id="c_alamat" placeholder="Alamat" disabled>
+                </div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right">Contact Person</label>
-                <div class="col-8"><input type="text" class="form-control" id="c_contactperson"></div>
+                <div class="col-8">
+                    <input type="text" class="form-control" id="c_contactperson" placeholder="Contact Person" disabled>
+                </div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right">Jabatan</label>
-                <div class="col-8"><input type="text" class="form-control" id="c_jabatan"></div>
+                <div class="col-8">
+                    <input type="text" class="form-control" id="c_jabatan" placeholder="Jabatan" disabled>
+                </div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right">Telepon</label>
-                <div class="col-8"><input type="text" class="form-control" id="c_telepon"></div>
+                <div class="col-8">
+                    <input type="text" class="form-control" id="c_telepon" placeholder="Telepon" disabled>
+                </div>
             </div>
         </div>
     </div>
@@ -1171,6 +1181,7 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $("select[name=x_idnpd]").change((function(){$.ajax({url:"api/npd_customer/"+$(this).val(),type:"GET",success:function(a){!1!==a.success&&($("#c_jenisproduk").val(a.data.jenisproduk),$("#c_namapemesan").val(a.data.namacustomer),$("#c_alamat").val(a.data.alamatcustomer),$("#c_jabatan").val(a.data.jabatancustomer),$("#c_contactperson").val(a.data.namacustomer),$("#c_telepon").val(a.data.telponcustomer))}})}));
 });
 </script>

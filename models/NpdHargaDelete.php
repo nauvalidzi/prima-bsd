@@ -891,7 +891,6 @@ class NpdHargaDelete extends NpdHarga
 
             // aplikasisediaan
             $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
-            $this->aplikasisediaan->ViewValue = FormatNumber($this->aplikasisediaan->ViewValue, 0, -2, -2, -2);
             $this->aplikasisediaan->ViewCustomAttributes = "";
 
             // volume
