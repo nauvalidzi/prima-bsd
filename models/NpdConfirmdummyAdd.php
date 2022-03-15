@@ -118,6 +118,9 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
 
+        // Custom template
+        $this->UseCustomTemplate = true;
+
         // Initialize
         $GLOBALS["Page"] = &$this;
 
@@ -205,18 +208,25 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -231,6 +241,11 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -369,9 +384,6 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -466,13 +478,17 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->dummydepan->setVisibility();
         $this->dummybelakang->setVisibility();
         $this->dummyatas->setVisibility();
         $this->dummysamping->setVisibility();
         $this->catatan->setVisibility();
         $this->ttd->setVisibility();
-        $this->checked_by->setVisibility();
+        $this->submitted_by->setVisibility();
+        $this->checked1_by->setVisibility();
+        $this->checked2_by->setVisibility();
         $this->approved_by->setVisibility();
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
@@ -490,7 +506,7 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->checked_by);
+        $this->setupLookupOptions($this->checked1_by);
         $this->setupLookupOptions($this->approved_by);
 
         // Check modal
@@ -628,6 +644,10 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         $this->id->OldValue = $this->id->CurrentValue;
         $this->idnpd->CurrentValue = null;
         $this->idnpd->OldValue = $this->idnpd->CurrentValue;
+        $this->tglterima->CurrentValue = null;
+        $this->tglterima->OldValue = $this->tglterima->CurrentValue;
+        $this->tglsubmit->CurrentValue = null;
+        $this->tglsubmit->OldValue = $this->tglsubmit->CurrentValue;
         $this->dummydepan->CurrentValue = null;
         $this->dummydepan->OldValue = $this->dummydepan->CurrentValue;
         $this->dummybelakang->CurrentValue = null;
@@ -640,8 +660,12 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         $this->catatan->OldValue = $this->catatan->CurrentValue;
         $this->ttd->CurrentValue = null;
         $this->ttd->OldValue = $this->ttd->CurrentValue;
-        $this->checked_by->CurrentValue = null;
-        $this->checked_by->OldValue = $this->checked_by->CurrentValue;
+        $this->submitted_by->CurrentValue = null;
+        $this->submitted_by->OldValue = $this->submitted_by->CurrentValue;
+        $this->checked1_by->CurrentValue = null;
+        $this->checked1_by->OldValue = $this->checked1_by->CurrentValue;
+        $this->checked2_by->CurrentValue = null;
+        $this->checked2_by->OldValue = $this->checked2_by->CurrentValue;
         $this->approved_by->CurrentValue = null;
         $this->approved_by->OldValue = $this->approved_by->CurrentValue;
         $this->created_at->CurrentValue = null;
@@ -664,6 +688,28 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             } else {
                 $this->idnpd->setFormValue($val);
             }
+        }
+
+        // Check field name 'tglterima' first before field var 'x_tglterima'
+        $val = $CurrentForm->hasValue("tglterima") ? $CurrentForm->getValue("tglterima") : $CurrentForm->getValue("x_tglterima");
+        if (!$this->tglterima->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->tglterima->Visible = false; // Disable update for API request
+            } else {
+                $this->tglterima->setFormValue($val);
+            }
+            $this->tglterima->CurrentValue = UnFormatDateTime($this->tglterima->CurrentValue, 0);
+        }
+
+        // Check field name 'tglsubmit' first before field var 'x_tglsubmit'
+        $val = $CurrentForm->hasValue("tglsubmit") ? $CurrentForm->getValue("tglsubmit") : $CurrentForm->getValue("x_tglsubmit");
+        if (!$this->tglsubmit->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->tglsubmit->Visible = false; // Disable update for API request
+            } else {
+                $this->tglsubmit->setFormValue($val);
+            }
+            $this->tglsubmit->CurrentValue = UnFormatDateTime($this->tglsubmit->CurrentValue, 0);
         }
 
         // Check field name 'dummydepan' first before field var 'x_dummydepan'
@@ -727,13 +773,33 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->ttd->CurrentValue = UnFormatDateTime($this->ttd->CurrentValue, 0);
         }
 
-        // Check field name 'checked_by' first before field var 'x_checked_by'
-        $val = $CurrentForm->hasValue("checked_by") ? $CurrentForm->getValue("checked_by") : $CurrentForm->getValue("x_checked_by");
-        if (!$this->checked_by->IsDetailKey) {
+        // Check field name 'submitted_by' first before field var 'x_submitted_by'
+        $val = $CurrentForm->hasValue("submitted_by") ? $CurrentForm->getValue("submitted_by") : $CurrentForm->getValue("x_submitted_by");
+        if (!$this->submitted_by->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->checked_by->Visible = false; // Disable update for API request
+                $this->submitted_by->Visible = false; // Disable update for API request
             } else {
-                $this->checked_by->setFormValue($val);
+                $this->submitted_by->setFormValue($val);
+            }
+        }
+
+        // Check field name 'checked1_by' first before field var 'x_checked1_by'
+        $val = $CurrentForm->hasValue("checked1_by") ? $CurrentForm->getValue("checked1_by") : $CurrentForm->getValue("x_checked1_by");
+        if (!$this->checked1_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->checked1_by->Visible = false; // Disable update for API request
+            } else {
+                $this->checked1_by->setFormValue($val);
+            }
+        }
+
+        // Check field name 'checked2_by' first before field var 'x_checked2_by'
+        $val = $CurrentForm->hasValue("checked2_by") ? $CurrentForm->getValue("checked2_by") : $CurrentForm->getValue("x_checked2_by");
+        if (!$this->checked2_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->checked2_by->Visible = false; // Disable update for API request
+            } else {
+                $this->checked2_by->setFormValue($val);
             }
         }
 
@@ -756,6 +822,10 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
     {
         global $CurrentForm;
         $this->idnpd->CurrentValue = $this->idnpd->FormValue;
+        $this->tglterima->CurrentValue = $this->tglterima->FormValue;
+        $this->tglterima->CurrentValue = UnFormatDateTime($this->tglterima->CurrentValue, 0);
+        $this->tglsubmit->CurrentValue = $this->tglsubmit->FormValue;
+        $this->tglsubmit->CurrentValue = UnFormatDateTime($this->tglsubmit->CurrentValue, 0);
         $this->dummydepan->CurrentValue = $this->dummydepan->FormValue;
         $this->dummybelakang->CurrentValue = $this->dummybelakang->FormValue;
         $this->dummyatas->CurrentValue = $this->dummyatas->FormValue;
@@ -763,7 +833,9 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         $this->catatan->CurrentValue = $this->catatan->FormValue;
         $this->ttd->CurrentValue = $this->ttd->FormValue;
         $this->ttd->CurrentValue = UnFormatDateTime($this->ttd->CurrentValue, 0);
-        $this->checked_by->CurrentValue = $this->checked_by->FormValue;
+        $this->submitted_by->CurrentValue = $this->submitted_by->FormValue;
+        $this->checked1_by->CurrentValue = $this->checked1_by->FormValue;
+        $this->checked2_by->CurrentValue = $this->checked2_by->FormValue;
         $this->approved_by->CurrentValue = $this->approved_by->FormValue;
     }
 
@@ -816,13 +888,17 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->dummydepan->setDbValue($row['dummydepan']);
         $this->dummybelakang->setDbValue($row['dummybelakang']);
         $this->dummyatas->setDbValue($row['dummyatas']);
         $this->dummysamping->setDbValue($row['dummysamping']);
         $this->catatan->setDbValue($row['catatan']);
         $this->ttd->setDbValue($row['ttd']);
-        $this->checked_by->setDbValue($row['checked_by']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -835,13 +911,17 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         $row = [];
         $row['id'] = $this->id->CurrentValue;
         $row['idnpd'] = $this->idnpd->CurrentValue;
+        $row['tglterima'] = $this->tglterima->CurrentValue;
+        $row['tglsubmit'] = $this->tglsubmit->CurrentValue;
         $row['dummydepan'] = $this->dummydepan->CurrentValue;
         $row['dummybelakang'] = $this->dummybelakang->CurrentValue;
         $row['dummyatas'] = $this->dummyatas->CurrentValue;
         $row['dummysamping'] = $this->dummysamping->CurrentValue;
         $row['catatan'] = $this->catatan->CurrentValue;
         $row['ttd'] = $this->ttd->CurrentValue;
-        $row['checked_by'] = $this->checked_by->CurrentValue;
+        $row['submitted_by'] = $this->submitted_by->CurrentValue;
+        $row['checked1_by'] = $this->checked1_by->CurrentValue;
+        $row['checked2_by'] = $this->checked2_by->CurrentValue;
         $row['approved_by'] = $this->approved_by->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         $row['updated_at'] = $this->updated_at->CurrentValue;
@@ -880,6 +960,10 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
 
         // idnpd
 
+        // tglterima
+
+        // tglsubmit
+
         // dummydepan
 
         // dummybelakang
@@ -892,7 +976,11 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
 
         // ttd
 
-        // checked_by
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
 
         // approved_by
 
@@ -908,6 +996,16 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
+
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
 
             // dummydepan
             $this->dummydepan->ViewValue = $this->dummydepan->CurrentValue;
@@ -934,26 +1032,36 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->ttd->ViewValue = FormatDateTime($this->ttd->ViewValue, 0);
             $this->ttd->ViewCustomAttributes = "";
 
-            // checked_by
-            $curVal = trim(strval($this->checked_by->CurrentValue));
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // checked1_by
+            $curVal = trim(strval($this->checked1_by->CurrentValue));
             if ($curVal != "") {
-                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
-                if ($this->checked_by->ViewValue === null) { // Lookup from database
+                $this->checked1_by->ViewValue = $this->checked1_by->lookupCacheOption($curVal);
+                if ($this->checked1_by->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->checked1_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
-                        $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
+                        $arwrk = $this->checked1_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked1_by->ViewValue = $this->checked1_by->displayValue($arwrk);
                     } else {
-                        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
+                        $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
                     }
                 }
             } else {
-                $this->checked_by->ViewValue = null;
+                $this->checked1_by->ViewValue = null;
             }
-            $this->checked_by->ViewCustomAttributes = "";
+            $this->checked1_by->ViewCustomAttributes = "";
+
+            // checked2_by
+            $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+            $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+            $this->checked2_by->ViewCustomAttributes = "";
 
             // approved_by
             $curVal = trim(strval($this->approved_by->CurrentValue));
@@ -991,6 +1099,16 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
 
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
+
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
+
             // dummydepan
             $this->dummydepan->LinkCustomAttributes = "";
             $this->dummydepan->HrefValue = "";
@@ -1021,10 +1139,20 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->ttd->HrefValue = "";
             $this->ttd->TooltipValue = "";
 
-            // checked_by
-            $this->checked_by->LinkCustomAttributes = "";
-            $this->checked_by->HrefValue = "";
-            $this->checked_by->TooltipValue = "";
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
+
+            // checked1_by
+            $this->checked1_by->LinkCustomAttributes = "";
+            $this->checked1_by->HrefValue = "";
+            $this->checked1_by->TooltipValue = "";
+
+            // checked2_by
+            $this->checked2_by->LinkCustomAttributes = "";
+            $this->checked2_by->HrefValue = "";
+            $this->checked2_by->TooltipValue = "";
 
             // approved_by
             $this->approved_by->LinkCustomAttributes = "";
@@ -1036,6 +1164,18 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->idnpd->EditCustomAttributes = "";
             $this->idnpd->EditValue = HtmlEncode($this->idnpd->CurrentValue);
             $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
+
+            // tglterima
+            $this->tglterima->EditAttrs["class"] = "form-control";
+            $this->tglterima->EditCustomAttributes = "";
+            $this->tglterima->EditValue = HtmlEncode(FormatDateTime($this->tglterima->CurrentValue, 8));
+            $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
+
+            // tglsubmit
+            $this->tglsubmit->EditAttrs["class"] = "form-control";
+            $this->tglsubmit->EditCustomAttributes = "";
+            $this->tglsubmit->EditValue = HtmlEncode(FormatDateTime($this->tglsubmit->CurrentValue, 8));
+            $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
             // dummydepan
             $this->dummydepan->EditAttrs["class"] = "form-control";
@@ -1085,30 +1225,42 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->ttd->EditValue = HtmlEncode(FormatDateTime($this->ttd->CurrentValue, 8));
             $this->ttd->PlaceHolder = RemoveHtml($this->ttd->caption());
 
-            // checked_by
-            $this->checked_by->EditAttrs["class"] = "form-control";
-            $this->checked_by->EditCustomAttributes = "";
-            $curVal = trim(strval($this->checked_by->CurrentValue));
+            // submitted_by
+            $this->submitted_by->EditAttrs["class"] = "form-control";
+            $this->submitted_by->EditCustomAttributes = "";
+            $this->submitted_by->EditValue = HtmlEncode($this->submitted_by->CurrentValue);
+            $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
+
+            // checked1_by
+            $this->checked1_by->EditAttrs["class"] = "form-control";
+            $this->checked1_by->EditCustomAttributes = "";
+            $curVal = trim(strval($this->checked1_by->CurrentValue));
             if ($curVal != "") {
-                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
+                $this->checked1_by->ViewValue = $this->checked1_by->lookupCacheOption($curVal);
             } else {
-                $this->checked_by->ViewValue = $this->checked_by->Lookup !== null && is_array($this->checked_by->Lookup->Options) ? $curVal : null;
+                $this->checked1_by->ViewValue = $this->checked1_by->Lookup !== null && is_array($this->checked1_by->Lookup->Options) ? $curVal : null;
             }
-            if ($this->checked_by->ViewValue !== null) { // Load from cache
-                $this->checked_by->EditValue = array_values($this->checked_by->Lookup->Options);
+            if ($this->checked1_by->ViewValue !== null) { // Load from cache
+                $this->checked1_by->EditValue = array_values($this->checked1_by->Lookup->Options);
             } else { // Lookup from database
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->checked_by->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->checked1_by->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $sqlWrk = $this->checked_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $sqlWrk = $this->checked1_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
-                $this->checked_by->EditValue = $arwrk;
+                $this->checked1_by->EditValue = $arwrk;
             }
-            $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
+            $this->checked1_by->PlaceHolder = RemoveHtml($this->checked1_by->caption());
+
+            // checked2_by
+            $this->checked2_by->EditAttrs["class"] = "form-control";
+            $this->checked2_by->EditCustomAttributes = "";
+            $this->checked2_by->EditValue = HtmlEncode($this->checked2_by->CurrentValue);
+            $this->checked2_by->PlaceHolder = RemoveHtml($this->checked2_by->caption());
 
             // approved_by
             $this->approved_by->EditAttrs["class"] = "form-control";
@@ -1141,6 +1293,14 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
 
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+
             // dummydepan
             $this->dummydepan->LinkCustomAttributes = "";
             $this->dummydepan->HrefValue = "";
@@ -1165,9 +1325,17 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
             $this->ttd->LinkCustomAttributes = "";
             $this->ttd->HrefValue = "";
 
-            // checked_by
-            $this->checked_by->LinkCustomAttributes = "";
-            $this->checked_by->HrefValue = "";
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+
+            // checked1_by
+            $this->checked1_by->LinkCustomAttributes = "";
+            $this->checked1_by->HrefValue = "";
+
+            // checked2_by
+            $this->checked2_by->LinkCustomAttributes = "";
+            $this->checked2_by->HrefValue = "";
 
             // approved_by
             $this->approved_by->LinkCustomAttributes = "";
@@ -1180,6 +1348,11 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
         }
     }
 
@@ -1199,6 +1372,22 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         }
         if (!CheckInteger($this->idnpd->FormValue)) {
             $this->idnpd->addErrorMessage($this->idnpd->getErrorMessage(false));
+        }
+        if ($this->tglterima->Required) {
+            if (!$this->tglterima->IsDetailKey && EmptyValue($this->tglterima->FormValue)) {
+                $this->tglterima->addErrorMessage(str_replace("%s", $this->tglterima->caption(), $this->tglterima->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->tglterima->FormValue)) {
+            $this->tglterima->addErrorMessage($this->tglterima->getErrorMessage(false));
+        }
+        if ($this->tglsubmit->Required) {
+            if (!$this->tglsubmit->IsDetailKey && EmptyValue($this->tglsubmit->FormValue)) {
+                $this->tglsubmit->addErrorMessage(str_replace("%s", $this->tglsubmit->caption(), $this->tglsubmit->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->tglsubmit->FormValue)) {
+            $this->tglsubmit->addErrorMessage($this->tglsubmit->getErrorMessage(false));
         }
         if ($this->dummydepan->Required) {
             if (!$this->dummydepan->IsDetailKey && EmptyValue($this->dummydepan->FormValue)) {
@@ -1233,10 +1422,26 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         if (!CheckDate($this->ttd->FormValue)) {
             $this->ttd->addErrorMessage($this->ttd->getErrorMessage(false));
         }
-        if ($this->checked_by->Required) {
-            if (!$this->checked_by->IsDetailKey && EmptyValue($this->checked_by->FormValue)) {
-                $this->checked_by->addErrorMessage(str_replace("%s", $this->checked_by->caption(), $this->checked_by->RequiredErrorMessage));
+        if ($this->submitted_by->Required) {
+            if (!$this->submitted_by->IsDetailKey && EmptyValue($this->submitted_by->FormValue)) {
+                $this->submitted_by->addErrorMessage(str_replace("%s", $this->submitted_by->caption(), $this->submitted_by->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->submitted_by->FormValue)) {
+            $this->submitted_by->addErrorMessage($this->submitted_by->getErrorMessage(false));
+        }
+        if ($this->checked1_by->Required) {
+            if (!$this->checked1_by->IsDetailKey && EmptyValue($this->checked1_by->FormValue)) {
+                $this->checked1_by->addErrorMessage(str_replace("%s", $this->checked1_by->caption(), $this->checked1_by->RequiredErrorMessage));
+            }
+        }
+        if ($this->checked2_by->Required) {
+            if (!$this->checked2_by->IsDetailKey && EmptyValue($this->checked2_by->FormValue)) {
+                $this->checked2_by->addErrorMessage(str_replace("%s", $this->checked2_by->caption(), $this->checked2_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->checked2_by->FormValue)) {
+            $this->checked2_by->addErrorMessage($this->checked2_by->getErrorMessage(false));
         }
         if ($this->approved_by->Required) {
             if (!$this->approved_by->IsDetailKey && EmptyValue($this->approved_by->FormValue)) {
@@ -1271,6 +1476,12 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         // idnpd
         $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, false);
 
+        // tglterima
+        $this->tglterima->setDbValueDef($rsnew, UnFormatDateTime($this->tglterima->CurrentValue, 0), null, false);
+
+        // tglsubmit
+        $this->tglsubmit->setDbValueDef($rsnew, UnFormatDateTime($this->tglsubmit->CurrentValue, 0), null, false);
+
         // dummydepan
         $this->dummydepan->setDbValueDef($rsnew, $this->dummydepan->CurrentValue, null, false);
 
@@ -1289,8 +1500,14 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
         // ttd
         $this->ttd->setDbValueDef($rsnew, UnFormatDateTime($this->ttd->CurrentValue, 0), null, false);
 
-        // checked_by
-        $this->checked_by->setDbValueDef($rsnew, $this->checked_by->CurrentValue, null, false);
+        // submitted_by
+        $this->submitted_by->setDbValueDef($rsnew, $this->submitted_by->CurrentValue, null, false);
+
+        // checked1_by
+        $this->checked1_by->setDbValueDef($rsnew, $this->checked1_by->CurrentValue, null, false);
+
+        // checked2_by
+        $this->checked2_by->setDbValueDef($rsnew, $this->checked2_by->CurrentValue, null, false);
 
         // approved_by
         $this->approved_by->setDbValueDef($rsnew, $this->approved_by->CurrentValue, null, false);
@@ -1358,7 +1575,7 @@ class NpdConfirmdummyAdd extends NpdConfirmdummy
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_checked_by":
+                case "x_checked1_by":
                     break;
                 case "x_approved_by":
                     break;

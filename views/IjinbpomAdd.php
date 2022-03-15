@@ -121,12 +121,12 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="insert">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<div class="ew-add-div"><!-- page* -->
+<div class="ew-add-div d-none"><!-- page* -->
 <?php if ($Page->tglterima->Visible) { // tglterima ?>
     <div id="r_tglterima" class="form-group row">
-        <label id="elh_ijinbpom_tglterima" for="x_tglterima" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tglterima->caption() ?><?= $Page->tglterima->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_tglterima" for="x_tglterima" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_tglterima"><?= $Page->tglterima->caption() ?><?= $Page->tglterima->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglterima->cellAttributes() ?>>
-<span id="el_ijinbpom_tglterima">
+<template id="tpx_ijinbpom_tglterima"><span id="el_ijinbpom_tglterima">
 <input type="<?= $Page->tglterima->getInputTextType() ?>" data-table="ijinbpom" data-field="x_tglterima" name="x_tglterima" id="x_tglterima" placeholder="<?= HtmlEncode($Page->tglterima->getPlaceHolder()) ?>" value="<?= $Page->tglterima->EditValue ?>"<?= $Page->tglterima->editAttributes() ?> aria-describedby="x_tglterima_help">
 <?= $Page->tglterima->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->tglterima->getErrorMessage() ?></div>
@@ -137,15 +137,15 @@ loadjs.ready(["fijinbpomadd", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
     <div id="r_tglsubmit" class="form-group row">
-        <label id="elh_ijinbpom_tglsubmit" for="x_tglsubmit" class="<?= $Page->LeftColumnClass ?>"><?= $Page->tglsubmit->caption() ?><?= $Page->tglsubmit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_tglsubmit" for="x_tglsubmit" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_tglsubmit"><?= $Page->tglsubmit->caption() ?><?= $Page->tglsubmit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglsubmit->cellAttributes() ?>>
-<span id="el_ijinbpom_tglsubmit">
+<template id="tpx_ijinbpom_tglsubmit"><span id="el_ijinbpom_tglsubmit">
 <input type="<?= $Page->tglsubmit->getInputTextType() ?>" data-table="ijinbpom" data-field="x_tglsubmit" name="x_tglsubmit" id="x_tglsubmit" placeholder="<?= HtmlEncode($Page->tglsubmit->getPlaceHolder()) ?>" value="<?= $Page->tglsubmit->EditValue ?>"<?= $Page->tglsubmit->editAttributes() ?> aria-describedby="x_tglsubmit_help">
 <?= $Page->tglsubmit->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->tglsubmit->getErrorMessage() ?></div>
@@ -156,15 +156,15 @@ loadjs.ready(["fijinbpomadd", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
     <div id="r_idpegawai" class="form-group row">
-        <label id="elh_ijinbpom_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_idpegawai" for="x_idpegawai" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_idpegawai"><?= $Page->idpegawai->caption() ?><?= $Page->idpegawai->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el_ijinbpom_idpegawai">
+<template id="tpx_ijinbpom_idpegawai"><span id="el_ijinbpom_idpegawai">
 <?php $Page->idpegawai->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x_idpegawai"
@@ -190,15 +190,15 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
     <div id="r_idcustomer" class="form-group row">
-        <label id="elh_ijinbpom_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_idcustomer" for="x_idcustomer" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_idcustomer"><?= $Page->idcustomer->caption() ?><?= $Page->idcustomer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el_ijinbpom_idcustomer">
+<template id="tpx_ijinbpom_idcustomer"><span id="el_ijinbpom_idcustomer">
     <select
         id="x_idcustomer"
         name="x_idcustomer"
@@ -223,15 +223,15 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
     <div id="r_idbrand" class="form-group row">
-        <label id="elh_ijinbpom_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_idbrand"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el_ijinbpom_idbrand">
+<template id="tpx_ijinbpom_idbrand"><span id="el_ijinbpom_idbrand">
     <select
         id="x_idbrand"
         name="x_idbrand"
@@ -256,15 +256,15 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->kontrakkerjasama->Visible) { // kontrakkerjasama ?>
     <div id="r_kontrakkerjasama" class="form-group row">
-        <label id="elh_ijinbpom_kontrakkerjasama" class="<?= $Page->LeftColumnClass ?>"><?= $Page->kontrakkerjasama->caption() ?><?= $Page->kontrakkerjasama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_kontrakkerjasama" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_kontrakkerjasama"><?= $Page->kontrakkerjasama->caption() ?><?= $Page->kontrakkerjasama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kontrakkerjasama->cellAttributes() ?>>
-<span id="el_ijinbpom_kontrakkerjasama">
+<template id="tpx_ijinbpom_kontrakkerjasama"><span id="el_ijinbpom_kontrakkerjasama">
 <div id="fd_x_kontrakkerjasama">
 <div class="input-group">
     <div class="custom-file">
@@ -281,15 +281,15 @@ loadjs.ready("head", function() {
 <input type="hidden" name="fm_x_kontrakkerjasama" id= "fm_x_kontrakkerjasama" value="<?= $Page->kontrakkerjasama->UploadMaxFileSize ?>">
 </div>
 <table id="ft_x_kontrakkerjasama" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->suratkuasa->Visible) { // suratkuasa ?>
     <div id="r_suratkuasa" class="form-group row">
-        <label id="elh_ijinbpom_suratkuasa" class="<?= $Page->LeftColumnClass ?>"><?= $Page->suratkuasa->caption() ?><?= $Page->suratkuasa->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_suratkuasa" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_suratkuasa"><?= $Page->suratkuasa->caption() ?><?= $Page->suratkuasa->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->suratkuasa->cellAttributes() ?>>
-<span id="el_ijinbpom_suratkuasa">
+<template id="tpx_ijinbpom_suratkuasa"><span id="el_ijinbpom_suratkuasa">
 <div id="fd_x_suratkuasa">
 <div class="input-group">
     <div class="custom-file">
@@ -306,15 +306,15 @@ loadjs.ready("head", function() {
 <input type="hidden" name="fm_x_suratkuasa" id= "fm_x_suratkuasa" value="<?= $Page->suratkuasa->UploadMaxFileSize ?>">
 </div>
 <table id="ft_x_suratkuasa" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->suratpembagian->Visible) { // suratpembagian ?>
     <div id="r_suratpembagian" class="form-group row">
-        <label id="elh_ijinbpom_suratpembagian" class="<?= $Page->LeftColumnClass ?>"><?= $Page->suratpembagian->caption() ?><?= $Page->suratpembagian->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_suratpembagian" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_suratpembagian"><?= $Page->suratpembagian->caption() ?><?= $Page->suratpembagian->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->suratpembagian->cellAttributes() ?>>
-<span id="el_ijinbpom_suratpembagian">
+<template id="tpx_ijinbpom_suratpembagian"><span id="el_ijinbpom_suratpembagian">
 <div id="fd_x_suratpembagian">
 <div class="input-group">
     <div class="custom-file">
@@ -331,15 +331,15 @@ loadjs.ready("head", function() {
 <input type="hidden" name="fm_x_suratpembagian" id= "fm_x_suratpembagian" value="<?= $Page->suratpembagian->UploadMaxFileSize ?>">
 </div>
 <table id="ft_x_suratpembagian" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <div id="r_status" class="form-group row">
-        <label id="elh_ijinbpom_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <label id="elh_ijinbpom_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_ijinbpom_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
-<span id="el_ijinbpom_status">
+<template id="tpx_ijinbpom_status"><span id="el_ijinbpom_status">
     <select
         id="x_status"
         name="x_status"
@@ -364,67 +364,74 @@ loadjs.ready("head", function() {
     ew.createSelect(options);
 });
 </script>
-</span>
+</span></template>
 </div></div>
     </div>
 <?php } ?>
-    <span id="el_ijinbpom_created_by">
+    <template id="tpx_ijinbpom_created_by"><span id="el_ijinbpom_created_by">
     <input type="hidden" data-table="ijinbpom" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
-    </span>
+    </span></template>
 </div><!-- /page* -->
+<div id="tpd_ijinbpomadd" class="ew-custom-template"></div>
+<template id="tpm_ijinbpomadd">
+<div id="ct_IjinbpomAdd"><div class="form-horizontal">
+    <div class="card">
+        <div class="card-body row">
+            <div class="col-6">
+                <div class="form-group row">
+                    <label class="col-3 col-form-label text-right"><?= $Page->tglterima->caption() ?></label>
+                    <div class="col-8"><slot class="ew-slot" name="tpx_ijinbpom_tglterima"></slot></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group row">
+                    <label class="col-3 col-form-label text-right"><?= $Page->tglsubmit->caption() ?></label>
+                    <div class="col-8"><slot class="ew-slot" name="tpx_ijinbpom_tglsubmit"></slot></div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="card">
+    	<div class="card-header">
+        	<div class="card-title">KELENGKAPAN</div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-3 col-form-label text-right"><?= $Page->idpegawai->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_ijinbpom_idpegawai"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-3 col-form-label text-right"><?= $Page->idcustomer->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_ijinbpom_idcustomer"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-3 col-form-label text-right"><?= $Page->idbrand->caption() ?></label>
+                <div class="col-7"><slot class="ew-slot" name="tpx_ijinbpom_idbrand"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-3 col-form-label text-right"><?= $Page->kontrakkerjasama->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_ijinbpom_kontrakkerjasama"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-3 col-form-label text-right"><?= $Page->suratkuasa->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_ijinbpom_suratkuasa"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-3 col-form-label text-right"><?= $Page->suratpembagian->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_ijinbpom_suratpembagian"></slot></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</template>
+<?php
+    if (in_array("ijinbpom_detail", explode(",", $Page->getCurrentDetailTable())) && $ijinbpom_detail->DetailAdd) {
+?>
 <?php if ($Page->getCurrentDetailTable() != "") { ?>
-<?php
-    $Page->DetailPages->ValidKeys = explode(",", $Page->getCurrentDetailTable());
-    $firstActiveDetailTable = $Page->DetailPages->activePageIndex();
-?>
-<div class="ew-detail-pages"><!-- detail-pages -->
-<div class="ew-nav-tabs" id="Page_details"><!-- tabs -->
-    <ul class="<?= $Page->DetailPages->navStyle() ?>"><!-- .nav -->
-<?php
-    if (in_array("ijinbpom_detail", explode(",", $Page->getCurrentDetailTable())) && $ijinbpom_detail->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "ijinbpom_detail") {
-            $firstActiveDetailTable = "ijinbpom_detail";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("ijinbpom_detail") ?>" href="#tab_ijinbpom_detail" data-toggle="tab"><?= $Language->tablePhrase("ijinbpom_detail", "TblCaption") ?></a></li>
-<?php
-    }
-?>
-<?php
-    if (in_array("ijinbpom_status", explode(",", $Page->getCurrentDetailTable())) && $ijinbpom_status->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "ijinbpom_status") {
-            $firstActiveDetailTable = "ijinbpom_status";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("ijinbpom_status") ?>" href="#tab_ijinbpom_status" data-toggle="tab"><?= $Language->tablePhrase("ijinbpom_status", "TblCaption") ?></a></li>
-<?php
-    }
-?>
-    </ul><!-- /.nav -->
-    <div class="tab-content"><!-- .tab-content -->
-<?php
-    if (in_array("ijinbpom_detail", explode(",", $Page->getCurrentDetailTable())) && $ijinbpom_detail->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "ijinbpom_detail") {
-            $firstActiveDetailTable = "ijinbpom_detail";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("ijinbpom_detail") ?>" id="tab_ijinbpom_detail"><!-- page* -->
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("ijinbpom_detail", "TblCaption") ?></h4>
+<?php } ?>
 <?php include_once "IjinbpomDetailGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
-<?php
-    if (in_array("ijinbpom_status", explode(",", $Page->getCurrentDetailTable())) && $ijinbpom_status->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "ijinbpom_status") {
-            $firstActiveDetailTable = "ijinbpom_status";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("ijinbpom_status") ?>" id="tab_ijinbpom_status"><!-- page* -->
-<?php include_once "IjinbpomStatusGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
-    </div><!-- /.tab-content -->
-</div><!-- /tabs -->
-</div><!-- /detail-pages -->
 <?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
@@ -435,6 +442,13 @@ loadjs.ready("head", function() {
 </div><!-- /buttons .form-group -->
 <?php } ?>
 </form>
+<script class="ew-apply-template">
+loadjs.ready(["jsrender", "makerjs"], function() {
+    ew.templateData = { rows: <?= JsonEncode($Page->Rows) ?> };
+    ew.applyTemplate("tpd_ijinbpomadd", "tpm_ijinbpomadd", "ijinbpomadd", "<?= $Page->CustomExport ?>", ew.templateData.rows[0]);
+    loadjs.done("customtemplate");
+});
+</script>
 <?php
 $Page->showPageFooter();
 echo GetDebugMessage();

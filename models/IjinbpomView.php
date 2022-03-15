@@ -44,10 +44,10 @@ class IjinbpomView extends Ijinbpom
     public $ExportPdfUrl;
 
     // Custom export
-    public $ExportExcelCustom = false;
-    public $ExportWordCustom = false;
-    public $ExportPdfCustom = false;
-    public $ExportEmailCustom = false;
+    public $ExportExcelCustom = true;
+    public $ExportWordCustom = true;
+    public $ExportPdfCustom = true;
+    public $ExportEmailCustom = true;
 
     // Update URLs
     public $InlineAddUrl;
@@ -149,6 +149,9 @@ class IjinbpomView extends Ijinbpom
     {
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
+
+        // Custom template
+        $this->UseCustomTemplate = true;
 
         // Initialize
         $GLOBALS["Page"] = &$this;
@@ -260,18 +263,25 @@ class IjinbpomView extends Ijinbpom
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -286,6 +296,11 @@ class IjinbpomView extends Ijinbpom
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -424,9 +439,6 @@ class IjinbpomView extends Ijinbpom
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -504,7 +516,6 @@ class IjinbpomView extends Ijinbpom
     public $RecordRange = 10;
     public $RecKey = [];
     public $IsModal = false;
-    public $DetailPages; // Detail pages object
 
     /**
      * Page run
@@ -537,9 +548,6 @@ class IjinbpomView extends Ijinbpom
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
-
-        // Set up detail page object
-        $this->setupDetailPages();
 
         // Global Page Loading event (in userfn*.php)
         Page_Loading();
@@ -731,44 +739,6 @@ class IjinbpomView extends Ijinbpom
             $item->Visible = false;
         }
 
-        // "detail_ijinbpom_status"
-        $item = &$option->add("detail_ijinbpom_status");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("ijinbpom_status", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("ijinbpom_status")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("IjinbpomStatusList?" . Config("TABLE_SHOW_MASTER") . "=ijinbpom&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
-        $links = "";
-        $detailPageObj = Container("IjinbpomStatusGrid");
-        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'ijinbpom')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=ijinbpom_status"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            if ($detailViewTblVar != "") {
-                $detailViewTblVar .= ",";
-            }
-            $detailViewTblVar .= "ijinbpom_status";
-        }
-        if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'ijinbpom')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=ijinbpom_status"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
-            if ($detailEditTblVar != "") {
-                $detailEditTblVar .= ",";
-            }
-            $detailEditTblVar .= "ijinbpom_status";
-        }
-        if ($links != "") {
-            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-        }
-        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-        $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'ijinbpom_status');
-        if ($item->Visible) {
-            if ($detailTableLink != "") {
-                $detailTableLink .= ",";
-            }
-            $detailTableLink .= "ijinbpom_status";
-        }
-        if ($this->ShowMultipleDetails) {
-            $item->Visible = false;
-        }
-
         // Multiple details
         if ($this->ShowMultipleDetails) {
             $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
@@ -878,12 +848,6 @@ class IjinbpomView extends Ijinbpom
         $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
         $detailTbl = Container("ijinbpom_detail");
-        $detailFilter = $detailTbl->sqlDetailFilter_ijinbpom();
-        $detailFilter = str_replace("@idijinbpom@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
-        $detailTbl->setCurrentMasterTable("ijinbpom");
-        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
-        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("ijinbpom_status");
         $detailFilter = $detailTbl->sqlDetailFilter_ijinbpom();
         $detailFilter = str_replace("@idijinbpom@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("ijinbpom");
@@ -1155,6 +1119,11 @@ class IjinbpomView extends Ijinbpom
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
+        }
     }
 
     // Show link optionally based on User ID
@@ -1192,19 +1161,6 @@ class IjinbpomView extends Ijinbpom
                     $detailPageObj->idijinbpom->setSessionValue($detailPageObj->idijinbpom->CurrentValue);
                 }
             }
-            if (in_array("ijinbpom_status", $detailTblVar)) {
-                $detailPageObj = Container("IjinbpomStatusGrid");
-                if ($detailPageObj->DetailView) {
-                    $detailPageObj->CurrentMode = "view";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idijinbpom->IsDetailKey = true;
-                    $detailPageObj->idijinbpom->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idijinbpom->setSessionValue($detailPageObj->idijinbpom->CurrentValue);
-                }
-            }
         }
     }
 
@@ -1217,16 +1173,6 @@ class IjinbpomView extends Ijinbpom
         $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("IjinbpomList"), "", $this->TableVar, true);
         $pageId = "view";
         $Breadcrumb->add("view", $pageId, $url);
-    }
-
-    // Set up detail pages
-    protected function setupDetailPages()
-    {
-        $pages = new SubPages();
-        $pages->Style = "tabs";
-        $pages->add('ijinbpom_detail');
-        $pages->add('ijinbpom_status');
-        $this->DetailPages = $pages;
     }
 
     // Setup lookup options

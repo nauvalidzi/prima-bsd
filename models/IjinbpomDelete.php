@@ -375,9 +375,9 @@ class IjinbpomDelete extends Ijinbpom
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->tglterima->Visible = false;
+        $this->tglterima->setVisibility();
         $this->tglsubmit->setVisibility();
-        $this->idpegawai->setVisibility();
+        $this->idpegawai->Visible = false;
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->kontrakkerjasama->Visible = false;
@@ -791,15 +791,15 @@ class IjinbpomDelete extends Ijinbpom
             }
             $this->readonly->ViewCustomAttributes = "";
 
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
+
             // tglsubmit
             $this->tglsubmit->LinkCustomAttributes = "";
             $this->tglsubmit->HrefValue = "";
             $this->tglsubmit->TooltipValue = "";
-
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";

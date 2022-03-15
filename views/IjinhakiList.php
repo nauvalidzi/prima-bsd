@@ -147,11 +147,8 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->nama_brand->Visible) { // nama_brand ?>
         <th data-name="nama_brand" class="<?= $Page->nama_brand->headerCellClass() ?>"><div id="elh_ijinhaki_nama_brand" class="ijinhaki_nama_brand"><?= $Page->renderSort($Page->nama_brand) ?></div></th>
 <?php } ?>
-<?php if ($Page->label_brand->Visible) { // label_brand ?>
-        <th data-name="label_brand" class="<?= $Page->label_brand->headerCellClass() ?>"><div id="elh_ijinhaki_label_brand" class="ijinhaki_label_brand"><?= $Page->renderSort($Page->label_brand) ?></div></th>
-<?php } ?>
-<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
-        <th data-name="submitted_by" class="<?= $Page->submitted_by->headerCellClass() ?>"><div id="elh_ijinhaki_submitted_by" class="ijinhaki_submitted_by"><?= $Page->renderSort($Page->submitted_by) ?></div></th>
+<?php if ($Page->approved_by->Visible) { // approved_by ?>
+        <th data-name="approved_by" class="<?= $Page->approved_by->headerCellClass() ?>"><div id="elh_ijinhaki_approved_by" class="ijinhaki_approved_by"><?= $Page->renderSort($Page->approved_by) ?></div></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_ijinhaki_status" class="ijinhaki_status"><?= $Page->renderSort($Page->status) ?></div></th>
@@ -255,20 +252,11 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->label_brand->Visible) { // label_brand ?>
-        <td data-name="label_brand" <?= $Page->label_brand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinhaki_label_brand">
-<span<?= $Page->label_brand->viewAttributes() ?>>
-<?= GetFileViewTag($Page->label_brand, $Page->label_brand->getViewValue(), false) ?>
-</span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->submitted_by->Visible) { // submitted_by ?>
-        <td data-name="submitted_by" <?= $Page->submitted_by->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinhaki_submitted_by">
-<span<?= $Page->submitted_by->viewAttributes() ?>>
-<?= $Page->submitted_by->getViewValue() ?></span>
+    <?php if ($Page->approved_by->Visible) { // approved_by ?>
+        <td data-name="approved_by" <?= $Page->approved_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_approved_by">
+<span<?= $Page->approved_by->viewAttributes() ?>>
+<?= $Page->approved_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

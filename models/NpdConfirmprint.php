@@ -29,17 +29,23 @@ class NpdConfirmprint extends DbTable
 
     // Fields
     public $id;
+    public $idnpd;
+    public $tglterima;
+    public $tglsubmit;
     public $brand;
-    public $tglkirim;
-    public $tgldisetujui;
+    public $tglkirimprimer;
+    public $tgldisetujuiprimer;
     public $desainprimer;
     public $materialprimer;
     public $aplikasiprimer;
     public $jumlahcetakprimer;
+    public $tglkirimsekunder;
+    public $tgldisetujuisekunder;
     public $desainsekunder;
-    public $materialinnerbox;
-    public $aplikasiinnerbox;
-    public $jumlahcetak;
+    public $materialsekunder;
+    public $aplikasisekunder;
+    public $jumlahcetaksekunder;
+    public $submitted_by;
     public $checked_by;
     public $approved_by;
     public $created_at;
@@ -83,11 +89,33 @@ class NpdConfirmprint extends DbTable
         // id
         $this->id = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
-        $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Sortable = true; // Allow sort
         $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
+
+        // idnpd
+        $this->idnpd = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idnpd->Nullable = false; // NOT NULL field
+        $this->idnpd->Required = true; // Required field
+        $this->idnpd->Sortable = true; // Allow sort
+        $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
+        $this->Fields['idnpd'] = &$this->idnpd;
+
+        // tglterima
+        $this->tglterima = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tglterima', 'tglterima', '`tglterima`', CastDateFieldForLike("`tglterima`", 0, "DB"), 133, 10, 0, false, '`tglterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglterima->Sortable = true; // Allow sort
+        $this->tglterima->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglterima->Param, "CustomMsg");
+        $this->Fields['tglterima'] = &$this->tglterima;
+
+        // tglsubmit
+        $this->tglsubmit = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tglsubmit', 'tglsubmit', '`tglsubmit`', CastDateFieldForLike("`tglsubmit`", 0, "DB"), 133, 10, 0, false, '`tglsubmit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglsubmit->Sortable = true; // Allow sort
+        $this->tglsubmit->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglsubmit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglsubmit->Param, "CustomMsg");
+        $this->Fields['tglsubmit'] = &$this->tglsubmit;
 
         // brand
         $this->brand = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_brand', 'brand', '`brand`', '`brand`', 200, 255, -1, false, '`brand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -97,19 +125,19 @@ class NpdConfirmprint extends DbTable
         $this->brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->brand->Param, "CustomMsg");
         $this->Fields['brand'] = &$this->brand;
 
-        // tglkirim
-        $this->tglkirim = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tglkirim', 'tglkirim', '`tglkirim`', CastDateFieldForLike("`tglkirim`", 0, "DB"), 133, 10, 0, false, '`tglkirim`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tglkirim->Sortable = true; // Allow sort
-        $this->tglkirim->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tglkirim->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglkirim->Param, "CustomMsg");
-        $this->Fields['tglkirim'] = &$this->tglkirim;
+        // tglkirimprimer
+        $this->tglkirimprimer = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tglkirimprimer', 'tglkirimprimer', '`tglkirimprimer`', CastDateFieldForLike("`tglkirimprimer`", 0, "DB"), 133, 10, 0, false, '`tglkirimprimer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglkirimprimer->Sortable = true; // Allow sort
+        $this->tglkirimprimer->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglkirimprimer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglkirimprimer->Param, "CustomMsg");
+        $this->Fields['tglkirimprimer'] = &$this->tglkirimprimer;
 
-        // tgldisetujui
-        $this->tgldisetujui = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tgldisetujui', 'tgldisetujui', '`tgldisetujui`', CastDateFieldForLike("`tgldisetujui`", 0, "DB"), 133, 10, 0, false, '`tgldisetujui`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tgldisetujui->Sortable = true; // Allow sort
-        $this->tgldisetujui->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tgldisetujui->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgldisetujui->Param, "CustomMsg");
-        $this->Fields['tgldisetujui'] = &$this->tgldisetujui;
+        // tgldisetujuiprimer
+        $this->tgldisetujuiprimer = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tgldisetujuiprimer', 'tgldisetujuiprimer', '`tgldisetujuiprimer`', CastDateFieldForLike("`tgldisetujuiprimer`", 0, "DB"), 133, 10, 0, false, '`tgldisetujuiprimer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tgldisetujuiprimer->Sortable = true; // Allow sort
+        $this->tgldisetujuiprimer->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tgldisetujuiprimer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgldisetujuiprimer->Param, "CustomMsg");
+        $this->Fields['tgldisetujuiprimer'] = &$this->tgldisetujuiprimer;
 
         // desainprimer
         $this->desainprimer = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_desainprimer', 'desainprimer', '`desainprimer`', '`desainprimer`', 200, 255, -1, false, '`desainprimer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -136,30 +164,51 @@ class NpdConfirmprint extends DbTable
         $this->jumlahcetakprimer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahcetakprimer->Param, "CustomMsg");
         $this->Fields['jumlahcetakprimer'] = &$this->jumlahcetakprimer;
 
+        // tglkirimsekunder
+        $this->tglkirimsekunder = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tglkirimsekunder', 'tglkirimsekunder', '`tglkirimsekunder`', CastDateFieldForLike("`tglkirimsekunder`", 0, "DB"), 133, 10, 0, false, '`tglkirimsekunder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglkirimsekunder->Sortable = true; // Allow sort
+        $this->tglkirimsekunder->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglkirimsekunder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglkirimsekunder->Param, "CustomMsg");
+        $this->Fields['tglkirimsekunder'] = &$this->tglkirimsekunder;
+
+        // tgldisetujuisekunder
+        $this->tgldisetujuisekunder = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_tgldisetujuisekunder', 'tgldisetujuisekunder', '`tgldisetujuisekunder`', CastDateFieldForLike("`tgldisetujuisekunder`", 0, "DB"), 133, 10, 0, false, '`tgldisetujuisekunder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tgldisetujuisekunder->Sortable = true; // Allow sort
+        $this->tgldisetujuisekunder->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tgldisetujuisekunder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tgldisetujuisekunder->Param, "CustomMsg");
+        $this->Fields['tgldisetujuisekunder'] = &$this->tgldisetujuisekunder;
+
         // desainsekunder
         $this->desainsekunder = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_desainsekunder', 'desainsekunder', '`desainsekunder`', '`desainsekunder`', 200, 255, -1, false, '`desainsekunder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->desainsekunder->Sortable = true; // Allow sort
         $this->desainsekunder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->desainsekunder->Param, "CustomMsg");
         $this->Fields['desainsekunder'] = &$this->desainsekunder;
 
-        // materialinnerbox
-        $this->materialinnerbox = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_materialinnerbox', 'materialinnerbox', '`materialinnerbox`', '`materialinnerbox`', 200, 255, -1, false, '`materialinnerbox`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->materialinnerbox->Sortable = true; // Allow sort
-        $this->materialinnerbox->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->materialinnerbox->Param, "CustomMsg");
-        $this->Fields['materialinnerbox'] = &$this->materialinnerbox;
+        // materialsekunder
+        $this->materialsekunder = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_materialsekunder', 'materialsekunder', '`materialsekunder`', '`materialsekunder`', 200, 255, -1, false, '`materialsekunder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->materialsekunder->Sortable = true; // Allow sort
+        $this->materialsekunder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->materialsekunder->Param, "CustomMsg");
+        $this->Fields['materialsekunder'] = &$this->materialsekunder;
 
-        // aplikasiinnerbox
-        $this->aplikasiinnerbox = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_aplikasiinnerbox', 'aplikasiinnerbox', '`aplikasiinnerbox`', '`aplikasiinnerbox`', 200, 255, -1, false, '`aplikasiinnerbox`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->aplikasiinnerbox->Sortable = true; // Allow sort
-        $this->aplikasiinnerbox->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aplikasiinnerbox->Param, "CustomMsg");
-        $this->Fields['aplikasiinnerbox'] = &$this->aplikasiinnerbox;
+        // aplikasisekunder
+        $this->aplikasisekunder = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_aplikasisekunder', 'aplikasisekunder', '`aplikasisekunder`', '`aplikasisekunder`', 200, 255, -1, false, '`aplikasisekunder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->aplikasisekunder->Sortable = true; // Allow sort
+        $this->aplikasisekunder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aplikasisekunder->Param, "CustomMsg");
+        $this->Fields['aplikasisekunder'] = &$this->aplikasisekunder;
 
-        // jumlahcetak
-        $this->jumlahcetak = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_jumlahcetak', 'jumlahcetak', '`jumlahcetak`', '`jumlahcetak`', 3, 11, -1, false, '`jumlahcetak`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jumlahcetak->Sortable = true; // Allow sort
-        $this->jumlahcetak->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->jumlahcetak->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahcetak->Param, "CustomMsg");
-        $this->Fields['jumlahcetak'] = &$this->jumlahcetak;
+        // jumlahcetaksekunder
+        $this->jumlahcetaksekunder = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_jumlahcetaksekunder', 'jumlahcetaksekunder', '`jumlahcetaksekunder`', '`jumlahcetaksekunder`', 3, 11, -1, false, '`jumlahcetaksekunder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jumlahcetaksekunder->Sortable = true; // Allow sort
+        $this->jumlahcetaksekunder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->jumlahcetaksekunder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahcetaksekunder->Param, "CustomMsg");
+        $this->Fields['jumlahcetaksekunder'] = &$this->jumlahcetaksekunder;
+
+        // submitted_by
+        $this->submitted_by = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_submitted_by', 'submitted_by', '`submitted_by`', '`submitted_by`', 3, 11, -1, false, '`submitted_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->submitted_by->Sortable = true; // Allow sort
+        $this->submitted_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->submitted_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->submitted_by->Param, "CustomMsg");
+        $this->Fields['submitted_by'] = &$this->submitted_by;
 
         // checked_by
         $this->checked_by = new DbField('npd_confirmprint', 'npd_confirmprint', 'x_checked_by', 'checked_by', '`checked_by`', '`checked_by`', 3, 11, -1, false, '`checked_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -596,9 +645,6 @@ class NpdConfirmprint extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('id', $rs)) {
-                AddFilter($where, QuotedName('id', $this->Dbid) . '=' . QuotedValue($rs['id'], $this->id->DataType, $this->Dbid));
-            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -622,17 +668,23 @@ class NpdConfirmprint extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
+        $this->idnpd->DbValue = $row['idnpd'];
+        $this->tglterima->DbValue = $row['tglterima'];
+        $this->tglsubmit->DbValue = $row['tglsubmit'];
         $this->brand->DbValue = $row['brand'];
-        $this->tglkirim->DbValue = $row['tglkirim'];
-        $this->tgldisetujui->DbValue = $row['tgldisetujui'];
+        $this->tglkirimprimer->DbValue = $row['tglkirimprimer'];
+        $this->tgldisetujuiprimer->DbValue = $row['tgldisetujuiprimer'];
         $this->desainprimer->DbValue = $row['desainprimer'];
         $this->materialprimer->DbValue = $row['materialprimer'];
         $this->aplikasiprimer->DbValue = $row['aplikasiprimer'];
         $this->jumlahcetakprimer->DbValue = $row['jumlahcetakprimer'];
+        $this->tglkirimsekunder->DbValue = $row['tglkirimsekunder'];
+        $this->tgldisetujuisekunder->DbValue = $row['tgldisetujuisekunder'];
         $this->desainsekunder->DbValue = $row['desainsekunder'];
-        $this->materialinnerbox->DbValue = $row['materialinnerbox'];
-        $this->aplikasiinnerbox->DbValue = $row['aplikasiinnerbox'];
-        $this->jumlahcetak->DbValue = $row['jumlahcetak'];
+        $this->materialsekunder->DbValue = $row['materialsekunder'];
+        $this->aplikasisekunder->DbValue = $row['aplikasisekunder'];
+        $this->jumlahcetaksekunder->DbValue = $row['jumlahcetaksekunder'];
+        $this->submitted_by->DbValue = $row['submitted_by'];
         $this->checked_by->DbValue = $row['checked_by'];
         $this->approved_by->DbValue = $row['approved_by'];
         $this->created_at->DbValue = $row['created_at'];
@@ -648,19 +700,13 @@ class NpdConfirmprint extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`id` = @id@";
+        return "";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->id->CurrentValue : $this->id->OldValue;
-        if (EmptyValue($val)) {
-            return "";
-        } else {
-            $keys[] = $val;
-        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -669,12 +715,7 @@ class NpdConfirmprint extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
-            if ($current) {
-                $this->id->CurrentValue = $keys[0];
-            } else {
-                $this->id->OldValue = $keys[0];
-            }
+        if (count($keys) == 0) {
         }
     }
 
@@ -682,19 +723,6 @@ class NpdConfirmprint extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
-        if (is_array($row)) {
-            $val = array_key_exists('id', $row) ? $row['id'] : null;
-        } else {
-            $val = $this->id->OldValue !== null ? $this->id->OldValue : $this->id->CurrentValue;
-        }
-        if (!is_numeric($val)) {
-            return "0=1"; // Invalid key
-        }
-        if ($val === null) {
-            return "0=1"; // Invalid key
-        } else {
-            $keyFilter = str_replace("@id@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
-        }
         return $keyFilter;
     }
 
@@ -822,7 +850,6 @@ class NpdConfirmprint extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "id:" . JsonEncode($this->id->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -833,11 +860,6 @@ class NpdConfirmprint extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->id->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->id->CurrentValue);
-        } else {
-            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
-        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -896,23 +918,12 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("id") ?? Route("id")) !== null) {
-                $arKeys[] = $keyValue;
-            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
-            } else {
-                $arKeys = null; // Do not setup
-            }
-
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
-                    continue;
-                }
                 $ar[] = $key;
             }
         }
@@ -927,11 +938,6 @@ SORTHTML;
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
-            }
-            if ($setCurrent) {
-                $this->id->CurrentValue = $key;
-            } else {
-                $this->id->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -958,17 +964,23 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
+        $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->brand->setDbValue($row['brand']);
-        $this->tglkirim->setDbValue($row['tglkirim']);
-        $this->tgldisetujui->setDbValue($row['tgldisetujui']);
+        $this->tglkirimprimer->setDbValue($row['tglkirimprimer']);
+        $this->tgldisetujuiprimer->setDbValue($row['tgldisetujuiprimer']);
         $this->desainprimer->setDbValue($row['desainprimer']);
         $this->materialprimer->setDbValue($row['materialprimer']);
         $this->aplikasiprimer->setDbValue($row['aplikasiprimer']);
         $this->jumlahcetakprimer->setDbValue($row['jumlahcetakprimer']);
+        $this->tglkirimsekunder->setDbValue($row['tglkirimsekunder']);
+        $this->tgldisetujuisekunder->setDbValue($row['tgldisetujuisekunder']);
         $this->desainsekunder->setDbValue($row['desainsekunder']);
-        $this->materialinnerbox->setDbValue($row['materialinnerbox']);
-        $this->aplikasiinnerbox->setDbValue($row['aplikasiinnerbox']);
-        $this->jumlahcetak->setDbValue($row['jumlahcetak']);
+        $this->materialsekunder->setDbValue($row['materialsekunder']);
+        $this->aplikasisekunder->setDbValue($row['aplikasisekunder']);
+        $this->jumlahcetaksekunder->setDbValue($row['jumlahcetaksekunder']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
         $this->checked_by->setDbValue($row['checked_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
@@ -987,11 +999,17 @@ SORTHTML;
 
         // id
 
+        // idnpd
+
+        // tglterima
+
+        // tglsubmit
+
         // brand
 
-        // tglkirim
+        // tglkirimprimer
 
-        // tgldisetujui
+        // tgldisetujuiprimer
 
         // desainprimer
 
@@ -1001,13 +1019,19 @@ SORTHTML;
 
         // jumlahcetakprimer
 
+        // tglkirimsekunder
+
+        // tgldisetujuisekunder
+
         // desainsekunder
 
-        // materialinnerbox
+        // materialsekunder
 
-        // aplikasiinnerbox
+        // aplikasisekunder
 
-        // jumlahcetak
+        // jumlahcetaksekunder
+
+        // submitted_by
 
         // checked_by
 
@@ -1021,19 +1045,34 @@ SORTHTML;
         $this->id->ViewValue = $this->id->CurrentValue;
         $this->id->ViewCustomAttributes = "";
 
+        // idnpd
+        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
+        $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
+        $this->idnpd->ViewCustomAttributes = "";
+
+        // tglterima
+        $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+        $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+        $this->tglterima->ViewCustomAttributes = "";
+
+        // tglsubmit
+        $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+        $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+        $this->tglsubmit->ViewCustomAttributes = "";
+
         // brand
         $this->brand->ViewValue = $this->brand->CurrentValue;
         $this->brand->ViewCustomAttributes = "";
 
-        // tglkirim
-        $this->tglkirim->ViewValue = $this->tglkirim->CurrentValue;
-        $this->tglkirim->ViewValue = FormatDateTime($this->tglkirim->ViewValue, 0);
-        $this->tglkirim->ViewCustomAttributes = "";
+        // tglkirimprimer
+        $this->tglkirimprimer->ViewValue = $this->tglkirimprimer->CurrentValue;
+        $this->tglkirimprimer->ViewValue = FormatDateTime($this->tglkirimprimer->ViewValue, 0);
+        $this->tglkirimprimer->ViewCustomAttributes = "";
 
-        // tgldisetujui
-        $this->tgldisetujui->ViewValue = $this->tgldisetujui->CurrentValue;
-        $this->tgldisetujui->ViewValue = FormatDateTime($this->tgldisetujui->ViewValue, 0);
-        $this->tgldisetujui->ViewCustomAttributes = "";
+        // tgldisetujuiprimer
+        $this->tgldisetujuiprimer->ViewValue = $this->tgldisetujuiprimer->CurrentValue;
+        $this->tgldisetujuiprimer->ViewValue = FormatDateTime($this->tgldisetujuiprimer->ViewValue, 0);
+        $this->tgldisetujuiprimer->ViewCustomAttributes = "";
 
         // desainprimer
         $this->desainprimer->ViewValue = $this->desainprimer->CurrentValue;
@@ -1052,22 +1091,37 @@ SORTHTML;
         $this->jumlahcetakprimer->ViewValue = FormatNumber($this->jumlahcetakprimer->ViewValue, 0, -2, -2, -2);
         $this->jumlahcetakprimer->ViewCustomAttributes = "";
 
+        // tglkirimsekunder
+        $this->tglkirimsekunder->ViewValue = $this->tglkirimsekunder->CurrentValue;
+        $this->tglkirimsekunder->ViewValue = FormatDateTime($this->tglkirimsekunder->ViewValue, 0);
+        $this->tglkirimsekunder->ViewCustomAttributes = "";
+
+        // tgldisetujuisekunder
+        $this->tgldisetujuisekunder->ViewValue = $this->tgldisetujuisekunder->CurrentValue;
+        $this->tgldisetujuisekunder->ViewValue = FormatDateTime($this->tgldisetujuisekunder->ViewValue, 0);
+        $this->tgldisetujuisekunder->ViewCustomAttributes = "";
+
         // desainsekunder
         $this->desainsekunder->ViewValue = $this->desainsekunder->CurrentValue;
         $this->desainsekunder->ViewCustomAttributes = "";
 
-        // materialinnerbox
-        $this->materialinnerbox->ViewValue = $this->materialinnerbox->CurrentValue;
-        $this->materialinnerbox->ViewCustomAttributes = "";
+        // materialsekunder
+        $this->materialsekunder->ViewValue = $this->materialsekunder->CurrentValue;
+        $this->materialsekunder->ViewCustomAttributes = "";
 
-        // aplikasiinnerbox
-        $this->aplikasiinnerbox->ViewValue = $this->aplikasiinnerbox->CurrentValue;
-        $this->aplikasiinnerbox->ViewCustomAttributes = "";
+        // aplikasisekunder
+        $this->aplikasisekunder->ViewValue = $this->aplikasisekunder->CurrentValue;
+        $this->aplikasisekunder->ViewCustomAttributes = "";
 
-        // jumlahcetak
-        $this->jumlahcetak->ViewValue = $this->jumlahcetak->CurrentValue;
-        $this->jumlahcetak->ViewValue = FormatNumber($this->jumlahcetak->ViewValue, 0, -2, -2, -2);
-        $this->jumlahcetak->ViewCustomAttributes = "";
+        // jumlahcetaksekunder
+        $this->jumlahcetaksekunder->ViewValue = $this->jumlahcetaksekunder->CurrentValue;
+        $this->jumlahcetaksekunder->ViewValue = FormatNumber($this->jumlahcetaksekunder->ViewValue, 0, -2, -2, -2);
+        $this->jumlahcetaksekunder->ViewCustomAttributes = "";
+
+        // submitted_by
+        $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+        $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+        $this->submitted_by->ViewCustomAttributes = "";
 
         // checked_by
         $curVal = trim(strval($this->checked_by->CurrentValue));
@@ -1126,20 +1180,35 @@ SORTHTML;
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
+        // idnpd
+        $this->idnpd->LinkCustomAttributes = "";
+        $this->idnpd->HrefValue = "";
+        $this->idnpd->TooltipValue = "";
+
+        // tglterima
+        $this->tglterima->LinkCustomAttributes = "";
+        $this->tglterima->HrefValue = "";
+        $this->tglterima->TooltipValue = "";
+
+        // tglsubmit
+        $this->tglsubmit->LinkCustomAttributes = "";
+        $this->tglsubmit->HrefValue = "";
+        $this->tglsubmit->TooltipValue = "";
+
         // brand
         $this->brand->LinkCustomAttributes = "";
         $this->brand->HrefValue = "";
         $this->brand->TooltipValue = "";
 
-        // tglkirim
-        $this->tglkirim->LinkCustomAttributes = "";
-        $this->tglkirim->HrefValue = "";
-        $this->tglkirim->TooltipValue = "";
+        // tglkirimprimer
+        $this->tglkirimprimer->LinkCustomAttributes = "";
+        $this->tglkirimprimer->HrefValue = "";
+        $this->tglkirimprimer->TooltipValue = "";
 
-        // tgldisetujui
-        $this->tgldisetujui->LinkCustomAttributes = "";
-        $this->tgldisetujui->HrefValue = "";
-        $this->tgldisetujui->TooltipValue = "";
+        // tgldisetujuiprimer
+        $this->tgldisetujuiprimer->LinkCustomAttributes = "";
+        $this->tgldisetujuiprimer->HrefValue = "";
+        $this->tgldisetujuiprimer->TooltipValue = "";
 
         // desainprimer
         $this->desainprimer->LinkCustomAttributes = "";
@@ -1161,25 +1230,40 @@ SORTHTML;
         $this->jumlahcetakprimer->HrefValue = "";
         $this->jumlahcetakprimer->TooltipValue = "";
 
+        // tglkirimsekunder
+        $this->tglkirimsekunder->LinkCustomAttributes = "";
+        $this->tglkirimsekunder->HrefValue = "";
+        $this->tglkirimsekunder->TooltipValue = "";
+
+        // tgldisetujuisekunder
+        $this->tgldisetujuisekunder->LinkCustomAttributes = "";
+        $this->tgldisetujuisekunder->HrefValue = "";
+        $this->tgldisetujuisekunder->TooltipValue = "";
+
         // desainsekunder
         $this->desainsekunder->LinkCustomAttributes = "";
         $this->desainsekunder->HrefValue = "";
         $this->desainsekunder->TooltipValue = "";
 
-        // materialinnerbox
-        $this->materialinnerbox->LinkCustomAttributes = "";
-        $this->materialinnerbox->HrefValue = "";
-        $this->materialinnerbox->TooltipValue = "";
+        // materialsekunder
+        $this->materialsekunder->LinkCustomAttributes = "";
+        $this->materialsekunder->HrefValue = "";
+        $this->materialsekunder->TooltipValue = "";
 
-        // aplikasiinnerbox
-        $this->aplikasiinnerbox->LinkCustomAttributes = "";
-        $this->aplikasiinnerbox->HrefValue = "";
-        $this->aplikasiinnerbox->TooltipValue = "";
+        // aplikasisekunder
+        $this->aplikasisekunder->LinkCustomAttributes = "";
+        $this->aplikasisekunder->HrefValue = "";
+        $this->aplikasisekunder->TooltipValue = "";
 
-        // jumlahcetak
-        $this->jumlahcetak->LinkCustomAttributes = "";
-        $this->jumlahcetak->HrefValue = "";
-        $this->jumlahcetak->TooltipValue = "";
+        // jumlahcetaksekunder
+        $this->jumlahcetaksekunder->LinkCustomAttributes = "";
+        $this->jumlahcetaksekunder->HrefValue = "";
+        $this->jumlahcetaksekunder->TooltipValue = "";
+
+        // submitted_by
+        $this->submitted_by->LinkCustomAttributes = "";
+        $this->submitted_by->HrefValue = "";
+        $this->submitted_by->TooltipValue = "";
 
         // checked_by
         $this->checked_by->LinkCustomAttributes = "";
@@ -1220,7 +1304,25 @@ SORTHTML;
         $this->id->EditAttrs["class"] = "form-control";
         $this->id->EditCustomAttributes = "";
         $this->id->EditValue = $this->id->CurrentValue;
-        $this->id->ViewCustomAttributes = "";
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
+
+        // idnpd
+        $this->idnpd->EditAttrs["class"] = "form-control";
+        $this->idnpd->EditCustomAttributes = "";
+        $this->idnpd->EditValue = $this->idnpd->CurrentValue;
+        $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
+
+        // tglterima
+        $this->tglterima->EditAttrs["class"] = "form-control";
+        $this->tglterima->EditCustomAttributes = "";
+        $this->tglterima->EditValue = FormatDateTime($this->tglterima->CurrentValue, 8);
+        $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
+
+        // tglsubmit
+        $this->tglsubmit->EditAttrs["class"] = "form-control";
+        $this->tglsubmit->EditCustomAttributes = "";
+        $this->tglsubmit->EditValue = FormatDateTime($this->tglsubmit->CurrentValue, 8);
+        $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
         // brand
         $this->brand->EditAttrs["class"] = "form-control";
@@ -1231,17 +1333,17 @@ SORTHTML;
         $this->brand->EditValue = $this->brand->CurrentValue;
         $this->brand->PlaceHolder = RemoveHtml($this->brand->caption());
 
-        // tglkirim
-        $this->tglkirim->EditAttrs["class"] = "form-control";
-        $this->tglkirim->EditCustomAttributes = "";
-        $this->tglkirim->EditValue = FormatDateTime($this->tglkirim->CurrentValue, 8);
-        $this->tglkirim->PlaceHolder = RemoveHtml($this->tglkirim->caption());
+        // tglkirimprimer
+        $this->tglkirimprimer->EditAttrs["class"] = "form-control";
+        $this->tglkirimprimer->EditCustomAttributes = "";
+        $this->tglkirimprimer->EditValue = FormatDateTime($this->tglkirimprimer->CurrentValue, 8);
+        $this->tglkirimprimer->PlaceHolder = RemoveHtml($this->tglkirimprimer->caption());
 
-        // tgldisetujui
-        $this->tgldisetujui->EditAttrs["class"] = "form-control";
-        $this->tgldisetujui->EditCustomAttributes = "";
-        $this->tgldisetujui->EditValue = FormatDateTime($this->tgldisetujui->CurrentValue, 8);
-        $this->tgldisetujui->PlaceHolder = RemoveHtml($this->tgldisetujui->caption());
+        // tgldisetujuiprimer
+        $this->tgldisetujuiprimer->EditAttrs["class"] = "form-control";
+        $this->tgldisetujuiprimer->EditCustomAttributes = "";
+        $this->tgldisetujuiprimer->EditValue = FormatDateTime($this->tgldisetujuiprimer->CurrentValue, 8);
+        $this->tgldisetujuiprimer->PlaceHolder = RemoveHtml($this->tgldisetujuiprimer->caption());
 
         // desainprimer
         $this->desainprimer->EditAttrs["class"] = "form-control";
@@ -1276,6 +1378,18 @@ SORTHTML;
         $this->jumlahcetakprimer->EditValue = $this->jumlahcetakprimer->CurrentValue;
         $this->jumlahcetakprimer->PlaceHolder = RemoveHtml($this->jumlahcetakprimer->caption());
 
+        // tglkirimsekunder
+        $this->tglkirimsekunder->EditAttrs["class"] = "form-control";
+        $this->tglkirimsekunder->EditCustomAttributes = "";
+        $this->tglkirimsekunder->EditValue = FormatDateTime($this->tglkirimsekunder->CurrentValue, 8);
+        $this->tglkirimsekunder->PlaceHolder = RemoveHtml($this->tglkirimsekunder->caption());
+
+        // tgldisetujuisekunder
+        $this->tgldisetujuisekunder->EditAttrs["class"] = "form-control";
+        $this->tgldisetujuisekunder->EditCustomAttributes = "";
+        $this->tgldisetujuisekunder->EditValue = FormatDateTime($this->tgldisetujuisekunder->CurrentValue, 8);
+        $this->tgldisetujuisekunder->PlaceHolder = RemoveHtml($this->tgldisetujuisekunder->caption());
+
         // desainsekunder
         $this->desainsekunder->EditAttrs["class"] = "form-control";
         $this->desainsekunder->EditCustomAttributes = "";
@@ -1285,29 +1399,35 @@ SORTHTML;
         $this->desainsekunder->EditValue = $this->desainsekunder->CurrentValue;
         $this->desainsekunder->PlaceHolder = RemoveHtml($this->desainsekunder->caption());
 
-        // materialinnerbox
-        $this->materialinnerbox->EditAttrs["class"] = "form-control";
-        $this->materialinnerbox->EditCustomAttributes = "";
-        if (!$this->materialinnerbox->Raw) {
-            $this->materialinnerbox->CurrentValue = HtmlDecode($this->materialinnerbox->CurrentValue);
+        // materialsekunder
+        $this->materialsekunder->EditAttrs["class"] = "form-control";
+        $this->materialsekunder->EditCustomAttributes = "";
+        if (!$this->materialsekunder->Raw) {
+            $this->materialsekunder->CurrentValue = HtmlDecode($this->materialsekunder->CurrentValue);
         }
-        $this->materialinnerbox->EditValue = $this->materialinnerbox->CurrentValue;
-        $this->materialinnerbox->PlaceHolder = RemoveHtml($this->materialinnerbox->caption());
+        $this->materialsekunder->EditValue = $this->materialsekunder->CurrentValue;
+        $this->materialsekunder->PlaceHolder = RemoveHtml($this->materialsekunder->caption());
 
-        // aplikasiinnerbox
-        $this->aplikasiinnerbox->EditAttrs["class"] = "form-control";
-        $this->aplikasiinnerbox->EditCustomAttributes = "";
-        if (!$this->aplikasiinnerbox->Raw) {
-            $this->aplikasiinnerbox->CurrentValue = HtmlDecode($this->aplikasiinnerbox->CurrentValue);
+        // aplikasisekunder
+        $this->aplikasisekunder->EditAttrs["class"] = "form-control";
+        $this->aplikasisekunder->EditCustomAttributes = "";
+        if (!$this->aplikasisekunder->Raw) {
+            $this->aplikasisekunder->CurrentValue = HtmlDecode($this->aplikasisekunder->CurrentValue);
         }
-        $this->aplikasiinnerbox->EditValue = $this->aplikasiinnerbox->CurrentValue;
-        $this->aplikasiinnerbox->PlaceHolder = RemoveHtml($this->aplikasiinnerbox->caption());
+        $this->aplikasisekunder->EditValue = $this->aplikasisekunder->CurrentValue;
+        $this->aplikasisekunder->PlaceHolder = RemoveHtml($this->aplikasisekunder->caption());
 
-        // jumlahcetak
-        $this->jumlahcetak->EditAttrs["class"] = "form-control";
-        $this->jumlahcetak->EditCustomAttributes = "";
-        $this->jumlahcetak->EditValue = $this->jumlahcetak->CurrentValue;
-        $this->jumlahcetak->PlaceHolder = RemoveHtml($this->jumlahcetak->caption());
+        // jumlahcetaksekunder
+        $this->jumlahcetaksekunder->EditAttrs["class"] = "form-control";
+        $this->jumlahcetaksekunder->EditCustomAttributes = "";
+        $this->jumlahcetaksekunder->EditValue = $this->jumlahcetaksekunder->CurrentValue;
+        $this->jumlahcetaksekunder->PlaceHolder = RemoveHtml($this->jumlahcetaksekunder->caption());
+
+        // submitted_by
+        $this->submitted_by->EditAttrs["class"] = "form-control";
+        $this->submitted_by->EditCustomAttributes = "";
+        $this->submitted_by->EditValue = $this->submitted_by->CurrentValue;
+        $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
 
         // checked_by
         $this->checked_by->EditAttrs["class"] = "form-control";
@@ -1360,34 +1480,46 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->idnpd);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
                     $doc->exportCaption($this->brand);
-                    $doc->exportCaption($this->tglkirim);
-                    $doc->exportCaption($this->tgldisetujui);
+                    $doc->exportCaption($this->tglkirimprimer);
+                    $doc->exportCaption($this->tgldisetujuiprimer);
                     $doc->exportCaption($this->desainprimer);
                     $doc->exportCaption($this->materialprimer);
                     $doc->exportCaption($this->aplikasiprimer);
                     $doc->exportCaption($this->jumlahcetakprimer);
+                    $doc->exportCaption($this->tglkirimsekunder);
+                    $doc->exportCaption($this->tgldisetujuisekunder);
                     $doc->exportCaption($this->desainsekunder);
-                    $doc->exportCaption($this->materialinnerbox);
-                    $doc->exportCaption($this->aplikasiinnerbox);
-                    $doc->exportCaption($this->jumlahcetak);
+                    $doc->exportCaption($this->materialsekunder);
+                    $doc->exportCaption($this->aplikasisekunder);
+                    $doc->exportCaption($this->jumlahcetaksekunder);
+                    $doc->exportCaption($this->submitted_by);
                     $doc->exportCaption($this->checked_by);
                     $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
                 } else {
                     $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->idnpd);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
                     $doc->exportCaption($this->brand);
-                    $doc->exportCaption($this->tglkirim);
-                    $doc->exportCaption($this->tgldisetujui);
+                    $doc->exportCaption($this->tglkirimprimer);
+                    $doc->exportCaption($this->tgldisetujuiprimer);
                     $doc->exportCaption($this->desainprimer);
                     $doc->exportCaption($this->materialprimer);
                     $doc->exportCaption($this->aplikasiprimer);
                     $doc->exportCaption($this->jumlahcetakprimer);
+                    $doc->exportCaption($this->tglkirimsekunder);
+                    $doc->exportCaption($this->tgldisetujuisekunder);
                     $doc->exportCaption($this->desainsekunder);
-                    $doc->exportCaption($this->materialinnerbox);
-                    $doc->exportCaption($this->aplikasiinnerbox);
-                    $doc->exportCaption($this->jumlahcetak);
+                    $doc->exportCaption($this->materialsekunder);
+                    $doc->exportCaption($this->aplikasisekunder);
+                    $doc->exportCaption($this->jumlahcetaksekunder);
+                    $doc->exportCaption($this->submitted_by);
                     $doc->exportCaption($this->checked_by);
                     $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->created_at);
@@ -1422,34 +1554,46 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
+                        $doc->exportField($this->idnpd);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
                         $doc->exportField($this->brand);
-                        $doc->exportField($this->tglkirim);
-                        $doc->exportField($this->tgldisetujui);
+                        $doc->exportField($this->tglkirimprimer);
+                        $doc->exportField($this->tgldisetujuiprimer);
                         $doc->exportField($this->desainprimer);
                         $doc->exportField($this->materialprimer);
                         $doc->exportField($this->aplikasiprimer);
                         $doc->exportField($this->jumlahcetakprimer);
+                        $doc->exportField($this->tglkirimsekunder);
+                        $doc->exportField($this->tgldisetujuisekunder);
                         $doc->exportField($this->desainsekunder);
-                        $doc->exportField($this->materialinnerbox);
-                        $doc->exportField($this->aplikasiinnerbox);
-                        $doc->exportField($this->jumlahcetak);
+                        $doc->exportField($this->materialsekunder);
+                        $doc->exportField($this->aplikasisekunder);
+                        $doc->exportField($this->jumlahcetaksekunder);
+                        $doc->exportField($this->submitted_by);
                         $doc->exportField($this->checked_by);
                         $doc->exportField($this->approved_by);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
                     } else {
                         $doc->exportField($this->id);
+                        $doc->exportField($this->idnpd);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
                         $doc->exportField($this->brand);
-                        $doc->exportField($this->tglkirim);
-                        $doc->exportField($this->tgldisetujui);
+                        $doc->exportField($this->tglkirimprimer);
+                        $doc->exportField($this->tgldisetujuiprimer);
                         $doc->exportField($this->desainprimer);
                         $doc->exportField($this->materialprimer);
                         $doc->exportField($this->aplikasiprimer);
                         $doc->exportField($this->jumlahcetakprimer);
+                        $doc->exportField($this->tglkirimsekunder);
+                        $doc->exportField($this->tgldisetujuisekunder);
                         $doc->exportField($this->desainsekunder);
-                        $doc->exportField($this->materialinnerbox);
-                        $doc->exportField($this->aplikasiinnerbox);
-                        $doc->exportField($this->jumlahcetak);
+                        $doc->exportField($this->materialsekunder);
+                        $doc->exportField($this->aplikasisekunder);
+                        $doc->exportField($this->jumlahcetaksekunder);
+                        $doc->exportField($this->submitted_by);
                         $doc->exportField($this->checked_by);
                         $doc->exportField($this->approved_by);
                         $doc->exportField($this->created_at);

@@ -507,22 +507,24 @@ class NpdDesainGrid extends NpdDesain
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->status->setVisibility();
-        $this->tanggal_terima->setVisibility();
-        $this->tanggal_submit->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->nama_produk->setVisibility();
-        $this->klaim_bahan->setVisibility();
-        $this->campaign_produk->setVisibility();
-        $this->konsep->setVisibility();
-        $this->tema_warna->setVisibility();
+        $this->klaim_bahan->Visible = false;
+        $this->campaign_produk->Visible = false;
+        $this->konsepwarna->setVisibility();
         $this->no_notifikasi->setVisibility();
-        $this->jenis_kemasan->setVisibility();
-        $this->posisi_label->setVisibility();
-        $this->bahan_label->setVisibility();
-        $this->draft_layout->setVisibility();
+        $this->jenis_kemasan->Visible = false;
+        $this->posisi_label->Visible = false;
+        $this->bahan_label->Visible = false;
+        $this->draft_layout->Visible = false;
         $this->keterangan->Visible = false;
-        $this->created_at->setVisibility();
+        $this->submitted_by->Visible = false;
+        $this->checked1_by->Visible = false;
+        $this->checked2_by->Visible = false;
+        $this->approved_by->Visible = false;
+        $this->created_at->Visible = false;
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -948,49 +950,19 @@ class NpdDesainGrid extends NpdDesain
         if ($CurrentForm->hasValue("x_idnpd") && $CurrentForm->hasValue("o_idnpd") && $this->idnpd->CurrentValue != $this->idnpd->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_idcustomer") && $CurrentForm->hasValue("o_idcustomer") && $this->idcustomer->CurrentValue != $this->idcustomer->OldValue) {
+        if ($CurrentForm->hasValue("x_tglterima") && $CurrentForm->hasValue("o_tglterima") && $this->tglterima->CurrentValue != $this->tglterima->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_status") && $CurrentForm->hasValue("o_status") && $this->status->CurrentValue != $this->status->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_tanggal_terima") && $CurrentForm->hasValue("o_tanggal_terima") && $this->tanggal_terima->CurrentValue != $this->tanggal_terima->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_tanggal_submit") && $CurrentForm->hasValue("o_tanggal_submit") && $this->tanggal_submit->CurrentValue != $this->tanggal_submit->OldValue) {
+        if ($CurrentForm->hasValue("x_tglsubmit") && $CurrentForm->hasValue("o_tglsubmit") && $this->tglsubmit->CurrentValue != $this->tglsubmit->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_nama_produk") && $CurrentForm->hasValue("o_nama_produk") && $this->nama_produk->CurrentValue != $this->nama_produk->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_klaim_bahan") && $CurrentForm->hasValue("o_klaim_bahan") && $this->klaim_bahan->CurrentValue != $this->klaim_bahan->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_campaign_produk") && $CurrentForm->hasValue("o_campaign_produk") && $this->campaign_produk->CurrentValue != $this->campaign_produk->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_konsep") && $CurrentForm->hasValue("o_konsep") && $this->konsep->CurrentValue != $this->konsep->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_tema_warna") && $CurrentForm->hasValue("o_tema_warna") && $this->tema_warna->CurrentValue != $this->tema_warna->OldValue) {
+        if ($CurrentForm->hasValue("x_konsepwarna") && $CurrentForm->hasValue("o_konsepwarna") && $this->konsepwarna->CurrentValue != $this->konsepwarna->OldValue) {
             return false;
         }
         if ($CurrentForm->hasValue("x_no_notifikasi") && $CurrentForm->hasValue("o_no_notifikasi") && $this->no_notifikasi->CurrentValue != $this->no_notifikasi->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_jenis_kemasan") && $CurrentForm->hasValue("o_jenis_kemasan") && $this->jenis_kemasan->CurrentValue != $this->jenis_kemasan->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_posisi_label") && $CurrentForm->hasValue("o_posisi_label") && $this->posisi_label->CurrentValue != $this->posisi_label->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_bahan_label") && $CurrentForm->hasValue("o_bahan_label") && $this->bahan_label->CurrentValue != $this->bahan_label->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_draft_layout") && $CurrentForm->hasValue("o_draft_layout") && $this->draft_layout->CurrentValue != $this->draft_layout->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_created_at") && $CurrentForm->hasValue("o_created_at") && $this->created_at->CurrentValue != $this->created_at->OldValue) {
             return false;
         }
         return true;
@@ -1075,21 +1047,11 @@ class NpdDesainGrid extends NpdDesain
     public function resetFormError()
     {
         $this->idnpd->clearErrorMessage();
-        $this->idcustomer->clearErrorMessage();
-        $this->status->clearErrorMessage();
-        $this->tanggal_terima->clearErrorMessage();
-        $this->tanggal_submit->clearErrorMessage();
+        $this->tglterima->clearErrorMessage();
+        $this->tglsubmit->clearErrorMessage();
         $this->nama_produk->clearErrorMessage();
-        $this->klaim_bahan->clearErrorMessage();
-        $this->campaign_produk->clearErrorMessage();
-        $this->konsep->clearErrorMessage();
-        $this->tema_warna->clearErrorMessage();
+        $this->konsepwarna->clearErrorMessage();
         $this->no_notifikasi->clearErrorMessage();
-        $this->jenis_kemasan->clearErrorMessage();
-        $this->posisi_label->clearErrorMessage();
-        $this->bahan_label->clearErrorMessage();
-        $this->draft_layout->clearErrorMessage();
-        $this->created_at->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1294,24 +1256,18 @@ class NpdDesainGrid extends NpdDesain
         $this->id->OldValue = $this->id->CurrentValue;
         $this->idnpd->CurrentValue = null;
         $this->idnpd->OldValue = $this->idnpd->CurrentValue;
-        $this->idcustomer->CurrentValue = null;
-        $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
-        $this->status->CurrentValue = null;
-        $this->status->OldValue = $this->status->CurrentValue;
-        $this->tanggal_terima->CurrentValue = null;
-        $this->tanggal_terima->OldValue = $this->tanggal_terima->CurrentValue;
-        $this->tanggal_submit->CurrentValue = null;
-        $this->tanggal_submit->OldValue = $this->tanggal_submit->CurrentValue;
+        $this->tglterima->CurrentValue = null;
+        $this->tglterima->OldValue = $this->tglterima->CurrentValue;
+        $this->tglsubmit->CurrentValue = null;
+        $this->tglsubmit->OldValue = $this->tglsubmit->CurrentValue;
         $this->nama_produk->CurrentValue = null;
         $this->nama_produk->OldValue = $this->nama_produk->CurrentValue;
         $this->klaim_bahan->CurrentValue = null;
         $this->klaim_bahan->OldValue = $this->klaim_bahan->CurrentValue;
         $this->campaign_produk->CurrentValue = null;
         $this->campaign_produk->OldValue = $this->campaign_produk->CurrentValue;
-        $this->konsep->CurrentValue = null;
-        $this->konsep->OldValue = $this->konsep->CurrentValue;
-        $this->tema_warna->CurrentValue = null;
-        $this->tema_warna->OldValue = $this->tema_warna->CurrentValue;
+        $this->konsepwarna->CurrentValue = null;
+        $this->konsepwarna->OldValue = $this->konsepwarna->CurrentValue;
         $this->no_notifikasi->CurrentValue = null;
         $this->no_notifikasi->OldValue = $this->no_notifikasi->CurrentValue;
         $this->jenis_kemasan->CurrentValue = null;
@@ -1324,8 +1280,18 @@ class NpdDesainGrid extends NpdDesain
         $this->draft_layout->OldValue = $this->draft_layout->CurrentValue;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
+        $this->submitted_by->CurrentValue = null;
+        $this->submitted_by->OldValue = $this->submitted_by->CurrentValue;
+        $this->checked1_by->CurrentValue = null;
+        $this->checked1_by->OldValue = $this->checked1_by->CurrentValue;
+        $this->checked2_by->CurrentValue = null;
+        $this->checked2_by->OldValue = $this->checked2_by->CurrentValue;
+        $this->approved_by->CurrentValue = null;
+        $this->approved_by->OldValue = $this->approved_by->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
+        $this->updated_at->CurrentValue = null;
+        $this->updated_at->OldValue = $this->updated_at->CurrentValue;
     }
 
     // Load form values
@@ -1348,58 +1314,32 @@ class NpdDesainGrid extends NpdDesain
             $this->idnpd->setOldValue($CurrentForm->getValue("o_idnpd"));
         }
 
-        // Check field name 'idcustomer' first before field var 'x_idcustomer'
-        $val = $CurrentForm->hasValue("idcustomer") ? $CurrentForm->getValue("idcustomer") : $CurrentForm->getValue("x_idcustomer");
-        if (!$this->idcustomer->IsDetailKey) {
+        // Check field name 'tglterima' first before field var 'x_tglterima'
+        $val = $CurrentForm->hasValue("tglterima") ? $CurrentForm->getValue("tglterima") : $CurrentForm->getValue("x_tglterima");
+        if (!$this->tglterima->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->idcustomer->Visible = false; // Disable update for API request
+                $this->tglterima->Visible = false; // Disable update for API request
             } else {
-                $this->idcustomer->setFormValue($val);
+                $this->tglterima->setFormValue($val);
             }
+            $this->tglterima->CurrentValue = UnFormatDateTime($this->tglterima->CurrentValue, 0);
         }
-        if ($CurrentForm->hasValue("o_idcustomer")) {
-            $this->idcustomer->setOldValue($CurrentForm->getValue("o_idcustomer"));
+        if ($CurrentForm->hasValue("o_tglterima")) {
+            $this->tglterima->setOldValue($CurrentForm->getValue("o_tglterima"));
         }
 
-        // Check field name 'status' first before field var 'x_status'
-        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
-        if (!$this->status->IsDetailKey) {
+        // Check field name 'tglsubmit' first before field var 'x_tglsubmit'
+        $val = $CurrentForm->hasValue("tglsubmit") ? $CurrentForm->getValue("tglsubmit") : $CurrentForm->getValue("x_tglsubmit");
+        if (!$this->tglsubmit->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->status->Visible = false; // Disable update for API request
+                $this->tglsubmit->Visible = false; // Disable update for API request
             } else {
-                $this->status->setFormValue($val);
+                $this->tglsubmit->setFormValue($val);
             }
+            $this->tglsubmit->CurrentValue = UnFormatDateTime($this->tglsubmit->CurrentValue, 0);
         }
-        if ($CurrentForm->hasValue("o_status")) {
-            $this->status->setOldValue($CurrentForm->getValue("o_status"));
-        }
-
-        // Check field name 'tanggal_terima' first before field var 'x_tanggal_terima'
-        $val = $CurrentForm->hasValue("tanggal_terima") ? $CurrentForm->getValue("tanggal_terima") : $CurrentForm->getValue("x_tanggal_terima");
-        if (!$this->tanggal_terima->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->tanggal_terima->Visible = false; // Disable update for API request
-            } else {
-                $this->tanggal_terima->setFormValue($val);
-            }
-            $this->tanggal_terima->CurrentValue = UnFormatDateTime($this->tanggal_terima->CurrentValue, 0);
-        }
-        if ($CurrentForm->hasValue("o_tanggal_terima")) {
-            $this->tanggal_terima->setOldValue($CurrentForm->getValue("o_tanggal_terima"));
-        }
-
-        // Check field name 'tanggal_submit' first before field var 'x_tanggal_submit'
-        $val = $CurrentForm->hasValue("tanggal_submit") ? $CurrentForm->getValue("tanggal_submit") : $CurrentForm->getValue("x_tanggal_submit");
-        if (!$this->tanggal_submit->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->tanggal_submit->Visible = false; // Disable update for API request
-            } else {
-                $this->tanggal_submit->setFormValue($val);
-            }
-            $this->tanggal_submit->CurrentValue = UnFormatDateTime($this->tanggal_submit->CurrentValue, 0);
-        }
-        if ($CurrentForm->hasValue("o_tanggal_submit")) {
-            $this->tanggal_submit->setOldValue($CurrentForm->getValue("o_tanggal_submit"));
+        if ($CurrentForm->hasValue("o_tglsubmit")) {
+            $this->tglsubmit->setOldValue($CurrentForm->getValue("o_tglsubmit"));
         }
 
         // Check field name 'nama_produk' first before field var 'x_nama_produk'
@@ -1415,56 +1355,17 @@ class NpdDesainGrid extends NpdDesain
             $this->nama_produk->setOldValue($CurrentForm->getValue("o_nama_produk"));
         }
 
-        // Check field name 'klaim_bahan' first before field var 'x_klaim_bahan'
-        $val = $CurrentForm->hasValue("klaim_bahan") ? $CurrentForm->getValue("klaim_bahan") : $CurrentForm->getValue("x_klaim_bahan");
-        if (!$this->klaim_bahan->IsDetailKey) {
+        // Check field name 'konsepwarna' first before field var 'x_konsepwarna'
+        $val = $CurrentForm->hasValue("konsepwarna") ? $CurrentForm->getValue("konsepwarna") : $CurrentForm->getValue("x_konsepwarna");
+        if (!$this->konsepwarna->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->klaim_bahan->Visible = false; // Disable update for API request
+                $this->konsepwarna->Visible = false; // Disable update for API request
             } else {
-                $this->klaim_bahan->setFormValue($val);
+                $this->konsepwarna->setFormValue($val);
             }
         }
-        if ($CurrentForm->hasValue("o_klaim_bahan")) {
-            $this->klaim_bahan->setOldValue($CurrentForm->getValue("o_klaim_bahan"));
-        }
-
-        // Check field name 'campaign_produk' first before field var 'x_campaign_produk'
-        $val = $CurrentForm->hasValue("campaign_produk") ? $CurrentForm->getValue("campaign_produk") : $CurrentForm->getValue("x_campaign_produk");
-        if (!$this->campaign_produk->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->campaign_produk->Visible = false; // Disable update for API request
-            } else {
-                $this->campaign_produk->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_campaign_produk")) {
-            $this->campaign_produk->setOldValue($CurrentForm->getValue("o_campaign_produk"));
-        }
-
-        // Check field name 'konsep' first before field var 'x_konsep'
-        $val = $CurrentForm->hasValue("konsep") ? $CurrentForm->getValue("konsep") : $CurrentForm->getValue("x_konsep");
-        if (!$this->konsep->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->konsep->Visible = false; // Disable update for API request
-            } else {
-                $this->konsep->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_konsep")) {
-            $this->konsep->setOldValue($CurrentForm->getValue("o_konsep"));
-        }
-
-        // Check field name 'tema_warna' first before field var 'x_tema_warna'
-        $val = $CurrentForm->hasValue("tema_warna") ? $CurrentForm->getValue("tema_warna") : $CurrentForm->getValue("x_tema_warna");
-        if (!$this->tema_warna->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->tema_warna->Visible = false; // Disable update for API request
-            } else {
-                $this->tema_warna->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_tema_warna")) {
-            $this->tema_warna->setOldValue($CurrentForm->getValue("o_tema_warna"));
+        if ($CurrentForm->hasValue("o_konsepwarna")) {
+            $this->konsepwarna->setOldValue($CurrentForm->getValue("o_konsepwarna"));
         }
 
         // Check field name 'no_notifikasi' first before field var 'x_no_notifikasi'
@@ -1478,72 +1379,6 @@ class NpdDesainGrid extends NpdDesain
         }
         if ($CurrentForm->hasValue("o_no_notifikasi")) {
             $this->no_notifikasi->setOldValue($CurrentForm->getValue("o_no_notifikasi"));
-        }
-
-        // Check field name 'jenis_kemasan' first before field var 'x_jenis_kemasan'
-        $val = $CurrentForm->hasValue("jenis_kemasan") ? $CurrentForm->getValue("jenis_kemasan") : $CurrentForm->getValue("x_jenis_kemasan");
-        if (!$this->jenis_kemasan->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->jenis_kemasan->Visible = false; // Disable update for API request
-            } else {
-                $this->jenis_kemasan->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_jenis_kemasan")) {
-            $this->jenis_kemasan->setOldValue($CurrentForm->getValue("o_jenis_kemasan"));
-        }
-
-        // Check field name 'posisi_label' first before field var 'x_posisi_label'
-        $val = $CurrentForm->hasValue("posisi_label") ? $CurrentForm->getValue("posisi_label") : $CurrentForm->getValue("x_posisi_label");
-        if (!$this->posisi_label->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->posisi_label->Visible = false; // Disable update for API request
-            } else {
-                $this->posisi_label->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_posisi_label")) {
-            $this->posisi_label->setOldValue($CurrentForm->getValue("o_posisi_label"));
-        }
-
-        // Check field name 'bahan_label' first before field var 'x_bahan_label'
-        $val = $CurrentForm->hasValue("bahan_label") ? $CurrentForm->getValue("bahan_label") : $CurrentForm->getValue("x_bahan_label");
-        if (!$this->bahan_label->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->bahan_label->Visible = false; // Disable update for API request
-            } else {
-                $this->bahan_label->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_bahan_label")) {
-            $this->bahan_label->setOldValue($CurrentForm->getValue("o_bahan_label"));
-        }
-
-        // Check field name 'draft_layout' first before field var 'x_draft_layout'
-        $val = $CurrentForm->hasValue("draft_layout") ? $CurrentForm->getValue("draft_layout") : $CurrentForm->getValue("x_draft_layout");
-        if (!$this->draft_layout->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->draft_layout->Visible = false; // Disable update for API request
-            } else {
-                $this->draft_layout->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_draft_layout")) {
-            $this->draft_layout->setOldValue($CurrentForm->getValue("o_draft_layout"));
-        }
-
-        // Check field name 'created_at' first before field var 'x_created_at'
-        $val = $CurrentForm->hasValue("created_at") ? $CurrentForm->getValue("created_at") : $CurrentForm->getValue("x_created_at");
-        if (!$this->created_at->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->created_at->Visible = false; // Disable update for API request
-            } else {
-                $this->created_at->setFormValue($val);
-            }
-            $this->created_at->CurrentValue = UnFormatDateTime($this->created_at->CurrentValue, 0);
-        }
-        if ($CurrentForm->hasValue("o_created_at")) {
-            $this->created_at->setOldValue($CurrentForm->getValue("o_created_at"));
         }
 
         // Check field name 'id' first before field var 'x_id'
@@ -1561,24 +1396,13 @@ class NpdDesainGrid extends NpdDesain
             $this->id->CurrentValue = $this->id->FormValue;
         }
         $this->idnpd->CurrentValue = $this->idnpd->FormValue;
-        $this->idcustomer->CurrentValue = $this->idcustomer->FormValue;
-        $this->status->CurrentValue = $this->status->FormValue;
-        $this->tanggal_terima->CurrentValue = $this->tanggal_terima->FormValue;
-        $this->tanggal_terima->CurrentValue = UnFormatDateTime($this->tanggal_terima->CurrentValue, 0);
-        $this->tanggal_submit->CurrentValue = $this->tanggal_submit->FormValue;
-        $this->tanggal_submit->CurrentValue = UnFormatDateTime($this->tanggal_submit->CurrentValue, 0);
+        $this->tglterima->CurrentValue = $this->tglterima->FormValue;
+        $this->tglterima->CurrentValue = UnFormatDateTime($this->tglterima->CurrentValue, 0);
+        $this->tglsubmit->CurrentValue = $this->tglsubmit->FormValue;
+        $this->tglsubmit->CurrentValue = UnFormatDateTime($this->tglsubmit->CurrentValue, 0);
         $this->nama_produk->CurrentValue = $this->nama_produk->FormValue;
-        $this->klaim_bahan->CurrentValue = $this->klaim_bahan->FormValue;
-        $this->campaign_produk->CurrentValue = $this->campaign_produk->FormValue;
-        $this->konsep->CurrentValue = $this->konsep->FormValue;
-        $this->tema_warna->CurrentValue = $this->tema_warna->FormValue;
+        $this->konsepwarna->CurrentValue = $this->konsepwarna->FormValue;
         $this->no_notifikasi->CurrentValue = $this->no_notifikasi->FormValue;
-        $this->jenis_kemasan->CurrentValue = $this->jenis_kemasan->FormValue;
-        $this->posisi_label->CurrentValue = $this->posisi_label->FormValue;
-        $this->bahan_label->CurrentValue = $this->bahan_label->FormValue;
-        $this->draft_layout->CurrentValue = $this->draft_layout->FormValue;
-        $this->created_at->CurrentValue = $this->created_at->FormValue;
-        $this->created_at->CurrentValue = UnFormatDateTime($this->created_at->CurrentValue, 0);
     }
 
     // Load recordset
@@ -1651,22 +1475,24 @@ class NpdDesainGrid extends NpdDesain
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->status->setDbValue($row['status']);
-        $this->tanggal_terima->setDbValue($row['tanggal_terima']);
-        $this->tanggal_submit->setDbValue($row['tanggal_submit']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->nama_produk->setDbValue($row['nama_produk']);
         $this->klaim_bahan->setDbValue($row['klaim_bahan']);
         $this->campaign_produk->setDbValue($row['campaign_produk']);
-        $this->konsep->setDbValue($row['konsep']);
-        $this->tema_warna->setDbValue($row['tema_warna']);
+        $this->konsepwarna->setDbValue($row['konsepwarna']);
         $this->no_notifikasi->setDbValue($row['no_notifikasi']);
         $this->jenis_kemasan->setDbValue($row['jenis_kemasan']);
         $this->posisi_label->setDbValue($row['posisi_label']);
         $this->bahan_label->setDbValue($row['bahan_label']);
         $this->draft_layout->setDbValue($row['draft_layout']);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -1676,22 +1502,24 @@ class NpdDesainGrid extends NpdDesain
         $row = [];
         $row['id'] = $this->id->CurrentValue;
         $row['idnpd'] = $this->idnpd->CurrentValue;
-        $row['idcustomer'] = $this->idcustomer->CurrentValue;
-        $row['status'] = $this->status->CurrentValue;
-        $row['tanggal_terima'] = $this->tanggal_terima->CurrentValue;
-        $row['tanggal_submit'] = $this->tanggal_submit->CurrentValue;
+        $row['tglterima'] = $this->tglterima->CurrentValue;
+        $row['tglsubmit'] = $this->tglsubmit->CurrentValue;
         $row['nama_produk'] = $this->nama_produk->CurrentValue;
         $row['klaim_bahan'] = $this->klaim_bahan->CurrentValue;
         $row['campaign_produk'] = $this->campaign_produk->CurrentValue;
-        $row['konsep'] = $this->konsep->CurrentValue;
-        $row['tema_warna'] = $this->tema_warna->CurrentValue;
+        $row['konsepwarna'] = $this->konsepwarna->CurrentValue;
         $row['no_notifikasi'] = $this->no_notifikasi->CurrentValue;
         $row['jenis_kemasan'] = $this->jenis_kemasan->CurrentValue;
         $row['posisi_label'] = $this->posisi_label->CurrentValue;
         $row['bahan_label'] = $this->bahan_label->CurrentValue;
         $row['draft_layout'] = $this->draft_layout->CurrentValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
+        $row['submitted_by'] = $this->submitted_by->CurrentValue;
+        $row['checked1_by'] = $this->checked1_by->CurrentValue;
+        $row['checked2_by'] = $this->checked2_by->CurrentValue;
+        $row['approved_by'] = $this->approved_by->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
+        $row['updated_at'] = $this->updated_at->CurrentValue;
         return $row;
     }
 
@@ -1731,13 +1559,9 @@ class NpdDesainGrid extends NpdDesain
 
         // idnpd
 
-        // idcustomer
+        // tglterima
 
-        // status
-
-        // tanggal_terima
-
-        // tanggal_submit
+        // tglsubmit
 
         // nama_produk
 
@@ -1745,9 +1569,7 @@ class NpdDesainGrid extends NpdDesain
 
         // campaign_produk
 
-        // konsep
-
-        // tema_warna
+        // konsepwarna
 
         // no_notifikasi
 
@@ -1761,31 +1583,32 @@ class NpdDesainGrid extends NpdDesain
 
         // keterangan
 
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
+
+        // approved_by
+
         // created_at
+
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // idnpd
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
-            $this->idcustomer->ViewCustomAttributes = "";
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
 
-            // status
-            $this->status->ViewValue = $this->status->CurrentValue;
-            $this->status->ViewCustomAttributes = "";
-
-            // tanggal_terima
-            $this->tanggal_terima->ViewValue = $this->tanggal_terima->CurrentValue;
-            $this->tanggal_terima->ViewValue = FormatDateTime($this->tanggal_terima->ViewValue, 0);
-            $this->tanggal_terima->ViewCustomAttributes = "";
-
-            // tanggal_submit
-            $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
-            $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
-            $this->tanggal_submit->ViewCustomAttributes = "";
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
 
             // nama_produk
             $this->nama_produk->ViewValue = $this->nama_produk->CurrentValue;
@@ -1799,13 +1622,9 @@ class NpdDesainGrid extends NpdDesain
             $this->campaign_produk->ViewValue = $this->campaign_produk->CurrentValue;
             $this->campaign_produk->ViewCustomAttributes = "";
 
-            // konsep
-            $this->konsep->ViewValue = $this->konsep->CurrentValue;
-            $this->konsep->ViewCustomAttributes = "";
-
-            // tema_warna
-            $this->tema_warna->ViewValue = $this->tema_warna->CurrentValue;
-            $this->tema_warna->ViewCustomAttributes = "";
+            // konsepwarna
+            $this->konsepwarna->ViewValue = $this->konsepwarna->CurrentValue;
+            $this->konsepwarna->ViewCustomAttributes = "";
 
             // no_notifikasi
             $this->no_notifikasi->ViewValue = $this->no_notifikasi->CurrentValue;
@@ -1827,90 +1646,65 @@ class NpdDesainGrid extends NpdDesain
             $this->draft_layout->ViewValue = $this->draft_layout->CurrentValue;
             $this->draft_layout->ViewCustomAttributes = "";
 
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // checked1_by
+            $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
+            $this->checked1_by->ViewValue = FormatNumber($this->checked1_by->ViewValue, 0, -2, -2, -2);
+            $this->checked1_by->ViewCustomAttributes = "";
+
+            // checked2_by
+            $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+            $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+            $this->checked2_by->ViewCustomAttributes = "";
+
+            // approved_by
+            $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+            $this->approved_by->ViewValue = FormatNumber($this->approved_by->ViewValue, 0, -2, -2, -2);
+            $this->approved_by->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
+
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
-
-            // tanggal_terima
-            $this->tanggal_terima->LinkCustomAttributes = "";
-            $this->tanggal_terima->HrefValue = "";
-            $this->tanggal_terima->TooltipValue = "";
-
-            // tanggal_submit
-            $this->tanggal_submit->LinkCustomAttributes = "";
-            $this->tanggal_submit->HrefValue = "";
-            $this->tanggal_submit->TooltipValue = "";
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
 
             // nama_produk
             $this->nama_produk->LinkCustomAttributes = "";
             $this->nama_produk->HrefValue = "";
             $this->nama_produk->TooltipValue = "";
 
-            // klaim_bahan
-            $this->klaim_bahan->LinkCustomAttributes = "";
-            $this->klaim_bahan->HrefValue = "";
-            $this->klaim_bahan->TooltipValue = "";
-
-            // campaign_produk
-            $this->campaign_produk->LinkCustomAttributes = "";
-            $this->campaign_produk->HrefValue = "";
-            $this->campaign_produk->TooltipValue = "";
-
-            // konsep
-            $this->konsep->LinkCustomAttributes = "";
-            $this->konsep->HrefValue = "";
-            $this->konsep->TooltipValue = "";
-
-            // tema_warna
-            $this->tema_warna->LinkCustomAttributes = "";
-            $this->tema_warna->HrefValue = "";
-            $this->tema_warna->TooltipValue = "";
+            // konsepwarna
+            $this->konsepwarna->LinkCustomAttributes = "";
+            $this->konsepwarna->HrefValue = "";
+            $this->konsepwarna->TooltipValue = "";
 
             // no_notifikasi
             $this->no_notifikasi->LinkCustomAttributes = "";
             $this->no_notifikasi->HrefValue = "";
             $this->no_notifikasi->TooltipValue = "";
-
-            // jenis_kemasan
-            $this->jenis_kemasan->LinkCustomAttributes = "";
-            $this->jenis_kemasan->HrefValue = "";
-            $this->jenis_kemasan->TooltipValue = "";
-
-            // posisi_label
-            $this->posisi_label->LinkCustomAttributes = "";
-            $this->posisi_label->HrefValue = "";
-            $this->posisi_label->TooltipValue = "";
-
-            // bahan_label
-            $this->bahan_label->LinkCustomAttributes = "";
-            $this->bahan_label->HrefValue = "";
-            $this->bahan_label->TooltipValue = "";
-
-            // draft_layout
-            $this->draft_layout->LinkCustomAttributes = "";
-            $this->draft_layout->HrefValue = "";
-            $this->draft_layout->TooltipValue = "";
-
-            // created_at
-            $this->created_at->LinkCustomAttributes = "";
-            $this->created_at->HrefValue = "";
-            $this->created_at->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -1926,32 +1720,17 @@ class NpdDesainGrid extends NpdDesain
                 $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
             }
 
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+            // tglterima
+            $this->tglterima->EditAttrs["class"] = "form-control";
+            $this->tglterima->EditCustomAttributes = "";
+            $this->tglterima->EditValue = HtmlEncode(FormatDateTime($this->tglterima->CurrentValue, 8));
+            $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
 
-            // status
-            $this->status->EditAttrs["class"] = "form-control";
-            $this->status->EditCustomAttributes = "";
-            if (!$this->status->Raw) {
-                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-            }
-            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
-            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
-            // tanggal_terima
-            $this->tanggal_terima->EditAttrs["class"] = "form-control";
-            $this->tanggal_terima->EditCustomAttributes = "";
-            $this->tanggal_terima->EditValue = HtmlEncode(FormatDateTime($this->tanggal_terima->CurrentValue, 8));
-            $this->tanggal_terima->PlaceHolder = RemoveHtml($this->tanggal_terima->caption());
-
-            // tanggal_submit
-            $this->tanggal_submit->EditAttrs["class"] = "form-control";
-            $this->tanggal_submit->EditCustomAttributes = "";
-            $this->tanggal_submit->EditValue = HtmlEncode(FormatDateTime($this->tanggal_submit->CurrentValue, 8));
-            $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
+            // tglsubmit
+            $this->tglsubmit->EditAttrs["class"] = "form-control";
+            $this->tglsubmit->EditCustomAttributes = "";
+            $this->tglsubmit->EditValue = HtmlEncode(FormatDateTime($this->tglsubmit->CurrentValue, 8));
+            $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
             // nama_produk
             $this->nama_produk->EditAttrs["class"] = "form-control";
@@ -1962,41 +1741,14 @@ class NpdDesainGrid extends NpdDesain
             $this->nama_produk->EditValue = HtmlEncode($this->nama_produk->CurrentValue);
             $this->nama_produk->PlaceHolder = RemoveHtml($this->nama_produk->caption());
 
-            // klaim_bahan
-            $this->klaim_bahan->EditAttrs["class"] = "form-control";
-            $this->klaim_bahan->EditCustomAttributes = "";
-            if (!$this->klaim_bahan->Raw) {
-                $this->klaim_bahan->CurrentValue = HtmlDecode($this->klaim_bahan->CurrentValue);
+            // konsepwarna
+            $this->konsepwarna->EditAttrs["class"] = "form-control";
+            $this->konsepwarna->EditCustomAttributes = "";
+            if (!$this->konsepwarna->Raw) {
+                $this->konsepwarna->CurrentValue = HtmlDecode($this->konsepwarna->CurrentValue);
             }
-            $this->klaim_bahan->EditValue = HtmlEncode($this->klaim_bahan->CurrentValue);
-            $this->klaim_bahan->PlaceHolder = RemoveHtml($this->klaim_bahan->caption());
-
-            // campaign_produk
-            $this->campaign_produk->EditAttrs["class"] = "form-control";
-            $this->campaign_produk->EditCustomAttributes = "";
-            if (!$this->campaign_produk->Raw) {
-                $this->campaign_produk->CurrentValue = HtmlDecode($this->campaign_produk->CurrentValue);
-            }
-            $this->campaign_produk->EditValue = HtmlEncode($this->campaign_produk->CurrentValue);
-            $this->campaign_produk->PlaceHolder = RemoveHtml($this->campaign_produk->caption());
-
-            // konsep
-            $this->konsep->EditAttrs["class"] = "form-control";
-            $this->konsep->EditCustomAttributes = "";
-            if (!$this->konsep->Raw) {
-                $this->konsep->CurrentValue = HtmlDecode($this->konsep->CurrentValue);
-            }
-            $this->konsep->EditValue = HtmlEncode($this->konsep->CurrentValue);
-            $this->konsep->PlaceHolder = RemoveHtml($this->konsep->caption());
-
-            // tema_warna
-            $this->tema_warna->EditAttrs["class"] = "form-control";
-            $this->tema_warna->EditCustomAttributes = "";
-            if (!$this->tema_warna->Raw) {
-                $this->tema_warna->CurrentValue = HtmlDecode($this->tema_warna->CurrentValue);
-            }
-            $this->tema_warna->EditValue = HtmlEncode($this->tema_warna->CurrentValue);
-            $this->tema_warna->PlaceHolder = RemoveHtml($this->tema_warna->caption());
+            $this->konsepwarna->EditValue = HtmlEncode($this->konsepwarna->CurrentValue);
+            $this->konsepwarna->PlaceHolder = RemoveHtml($this->konsepwarna->caption());
 
             // no_notifikasi
             $this->no_notifikasi->EditAttrs["class"] = "form-control";
@@ -2007,113 +1759,31 @@ class NpdDesainGrid extends NpdDesain
             $this->no_notifikasi->EditValue = HtmlEncode($this->no_notifikasi->CurrentValue);
             $this->no_notifikasi->PlaceHolder = RemoveHtml($this->no_notifikasi->caption());
 
-            // jenis_kemasan
-            $this->jenis_kemasan->EditAttrs["class"] = "form-control";
-            $this->jenis_kemasan->EditCustomAttributes = "";
-            if (!$this->jenis_kemasan->Raw) {
-                $this->jenis_kemasan->CurrentValue = HtmlDecode($this->jenis_kemasan->CurrentValue);
-            }
-            $this->jenis_kemasan->EditValue = HtmlEncode($this->jenis_kemasan->CurrentValue);
-            $this->jenis_kemasan->PlaceHolder = RemoveHtml($this->jenis_kemasan->caption());
-
-            // posisi_label
-            $this->posisi_label->EditAttrs["class"] = "form-control";
-            $this->posisi_label->EditCustomAttributes = "";
-            if (!$this->posisi_label->Raw) {
-                $this->posisi_label->CurrentValue = HtmlDecode($this->posisi_label->CurrentValue);
-            }
-            $this->posisi_label->EditValue = HtmlEncode($this->posisi_label->CurrentValue);
-            $this->posisi_label->PlaceHolder = RemoveHtml($this->posisi_label->caption());
-
-            // bahan_label
-            $this->bahan_label->EditAttrs["class"] = "form-control";
-            $this->bahan_label->EditCustomAttributes = "";
-            if (!$this->bahan_label->Raw) {
-                $this->bahan_label->CurrentValue = HtmlDecode($this->bahan_label->CurrentValue);
-            }
-            $this->bahan_label->EditValue = HtmlEncode($this->bahan_label->CurrentValue);
-            $this->bahan_label->PlaceHolder = RemoveHtml($this->bahan_label->caption());
-
-            // draft_layout
-            $this->draft_layout->EditAttrs["class"] = "form-control";
-            $this->draft_layout->EditCustomAttributes = "";
-            if (!$this->draft_layout->Raw) {
-                $this->draft_layout->CurrentValue = HtmlDecode($this->draft_layout->CurrentValue);
-            }
-            $this->draft_layout->EditValue = HtmlEncode($this->draft_layout->CurrentValue);
-            $this->draft_layout->PlaceHolder = RemoveHtml($this->draft_layout->caption());
-
-            // created_at
-            $this->created_at->EditAttrs["class"] = "form-control";
-            $this->created_at->EditCustomAttributes = "";
-            $this->created_at->EditValue = HtmlEncode(FormatDateTime($this->created_at->CurrentValue, 8));
-            $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
-
             // Add refer script
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-
-            // tanggal_terima
-            $this->tanggal_terima->LinkCustomAttributes = "";
-            $this->tanggal_terima->HrefValue = "";
-
-            // tanggal_submit
-            $this->tanggal_submit->LinkCustomAttributes = "";
-            $this->tanggal_submit->HrefValue = "";
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
 
             // nama_produk
             $this->nama_produk->LinkCustomAttributes = "";
             $this->nama_produk->HrefValue = "";
 
-            // klaim_bahan
-            $this->klaim_bahan->LinkCustomAttributes = "";
-            $this->klaim_bahan->HrefValue = "";
-
-            // campaign_produk
-            $this->campaign_produk->LinkCustomAttributes = "";
-            $this->campaign_produk->HrefValue = "";
-
-            // konsep
-            $this->konsep->LinkCustomAttributes = "";
-            $this->konsep->HrefValue = "";
-
-            // tema_warna
-            $this->tema_warna->LinkCustomAttributes = "";
-            $this->tema_warna->HrefValue = "";
+            // konsepwarna
+            $this->konsepwarna->LinkCustomAttributes = "";
+            $this->konsepwarna->HrefValue = "";
 
             // no_notifikasi
             $this->no_notifikasi->LinkCustomAttributes = "";
             $this->no_notifikasi->HrefValue = "";
-
-            // jenis_kemasan
-            $this->jenis_kemasan->LinkCustomAttributes = "";
-            $this->jenis_kemasan->HrefValue = "";
-
-            // posisi_label
-            $this->posisi_label->LinkCustomAttributes = "";
-            $this->posisi_label->HrefValue = "";
-
-            // bahan_label
-            $this->bahan_label->LinkCustomAttributes = "";
-            $this->bahan_label->HrefValue = "";
-
-            // draft_layout
-            $this->draft_layout->LinkCustomAttributes = "";
-            $this->draft_layout->HrefValue = "";
-
-            // created_at
-            $this->created_at->LinkCustomAttributes = "";
-            $this->created_at->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -2129,32 +1799,17 @@ class NpdDesainGrid extends NpdDesain
                 $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
             }
 
-            // idcustomer
-            $this->idcustomer->EditAttrs["class"] = "form-control";
-            $this->idcustomer->EditCustomAttributes = "";
-            $this->idcustomer->EditValue = HtmlEncode($this->idcustomer->CurrentValue);
-            $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+            // tglterima
+            $this->tglterima->EditAttrs["class"] = "form-control";
+            $this->tglterima->EditCustomAttributes = "";
+            $this->tglterima->EditValue = HtmlEncode(FormatDateTime($this->tglterima->CurrentValue, 8));
+            $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
 
-            // status
-            $this->status->EditAttrs["class"] = "form-control";
-            $this->status->EditCustomAttributes = "";
-            if (!$this->status->Raw) {
-                $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-            }
-            $this->status->EditValue = HtmlEncode($this->status->CurrentValue);
-            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
-            // tanggal_terima
-            $this->tanggal_terima->EditAttrs["class"] = "form-control";
-            $this->tanggal_terima->EditCustomAttributes = "";
-            $this->tanggal_terima->EditValue = HtmlEncode(FormatDateTime($this->tanggal_terima->CurrentValue, 8));
-            $this->tanggal_terima->PlaceHolder = RemoveHtml($this->tanggal_terima->caption());
-
-            // tanggal_submit
-            $this->tanggal_submit->EditAttrs["class"] = "form-control";
-            $this->tanggal_submit->EditCustomAttributes = "";
-            $this->tanggal_submit->EditValue = HtmlEncode(FormatDateTime($this->tanggal_submit->CurrentValue, 8));
-            $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
+            // tglsubmit
+            $this->tglsubmit->EditAttrs["class"] = "form-control";
+            $this->tglsubmit->EditCustomAttributes = "";
+            $this->tglsubmit->EditValue = HtmlEncode(FormatDateTime($this->tglsubmit->CurrentValue, 8));
+            $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
             // nama_produk
             $this->nama_produk->EditAttrs["class"] = "form-control";
@@ -2165,41 +1820,14 @@ class NpdDesainGrid extends NpdDesain
             $this->nama_produk->EditValue = HtmlEncode($this->nama_produk->CurrentValue);
             $this->nama_produk->PlaceHolder = RemoveHtml($this->nama_produk->caption());
 
-            // klaim_bahan
-            $this->klaim_bahan->EditAttrs["class"] = "form-control";
-            $this->klaim_bahan->EditCustomAttributes = "";
-            if (!$this->klaim_bahan->Raw) {
-                $this->klaim_bahan->CurrentValue = HtmlDecode($this->klaim_bahan->CurrentValue);
+            // konsepwarna
+            $this->konsepwarna->EditAttrs["class"] = "form-control";
+            $this->konsepwarna->EditCustomAttributes = "";
+            if (!$this->konsepwarna->Raw) {
+                $this->konsepwarna->CurrentValue = HtmlDecode($this->konsepwarna->CurrentValue);
             }
-            $this->klaim_bahan->EditValue = HtmlEncode($this->klaim_bahan->CurrentValue);
-            $this->klaim_bahan->PlaceHolder = RemoveHtml($this->klaim_bahan->caption());
-
-            // campaign_produk
-            $this->campaign_produk->EditAttrs["class"] = "form-control";
-            $this->campaign_produk->EditCustomAttributes = "";
-            if (!$this->campaign_produk->Raw) {
-                $this->campaign_produk->CurrentValue = HtmlDecode($this->campaign_produk->CurrentValue);
-            }
-            $this->campaign_produk->EditValue = HtmlEncode($this->campaign_produk->CurrentValue);
-            $this->campaign_produk->PlaceHolder = RemoveHtml($this->campaign_produk->caption());
-
-            // konsep
-            $this->konsep->EditAttrs["class"] = "form-control";
-            $this->konsep->EditCustomAttributes = "";
-            if (!$this->konsep->Raw) {
-                $this->konsep->CurrentValue = HtmlDecode($this->konsep->CurrentValue);
-            }
-            $this->konsep->EditValue = HtmlEncode($this->konsep->CurrentValue);
-            $this->konsep->PlaceHolder = RemoveHtml($this->konsep->caption());
-
-            // tema_warna
-            $this->tema_warna->EditAttrs["class"] = "form-control";
-            $this->tema_warna->EditCustomAttributes = "";
-            if (!$this->tema_warna->Raw) {
-                $this->tema_warna->CurrentValue = HtmlDecode($this->tema_warna->CurrentValue);
-            }
-            $this->tema_warna->EditValue = HtmlEncode($this->tema_warna->CurrentValue);
-            $this->tema_warna->PlaceHolder = RemoveHtml($this->tema_warna->caption());
+            $this->konsepwarna->EditValue = HtmlEncode($this->konsepwarna->CurrentValue);
+            $this->konsepwarna->PlaceHolder = RemoveHtml($this->konsepwarna->caption());
 
             // no_notifikasi
             $this->no_notifikasi->EditAttrs["class"] = "form-control";
@@ -2210,113 +1838,31 @@ class NpdDesainGrid extends NpdDesain
             $this->no_notifikasi->EditValue = HtmlEncode($this->no_notifikasi->CurrentValue);
             $this->no_notifikasi->PlaceHolder = RemoveHtml($this->no_notifikasi->caption());
 
-            // jenis_kemasan
-            $this->jenis_kemasan->EditAttrs["class"] = "form-control";
-            $this->jenis_kemasan->EditCustomAttributes = "";
-            if (!$this->jenis_kemasan->Raw) {
-                $this->jenis_kemasan->CurrentValue = HtmlDecode($this->jenis_kemasan->CurrentValue);
-            }
-            $this->jenis_kemasan->EditValue = HtmlEncode($this->jenis_kemasan->CurrentValue);
-            $this->jenis_kemasan->PlaceHolder = RemoveHtml($this->jenis_kemasan->caption());
-
-            // posisi_label
-            $this->posisi_label->EditAttrs["class"] = "form-control";
-            $this->posisi_label->EditCustomAttributes = "";
-            if (!$this->posisi_label->Raw) {
-                $this->posisi_label->CurrentValue = HtmlDecode($this->posisi_label->CurrentValue);
-            }
-            $this->posisi_label->EditValue = HtmlEncode($this->posisi_label->CurrentValue);
-            $this->posisi_label->PlaceHolder = RemoveHtml($this->posisi_label->caption());
-
-            // bahan_label
-            $this->bahan_label->EditAttrs["class"] = "form-control";
-            $this->bahan_label->EditCustomAttributes = "";
-            if (!$this->bahan_label->Raw) {
-                $this->bahan_label->CurrentValue = HtmlDecode($this->bahan_label->CurrentValue);
-            }
-            $this->bahan_label->EditValue = HtmlEncode($this->bahan_label->CurrentValue);
-            $this->bahan_label->PlaceHolder = RemoveHtml($this->bahan_label->caption());
-
-            // draft_layout
-            $this->draft_layout->EditAttrs["class"] = "form-control";
-            $this->draft_layout->EditCustomAttributes = "";
-            if (!$this->draft_layout->Raw) {
-                $this->draft_layout->CurrentValue = HtmlDecode($this->draft_layout->CurrentValue);
-            }
-            $this->draft_layout->EditValue = HtmlEncode($this->draft_layout->CurrentValue);
-            $this->draft_layout->PlaceHolder = RemoveHtml($this->draft_layout->caption());
-
-            // created_at
-            $this->created_at->EditAttrs["class"] = "form-control";
-            $this->created_at->EditCustomAttributes = "";
-            $this->created_at->EditValue = HtmlEncode(FormatDateTime($this->created_at->CurrentValue, 8));
-            $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
-
             // Edit refer script
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-
-            // tanggal_terima
-            $this->tanggal_terima->LinkCustomAttributes = "";
-            $this->tanggal_terima->HrefValue = "";
-
-            // tanggal_submit
-            $this->tanggal_submit->LinkCustomAttributes = "";
-            $this->tanggal_submit->HrefValue = "";
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
 
             // nama_produk
             $this->nama_produk->LinkCustomAttributes = "";
             $this->nama_produk->HrefValue = "";
 
-            // klaim_bahan
-            $this->klaim_bahan->LinkCustomAttributes = "";
-            $this->klaim_bahan->HrefValue = "";
-
-            // campaign_produk
-            $this->campaign_produk->LinkCustomAttributes = "";
-            $this->campaign_produk->HrefValue = "";
-
-            // konsep
-            $this->konsep->LinkCustomAttributes = "";
-            $this->konsep->HrefValue = "";
-
-            // tema_warna
-            $this->tema_warna->LinkCustomAttributes = "";
-            $this->tema_warna->HrefValue = "";
+            // konsepwarna
+            $this->konsepwarna->LinkCustomAttributes = "";
+            $this->konsepwarna->HrefValue = "";
 
             // no_notifikasi
             $this->no_notifikasi->LinkCustomAttributes = "";
             $this->no_notifikasi->HrefValue = "";
-
-            // jenis_kemasan
-            $this->jenis_kemasan->LinkCustomAttributes = "";
-            $this->jenis_kemasan->HrefValue = "";
-
-            // posisi_label
-            $this->posisi_label->LinkCustomAttributes = "";
-            $this->posisi_label->HrefValue = "";
-
-            // bahan_label
-            $this->bahan_label->LinkCustomAttributes = "";
-            $this->bahan_label->HrefValue = "";
-
-            // draft_layout
-            $this->draft_layout->LinkCustomAttributes = "";
-            $this->draft_layout->HrefValue = "";
-
-            // created_at
-            $this->created_at->LinkCustomAttributes = "";
-            $this->created_at->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2345,92 +1891,36 @@ class NpdDesainGrid extends NpdDesain
         if (!CheckInteger($this->idnpd->FormValue)) {
             $this->idnpd->addErrorMessage($this->idnpd->getErrorMessage(false));
         }
-        if ($this->idcustomer->Required) {
-            if (!$this->idcustomer->IsDetailKey && EmptyValue($this->idcustomer->FormValue)) {
-                $this->idcustomer->addErrorMessage(str_replace("%s", $this->idcustomer->caption(), $this->idcustomer->RequiredErrorMessage));
+        if ($this->tglterima->Required) {
+            if (!$this->tglterima->IsDetailKey && EmptyValue($this->tglterima->FormValue)) {
+                $this->tglterima->addErrorMessage(str_replace("%s", $this->tglterima->caption(), $this->tglterima->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idcustomer->FormValue)) {
-            $this->idcustomer->addErrorMessage($this->idcustomer->getErrorMessage(false));
+        if (!CheckDate($this->tglterima->FormValue)) {
+            $this->tglterima->addErrorMessage($this->tglterima->getErrorMessage(false));
         }
-        if ($this->status->Required) {
-            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
-                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
+        if ($this->tglsubmit->Required) {
+            if (!$this->tglsubmit->IsDetailKey && EmptyValue($this->tglsubmit->FormValue)) {
+                $this->tglsubmit->addErrorMessage(str_replace("%s", $this->tglsubmit->caption(), $this->tglsubmit->RequiredErrorMessage));
             }
         }
-        if ($this->tanggal_terima->Required) {
-            if (!$this->tanggal_terima->IsDetailKey && EmptyValue($this->tanggal_terima->FormValue)) {
-                $this->tanggal_terima->addErrorMessage(str_replace("%s", $this->tanggal_terima->caption(), $this->tanggal_terima->RequiredErrorMessage));
-            }
-        }
-        if (!CheckDate($this->tanggal_terima->FormValue)) {
-            $this->tanggal_terima->addErrorMessage($this->tanggal_terima->getErrorMessage(false));
-        }
-        if ($this->tanggal_submit->Required) {
-            if (!$this->tanggal_submit->IsDetailKey && EmptyValue($this->tanggal_submit->FormValue)) {
-                $this->tanggal_submit->addErrorMessage(str_replace("%s", $this->tanggal_submit->caption(), $this->tanggal_submit->RequiredErrorMessage));
-            }
-        }
-        if (!CheckDate($this->tanggal_submit->FormValue)) {
-            $this->tanggal_submit->addErrorMessage($this->tanggal_submit->getErrorMessage(false));
+        if (!CheckDate($this->tglsubmit->FormValue)) {
+            $this->tglsubmit->addErrorMessage($this->tglsubmit->getErrorMessage(false));
         }
         if ($this->nama_produk->Required) {
             if (!$this->nama_produk->IsDetailKey && EmptyValue($this->nama_produk->FormValue)) {
                 $this->nama_produk->addErrorMessage(str_replace("%s", $this->nama_produk->caption(), $this->nama_produk->RequiredErrorMessage));
             }
         }
-        if ($this->klaim_bahan->Required) {
-            if (!$this->klaim_bahan->IsDetailKey && EmptyValue($this->klaim_bahan->FormValue)) {
-                $this->klaim_bahan->addErrorMessage(str_replace("%s", $this->klaim_bahan->caption(), $this->klaim_bahan->RequiredErrorMessage));
-            }
-        }
-        if ($this->campaign_produk->Required) {
-            if (!$this->campaign_produk->IsDetailKey && EmptyValue($this->campaign_produk->FormValue)) {
-                $this->campaign_produk->addErrorMessage(str_replace("%s", $this->campaign_produk->caption(), $this->campaign_produk->RequiredErrorMessage));
-            }
-        }
-        if ($this->konsep->Required) {
-            if (!$this->konsep->IsDetailKey && EmptyValue($this->konsep->FormValue)) {
-                $this->konsep->addErrorMessage(str_replace("%s", $this->konsep->caption(), $this->konsep->RequiredErrorMessage));
-            }
-        }
-        if ($this->tema_warna->Required) {
-            if (!$this->tema_warna->IsDetailKey && EmptyValue($this->tema_warna->FormValue)) {
-                $this->tema_warna->addErrorMessage(str_replace("%s", $this->tema_warna->caption(), $this->tema_warna->RequiredErrorMessage));
+        if ($this->konsepwarna->Required) {
+            if (!$this->konsepwarna->IsDetailKey && EmptyValue($this->konsepwarna->FormValue)) {
+                $this->konsepwarna->addErrorMessage(str_replace("%s", $this->konsepwarna->caption(), $this->konsepwarna->RequiredErrorMessage));
             }
         }
         if ($this->no_notifikasi->Required) {
             if (!$this->no_notifikasi->IsDetailKey && EmptyValue($this->no_notifikasi->FormValue)) {
                 $this->no_notifikasi->addErrorMessage(str_replace("%s", $this->no_notifikasi->caption(), $this->no_notifikasi->RequiredErrorMessage));
             }
-        }
-        if ($this->jenis_kemasan->Required) {
-            if (!$this->jenis_kemasan->IsDetailKey && EmptyValue($this->jenis_kemasan->FormValue)) {
-                $this->jenis_kemasan->addErrorMessage(str_replace("%s", $this->jenis_kemasan->caption(), $this->jenis_kemasan->RequiredErrorMessage));
-            }
-        }
-        if ($this->posisi_label->Required) {
-            if (!$this->posisi_label->IsDetailKey && EmptyValue($this->posisi_label->FormValue)) {
-                $this->posisi_label->addErrorMessage(str_replace("%s", $this->posisi_label->caption(), $this->posisi_label->RequiredErrorMessage));
-            }
-        }
-        if ($this->bahan_label->Required) {
-            if (!$this->bahan_label->IsDetailKey && EmptyValue($this->bahan_label->FormValue)) {
-                $this->bahan_label->addErrorMessage(str_replace("%s", $this->bahan_label->caption(), $this->bahan_label->RequiredErrorMessage));
-            }
-        }
-        if ($this->draft_layout->Required) {
-            if (!$this->draft_layout->IsDetailKey && EmptyValue($this->draft_layout->FormValue)) {
-                $this->draft_layout->addErrorMessage(str_replace("%s", $this->draft_layout->caption(), $this->draft_layout->RequiredErrorMessage));
-            }
-        }
-        if ($this->created_at->Required) {
-            if (!$this->created_at->IsDetailKey && EmptyValue($this->created_at->FormValue)) {
-                $this->created_at->addErrorMessage(str_replace("%s", $this->created_at->caption(), $this->created_at->RequiredErrorMessage));
-            }
-        }
-        if (!CheckDate($this->created_at->FormValue)) {
-            $this->created_at->addErrorMessage($this->created_at->getErrorMessage(false));
         }
 
         // Return validate result
@@ -2547,50 +2037,20 @@ class NpdDesainGrid extends NpdDesain
             }
             $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, null, $this->idnpd->ReadOnly);
 
-            // idcustomer
-            $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, $this->idcustomer->ReadOnly);
+            // tglterima
+            $this->tglterima->setDbValueDef($rsnew, UnFormatDateTime($this->tglterima->CurrentValue, 0), null, $this->tglterima->ReadOnly);
 
-            // status
-            $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
-
-            // tanggal_terima
-            $this->tanggal_terima->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_terima->CurrentValue, 0), null, $this->tanggal_terima->ReadOnly);
-
-            // tanggal_submit
-            $this->tanggal_submit->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_submit->CurrentValue, 0), null, $this->tanggal_submit->ReadOnly);
+            // tglsubmit
+            $this->tglsubmit->setDbValueDef($rsnew, UnFormatDateTime($this->tglsubmit->CurrentValue, 0), null, $this->tglsubmit->ReadOnly);
 
             // nama_produk
             $this->nama_produk->setDbValueDef($rsnew, $this->nama_produk->CurrentValue, null, $this->nama_produk->ReadOnly);
 
-            // klaim_bahan
-            $this->klaim_bahan->setDbValueDef($rsnew, $this->klaim_bahan->CurrentValue, null, $this->klaim_bahan->ReadOnly);
-
-            // campaign_produk
-            $this->campaign_produk->setDbValueDef($rsnew, $this->campaign_produk->CurrentValue, null, $this->campaign_produk->ReadOnly);
-
-            // konsep
-            $this->konsep->setDbValueDef($rsnew, $this->konsep->CurrentValue, null, $this->konsep->ReadOnly);
-
-            // tema_warna
-            $this->tema_warna->setDbValueDef($rsnew, $this->tema_warna->CurrentValue, null, $this->tema_warna->ReadOnly);
+            // konsepwarna
+            $this->konsepwarna->setDbValueDef($rsnew, $this->konsepwarna->CurrentValue, null, $this->konsepwarna->ReadOnly);
 
             // no_notifikasi
             $this->no_notifikasi->setDbValueDef($rsnew, $this->no_notifikasi->CurrentValue, null, $this->no_notifikasi->ReadOnly);
-
-            // jenis_kemasan
-            $this->jenis_kemasan->setDbValueDef($rsnew, $this->jenis_kemasan->CurrentValue, null, $this->jenis_kemasan->ReadOnly);
-
-            // posisi_label
-            $this->posisi_label->setDbValueDef($rsnew, $this->posisi_label->CurrentValue, null, $this->posisi_label->ReadOnly);
-
-            // bahan_label
-            $this->bahan_label->setDbValueDef($rsnew, $this->bahan_label->CurrentValue, null, $this->bahan_label->ReadOnly);
-
-            // draft_layout
-            $this->draft_layout->setDbValueDef($rsnew, $this->draft_layout->CurrentValue, null, $this->draft_layout->ReadOnly);
-
-            // created_at
-            $this->created_at->setDbValueDef($rsnew, UnFormatDateTime($this->created_at->CurrentValue, 0), CurrentDate(), $this->created_at->ReadOnly);
 
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
@@ -2693,50 +2153,20 @@ class NpdDesainGrid extends NpdDesain
         // idnpd
         $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, null, false);
 
-        // idcustomer
-        $this->idcustomer->setDbValueDef($rsnew, $this->idcustomer->CurrentValue, null, false);
+        // tglterima
+        $this->tglterima->setDbValueDef($rsnew, UnFormatDateTime($this->tglterima->CurrentValue, 0), null, false);
 
-        // status
-        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);
-
-        // tanggal_terima
-        $this->tanggal_terima->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_terima->CurrentValue, 0), null, false);
-
-        // tanggal_submit
-        $this->tanggal_submit->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal_submit->CurrentValue, 0), null, false);
+        // tglsubmit
+        $this->tglsubmit->setDbValueDef($rsnew, UnFormatDateTime($this->tglsubmit->CurrentValue, 0), null, false);
 
         // nama_produk
         $this->nama_produk->setDbValueDef($rsnew, $this->nama_produk->CurrentValue, null, false);
 
-        // klaim_bahan
-        $this->klaim_bahan->setDbValueDef($rsnew, $this->klaim_bahan->CurrentValue, null, false);
-
-        // campaign_produk
-        $this->campaign_produk->setDbValueDef($rsnew, $this->campaign_produk->CurrentValue, null, false);
-
-        // konsep
-        $this->konsep->setDbValueDef($rsnew, $this->konsep->CurrentValue, null, false);
-
-        // tema_warna
-        $this->tema_warna->setDbValueDef($rsnew, $this->tema_warna->CurrentValue, null, false);
+        // konsepwarna
+        $this->konsepwarna->setDbValueDef($rsnew, $this->konsepwarna->CurrentValue, null, false);
 
         // no_notifikasi
         $this->no_notifikasi->setDbValueDef($rsnew, $this->no_notifikasi->CurrentValue, null, false);
-
-        // jenis_kemasan
-        $this->jenis_kemasan->setDbValueDef($rsnew, $this->jenis_kemasan->CurrentValue, null, false);
-
-        // posisi_label
-        $this->posisi_label->setDbValueDef($rsnew, $this->posisi_label->CurrentValue, null, false);
-
-        // bahan_label
-        $this->bahan_label->setDbValueDef($rsnew, $this->bahan_label->CurrentValue, null, false);
-
-        // draft_layout
-        $this->draft_layout->setDbValueDef($rsnew, $this->draft_layout->CurrentValue, null, false);
-
-        // created_at
-        $this->created_at->setDbValueDef($rsnew, UnFormatDateTime($this->created_at->CurrentValue, 0), CurrentDate(), false);
 
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);

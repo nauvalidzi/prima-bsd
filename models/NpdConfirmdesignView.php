@@ -44,10 +44,10 @@ class NpdConfirmdesignView extends NpdConfirmdesign
     public $ExportPdfUrl;
 
     // Custom export
-    public $ExportExcelCustom = false;
-    public $ExportWordCustom = false;
-    public $ExportPdfCustom = false;
-    public $ExportEmailCustom = false;
+    public $ExportExcelCustom = true;
+    public $ExportWordCustom = true;
+    public $ExportPdfCustom = true;
+    public $ExportEmailCustom = true;
 
     // Update URLs
     public $InlineAddUrl;
@@ -149,6 +149,9 @@ class NpdConfirmdesignView extends NpdConfirmdesign
     {
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
+
+        // Custom template
+        $this->UseCustomTemplate = true;
 
         // Initialize
         $GLOBALS["Page"] = &$this;
@@ -260,18 +263,25 @@ class NpdConfirmdesignView extends NpdConfirmdesign
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -286,6 +296,11 @@ class NpdConfirmdesignView extends NpdConfirmdesign
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -424,9 +439,6 @@ class NpdConfirmdesignView extends NpdConfirmdesign
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -520,6 +532,8 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->setVisibility();
         $this->idnpd->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->desaindepan->setVisibility();
         $this->desainbelakang->setVisibility();
         $this->catatan->setVisibility();
@@ -527,7 +541,9 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         $this->desainsekunder->setVisibility();
         $this->catatansekunder->setVisibility();
         $this->tglsekunder->setVisibility();
-        $this->checked_by->setVisibility();
+        $this->submitted_by->setVisibility();
+        $this->checked1_by->setVisibility();
+        $this->checked2_by->setVisibility();
         $this->approved_by->setVisibility();
         $this->created_at->setVisibility();
         $this->updated_at->setVisibility();
@@ -545,7 +561,6 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->checked_by);
         $this->setupLookupOptions($this->approved_by);
 
         // Check modal
@@ -748,6 +763,8 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->desaindepan->setDbValue($row['desaindepan']);
         $this->desainbelakang->setDbValue($row['desainbelakang']);
         $this->catatan->setDbValue($row['catatan']);
@@ -755,7 +772,9 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         $this->desainsekunder->setDbValue($row['desainsekunder']);
         $this->catatansekunder->setDbValue($row['catatansekunder']);
         $this->tglsekunder->setDbValue($row['tglsekunder']);
-        $this->checked_by->setDbValue($row['checked_by']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -767,6 +786,8 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         $row = [];
         $row['id'] = null;
         $row['idnpd'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
         $row['desaindepan'] = null;
         $row['desainbelakang'] = null;
         $row['catatan'] = null;
@@ -774,7 +795,9 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         $row['desainsekunder'] = null;
         $row['catatansekunder'] = null;
         $row['tglsekunder'] = null;
-        $row['checked_by'] = null;
+        $row['submitted_by'] = null;
+        $row['checked1_by'] = null;
+        $row['checked2_by'] = null;
         $row['approved_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -803,6 +826,10 @@ class NpdConfirmdesignView extends NpdConfirmdesign
 
         // idnpd
 
+        // tglterima
+
+        // tglsubmit
+
         // desaindepan
 
         // desainbelakang
@@ -817,7 +844,11 @@ class NpdConfirmdesignView extends NpdConfirmdesign
 
         // tglsekunder
 
-        // checked_by
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
 
         // approved_by
 
@@ -833,6 +864,16 @@ class NpdConfirmdesignView extends NpdConfirmdesign
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
+
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
 
             // desaindepan
             $this->desaindepan->ViewValue = $this->desaindepan->CurrentValue;
@@ -864,26 +905,20 @@ class NpdConfirmdesignView extends NpdConfirmdesign
             $this->tglsekunder->ViewValue = FormatDateTime($this->tglsekunder->ViewValue, 0);
             $this->tglsekunder->ViewCustomAttributes = "";
 
-            // checked_by
-            $curVal = trim(strval($this->checked_by->CurrentValue));
-            if ($curVal != "") {
-                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
-                if ($this->checked_by->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
-                        $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
-                    } else {
-                        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
-                    }
-                }
-            } else {
-                $this->checked_by->ViewValue = null;
-            }
-            $this->checked_by->ViewCustomAttributes = "";
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // checked1_by
+            $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
+            $this->checked1_by->ViewValue = FormatNumber($this->checked1_by->ViewValue, 0, -2, -2, -2);
+            $this->checked1_by->ViewCustomAttributes = "";
+
+            // checked2_by
+            $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+            $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+            $this->checked2_by->ViewCustomAttributes = "";
 
             // approved_by
             $curVal = trim(strval($this->approved_by->CurrentValue));
@@ -926,6 +961,16 @@ class NpdConfirmdesignView extends NpdConfirmdesign
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
 
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
+
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
+
             // desaindepan
             $this->desaindepan->LinkCustomAttributes = "";
             $this->desaindepan->HrefValue = "";
@@ -961,10 +1006,20 @@ class NpdConfirmdesignView extends NpdConfirmdesign
             $this->tglsekunder->HrefValue = "";
             $this->tglsekunder->TooltipValue = "";
 
-            // checked_by
-            $this->checked_by->LinkCustomAttributes = "";
-            $this->checked_by->HrefValue = "";
-            $this->checked_by->TooltipValue = "";
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
+
+            // checked1_by
+            $this->checked1_by->LinkCustomAttributes = "";
+            $this->checked1_by->HrefValue = "";
+            $this->checked1_by->TooltipValue = "";
+
+            // checked2_by
+            $this->checked2_by->LinkCustomAttributes = "";
+            $this->checked2_by->HrefValue = "";
+            $this->checked2_by->TooltipValue = "";
 
             // approved_by
             $this->approved_by->LinkCustomAttributes = "";
@@ -985,6 +1040,11 @@ class NpdConfirmdesignView extends NpdConfirmdesign
         // Call Row Rendered event
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
+        }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
         }
     }
 
@@ -1012,8 +1072,6 @@ class NpdConfirmdesignView extends NpdConfirmdesign
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_checked_by":
-                    break;
                 case "x_approved_by":
                     break;
                 default:

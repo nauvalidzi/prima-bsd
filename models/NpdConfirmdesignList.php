@@ -570,6 +570,8 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $this->setupListOptions();
         $this->id->setVisibility();
         $this->idnpd->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->desaindepan->setVisibility();
         $this->desainbelakang->setVisibility();
         $this->catatan->Visible = false;
@@ -577,7 +579,9 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $this->desainsekunder->setVisibility();
         $this->catatansekunder->setVisibility();
         $this->tglsekunder->Visible = false;
-        $this->checked_by->Visible = false;
+        $this->submitted_by->setVisibility();
+        $this->checked1_by->setVisibility();
+        $this->checked2_by->setVisibility();
         $this->approved_by->Visible = false;
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
@@ -608,7 +612,6 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->checked_by);
         $this->setupLookupOptions($this->approved_by);
 
         // Search filters
@@ -875,6 +878,8 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
+        $filterList = Concat($filterList, $this->tglterima->AdvancedSearch->toJson(), ","); // Field tglterima
+        $filterList = Concat($filterList, $this->tglsubmit->AdvancedSearch->toJson(), ","); // Field tglsubmit
         $filterList = Concat($filterList, $this->desaindepan->AdvancedSearch->toJson(), ","); // Field desaindepan
         $filterList = Concat($filterList, $this->desainbelakang->AdvancedSearch->toJson(), ","); // Field desainbelakang
         $filterList = Concat($filterList, $this->catatan->AdvancedSearch->toJson(), ","); // Field catatan
@@ -882,7 +887,9 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $filterList = Concat($filterList, $this->desainsekunder->AdvancedSearch->toJson(), ","); // Field desainsekunder
         $filterList = Concat($filterList, $this->catatansekunder->AdvancedSearch->toJson(), ","); // Field catatansekunder
         $filterList = Concat($filterList, $this->tglsekunder->AdvancedSearch->toJson(), ","); // Field tglsekunder
-        $filterList = Concat($filterList, $this->checked_by->AdvancedSearch->toJson(), ","); // Field checked_by
+        $filterList = Concat($filterList, $this->submitted_by->AdvancedSearch->toJson(), ","); // Field submitted_by
+        $filterList = Concat($filterList, $this->checked1_by->AdvancedSearch->toJson(), ","); // Field checked1_by
+        $filterList = Concat($filterList, $this->checked2_by->AdvancedSearch->toJson(), ","); // Field checked2_by
         $filterList = Concat($filterList, $this->approved_by->AdvancedSearch->toJson(), ","); // Field approved_by
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
         $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
@@ -942,6 +949,22 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
         $this->idnpd->AdvancedSearch->save();
 
+        // Field tglterima
+        $this->tglterima->AdvancedSearch->SearchValue = @$filter["x_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator = @$filter["z_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchCondition = @$filter["v_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchValue2 = @$filter["y_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator2 = @$filter["w_tglterima"];
+        $this->tglterima->AdvancedSearch->save();
+
+        // Field tglsubmit
+        $this->tglsubmit->AdvancedSearch->SearchValue = @$filter["x_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator = @$filter["z_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchCondition = @$filter["v_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchValue2 = @$filter["y_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator2 = @$filter["w_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->save();
+
         // Field desaindepan
         $this->desaindepan->AdvancedSearch->SearchValue = @$filter["x_desaindepan"];
         $this->desaindepan->AdvancedSearch->SearchOperator = @$filter["z_desaindepan"];
@@ -998,13 +1021,29 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $this->tglsekunder->AdvancedSearch->SearchOperator2 = @$filter["w_tglsekunder"];
         $this->tglsekunder->AdvancedSearch->save();
 
-        // Field checked_by
-        $this->checked_by->AdvancedSearch->SearchValue = @$filter["x_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchOperator = @$filter["z_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchCondition = @$filter["v_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchValue2 = @$filter["y_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked_by"];
-        $this->checked_by->AdvancedSearch->save();
+        // Field submitted_by
+        $this->submitted_by->AdvancedSearch->SearchValue = @$filter["x_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator = @$filter["z_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchCondition = @$filter["v_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchValue2 = @$filter["y_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator2 = @$filter["w_submitted_by"];
+        $this->submitted_by->AdvancedSearch->save();
+
+        // Field checked1_by
+        $this->checked1_by->AdvancedSearch->SearchValue = @$filter["x_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchOperator = @$filter["z_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchCondition = @$filter["v_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchValue2 = @$filter["y_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked1_by"];
+        $this->checked1_by->AdvancedSearch->save();
+
+        // Field checked2_by
+        $this->checked2_by->AdvancedSearch->SearchValue = @$filter["x_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchOperator = @$filter["z_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchCondition = @$filter["v_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchValue2 = @$filter["y_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked2_by"];
+        $this->checked2_by->AdvancedSearch->save();
 
         // Field approved_by
         $this->approved_by->AdvancedSearch->SearchValue = @$filter["x_approved_by"];
@@ -1206,11 +1245,16 @@ class NpdConfirmdesignList extends NpdConfirmdesign
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->id); // id
             $this->updateSort($this->idnpd); // idnpd
+            $this->updateSort($this->tglterima); // tglterima
+            $this->updateSort($this->tglsubmit); // tglsubmit
             $this->updateSort($this->desaindepan); // desaindepan
             $this->updateSort($this->desainbelakang); // desainbelakang
             $this->updateSort($this->tglprimer); // tglprimer
             $this->updateSort($this->desainsekunder); // desainsekunder
             $this->updateSort($this->catatansekunder); // catatansekunder
+            $this->updateSort($this->submitted_by); // submitted_by
+            $this->updateSort($this->checked1_by); // checked1_by
+            $this->updateSort($this->checked2_by); // checked2_by
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1252,6 +1296,8 @@ class NpdConfirmdesignList extends NpdConfirmdesign
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->idnpd->setSort("");
+                $this->tglterima->setSort("");
+                $this->tglsubmit->setSort("");
                 $this->desaindepan->setSort("");
                 $this->desainbelakang->setSort("");
                 $this->catatan->setSort("");
@@ -1259,7 +1305,9 @@ class NpdConfirmdesignList extends NpdConfirmdesign
                 $this->desainsekunder->setSort("");
                 $this->catatansekunder->setSort("");
                 $this->tglsekunder->setSort("");
-                $this->checked_by->setSort("");
+                $this->submitted_by->setSort("");
+                $this->checked1_by->setSort("");
+                $this->checked2_by->setSort("");
                 $this->approved_by->setSort("");
                 $this->created_at->setSort("");
                 $this->updated_at->setSort("");
@@ -1685,6 +1733,8 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->desaindepan->setDbValue($row['desaindepan']);
         $this->desainbelakang->setDbValue($row['desainbelakang']);
         $this->catatan->setDbValue($row['catatan']);
@@ -1692,7 +1742,9 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $this->desainsekunder->setDbValue($row['desainsekunder']);
         $this->catatansekunder->setDbValue($row['catatansekunder']);
         $this->tglsekunder->setDbValue($row['tglsekunder']);
-        $this->checked_by->setDbValue($row['checked_by']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -1704,6 +1756,8 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $row = [];
         $row['id'] = null;
         $row['idnpd'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
         $row['desaindepan'] = null;
         $row['desainbelakang'] = null;
         $row['catatan'] = null;
@@ -1711,7 +1765,9 @@ class NpdConfirmdesignList extends NpdConfirmdesign
         $row['desainsekunder'] = null;
         $row['catatansekunder'] = null;
         $row['tglsekunder'] = null;
-        $row['checked_by'] = null;
+        $row['submitted_by'] = null;
+        $row['checked1_by'] = null;
+        $row['checked2_by'] = null;
         $row['approved_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -1756,6 +1812,10 @@ class NpdConfirmdesignList extends NpdConfirmdesign
 
         // idnpd
 
+        // tglterima
+
+        // tglsubmit
+
         // desaindepan
 
         // desainbelakang
@@ -1770,7 +1830,11 @@ class NpdConfirmdesignList extends NpdConfirmdesign
 
         // tglsekunder
 
-        // checked_by
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
 
         // approved_by
 
@@ -1786,6 +1850,16 @@ class NpdConfirmdesignList extends NpdConfirmdesign
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
+
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
 
             // desaindepan
             $this->desaindepan->ViewValue = $this->desaindepan->CurrentValue;
@@ -1813,26 +1887,20 @@ class NpdConfirmdesignList extends NpdConfirmdesign
             $this->tglsekunder->ViewValue = FormatDateTime($this->tglsekunder->ViewValue, 0);
             $this->tglsekunder->ViewCustomAttributes = "";
 
-            // checked_by
-            $curVal = trim(strval($this->checked_by->CurrentValue));
-            if ($curVal != "") {
-                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
-                if ($this->checked_by->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
-                        $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
-                    } else {
-                        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
-                    }
-                }
-            } else {
-                $this->checked_by->ViewValue = null;
-            }
-            $this->checked_by->ViewCustomAttributes = "";
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // checked1_by
+            $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
+            $this->checked1_by->ViewValue = FormatNumber($this->checked1_by->ViewValue, 0, -2, -2, -2);
+            $this->checked1_by->ViewCustomAttributes = "";
+
+            // checked2_by
+            $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+            $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+            $this->checked2_by->ViewCustomAttributes = "";
 
             // approved_by
             $curVal = trim(strval($this->approved_by->CurrentValue));
@@ -1875,6 +1943,16 @@ class NpdConfirmdesignList extends NpdConfirmdesign
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
 
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
+
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
+
             // desaindepan
             $this->desaindepan->LinkCustomAttributes = "";
             $this->desaindepan->HrefValue = "";
@@ -1899,6 +1977,21 @@ class NpdConfirmdesignList extends NpdConfirmdesign
             $this->catatansekunder->LinkCustomAttributes = "";
             $this->catatansekunder->HrefValue = "";
             $this->catatansekunder->TooltipValue = "";
+
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
+
+            // checked1_by
+            $this->checked1_by->LinkCustomAttributes = "";
+            $this->checked1_by->HrefValue = "";
+            $this->checked1_by->TooltipValue = "";
+
+            // checked2_by
+            $this->checked2_by->LinkCustomAttributes = "";
+            $this->checked2_by->HrefValue = "";
+            $this->checked2_by->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1969,8 +2062,6 @@ class NpdConfirmdesignList extends NpdConfirmdesign
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_checked_by":
-                    break;
                 case "x_approved_by":
                     break;
                 default:

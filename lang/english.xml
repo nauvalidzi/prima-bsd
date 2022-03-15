@@ -2908,58 +2908,64 @@
     <table id="npd_desain">
       <phrase id="tblcaption" value="Pembuatan Desain" />
       <field id="id">
-        <phrase id="fldcaption" value="id" />
+        <phrase id="fldcaption" value="ID" />
       </field>
       <field id="idnpd">
-        <phrase id="fldcaption" value="idnpd" />
+        <phrase id="fldcaption" value="Kode Order" />
       </field>
-      <field id="idcustomer">
-        <phrase id="fldcaption" value="idcustomer" />
+      <field id="tglterima">
+        <phrase id="fldcaption" value="Tgl. Terima" />
       </field>
-      <field id="status">
-        <phrase id="fldcaption" value="status" />
-      </field>
-      <field id="tanggal_terima">
-        <phrase id="fldcaption" value="tanggal terima" />
-      </field>
-      <field id="tanggal_submit">
-        <phrase id="fldcaption" value="tanggal submit" />
+      <field id="tglsubmit">
+        <phrase id="fldcaption" value="Tgl. Submit" />
       </field>
       <field id="nama_produk">
-        <phrase id="fldcaption" value="nama produk" />
+        <phrase id="fldcaption" value="Nama Produk" />
       </field>
       <field id="klaim_bahan">
-        <phrase id="fldcaption" value="klaim bahan" />
+        <phrase id="fldcaption" value="Klaim Bahan" />
       </field>
       <field id="campaign_produk">
-        <phrase id="fldcaption" value="campaign produk" />
+        <phrase id="fldcaption" value="Campaign Produk" />
       </field>
-      <field id="konsep">
-        <phrase id="fldcaption" value="konsep" />
-      </field>
-      <field id="tema_warna">
-        <phrase id="fldcaption" value="tema warna" />
+      <field id="konsepwarna">
+        <phrase id="fldcaption" value="Konsep" />
       </field>
       <field id="no_notifikasi">
-        <phrase id="fldcaption" value="no notifikasi" />
+        <phrase id="fldcaption" value="No. Notifikasi (opsional)" />
       </field>
       <field id="jenis_kemasan">
-        <phrase id="fldcaption" value="jenis kemasan" />
+        <phrase id="fldcaption" value="Jenis Kemasan/Ukuran" />
       </field>
       <field id="posisi_label">
-        <phrase id="fldcaption" value="posisi label" />
+        <phrase id="fldcaption" value="Posisi Label" />
       </field>
       <field id="bahan_label">
-        <phrase id="fldcaption" value="bahan label" />
+        <phrase id="fldcaption" value="Bahan Label/Inner Bo" />
       </field>
       <field id="draft_layout">
-        <phrase id="fldcaption" value="draft layout" />
+        <phrase id="fldcaption" value="Draft Layout" />
       </field>
       <field id="keterangan">
-        <phrase id="fldcaption" value="keterangan" />
+        <phrase id="fldcaption" value="Keterangan" />
+      </field>
+      <field id="submitted_by">
+        <phrase id="fldcaption" value="Diajukan oleh" />
+      </field>
+      <field id="checked1_by">
+        <phrase id="fldcaption" value="Diperiksa oleh (1)" />
+      </field>
+      <field id="checked2_by">
+        <phrase id="fldcaption" value="Diperiksa oleh (2)" />
+      </field>
+      <field id="approved_by">
+        <phrase id="fldcaption" value="Disetujui oleh" />
       </field>
       <field id="created_at">
         <phrase id="fldcaption" value="created at" />
+      </field>
+      <field id="updated_at">
+        <phrase id="fldcaption" value="updated by" />
       </field>
     </table>
     <table id="print_suratjalan">
@@ -2971,7 +2977,13 @@
         <phrase id="fldcaption" value="ID" />
       </field>
       <field id="idnpd">
-        <phrase id="fldcaption" value="NPD" />
+        <phrase id="fldcaption" value="Kode Order" />
+      </field>
+      <field id="tglterima">
+        <phrase id="fldcaption" value="Tgl. Terima" />
+      </field>
+      <field id="tglsubmit">
+        <phrase id="fldcaption" value="Tgl. Submit" />
       </field>
       <field id="desaindepan">
         <phrase id="fldcaption" value="Desain Depan" />
@@ -2994,8 +3006,14 @@
       <field id="tglsekunder">
         <phrase id="fldcaption" value="Tgl. Sekunder" />
       </field>
-      <field id="checked_by">
-        <phrase id="fldcaption" value="Diperiksa oleh" />
+      <field id="submitted_by">
+        <phrase id="fldcaption" value="Diajukan oleh" />
+      </field>
+      <field id="checked1_by">
+        <phrase id="fldcaption" value="Diperiksa oleh (1)" />
+      </field>
+      <field id="checked2_by">
+        <phrase id="fldcaption" value="Diperiksa oleh (2)" />
       </field>
       <field id="approved_by">
         <phrase id="fldcaption" value="Disetujui oleh" />
@@ -3013,7 +3031,13 @@
         <phrase id="fldcaption" value="ID" />
       </field>
       <field id="idnpd">
-        <phrase id="fldcaption" value="NPD" />
+        <phrase id="fldcaption" value="Kode Order" />
+      </field>
+      <field id="tglterima">
+        <phrase id="fldcaption" value="Tgl. Terima" />
+      </field>
+      <field id="tglsubmit">
+        <phrase id="fldcaption" value="Tgl. Submit" />
       </field>
       <field id="dummydepan">
         <phrase id="fldcaption" value="Dummy Depan" />
@@ -3033,7 +3057,13 @@
       <field id="ttd">
         <phrase id="fldcaption" value="Tgl. Tanda Tangan" />
       </field>
-      <field id="checked_by">
+      <field id="submitted_by">
+        <phrase id="fldcaption" value="Diajukan oleh" />
+      </field>
+      <field id="checked1_by">
+        <phrase id="fldcaption" value="Diperiksa oleh" />
+      </field>
+      <field id="checked2_by">
         <phrase id="fldcaption" value="Diperiksa oleh" />
       </field>
       <field id="approved_by">
@@ -3051,38 +3081,56 @@
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
+      <field id="idnpd">
+        <phrase id="fldcaption" value="Kode Order" />
+      </field>
+      <field id="tglterima">
+        <phrase id="fldcaption" value="Tgl. Terima" />
+      </field>
+      <field id="tglsubmit">
+        <phrase id="fldcaption" value="Tgl. Submit" />
+      </field>
       <field id="brand">
         <phrase id="fldcaption" value="Brand" />
       </field>
-      <field id="tglkirim">
+      <field id="tglkirimprimer">
         <phrase id="fldcaption" value="Tgl. Kirim" />
       </field>
-      <field id="tgldisetujui">
+      <field id="tgldisetujuiprimer">
         <phrase id="fldcaption" value="Tgl. Disetujui" />
       </field>
       <field id="desainprimer">
         <phrase id="fldcaption" value="Desain Primer" />
       </field>
       <field id="materialprimer">
-        <phrase id="fldcaption" value="Material Primer" />
+        <phrase id="fldcaption" value="Material Label" />
       </field>
       <field id="aplikasiprimer">
-        <phrase id="fldcaption" value="Aplikasi Primer" />
+        <phrase id="fldcaption" value="Cara Aplikasi Label" />
       </field>
       <field id="jumlahcetakprimer">
         <phrase id="fldcaption" value="Jumlah Cetak Primer" />
       </field>
+      <field id="tglkirimsekunder">
+        <phrase id="fldcaption" value="Tgl. Kirim" />
+      </field>
+      <field id="tgldisetujuisekunder">
+        <phrase id="fldcaption" value="Tgl. Disetujui" />
+      </field>
       <field id="desainsekunder">
         <phrase id="fldcaption" value="Desain Sekunder" />
       </field>
-      <field id="materialinnerbox">
+      <field id="materialsekunder">
         <phrase id="fldcaption" value="Material Inner Box" />
       </field>
-      <field id="aplikasiinnerbox">
+      <field id="aplikasisekunder">
         <phrase id="fldcaption" value="Aplikasi Inner Box" />
       </field>
-      <field id="jumlahcetak">
+      <field id="jumlahcetaksekunder">
         <phrase id="fldcaption" value="Jumlah Cetak" />
+      </field>
+      <field id="submitted_by">
+        <phrase id="fldcaption" value="Diajukan oleh" />
       </field>
       <field id="checked_by">
         <phrase id="fldcaption" value="Diperiksa oleh" />
@@ -3094,7 +3142,7 @@
         <phrase id="fldcaption" value="created at" />
       </field>
       <field id="updated_at">
-        <phrase id="fldcaption" value="Disetujui leh" />
+        <phrase id="fldcaption" value="updated at" />
       </field>
     </table>
     <table id="npd_masterdata">

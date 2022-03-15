@@ -570,22 +570,24 @@ class NpdDesainList extends NpdDesain
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->status->setVisibility();
-        $this->tanggal_terima->setVisibility();
-        $this->tanggal_submit->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->nama_produk->setVisibility();
-        $this->klaim_bahan->setVisibility();
-        $this->campaign_produk->setVisibility();
-        $this->konsep->setVisibility();
-        $this->tema_warna->setVisibility();
+        $this->klaim_bahan->Visible = false;
+        $this->campaign_produk->Visible = false;
+        $this->konsepwarna->setVisibility();
         $this->no_notifikasi->setVisibility();
-        $this->jenis_kemasan->setVisibility();
-        $this->posisi_label->setVisibility();
-        $this->bahan_label->setVisibility();
-        $this->draft_layout->setVisibility();
+        $this->jenis_kemasan->Visible = false;
+        $this->posisi_label->Visible = false;
+        $this->bahan_label->Visible = false;
+        $this->draft_layout->Visible = false;
         $this->keterangan->Visible = false;
-        $this->created_at->setVisibility();
+        $this->submitted_by->Visible = false;
+        $this->checked1_by->Visible = false;
+        $this->checked2_by->Visible = false;
+        $this->approved_by->Visible = false;
+        $this->created_at->Visible = false;
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -901,22 +903,24 @@ class NpdDesainList extends NpdDesain
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
-        $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
-        $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
-        $filterList = Concat($filterList, $this->tanggal_terima->AdvancedSearch->toJson(), ","); // Field tanggal_terima
-        $filterList = Concat($filterList, $this->tanggal_submit->AdvancedSearch->toJson(), ","); // Field tanggal_submit
+        $filterList = Concat($filterList, $this->tglterima->AdvancedSearch->toJson(), ","); // Field tglterima
+        $filterList = Concat($filterList, $this->tglsubmit->AdvancedSearch->toJson(), ","); // Field tglsubmit
         $filterList = Concat($filterList, $this->nama_produk->AdvancedSearch->toJson(), ","); // Field nama_produk
         $filterList = Concat($filterList, $this->klaim_bahan->AdvancedSearch->toJson(), ","); // Field klaim_bahan
         $filterList = Concat($filterList, $this->campaign_produk->AdvancedSearch->toJson(), ","); // Field campaign_produk
-        $filterList = Concat($filterList, $this->konsep->AdvancedSearch->toJson(), ","); // Field konsep
-        $filterList = Concat($filterList, $this->tema_warna->AdvancedSearch->toJson(), ","); // Field tema_warna
+        $filterList = Concat($filterList, $this->konsepwarna->AdvancedSearch->toJson(), ","); // Field konsepwarna
         $filterList = Concat($filterList, $this->no_notifikasi->AdvancedSearch->toJson(), ","); // Field no_notifikasi
         $filterList = Concat($filterList, $this->jenis_kemasan->AdvancedSearch->toJson(), ","); // Field jenis_kemasan
         $filterList = Concat($filterList, $this->posisi_label->AdvancedSearch->toJson(), ","); // Field posisi_label
         $filterList = Concat($filterList, $this->bahan_label->AdvancedSearch->toJson(), ","); // Field bahan_label
         $filterList = Concat($filterList, $this->draft_layout->AdvancedSearch->toJson(), ","); // Field draft_layout
         $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
+        $filterList = Concat($filterList, $this->submitted_by->AdvancedSearch->toJson(), ","); // Field submitted_by
+        $filterList = Concat($filterList, $this->checked1_by->AdvancedSearch->toJson(), ","); // Field checked1_by
+        $filterList = Concat($filterList, $this->checked2_by->AdvancedSearch->toJson(), ","); // Field checked2_by
+        $filterList = Concat($filterList, $this->approved_by->AdvancedSearch->toJson(), ","); // Field approved_by
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
+        $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -973,37 +977,21 @@ class NpdDesainList extends NpdDesain
         $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
         $this->idnpd->AdvancedSearch->save();
 
-        // Field idcustomer
-        $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchCondition = @$filter["v_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
-        $this->idcustomer->AdvancedSearch->save();
+        // Field tglterima
+        $this->tglterima->AdvancedSearch->SearchValue = @$filter["x_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator = @$filter["z_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchCondition = @$filter["v_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchValue2 = @$filter["y_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator2 = @$filter["w_tglterima"];
+        $this->tglterima->AdvancedSearch->save();
 
-        // Field status
-        $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
-        $this->status->AdvancedSearch->SearchOperator = @$filter["z_status"];
-        $this->status->AdvancedSearch->SearchCondition = @$filter["v_status"];
-        $this->status->AdvancedSearch->SearchValue2 = @$filter["y_status"];
-        $this->status->AdvancedSearch->SearchOperator2 = @$filter["w_status"];
-        $this->status->AdvancedSearch->save();
-
-        // Field tanggal_terima
-        $this->tanggal_terima->AdvancedSearch->SearchValue = @$filter["x_tanggal_terima"];
-        $this->tanggal_terima->AdvancedSearch->SearchOperator = @$filter["z_tanggal_terima"];
-        $this->tanggal_terima->AdvancedSearch->SearchCondition = @$filter["v_tanggal_terima"];
-        $this->tanggal_terima->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_terima"];
-        $this->tanggal_terima->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_terima"];
-        $this->tanggal_terima->AdvancedSearch->save();
-
-        // Field tanggal_submit
-        $this->tanggal_submit->AdvancedSearch->SearchValue = @$filter["x_tanggal_submit"];
-        $this->tanggal_submit->AdvancedSearch->SearchOperator = @$filter["z_tanggal_submit"];
-        $this->tanggal_submit->AdvancedSearch->SearchCondition = @$filter["v_tanggal_submit"];
-        $this->tanggal_submit->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_submit"];
-        $this->tanggal_submit->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_submit"];
-        $this->tanggal_submit->AdvancedSearch->save();
+        // Field tglsubmit
+        $this->tglsubmit->AdvancedSearch->SearchValue = @$filter["x_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator = @$filter["z_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchCondition = @$filter["v_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchValue2 = @$filter["y_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator2 = @$filter["w_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->save();
 
         // Field nama_produk
         $this->nama_produk->AdvancedSearch->SearchValue = @$filter["x_nama_produk"];
@@ -1029,21 +1017,13 @@ class NpdDesainList extends NpdDesain
         $this->campaign_produk->AdvancedSearch->SearchOperator2 = @$filter["w_campaign_produk"];
         $this->campaign_produk->AdvancedSearch->save();
 
-        // Field konsep
-        $this->konsep->AdvancedSearch->SearchValue = @$filter["x_konsep"];
-        $this->konsep->AdvancedSearch->SearchOperator = @$filter["z_konsep"];
-        $this->konsep->AdvancedSearch->SearchCondition = @$filter["v_konsep"];
-        $this->konsep->AdvancedSearch->SearchValue2 = @$filter["y_konsep"];
-        $this->konsep->AdvancedSearch->SearchOperator2 = @$filter["w_konsep"];
-        $this->konsep->AdvancedSearch->save();
-
-        // Field tema_warna
-        $this->tema_warna->AdvancedSearch->SearchValue = @$filter["x_tema_warna"];
-        $this->tema_warna->AdvancedSearch->SearchOperator = @$filter["z_tema_warna"];
-        $this->tema_warna->AdvancedSearch->SearchCondition = @$filter["v_tema_warna"];
-        $this->tema_warna->AdvancedSearch->SearchValue2 = @$filter["y_tema_warna"];
-        $this->tema_warna->AdvancedSearch->SearchOperator2 = @$filter["w_tema_warna"];
-        $this->tema_warna->AdvancedSearch->save();
+        // Field konsepwarna
+        $this->konsepwarna->AdvancedSearch->SearchValue = @$filter["x_konsepwarna"];
+        $this->konsepwarna->AdvancedSearch->SearchOperator = @$filter["z_konsepwarna"];
+        $this->konsepwarna->AdvancedSearch->SearchCondition = @$filter["v_konsepwarna"];
+        $this->konsepwarna->AdvancedSearch->SearchValue2 = @$filter["y_konsepwarna"];
+        $this->konsepwarna->AdvancedSearch->SearchOperator2 = @$filter["w_konsepwarna"];
+        $this->konsepwarna->AdvancedSearch->save();
 
         // Field no_notifikasi
         $this->no_notifikasi->AdvancedSearch->SearchValue = @$filter["x_no_notifikasi"];
@@ -1093,6 +1073,38 @@ class NpdDesainList extends NpdDesain
         $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
         $this->keterangan->AdvancedSearch->save();
 
+        // Field submitted_by
+        $this->submitted_by->AdvancedSearch->SearchValue = @$filter["x_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator = @$filter["z_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchCondition = @$filter["v_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchValue2 = @$filter["y_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator2 = @$filter["w_submitted_by"];
+        $this->submitted_by->AdvancedSearch->save();
+
+        // Field checked1_by
+        $this->checked1_by->AdvancedSearch->SearchValue = @$filter["x_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchOperator = @$filter["z_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchCondition = @$filter["v_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchValue2 = @$filter["y_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked1_by"];
+        $this->checked1_by->AdvancedSearch->save();
+
+        // Field checked2_by
+        $this->checked2_by->AdvancedSearch->SearchValue = @$filter["x_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchOperator = @$filter["z_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchCondition = @$filter["v_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchValue2 = @$filter["y_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked2_by"];
+        $this->checked2_by->AdvancedSearch->save();
+
+        // Field approved_by
+        $this->approved_by->AdvancedSearch->SearchValue = @$filter["x_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchOperator = @$filter["z_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchCondition = @$filter["v_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchValue2 = @$filter["y_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchOperator2 = @$filter["w_approved_by"];
+        $this->approved_by->AdvancedSearch->save();
+
         // Field created_at
         $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
@@ -1100,6 +1112,14 @@ class NpdDesainList extends NpdDesain
         $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
+
+        // Field updated_at
+        $this->updated_at->AdvancedSearch->SearchValue = @$filter["x_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchOperator = @$filter["z_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchCondition = @$filter["v_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchValue2 = @$filter["y_updated_at"];
+        $this->updated_at->AdvancedSearch->SearchOperator2 = @$filter["w_updated_at"];
+        $this->updated_at->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1108,12 +1128,10 @@ class NpdDesainList extends NpdDesain
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->status, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->nama_produk, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->klaim_bahan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->campaign_produk, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->konsep, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->tema_warna, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->konsepwarna, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->no_notifikasi, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->jenis_kemasan, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->posisi_label, $arKeywords, $type);
@@ -1283,21 +1301,11 @@ class NpdDesainList extends NpdDesain
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->idnpd); // idnpd
-            $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->status); // status
-            $this->updateSort($this->tanggal_terima); // tanggal_terima
-            $this->updateSort($this->tanggal_submit); // tanggal_submit
+            $this->updateSort($this->tglterima); // tglterima
+            $this->updateSort($this->tglsubmit); // tglsubmit
             $this->updateSort($this->nama_produk); // nama_produk
-            $this->updateSort($this->klaim_bahan); // klaim_bahan
-            $this->updateSort($this->campaign_produk); // campaign_produk
-            $this->updateSort($this->konsep); // konsep
-            $this->updateSort($this->tema_warna); // tema_warna
+            $this->updateSort($this->konsepwarna); // konsepwarna
             $this->updateSort($this->no_notifikasi); // no_notifikasi
-            $this->updateSort($this->jenis_kemasan); // jenis_kemasan
-            $this->updateSort($this->posisi_label); // posisi_label
-            $this->updateSort($this->bahan_label); // bahan_label
-            $this->updateSort($this->draft_layout); // draft_layout
-            $this->updateSort($this->created_at); // created_at
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1347,22 +1355,24 @@ class NpdDesainList extends NpdDesain
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->idnpd->setSort("");
-                $this->idcustomer->setSort("");
-                $this->status->setSort("");
-                $this->tanggal_terima->setSort("");
-                $this->tanggal_submit->setSort("");
+                $this->tglterima->setSort("");
+                $this->tglsubmit->setSort("");
                 $this->nama_produk->setSort("");
                 $this->klaim_bahan->setSort("");
                 $this->campaign_produk->setSort("");
-                $this->konsep->setSort("");
-                $this->tema_warna->setSort("");
+                $this->konsepwarna->setSort("");
                 $this->no_notifikasi->setSort("");
                 $this->jenis_kemasan->setSort("");
                 $this->posisi_label->setSort("");
                 $this->bahan_label->setSort("");
                 $this->draft_layout->setSort("");
                 $this->keterangan->setSort("");
+                $this->submitted_by->setSort("");
+                $this->checked1_by->setSort("");
+                $this->checked2_by->setSort("");
+                $this->approved_by->setSort("");
                 $this->created_at->setSort("");
+                $this->updated_at->setSort("");
             }
 
             // Reset start position
@@ -1708,22 +1718,24 @@ class NpdDesainList extends NpdDesain
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->status->setDbValue($row['status']);
-        $this->tanggal_terima->setDbValue($row['tanggal_terima']);
-        $this->tanggal_submit->setDbValue($row['tanggal_submit']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->nama_produk->setDbValue($row['nama_produk']);
         $this->klaim_bahan->setDbValue($row['klaim_bahan']);
         $this->campaign_produk->setDbValue($row['campaign_produk']);
-        $this->konsep->setDbValue($row['konsep']);
-        $this->tema_warna->setDbValue($row['tema_warna']);
+        $this->konsepwarna->setDbValue($row['konsepwarna']);
         $this->no_notifikasi->setDbValue($row['no_notifikasi']);
         $this->jenis_kemasan->setDbValue($row['jenis_kemasan']);
         $this->posisi_label->setDbValue($row['posisi_label']);
         $this->bahan_label->setDbValue($row['bahan_label']);
         $this->draft_layout->setDbValue($row['draft_layout']);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Return a row with default values
@@ -1732,22 +1744,24 @@ class NpdDesainList extends NpdDesain
         $row = [];
         $row['id'] = null;
         $row['idnpd'] = null;
-        $row['idcustomer'] = null;
-        $row['status'] = null;
-        $row['tanggal_terima'] = null;
-        $row['tanggal_submit'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
         $row['nama_produk'] = null;
         $row['klaim_bahan'] = null;
         $row['campaign_produk'] = null;
-        $row['konsep'] = null;
-        $row['tema_warna'] = null;
+        $row['konsepwarna'] = null;
         $row['no_notifikasi'] = null;
         $row['jenis_kemasan'] = null;
         $row['posisi_label'] = null;
         $row['bahan_label'] = null;
         $row['draft_layout'] = null;
         $row['keterangan'] = null;
+        $row['submitted_by'] = null;
+        $row['checked1_by'] = null;
+        $row['checked2_by'] = null;
+        $row['approved_by'] = null;
         $row['created_at'] = null;
+        $row['updated_at'] = null;
         return $row;
     }
 
@@ -1789,13 +1803,9 @@ class NpdDesainList extends NpdDesain
 
         // idnpd
 
-        // idcustomer
+        // tglterima
 
-        // status
-
-        // tanggal_terima
-
-        // tanggal_submit
+        // tglsubmit
 
         // nama_produk
 
@@ -1803,9 +1813,7 @@ class NpdDesainList extends NpdDesain
 
         // campaign_produk
 
-        // konsep
-
-        // tema_warna
+        // konsepwarna
 
         // no_notifikasi
 
@@ -1819,31 +1827,32 @@ class NpdDesainList extends NpdDesain
 
         // keterangan
 
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
+
+        // approved_by
+
         // created_at
+
+        // updated_at
         if ($this->RowType == ROWTYPE_VIEW) {
             // idnpd
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
 
-            // idcustomer
-            $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-            $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
-            $this->idcustomer->ViewCustomAttributes = "";
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
 
-            // status
-            $this->status->ViewValue = $this->status->CurrentValue;
-            $this->status->ViewCustomAttributes = "";
-
-            // tanggal_terima
-            $this->tanggal_terima->ViewValue = $this->tanggal_terima->CurrentValue;
-            $this->tanggal_terima->ViewValue = FormatDateTime($this->tanggal_terima->ViewValue, 0);
-            $this->tanggal_terima->ViewCustomAttributes = "";
-
-            // tanggal_submit
-            $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
-            $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
-            $this->tanggal_submit->ViewCustomAttributes = "";
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
 
             // nama_produk
             $this->nama_produk->ViewValue = $this->nama_produk->CurrentValue;
@@ -1857,13 +1866,9 @@ class NpdDesainList extends NpdDesain
             $this->campaign_produk->ViewValue = $this->campaign_produk->CurrentValue;
             $this->campaign_produk->ViewCustomAttributes = "";
 
-            // konsep
-            $this->konsep->ViewValue = $this->konsep->CurrentValue;
-            $this->konsep->ViewCustomAttributes = "";
-
-            // tema_warna
-            $this->tema_warna->ViewValue = $this->tema_warna->CurrentValue;
-            $this->tema_warna->ViewCustomAttributes = "";
+            // konsepwarna
+            $this->konsepwarna->ViewValue = $this->konsepwarna->CurrentValue;
+            $this->konsepwarna->ViewCustomAttributes = "";
 
             // no_notifikasi
             $this->no_notifikasi->ViewValue = $this->no_notifikasi->CurrentValue;
@@ -1885,90 +1890,65 @@ class NpdDesainList extends NpdDesain
             $this->draft_layout->ViewValue = $this->draft_layout->CurrentValue;
             $this->draft_layout->ViewCustomAttributes = "";
 
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // checked1_by
+            $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
+            $this->checked1_by->ViewValue = FormatNumber($this->checked1_by->ViewValue, 0, -2, -2, -2);
+            $this->checked1_by->ViewCustomAttributes = "";
+
+            // checked2_by
+            $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+            $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+            $this->checked2_by->ViewCustomAttributes = "";
+
+            // approved_by
+            $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+            $this->approved_by->ViewValue = FormatNumber($this->approved_by->ViewValue, 0, -2, -2, -2);
+            $this->approved_by->ViewCustomAttributes = "";
+
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
+
+            // updated_at
+            $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+            $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+            $this->updated_at->ViewCustomAttributes = "";
 
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
 
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
-
-            // tanggal_terima
-            $this->tanggal_terima->LinkCustomAttributes = "";
-            $this->tanggal_terima->HrefValue = "";
-            $this->tanggal_terima->TooltipValue = "";
-
-            // tanggal_submit
-            $this->tanggal_submit->LinkCustomAttributes = "";
-            $this->tanggal_submit->HrefValue = "";
-            $this->tanggal_submit->TooltipValue = "";
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
 
             // nama_produk
             $this->nama_produk->LinkCustomAttributes = "";
             $this->nama_produk->HrefValue = "";
             $this->nama_produk->TooltipValue = "";
 
-            // klaim_bahan
-            $this->klaim_bahan->LinkCustomAttributes = "";
-            $this->klaim_bahan->HrefValue = "";
-            $this->klaim_bahan->TooltipValue = "";
-
-            // campaign_produk
-            $this->campaign_produk->LinkCustomAttributes = "";
-            $this->campaign_produk->HrefValue = "";
-            $this->campaign_produk->TooltipValue = "";
-
-            // konsep
-            $this->konsep->LinkCustomAttributes = "";
-            $this->konsep->HrefValue = "";
-            $this->konsep->TooltipValue = "";
-
-            // tema_warna
-            $this->tema_warna->LinkCustomAttributes = "";
-            $this->tema_warna->HrefValue = "";
-            $this->tema_warna->TooltipValue = "";
+            // konsepwarna
+            $this->konsepwarna->LinkCustomAttributes = "";
+            $this->konsepwarna->HrefValue = "";
+            $this->konsepwarna->TooltipValue = "";
 
             // no_notifikasi
             $this->no_notifikasi->LinkCustomAttributes = "";
             $this->no_notifikasi->HrefValue = "";
             $this->no_notifikasi->TooltipValue = "";
-
-            // jenis_kemasan
-            $this->jenis_kemasan->LinkCustomAttributes = "";
-            $this->jenis_kemasan->HrefValue = "";
-            $this->jenis_kemasan->TooltipValue = "";
-
-            // posisi_label
-            $this->posisi_label->LinkCustomAttributes = "";
-            $this->posisi_label->HrefValue = "";
-            $this->posisi_label->TooltipValue = "";
-
-            // bahan_label
-            $this->bahan_label->LinkCustomAttributes = "";
-            $this->bahan_label->HrefValue = "";
-            $this->bahan_label->TooltipValue = "";
-
-            // draft_layout
-            $this->draft_layout->LinkCustomAttributes = "";
-            $this->draft_layout->HrefValue = "";
-            $this->draft_layout->TooltipValue = "";
-
-            // created_at
-            $this->created_at->LinkCustomAttributes = "";
-            $this->created_at->HrefValue = "";
-            $this->created_at->TooltipValue = "";
         }
 
         // Call Row Rendered event

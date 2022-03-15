@@ -50,6 +50,12 @@ $Page->showMessage();
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <th class="<?= $Page->idnpd->headerCellClass() ?>"><span id="elh_npd_confirmdesign_idnpd" class="npd_confirmdesign_idnpd"><?= $Page->idnpd->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <th class="<?= $Page->tglterima->headerCellClass() ?>"><span id="elh_npd_confirmdesign_tglterima" class="npd_confirmdesign_tglterima"><?= $Page->tglterima->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <th class="<?= $Page->tglsubmit->headerCellClass() ?>"><span id="elh_npd_confirmdesign_tglsubmit" class="npd_confirmdesign_tglsubmit"><?= $Page->tglsubmit->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->desaindepan->Visible) { // desaindepan ?>
         <th class="<?= $Page->desaindepan->headerCellClass() ?>"><span id="elh_npd_confirmdesign_desaindepan" class="npd_confirmdesign_desaindepan"><?= $Page->desaindepan->caption() ?></span></th>
 <?php } ?>
@@ -64,6 +70,15 @@ $Page->showMessage();
 <?php } ?>
 <?php if ($Page->catatansekunder->Visible) { // catatansekunder ?>
         <th class="<?= $Page->catatansekunder->headerCellClass() ?>"><span id="elh_npd_confirmdesign_catatansekunder" class="npd_confirmdesign_catatansekunder"><?= $Page->catatansekunder->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <th class="<?= $Page->submitted_by->headerCellClass() ?>"><span id="elh_npd_confirmdesign_submitted_by" class="npd_confirmdesign_submitted_by"><?= $Page->submitted_by->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->checked1_by->Visible) { // checked1_by ?>
+        <th class="<?= $Page->checked1_by->headerCellClass() ?>"><span id="elh_npd_confirmdesign_checked1_by" class="npd_confirmdesign_checked1_by"><?= $Page->checked1_by->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->checked2_by->Visible) { // checked2_by ?>
+        <th class="<?= $Page->checked2_by->headerCellClass() ?>"><span id="elh_npd_confirmdesign_checked2_by" class="npd_confirmdesign_checked2_by"><?= $Page->checked2_by->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -99,6 +114,22 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_npd_confirmdesign_idnpd" class="npd_confirmdesign_idnpd">
 <span<?= $Page->idnpd->viewAttributes() ?>>
 <?= $Page->idnpd->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <td <?= $Page->tglterima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdesign_tglterima" class="npd_confirmdesign_tglterima">
+<span<?= $Page->tglterima->viewAttributes() ?>>
+<?= $Page->tglterima->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <td <?= $Page->tglsubmit->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdesign_tglsubmit" class="npd_confirmdesign_tglsubmit">
+<span<?= $Page->tglsubmit->viewAttributes() ?>>
+<?= $Page->tglsubmit->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
@@ -139,6 +170,30 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_npd_confirmdesign_catatansekunder" class="npd_confirmdesign_catatansekunder">
 <span<?= $Page->catatansekunder->viewAttributes() ?>>
 <?= $Page->catatansekunder->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <td <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdesign_submitted_by" class="npd_confirmdesign_submitted_by">
+<span<?= $Page->submitted_by->viewAttributes() ?>>
+<?= $Page->submitted_by->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->checked1_by->Visible) { // checked1_by ?>
+        <td <?= $Page->checked1_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdesign_checked1_by" class="npd_confirmdesign_checked1_by">
+<span<?= $Page->checked1_by->viewAttributes() ?>>
+<?= $Page->checked1_by->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->checked2_by->Visible) { // checked2_by ?>
+        <td <?= $Page->checked2_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdesign_checked2_by" class="npd_confirmdesign_checked2_by">
+<span<?= $Page->checked2_by->viewAttributes() ?>>
+<?= $Page->checked2_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

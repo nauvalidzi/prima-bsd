@@ -30,22 +30,24 @@ class NpdDesain extends DbTable
     // Fields
     public $id;
     public $idnpd;
-    public $idcustomer;
-    public $status;
-    public $tanggal_terima;
-    public $tanggal_submit;
+    public $tglterima;
+    public $tglsubmit;
     public $nama_produk;
     public $klaim_bahan;
     public $campaign_produk;
-    public $konsep;
-    public $tema_warna;
+    public $konsepwarna;
     public $no_notifikasi;
     public $jenis_kemasan;
     public $posisi_label;
     public $bahan_label;
     public $draft_layout;
     public $keterangan;
+    public $submitted_by;
+    public $checked1_by;
+    public $checked2_by;
+    public $approved_by;
     public $created_at;
+    public $updated_at;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -99,32 +101,19 @@ class NpdDesain extends DbTable
         $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
         $this->Fields['idnpd'] = &$this->idnpd;
 
-        // idcustomer
-        $this->idcustomer = new DbField('npd_desain', 'npd_desain', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idcustomer->Sortable = true; // Allow sort
-        $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
-        $this->Fields['idcustomer'] = &$this->idcustomer;
+        // tglterima
+        $this->tglterima = new DbField('npd_desain', 'npd_desain', 'x_tglterima', 'tglterima', '`tglterima`', CastDateFieldForLike("`tglterima`", 0, "DB"), 133, 10, 0, false, '`tglterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglterima->Sortable = true; // Allow sort
+        $this->tglterima->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglterima->Param, "CustomMsg");
+        $this->Fields['tglterima'] = &$this->tglterima;
 
-        // status
-        $this->status = new DbField('npd_desain', 'npd_desain', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->status->Sortable = true; // Allow sort
-        $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
-        $this->Fields['status'] = &$this->status;
-
-        // tanggal_terima
-        $this->tanggal_terima = new DbField('npd_desain', 'npd_desain', 'x_tanggal_terima', 'tanggal_terima', '`tanggal_terima`', CastDateFieldForLike("`tanggal_terima`", 0, "DB"), 133, 10, 0, false, '`tanggal_terima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggal_terima->Sortable = true; // Allow sort
-        $this->tanggal_terima->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggal_terima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_terima->Param, "CustomMsg");
-        $this->Fields['tanggal_terima'] = &$this->tanggal_terima;
-
-        // tanggal_submit
-        $this->tanggal_submit = new DbField('npd_desain', 'npd_desain', 'x_tanggal_submit', 'tanggal_submit', '`tanggal_submit`', CastDateFieldForLike("`tanggal_submit`", 0, "DB"), 133, 10, 0, false, '`tanggal_submit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggal_submit->Sortable = true; // Allow sort
-        $this->tanggal_submit->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggal_submit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_submit->Param, "CustomMsg");
-        $this->Fields['tanggal_submit'] = &$this->tanggal_submit;
+        // tglsubmit
+        $this->tglsubmit = new DbField('npd_desain', 'npd_desain', 'x_tglsubmit', 'tglsubmit', '`tglsubmit`', CastDateFieldForLike("`tglsubmit`", 0, "DB"), 133, 10, 0, false, '`tglsubmit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglsubmit->Sortable = true; // Allow sort
+        $this->tglsubmit->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglsubmit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglsubmit->Param, "CustomMsg");
+        $this->Fields['tglsubmit'] = &$this->tglsubmit;
 
         // nama_produk
         $this->nama_produk = new DbField('npd_desain', 'npd_desain', 'x_nama_produk', 'nama_produk', '`nama_produk`', '`nama_produk`', 200, 255, -1, false, '`nama_produk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -144,17 +133,11 @@ class NpdDesain extends DbTable
         $this->campaign_produk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->campaign_produk->Param, "CustomMsg");
         $this->Fields['campaign_produk'] = &$this->campaign_produk;
 
-        // konsep
-        $this->konsep = new DbField('npd_desain', 'npd_desain', 'x_konsep', 'konsep', '`konsep`', '`konsep`', 200, 255, -1, false, '`konsep`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->konsep->Sortable = true; // Allow sort
-        $this->konsep->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->konsep->Param, "CustomMsg");
-        $this->Fields['konsep'] = &$this->konsep;
-
-        // tema_warna
-        $this->tema_warna = new DbField('npd_desain', 'npd_desain', 'x_tema_warna', 'tema_warna', '`tema_warna`', '`tema_warna`', 200, 255, -1, false, '`tema_warna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tema_warna->Sortable = true; // Allow sort
-        $this->tema_warna->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tema_warna->Param, "CustomMsg");
-        $this->Fields['tema_warna'] = &$this->tema_warna;
+        // konsepwarna
+        $this->konsepwarna = new DbField('npd_desain', 'npd_desain', 'x_konsepwarna', 'konsepwarna', '`konsepwarna`', '`konsepwarna`', 200, 255, -1, false, '`konsepwarna`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->konsepwarna->Sortable = true; // Allow sort
+        $this->konsepwarna->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->konsepwarna->Param, "CustomMsg");
+        $this->Fields['konsepwarna'] = &$this->konsepwarna;
 
         // no_notifikasi
         $this->no_notifikasi = new DbField('npd_desain', 'npd_desain', 'x_no_notifikasi', 'no_notifikasi', '`no_notifikasi`', '`no_notifikasi`', 200, 255, -1, false, '`no_notifikasi`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -192,6 +175,34 @@ class NpdDesain extends DbTable
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;
 
+        // submitted_by
+        $this->submitted_by = new DbField('npd_desain', 'npd_desain', 'x_submitted_by', 'submitted_by', '`submitted_by`', '`submitted_by`', 3, 11, -1, false, '`submitted_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->submitted_by->Sortable = true; // Allow sort
+        $this->submitted_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->submitted_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->submitted_by->Param, "CustomMsg");
+        $this->Fields['submitted_by'] = &$this->submitted_by;
+
+        // checked1_by
+        $this->checked1_by = new DbField('npd_desain', 'npd_desain', 'x_checked1_by', 'checked1_by', '`checked1_by`', '`checked1_by`', 3, 11, -1, false, '`checked1_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->checked1_by->Sortable = true; // Allow sort
+        $this->checked1_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked1_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked1_by->Param, "CustomMsg");
+        $this->Fields['checked1_by'] = &$this->checked1_by;
+
+        // checked2_by
+        $this->checked2_by = new DbField('npd_desain', 'npd_desain', 'x_checked2_by', 'checked2_by', '`checked2_by`', '`checked2_by`', 3, 11, -1, false, '`checked2_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->checked2_by->Sortable = true; // Allow sort
+        $this->checked2_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked2_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked2_by->Param, "CustomMsg");
+        $this->Fields['checked2_by'] = &$this->checked2_by;
+
+        // approved_by
+        $this->approved_by = new DbField('npd_desain', 'npd_desain', 'x_approved_by', 'approved_by', '`approved_by`', '`approved_by`', 3, 11, -1, false, '`approved_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->approved_by->Sortable = true; // Allow sort
+        $this->approved_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->approved_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approved_by->Param, "CustomMsg");
+        $this->Fields['approved_by'] = &$this->approved_by;
+
         // created_at
         $this->created_at = new DbField('npd_desain', 'npd_desain', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 0, "DB"), 135, 19, 0, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->created_at->Nullable = false; // NOT NULL field
@@ -200,6 +211,15 @@ class NpdDesain extends DbTable
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
+
+        // updated_at
+        $this->updated_at = new DbField('npd_desain', 'npd_desain', 'x_updated_at', 'updated_at', '`updated_at`', CastDateFieldForLike("`updated_at`", 0, "DB"), 135, 19, 0, false, '`updated_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->updated_at->Nullable = false; // NOT NULL field
+        $this->updated_at->Required = true; // Required field
+        $this->updated_at->Sortable = true; // Allow sort
+        $this->updated_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->updated_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->updated_at->Param, "CustomMsg");
+        $this->Fields['updated_at'] = &$this->updated_at;
     }
 
     // Field Visibility
@@ -667,22 +687,24 @@ class NpdDesain extends DbTable
         }
         $this->id->DbValue = $row['id'];
         $this->idnpd->DbValue = $row['idnpd'];
-        $this->idcustomer->DbValue = $row['idcustomer'];
-        $this->status->DbValue = $row['status'];
-        $this->tanggal_terima->DbValue = $row['tanggal_terima'];
-        $this->tanggal_submit->DbValue = $row['tanggal_submit'];
+        $this->tglterima->DbValue = $row['tglterima'];
+        $this->tglsubmit->DbValue = $row['tglsubmit'];
         $this->nama_produk->DbValue = $row['nama_produk'];
         $this->klaim_bahan->DbValue = $row['klaim_bahan'];
         $this->campaign_produk->DbValue = $row['campaign_produk'];
-        $this->konsep->DbValue = $row['konsep'];
-        $this->tema_warna->DbValue = $row['tema_warna'];
+        $this->konsepwarna->DbValue = $row['konsepwarna'];
         $this->no_notifikasi->DbValue = $row['no_notifikasi'];
         $this->jenis_kemasan->DbValue = $row['jenis_kemasan'];
         $this->posisi_label->DbValue = $row['posisi_label'];
         $this->bahan_label->DbValue = $row['bahan_label'];
         $this->draft_layout->DbValue = $row['draft_layout'];
         $this->keterangan->DbValue = $row['keterangan'];
+        $this->submitted_by->DbValue = $row['submitted_by'];
+        $this->checked1_by->DbValue = $row['checked1_by'];
+        $this->checked2_by->DbValue = $row['checked2_by'];
+        $this->approved_by->DbValue = $row['approved_by'];
         $this->created_at->DbValue = $row['created_at'];
+        $this->updated_at->DbValue = $row['updated_at'];
     }
 
     // Delete uploaded files
@@ -1009,22 +1031,24 @@ SORTHTML;
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->status->setDbValue($row['status']);
-        $this->tanggal_terima->setDbValue($row['tanggal_terima']);
-        $this->tanggal_submit->setDbValue($row['tanggal_submit']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->nama_produk->setDbValue($row['nama_produk']);
         $this->klaim_bahan->setDbValue($row['klaim_bahan']);
         $this->campaign_produk->setDbValue($row['campaign_produk']);
-        $this->konsep->setDbValue($row['konsep']);
-        $this->tema_warna->setDbValue($row['tema_warna']);
+        $this->konsepwarna->setDbValue($row['konsepwarna']);
         $this->no_notifikasi->setDbValue($row['no_notifikasi']);
         $this->jenis_kemasan->setDbValue($row['jenis_kemasan']);
         $this->posisi_label->setDbValue($row['posisi_label']);
         $this->bahan_label->setDbValue($row['bahan_label']);
         $this->draft_layout->setDbValue($row['draft_layout']);
         $this->keterangan->setDbValue($row['keterangan']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
+        $this->updated_at->setDbValue($row['updated_at']);
     }
 
     // Render list row values
@@ -1041,13 +1065,9 @@ SORTHTML;
 
         // idnpd
 
-        // idcustomer
+        // tglterima
 
-        // status
-
-        // tanggal_terima
-
-        // tanggal_submit
+        // tglsubmit
 
         // nama_produk
 
@@ -1055,9 +1075,7 @@ SORTHTML;
 
         // campaign_produk
 
-        // konsep
-
-        // tema_warna
+        // konsepwarna
 
         // no_notifikasi
 
@@ -1071,7 +1089,17 @@ SORTHTML;
 
         // keterangan
 
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
+
+        // approved_by
+
         // created_at
+
+        // updated_at
 
         // id
         $this->id->ViewValue = $this->id->CurrentValue;
@@ -1083,24 +1111,15 @@ SORTHTML;
         $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
         $this->idnpd->ViewCustomAttributes = "";
 
-        // idcustomer
-        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->ViewValue = FormatNumber($this->idcustomer->ViewValue, 0, -2, -2, -2);
-        $this->idcustomer->ViewCustomAttributes = "";
+        // tglterima
+        $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+        $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+        $this->tglterima->ViewCustomAttributes = "";
 
-        // status
-        $this->status->ViewValue = $this->status->CurrentValue;
-        $this->status->ViewCustomAttributes = "";
-
-        // tanggal_terima
-        $this->tanggal_terima->ViewValue = $this->tanggal_terima->CurrentValue;
-        $this->tanggal_terima->ViewValue = FormatDateTime($this->tanggal_terima->ViewValue, 0);
-        $this->tanggal_terima->ViewCustomAttributes = "";
-
-        // tanggal_submit
-        $this->tanggal_submit->ViewValue = $this->tanggal_submit->CurrentValue;
-        $this->tanggal_submit->ViewValue = FormatDateTime($this->tanggal_submit->ViewValue, 0);
-        $this->tanggal_submit->ViewCustomAttributes = "";
+        // tglsubmit
+        $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+        $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+        $this->tglsubmit->ViewCustomAttributes = "";
 
         // nama_produk
         $this->nama_produk->ViewValue = $this->nama_produk->CurrentValue;
@@ -1114,13 +1133,9 @@ SORTHTML;
         $this->campaign_produk->ViewValue = $this->campaign_produk->CurrentValue;
         $this->campaign_produk->ViewCustomAttributes = "";
 
-        // konsep
-        $this->konsep->ViewValue = $this->konsep->CurrentValue;
-        $this->konsep->ViewCustomAttributes = "";
-
-        // tema_warna
-        $this->tema_warna->ViewValue = $this->tema_warna->CurrentValue;
-        $this->tema_warna->ViewCustomAttributes = "";
+        // konsepwarna
+        $this->konsepwarna->ViewValue = $this->konsepwarna->CurrentValue;
+        $this->konsepwarna->ViewCustomAttributes = "";
 
         // no_notifikasi
         $this->no_notifikasi->ViewValue = $this->no_notifikasi->CurrentValue;
@@ -1146,10 +1161,35 @@ SORTHTML;
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
         $this->keterangan->ViewCustomAttributes = "";
 
+        // submitted_by
+        $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+        $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+        $this->submitted_by->ViewCustomAttributes = "";
+
+        // checked1_by
+        $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
+        $this->checked1_by->ViewValue = FormatNumber($this->checked1_by->ViewValue, 0, -2, -2, -2);
+        $this->checked1_by->ViewCustomAttributes = "";
+
+        // checked2_by
+        $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+        $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+        $this->checked2_by->ViewCustomAttributes = "";
+
+        // approved_by
+        $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+        $this->approved_by->ViewValue = FormatNumber($this->approved_by->ViewValue, 0, -2, -2, -2);
+        $this->approved_by->ViewCustomAttributes = "";
+
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
+
+        // updated_at
+        $this->updated_at->ViewValue = $this->updated_at->CurrentValue;
+        $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
+        $this->updated_at->ViewCustomAttributes = "";
 
         // id
         $this->id->LinkCustomAttributes = "";
@@ -1161,25 +1201,15 @@ SORTHTML;
         $this->idnpd->HrefValue = "";
         $this->idnpd->TooltipValue = "";
 
-        // idcustomer
-        $this->idcustomer->LinkCustomAttributes = "";
-        $this->idcustomer->HrefValue = "";
-        $this->idcustomer->TooltipValue = "";
+        // tglterima
+        $this->tglterima->LinkCustomAttributes = "";
+        $this->tglterima->HrefValue = "";
+        $this->tglterima->TooltipValue = "";
 
-        // status
-        $this->status->LinkCustomAttributes = "";
-        $this->status->HrefValue = "";
-        $this->status->TooltipValue = "";
-
-        // tanggal_terima
-        $this->tanggal_terima->LinkCustomAttributes = "";
-        $this->tanggal_terima->HrefValue = "";
-        $this->tanggal_terima->TooltipValue = "";
-
-        // tanggal_submit
-        $this->tanggal_submit->LinkCustomAttributes = "";
-        $this->tanggal_submit->HrefValue = "";
-        $this->tanggal_submit->TooltipValue = "";
+        // tglsubmit
+        $this->tglsubmit->LinkCustomAttributes = "";
+        $this->tglsubmit->HrefValue = "";
+        $this->tglsubmit->TooltipValue = "";
 
         // nama_produk
         $this->nama_produk->LinkCustomAttributes = "";
@@ -1196,15 +1226,10 @@ SORTHTML;
         $this->campaign_produk->HrefValue = "";
         $this->campaign_produk->TooltipValue = "";
 
-        // konsep
-        $this->konsep->LinkCustomAttributes = "";
-        $this->konsep->HrefValue = "";
-        $this->konsep->TooltipValue = "";
-
-        // tema_warna
-        $this->tema_warna->LinkCustomAttributes = "";
-        $this->tema_warna->HrefValue = "";
-        $this->tema_warna->TooltipValue = "";
+        // konsepwarna
+        $this->konsepwarna->LinkCustomAttributes = "";
+        $this->konsepwarna->HrefValue = "";
+        $this->konsepwarna->TooltipValue = "";
 
         // no_notifikasi
         $this->no_notifikasi->LinkCustomAttributes = "";
@@ -1236,10 +1261,35 @@ SORTHTML;
         $this->keterangan->HrefValue = "";
         $this->keterangan->TooltipValue = "";
 
+        // submitted_by
+        $this->submitted_by->LinkCustomAttributes = "";
+        $this->submitted_by->HrefValue = "";
+        $this->submitted_by->TooltipValue = "";
+
+        // checked1_by
+        $this->checked1_by->LinkCustomAttributes = "";
+        $this->checked1_by->HrefValue = "";
+        $this->checked1_by->TooltipValue = "";
+
+        // checked2_by
+        $this->checked2_by->LinkCustomAttributes = "";
+        $this->checked2_by->HrefValue = "";
+        $this->checked2_by->TooltipValue = "";
+
+        // approved_by
+        $this->approved_by->LinkCustomAttributes = "";
+        $this->approved_by->HrefValue = "";
+        $this->approved_by->TooltipValue = "";
+
         // created_at
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
+
+        // updated_at
+        $this->updated_at->LinkCustomAttributes = "";
+        $this->updated_at->HrefValue = "";
+        $this->updated_at->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1276,32 +1326,17 @@ SORTHTML;
             $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
         }
 
-        // idcustomer
-        $this->idcustomer->EditAttrs["class"] = "form-control";
-        $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->EditValue = $this->idcustomer->CurrentValue;
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        // tglterima
+        $this->tglterima->EditAttrs["class"] = "form-control";
+        $this->tglterima->EditCustomAttributes = "";
+        $this->tglterima->EditValue = FormatDateTime($this->tglterima->CurrentValue, 8);
+        $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
 
-        // status
-        $this->status->EditAttrs["class"] = "form-control";
-        $this->status->EditCustomAttributes = "";
-        if (!$this->status->Raw) {
-            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
-        }
-        $this->status->EditValue = $this->status->CurrentValue;
-        $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
-        // tanggal_terima
-        $this->tanggal_terima->EditAttrs["class"] = "form-control";
-        $this->tanggal_terima->EditCustomAttributes = "";
-        $this->tanggal_terima->EditValue = FormatDateTime($this->tanggal_terima->CurrentValue, 8);
-        $this->tanggal_terima->PlaceHolder = RemoveHtml($this->tanggal_terima->caption());
-
-        // tanggal_submit
-        $this->tanggal_submit->EditAttrs["class"] = "form-control";
-        $this->tanggal_submit->EditCustomAttributes = "";
-        $this->tanggal_submit->EditValue = FormatDateTime($this->tanggal_submit->CurrentValue, 8);
-        $this->tanggal_submit->PlaceHolder = RemoveHtml($this->tanggal_submit->caption());
+        // tglsubmit
+        $this->tglsubmit->EditAttrs["class"] = "form-control";
+        $this->tglsubmit->EditCustomAttributes = "";
+        $this->tglsubmit->EditValue = FormatDateTime($this->tglsubmit->CurrentValue, 8);
+        $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
         // nama_produk
         $this->nama_produk->EditAttrs["class"] = "form-control";
@@ -1330,23 +1365,14 @@ SORTHTML;
         $this->campaign_produk->EditValue = $this->campaign_produk->CurrentValue;
         $this->campaign_produk->PlaceHolder = RemoveHtml($this->campaign_produk->caption());
 
-        // konsep
-        $this->konsep->EditAttrs["class"] = "form-control";
-        $this->konsep->EditCustomAttributes = "";
-        if (!$this->konsep->Raw) {
-            $this->konsep->CurrentValue = HtmlDecode($this->konsep->CurrentValue);
+        // konsepwarna
+        $this->konsepwarna->EditAttrs["class"] = "form-control";
+        $this->konsepwarna->EditCustomAttributes = "";
+        if (!$this->konsepwarna->Raw) {
+            $this->konsepwarna->CurrentValue = HtmlDecode($this->konsepwarna->CurrentValue);
         }
-        $this->konsep->EditValue = $this->konsep->CurrentValue;
-        $this->konsep->PlaceHolder = RemoveHtml($this->konsep->caption());
-
-        // tema_warna
-        $this->tema_warna->EditAttrs["class"] = "form-control";
-        $this->tema_warna->EditCustomAttributes = "";
-        if (!$this->tema_warna->Raw) {
-            $this->tema_warna->CurrentValue = HtmlDecode($this->tema_warna->CurrentValue);
-        }
-        $this->tema_warna->EditValue = $this->tema_warna->CurrentValue;
-        $this->tema_warna->PlaceHolder = RemoveHtml($this->tema_warna->caption());
+        $this->konsepwarna->EditValue = $this->konsepwarna->CurrentValue;
+        $this->konsepwarna->PlaceHolder = RemoveHtml($this->konsepwarna->caption());
 
         // no_notifikasi
         $this->no_notifikasi->EditAttrs["class"] = "form-control";
@@ -1399,11 +1425,41 @@ SORTHTML;
         $this->keterangan->EditValue = $this->keterangan->CurrentValue;
         $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
+        // submitted_by
+        $this->submitted_by->EditAttrs["class"] = "form-control";
+        $this->submitted_by->EditCustomAttributes = "";
+        $this->submitted_by->EditValue = $this->submitted_by->CurrentValue;
+        $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
+
+        // checked1_by
+        $this->checked1_by->EditAttrs["class"] = "form-control";
+        $this->checked1_by->EditCustomAttributes = "";
+        $this->checked1_by->EditValue = $this->checked1_by->CurrentValue;
+        $this->checked1_by->PlaceHolder = RemoveHtml($this->checked1_by->caption());
+
+        // checked2_by
+        $this->checked2_by->EditAttrs["class"] = "form-control";
+        $this->checked2_by->EditCustomAttributes = "";
+        $this->checked2_by->EditValue = $this->checked2_by->CurrentValue;
+        $this->checked2_by->PlaceHolder = RemoveHtml($this->checked2_by->caption());
+
+        // approved_by
+        $this->approved_by->EditAttrs["class"] = "form-control";
+        $this->approved_by->EditCustomAttributes = "";
+        $this->approved_by->EditValue = $this->approved_by->CurrentValue;
+        $this->approved_by->PlaceHolder = RemoveHtml($this->approved_by->caption());
+
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
         $this->created_at->EditCustomAttributes = "";
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
+
+        // updated_at
+        $this->updated_at->EditAttrs["class"] = "form-control";
+        $this->updated_at->EditCustomAttributes = "";
+        $this->updated_at->EditValue = FormatDateTime($this->updated_at->CurrentValue, 8);
+        $this->updated_at->PlaceHolder = RemoveHtml($this->updated_at->caption());
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1434,39 +1490,42 @@ SORTHTML;
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->idnpd);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->tanggal_terima);
-                    $doc->exportCaption($this->tanggal_submit);
-                    $doc->exportCaption($this->nama_produk);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
                     $doc->exportCaption($this->klaim_bahan);
                     $doc->exportCaption($this->campaign_produk);
-                    $doc->exportCaption($this->konsep);
-                    $doc->exportCaption($this->tema_warna);
+                    $doc->exportCaption($this->konsepwarna);
                     $doc->exportCaption($this->no_notifikasi);
                     $doc->exportCaption($this->jenis_kemasan);
                     $doc->exportCaption($this->posisi_label);
                     $doc->exportCaption($this->bahan_label);
                     $doc->exportCaption($this->draft_layout);
                     $doc->exportCaption($this->keterangan);
+                    $doc->exportCaption($this->submitted_by);
+                    $doc->exportCaption($this->checked1_by);
+                    $doc->exportCaption($this->checked2_by);
+                    $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->updated_at);
                 } else {
                     $doc->exportCaption($this->idnpd);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->status);
-                    $doc->exportCaption($this->tanggal_terima);
-                    $doc->exportCaption($this->tanggal_submit);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
                     $doc->exportCaption($this->nama_produk);
                     $doc->exportCaption($this->klaim_bahan);
                     $doc->exportCaption($this->campaign_produk);
-                    $doc->exportCaption($this->konsep);
-                    $doc->exportCaption($this->tema_warna);
+                    $doc->exportCaption($this->konsepwarna);
                     $doc->exportCaption($this->no_notifikasi);
                     $doc->exportCaption($this->jenis_kemasan);
                     $doc->exportCaption($this->posisi_label);
                     $doc->exportCaption($this->bahan_label);
                     $doc->exportCaption($this->draft_layout);
+                    $doc->exportCaption($this->submitted_by);
+                    $doc->exportCaption($this->checked1_by);
+                    $doc->exportCaption($this->checked2_by);
+                    $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->created_at);
+                    $doc->exportCaption($this->updated_at);
                 }
                 $doc->endExportRow();
             }
@@ -1497,39 +1556,42 @@ SORTHTML;
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
                         $doc->exportField($this->idnpd);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->status);
-                        $doc->exportField($this->tanggal_terima);
-                        $doc->exportField($this->tanggal_submit);
-                        $doc->exportField($this->nama_produk);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
                         $doc->exportField($this->klaim_bahan);
                         $doc->exportField($this->campaign_produk);
-                        $doc->exportField($this->konsep);
-                        $doc->exportField($this->tema_warna);
+                        $doc->exportField($this->konsepwarna);
                         $doc->exportField($this->no_notifikasi);
                         $doc->exportField($this->jenis_kemasan);
                         $doc->exportField($this->posisi_label);
                         $doc->exportField($this->bahan_label);
                         $doc->exportField($this->draft_layout);
                         $doc->exportField($this->keterangan);
+                        $doc->exportField($this->submitted_by);
+                        $doc->exportField($this->checked1_by);
+                        $doc->exportField($this->checked2_by);
+                        $doc->exportField($this->approved_by);
                         $doc->exportField($this->created_at);
+                        $doc->exportField($this->updated_at);
                     } else {
                         $doc->exportField($this->idnpd);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->status);
-                        $doc->exportField($this->tanggal_terima);
-                        $doc->exportField($this->tanggal_submit);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
                         $doc->exportField($this->nama_produk);
                         $doc->exportField($this->klaim_bahan);
                         $doc->exportField($this->campaign_produk);
-                        $doc->exportField($this->konsep);
-                        $doc->exportField($this->tema_warna);
+                        $doc->exportField($this->konsepwarna);
                         $doc->exportField($this->no_notifikasi);
                         $doc->exportField($this->jenis_kemasan);
                         $doc->exportField($this->posisi_label);
                         $doc->exportField($this->bahan_label);
                         $doc->exportField($this->draft_layout);
+                        $doc->exportField($this->submitted_by);
+                        $doc->exportField($this->checked1_by);
+                        $doc->exportField($this->checked2_by);
+                        $doc->exportField($this->approved_by);
                         $doc->exportField($this->created_at);
+                        $doc->exportField($this->updated_at);
                     }
                     $doc->endExportRow($rowCnt);
                 }

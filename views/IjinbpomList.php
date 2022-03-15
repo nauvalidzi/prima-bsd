@@ -135,11 +135,11 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <th data-name="tglterima" class="<?= $Page->tglterima->headerCellClass() ?>"><div id="elh_ijinbpom_tglterima" class="ijinbpom_tglterima"><?= $Page->renderSort($Page->tglterima) ?></div></th>
+<?php } ?>
 <?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
         <th data-name="tglsubmit" class="<?= $Page->tglsubmit->headerCellClass() ?>"><div id="elh_ijinbpom_tglsubmit" class="ijinbpom_tglsubmit"><?= $Page->renderSort($Page->tglsubmit) ?></div></th>
-<?php } ?>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <th data-name="idpegawai" class="<?= $Page->idpegawai->headerCellClass() ?>"><div id="elh_ijinbpom_idpegawai" class="ijinbpom_idpegawai"><?= $Page->renderSort($Page->idpegawai) ?></div></th>
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th data-name="idcustomer" class="<?= $Page->idcustomer->headerCellClass() ?>"><div id="elh_ijinbpom_idcustomer" class="ijinbpom_idcustomer"><?= $Page->renderSort($Page->idcustomer) ?></div></th>
@@ -217,19 +217,19 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <td data-name="tglterima" <?= $Page->tglterima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinbpom_tglterima">
+<span<?= $Page->tglterima->viewAttributes() ?>>
+<?= $Page->tglterima->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
         <td data-name="tglsubmit" <?= $Page->tglsubmit->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_ijinbpom_tglsubmit">
 <span<?= $Page->tglsubmit->viewAttributes() ?>>
 <?= $Page->tglsubmit->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <td data-name="idpegawai" <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinbpom_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<?= $Page->idpegawai->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -9,6 +9,17 @@ $ijinbpom = Container("ijinbpom");
 <div class="ew-master-div">
 <table id="tbl_ijinbpommaster" class="table ew-view-table ew-master-table ew-vertical">
     <tbody>
+<?php if ($ijinbpom->tglterima->Visible) { // tglterima ?>
+        <tr id="r_tglterima">
+            <td class="<?= $ijinbpom->TableLeftColumnClass ?>"><?= $ijinbpom->tglterima->caption() ?></td>
+            <td <?= $ijinbpom->tglterima->cellAttributes() ?>>
+<span id="el_ijinbpom_tglterima">
+<span<?= $ijinbpom->tglterima->viewAttributes() ?>>
+<?= $ijinbpom->tglterima->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
 <?php if ($ijinbpom->tglsubmit->Visible) { // tglsubmit ?>
         <tr id="r_tglsubmit">
             <td class="<?= $ijinbpom->TableLeftColumnClass ?>"><?= $ijinbpom->tglsubmit->caption() ?></td>
@@ -16,17 +27,6 @@ $ijinbpom = Container("ijinbpom");
 <span id="el_ijinbpom_tglsubmit">
 <span<?= $ijinbpom->tglsubmit->viewAttributes() ?>>
 <?= $ijinbpom->tglsubmit->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($ijinbpom->idpegawai->Visible) { // idpegawai ?>
-        <tr id="r_idpegawai">
-            <td class="<?= $ijinbpom->TableLeftColumnClass ?>"><?= $ijinbpom->idpegawai->caption() ?></td>
-            <td <?= $ijinbpom->idpegawai->cellAttributes() ?>>
-<span id="el_ijinbpom_idpegawai">
-<span<?= $ijinbpom->idpegawai->viewAttributes() ?>>
-<?= $ijinbpom->idpegawai->getViewValue() ?></span>
 </span>
 </td>
         </tr>

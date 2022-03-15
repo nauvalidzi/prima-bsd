@@ -118,6 +118,9 @@ class IjinbpomAdd extends Ijinbpom
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
 
+        // Custom template
+        $this->UseCustomTemplate = true;
+
         // Initialize
         $GLOBALS["Page"] = &$this;
 
@@ -205,18 +208,25 @@ class IjinbpomAdd extends Ijinbpom
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -231,6 +241,11 @@ class IjinbpomAdd extends Ijinbpom
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -369,9 +384,6 @@ class IjinbpomAdd extends Ijinbpom
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -447,7 +459,6 @@ class IjinbpomAdd extends Ijinbpom
     public $Priv = 0;
     public $OldRecordset;
     public $CopyRecord;
-    public $DetailPages; // Detail pages object
 
     /**
      * Page run
@@ -483,9 +494,6 @@ class IjinbpomAdd extends Ijinbpom
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
-
-        // Set up detail page object
-        $this->setupDetailPages();
 
         // Global Page Loading event (in userfn*.php)
         Page_Loading();
@@ -1324,6 +1332,11 @@ class IjinbpomAdd extends Ijinbpom
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
+        }
     }
 
     // Validate form
@@ -1396,10 +1409,6 @@ class IjinbpomAdd extends Ijinbpom
         $detailTblVar = explode(",", $this->getCurrentDetailTable());
         $detailPage = Container("IjinbpomDetailGrid");
         if (in_array("ijinbpom_detail", $detailTblVar) && $detailPage->DetailAdd) {
-            $detailPage->validateGridForm();
-        }
-        $detailPage = Container("IjinbpomStatusGrid");
-        if (in_array("ijinbpom_status", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
 
@@ -1747,16 +1756,6 @@ class IjinbpomAdd extends Ijinbpom
                 $detailPage->idijinbpom->setSessionValue(""); // Clear master key if insert failed
                 }
             }
-            $detailPage = Container("IjinbpomStatusGrid");
-            if (in_array("ijinbpom_status", $detailTblVar) && $detailPage->DetailAdd) {
-                $detailPage->idijinbpom->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "ijinbpom_status"); // Load user level of detail table
-                $addRow = $detailPage->gridInsert();
-                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                if (!$addRow) {
-                $detailPage->idijinbpom->setSessionValue(""); // Clear master key if insert failed
-                }
-            }
         }
 
         // Commit/Rollback transaction
@@ -1832,24 +1831,6 @@ class IjinbpomAdd extends Ijinbpom
                     $detailPageObj->idijinbpom->setSessionValue($detailPageObj->idijinbpom->CurrentValue);
                 }
             }
-            if (in_array("ijinbpom_status", $detailTblVar)) {
-                $detailPageObj = Container("IjinbpomStatusGrid");
-                if ($detailPageObj->DetailAdd) {
-                    if ($this->CopyRecord) {
-                        $detailPageObj->CurrentMode = "copy";
-                    } else {
-                        $detailPageObj->CurrentMode = "add";
-                    }
-                    $detailPageObj->CurrentAction = "gridadd";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idijinbpom->IsDetailKey = true;
-                    $detailPageObj->idijinbpom->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idijinbpom->setSessionValue($detailPageObj->idijinbpom->CurrentValue);
-                }
-            }
         }
     }
 
@@ -1862,16 +1843,6 @@ class IjinbpomAdd extends Ijinbpom
         $Breadcrumb->add("list", $this->TableVar, $this->addMasterUrl("IjinbpomList"), "", $this->TableVar, true);
         $pageId = ($this->isCopy()) ? "Copy" : "Add";
         $Breadcrumb->add("add", $pageId, $url);
-    }
-
-    // Set up detail pages
-    protected function setupDetailPages()
-    {
-        $pages = new SubPages();
-        $pages->Style = "tabs";
-        $pages->add('ijinbpom_detail');
-        $pages->add('ijinbpom_status');
-        $this->DetailPages = $pages;
     }
 
     // Setup lookup options

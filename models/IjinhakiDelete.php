@@ -385,13 +385,13 @@ class IjinhakiDelete extends Ijinhaki
         $this->sk_umk->Visible = false;
         $this->ttd_pemohon->Visible = false;
         $this->nama_brand->setVisibility();
-        $this->label_brand->setVisibility();
+        $this->label_brand->Visible = false;
         $this->deskripsi_brand->Visible = false;
         $this->unsur_brand->Visible = false;
-        $this->submitted_by->setVisibility();
+        $this->submitted_by->Visible = false;
         $this->checked1_by->Visible = false;
         $this->checked2_by->Visible = false;
-        $this->approved_by->Visible = false;
+        $this->approved_by->setVisibility();
         $this->status->setVisibility();
         $this->selesai->Visible = false;
         $this->created_at->Visible = false;
@@ -747,14 +747,6 @@ class IjinhakiDelete extends Ijinhaki
             $this->nama_brand->ViewValue = $this->nama_brand->CurrentValue;
             $this->nama_brand->ViewCustomAttributes = "";
 
-            // label_brand
-            if (!EmptyValue($this->label_brand->Upload->DbValue)) {
-                $this->label_brand->ViewValue = $this->label_brand->Upload->DbValue;
-            } else {
-                $this->label_brand->ViewValue = "";
-            }
-            $this->label_brand->ViewCustomAttributes = "";
-
             // unsur_brand
             $this->unsur_brand->ViewValue = $this->unsur_brand->CurrentValue;
             $this->unsur_brand->ViewCustomAttributes = "";
@@ -892,16 +884,10 @@ class IjinhakiDelete extends Ijinhaki
             $this->nama_brand->HrefValue = "";
             $this->nama_brand->TooltipValue = "";
 
-            // label_brand
-            $this->label_brand->LinkCustomAttributes = "";
-            $this->label_brand->HrefValue = "";
-            $this->label_brand->ExportHrefValue = $this->label_brand->UploadPath . $this->label_brand->Upload->DbValue;
-            $this->label_brand->TooltipValue = "";
-
-            // submitted_by
-            $this->submitted_by->LinkCustomAttributes = "";
-            $this->submitted_by->HrefValue = "";
-            $this->submitted_by->TooltipValue = "";
+            // approved_by
+            $this->approved_by->LinkCustomAttributes = "";
+            $this->approved_by->HrefValue = "";
+            $this->approved_by->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";

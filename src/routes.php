@@ -508,7 +508,6 @@ return function (App $app) {
     $app->any('/IjinbpomStatusView[/{id}]', IjinbpomStatusController::class . ':view')->add(PermissionMiddleware::class)->setName('IjinbpomStatusView-ijinbpom_status-view'); // view
     $app->any('/IjinbpomStatusEdit[/{id}]', IjinbpomStatusController::class . ':edit')->add(PermissionMiddleware::class)->setName('IjinbpomStatusEdit-ijinbpom_status-edit'); // edit
     $app->any('/IjinbpomStatusDelete[/{id}]', IjinbpomStatusController::class . ':delete')->add(PermissionMiddleware::class)->setName('IjinbpomStatusDelete-ijinbpom_status-delete'); // delete
-    $app->any('/IjinbpomStatusPreview', IjinbpomStatusController::class . ':preview')->add(PermissionMiddleware::class)->setName('IjinbpomStatusPreview-ijinbpom_status-preview'); // preview
     $app->group(
         '/ijinbpom_status',
         function (RouteCollectorProxy $group) {
@@ -517,7 +516,6 @@ return function (App $app) {
             $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', IjinbpomStatusController::class . ':view')->add(PermissionMiddleware::class)->setName('ijinbpom_status/view-ijinbpom_status-view-2'); // view
             $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', IjinbpomStatusController::class . ':edit')->add(PermissionMiddleware::class)->setName('ijinbpom_status/edit-ijinbpom_status-edit-2'); // edit
             $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', IjinbpomStatusController::class . ':delete')->add(PermissionMiddleware::class)->setName('ijinbpom_status/delete-ijinbpom_status-delete-2'); // delete
-            $group->any('/' . Config("PREVIEW_ACTION") . '', IjinbpomStatusController::class . ':preview')->add(PermissionMiddleware::class)->setName('ijinbpom_status/preview-ijinbpom_status-preview-2'); // preview
         }
     );
 
@@ -570,19 +568,13 @@ return function (App $app) {
     );
 
     // npd_confirmprint
-    $app->any('/NpdConfirmprintList[/{id}]', NpdConfirmprintController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdConfirmprintList-npd_confirmprint-list'); // list
-    $app->any('/NpdConfirmprintAdd[/{id}]', NpdConfirmprintController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdConfirmprintAdd-npd_confirmprint-add'); // add
-    $app->any('/NpdConfirmprintView[/{id}]', NpdConfirmprintController::class . ':view')->add(PermissionMiddleware::class)->setName('NpdConfirmprintView-npd_confirmprint-view'); // view
-    $app->any('/NpdConfirmprintEdit[/{id}]', NpdConfirmprintController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdConfirmprintEdit-npd_confirmprint-edit'); // edit
-    $app->any('/NpdConfirmprintDelete[/{id}]', NpdConfirmprintController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdConfirmprintDelete-npd_confirmprint-delete'); // delete
+    $app->any('/NpdConfirmprintList', NpdConfirmprintController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdConfirmprintList-npd_confirmprint-list'); // list
+    $app->any('/NpdConfirmprintAdd', NpdConfirmprintController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdConfirmprintAdd-npd_confirmprint-add'); // add
     $app->group(
         '/npd_confirmprint',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdConfirmprintController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_confirmprint/list-npd_confirmprint-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdConfirmprintController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_confirmprint/add-npd_confirmprint-add-2'); // add
-            $group->any('/' . Config("VIEW_ACTION") . '[/{id}]', NpdConfirmprintController::class . ':view')->add(PermissionMiddleware::class)->setName('npd_confirmprint/view-npd_confirmprint-view-2'); // view
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdConfirmprintController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_confirmprint/edit-npd_confirmprint-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdConfirmprintController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_confirmprint/delete-npd_confirmprint-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '', NpdConfirmprintController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_confirmprint/list-npd_confirmprint-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '', NpdConfirmprintController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_confirmprint/add-npd_confirmprint-add-2'); // add
         }
     );
 

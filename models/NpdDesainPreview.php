@@ -392,22 +392,24 @@ class NpdDesainPreview extends NpdDesain
         $this->setupListOptions();
         $this->id->Visible = false;
         $this->idnpd->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->status->setVisibility();
-        $this->tanggal_terima->setVisibility();
-        $this->tanggal_submit->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->nama_produk->setVisibility();
-        $this->klaim_bahan->setVisibility();
-        $this->campaign_produk->setVisibility();
-        $this->konsep->setVisibility();
-        $this->tema_warna->setVisibility();
+        $this->klaim_bahan->Visible = false;
+        $this->campaign_produk->Visible = false;
+        $this->konsepwarna->setVisibility();
         $this->no_notifikasi->setVisibility();
-        $this->jenis_kemasan->setVisibility();
-        $this->posisi_label->setVisibility();
-        $this->bahan_label->setVisibility();
-        $this->draft_layout->setVisibility();
+        $this->jenis_kemasan->Visible = false;
+        $this->posisi_label->Visible = false;
+        $this->bahan_label->Visible = false;
+        $this->draft_layout->Visible = false;
         $this->keterangan->Visible = false;
-        $this->created_at->setVisibility();
+        $this->submitted_by->Visible = false;
+        $this->checked1_by->Visible = false;
+        $this->checked2_by->Visible = false;
+        $this->approved_by->Visible = false;
+        $this->created_at->Visible = false;
+        $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -495,22 +497,24 @@ class NpdDesainPreview extends NpdDesain
             $this->CurrentOrderType = "";
             $this->id->setSort("");
             $this->idnpd->setSort("");
-            $this->idcustomer->setSort("");
-            $this->status->setSort("");
-            $this->tanggal_terima->setSort("");
-            $this->tanggal_submit->setSort("");
+            $this->tglterima->setSort("");
+            $this->tglsubmit->setSort("");
             $this->nama_produk->setSort("");
             $this->klaim_bahan->setSort("");
             $this->campaign_produk->setSort("");
-            $this->konsep->setSort("");
-            $this->tema_warna->setSort("");
+            $this->konsepwarna->setSort("");
             $this->no_notifikasi->setSort("");
             $this->jenis_kemasan->setSort("");
             $this->posisi_label->setSort("");
             $this->bahan_label->setSort("");
             $this->draft_layout->setSort("");
             $this->keterangan->setSort("");
+            $this->submitted_by->setSort("");
+            $this->checked1_by->setSort("");
+            $this->checked2_by->setSort("");
+            $this->approved_by->setSort("");
             $this->created_at->setSort("");
+            $this->updated_at->setSort("");
 
             // Save sort to session
             $this->setSessionOrderBy("");
@@ -523,21 +527,11 @@ class NpdDesainPreview extends NpdDesain
         // Check for sort field
         if ($this->CurrentOrder !== "") {
             $this->updateSort($this->idnpd); // idnpd
-            $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->status); // status
-            $this->updateSort($this->tanggal_terima); // tanggal_terima
-            $this->updateSort($this->tanggal_submit); // tanggal_submit
+            $this->updateSort($this->tglterima); // tglterima
+            $this->updateSort($this->tglsubmit); // tglsubmit
             $this->updateSort($this->nama_produk); // nama_produk
-            $this->updateSort($this->klaim_bahan); // klaim_bahan
-            $this->updateSort($this->campaign_produk); // campaign_produk
-            $this->updateSort($this->konsep); // konsep
-            $this->updateSort($this->tema_warna); // tema_warna
+            $this->updateSort($this->konsepwarna); // konsepwarna
             $this->updateSort($this->no_notifikasi); // no_notifikasi
-            $this->updateSort($this->jenis_kemasan); // jenis_kemasan
-            $this->updateSort($this->posisi_label); // posisi_label
-            $this->updateSort($this->bahan_label); // bahan_label
-            $this->updateSort($this->draft_layout); // draft_layout
-            $this->updateSort($this->created_at); // created_at
         }
     }
 

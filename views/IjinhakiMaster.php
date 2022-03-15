@@ -53,25 +53,13 @@ $ijinhaki = Container("ijinhaki");
 </td>
         </tr>
 <?php } ?>
-<?php if ($ijinhaki->label_brand->Visible) { // label_brand ?>
-        <tr id="r_label_brand">
-            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->label_brand->caption() ?></td>
-            <td <?= $ijinhaki->label_brand->cellAttributes() ?>>
-<span id="el_ijinhaki_label_brand">
-<span<?= $ijinhaki->label_brand->viewAttributes() ?>>
-<?= GetFileViewTag($ijinhaki->label_brand, $ijinhaki->label_brand->getViewValue(), false) ?>
-</span>
-</span>
-</td>
-        </tr>
-<?php } ?>
-<?php if ($ijinhaki->submitted_by->Visible) { // submitted_by ?>
-        <tr id="r_submitted_by">
-            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->submitted_by->caption() ?></td>
-            <td <?= $ijinhaki->submitted_by->cellAttributes() ?>>
-<span id="el_ijinhaki_submitted_by">
-<span<?= $ijinhaki->submitted_by->viewAttributes() ?>>
-<?= $ijinhaki->submitted_by->getViewValue() ?></span>
+<?php if ($ijinhaki->approved_by->Visible) { // approved_by ?>
+        <tr id="r_approved_by">
+            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->approved_by->caption() ?></td>
+            <td <?= $ijinhaki->approved_by->cellAttributes() ?>>
+<span id="el_ijinhaki_approved_by">
+<span<?= $ijinhaki->approved_by->viewAttributes() ?>>
+<?= $ijinhaki->approved_by->getViewValue() ?></span>
 </span>
 </td>
         </tr>

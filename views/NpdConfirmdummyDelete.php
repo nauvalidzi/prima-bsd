@@ -44,26 +44,26 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_npd_confirmdummy_id" class="npd_confirmdummy_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <th class="<?= $Page->idnpd->headerCellClass() ?>"><span id="elh_npd_confirmdummy_idnpd" class="npd_confirmdummy_idnpd"><?= $Page->idnpd->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->dummydepan->Visible) { // dummydepan ?>
-        <th class="<?= $Page->dummydepan->headerCellClass() ?>"><span id="elh_npd_confirmdummy_dummydepan" class="npd_confirmdummy_dummydepan"><?= $Page->dummydepan->caption() ?></span></th>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <th class="<?= $Page->tglterima->headerCellClass() ?>"><span id="elh_npd_confirmdummy_tglterima" class="npd_confirmdummy_tglterima"><?= $Page->tglterima->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->dummybelakang->Visible) { // dummybelakang ?>
-        <th class="<?= $Page->dummybelakang->headerCellClass() ?>"><span id="elh_npd_confirmdummy_dummybelakang" class="npd_confirmdummy_dummybelakang"><?= $Page->dummybelakang->caption() ?></span></th>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <th class="<?= $Page->tglsubmit->headerCellClass() ?>"><span id="elh_npd_confirmdummy_tglsubmit" class="npd_confirmdummy_tglsubmit"><?= $Page->tglsubmit->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->dummyatas->Visible) { // dummyatas ?>
-        <th class="<?= $Page->dummyatas->headerCellClass() ?>"><span id="elh_npd_confirmdummy_dummyatas" class="npd_confirmdummy_dummyatas"><?= $Page->dummyatas->caption() ?></span></th>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <th class="<?= $Page->submitted_by->headerCellClass() ?>"><span id="elh_npd_confirmdummy_submitted_by" class="npd_confirmdummy_submitted_by"><?= $Page->submitted_by->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->dummysamping->Visible) { // dummysamping ?>
-        <th class="<?= $Page->dummysamping->headerCellClass() ?>"><span id="elh_npd_confirmdummy_dummysamping" class="npd_confirmdummy_dummysamping"><?= $Page->dummysamping->caption() ?></span></th>
+<?php if ($Page->checked1_by->Visible) { // checked1_by ?>
+        <th class="<?= $Page->checked1_by->headerCellClass() ?>"><span id="elh_npd_confirmdummy_checked1_by" class="npd_confirmdummy_checked1_by"><?= $Page->checked1_by->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->ttd->Visible) { // ttd ?>
-        <th class="<?= $Page->ttd->headerCellClass() ?>"><span id="elh_npd_confirmdummy_ttd" class="npd_confirmdummy_ttd"><?= $Page->ttd->caption() ?></span></th>
+<?php if ($Page->checked2_by->Visible) { // checked2_by ?>
+        <th class="<?= $Page->checked2_by->headerCellClass() ?>"><span id="elh_npd_confirmdummy_checked2_by" class="npd_confirmdummy_checked2_by"><?= $Page->checked2_by->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->approved_by->Visible) { // approved_by ?>
+        <th class="<?= $Page->approved_by->headerCellClass() ?>"><span id="elh_npd_confirmdummy_approved_by" class="npd_confirmdummy_approved_by"><?= $Page->approved_by->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -86,14 +86,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_id" class="npd_confirmdummy_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->idnpd->Visible) { // idnpd ?>
         <td <?= $Page->idnpd->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_confirmdummy_idnpd" class="npd_confirmdummy_idnpd">
@@ -102,43 +94,51 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->dummydepan->Visible) { // dummydepan ?>
-        <td <?= $Page->dummydepan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummydepan" class="npd_confirmdummy_dummydepan">
-<span<?= $Page->dummydepan->viewAttributes() ?>>
-<?= $Page->dummydepan->getViewValue() ?></span>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <td <?= $Page->tglterima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_tglterima" class="npd_confirmdummy_tglterima">
+<span<?= $Page->tglterima->viewAttributes() ?>>
+<?= $Page->tglterima->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->dummybelakang->Visible) { // dummybelakang ?>
-        <td <?= $Page->dummybelakang->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummybelakang" class="npd_confirmdummy_dummybelakang">
-<span<?= $Page->dummybelakang->viewAttributes() ?>>
-<?= $Page->dummybelakang->getViewValue() ?></span>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <td <?= $Page->tglsubmit->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_tglsubmit" class="npd_confirmdummy_tglsubmit">
+<span<?= $Page->tglsubmit->viewAttributes() ?>>
+<?= $Page->tglsubmit->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->dummyatas->Visible) { // dummyatas ?>
-        <td <?= $Page->dummyatas->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummyatas" class="npd_confirmdummy_dummyatas">
-<span<?= $Page->dummyatas->viewAttributes() ?>>
-<?= $Page->dummyatas->getViewValue() ?></span>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <td <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_submitted_by" class="npd_confirmdummy_submitted_by">
+<span<?= $Page->submitted_by->viewAttributes() ?>>
+<?= $Page->submitted_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->dummysamping->Visible) { // dummysamping ?>
-        <td <?= $Page->dummysamping->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_dummysamping" class="npd_confirmdummy_dummysamping">
-<span<?= $Page->dummysamping->viewAttributes() ?>>
-<?= $Page->dummysamping->getViewValue() ?></span>
+<?php if ($Page->checked1_by->Visible) { // checked1_by ?>
+        <td <?= $Page->checked1_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_checked1_by" class="npd_confirmdummy_checked1_by">
+<span<?= $Page->checked1_by->viewAttributes() ?>>
+<?= $Page->checked1_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->ttd->Visible) { // ttd ?>
-        <td <?= $Page->ttd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_ttd" class="npd_confirmdummy_ttd">
-<span<?= $Page->ttd->viewAttributes() ?>>
-<?= $Page->ttd->getViewValue() ?></span>
+<?php if ($Page->checked2_by->Visible) { // checked2_by ?>
+        <td <?= $Page->checked2_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_checked2_by" class="npd_confirmdummy_checked2_by">
+<span<?= $Page->checked2_by->viewAttributes() ?>>
+<?= $Page->checked2_by->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->approved_by->Visible) { // approved_by ?>
+        <td <?= $Page->approved_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmdummy_approved_by" class="npd_confirmdummy_approved_by">
+<span<?= $Page->approved_by->viewAttributes() ?>>
+<?= $Page->approved_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

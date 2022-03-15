@@ -426,7 +426,6 @@ class NpdConfirmprintList extends NpdConfirmprint
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['id'];
         }
         return $key;
     }
@@ -438,7 +437,7 @@ class NpdConfirmprintList extends NpdConfirmprint
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
+        if ($this->isAddOrEdit()) {
             $this->id->Visible = false;
         }
     }
@@ -569,17 +568,23 @@ class NpdConfirmprintList extends NpdConfirmprint
         // Set up list options
         $this->setupListOptions();
         $this->id->setVisibility();
+        $this->idnpd->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->brand->setVisibility();
-        $this->tglkirim->setVisibility();
-        $this->tgldisetujui->setVisibility();
+        $this->tglkirimprimer->setVisibility();
+        $this->tgldisetujuiprimer->setVisibility();
         $this->desainprimer->setVisibility();
         $this->materialprimer->setVisibility();
         $this->aplikasiprimer->setVisibility();
         $this->jumlahcetakprimer->setVisibility();
+        $this->tglkirimsekunder->setVisibility();
+        $this->tgldisetujuisekunder->setVisibility();
         $this->desainsekunder->setVisibility();
-        $this->materialinnerbox->setVisibility();
-        $this->aplikasiinnerbox->setVisibility();
-        $this->jumlahcetak->setVisibility();
+        $this->materialsekunder->setVisibility();
+        $this->aplikasisekunder->setVisibility();
+        $this->jumlahcetaksekunder->setVisibility();
+        $this->submitted_by->setVisibility();
         $this->checked_by->setVisibility();
         $this->approved_by->setVisibility();
         $this->created_at->setVisibility();
@@ -877,17 +882,23 @@ class NpdConfirmprintList extends NpdConfirmprint
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
+        $filterList = Concat($filterList, $this->tglterima->AdvancedSearch->toJson(), ","); // Field tglterima
+        $filterList = Concat($filterList, $this->tglsubmit->AdvancedSearch->toJson(), ","); // Field tglsubmit
         $filterList = Concat($filterList, $this->brand->AdvancedSearch->toJson(), ","); // Field brand
-        $filterList = Concat($filterList, $this->tglkirim->AdvancedSearch->toJson(), ","); // Field tglkirim
-        $filterList = Concat($filterList, $this->tgldisetujui->AdvancedSearch->toJson(), ","); // Field tgldisetujui
+        $filterList = Concat($filterList, $this->tglkirimprimer->AdvancedSearch->toJson(), ","); // Field tglkirimprimer
+        $filterList = Concat($filterList, $this->tgldisetujuiprimer->AdvancedSearch->toJson(), ","); // Field tgldisetujuiprimer
         $filterList = Concat($filterList, $this->desainprimer->AdvancedSearch->toJson(), ","); // Field desainprimer
         $filterList = Concat($filterList, $this->materialprimer->AdvancedSearch->toJson(), ","); // Field materialprimer
         $filterList = Concat($filterList, $this->aplikasiprimer->AdvancedSearch->toJson(), ","); // Field aplikasiprimer
         $filterList = Concat($filterList, $this->jumlahcetakprimer->AdvancedSearch->toJson(), ","); // Field jumlahcetakprimer
+        $filterList = Concat($filterList, $this->tglkirimsekunder->AdvancedSearch->toJson(), ","); // Field tglkirimsekunder
+        $filterList = Concat($filterList, $this->tgldisetujuisekunder->AdvancedSearch->toJson(), ","); // Field tgldisetujuisekunder
         $filterList = Concat($filterList, $this->desainsekunder->AdvancedSearch->toJson(), ","); // Field desainsekunder
-        $filterList = Concat($filterList, $this->materialinnerbox->AdvancedSearch->toJson(), ","); // Field materialinnerbox
-        $filterList = Concat($filterList, $this->aplikasiinnerbox->AdvancedSearch->toJson(), ","); // Field aplikasiinnerbox
-        $filterList = Concat($filterList, $this->jumlahcetak->AdvancedSearch->toJson(), ","); // Field jumlahcetak
+        $filterList = Concat($filterList, $this->materialsekunder->AdvancedSearch->toJson(), ","); // Field materialsekunder
+        $filterList = Concat($filterList, $this->aplikasisekunder->AdvancedSearch->toJson(), ","); // Field aplikasisekunder
+        $filterList = Concat($filterList, $this->jumlahcetaksekunder->AdvancedSearch->toJson(), ","); // Field jumlahcetaksekunder
+        $filterList = Concat($filterList, $this->submitted_by->AdvancedSearch->toJson(), ","); // Field submitted_by
         $filterList = Concat($filterList, $this->checked_by->AdvancedSearch->toJson(), ","); // Field checked_by
         $filterList = Concat($filterList, $this->approved_by->AdvancedSearch->toJson(), ","); // Field approved_by
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
@@ -940,6 +951,30 @@ class NpdConfirmprintList extends NpdConfirmprint
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
 
+        // Field idnpd
+        $this->idnpd->AdvancedSearch->SearchValue = @$filter["x_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator = @$filter["z_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchCondition = @$filter["v_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchValue2 = @$filter["y_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
+        $this->idnpd->AdvancedSearch->save();
+
+        // Field tglterima
+        $this->tglterima->AdvancedSearch->SearchValue = @$filter["x_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator = @$filter["z_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchCondition = @$filter["v_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchValue2 = @$filter["y_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator2 = @$filter["w_tglterima"];
+        $this->tglterima->AdvancedSearch->save();
+
+        // Field tglsubmit
+        $this->tglsubmit->AdvancedSearch->SearchValue = @$filter["x_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator = @$filter["z_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchCondition = @$filter["v_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchValue2 = @$filter["y_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator2 = @$filter["w_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->save();
+
         // Field brand
         $this->brand->AdvancedSearch->SearchValue = @$filter["x_brand"];
         $this->brand->AdvancedSearch->SearchOperator = @$filter["z_brand"];
@@ -948,21 +983,21 @@ class NpdConfirmprintList extends NpdConfirmprint
         $this->brand->AdvancedSearch->SearchOperator2 = @$filter["w_brand"];
         $this->brand->AdvancedSearch->save();
 
-        // Field tglkirim
-        $this->tglkirim->AdvancedSearch->SearchValue = @$filter["x_tglkirim"];
-        $this->tglkirim->AdvancedSearch->SearchOperator = @$filter["z_tglkirim"];
-        $this->tglkirim->AdvancedSearch->SearchCondition = @$filter["v_tglkirim"];
-        $this->tglkirim->AdvancedSearch->SearchValue2 = @$filter["y_tglkirim"];
-        $this->tglkirim->AdvancedSearch->SearchOperator2 = @$filter["w_tglkirim"];
-        $this->tglkirim->AdvancedSearch->save();
+        // Field tglkirimprimer
+        $this->tglkirimprimer->AdvancedSearch->SearchValue = @$filter["x_tglkirimprimer"];
+        $this->tglkirimprimer->AdvancedSearch->SearchOperator = @$filter["z_tglkirimprimer"];
+        $this->tglkirimprimer->AdvancedSearch->SearchCondition = @$filter["v_tglkirimprimer"];
+        $this->tglkirimprimer->AdvancedSearch->SearchValue2 = @$filter["y_tglkirimprimer"];
+        $this->tglkirimprimer->AdvancedSearch->SearchOperator2 = @$filter["w_tglkirimprimer"];
+        $this->tglkirimprimer->AdvancedSearch->save();
 
-        // Field tgldisetujui
-        $this->tgldisetujui->AdvancedSearch->SearchValue = @$filter["x_tgldisetujui"];
-        $this->tgldisetujui->AdvancedSearch->SearchOperator = @$filter["z_tgldisetujui"];
-        $this->tgldisetujui->AdvancedSearch->SearchCondition = @$filter["v_tgldisetujui"];
-        $this->tgldisetujui->AdvancedSearch->SearchValue2 = @$filter["y_tgldisetujui"];
-        $this->tgldisetujui->AdvancedSearch->SearchOperator2 = @$filter["w_tgldisetujui"];
-        $this->tgldisetujui->AdvancedSearch->save();
+        // Field tgldisetujuiprimer
+        $this->tgldisetujuiprimer->AdvancedSearch->SearchValue = @$filter["x_tgldisetujuiprimer"];
+        $this->tgldisetujuiprimer->AdvancedSearch->SearchOperator = @$filter["z_tgldisetujuiprimer"];
+        $this->tgldisetujuiprimer->AdvancedSearch->SearchCondition = @$filter["v_tgldisetujuiprimer"];
+        $this->tgldisetujuiprimer->AdvancedSearch->SearchValue2 = @$filter["y_tgldisetujuiprimer"];
+        $this->tgldisetujuiprimer->AdvancedSearch->SearchOperator2 = @$filter["w_tgldisetujuiprimer"];
+        $this->tgldisetujuiprimer->AdvancedSearch->save();
 
         // Field desainprimer
         $this->desainprimer->AdvancedSearch->SearchValue = @$filter["x_desainprimer"];
@@ -996,6 +1031,22 @@ class NpdConfirmprintList extends NpdConfirmprint
         $this->jumlahcetakprimer->AdvancedSearch->SearchOperator2 = @$filter["w_jumlahcetakprimer"];
         $this->jumlahcetakprimer->AdvancedSearch->save();
 
+        // Field tglkirimsekunder
+        $this->tglkirimsekunder->AdvancedSearch->SearchValue = @$filter["x_tglkirimsekunder"];
+        $this->tglkirimsekunder->AdvancedSearch->SearchOperator = @$filter["z_tglkirimsekunder"];
+        $this->tglkirimsekunder->AdvancedSearch->SearchCondition = @$filter["v_tglkirimsekunder"];
+        $this->tglkirimsekunder->AdvancedSearch->SearchValue2 = @$filter["y_tglkirimsekunder"];
+        $this->tglkirimsekunder->AdvancedSearch->SearchOperator2 = @$filter["w_tglkirimsekunder"];
+        $this->tglkirimsekunder->AdvancedSearch->save();
+
+        // Field tgldisetujuisekunder
+        $this->tgldisetujuisekunder->AdvancedSearch->SearchValue = @$filter["x_tgldisetujuisekunder"];
+        $this->tgldisetujuisekunder->AdvancedSearch->SearchOperator = @$filter["z_tgldisetujuisekunder"];
+        $this->tgldisetujuisekunder->AdvancedSearch->SearchCondition = @$filter["v_tgldisetujuisekunder"];
+        $this->tgldisetujuisekunder->AdvancedSearch->SearchValue2 = @$filter["y_tgldisetujuisekunder"];
+        $this->tgldisetujuisekunder->AdvancedSearch->SearchOperator2 = @$filter["w_tgldisetujuisekunder"];
+        $this->tgldisetujuisekunder->AdvancedSearch->save();
+
         // Field desainsekunder
         $this->desainsekunder->AdvancedSearch->SearchValue = @$filter["x_desainsekunder"];
         $this->desainsekunder->AdvancedSearch->SearchOperator = @$filter["z_desainsekunder"];
@@ -1004,29 +1055,37 @@ class NpdConfirmprintList extends NpdConfirmprint
         $this->desainsekunder->AdvancedSearch->SearchOperator2 = @$filter["w_desainsekunder"];
         $this->desainsekunder->AdvancedSearch->save();
 
-        // Field materialinnerbox
-        $this->materialinnerbox->AdvancedSearch->SearchValue = @$filter["x_materialinnerbox"];
-        $this->materialinnerbox->AdvancedSearch->SearchOperator = @$filter["z_materialinnerbox"];
-        $this->materialinnerbox->AdvancedSearch->SearchCondition = @$filter["v_materialinnerbox"];
-        $this->materialinnerbox->AdvancedSearch->SearchValue2 = @$filter["y_materialinnerbox"];
-        $this->materialinnerbox->AdvancedSearch->SearchOperator2 = @$filter["w_materialinnerbox"];
-        $this->materialinnerbox->AdvancedSearch->save();
+        // Field materialsekunder
+        $this->materialsekunder->AdvancedSearch->SearchValue = @$filter["x_materialsekunder"];
+        $this->materialsekunder->AdvancedSearch->SearchOperator = @$filter["z_materialsekunder"];
+        $this->materialsekunder->AdvancedSearch->SearchCondition = @$filter["v_materialsekunder"];
+        $this->materialsekunder->AdvancedSearch->SearchValue2 = @$filter["y_materialsekunder"];
+        $this->materialsekunder->AdvancedSearch->SearchOperator2 = @$filter["w_materialsekunder"];
+        $this->materialsekunder->AdvancedSearch->save();
 
-        // Field aplikasiinnerbox
-        $this->aplikasiinnerbox->AdvancedSearch->SearchValue = @$filter["x_aplikasiinnerbox"];
-        $this->aplikasiinnerbox->AdvancedSearch->SearchOperator = @$filter["z_aplikasiinnerbox"];
-        $this->aplikasiinnerbox->AdvancedSearch->SearchCondition = @$filter["v_aplikasiinnerbox"];
-        $this->aplikasiinnerbox->AdvancedSearch->SearchValue2 = @$filter["y_aplikasiinnerbox"];
-        $this->aplikasiinnerbox->AdvancedSearch->SearchOperator2 = @$filter["w_aplikasiinnerbox"];
-        $this->aplikasiinnerbox->AdvancedSearch->save();
+        // Field aplikasisekunder
+        $this->aplikasisekunder->AdvancedSearch->SearchValue = @$filter["x_aplikasisekunder"];
+        $this->aplikasisekunder->AdvancedSearch->SearchOperator = @$filter["z_aplikasisekunder"];
+        $this->aplikasisekunder->AdvancedSearch->SearchCondition = @$filter["v_aplikasisekunder"];
+        $this->aplikasisekunder->AdvancedSearch->SearchValue2 = @$filter["y_aplikasisekunder"];
+        $this->aplikasisekunder->AdvancedSearch->SearchOperator2 = @$filter["w_aplikasisekunder"];
+        $this->aplikasisekunder->AdvancedSearch->save();
 
-        // Field jumlahcetak
-        $this->jumlahcetak->AdvancedSearch->SearchValue = @$filter["x_jumlahcetak"];
-        $this->jumlahcetak->AdvancedSearch->SearchOperator = @$filter["z_jumlahcetak"];
-        $this->jumlahcetak->AdvancedSearch->SearchCondition = @$filter["v_jumlahcetak"];
-        $this->jumlahcetak->AdvancedSearch->SearchValue2 = @$filter["y_jumlahcetak"];
-        $this->jumlahcetak->AdvancedSearch->SearchOperator2 = @$filter["w_jumlahcetak"];
-        $this->jumlahcetak->AdvancedSearch->save();
+        // Field jumlahcetaksekunder
+        $this->jumlahcetaksekunder->AdvancedSearch->SearchValue = @$filter["x_jumlahcetaksekunder"];
+        $this->jumlahcetaksekunder->AdvancedSearch->SearchOperator = @$filter["z_jumlahcetaksekunder"];
+        $this->jumlahcetaksekunder->AdvancedSearch->SearchCondition = @$filter["v_jumlahcetaksekunder"];
+        $this->jumlahcetaksekunder->AdvancedSearch->SearchValue2 = @$filter["y_jumlahcetaksekunder"];
+        $this->jumlahcetaksekunder->AdvancedSearch->SearchOperator2 = @$filter["w_jumlahcetaksekunder"];
+        $this->jumlahcetaksekunder->AdvancedSearch->save();
+
+        // Field submitted_by
+        $this->submitted_by->AdvancedSearch->SearchValue = @$filter["x_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator = @$filter["z_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchCondition = @$filter["v_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchValue2 = @$filter["y_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator2 = @$filter["w_submitted_by"];
+        $this->submitted_by->AdvancedSearch->save();
 
         // Field checked_by
         $this->checked_by->AdvancedSearch->SearchValue = @$filter["x_checked_by"];
@@ -1072,8 +1131,8 @@ class NpdConfirmprintList extends NpdConfirmprint
         $this->buildBasicSearchSql($where, $this->materialprimer, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->aplikasiprimer, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->desainsekunder, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->materialinnerbox, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->aplikasiinnerbox, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->materialsekunder, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->aplikasisekunder, $arKeywords, $type);
         return $where;
     }
 
@@ -1237,17 +1296,23 @@ class NpdConfirmprintList extends NpdConfirmprint
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
             $this->updateSort($this->id); // id
+            $this->updateSort($this->idnpd); // idnpd
+            $this->updateSort($this->tglterima); // tglterima
+            $this->updateSort($this->tglsubmit); // tglsubmit
             $this->updateSort($this->brand); // brand
-            $this->updateSort($this->tglkirim); // tglkirim
-            $this->updateSort($this->tgldisetujui); // tgldisetujui
+            $this->updateSort($this->tglkirimprimer); // tglkirimprimer
+            $this->updateSort($this->tgldisetujuiprimer); // tgldisetujuiprimer
             $this->updateSort($this->desainprimer); // desainprimer
             $this->updateSort($this->materialprimer); // materialprimer
             $this->updateSort($this->aplikasiprimer); // aplikasiprimer
             $this->updateSort($this->jumlahcetakprimer); // jumlahcetakprimer
+            $this->updateSort($this->tglkirimsekunder); // tglkirimsekunder
+            $this->updateSort($this->tgldisetujuisekunder); // tgldisetujuisekunder
             $this->updateSort($this->desainsekunder); // desainsekunder
-            $this->updateSort($this->materialinnerbox); // materialinnerbox
-            $this->updateSort($this->aplikasiinnerbox); // aplikasiinnerbox
-            $this->updateSort($this->jumlahcetak); // jumlahcetak
+            $this->updateSort($this->materialsekunder); // materialsekunder
+            $this->updateSort($this->aplikasisekunder); // aplikasisekunder
+            $this->updateSort($this->jumlahcetaksekunder); // jumlahcetaksekunder
+            $this->updateSort($this->submitted_by); // submitted_by
             $this->updateSort($this->checked_by); // checked_by
             $this->updateSort($this->approved_by); // approved_by
             $this->updateSort($this->created_at); // created_at
@@ -1292,17 +1357,23 @@ class NpdConfirmprintList extends NpdConfirmprint
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
+                $this->idnpd->setSort("");
+                $this->tglterima->setSort("");
+                $this->tglsubmit->setSort("");
                 $this->brand->setSort("");
-                $this->tglkirim->setSort("");
-                $this->tgldisetujui->setSort("");
+                $this->tglkirimprimer->setSort("");
+                $this->tgldisetujuiprimer->setSort("");
                 $this->desainprimer->setSort("");
                 $this->materialprimer->setSort("");
                 $this->aplikasiprimer->setSort("");
                 $this->jumlahcetakprimer->setSort("");
+                $this->tglkirimsekunder->setSort("");
+                $this->tgldisetujuisekunder->setSort("");
                 $this->desainsekunder->setSort("");
-                $this->materialinnerbox->setSort("");
-                $this->aplikasiinnerbox->setSort("");
-                $this->jumlahcetak->setSort("");
+                $this->materialsekunder->setSort("");
+                $this->aplikasisekunder->setSort("");
+                $this->jumlahcetaksekunder->setSort("");
+                $this->submitted_by->setSort("");
                 $this->checked_by->setSort("");
                 $this->approved_by->setSort("");
                 $this->created_at->setSort("");
@@ -1325,30 +1396,6 @@ class NpdConfirmprintList extends NpdConfirmprint
         $item->Body = "";
         $item->OnLeft = false;
         $item->Visible = false;
-
-        // "view"
-        $item = &$this->ListOptions->add("view");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
-
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canAdd();
-        $item->OnLeft = false;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
-        $item->OnLeft = false;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -1404,41 +1451,7 @@ class NpdConfirmprintList extends NpdConfirmprint
         $opt = $this->ListOptions["sequence"];
         $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") {
-            // "view"
-            $opt = $this->ListOptions["view"];
-            $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView()) {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "edit"
-            $opt = $this->ListOptions["edit"];
-            $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit()) {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "copy"
-            $opt = $this->ListOptions["copy"];
-            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
-            if ($Security->canAdd()) {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "delete"
-            $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete()) {
-            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
+        if ($this->CurrentMode == "view") { // View mode
         } // End View mode
 
         // Set up list action buttons
@@ -1474,7 +1487,6 @@ class NpdConfirmprintList extends NpdConfirmprint
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1728,17 +1740,23 @@ class NpdConfirmprintList extends NpdConfirmprint
             return;
         }
         $this->id->setDbValue($row['id']);
+        $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->brand->setDbValue($row['brand']);
-        $this->tglkirim->setDbValue($row['tglkirim']);
-        $this->tgldisetujui->setDbValue($row['tgldisetujui']);
+        $this->tglkirimprimer->setDbValue($row['tglkirimprimer']);
+        $this->tgldisetujuiprimer->setDbValue($row['tgldisetujuiprimer']);
         $this->desainprimer->setDbValue($row['desainprimer']);
         $this->materialprimer->setDbValue($row['materialprimer']);
         $this->aplikasiprimer->setDbValue($row['aplikasiprimer']);
         $this->jumlahcetakprimer->setDbValue($row['jumlahcetakprimer']);
+        $this->tglkirimsekunder->setDbValue($row['tglkirimsekunder']);
+        $this->tgldisetujuisekunder->setDbValue($row['tgldisetujuisekunder']);
         $this->desainsekunder->setDbValue($row['desainsekunder']);
-        $this->materialinnerbox->setDbValue($row['materialinnerbox']);
-        $this->aplikasiinnerbox->setDbValue($row['aplikasiinnerbox']);
-        $this->jumlahcetak->setDbValue($row['jumlahcetak']);
+        $this->materialsekunder->setDbValue($row['materialsekunder']);
+        $this->aplikasisekunder->setDbValue($row['aplikasisekunder']);
+        $this->jumlahcetaksekunder->setDbValue($row['jumlahcetaksekunder']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
         $this->checked_by->setDbValue($row['checked_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
@@ -1750,17 +1768,23 @@ class NpdConfirmprintList extends NpdConfirmprint
     {
         $row = [];
         $row['id'] = null;
+        $row['idnpd'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
         $row['brand'] = null;
-        $row['tglkirim'] = null;
-        $row['tgldisetujui'] = null;
+        $row['tglkirimprimer'] = null;
+        $row['tgldisetujuiprimer'] = null;
         $row['desainprimer'] = null;
         $row['materialprimer'] = null;
         $row['aplikasiprimer'] = null;
         $row['jumlahcetakprimer'] = null;
+        $row['tglkirimsekunder'] = null;
+        $row['tgldisetujuisekunder'] = null;
         $row['desainsekunder'] = null;
-        $row['materialinnerbox'] = null;
-        $row['aplikasiinnerbox'] = null;
-        $row['jumlahcetak'] = null;
+        $row['materialsekunder'] = null;
+        $row['aplikasisekunder'] = null;
+        $row['jumlahcetaksekunder'] = null;
+        $row['submitted_by'] = null;
         $row['checked_by'] = null;
         $row['approved_by'] = null;
         $row['created_at'] = null;
@@ -1771,17 +1795,7 @@ class NpdConfirmprintList extends NpdConfirmprint
     // Load old record
     protected function loadOldRecord()
     {
-        // Load old record
-        $this->OldRecordset = null;
-        $validKey = $this->OldKey != "";
-        if ($validKey) {
-            $this->CurrentFilter = $this->getRecordFilter();
-            $sql = $this->getCurrentSql();
-            $conn = $this->getConnection();
-            $this->OldRecordset = LoadRecordset($sql, $conn);
-        }
-        $this->loadRowValues($this->OldRecordset); // Load row values
-        return $validKey;
+        return false;
     }
 
     // Render row values based on field settings
@@ -1804,11 +1818,17 @@ class NpdConfirmprintList extends NpdConfirmprint
 
         // id
 
+        // idnpd
+
+        // tglterima
+
+        // tglsubmit
+
         // brand
 
-        // tglkirim
+        // tglkirimprimer
 
-        // tgldisetujui
+        // tgldisetujuiprimer
 
         // desainprimer
 
@@ -1818,13 +1838,19 @@ class NpdConfirmprintList extends NpdConfirmprint
 
         // jumlahcetakprimer
 
+        // tglkirimsekunder
+
+        // tgldisetujuisekunder
+
         // desainsekunder
 
-        // materialinnerbox
+        // materialsekunder
 
-        // aplikasiinnerbox
+        // aplikasisekunder
 
-        // jumlahcetak
+        // jumlahcetaksekunder
+
+        // submitted_by
 
         // checked_by
 
@@ -1838,19 +1864,34 @@ class NpdConfirmprintList extends NpdConfirmprint
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
+            // idnpd
+            $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
+            $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
+            $this->idnpd->ViewCustomAttributes = "";
+
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
+
             // brand
             $this->brand->ViewValue = $this->brand->CurrentValue;
             $this->brand->ViewCustomAttributes = "";
 
-            // tglkirim
-            $this->tglkirim->ViewValue = $this->tglkirim->CurrentValue;
-            $this->tglkirim->ViewValue = FormatDateTime($this->tglkirim->ViewValue, 0);
-            $this->tglkirim->ViewCustomAttributes = "";
+            // tglkirimprimer
+            $this->tglkirimprimer->ViewValue = $this->tglkirimprimer->CurrentValue;
+            $this->tglkirimprimer->ViewValue = FormatDateTime($this->tglkirimprimer->ViewValue, 0);
+            $this->tglkirimprimer->ViewCustomAttributes = "";
 
-            // tgldisetujui
-            $this->tgldisetujui->ViewValue = $this->tgldisetujui->CurrentValue;
-            $this->tgldisetujui->ViewValue = FormatDateTime($this->tgldisetujui->ViewValue, 0);
-            $this->tgldisetujui->ViewCustomAttributes = "";
+            // tgldisetujuiprimer
+            $this->tgldisetujuiprimer->ViewValue = $this->tgldisetujuiprimer->CurrentValue;
+            $this->tgldisetujuiprimer->ViewValue = FormatDateTime($this->tgldisetujuiprimer->ViewValue, 0);
+            $this->tgldisetujuiprimer->ViewCustomAttributes = "";
 
             // desainprimer
             $this->desainprimer->ViewValue = $this->desainprimer->CurrentValue;
@@ -1869,22 +1910,37 @@ class NpdConfirmprintList extends NpdConfirmprint
             $this->jumlahcetakprimer->ViewValue = FormatNumber($this->jumlahcetakprimer->ViewValue, 0, -2, -2, -2);
             $this->jumlahcetakprimer->ViewCustomAttributes = "";
 
+            // tglkirimsekunder
+            $this->tglkirimsekunder->ViewValue = $this->tglkirimsekunder->CurrentValue;
+            $this->tglkirimsekunder->ViewValue = FormatDateTime($this->tglkirimsekunder->ViewValue, 0);
+            $this->tglkirimsekunder->ViewCustomAttributes = "";
+
+            // tgldisetujuisekunder
+            $this->tgldisetujuisekunder->ViewValue = $this->tgldisetujuisekunder->CurrentValue;
+            $this->tgldisetujuisekunder->ViewValue = FormatDateTime($this->tgldisetujuisekunder->ViewValue, 0);
+            $this->tgldisetujuisekunder->ViewCustomAttributes = "";
+
             // desainsekunder
             $this->desainsekunder->ViewValue = $this->desainsekunder->CurrentValue;
             $this->desainsekunder->ViewCustomAttributes = "";
 
-            // materialinnerbox
-            $this->materialinnerbox->ViewValue = $this->materialinnerbox->CurrentValue;
-            $this->materialinnerbox->ViewCustomAttributes = "";
+            // materialsekunder
+            $this->materialsekunder->ViewValue = $this->materialsekunder->CurrentValue;
+            $this->materialsekunder->ViewCustomAttributes = "";
 
-            // aplikasiinnerbox
-            $this->aplikasiinnerbox->ViewValue = $this->aplikasiinnerbox->CurrentValue;
-            $this->aplikasiinnerbox->ViewCustomAttributes = "";
+            // aplikasisekunder
+            $this->aplikasisekunder->ViewValue = $this->aplikasisekunder->CurrentValue;
+            $this->aplikasisekunder->ViewCustomAttributes = "";
 
-            // jumlahcetak
-            $this->jumlahcetak->ViewValue = $this->jumlahcetak->CurrentValue;
-            $this->jumlahcetak->ViewValue = FormatNumber($this->jumlahcetak->ViewValue, 0, -2, -2, -2);
-            $this->jumlahcetak->ViewCustomAttributes = "";
+            // jumlahcetaksekunder
+            $this->jumlahcetaksekunder->ViewValue = $this->jumlahcetaksekunder->CurrentValue;
+            $this->jumlahcetaksekunder->ViewValue = FormatNumber($this->jumlahcetaksekunder->ViewValue, 0, -2, -2, -2);
+            $this->jumlahcetaksekunder->ViewCustomAttributes = "";
+
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
 
             // checked_by
             $curVal = trim(strval($this->checked_by->CurrentValue));
@@ -1943,20 +1999,35 @@ class NpdConfirmprintList extends NpdConfirmprint
             $this->id->HrefValue = "";
             $this->id->TooltipValue = "";
 
+            // idnpd
+            $this->idnpd->LinkCustomAttributes = "";
+            $this->idnpd->HrefValue = "";
+            $this->idnpd->TooltipValue = "";
+
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
+
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
+
             // brand
             $this->brand->LinkCustomAttributes = "";
             $this->brand->HrefValue = "";
             $this->brand->TooltipValue = "";
 
-            // tglkirim
-            $this->tglkirim->LinkCustomAttributes = "";
-            $this->tglkirim->HrefValue = "";
-            $this->tglkirim->TooltipValue = "";
+            // tglkirimprimer
+            $this->tglkirimprimer->LinkCustomAttributes = "";
+            $this->tglkirimprimer->HrefValue = "";
+            $this->tglkirimprimer->TooltipValue = "";
 
-            // tgldisetujui
-            $this->tgldisetujui->LinkCustomAttributes = "";
-            $this->tgldisetujui->HrefValue = "";
-            $this->tgldisetujui->TooltipValue = "";
+            // tgldisetujuiprimer
+            $this->tgldisetujuiprimer->LinkCustomAttributes = "";
+            $this->tgldisetujuiprimer->HrefValue = "";
+            $this->tgldisetujuiprimer->TooltipValue = "";
 
             // desainprimer
             $this->desainprimer->LinkCustomAttributes = "";
@@ -1978,25 +2049,40 @@ class NpdConfirmprintList extends NpdConfirmprint
             $this->jumlahcetakprimer->HrefValue = "";
             $this->jumlahcetakprimer->TooltipValue = "";
 
+            // tglkirimsekunder
+            $this->tglkirimsekunder->LinkCustomAttributes = "";
+            $this->tglkirimsekunder->HrefValue = "";
+            $this->tglkirimsekunder->TooltipValue = "";
+
+            // tgldisetujuisekunder
+            $this->tgldisetujuisekunder->LinkCustomAttributes = "";
+            $this->tgldisetujuisekunder->HrefValue = "";
+            $this->tgldisetujuisekunder->TooltipValue = "";
+
             // desainsekunder
             $this->desainsekunder->LinkCustomAttributes = "";
             $this->desainsekunder->HrefValue = "";
             $this->desainsekunder->TooltipValue = "";
 
-            // materialinnerbox
-            $this->materialinnerbox->LinkCustomAttributes = "";
-            $this->materialinnerbox->HrefValue = "";
-            $this->materialinnerbox->TooltipValue = "";
+            // materialsekunder
+            $this->materialsekunder->LinkCustomAttributes = "";
+            $this->materialsekunder->HrefValue = "";
+            $this->materialsekunder->TooltipValue = "";
 
-            // aplikasiinnerbox
-            $this->aplikasiinnerbox->LinkCustomAttributes = "";
-            $this->aplikasiinnerbox->HrefValue = "";
-            $this->aplikasiinnerbox->TooltipValue = "";
+            // aplikasisekunder
+            $this->aplikasisekunder->LinkCustomAttributes = "";
+            $this->aplikasisekunder->HrefValue = "";
+            $this->aplikasisekunder->TooltipValue = "";
 
-            // jumlahcetak
-            $this->jumlahcetak->LinkCustomAttributes = "";
-            $this->jumlahcetak->HrefValue = "";
-            $this->jumlahcetak->TooltipValue = "";
+            // jumlahcetaksekunder
+            $this->jumlahcetaksekunder->LinkCustomAttributes = "";
+            $this->jumlahcetaksekunder->HrefValue = "";
+            $this->jumlahcetaksekunder->TooltipValue = "";
+
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
 
             // checked_by
             $this->checked_by->LinkCustomAttributes = "";

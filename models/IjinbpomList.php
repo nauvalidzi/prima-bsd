@@ -569,9 +569,9 @@ class IjinbpomList extends Ijinbpom
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->tglterima->Visible = false;
+        $this->tglterima->setVisibility();
         $this->tglsubmit->setVisibility();
-        $this->idpegawai->setVisibility();
+        $this->idpegawai->Visible = false;
         $this->idcustomer->setVisibility();
         $this->idbrand->setVisibility();
         $this->kontrakkerjasama->Visible = false;
@@ -1214,8 +1214,8 @@ class IjinbpomList extends Ijinbpom
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->tglterima); // tglterima
             $this->updateSort($this->tglsubmit); // tglsubmit
-            $this->updateSort($this->idpegawai); // idpegawai
             $this->updateSort($this->idcustomer); // idcustomer
             $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->status); // status
@@ -1320,13 +1320,6 @@ class IjinbpomList extends Ijinbpom
         $item->OnLeft = false;
         $item->ShowInButtonGroup = false;
 
-        // "detail_ijinbpom_status"
-        $item = &$this->ListOptions->add("detail_ijinbpom_status");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'ijinbpom_status') && !$this->ShowMultipleDetails;
-        $item->OnLeft = false;
-        $item->ShowInButtonGroup = false;
-
         // Multiple details
         if ($this->ShowMultipleDetails) {
             $item = &$this->ListOptions->add("details");
@@ -1339,7 +1332,6 @@ class IjinbpomList extends Ijinbpom
         // Set up detail pages
         $pages = new SubPages();
         $pages->add("ijinbpom_detail");
-        $pages->add("ijinbpom_status");
         $this->DetailPages = $pages;
 
         // List actions
@@ -1482,43 +1474,6 @@ class IjinbpomList extends Ijinbpom
                 $opt->Visible = false;
             }
         }
-
-        // "detail_ijinbpom_status"
-        $opt = $this->ListOptions["detail_ijinbpom_status"];
-        if ($Security->allowList(CurrentProjectID() . 'ijinbpom_status') && $this->showOptionLink()) {
-            $body = $Language->phrase("DetailLink") . $Language->TablePhrase("ijinbpom_status", "TblCaption");
-            $body .= "&nbsp;" . str_replace("%c", Container("ijinbpom_status")->Count, $Language->phrase("DetailCount"));
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("IjinbpomStatusList?" . Config("TABLE_SHOW_MASTER") . "=ijinbpom&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
-            $links = "";
-            $detailPage = Container("IjinbpomStatusGrid");
-            if ($detailPage->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'ijinbpom')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=ijinbpom_status");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
-                if ($detailViewTblVar != "") {
-                    $detailViewTblVar .= ",";
-                }
-                $detailViewTblVar .= "ijinbpom_status";
-            }
-            if ($detailPage->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'ijinbpom')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=ijinbpom_status");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
-                if ($detailEditTblVar != "") {
-                    $detailEditTblVar .= ",";
-                }
-                $detailEditTblVar .= "ijinbpom_status";
-            }
-            if ($links != "") {
-                $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-                $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-            }
-            $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-            $opt->Body = $body;
-            if ($this->ShowMultipleDetails) {
-                $opt->Visible = false;
-            }
-        }
         if ($this->ShowMultipleDetails) {
             $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
             $links = "";
@@ -1575,18 +1530,6 @@ class IjinbpomList extends Ijinbpom
                         $detailTableLink .= ",";
                     }
                     $detailTableLink .= "ijinbpom_detail";
-                }
-                $item = &$option->add("detailadd_ijinbpom_status");
-                $url = $this->getAddUrl(Config("TABLE_SHOW_DETAIL") . "=ijinbpom_status");
-                $detailPage = Container("IjinbpomStatusGrid");
-                $caption = $Language->phrase("Add") . "&nbsp;" . $this->tableCaption() . "/" . $detailPage->tableCaption();
-                $item->Body = "<a class=\"ew-detail-add-group ew-detail-add\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode(GetUrl($url)) . "\">" . $caption . "</a>";
-                $item->Visible = ($detailPage->DetailAdd && $Security->allowAdd(CurrentProjectID() . 'ijinbpom') && $Security->canAdd());
-                if ($item->Visible) {
-                    if ($detailTableLink != "") {
-                        $detailTableLink .= ",";
-                    }
-                    $detailTableLink .= "ijinbpom_status";
                 }
 
         // Add multiple details
@@ -1794,39 +1737,6 @@ class IjinbpomList extends Ijinbpom
                 $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
             }
         }
-        $sqlwrk = "`idijinbpom`=" . AdjustSql($this->id->CurrentValue, $this->Dbid) . "";
-
-        // Column "detail_ijinbpom_status"
-        if ($this->DetailPages && $this->DetailPages["ijinbpom_status"] && $this->DetailPages["ijinbpom_status"]->Visible) {
-            $link = "";
-            $option = $this->ListOptions["detail_ijinbpom_status"];
-            $url = "IjinbpomStatusPreview?t=ijinbpom&f=" . Encrypt($sqlwrk);
-            $btngrp = "<div data-table=\"ijinbpom_status\" data-url=\"" . $url . "\">";
-            if ($Security->allowList(CurrentProjectID() . 'ijinbpom')) {
-                $label = $Language->TablePhrase("ijinbpom_status", "TblCaption");
-                $label .= "&nbsp;" . JsEncode(str_replace("%c", Container("ijinbpom_status")->Count, $Language->phrase("DetailCount")));
-                $link = "<li class=\"nav-item\"><a href=\"#\" class=\"nav-link\" data-toggle=\"tab\" data-table=\"ijinbpom_status\" data-url=\"" . $url . "\">" . $label . "</a></li>";
-                $links .= $link;
-                $detaillnk = JsEncodeAttribute("IjinbpomStatusList?" . Config("TABLE_SHOW_MASTER") . "=ijinbpom&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("ijinbpom_status", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
-            }
-            $detailPageObj = Container("IjinbpomStatusGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'ijinbpom')) {
-                $caption = $Language->phrase("MasterDetailViewLink");
-                $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=ijinbpom_status");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'ijinbpom')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=ijinbpom_status");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
-            $btngrp .= "</div>";
-            if ($link != "") {
-                $btngrps .= $btngrp;
-                $option->Body .= "<div class=\"d-none ew-preview\">" . $link . $btngrp . "</div>";
-            }
-        }
 
         // Hide detail items if necessary
         $this->ListOptions->hideDetailItemsForDropDown();
@@ -1959,12 +1869,6 @@ class IjinbpomList extends Ijinbpom
         $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
         $detailTbl = Container("ijinbpom_detail");
-        $detailFilter = $detailTbl->sqlDetailFilter_ijinbpom();
-        $detailFilter = str_replace("@idijinbpom@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
-        $detailTbl->setCurrentMasterTable("ijinbpom");
-        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
-        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("ijinbpom_status");
         $detailFilter = $detailTbl->sqlDetailFilter_ijinbpom();
         $detailFilter = str_replace("@idijinbpom@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
         $detailTbl->setCurrentMasterTable("ijinbpom");
@@ -2194,15 +2098,15 @@ class IjinbpomList extends Ijinbpom
             }
             $this->readonly->ViewCustomAttributes = "";
 
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
+
             // tglsubmit
             $this->tglsubmit->LinkCustomAttributes = "";
             $this->tglsubmit->HrefValue = "";
             $this->tglsubmit->TooltipValue = "";
-
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
 
             // idcustomer
             $this->idcustomer->LinkCustomAttributes = "";

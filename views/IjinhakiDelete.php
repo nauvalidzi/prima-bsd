@@ -56,11 +56,8 @@ $Page->showMessage();
 <?php if ($Page->nama_brand->Visible) { // nama_brand ?>
         <th class="<?= $Page->nama_brand->headerCellClass() ?>"><span id="elh_ijinhaki_nama_brand" class="ijinhaki_nama_brand"><?= $Page->nama_brand->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->label_brand->Visible) { // label_brand ?>
-        <th class="<?= $Page->label_brand->headerCellClass() ?>"><span id="elh_ijinhaki_label_brand" class="ijinhaki_label_brand"><?= $Page->label_brand->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
-        <th class="<?= $Page->submitted_by->headerCellClass() ?>"><span id="elh_ijinhaki_submitted_by" class="ijinhaki_submitted_by"><?= $Page->submitted_by->caption() ?></span></th>
+<?php if ($Page->approved_by->Visible) { // approved_by ?>
+        <th class="<?= $Page->approved_by->headerCellClass() ?>"><span id="elh_ijinhaki_approved_by" class="ijinhaki_approved_by"><?= $Page->approved_by->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_ijinhaki_status" class="ijinhaki_status"><?= $Page->status->caption() ?></span></th>
@@ -118,20 +115,11 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->label_brand->Visible) { // label_brand ?>
-        <td <?= $Page->label_brand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinhaki_label_brand" class="ijinhaki_label_brand">
-<span<?= $Page->label_brand->viewAttributes() ?>>
-<?= GetFileViewTag($Page->label_brand, $Page->label_brand->getViewValue(), false) ?>
-</span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
-        <td <?= $Page->submitted_by->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinhaki_submitted_by" class="ijinhaki_submitted_by">
-<span<?= $Page->submitted_by->viewAttributes() ?>>
-<?= $Page->submitted_by->getViewValue() ?></span>
+<?php if ($Page->approved_by->Visible) { // approved_by ?>
+        <td <?= $Page->approved_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_approved_by" class="ijinhaki_approved_by">
+<span<?= $Page->approved_by->viewAttributes() ?>>
+<?= $Page->approved_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

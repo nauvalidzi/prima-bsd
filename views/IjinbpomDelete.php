@@ -44,11 +44,11 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <th class="<?= $Page->tglterima->headerCellClass() ?>"><span id="elh_ijinbpom_tglterima" class="ijinbpom_tglterima"><?= $Page->tglterima->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
         <th class="<?= $Page->tglsubmit->headerCellClass() ?>"><span id="elh_ijinbpom_tglsubmit" class="ijinbpom_tglsubmit"><?= $Page->tglsubmit->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <th class="<?= $Page->idpegawai->headerCellClass() ?>"><span id="elh_ijinbpom_idpegawai" class="ijinbpom_idpegawai"><?= $Page->idpegawai->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->idcustomer->Visible) { // idcustomer ?>
         <th class="<?= $Page->idcustomer->headerCellClass() ?>"><span id="elh_ijinbpom_idcustomer" class="ijinbpom_idcustomer"><?= $Page->idcustomer->caption() ?></span></th>
@@ -80,19 +80,19 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <td <?= $Page->tglterima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinbpom_tglterima" class="ijinbpom_tglterima">
+<span<?= $Page->tglterima->viewAttributes() ?>>
+<?= $Page->tglterima->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
         <td <?= $Page->tglsubmit->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_ijinbpom_tglsubmit" class="ijinbpom_tglsubmit">
 <span<?= $Page->tglsubmit->viewAttributes() ?>>
 <?= $Page->tglsubmit->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <td <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinbpom_idpegawai" class="ijinbpom_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<?= $Page->idpegawai->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

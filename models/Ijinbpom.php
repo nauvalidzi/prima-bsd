@@ -72,7 +72,7 @@ class Ijinbpom extends DbTable
         $this->DetailAdd = false; // Allow detail add
         $this->DetailEdit = false; // Allow detail edit
         $this->DetailView = false; // Allow detail view
-        $this->ShowMultipleDetails = true; // Show multiple details
+        $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
         $this->BasicSearch = new BasicSearch($this->TableVar);
@@ -302,10 +302,6 @@ class Ijinbpom extends DbTable
         $detailUrl = "";
         if ($this->getCurrentDetailTable() == "ijinbpom_detail") {
             $detailUrl = Container("ijinbpom_detail")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
-        }
-        if ($this->getCurrentDetailTable() == "ijinbpom_status") {
-            $detailUrl = Container("ijinbpom_status")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {

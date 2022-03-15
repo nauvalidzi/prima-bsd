@@ -30,6 +30,8 @@ class NpdConfirmdesign extends DbTable
     // Fields
     public $id;
     public $idnpd;
+    public $tglterima;
+    public $tglsubmit;
     public $desaindepan;
     public $desainbelakang;
     public $catatan;
@@ -37,7 +39,9 @@ class NpdConfirmdesign extends DbTable
     public $desainsekunder;
     public $catatansekunder;
     public $tglsekunder;
-    public $checked_by;
+    public $submitted_by;
+    public $checked1_by;
+    public $checked2_by;
     public $approved_by;
     public $created_at;
     public $updated_at;
@@ -95,6 +99,20 @@ class NpdConfirmdesign extends DbTable
         $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
         $this->Fields['idnpd'] = &$this->idnpd;
 
+        // tglterima
+        $this->tglterima = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_tglterima', 'tglterima', '`tglterima`', CastDateFieldForLike("`tglterima`", 0, "DB"), 133, 10, 0, false, '`tglterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglterima->Sortable = true; // Allow sort
+        $this->tglterima->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglterima->Param, "CustomMsg");
+        $this->Fields['tglterima'] = &$this->tglterima;
+
+        // tglsubmit
+        $this->tglsubmit = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_tglsubmit', 'tglsubmit', '`tglsubmit`', CastDateFieldForLike("`tglsubmit`", 0, "DB"), 133, 10, 0, false, '`tglsubmit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglsubmit->Sortable = true; // Allow sort
+        $this->tglsubmit->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglsubmit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglsubmit->Param, "CustomMsg");
+        $this->Fields['tglsubmit'] = &$this->tglsubmit;
+
         // desaindepan
         $this->desaindepan = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_desaindepan', 'desaindepan', '`desaindepan`', '`desaindepan`', 200, 255, -1, false, '`desaindepan`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->desaindepan->Sortable = true; // Allow sort
@@ -139,22 +157,26 @@ class NpdConfirmdesign extends DbTable
         $this->tglsekunder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglsekunder->Param, "CustomMsg");
         $this->Fields['tglsekunder'] = &$this->tglsekunder;
 
-        // checked_by
-        $this->checked_by = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_checked_by', 'checked_by', '`checked_by`', '`checked_by`', 3, 11, -1, false, '`checked_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->checked_by->Sortable = true; // Allow sort
-        $this->checked_by->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->checked_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->checked_by->Lookup = new Lookup('checked_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->checked_by->Lookup = new Lookup('checked_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->checked_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->checked_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked_by->Param, "CustomMsg");
-        $this->Fields['checked_by'] = &$this->checked_by;
+        // submitted_by
+        $this->submitted_by = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_submitted_by', 'submitted_by', '`submitted_by`', '`submitted_by`', 3, 11, -1, false, '`submitted_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->submitted_by->Sortable = true; // Allow sort
+        $this->submitted_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->submitted_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->submitted_by->Param, "CustomMsg");
+        $this->Fields['submitted_by'] = &$this->submitted_by;
+
+        // checked1_by
+        $this->checked1_by = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_checked1_by', 'checked1_by', '`checked1_by`', '`checked1_by`', 3, 11, -1, false, '`checked1_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->checked1_by->Sortable = true; // Allow sort
+        $this->checked1_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked1_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked1_by->Param, "CustomMsg");
+        $this->Fields['checked1_by'] = &$this->checked1_by;
+
+        // checked2_by
+        $this->checked2_by = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_checked2_by', 'checked2_by', '`checked2_by`', '`checked2_by`', 3, 11, -1, false, '`checked2_by`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->checked2_by->Sortable = true; // Allow sort
+        $this->checked2_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked2_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked2_by->Param, "CustomMsg");
+        $this->Fields['checked2_by'] = &$this->checked2_by;
 
         // approved_by
         $this->approved_by = new DbField('npd_confirmdesign', 'npd_confirmdesign', 'x_approved_by', 'approved_by', '`approved_by`', '`approved_by`', 3, 11, -1, false, '`approved_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -601,6 +623,8 @@ class NpdConfirmdesign extends DbTable
         }
         $this->id->DbValue = $row['id'];
         $this->idnpd->DbValue = $row['idnpd'];
+        $this->tglterima->DbValue = $row['tglterima'];
+        $this->tglsubmit->DbValue = $row['tglsubmit'];
         $this->desaindepan->DbValue = $row['desaindepan'];
         $this->desainbelakang->DbValue = $row['desainbelakang'];
         $this->catatan->DbValue = $row['catatan'];
@@ -608,7 +632,9 @@ class NpdConfirmdesign extends DbTable
         $this->desainsekunder->DbValue = $row['desainsekunder'];
         $this->catatansekunder->DbValue = $row['catatansekunder'];
         $this->tglsekunder->DbValue = $row['tglsekunder'];
-        $this->checked_by->DbValue = $row['checked_by'];
+        $this->submitted_by->DbValue = $row['submitted_by'];
+        $this->checked1_by->DbValue = $row['checked1_by'];
+        $this->checked2_by->DbValue = $row['checked2_by'];
         $this->approved_by->DbValue = $row['approved_by'];
         $this->created_at->DbValue = $row['created_at'];
         $this->updated_at->DbValue = $row['updated_at'];
@@ -934,6 +960,8 @@ SORTHTML;
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->desaindepan->setDbValue($row['desaindepan']);
         $this->desainbelakang->setDbValue($row['desainbelakang']);
         $this->catatan->setDbValue($row['catatan']);
@@ -941,7 +969,9 @@ SORTHTML;
         $this->desainsekunder->setDbValue($row['desainsekunder']);
         $this->catatansekunder->setDbValue($row['catatansekunder']);
         $this->tglsekunder->setDbValue($row['tglsekunder']);
-        $this->checked_by->setDbValue($row['checked_by']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -961,6 +991,10 @@ SORTHTML;
 
         // idnpd
 
+        // tglterima
+
+        // tglsubmit
+
         // desaindepan
 
         // desainbelakang
@@ -975,7 +1009,11 @@ SORTHTML;
 
         // tglsekunder
 
-        // checked_by
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
 
         // approved_by
 
@@ -991,6 +1029,16 @@ SORTHTML;
         $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
         $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
         $this->idnpd->ViewCustomAttributes = "";
+
+        // tglterima
+        $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+        $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+        $this->tglterima->ViewCustomAttributes = "";
+
+        // tglsubmit
+        $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+        $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+        $this->tglsubmit->ViewCustomAttributes = "";
 
         // desaindepan
         $this->desaindepan->ViewValue = $this->desaindepan->CurrentValue;
@@ -1022,26 +1070,20 @@ SORTHTML;
         $this->tglsekunder->ViewValue = FormatDateTime($this->tglsekunder->ViewValue, 0);
         $this->tglsekunder->ViewCustomAttributes = "";
 
-        // checked_by
-        $curVal = trim(strval($this->checked_by->CurrentValue));
-        if ($curVal != "") {
-            $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
-            if ($this->checked_by->ViewValue === null) { // Lookup from database
-                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
-                    $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
-                } else {
-                    $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
-                }
-            }
-        } else {
-            $this->checked_by->ViewValue = null;
-        }
-        $this->checked_by->ViewCustomAttributes = "";
+        // submitted_by
+        $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+        $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+        $this->submitted_by->ViewCustomAttributes = "";
+
+        // checked1_by
+        $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
+        $this->checked1_by->ViewValue = FormatNumber($this->checked1_by->ViewValue, 0, -2, -2, -2);
+        $this->checked1_by->ViewCustomAttributes = "";
+
+        // checked2_by
+        $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+        $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+        $this->checked2_by->ViewCustomAttributes = "";
 
         // approved_by
         $curVal = trim(strval($this->approved_by->CurrentValue));
@@ -1084,6 +1126,16 @@ SORTHTML;
         $this->idnpd->HrefValue = "";
         $this->idnpd->TooltipValue = "";
 
+        // tglterima
+        $this->tglterima->LinkCustomAttributes = "";
+        $this->tglterima->HrefValue = "";
+        $this->tglterima->TooltipValue = "";
+
+        // tglsubmit
+        $this->tglsubmit->LinkCustomAttributes = "";
+        $this->tglsubmit->HrefValue = "";
+        $this->tglsubmit->TooltipValue = "";
+
         // desaindepan
         $this->desaindepan->LinkCustomAttributes = "";
         $this->desaindepan->HrefValue = "";
@@ -1119,10 +1171,20 @@ SORTHTML;
         $this->tglsekunder->HrefValue = "";
         $this->tglsekunder->TooltipValue = "";
 
-        // checked_by
-        $this->checked_by->LinkCustomAttributes = "";
-        $this->checked_by->HrefValue = "";
-        $this->checked_by->TooltipValue = "";
+        // submitted_by
+        $this->submitted_by->LinkCustomAttributes = "";
+        $this->submitted_by->HrefValue = "";
+        $this->submitted_by->TooltipValue = "";
+
+        // checked1_by
+        $this->checked1_by->LinkCustomAttributes = "";
+        $this->checked1_by->HrefValue = "";
+        $this->checked1_by->TooltipValue = "";
+
+        // checked2_by
+        $this->checked2_by->LinkCustomAttributes = "";
+        $this->checked2_by->HrefValue = "";
+        $this->checked2_by->TooltipValue = "";
 
         // approved_by
         $this->approved_by->LinkCustomAttributes = "";
@@ -1165,6 +1227,18 @@ SORTHTML;
         $this->idnpd->EditCustomAttributes = "";
         $this->idnpd->EditValue = $this->idnpd->CurrentValue;
         $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
+
+        // tglterima
+        $this->tglterima->EditAttrs["class"] = "form-control";
+        $this->tglterima->EditCustomAttributes = "";
+        $this->tglterima->EditValue = FormatDateTime($this->tglterima->CurrentValue, 8);
+        $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
+
+        // tglsubmit
+        $this->tglsubmit->EditAttrs["class"] = "form-control";
+        $this->tglsubmit->EditCustomAttributes = "";
+        $this->tglsubmit->EditValue = FormatDateTime($this->tglsubmit->CurrentValue, 8);
+        $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
         // desaindepan
         $this->desaindepan->EditAttrs["class"] = "form-control";
@@ -1220,10 +1294,23 @@ SORTHTML;
         $this->tglsekunder->EditValue = FormatDateTime($this->tglsekunder->CurrentValue, 8);
         $this->tglsekunder->PlaceHolder = RemoveHtml($this->tglsekunder->caption());
 
-        // checked_by
-        $this->checked_by->EditAttrs["class"] = "form-control";
-        $this->checked_by->EditCustomAttributes = "";
-        $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
+        // submitted_by
+        $this->submitted_by->EditAttrs["class"] = "form-control";
+        $this->submitted_by->EditCustomAttributes = "";
+        $this->submitted_by->EditValue = $this->submitted_by->CurrentValue;
+        $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
+
+        // checked1_by
+        $this->checked1_by->EditAttrs["class"] = "form-control";
+        $this->checked1_by->EditCustomAttributes = "";
+        $this->checked1_by->EditValue = $this->checked1_by->CurrentValue;
+        $this->checked1_by->PlaceHolder = RemoveHtml($this->checked1_by->caption());
+
+        // checked2_by
+        $this->checked2_by->EditAttrs["class"] = "form-control";
+        $this->checked2_by->EditCustomAttributes = "";
+        $this->checked2_by->EditValue = $this->checked2_by->CurrentValue;
+        $this->checked2_by->PlaceHolder = RemoveHtml($this->checked2_by->caption());
 
         // approved_by
         $this->approved_by->EditAttrs["class"] = "form-control";
@@ -1272,6 +1359,8 @@ SORTHTML;
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
                     $doc->exportCaption($this->desaindepan);
                     $doc->exportCaption($this->desainbelakang);
                     $doc->exportCaption($this->catatan);
@@ -1279,20 +1368,26 @@ SORTHTML;
                     $doc->exportCaption($this->desainsekunder);
                     $doc->exportCaption($this->catatansekunder);
                     $doc->exportCaption($this->tglsekunder);
-                    $doc->exportCaption($this->checked_by);
+                    $doc->exportCaption($this->submitted_by);
+                    $doc->exportCaption($this->checked1_by);
+                    $doc->exportCaption($this->checked2_by);
                     $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->idnpd);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
                     $doc->exportCaption($this->desaindepan);
                     $doc->exportCaption($this->desainbelakang);
                     $doc->exportCaption($this->tglprimer);
                     $doc->exportCaption($this->desainsekunder);
                     $doc->exportCaption($this->catatansekunder);
                     $doc->exportCaption($this->tglsekunder);
-                    $doc->exportCaption($this->checked_by);
+                    $doc->exportCaption($this->submitted_by);
+                    $doc->exportCaption($this->checked1_by);
+                    $doc->exportCaption($this->checked2_by);
                     $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->created_at);
                     $doc->exportCaption($this->updated_at);
@@ -1327,6 +1422,8 @@ SORTHTML;
                     if ($exportPageType == "view") {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
                         $doc->exportField($this->desaindepan);
                         $doc->exportField($this->desainbelakang);
                         $doc->exportField($this->catatan);
@@ -1334,20 +1431,26 @@ SORTHTML;
                         $doc->exportField($this->desainsekunder);
                         $doc->exportField($this->catatansekunder);
                         $doc->exportField($this->tglsekunder);
-                        $doc->exportField($this->checked_by);
+                        $doc->exportField($this->submitted_by);
+                        $doc->exportField($this->checked1_by);
+                        $doc->exportField($this->checked2_by);
                         $doc->exportField($this->approved_by);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->idnpd);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
                         $doc->exportField($this->desaindepan);
                         $doc->exportField($this->desainbelakang);
                         $doc->exportField($this->tglprimer);
                         $doc->exportField($this->desainsekunder);
                         $doc->exportField($this->catatansekunder);
                         $doc->exportField($this->tglsekunder);
-                        $doc->exportField($this->checked_by);
+                        $doc->exportField($this->submitted_by);
+                        $doc->exportField($this->checked1_by);
+                        $doc->exportField($this->checked2_by);
                         $doc->exportField($this->approved_by);
                         $doc->exportField($this->created_at);
                         $doc->exportField($this->updated_at);

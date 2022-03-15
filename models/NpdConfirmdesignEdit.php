@@ -118,6 +118,9 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         global $Language, $DashboardReport, $DebugTimer;
         global $UserTable;
 
+        // Custom template
+        $this->UseCustomTemplate = true;
+
         // Initialize
         $GLOBALS["Page"] = &$this;
 
@@ -205,18 +208,25 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
 
         // Page is terminated
         $this->terminated = true;
+        if (Post("customexport") === null) {
+             // Page Unload event
+            if (method_exists($this, "pageUnload")) {
+                $this->pageUnload();
+            }
 
-         // Page Unload event
-        if (method_exists($this, "pageUnload")) {
-            $this->pageUnload();
+            // Global Page Unloaded event (in userfn*.php)
+            Page_Unloaded();
         }
-
-        // Global Page Unloaded event (in userfn*.php)
-        Page_Unloaded();
 
         // Export
         if ($this->CustomExport && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, Config("EXPORT_CLASSES"))) {
-            $content = $this->getContents();
+            if (is_array(Session(SESSION_TEMP_IMAGES))) { // Restore temp images
+                $TempImages = Session(SESSION_TEMP_IMAGES);
+            }
+            if (Post("data") !== null) {
+                $content = Post("data");
+            }
+            $ExportFileName = Post("filename", "");
             if ($ExportFileName == "") {
                 $ExportFileName = $this->TableVar;
             }
@@ -231,6 +241,11 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
                 }
                 DeleteTempImages(); // Delete temp images
                 return;
+            }
+        }
+        if ($this->CustomExport) { // Save temp images array for custom export
+            if (is_array($TempImages)) {
+                $_SESSION[SESSION_TEMP_IMAGES] = $TempImages;
             }
         }
         if (!IsApi() && method_exists($this, "pageRedirecting")) {
@@ -369,9 +384,6 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->id->Visible = false;
-        }
     }
 
     // Lookup data
@@ -467,8 +479,10 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
         $this->desaindepan->setVisibility();
         $this->desainbelakang->setVisibility();
         $this->catatan->setVisibility();
@@ -476,7 +490,9 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         $this->desainsekunder->setVisibility();
         $this->catatansekunder->setVisibility();
         $this->tglsekunder->setVisibility();
-        $this->checked_by->setVisibility();
+        $this->submitted_by->setVisibility();
+        $this->checked1_by->setVisibility();
+        $this->checked2_by->setVisibility();
         $this->approved_by->setVisibility();
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
@@ -494,7 +510,6 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->checked_by);
         $this->setupLookupOptions($this->approved_by);
 
         // Check modal
@@ -662,12 +677,6 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
         // Check field name 'idnpd' first before field var 'x_idnpd'
         $val = $CurrentForm->hasValue("idnpd") ? $CurrentForm->getValue("idnpd") : $CurrentForm->getValue("x_idnpd");
         if (!$this->idnpd->IsDetailKey) {
@@ -676,6 +685,28 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             } else {
                 $this->idnpd->setFormValue($val);
             }
+        }
+
+        // Check field name 'tglterima' first before field var 'x_tglterima'
+        $val = $CurrentForm->hasValue("tglterima") ? $CurrentForm->getValue("tglterima") : $CurrentForm->getValue("x_tglterima");
+        if (!$this->tglterima->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->tglterima->Visible = false; // Disable update for API request
+            } else {
+                $this->tglterima->setFormValue($val);
+            }
+            $this->tglterima->CurrentValue = UnFormatDateTime($this->tglterima->CurrentValue, 0);
+        }
+
+        // Check field name 'tglsubmit' first before field var 'x_tglsubmit'
+        $val = $CurrentForm->hasValue("tglsubmit") ? $CurrentForm->getValue("tglsubmit") : $CurrentForm->getValue("x_tglsubmit");
+        if (!$this->tglsubmit->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->tglsubmit->Visible = false; // Disable update for API request
+            } else {
+                $this->tglsubmit->setFormValue($val);
+            }
+            $this->tglsubmit->CurrentValue = UnFormatDateTime($this->tglsubmit->CurrentValue, 0);
         }
 
         // Check field name 'desaindepan' first before field var 'x_desaindepan'
@@ -750,13 +781,33 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             $this->tglsekunder->CurrentValue = UnFormatDateTime($this->tglsekunder->CurrentValue, 0);
         }
 
-        // Check field name 'checked_by' first before field var 'x_checked_by'
-        $val = $CurrentForm->hasValue("checked_by") ? $CurrentForm->getValue("checked_by") : $CurrentForm->getValue("x_checked_by");
-        if (!$this->checked_by->IsDetailKey) {
+        // Check field name 'submitted_by' first before field var 'x_submitted_by'
+        $val = $CurrentForm->hasValue("submitted_by") ? $CurrentForm->getValue("submitted_by") : $CurrentForm->getValue("x_submitted_by");
+        if (!$this->submitted_by->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->checked_by->Visible = false; // Disable update for API request
+                $this->submitted_by->Visible = false; // Disable update for API request
             } else {
-                $this->checked_by->setFormValue($val);
+                $this->submitted_by->setFormValue($val);
+            }
+        }
+
+        // Check field name 'checked1_by' first before field var 'x_checked1_by'
+        $val = $CurrentForm->hasValue("checked1_by") ? $CurrentForm->getValue("checked1_by") : $CurrentForm->getValue("x_checked1_by");
+        if (!$this->checked1_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->checked1_by->Visible = false; // Disable update for API request
+            } else {
+                $this->checked1_by->setFormValue($val);
+            }
+        }
+
+        // Check field name 'checked2_by' first before field var 'x_checked2_by'
+        $val = $CurrentForm->hasValue("checked2_by") ? $CurrentForm->getValue("checked2_by") : $CurrentForm->getValue("x_checked2_by");
+        if (!$this->checked2_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->checked2_by->Visible = false; // Disable update for API request
+            } else {
+                $this->checked2_by->setFormValue($val);
             }
         }
 
@@ -769,6 +820,12 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
                 $this->approved_by->setFormValue($val);
             }
         }
+
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
+        }
     }
 
     // Restore form values
@@ -777,6 +834,10 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
         $this->idnpd->CurrentValue = $this->idnpd->FormValue;
+        $this->tglterima->CurrentValue = $this->tglterima->FormValue;
+        $this->tglterima->CurrentValue = UnFormatDateTime($this->tglterima->CurrentValue, 0);
+        $this->tglsubmit->CurrentValue = $this->tglsubmit->FormValue;
+        $this->tglsubmit->CurrentValue = UnFormatDateTime($this->tglsubmit->CurrentValue, 0);
         $this->desaindepan->CurrentValue = $this->desaindepan->FormValue;
         $this->desainbelakang->CurrentValue = $this->desainbelakang->FormValue;
         $this->catatan->CurrentValue = $this->catatan->FormValue;
@@ -786,7 +847,9 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         $this->catatansekunder->CurrentValue = $this->catatansekunder->FormValue;
         $this->tglsekunder->CurrentValue = $this->tglsekunder->FormValue;
         $this->tglsekunder->CurrentValue = UnFormatDateTime($this->tglsekunder->CurrentValue, 0);
-        $this->checked_by->CurrentValue = $this->checked_by->FormValue;
+        $this->submitted_by->CurrentValue = $this->submitted_by->FormValue;
+        $this->checked1_by->CurrentValue = $this->checked1_by->FormValue;
+        $this->checked2_by->CurrentValue = $this->checked2_by->FormValue;
         $this->approved_by->CurrentValue = $this->approved_by->FormValue;
     }
 
@@ -839,6 +902,8 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->desaindepan->setDbValue($row['desaindepan']);
         $this->desainbelakang->setDbValue($row['desainbelakang']);
         $this->catatan->setDbValue($row['catatan']);
@@ -846,7 +911,9 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         $this->desainsekunder->setDbValue($row['desainsekunder']);
         $this->catatansekunder->setDbValue($row['catatansekunder']);
         $this->tglsekunder->setDbValue($row['tglsekunder']);
-        $this->checked_by->setDbValue($row['checked_by']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -858,6 +925,8 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         $row = [];
         $row['id'] = null;
         $row['idnpd'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
         $row['desaindepan'] = null;
         $row['desainbelakang'] = null;
         $row['catatan'] = null;
@@ -865,7 +934,9 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         $row['desainsekunder'] = null;
         $row['catatansekunder'] = null;
         $row['tglsekunder'] = null;
-        $row['checked_by'] = null;
+        $row['submitted_by'] = null;
+        $row['checked1_by'] = null;
+        $row['checked2_by'] = null;
         $row['approved_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -904,6 +975,10 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
 
         // idnpd
 
+        // tglterima
+
+        // tglsubmit
+
         // desaindepan
 
         // desainbelakang
@@ -918,7 +993,11 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
 
         // tglsekunder
 
-        // checked_by
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
 
         // approved_by
 
@@ -934,6 +1013,16 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
+
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
 
             // desaindepan
             $this->desaindepan->ViewValue = $this->desaindepan->CurrentValue;
@@ -965,26 +1054,20 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             $this->tglsekunder->ViewValue = FormatDateTime($this->tglsekunder->ViewValue, 0);
             $this->tglsekunder->ViewCustomAttributes = "";
 
-            // checked_by
-            $curVal = trim(strval($this->checked_by->CurrentValue));
-            if ($curVal != "") {
-                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
-                if ($this->checked_by->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
-                        $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
-                    } else {
-                        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
-                    }
-                }
-            } else {
-                $this->checked_by->ViewValue = null;
-            }
-            $this->checked_by->ViewCustomAttributes = "";
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // checked1_by
+            $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
+            $this->checked1_by->ViewValue = FormatNumber($this->checked1_by->ViewValue, 0, -2, -2, -2);
+            $this->checked1_by->ViewCustomAttributes = "";
+
+            // checked2_by
+            $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+            $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+            $this->checked2_by->ViewCustomAttributes = "";
 
             // approved_by
             $curVal = trim(strval($this->approved_by->CurrentValue));
@@ -1017,15 +1100,20 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
+
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
+
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
 
             // desaindepan
             $this->desaindepan->LinkCustomAttributes = "";
@@ -1062,27 +1150,43 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             $this->tglsekunder->HrefValue = "";
             $this->tglsekunder->TooltipValue = "";
 
-            // checked_by
-            $this->checked_by->LinkCustomAttributes = "";
-            $this->checked_by->HrefValue = "";
-            $this->checked_by->TooltipValue = "";
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
+
+            // checked1_by
+            $this->checked1_by->LinkCustomAttributes = "";
+            $this->checked1_by->HrefValue = "";
+            $this->checked1_by->TooltipValue = "";
+
+            // checked2_by
+            $this->checked2_by->LinkCustomAttributes = "";
+            $this->checked2_by->HrefValue = "";
+            $this->checked2_by->TooltipValue = "";
 
             // approved_by
             $this->approved_by->LinkCustomAttributes = "";
             $this->approved_by->HrefValue = "";
             $this->approved_by->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
             $this->idnpd->EditCustomAttributes = "";
             $this->idnpd->EditValue = HtmlEncode($this->idnpd->CurrentValue);
             $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
+
+            // tglterima
+            $this->tglterima->EditAttrs["class"] = "form-control";
+            $this->tglterima->EditCustomAttributes = "";
+            $this->tglterima->EditValue = HtmlEncode(FormatDateTime($this->tglterima->CurrentValue, 8));
+            $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
+
+            // tglsubmit
+            $this->tglsubmit->EditAttrs["class"] = "form-control";
+            $this->tglsubmit->EditCustomAttributes = "";
+            $this->tglsubmit->EditValue = HtmlEncode(FormatDateTime($this->tglsubmit->CurrentValue, 8));
+            $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
             // desaindepan
             $this->desaindepan->EditAttrs["class"] = "form-control";
@@ -1138,30 +1242,23 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             $this->tglsekunder->EditValue = HtmlEncode(FormatDateTime($this->tglsekunder->CurrentValue, 8));
             $this->tglsekunder->PlaceHolder = RemoveHtml($this->tglsekunder->caption());
 
-            // checked_by
-            $this->checked_by->EditAttrs["class"] = "form-control";
-            $this->checked_by->EditCustomAttributes = "";
-            $curVal = trim(strval($this->checked_by->CurrentValue));
-            if ($curVal != "") {
-                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
-            } else {
-                $this->checked_by->ViewValue = $this->checked_by->Lookup !== null && is_array($this->checked_by->Lookup->Options) ? $curVal : null;
-            }
-            if ($this->checked_by->ViewValue !== null) { // Load from cache
-                $this->checked_by->EditValue = array_values($this->checked_by->Lookup->Options);
-            } else { // Lookup from database
-                if ($curVal == "") {
-                    $filterWrk = "0=1";
-                } else {
-                    $filterWrk = "`id`" . SearchString("=", $this->checked_by->CurrentValue, DATATYPE_NUMBER, "");
-                }
-                $sqlWrk = $this->checked_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
-                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                $ari = count($rswrk);
-                $arwrk = $rswrk;
-                $this->checked_by->EditValue = $arwrk;
-            }
-            $this->checked_by->PlaceHolder = RemoveHtml($this->checked_by->caption());
+            // submitted_by
+            $this->submitted_by->EditAttrs["class"] = "form-control";
+            $this->submitted_by->EditCustomAttributes = "";
+            $this->submitted_by->EditValue = HtmlEncode($this->submitted_by->CurrentValue);
+            $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
+
+            // checked1_by
+            $this->checked1_by->EditAttrs["class"] = "form-control";
+            $this->checked1_by->EditCustomAttributes = "";
+            $this->checked1_by->EditValue = HtmlEncode($this->checked1_by->CurrentValue);
+            $this->checked1_by->PlaceHolder = RemoveHtml($this->checked1_by->caption());
+
+            // checked2_by
+            $this->checked2_by->EditAttrs["class"] = "form-control";
+            $this->checked2_by->EditCustomAttributes = "";
+            $this->checked2_by->EditValue = HtmlEncode($this->checked2_by->CurrentValue);
+            $this->checked2_by->PlaceHolder = RemoveHtml($this->checked2_by->caption());
 
             // approved_by
             $this->approved_by->EditAttrs["class"] = "form-control";
@@ -1190,13 +1287,17 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
 
             // Edit refer script
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
+
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
 
             // desaindepan
             $this->desaindepan->LinkCustomAttributes = "";
@@ -1226,9 +1327,17 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             $this->tglsekunder->LinkCustomAttributes = "";
             $this->tglsekunder->HrefValue = "";
 
-            // checked_by
-            $this->checked_by->LinkCustomAttributes = "";
-            $this->checked_by->HrefValue = "";
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+
+            // checked1_by
+            $this->checked1_by->LinkCustomAttributes = "";
+            $this->checked1_by->HrefValue = "";
+
+            // checked2_by
+            $this->checked2_by->LinkCustomAttributes = "";
+            $this->checked2_by->HrefValue = "";
 
             // approved_by
             $this->approved_by->LinkCustomAttributes = "";
@@ -1242,6 +1351,11 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         if ($this->RowType != ROWTYPE_AGGREGATEINIT) {
             $this->rowRendered();
         }
+
+        // Save data for Custom Template
+        if ($this->RowType == ROWTYPE_VIEW || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_ADD) {
+            $this->Rows[] = $this->customTemplateFieldValues();
+        }
     }
 
     // Validate form
@@ -1253,11 +1367,6 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
         if ($this->idnpd->Required) {
             if (!$this->idnpd->IsDetailKey && EmptyValue($this->idnpd->FormValue)) {
                 $this->idnpd->addErrorMessage(str_replace("%s", $this->idnpd->caption(), $this->idnpd->RequiredErrorMessage));
@@ -1265,6 +1374,22 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         }
         if (!CheckInteger($this->idnpd->FormValue)) {
             $this->idnpd->addErrorMessage($this->idnpd->getErrorMessage(false));
+        }
+        if ($this->tglterima->Required) {
+            if (!$this->tglterima->IsDetailKey && EmptyValue($this->tglterima->FormValue)) {
+                $this->tglterima->addErrorMessage(str_replace("%s", $this->tglterima->caption(), $this->tglterima->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->tglterima->FormValue)) {
+            $this->tglterima->addErrorMessage($this->tglterima->getErrorMessage(false));
+        }
+        if ($this->tglsubmit->Required) {
+            if (!$this->tglsubmit->IsDetailKey && EmptyValue($this->tglsubmit->FormValue)) {
+                $this->tglsubmit->addErrorMessage(str_replace("%s", $this->tglsubmit->caption(), $this->tglsubmit->RequiredErrorMessage));
+            }
+        }
+        if (!CheckDate($this->tglsubmit->FormValue)) {
+            $this->tglsubmit->addErrorMessage($this->tglsubmit->getErrorMessage(false));
         }
         if ($this->desaindepan->Required) {
             if (!$this->desaindepan->IsDetailKey && EmptyValue($this->desaindepan->FormValue)) {
@@ -1307,10 +1432,29 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
         if (!CheckDate($this->tglsekunder->FormValue)) {
             $this->tglsekunder->addErrorMessage($this->tglsekunder->getErrorMessage(false));
         }
-        if ($this->checked_by->Required) {
-            if (!$this->checked_by->IsDetailKey && EmptyValue($this->checked_by->FormValue)) {
-                $this->checked_by->addErrorMessage(str_replace("%s", $this->checked_by->caption(), $this->checked_by->RequiredErrorMessage));
+        if ($this->submitted_by->Required) {
+            if (!$this->submitted_by->IsDetailKey && EmptyValue($this->submitted_by->FormValue)) {
+                $this->submitted_by->addErrorMessage(str_replace("%s", $this->submitted_by->caption(), $this->submitted_by->RequiredErrorMessage));
             }
+        }
+        if (!CheckInteger($this->submitted_by->FormValue)) {
+            $this->submitted_by->addErrorMessage($this->submitted_by->getErrorMessage(false));
+        }
+        if ($this->checked1_by->Required) {
+            if (!$this->checked1_by->IsDetailKey && EmptyValue($this->checked1_by->FormValue)) {
+                $this->checked1_by->addErrorMessage(str_replace("%s", $this->checked1_by->caption(), $this->checked1_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->checked1_by->FormValue)) {
+            $this->checked1_by->addErrorMessage($this->checked1_by->getErrorMessage(false));
+        }
+        if ($this->checked2_by->Required) {
+            if (!$this->checked2_by->IsDetailKey && EmptyValue($this->checked2_by->FormValue)) {
+                $this->checked2_by->addErrorMessage(str_replace("%s", $this->checked2_by->caption(), $this->checked2_by->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->checked2_by->FormValue)) {
+            $this->checked2_by->addErrorMessage($this->checked2_by->getErrorMessage(false));
         }
         if ($this->approved_by->Required) {
             if (!$this->approved_by->IsDetailKey && EmptyValue($this->approved_by->FormValue)) {
@@ -1352,6 +1496,12 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             // idnpd
             $this->idnpd->setDbValueDef($rsnew, $this->idnpd->CurrentValue, 0, $this->idnpd->ReadOnly);
 
+            // tglterima
+            $this->tglterima->setDbValueDef($rsnew, UnFormatDateTime($this->tglterima->CurrentValue, 0), null, $this->tglterima->ReadOnly);
+
+            // tglsubmit
+            $this->tglsubmit->setDbValueDef($rsnew, UnFormatDateTime($this->tglsubmit->CurrentValue, 0), null, $this->tglsubmit->ReadOnly);
+
             // desaindepan
             $this->desaindepan->setDbValueDef($rsnew, $this->desaindepan->CurrentValue, null, $this->desaindepan->ReadOnly);
 
@@ -1373,8 +1523,14 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
             // tglsekunder
             $this->tglsekunder->setDbValueDef($rsnew, UnFormatDateTime($this->tglsekunder->CurrentValue, 0), null, $this->tglsekunder->ReadOnly);
 
-            // checked_by
-            $this->checked_by->setDbValueDef($rsnew, $this->checked_by->CurrentValue, null, $this->checked_by->ReadOnly);
+            // submitted_by
+            $this->submitted_by->setDbValueDef($rsnew, $this->submitted_by->CurrentValue, null, $this->submitted_by->ReadOnly);
+
+            // checked1_by
+            $this->checked1_by->setDbValueDef($rsnew, $this->checked1_by->CurrentValue, null, $this->checked1_by->ReadOnly);
+
+            // checked2_by
+            $this->checked2_by->setDbValueDef($rsnew, $this->checked2_by->CurrentValue, null, $this->checked2_by->ReadOnly);
 
             // approved_by
             $this->approved_by->setDbValueDef($rsnew, $this->approved_by->CurrentValue, null, $this->approved_by->ReadOnly);
@@ -1447,8 +1603,6 @@ class NpdConfirmdesignEdit extends NpdConfirmdesign
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_checked_by":
-                    break;
                 case "x_approved_by":
                     break;
                 default:

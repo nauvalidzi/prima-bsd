@@ -138,14 +138,23 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->id->Visible) { // id ?>
         <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_npd_confirmprint_id" class="npd_confirmprint_id"><?= $Page->renderSort($Page->id) ?></div></th>
 <?php } ?>
+<?php if ($Page->idnpd->Visible) { // idnpd ?>
+        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_confirmprint_idnpd" class="npd_confirmprint_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
+<?php } ?>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <th data-name="tglterima" class="<?= $Page->tglterima->headerCellClass() ?>"><div id="elh_npd_confirmprint_tglterima" class="npd_confirmprint_tglterima"><?= $Page->renderSort($Page->tglterima) ?></div></th>
+<?php } ?>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <th data-name="tglsubmit" class="<?= $Page->tglsubmit->headerCellClass() ?>"><div id="elh_npd_confirmprint_tglsubmit" class="npd_confirmprint_tglsubmit"><?= $Page->renderSort($Page->tglsubmit) ?></div></th>
+<?php } ?>
 <?php if ($Page->brand->Visible) { // brand ?>
         <th data-name="brand" class="<?= $Page->brand->headerCellClass() ?>"><div id="elh_npd_confirmprint_brand" class="npd_confirmprint_brand"><?= $Page->renderSort($Page->brand) ?></div></th>
 <?php } ?>
-<?php if ($Page->tglkirim->Visible) { // tglkirim ?>
-        <th data-name="tglkirim" class="<?= $Page->tglkirim->headerCellClass() ?>"><div id="elh_npd_confirmprint_tglkirim" class="npd_confirmprint_tglkirim"><?= $Page->renderSort($Page->tglkirim) ?></div></th>
+<?php if ($Page->tglkirimprimer->Visible) { // tglkirimprimer ?>
+        <th data-name="tglkirimprimer" class="<?= $Page->tglkirimprimer->headerCellClass() ?>"><div id="elh_npd_confirmprint_tglkirimprimer" class="npd_confirmprint_tglkirimprimer"><?= $Page->renderSort($Page->tglkirimprimer) ?></div></th>
 <?php } ?>
-<?php if ($Page->tgldisetujui->Visible) { // tgldisetujui ?>
-        <th data-name="tgldisetujui" class="<?= $Page->tgldisetujui->headerCellClass() ?>"><div id="elh_npd_confirmprint_tgldisetujui" class="npd_confirmprint_tgldisetujui"><?= $Page->renderSort($Page->tgldisetujui) ?></div></th>
+<?php if ($Page->tgldisetujuiprimer->Visible) { // tgldisetujuiprimer ?>
+        <th data-name="tgldisetujuiprimer" class="<?= $Page->tgldisetujuiprimer->headerCellClass() ?>"><div id="elh_npd_confirmprint_tgldisetujuiprimer" class="npd_confirmprint_tgldisetujuiprimer"><?= $Page->renderSort($Page->tgldisetujuiprimer) ?></div></th>
 <?php } ?>
 <?php if ($Page->desainprimer->Visible) { // desainprimer ?>
         <th data-name="desainprimer" class="<?= $Page->desainprimer->headerCellClass() ?>"><div id="elh_npd_confirmprint_desainprimer" class="npd_confirmprint_desainprimer"><?= $Page->renderSort($Page->desainprimer) ?></div></th>
@@ -159,17 +168,26 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->jumlahcetakprimer->Visible) { // jumlahcetakprimer ?>
         <th data-name="jumlahcetakprimer" class="<?= $Page->jumlahcetakprimer->headerCellClass() ?>"><div id="elh_npd_confirmprint_jumlahcetakprimer" class="npd_confirmprint_jumlahcetakprimer"><?= $Page->renderSort($Page->jumlahcetakprimer) ?></div></th>
 <?php } ?>
+<?php if ($Page->tglkirimsekunder->Visible) { // tglkirimsekunder ?>
+        <th data-name="tglkirimsekunder" class="<?= $Page->tglkirimsekunder->headerCellClass() ?>"><div id="elh_npd_confirmprint_tglkirimsekunder" class="npd_confirmprint_tglkirimsekunder"><?= $Page->renderSort($Page->tglkirimsekunder) ?></div></th>
+<?php } ?>
+<?php if ($Page->tgldisetujuisekunder->Visible) { // tgldisetujuisekunder ?>
+        <th data-name="tgldisetujuisekunder" class="<?= $Page->tgldisetujuisekunder->headerCellClass() ?>"><div id="elh_npd_confirmprint_tgldisetujuisekunder" class="npd_confirmprint_tgldisetujuisekunder"><?= $Page->renderSort($Page->tgldisetujuisekunder) ?></div></th>
+<?php } ?>
 <?php if ($Page->desainsekunder->Visible) { // desainsekunder ?>
         <th data-name="desainsekunder" class="<?= $Page->desainsekunder->headerCellClass() ?>"><div id="elh_npd_confirmprint_desainsekunder" class="npd_confirmprint_desainsekunder"><?= $Page->renderSort($Page->desainsekunder) ?></div></th>
 <?php } ?>
-<?php if ($Page->materialinnerbox->Visible) { // materialinnerbox ?>
-        <th data-name="materialinnerbox" class="<?= $Page->materialinnerbox->headerCellClass() ?>"><div id="elh_npd_confirmprint_materialinnerbox" class="npd_confirmprint_materialinnerbox"><?= $Page->renderSort($Page->materialinnerbox) ?></div></th>
+<?php if ($Page->materialsekunder->Visible) { // materialsekunder ?>
+        <th data-name="materialsekunder" class="<?= $Page->materialsekunder->headerCellClass() ?>"><div id="elh_npd_confirmprint_materialsekunder" class="npd_confirmprint_materialsekunder"><?= $Page->renderSort($Page->materialsekunder) ?></div></th>
 <?php } ?>
-<?php if ($Page->aplikasiinnerbox->Visible) { // aplikasiinnerbox ?>
-        <th data-name="aplikasiinnerbox" class="<?= $Page->aplikasiinnerbox->headerCellClass() ?>"><div id="elh_npd_confirmprint_aplikasiinnerbox" class="npd_confirmprint_aplikasiinnerbox"><?= $Page->renderSort($Page->aplikasiinnerbox) ?></div></th>
+<?php if ($Page->aplikasisekunder->Visible) { // aplikasisekunder ?>
+        <th data-name="aplikasisekunder" class="<?= $Page->aplikasisekunder->headerCellClass() ?>"><div id="elh_npd_confirmprint_aplikasisekunder" class="npd_confirmprint_aplikasisekunder"><?= $Page->renderSort($Page->aplikasisekunder) ?></div></th>
 <?php } ?>
-<?php if ($Page->jumlahcetak->Visible) { // jumlahcetak ?>
-        <th data-name="jumlahcetak" class="<?= $Page->jumlahcetak->headerCellClass() ?>"><div id="elh_npd_confirmprint_jumlahcetak" class="npd_confirmprint_jumlahcetak"><?= $Page->renderSort($Page->jumlahcetak) ?></div></th>
+<?php if ($Page->jumlahcetaksekunder->Visible) { // jumlahcetaksekunder ?>
+        <th data-name="jumlahcetaksekunder" class="<?= $Page->jumlahcetaksekunder->headerCellClass() ?>"><div id="elh_npd_confirmprint_jumlahcetaksekunder" class="npd_confirmprint_jumlahcetaksekunder"><?= $Page->renderSort($Page->jumlahcetaksekunder) ?></div></th>
+<?php } ?>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <th data-name="submitted_by" class="<?= $Page->submitted_by->headerCellClass() ?>"><div id="elh_npd_confirmprint_submitted_by" class="npd_confirmprint_submitted_by"><?= $Page->renderSort($Page->submitted_by) ?></div></th>
 <?php } ?>
 <?php if ($Page->checked_by->Visible) { // checked_by ?>
         <th data-name="checked_by" class="<?= $Page->checked_by->headerCellClass() ?>"><div id="elh_npd_confirmprint_checked_by" class="npd_confirmprint_checked_by"><?= $Page->renderSort($Page->checked_by) ?></div></th>
@@ -258,6 +276,30 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->idnpd->Visible) { // idnpd ?>
+        <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_idnpd">
+<span<?= $Page->idnpd->viewAttributes() ?>>
+<?= $Page->idnpd->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <td data-name="tglterima" <?= $Page->tglterima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tglterima">
+<span<?= $Page->tglterima->viewAttributes() ?>>
+<?= $Page->tglterima->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <td data-name="tglsubmit" <?= $Page->tglsubmit->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tglsubmit">
+<span<?= $Page->tglsubmit->viewAttributes() ?>>
+<?= $Page->tglsubmit->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->brand->Visible) { // brand ?>
         <td data-name="brand" <?= $Page->brand->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_confirmprint_brand">
@@ -266,19 +308,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tglkirim->Visible) { // tglkirim ?>
-        <td data-name="tglkirim" <?= $Page->tglkirim->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tglkirim">
-<span<?= $Page->tglkirim->viewAttributes() ?>>
-<?= $Page->tglkirim->getViewValue() ?></span>
+    <?php if ($Page->tglkirimprimer->Visible) { // tglkirimprimer ?>
+        <td data-name="tglkirimprimer" <?= $Page->tglkirimprimer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tglkirimprimer">
+<span<?= $Page->tglkirimprimer->viewAttributes() ?>>
+<?= $Page->tglkirimprimer->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tgldisetujui->Visible) { // tgldisetujui ?>
-        <td data-name="tgldisetujui" <?= $Page->tgldisetujui->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tgldisetujui">
-<span<?= $Page->tgldisetujui->viewAttributes() ?>>
-<?= $Page->tgldisetujui->getViewValue() ?></span>
+    <?php if ($Page->tgldisetujuiprimer->Visible) { // tgldisetujuiprimer ?>
+        <td data-name="tgldisetujuiprimer" <?= $Page->tgldisetujuiprimer->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tgldisetujuiprimer">
+<span<?= $Page->tgldisetujuiprimer->viewAttributes() ?>>
+<?= $Page->tgldisetujuiprimer->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -314,6 +356,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
+    <?php if ($Page->tglkirimsekunder->Visible) { // tglkirimsekunder ?>
+        <td data-name="tglkirimsekunder" <?= $Page->tglkirimsekunder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tglkirimsekunder">
+<span<?= $Page->tglkirimsekunder->viewAttributes() ?>>
+<?= $Page->tglkirimsekunder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->tgldisetujuisekunder->Visible) { // tgldisetujuisekunder ?>
+        <td data-name="tgldisetujuisekunder" <?= $Page->tgldisetujuisekunder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_tgldisetujuisekunder">
+<span<?= $Page->tgldisetujuisekunder->viewAttributes() ?>>
+<?= $Page->tgldisetujuisekunder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->desainsekunder->Visible) { // desainsekunder ?>
         <td data-name="desainsekunder" <?= $Page->desainsekunder->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_confirmprint_desainsekunder">
@@ -322,27 +380,35 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->materialinnerbox->Visible) { // materialinnerbox ?>
-        <td data-name="materialinnerbox" <?= $Page->materialinnerbox->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmprint_materialinnerbox">
-<span<?= $Page->materialinnerbox->viewAttributes() ?>>
-<?= $Page->materialinnerbox->getViewValue() ?></span>
+    <?php if ($Page->materialsekunder->Visible) { // materialsekunder ?>
+        <td data-name="materialsekunder" <?= $Page->materialsekunder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_materialsekunder">
+<span<?= $Page->materialsekunder->viewAttributes() ?>>
+<?= $Page->materialsekunder->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->aplikasiinnerbox->Visible) { // aplikasiinnerbox ?>
-        <td data-name="aplikasiinnerbox" <?= $Page->aplikasiinnerbox->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmprint_aplikasiinnerbox">
-<span<?= $Page->aplikasiinnerbox->viewAttributes() ?>>
-<?= $Page->aplikasiinnerbox->getViewValue() ?></span>
+    <?php if ($Page->aplikasisekunder->Visible) { // aplikasisekunder ?>
+        <td data-name="aplikasisekunder" <?= $Page->aplikasisekunder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_aplikasisekunder">
+<span<?= $Page->aplikasisekunder->viewAttributes() ?>>
+<?= $Page->aplikasisekunder->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->jumlahcetak->Visible) { // jumlahcetak ?>
-        <td data-name="jumlahcetak" <?= $Page->jumlahcetak->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_confirmprint_jumlahcetak">
-<span<?= $Page->jumlahcetak->viewAttributes() ?>>
-<?= $Page->jumlahcetak->getViewValue() ?></span>
+    <?php if ($Page->jumlahcetaksekunder->Visible) { // jumlahcetaksekunder ?>
+        <td data-name="jumlahcetaksekunder" <?= $Page->jumlahcetaksekunder->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_jumlahcetaksekunder">
+<span<?= $Page->jumlahcetaksekunder->viewAttributes() ?>>
+<?= $Page->jumlahcetaksekunder->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <td data-name="submitted_by" <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_confirmprint_submitted_by">
+<span<?= $Page->submitted_by->viewAttributes() ?>>
+<?= $Page->submitted_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

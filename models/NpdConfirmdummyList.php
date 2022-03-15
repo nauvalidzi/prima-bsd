@@ -568,16 +568,20 @@ class NpdConfirmdummyList extends NpdConfirmdummy
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->idnpd->setVisibility();
-        $this->dummydepan->setVisibility();
-        $this->dummybelakang->setVisibility();
-        $this->dummyatas->setVisibility();
-        $this->dummysamping->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
+        $this->dummydepan->Visible = false;
+        $this->dummybelakang->Visible = false;
+        $this->dummyatas->Visible = false;
+        $this->dummysamping->Visible = false;
         $this->catatan->Visible = false;
-        $this->ttd->setVisibility();
-        $this->checked_by->Visible = false;
-        $this->approved_by->Visible = false;
+        $this->ttd->Visible = false;
+        $this->submitted_by->setVisibility();
+        $this->checked1_by->setVisibility();
+        $this->checked2_by->setVisibility();
+        $this->approved_by->setVisibility();
         $this->created_at->Visible = false;
         $this->updated_at->Visible = false;
         $this->hideFieldsForAddEdit();
@@ -607,7 +611,7 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->checked_by);
+        $this->setupLookupOptions($this->checked1_by);
         $this->setupLookupOptions($this->approved_by);
 
         // Search filters
@@ -658,33 +662,8 @@ class NpdConfirmdummyList extends NpdConfirmdummy
                 $this->OtherOptions->hideAllOptions();
             }
 
-            // Get default search criteria
-            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
-
-            // Get basic search values
-            $this->loadBasicSearchValues();
-
-            // Process filter list
-            if ($this->processFilterList()) {
-                $this->terminate();
-                return;
-            }
-
-            // Restore search parms from Session if not searching / reset / export
-            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
-                $this->restoreSearchParms();
-            }
-
-            // Call Recordset SearchValidated event
-            $this->recordsetSearchValidated();
-
             // Set up sorting order
             $this->setupSortOrder();
-
-            // Get basic search criteria
-            if (!$this->hasInvalidFields()) {
-                $srchBasic = $this->basicSearchWhere();
-            }
         }
 
         // Restore display records
@@ -698,31 +677,6 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         // Load Sorting Order
         if ($this->Command != "json") {
             $this->loadSortOrder();
-        }
-
-        // Load search default if no existing search criteria
-        if (!$this->checkSearchParms()) {
-            // Load basic search from default
-            $this->BasicSearch->loadDefault();
-            if ($this->BasicSearch->Keyword != "") {
-                $srchBasic = $this->basicSearchWhere();
-            }
-        }
-
-        // Build search criteria
-        AddFilter($this->SearchWhere, $srchAdvanced);
-        AddFilter($this->SearchWhere, $srchBasic);
-
-        // Call Recordset_Searching event
-        $this->recordsetSearching($this->SearchWhere);
-
-        // Save search criteria
-        if ($this->Command == "search" && !$this->RestoreSearch) {
-            $this->setSearchWhere($this->SearchWhere); // Save to Session
-            $this->StartRecord = 1; // Reset start record counter
-            $this->setStartRecordNumber($this->StartRecord);
-        } elseif ($this->Command != "json") {
-            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -864,329 +818,6 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         return $wrkFilter;
     }
 
-    // Get list of filters
-    public function getFilterList()
-    {
-        global $UserProfile;
-
-        // Initialize
-        $filterList = "";
-        $savedFilterList = "";
-        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
-        $filterList = Concat($filterList, $this->dummydepan->AdvancedSearch->toJson(), ","); // Field dummydepan
-        $filterList = Concat($filterList, $this->dummybelakang->AdvancedSearch->toJson(), ","); // Field dummybelakang
-        $filterList = Concat($filterList, $this->dummyatas->AdvancedSearch->toJson(), ","); // Field dummyatas
-        $filterList = Concat($filterList, $this->dummysamping->AdvancedSearch->toJson(), ","); // Field dummysamping
-        $filterList = Concat($filterList, $this->catatan->AdvancedSearch->toJson(), ","); // Field catatan
-        $filterList = Concat($filterList, $this->ttd->AdvancedSearch->toJson(), ","); // Field ttd
-        $filterList = Concat($filterList, $this->checked_by->AdvancedSearch->toJson(), ","); // Field checked_by
-        $filterList = Concat($filterList, $this->approved_by->AdvancedSearch->toJson(), ","); // Field approved_by
-        $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->updated_at->AdvancedSearch->toJson(), ","); // Field updated_at
-        if ($this->BasicSearch->Keyword != "") {
-            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
-            $filterList = Concat($filterList, $wrk, ",");
-        }
-
-        // Return filter list in JSON
-        if ($filterList != "") {
-            $filterList = "\"data\":{" . $filterList . "}";
-        }
-        if ($savedFilterList != "") {
-            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
-        }
-        return ($filterList != "") ? "{" . $filterList . "}" : "null";
-    }
-
-    // Process filter list
-    protected function processFilterList()
-    {
-        global $UserProfile;
-        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
-            $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fnpd_confirmdummylistsrch", $filters);
-            WriteJson([["success" => true]]); // Success
-            return true;
-        } elseif (Post("cmd") == "resetfilter") {
-            $this->restoreFilterList();
-        }
-        return false;
-    }
-
-    // Restore list of filters
-    protected function restoreFilterList()
-    {
-        // Return if not reset filter
-        if (Post("cmd") !== "resetfilter") {
-            return false;
-        }
-        $filter = json_decode(Post("filter"), true);
-        $this->Command = "search";
-
-        // Field id
-        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-        $this->id->AdvancedSearch->save();
-
-        // Field idnpd
-        $this->idnpd->AdvancedSearch->SearchValue = @$filter["x_idnpd"];
-        $this->idnpd->AdvancedSearch->SearchOperator = @$filter["z_idnpd"];
-        $this->idnpd->AdvancedSearch->SearchCondition = @$filter["v_idnpd"];
-        $this->idnpd->AdvancedSearch->SearchValue2 = @$filter["y_idnpd"];
-        $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
-        $this->idnpd->AdvancedSearch->save();
-
-        // Field dummydepan
-        $this->dummydepan->AdvancedSearch->SearchValue = @$filter["x_dummydepan"];
-        $this->dummydepan->AdvancedSearch->SearchOperator = @$filter["z_dummydepan"];
-        $this->dummydepan->AdvancedSearch->SearchCondition = @$filter["v_dummydepan"];
-        $this->dummydepan->AdvancedSearch->SearchValue2 = @$filter["y_dummydepan"];
-        $this->dummydepan->AdvancedSearch->SearchOperator2 = @$filter["w_dummydepan"];
-        $this->dummydepan->AdvancedSearch->save();
-
-        // Field dummybelakang
-        $this->dummybelakang->AdvancedSearch->SearchValue = @$filter["x_dummybelakang"];
-        $this->dummybelakang->AdvancedSearch->SearchOperator = @$filter["z_dummybelakang"];
-        $this->dummybelakang->AdvancedSearch->SearchCondition = @$filter["v_dummybelakang"];
-        $this->dummybelakang->AdvancedSearch->SearchValue2 = @$filter["y_dummybelakang"];
-        $this->dummybelakang->AdvancedSearch->SearchOperator2 = @$filter["w_dummybelakang"];
-        $this->dummybelakang->AdvancedSearch->save();
-
-        // Field dummyatas
-        $this->dummyatas->AdvancedSearch->SearchValue = @$filter["x_dummyatas"];
-        $this->dummyatas->AdvancedSearch->SearchOperator = @$filter["z_dummyatas"];
-        $this->dummyatas->AdvancedSearch->SearchCondition = @$filter["v_dummyatas"];
-        $this->dummyatas->AdvancedSearch->SearchValue2 = @$filter["y_dummyatas"];
-        $this->dummyatas->AdvancedSearch->SearchOperator2 = @$filter["w_dummyatas"];
-        $this->dummyatas->AdvancedSearch->save();
-
-        // Field dummysamping
-        $this->dummysamping->AdvancedSearch->SearchValue = @$filter["x_dummysamping"];
-        $this->dummysamping->AdvancedSearch->SearchOperator = @$filter["z_dummysamping"];
-        $this->dummysamping->AdvancedSearch->SearchCondition = @$filter["v_dummysamping"];
-        $this->dummysamping->AdvancedSearch->SearchValue2 = @$filter["y_dummysamping"];
-        $this->dummysamping->AdvancedSearch->SearchOperator2 = @$filter["w_dummysamping"];
-        $this->dummysamping->AdvancedSearch->save();
-
-        // Field catatan
-        $this->catatan->AdvancedSearch->SearchValue = @$filter["x_catatan"];
-        $this->catatan->AdvancedSearch->SearchOperator = @$filter["z_catatan"];
-        $this->catatan->AdvancedSearch->SearchCondition = @$filter["v_catatan"];
-        $this->catatan->AdvancedSearch->SearchValue2 = @$filter["y_catatan"];
-        $this->catatan->AdvancedSearch->SearchOperator2 = @$filter["w_catatan"];
-        $this->catatan->AdvancedSearch->save();
-
-        // Field ttd
-        $this->ttd->AdvancedSearch->SearchValue = @$filter["x_ttd"];
-        $this->ttd->AdvancedSearch->SearchOperator = @$filter["z_ttd"];
-        $this->ttd->AdvancedSearch->SearchCondition = @$filter["v_ttd"];
-        $this->ttd->AdvancedSearch->SearchValue2 = @$filter["y_ttd"];
-        $this->ttd->AdvancedSearch->SearchOperator2 = @$filter["w_ttd"];
-        $this->ttd->AdvancedSearch->save();
-
-        // Field checked_by
-        $this->checked_by->AdvancedSearch->SearchValue = @$filter["x_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchOperator = @$filter["z_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchCondition = @$filter["v_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchValue2 = @$filter["y_checked_by"];
-        $this->checked_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked_by"];
-        $this->checked_by->AdvancedSearch->save();
-
-        // Field approved_by
-        $this->approved_by->AdvancedSearch->SearchValue = @$filter["x_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchOperator = @$filter["z_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchCondition = @$filter["v_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchValue2 = @$filter["y_approved_by"];
-        $this->approved_by->AdvancedSearch->SearchOperator2 = @$filter["w_approved_by"];
-        $this->approved_by->AdvancedSearch->save();
-
-        // Field created_at
-        $this->created_at->AdvancedSearch->SearchValue = @$filter["x_created_at"];
-        $this->created_at->AdvancedSearch->SearchOperator = @$filter["z_created_at"];
-        $this->created_at->AdvancedSearch->SearchCondition = @$filter["v_created_at"];
-        $this->created_at->AdvancedSearch->SearchValue2 = @$filter["y_created_at"];
-        $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
-        $this->created_at->AdvancedSearch->save();
-
-        // Field updated_at
-        $this->updated_at->AdvancedSearch->SearchValue = @$filter["x_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchOperator = @$filter["z_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchCondition = @$filter["v_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchValue2 = @$filter["y_updated_at"];
-        $this->updated_at->AdvancedSearch->SearchOperator2 = @$filter["w_updated_at"];
-        $this->updated_at->AdvancedSearch->save();
-        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
-        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
-    }
-
-    // Return basic search SQL
-    protected function basicSearchSql($arKeywords, $type)
-    {
-        $where = "";
-        $this->buildBasicSearchSql($where, $this->dummydepan, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->dummybelakang, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->dummyatas, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->dummysamping, $arKeywords, $type);
-        $this->buildBasicSearchSql($where, $this->catatan, $arKeywords, $type);
-        return $where;
-    }
-
-    // Build basic search SQL
-    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
-    {
-        $defCond = ($type == "OR") ? "OR" : "AND";
-        $arSql = []; // Array for SQL parts
-        $arCond = []; // Array for search conditions
-        $cnt = count($arKeywords);
-        $j = 0; // Number of SQL parts
-        for ($i = 0; $i < $cnt; $i++) {
-            $keyword = $arKeywords[$i];
-            $keyword = trim($keyword);
-            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
-                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
-                $ar = explode("\\", $keyword);
-            } else {
-                $ar = [$keyword];
-            }
-            foreach ($ar as $keyword) {
-                if ($keyword != "") {
-                    $wrk = "";
-                    if ($keyword == "OR" && $type == "") {
-                        if ($j > 0) {
-                            $arCond[$j - 1] = "OR";
-                        }
-                    } elseif ($keyword == Config("NULL_VALUE")) {
-                        $wrk = $fld->Expression . " IS NULL";
-                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
-                        $wrk = $fld->Expression . " IS NOT NULL";
-                    } elseif ($fld->IsVirtual && $fld->Visible) {
-                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
-                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-                    }
-                    if ($wrk != "") {
-                        $arSql[$j] = $wrk;
-                        $arCond[$j] = $defCond;
-                        $j += 1;
-                    }
-                }
-            }
-        }
-        $cnt = count($arSql);
-        $quoted = false;
-        $sql = "";
-        if ($cnt > 0) {
-            for ($i = 0; $i < $cnt - 1; $i++) {
-                if ($arCond[$i] == "OR") {
-                    if (!$quoted) {
-                        $sql .= "(";
-                    }
-                    $quoted = true;
-                }
-                $sql .= $arSql[$i];
-                if ($quoted && $arCond[$i] != "OR") {
-                    $sql .= ")";
-                    $quoted = false;
-                }
-                $sql .= " " . $arCond[$i] . " ";
-            }
-            $sql .= $arSql[$cnt - 1];
-            if ($quoted) {
-                $sql .= ")";
-            }
-        }
-        if ($sql != "") {
-            if ($where != "") {
-                $where .= " OR ";
-            }
-            $where .= "(" . $sql . ")";
-        }
-    }
-
-    // Return basic search WHERE clause based on search keyword and type
-    protected function basicSearchWhere($default = false)
-    {
-        global $Security;
-        $searchStr = "";
-        if (!$Security->canSearch()) {
-            return "";
-        }
-        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
-        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
-
-        // Get search SQL
-        if ($searchKeyword != "") {
-            $ar = $this->BasicSearch->keywordList($default);
-            // Search keyword in any fields
-            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
-                foreach ($ar as $keyword) {
-                    if ($keyword != "") {
-                        if ($searchStr != "") {
-                            $searchStr .= " " . $searchType . " ";
-                        }
-                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
-                    }
-                }
-            } else {
-                $searchStr = $this->basicSearchSql($ar, $searchType);
-            }
-            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
-                $this->Command = "search";
-            }
-        }
-        if (!$default && $this->Command == "search") {
-            $this->BasicSearch->setKeyword($searchKeyword);
-            $this->BasicSearch->setType($searchType);
-        }
-        return $searchStr;
-    }
-
-    // Check if search parm exists
-    protected function checkSearchParms()
-    {
-        // Check basic search
-        if ($this->BasicSearch->issetSession()) {
-            return true;
-        }
-        return false;
-    }
-
-    // Clear all search parameters
-    protected function resetSearchParms()
-    {
-        // Clear search WHERE clause
-        $this->SearchWhere = "";
-        $this->setSearchWhere($this->SearchWhere);
-
-        // Clear basic search parameters
-        $this->resetBasicSearchParms();
-    }
-
-    // Load advanced search default values
-    protected function loadAdvancedSearchDefault()
-    {
-        return false;
-    }
-
-    // Clear all basic search parameters
-    protected function resetBasicSearchParms()
-    {
-        $this->BasicSearch->unsetSession();
-    }
-
-    // Restore all search parameters
-    protected function restoreSearchParms()
-    {
-        $this->RestoreSearch = true;
-
-        // Restore basic search values
-        $this->BasicSearch->load();
-    }
-
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -1194,13 +825,13 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->idnpd); // idnpd
-            $this->updateSort($this->dummydepan); // dummydepan
-            $this->updateSort($this->dummybelakang); // dummybelakang
-            $this->updateSort($this->dummyatas); // dummyatas
-            $this->updateSort($this->dummysamping); // dummysamping
-            $this->updateSort($this->ttd); // ttd
+            $this->updateSort($this->tglterima); // tglterima
+            $this->updateSort($this->tglsubmit); // tglsubmit
+            $this->updateSort($this->submitted_by); // submitted_by
+            $this->updateSort($this->checked1_by); // checked1_by
+            $this->updateSort($this->checked2_by); // checked2_by
+            $this->updateSort($this->approved_by); // approved_by
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1231,24 +862,23 @@ class NpdConfirmdummyList extends NpdConfirmdummy
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
-            // Reset search criteria
-            if ($this->Command == "reset" || $this->Command == "resetall") {
-                $this->resetSearchParms();
-            }
-
             // Reset (clear) sorting order
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
                 $this->idnpd->setSort("");
+                $this->tglterima->setSort("");
+                $this->tglsubmit->setSort("");
                 $this->dummydepan->setSort("");
                 $this->dummybelakang->setSort("");
                 $this->dummyatas->setSort("");
                 $this->dummysamping->setSort("");
                 $this->catatan->setSort("");
                 $this->ttd->setSort("");
-                $this->checked_by->setSort("");
+                $this->submitted_by->setSort("");
+                $this->checked1_by->setSort("");
+                $this->checked2_by->setSort("");
                 $this->approved_by->setSort("");
                 $this->created_at->setSort("");
                 $this->updated_at->setSort("");
@@ -1456,10 +1086,10 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
         $item->Body = "<a class=\"ew-save-filter\" data-form=\"fnpd_confirmdummylistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = true;
+        $item->Visible = false;
         $item = &$this->FilterOptions->add("deletefilter");
         $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fnpd_confirmdummylistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = true;
+        $item->Visible = false;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1594,16 +1224,6 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         global $Security, $Language;
     }
 
-    // Load basic search values
-    protected function loadBasicSearchValues()
-    {
-        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
-        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
-            $this->Command = "search";
-        }
-        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
-    }
-
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1674,13 +1294,17 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         }
         $this->id->setDbValue($row['id']);
         $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
         $this->dummydepan->setDbValue($row['dummydepan']);
         $this->dummybelakang->setDbValue($row['dummybelakang']);
         $this->dummyatas->setDbValue($row['dummyatas']);
         $this->dummysamping->setDbValue($row['dummysamping']);
         $this->catatan->setDbValue($row['catatan']);
         $this->ttd->setDbValue($row['ttd']);
-        $this->checked_by->setDbValue($row['checked_by']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
         $this->approved_by->setDbValue($row['approved_by']);
         $this->created_at->setDbValue($row['created_at']);
         $this->updated_at->setDbValue($row['updated_at']);
@@ -1692,13 +1316,17 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         $row = [];
         $row['id'] = null;
         $row['idnpd'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
         $row['dummydepan'] = null;
         $row['dummybelakang'] = null;
         $row['dummyatas'] = null;
         $row['dummysamping'] = null;
         $row['catatan'] = null;
         $row['ttd'] = null;
-        $row['checked_by'] = null;
+        $row['submitted_by'] = null;
+        $row['checked1_by'] = null;
+        $row['checked2_by'] = null;
         $row['approved_by'] = null;
         $row['created_at'] = null;
         $row['updated_at'] = null;
@@ -1743,6 +1371,10 @@ class NpdConfirmdummyList extends NpdConfirmdummy
 
         // idnpd
 
+        // tglterima
+
+        // tglsubmit
+
         // dummydepan
 
         // dummybelakang
@@ -1755,7 +1387,11 @@ class NpdConfirmdummyList extends NpdConfirmdummy
 
         // ttd
 
-        // checked_by
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
 
         // approved_by
 
@@ -1771,6 +1407,16 @@ class NpdConfirmdummyList extends NpdConfirmdummy
             $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
             $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
             $this->idnpd->ViewCustomAttributes = "";
+
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
 
             // dummydepan
             $this->dummydepan->ViewValue = $this->dummydepan->CurrentValue;
@@ -1793,26 +1439,36 @@ class NpdConfirmdummyList extends NpdConfirmdummy
             $this->ttd->ViewValue = FormatDateTime($this->ttd->ViewValue, 0);
             $this->ttd->ViewCustomAttributes = "";
 
-            // checked_by
-            $curVal = trim(strval($this->checked_by->CurrentValue));
+            // submitted_by
+            $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
+            $this->submitted_by->ViewValue = FormatNumber($this->submitted_by->ViewValue, 0, -2, -2, -2);
+            $this->submitted_by->ViewCustomAttributes = "";
+
+            // checked1_by
+            $curVal = trim(strval($this->checked1_by->CurrentValue));
             if ($curVal != "") {
-                $this->checked_by->ViewValue = $this->checked_by->lookupCacheOption($curVal);
-                if ($this->checked_by->ViewValue === null) { // Lookup from database
+                $this->checked1_by->ViewValue = $this->checked1_by->lookupCacheOption($curVal);
+                if ($this->checked1_by->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->checked_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->checked1_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->checked_by->Lookup->renderViewRow($rswrk[0]);
-                        $this->checked_by->ViewValue = $this->checked_by->displayValue($arwrk);
+                        $arwrk = $this->checked1_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked1_by->ViewValue = $this->checked1_by->displayValue($arwrk);
                     } else {
-                        $this->checked_by->ViewValue = $this->checked_by->CurrentValue;
+                        $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
                     }
                 }
             } else {
-                $this->checked_by->ViewValue = null;
+                $this->checked1_by->ViewValue = null;
             }
-            $this->checked_by->ViewCustomAttributes = "";
+            $this->checked1_by->ViewCustomAttributes = "";
+
+            // checked2_by
+            $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+            $this->checked2_by->ViewValue = FormatNumber($this->checked2_by->ViewValue, 0, -2, -2, -2);
+            $this->checked2_by->ViewCustomAttributes = "";
 
             // approved_by
             $curVal = trim(strval($this->approved_by->CurrentValue));
@@ -1845,40 +1501,40 @@ class NpdConfirmdummyList extends NpdConfirmdummy
             $this->updated_at->ViewValue = FormatDateTime($this->updated_at->ViewValue, 0);
             $this->updated_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // idnpd
             $this->idnpd->LinkCustomAttributes = "";
             $this->idnpd->HrefValue = "";
             $this->idnpd->TooltipValue = "";
 
-            // dummydepan
-            $this->dummydepan->LinkCustomAttributes = "";
-            $this->dummydepan->HrefValue = "";
-            $this->dummydepan->TooltipValue = "";
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
 
-            // dummybelakang
-            $this->dummybelakang->LinkCustomAttributes = "";
-            $this->dummybelakang->HrefValue = "";
-            $this->dummybelakang->TooltipValue = "";
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
 
-            // dummyatas
-            $this->dummyatas->LinkCustomAttributes = "";
-            $this->dummyatas->HrefValue = "";
-            $this->dummyatas->TooltipValue = "";
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
 
-            // dummysamping
-            $this->dummysamping->LinkCustomAttributes = "";
-            $this->dummysamping->HrefValue = "";
-            $this->dummysamping->TooltipValue = "";
+            // checked1_by
+            $this->checked1_by->LinkCustomAttributes = "";
+            $this->checked1_by->HrefValue = "";
+            $this->checked1_by->TooltipValue = "";
 
-            // ttd
-            $this->ttd->LinkCustomAttributes = "";
-            $this->ttd->HrefValue = "";
-            $this->ttd->TooltipValue = "";
+            // checked2_by
+            $this->checked2_by->LinkCustomAttributes = "";
+            $this->checked2_by->HrefValue = "";
+            $this->checked2_by->TooltipValue = "";
+
+            // approved_by
+            $this->approved_by->LinkCustomAttributes = "";
+            $this->approved_by->HrefValue = "";
+            $this->approved_by->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1894,17 +1550,6 @@ class NpdConfirmdummyList extends NpdConfirmdummy
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
-
-        // Search button
-        $item = &$this->SearchOptions->add("searchtoggle");
-        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fnpd_confirmdummylistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
-        $item->Visible = true;
-
-        // Show all button
-        $item = &$this->SearchOptions->add("showall");
-        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
-        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1949,7 +1594,7 @@ class NpdConfirmdummyList extends NpdConfirmdummy
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_checked_by":
+                case "x_checked1_by":
                     break;
                 case "x_approved_by":
                     break;
