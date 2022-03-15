@@ -1408,18 +1408,21 @@ $API_ACTIONS['brandcustomer-delete'] = function(Request $request, Response &$res
 $API_ACTIONS['npd_customer'] = function(Request $request, Response &$response) {
     $idnpd = Param("idnpd", Route(1));
     if (empty($idnpd)) return WriteJson(['status' => false, 'message' => 'Parameter not found!']);
-    $row = ExecuteRow("SELECT npd.id as idnpd, npd.kodeorder, npd.nomororder, npd.bahan_campaign, c.kode as kodecustomer, c.nama as namacustomer, c.alamat as alamatcustomer, c.jabatan as jabatancustomer, c.telpon as telponcustomer, jp.nama as jenisproduk FROM npd JOIN customer c ON c.id = npd.idcustomer JOIN jenisproduk jp ON jp.id = npd.jenisproduk WHERE npd.id = {$idnpd}");
+    $row = ExecuteRow("SELECT npd.id as idnpd, npd.kodeorder, npd.nomororder, npd.bahan_campaign, npd.status as statusnpd, c.kode as kodecustomer, c.nama as namacustomer, c.alamat as alamatcustomer, c.jabatan as jabatancustomer, c.telpon as telponcustomer, c.ktp, c.npwp, jp.nama as jenisproduk FROM npd JOIN customer c ON c.id = npd.idcustomer JOIN jenisproduk jp ON jp.id = npd.jenisproduk WHERE npd.id = {$idnpd}");
     $data = [
         'idnpd' => $row['idnpd'],
         'kodeorder' => $row['kodeorder'],
         'nomororder' => $row['nomororder'],
         'bahan_campaign' => $row['bahan_campaign'],
+        'statusnpd' => $row['statusnpd'],
         'jenisproduk' => $row['jenisproduk'],
         'kodecustomer' => $row['kodecustomer'],
         'namacustomer' => $row['namacustomer'],
         'alamatcustomer' => $row['alamatcustomer'],
         'jabatancustomer' => $row['jabatancustomer'],
         'telponcustomer' => $row['telponcustomer'],
+        'ktpcustomer' => $row['ktp'],
+        'npwpcustomer' => $row['npwp'],
     ];
     WriteJson(['success' => true, 'data' => $data]);
 };

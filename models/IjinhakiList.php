@@ -569,14 +569,26 @@ class IjinhakiList extends Ijinhaki
         // Set up list options
         $this->setupListOptions();
         $this->id->Visible = false;
-        $this->idpegawai->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->idbrand->setVisibility();
-        $this->aktaperusahaan->Visible = false;
+        $this->idnpd->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
+        $this->ktp->Visible = false;
+        $this->npwp->Visible = false;
+        $this->nib->Visible = false;
+        $this->akta_pendirian->Visible = false;
+        $this->sk_umk->Visible = false;
+        $this->ttd_pemohon->Visible = false;
+        $this->nama_brand->setVisibility();
+        $this->label_brand->setVisibility();
+        $this->deskripsi_brand->Visible = false;
+        $this->unsur_brand->Visible = false;
+        $this->submitted_by->setVisibility();
+        $this->checked1_by->Visible = false;
+        $this->checked2_by->Visible = false;
+        $this->approved_by->Visible = false;
         $this->status->setVisibility();
         $this->selesai->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -605,9 +617,11 @@ class IjinhakiList extends Ijinhaki
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idpegawai);
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idbrand);
+        $this->setupLookupOptions($this->idnpd);
+        $this->setupLookupOptions($this->submitted_by);
+        $this->setupLookupOptions($this->checked1_by);
+        $this->setupLookupOptions($this->checked2_by);
+        $this->setupLookupOptions($this->approved_by);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -872,14 +886,26 @@ class IjinhakiList extends Ijinhaki
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-        $filterList = Concat($filterList, $this->idpegawai->AdvancedSearch->toJson(), ","); // Field idpegawai
-        $filterList = Concat($filterList, $this->idcustomer->AdvancedSearch->toJson(), ","); // Field idcustomer
-        $filterList = Concat($filterList, $this->idbrand->AdvancedSearch->toJson(), ","); // Field idbrand
-        $filterList = Concat($filterList, $this->aktaperusahaan->AdvancedSearch->toJson(), ","); // Field aktaperusahaan
+        $filterList = Concat($filterList, $this->idnpd->AdvancedSearch->toJson(), ","); // Field idnpd
+        $filterList = Concat($filterList, $this->tglterima->AdvancedSearch->toJson(), ","); // Field tglterima
+        $filterList = Concat($filterList, $this->tglsubmit->AdvancedSearch->toJson(), ","); // Field tglsubmit
+        $filterList = Concat($filterList, $this->ktp->AdvancedSearch->toJson(), ","); // Field ktp
+        $filterList = Concat($filterList, $this->npwp->AdvancedSearch->toJson(), ","); // Field npwp
+        $filterList = Concat($filterList, $this->nib->AdvancedSearch->toJson(), ","); // Field nib
+        $filterList = Concat($filterList, $this->akta_pendirian->AdvancedSearch->toJson(), ","); // Field akta_pendirian
+        $filterList = Concat($filterList, $this->sk_umk->AdvancedSearch->toJson(), ","); // Field sk_umk
+        $filterList = Concat($filterList, $this->ttd_pemohon->AdvancedSearch->toJson(), ","); // Field ttd_pemohon
+        $filterList = Concat($filterList, $this->nama_brand->AdvancedSearch->toJson(), ","); // Field nama_brand
+        $filterList = Concat($filterList, $this->label_brand->AdvancedSearch->toJson(), ","); // Field label_brand
+        $filterList = Concat($filterList, $this->deskripsi_brand->AdvancedSearch->toJson(), ","); // Field deskripsi_brand
+        $filterList = Concat($filterList, $this->unsur_brand->AdvancedSearch->toJson(), ","); // Field unsur_brand
+        $filterList = Concat($filterList, $this->submitted_by->AdvancedSearch->toJson(), ","); // Field submitted_by
+        $filterList = Concat($filterList, $this->checked1_by->AdvancedSearch->toJson(), ","); // Field checked1_by
+        $filterList = Concat($filterList, $this->checked2_by->AdvancedSearch->toJson(), ","); // Field checked2_by
+        $filterList = Concat($filterList, $this->approved_by->AdvancedSearch->toJson(), ","); // Field approved_by
         $filterList = Concat($filterList, $this->status->AdvancedSearch->toJson(), ","); // Field status
         $filterList = Concat($filterList, $this->selesai->AdvancedSearch->toJson(), ","); // Field selesai
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
-        $filterList = Concat($filterList, $this->created_by->AdvancedSearch->toJson(), ","); // Field created_by
         $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -929,37 +955,141 @@ class IjinhakiList extends Ijinhaki
         $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
         $this->id->AdvancedSearch->save();
 
-        // Field idpegawai
-        $this->idpegawai->AdvancedSearch->SearchValue = @$filter["x_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator = @$filter["z_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchCondition = @$filter["v_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchValue2 = @$filter["y_idpegawai"];
-        $this->idpegawai->AdvancedSearch->SearchOperator2 = @$filter["w_idpegawai"];
-        $this->idpegawai->AdvancedSearch->save();
+        // Field idnpd
+        $this->idnpd->AdvancedSearch->SearchValue = @$filter["x_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator = @$filter["z_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchCondition = @$filter["v_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchValue2 = @$filter["y_idnpd"];
+        $this->idnpd->AdvancedSearch->SearchOperator2 = @$filter["w_idnpd"];
+        $this->idnpd->AdvancedSearch->save();
 
-        // Field idcustomer
-        $this->idcustomer->AdvancedSearch->SearchValue = @$filter["x_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator = @$filter["z_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchCondition = @$filter["v_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchValue2 = @$filter["y_idcustomer"];
-        $this->idcustomer->AdvancedSearch->SearchOperator2 = @$filter["w_idcustomer"];
-        $this->idcustomer->AdvancedSearch->save();
+        // Field tglterima
+        $this->tglterima->AdvancedSearch->SearchValue = @$filter["x_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator = @$filter["z_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchCondition = @$filter["v_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchValue2 = @$filter["y_tglterima"];
+        $this->tglterima->AdvancedSearch->SearchOperator2 = @$filter["w_tglterima"];
+        $this->tglterima->AdvancedSearch->save();
 
-        // Field idbrand
-        $this->idbrand->AdvancedSearch->SearchValue = @$filter["x_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchOperator = @$filter["z_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchCondition = @$filter["v_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchValue2 = @$filter["y_idbrand"];
-        $this->idbrand->AdvancedSearch->SearchOperator2 = @$filter["w_idbrand"];
-        $this->idbrand->AdvancedSearch->save();
+        // Field tglsubmit
+        $this->tglsubmit->AdvancedSearch->SearchValue = @$filter["x_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator = @$filter["z_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchCondition = @$filter["v_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchValue2 = @$filter["y_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->SearchOperator2 = @$filter["w_tglsubmit"];
+        $this->tglsubmit->AdvancedSearch->save();
 
-        // Field aktaperusahaan
-        $this->aktaperusahaan->AdvancedSearch->SearchValue = @$filter["x_aktaperusahaan"];
-        $this->aktaperusahaan->AdvancedSearch->SearchOperator = @$filter["z_aktaperusahaan"];
-        $this->aktaperusahaan->AdvancedSearch->SearchCondition = @$filter["v_aktaperusahaan"];
-        $this->aktaperusahaan->AdvancedSearch->SearchValue2 = @$filter["y_aktaperusahaan"];
-        $this->aktaperusahaan->AdvancedSearch->SearchOperator2 = @$filter["w_aktaperusahaan"];
-        $this->aktaperusahaan->AdvancedSearch->save();
+        // Field ktp
+        $this->ktp->AdvancedSearch->SearchValue = @$filter["x_ktp"];
+        $this->ktp->AdvancedSearch->SearchOperator = @$filter["z_ktp"];
+        $this->ktp->AdvancedSearch->SearchCondition = @$filter["v_ktp"];
+        $this->ktp->AdvancedSearch->SearchValue2 = @$filter["y_ktp"];
+        $this->ktp->AdvancedSearch->SearchOperator2 = @$filter["w_ktp"];
+        $this->ktp->AdvancedSearch->save();
+
+        // Field npwp
+        $this->npwp->AdvancedSearch->SearchValue = @$filter["x_npwp"];
+        $this->npwp->AdvancedSearch->SearchOperator = @$filter["z_npwp"];
+        $this->npwp->AdvancedSearch->SearchCondition = @$filter["v_npwp"];
+        $this->npwp->AdvancedSearch->SearchValue2 = @$filter["y_npwp"];
+        $this->npwp->AdvancedSearch->SearchOperator2 = @$filter["w_npwp"];
+        $this->npwp->AdvancedSearch->save();
+
+        // Field nib
+        $this->nib->AdvancedSearch->SearchValue = @$filter["x_nib"];
+        $this->nib->AdvancedSearch->SearchOperator = @$filter["z_nib"];
+        $this->nib->AdvancedSearch->SearchCondition = @$filter["v_nib"];
+        $this->nib->AdvancedSearch->SearchValue2 = @$filter["y_nib"];
+        $this->nib->AdvancedSearch->SearchOperator2 = @$filter["w_nib"];
+        $this->nib->AdvancedSearch->save();
+
+        // Field akta_pendirian
+        $this->akta_pendirian->AdvancedSearch->SearchValue = @$filter["x_akta_pendirian"];
+        $this->akta_pendirian->AdvancedSearch->SearchOperator = @$filter["z_akta_pendirian"];
+        $this->akta_pendirian->AdvancedSearch->SearchCondition = @$filter["v_akta_pendirian"];
+        $this->akta_pendirian->AdvancedSearch->SearchValue2 = @$filter["y_akta_pendirian"];
+        $this->akta_pendirian->AdvancedSearch->SearchOperator2 = @$filter["w_akta_pendirian"];
+        $this->akta_pendirian->AdvancedSearch->save();
+
+        // Field sk_umk
+        $this->sk_umk->AdvancedSearch->SearchValue = @$filter["x_sk_umk"];
+        $this->sk_umk->AdvancedSearch->SearchOperator = @$filter["z_sk_umk"];
+        $this->sk_umk->AdvancedSearch->SearchCondition = @$filter["v_sk_umk"];
+        $this->sk_umk->AdvancedSearch->SearchValue2 = @$filter["y_sk_umk"];
+        $this->sk_umk->AdvancedSearch->SearchOperator2 = @$filter["w_sk_umk"];
+        $this->sk_umk->AdvancedSearch->save();
+
+        // Field ttd_pemohon
+        $this->ttd_pemohon->AdvancedSearch->SearchValue = @$filter["x_ttd_pemohon"];
+        $this->ttd_pemohon->AdvancedSearch->SearchOperator = @$filter["z_ttd_pemohon"];
+        $this->ttd_pemohon->AdvancedSearch->SearchCondition = @$filter["v_ttd_pemohon"];
+        $this->ttd_pemohon->AdvancedSearch->SearchValue2 = @$filter["y_ttd_pemohon"];
+        $this->ttd_pemohon->AdvancedSearch->SearchOperator2 = @$filter["w_ttd_pemohon"];
+        $this->ttd_pemohon->AdvancedSearch->save();
+
+        // Field nama_brand
+        $this->nama_brand->AdvancedSearch->SearchValue = @$filter["x_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchOperator = @$filter["z_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchCondition = @$filter["v_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchValue2 = @$filter["y_nama_brand"];
+        $this->nama_brand->AdvancedSearch->SearchOperator2 = @$filter["w_nama_brand"];
+        $this->nama_brand->AdvancedSearch->save();
+
+        // Field label_brand
+        $this->label_brand->AdvancedSearch->SearchValue = @$filter["x_label_brand"];
+        $this->label_brand->AdvancedSearch->SearchOperator = @$filter["z_label_brand"];
+        $this->label_brand->AdvancedSearch->SearchCondition = @$filter["v_label_brand"];
+        $this->label_brand->AdvancedSearch->SearchValue2 = @$filter["y_label_brand"];
+        $this->label_brand->AdvancedSearch->SearchOperator2 = @$filter["w_label_brand"];
+        $this->label_brand->AdvancedSearch->save();
+
+        // Field deskripsi_brand
+        $this->deskripsi_brand->AdvancedSearch->SearchValue = @$filter["x_deskripsi_brand"];
+        $this->deskripsi_brand->AdvancedSearch->SearchOperator = @$filter["z_deskripsi_brand"];
+        $this->deskripsi_brand->AdvancedSearch->SearchCondition = @$filter["v_deskripsi_brand"];
+        $this->deskripsi_brand->AdvancedSearch->SearchValue2 = @$filter["y_deskripsi_brand"];
+        $this->deskripsi_brand->AdvancedSearch->SearchOperator2 = @$filter["w_deskripsi_brand"];
+        $this->deskripsi_brand->AdvancedSearch->save();
+
+        // Field unsur_brand
+        $this->unsur_brand->AdvancedSearch->SearchValue = @$filter["x_unsur_brand"];
+        $this->unsur_brand->AdvancedSearch->SearchOperator = @$filter["z_unsur_brand"];
+        $this->unsur_brand->AdvancedSearch->SearchCondition = @$filter["v_unsur_brand"];
+        $this->unsur_brand->AdvancedSearch->SearchValue2 = @$filter["y_unsur_brand"];
+        $this->unsur_brand->AdvancedSearch->SearchOperator2 = @$filter["w_unsur_brand"];
+        $this->unsur_brand->AdvancedSearch->save();
+
+        // Field submitted_by
+        $this->submitted_by->AdvancedSearch->SearchValue = @$filter["x_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator = @$filter["z_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchCondition = @$filter["v_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchValue2 = @$filter["y_submitted_by"];
+        $this->submitted_by->AdvancedSearch->SearchOperator2 = @$filter["w_submitted_by"];
+        $this->submitted_by->AdvancedSearch->save();
+
+        // Field checked1_by
+        $this->checked1_by->AdvancedSearch->SearchValue = @$filter["x_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchOperator = @$filter["z_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchCondition = @$filter["v_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchValue2 = @$filter["y_checked1_by"];
+        $this->checked1_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked1_by"];
+        $this->checked1_by->AdvancedSearch->save();
+
+        // Field checked2_by
+        $this->checked2_by->AdvancedSearch->SearchValue = @$filter["x_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchOperator = @$filter["z_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchCondition = @$filter["v_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchValue2 = @$filter["y_checked2_by"];
+        $this->checked2_by->AdvancedSearch->SearchOperator2 = @$filter["w_checked2_by"];
+        $this->checked2_by->AdvancedSearch->save();
+
+        // Field approved_by
+        $this->approved_by->AdvancedSearch->SearchValue = @$filter["x_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchOperator = @$filter["z_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchCondition = @$filter["v_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchValue2 = @$filter["y_approved_by"];
+        $this->approved_by->AdvancedSearch->SearchOperator2 = @$filter["w_approved_by"];
+        $this->approved_by->AdvancedSearch->save();
 
         // Field status
         $this->status->AdvancedSearch->SearchValue = @$filter["x_status"];
@@ -985,14 +1115,6 @@ class IjinhakiList extends Ijinhaki
         $this->created_at->AdvancedSearch->SearchOperator2 = @$filter["w_created_at"];
         $this->created_at->AdvancedSearch->save();
 
-        // Field created_by
-        $this->created_by->AdvancedSearch->SearchValue = @$filter["x_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator = @$filter["z_created_by"];
-        $this->created_by->AdvancedSearch->SearchCondition = @$filter["v_created_by"];
-        $this->created_by->AdvancedSearch->SearchValue2 = @$filter["y_created_by"];
-        $this->created_by->AdvancedSearch->SearchOperator2 = @$filter["w_created_by"];
-        $this->created_by->AdvancedSearch->save();
-
         // Field readonly
         $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
         $this->readonly->AdvancedSearch->SearchOperator = @$filter["z_readonly"];
@@ -1008,7 +1130,16 @@ class IjinhakiList extends Ijinhaki
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->aktaperusahaan, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->ktp, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->npwp, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nib, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->akta_pendirian, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->sk_umk, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->ttd_pemohon, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->nama_brand, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->label_brand, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->deskripsi_brand, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->unsur_brand, $arKeywords, $type);
         $this->buildBasicSearchSql($where, $this->status, $arKeywords, $type);
         return $where;
     }
@@ -1172,9 +1303,12 @@ class IjinhakiList extends Ijinhaki
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idpegawai); // idpegawai
-            $this->updateSort($this->idcustomer); // idcustomer
-            $this->updateSort($this->idbrand); // idbrand
+            $this->updateSort($this->idnpd); // idnpd
+            $this->updateSort($this->tglterima); // tglterima
+            $this->updateSort($this->tglsubmit); // tglsubmit
+            $this->updateSort($this->nama_brand); // nama_brand
+            $this->updateSort($this->label_brand); // label_brand
+            $this->updateSort($this->submitted_by); // submitted_by
             $this->updateSort($this->status); // status
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1220,14 +1354,26 @@ class IjinhakiList extends Ijinhaki
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->id->setSort("");
-                $this->idpegawai->setSort("");
-                $this->idcustomer->setSort("");
-                $this->idbrand->setSort("");
-                $this->aktaperusahaan->setSort("");
+                $this->idnpd->setSort("");
+                $this->tglterima->setSort("");
+                $this->tglsubmit->setSort("");
+                $this->ktp->setSort("");
+                $this->npwp->setSort("");
+                $this->nib->setSort("");
+                $this->akta_pendirian->setSort("");
+                $this->sk_umk->setSort("");
+                $this->ttd_pemohon->setSort("");
+                $this->nama_brand->setSort("");
+                $this->label_brand->setSort("");
+                $this->deskripsi_brand->setSort("");
+                $this->unsur_brand->setSort("");
+                $this->submitted_by->setSort("");
+                $this->checked1_by->setSort("");
+                $this->checked2_by->setSort("");
+                $this->approved_by->setSort("");
                 $this->status->setSort("");
                 $this->selesai->setSort("");
                 $this->created_at->setSort("");
-                $this->created_by->setSort("");
                 $this->readonly->setSort("");
             }
 
@@ -1333,7 +1479,7 @@ class IjinhakiList extends Ijinhaki
             // "view"
             $opt = $this->ListOptions["view"];
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView() && $this->showOptionLink("view")) {
+            if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1342,7 +1488,7 @@ class IjinhakiList extends Ijinhaki
             // "edit"
             $opt = $this->ListOptions["edit"];
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit() && $this->showOptionLink("edit")) {
+            if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1350,7 +1496,7 @@ class IjinhakiList extends Ijinhaki
 
             // "delete"
             $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete() && $this->showOptionLink("delete")) {
+            if ($Security->canDelete()) {
             $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
@@ -1393,13 +1539,13 @@ class IjinhakiList extends Ijinhaki
 
         // "detail_ijinhaki_status"
         $opt = $this->ListOptions["detail_ijinhaki_status"];
-        if ($Security->allowList(CurrentProjectID() . 'ijinhaki_status') && $this->showOptionLink()) {
+        if ($Security->allowList(CurrentProjectID() . 'ijinhaki_status')) {
             $body = $Language->phrase("DetailLink") . $Language->TablePhrase("ijinhaki_status", "TblCaption");
             $body .= "&nbsp;" . str_replace("%c", Container("ijinhaki_status")->Count, $Language->phrase("DetailCount"));
             $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("IjinhakiStatusList?" . Config("TABLE_SHOW_MASTER") . "=ijinhaki&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "") . "\">" . $body . "</a>";
             $links = "";
             $detailPage = Container("IjinhakiStatusGrid");
-            if ($detailPage->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'ijinhaki')) {
+            if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'ijinhaki')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=ijinhaki_status");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
@@ -1408,7 +1554,7 @@ class IjinhakiList extends Ijinhaki
                 }
                 $detailViewTblVar .= "ijinhaki_status";
             }
-            if ($detailPage->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'ijinhaki')) {
+            if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'ijinhaki')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
                 $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=ijinhaki_status");
                 $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
@@ -1674,12 +1820,12 @@ class IjinhakiList extends Ijinhaki
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . $Language->TablePhrase("ijinhaki_status", "TblCaption") . "\" onclick=\"window.location='" . $detaillnk . "';return false;\">" . $Language->phrase("MasterDetailListLink") . "</a>";
             }
             $detailPageObj = Container("IjinhakiStatusGrid");
-            if ($detailPageObj->DetailView && $Security->canView() && $this->showOptionLink("view") && $Security->allowView(CurrentProjectID() . 'ijinhaki')) {
+            if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'ijinhaki')) {
                 $caption = $Language->phrase("MasterDetailViewLink");
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=ijinhaki_status");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $this->showOptionLink("edit") && $Security->allowEdit(CurrentProjectID() . 'ijinhaki')) {
+            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'ijinhaki')) {
                 $caption = $Language->phrase("MasterDetailEditLink");
                 $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=ijinhaki_status");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
@@ -1805,15 +1951,29 @@ class IjinhakiList extends Ijinhaki
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->idbrand->setDbValue($row['idbrand']);
-        $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
-        $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
+        $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
+        $this->ktp->setDbValue($row['ktp']);
+        $this->npwp->setDbValue($row['npwp']);
+        $this->nib->setDbValue($row['nib']);
+        $this->akta_pendirian->Upload->DbValue = $row['akta_pendirian'];
+        $this->akta_pendirian->setDbValue($this->akta_pendirian->Upload->DbValue);
+        $this->sk_umk->setDbValue($row['sk_umk']);
+        $this->ttd_pemohon->Upload->DbValue = $row['ttd_pemohon'];
+        $this->ttd_pemohon->setDbValue($this->ttd_pemohon->Upload->DbValue);
+        $this->nama_brand->setDbValue($row['nama_brand']);
+        $this->label_brand->Upload->DbValue = $row['label_brand'];
+        $this->label_brand->setDbValue($this->label_brand->Upload->DbValue);
+        $this->deskripsi_brand->setDbValue($row['deskripsi_brand']);
+        $this->unsur_brand->setDbValue($row['unsur_brand']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
         $this->status->setDbValue($row['status']);
         $this->selesai->setDbValue($row['selesai']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
         $detailTbl = Container("ijinhaki_status");
         $detailFilter = $detailTbl->sqlDetailFilter_ijinhaki();
@@ -1828,14 +1988,26 @@ class IjinhakiList extends Ijinhaki
     {
         $row = [];
         $row['id'] = null;
-        $row['idpegawai'] = null;
-        $row['idcustomer'] = null;
-        $row['idbrand'] = null;
-        $row['aktaperusahaan'] = null;
+        $row['idnpd'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
+        $row['ktp'] = null;
+        $row['npwp'] = null;
+        $row['nib'] = null;
+        $row['akta_pendirian'] = null;
+        $row['sk_umk'] = null;
+        $row['ttd_pemohon'] = null;
+        $row['nama_brand'] = null;
+        $row['label_brand'] = null;
+        $row['deskripsi_brand'] = null;
+        $row['unsur_brand'] = null;
+        $row['submitted_by'] = null;
+        $row['checked1_by'] = null;
+        $row['checked2_by'] = null;
+        $row['approved_by'] = null;
         $row['status'] = null;
         $row['selesai'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -1876,21 +2048,45 @@ class IjinhakiList extends Ijinhaki
 
         // id
 
-        // idpegawai
+        // idnpd
 
-        // idcustomer
+        // tglterima
 
-        // idbrand
+        // tglsubmit
 
-        // aktaperusahaan
+        // ktp
+
+        // npwp
+
+        // nib
+
+        // akta_pendirian
+
+        // sk_umk
+
+        // ttd_pemohon
+
+        // nama_brand
+
+        // label_brand
+
+        // deskripsi_brand
+
+        // unsur_brand
+
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
+
+        // approved_by
 
         // status
 
         // selesai
 
         // created_at
-
-        // created_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1899,80 +2095,168 @@ class IjinhakiList extends Ijinhaki
             $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
-            // idpegawai
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
+            // idnpd
+            $curVal = trim(strval($this->idnpd->CurrentValue));
             if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
+                $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
+                if ($this->idnpd->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
+                        $arwrk = $this->idnpd->Lookup->renderViewRow($rswrk[0]);
+                        $this->idnpd->ViewValue = $this->idnpd->displayValue($arwrk);
                     } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+                        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
                     }
                 }
             } else {
-                $this->idpegawai->ViewValue = null;
+                $this->idnpd->ViewValue = null;
             }
-            $this->idpegawai->ViewCustomAttributes = "";
+            $this->idnpd->ViewCustomAttributes = "";
 
-            // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
+
+            // ktp
+            $this->ktp->ViewValue = $this->ktp->CurrentValue;
+            $this->ktp->ViewCustomAttributes = "";
+
+            // npwp
+            $this->npwp->ViewValue = $this->npwp->CurrentValue;
+            $this->npwp->ViewCustomAttributes = "";
+
+            // nib
+            $this->nib->ViewValue = $this->nib->CurrentValue;
+            $this->nib->ViewCustomAttributes = "";
+
+            // akta_pendirian
+            if (!EmptyValue($this->akta_pendirian->Upload->DbValue)) {
+                $this->akta_pendirian->ViewValue = $this->akta_pendirian->Upload->DbValue;
+            } else {
+                $this->akta_pendirian->ViewValue = "";
+            }
+            $this->akta_pendirian->ViewCustomAttributes = "";
+
+            // sk_umk
+            $this->sk_umk->ViewValue = $this->sk_umk->CurrentValue;
+            $this->sk_umk->ViewCustomAttributes = "";
+
+            // ttd_pemohon
+            if (!EmptyValue($this->ttd_pemohon->Upload->DbValue)) {
+                $this->ttd_pemohon->ViewValue = $this->ttd_pemohon->Upload->DbValue;
+            } else {
+                $this->ttd_pemohon->ViewValue = "";
+            }
+            $this->ttd_pemohon->ViewCustomAttributes = "";
+
+            // nama_brand
+            $this->nama_brand->ViewValue = $this->nama_brand->CurrentValue;
+            $this->nama_brand->ViewCustomAttributes = "";
+
+            // label_brand
+            if (!EmptyValue($this->label_brand->Upload->DbValue)) {
+                $this->label_brand->ViewValue = $this->label_brand->Upload->DbValue;
+            } else {
+                $this->label_brand->ViewValue = "";
+            }
+            $this->label_brand->ViewCustomAttributes = "";
+
+            // unsur_brand
+            $this->unsur_brand->ViewValue = $this->unsur_brand->CurrentValue;
+            $this->unsur_brand->ViewCustomAttributes = "";
+
+            // submitted_by
+            $curVal = trim(strval($this->submitted_by->CurrentValue));
             if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                $this->submitted_by->ViewValue = $this->submitted_by->lookupCacheOption($curVal);
+                if ($this->submitted_by->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->submitted_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                        $arwrk = $this->submitted_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->submitted_by->ViewValue = $this->submitted_by->displayValue($arwrk);
                     } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                        $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
                     }
                 }
             } else {
-                $this->idcustomer->ViewValue = null;
+                $this->submitted_by->ViewValue = null;
             }
-            $this->idcustomer->ViewCustomAttributes = "";
+            $this->submitted_by->ViewCustomAttributes = "";
 
-            // idbrand
-            $curVal = trim(strval($this->idbrand->CurrentValue));
+            // checked1_by
+            $curVal = trim(strval($this->checked1_by->CurrentValue));
             if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                $this->checked1_by->ViewValue = $this->checked1_by->lookupCacheOption($curVal);
+                if ($this->checked1_by->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "`ijinhaki` = 0" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $sqlWrk = $this->checked1_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                        $arwrk = $this->checked1_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked1_by->ViewValue = $this->checked1_by->displayValue($arwrk);
                     } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                        $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
                     }
                 }
             } else {
-                $this->idbrand->ViewValue = null;
+                $this->checked1_by->ViewValue = null;
             }
-            $this->idbrand->ViewCustomAttributes = "";
+            $this->checked1_by->ViewCustomAttributes = "";
 
-            // aktaperusahaan
-            if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
-                $this->aktaperusahaan->ViewValue = $this->aktaperusahaan->Upload->DbValue;
+            // checked2_by
+            $curVal = trim(strval($this->checked2_by->CurrentValue));
+            if ($curVal != "") {
+                $this->checked2_by->ViewValue = $this->checked2_by->lookupCacheOption($curVal);
+                if ($this->checked2_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->checked2_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->checked2_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked2_by->ViewValue = $this->checked2_by->displayValue($arwrk);
+                    } else {
+                        $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+                    }
+                }
             } else {
-                $this->aktaperusahaan->ViewValue = "";
+                $this->checked2_by->ViewValue = null;
             }
-            $this->aktaperusahaan->ViewCustomAttributes = "";
+            $this->checked2_by->ViewCustomAttributes = "";
+
+            // approved_by
+            $curVal = trim(strval($this->approved_by->CurrentValue));
+            if ($curVal != "") {
+                $this->approved_by->ViewValue = $this->approved_by->lookupCacheOption($curVal);
+                if ($this->approved_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->approved_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->approved_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->approved_by->ViewValue = $this->approved_by->displayValue($arwrk);
+                    } else {
+                        $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->approved_by->ViewValue = null;
+            }
+            $this->approved_by->ViewCustomAttributes = "";
 
             // status
             if (strval($this->status->CurrentValue) != "") {
@@ -1995,11 +2279,6 @@ class IjinhakiList extends Ijinhaki
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
                 $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -2008,20 +2287,36 @@ class IjinhakiList extends Ijinhaki
             }
             $this->readonly->ViewCustomAttributes = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
+            // idnpd
+            $this->idnpd->LinkCustomAttributes = "";
+            $this->idnpd->HrefValue = "";
+            $this->idnpd->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
 
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
+
+            // nama_brand
+            $this->nama_brand->LinkCustomAttributes = "";
+            $this->nama_brand->HrefValue = "";
+            $this->nama_brand->TooltipValue = "";
+
+            // label_brand
+            $this->label_brand->LinkCustomAttributes = "";
+            $this->label_brand->HrefValue = "";
+            $this->label_brand->ExportHrefValue = $this->label_brand->UploadPath . $this->label_brand->Upload->DbValue;
+            $this->label_brand->TooltipValue = "";
+
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -2074,16 +2369,6 @@ class IjinhakiList extends Ijinhaki
         }
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -2107,15 +2392,15 @@ class IjinhakiList extends Ijinhaki
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idpegawai":
+                case "x_idnpd":
                     break;
-                case "x_idcustomer":
+                case "x_submitted_by":
                     break;
-                case "x_idbrand":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "`ijinhaki` = 0" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
+                case "x_checked1_by":
+                    break;
+                case "x_checked2_by":
+                    break;
+                case "x_approved_by":
                     break;
                 case "x_status":
                     break;

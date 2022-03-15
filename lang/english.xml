@@ -2529,17 +2529,56 @@
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
-      <field id="idpegawai">
-        <phrase id="fldcaption" value="Marketing" />
+      <field id="idnpd">
+        <phrase id="fldcaption" value="Kode Order" />
       </field>
-      <field id="idcustomer">
-        <phrase id="fldcaption" value="Customer" />
+      <field id="tglterima">
+        <phrase id="fldcaption" value="Tgl. Terima" />
       </field>
-      <field id="idbrand">
-        <phrase id="fldcaption" value="Brand" />
+      <field id="tglsubmit">
+        <phrase id="fldcaption" value="Tgl. Submit" />
       </field>
-      <field id="aktaperusahaan">
+      <field id="ktp">
+        <phrase id="fldcaption" value="KTP" />
+      </field>
+      <field id="npwp">
+        <phrase id="fldcaption" value="NPWP" />
+      </field>
+      <field id="nib">
+        <phrase id="fldcaption" value="NIB" />
+      </field>
+      <field id="akta_pendirian">
         <phrase id="fldcaption" value="Akta Perusahaan" />
+      </field>
+      <field id="sk_umk">
+        <phrase id="fldcaption" value="Surat Keterangan UMK" />
+      </field>
+      <field id="ttd_pemohon">
+        <phrase id="fldcaption" value="Tanda Tangan Pemohon" />
+      </field>
+      <field id="nama_brand">
+        <phrase id="fldcaption" value="Nama Brand" />
+      </field>
+      <field id="label_brand">
+        <phrase id="fldcaption" value="Label Brand" />
+      </field>
+      <field id="deskripsi_brand">
+        <phrase id="fldcaption" value="Deskripsi Label" />
+      </field>
+      <field id="unsur_brand">
+        <phrase id="fldcaption" value="Unsur Warna dalam Label" />
+      </field>
+      <field id="submitted_by">
+        <phrase id="fldcaption" value="Diajukan oleh" />
+      </field>
+      <field id="checked1_by">
+        <phrase id="fldcaption" value="Diperiksa oleh (1)" />
+      </field>
+      <field id="checked2_by">
+        <phrase id="fldcaption" value="Diperiksa oleh (2)" />
+      </field>
+      <field id="approved_by">
+        <phrase id="fldcaption" value="Disetujui oleh" />
       </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />
@@ -2560,11 +2599,8 @@
       <field id="created_at">
         <phrase id="fldcaption" value="Created at" />
       </field>
-      <field id="created_by">
-        <phrase id="fldcaption" value="Created by" />
-      </field>
       <field id="readonly">
-        <phrase id="fldcaption" value="Created at" />
+        <phrase id="fldcaption" value="Readonly" />
         <phrase id="fldtagvalue1" value="1" />
         <phrase id="fldtagcaption1" value="Yes" />
         <phrase id="fldtagvalue2" value="0" />

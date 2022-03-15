@@ -29,14 +29,26 @@ class Ijinhaki extends DbTable
 
     // Fields
     public $id;
-    public $idpegawai;
-    public $idcustomer;
-    public $idbrand;
-    public $aktaperusahaan;
+    public $idnpd;
+    public $tglterima;
+    public $tglsubmit;
+    public $ktp;
+    public $npwp;
+    public $nib;
+    public $akta_pendirian;
+    public $sk_umk;
+    public $ttd_pemohon;
+    public $nama_brand;
+    public $label_brand;
+    public $deskripsi_brand;
+    public $unsur_brand;
+    public $submitted_by;
+    public $checked1_by;
+    public $checked2_by;
+    public $approved_by;
     public $status;
     public $selesai;
     public $created_at;
-    public $created_by;
     public $readonly;
 
     // Page ID
@@ -71,6 +83,7 @@ class Ijinhaki extends DbTable
         $this->ShowMultipleDetails = false; // Show multiple details
         $this->GridAddRowCount = 1;
         $this->AllowAddDeleteRow = true; // Allow add/delete row
+        $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
@@ -83,66 +96,168 @@ class Ijinhaki extends DbTable
         $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
         $this->Fields['id'] = &$this->id;
 
-        // idpegawai
-        $this->idpegawai = new DbField('ijinhaki', 'ijinhaki', 'x_idpegawai', 'idpegawai', '`idpegawai`', '`idpegawai`', 3, 11, -1, false, '`idpegawai`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idpegawai->Nullable = false; // NOT NULL field
-        $this->idpegawai->Required = true; // Required field
-        $this->idpegawai->Sortable = true; // Allow sort
-        $this->idpegawai->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idpegawai->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        // idnpd
+        $this->idnpd = new DbField('ijinhaki', 'ijinhaki', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idnpd->Nullable = false; // NOT NULL field
+        $this->idnpd->Required = true; // Required field
+        $this->idnpd->Sortable = true; // Allow sort
+        $this->idnpd->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idnpd->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], ["x_idcustomer"], [], [], [], [], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->idpegawai->Lookup = new Lookup('idpegawai', 'pegawai', false, 'id', ["kode","nama","",""], [], ["x_idcustomer"], [], [], [], [], '', '');
+                $this->idnpd->Lookup = new Lookup('idnpd', 'npd', false, 'id', ["kodeorder","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
-        $this->idpegawai->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idpegawai->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idpegawai->Param, "CustomMsg");
-        $this->Fields['idpegawai'] = &$this->idpegawai;
+        $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
+        $this->Fields['idnpd'] = &$this->idnpd;
 
-        // idcustomer
-        $this->idcustomer = new DbField('ijinhaki', 'ijinhaki', 'x_idcustomer', 'idcustomer', '`idcustomer`', '`idcustomer`', 20, 20, -1, false, '`idcustomer`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idcustomer->Nullable = false; // NOT NULL field
-        $this->idcustomer->Sortable = true; // Allow sort
-        $this->idcustomer->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idcustomer->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        // tglterima
+        $this->tglterima = new DbField('ijinhaki', 'ijinhaki', 'x_tglterima', 'tglterima', '`tglterima`', CastDateFieldForLike("`tglterima`", 0, "DB"), 133, 10, 0, false, '`tglterima`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglterima->Sortable = true; // Allow sort
+        $this->tglterima->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglterima->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglterima->Param, "CustomMsg");
+        $this->Fields['tglterima'] = &$this->tglterima;
+
+        // tglsubmit
+        $this->tglsubmit = new DbField('ijinhaki', 'ijinhaki', 'x_tglsubmit', 'tglsubmit', '`tglsubmit`', CastDateFieldForLike("`tglsubmit`", 0, "DB"), 133, 10, 0, false, '`tglsubmit`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tglsubmit->Sortable = true; // Allow sort
+        $this->tglsubmit->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tglsubmit->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tglsubmit->Param, "CustomMsg");
+        $this->Fields['tglsubmit'] = &$this->tglsubmit;
+
+        // ktp
+        $this->ktp = new DbField('ijinhaki', 'ijinhaki', 'x_ktp', 'ktp', '`ktp`', '`ktp`', 200, 50, -1, false, '`ktp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->ktp->Sortable = true; // Allow sort
+        $this->ktp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ktp->Param, "CustomMsg");
+        $this->Fields['ktp'] = &$this->ktp;
+
+        // npwp
+        $this->npwp = new DbField('ijinhaki', 'ijinhaki', 'x_npwp', 'npwp', '`npwp`', '`npwp`', 200, 50, -1, false, '`npwp`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->npwp->Sortable = true; // Allow sort
+        $this->npwp->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->npwp->Param, "CustomMsg");
+        $this->Fields['npwp'] = &$this->npwp;
+
+        // nib
+        $this->nib = new DbField('ijinhaki', 'ijinhaki', 'x_nib', 'nib', '`nib`', '`nib`', 200, 50, -1, false, '`nib`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nib->Sortable = true; // Allow sort
+        $this->nib->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nib->Param, "CustomMsg");
+        $this->Fields['nib'] = &$this->nib;
+
+        // akta_pendirian
+        $this->akta_pendirian = new DbField('ijinhaki', 'ijinhaki', 'x_akta_pendirian', 'akta_pendirian', '`akta_pendirian`', '`akta_pendirian`', 200, 50, -1, true, '`akta_pendirian`', false, false, false, 'FORMATTED TEXT', 'FILE');
+        $this->akta_pendirian->Sortable = true; // Allow sort
+        $this->akta_pendirian->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->akta_pendirian->Param, "CustomMsg");
+        $this->Fields['akta_pendirian'] = &$this->akta_pendirian;
+
+        // sk_umk
+        $this->sk_umk = new DbField('ijinhaki', 'ijinhaki', 'x_sk_umk', 'sk_umk', '`sk_umk`', '`sk_umk`', 200, 50, -1, false, '`sk_umk`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->sk_umk->Sortable = true; // Allow sort
+        $this->sk_umk->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sk_umk->Param, "CustomMsg");
+        $this->Fields['sk_umk'] = &$this->sk_umk;
+
+        // ttd_pemohon
+        $this->ttd_pemohon = new DbField('ijinhaki', 'ijinhaki', 'x_ttd_pemohon', 'ttd_pemohon', '`ttd_pemohon`', '`ttd_pemohon`', 200, 255, -1, true, '`ttd_pemohon`', false, false, false, 'FORMATTED TEXT', 'FILE');
+        $this->ttd_pemohon->Sortable = true; // Allow sort
+        $this->ttd_pemohon->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->ttd_pemohon->Param, "CustomMsg");
+        $this->Fields['ttd_pemohon'] = &$this->ttd_pemohon;
+
+        // nama_brand
+        $this->nama_brand = new DbField('ijinhaki', 'ijinhaki', 'x_nama_brand', 'nama_brand', '`nama_brand`', '`nama_brand`', 200, 255, -1, false, '`nama_brand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->nama_brand->Nullable = false; // NOT NULL field
+        $this->nama_brand->Required = true; // Required field
+        $this->nama_brand->Sortable = true; // Allow sort
+        $this->nama_brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->nama_brand->Param, "CustomMsg");
+        $this->Fields['nama_brand'] = &$this->nama_brand;
+
+        // label_brand
+        $this->label_brand = new DbField('ijinhaki', 'ijinhaki', 'x_label_brand', 'label_brand', '`label_brand`', '`label_brand`', 201, 65535, -1, true, '`label_brand`', false, false, false, 'FORMATTED TEXT', 'FILE');
+        $this->label_brand->Sortable = true; // Allow sort
+        $this->label_brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->label_brand->Param, "CustomMsg");
+        $this->Fields['label_brand'] = &$this->label_brand;
+
+        // deskripsi_brand
+        $this->deskripsi_brand = new DbField('ijinhaki', 'ijinhaki', 'x_deskripsi_brand', 'deskripsi_brand', '`deskripsi_brand`', '`deskripsi_brand`', 201, 65535, -1, false, '`deskripsi_brand`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
+        $this->deskripsi_brand->Sortable = true; // Allow sort
+        $this->deskripsi_brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->deskripsi_brand->Param, "CustomMsg");
+        $this->Fields['deskripsi_brand'] = &$this->deskripsi_brand;
+
+        // unsur_brand
+        $this->unsur_brand = new DbField('ijinhaki', 'ijinhaki', 'x_unsur_brand', 'unsur_brand', '`unsur_brand`', '`unsur_brand`', 200, 255, -1, false, '`unsur_brand`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->unsur_brand->Sortable = true; // Allow sort
+        $this->unsur_brand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->unsur_brand->Param, "CustomMsg");
+        $this->Fields['unsur_brand'] = &$this->unsur_brand;
+
+        // submitted_by
+        $this->submitted_by = new DbField('ijinhaki', 'ijinhaki', 'x_submitted_by', 'submitted_by', '`submitted_by`', '`submitted_by`', 3, 11, -1, false, '`submitted_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->submitted_by->Sortable = true; // Allow sort
+        $this->submitted_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->submitted_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], [], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
+                $this->submitted_by->Lookup = new Lookup('submitted_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->idcustomer->Lookup = new Lookup('idcustomer', 'customer', false, 'id', ["kode","nama","",""], ["x_idpegawai"], [], ["idpegawai"], ["x_idpegawai"], [], [], '', '');
+                $this->submitted_by->Lookup = new Lookup('submitted_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
         }
-        $this->idcustomer->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idcustomer->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idcustomer->Param, "CustomMsg");
-        $this->Fields['idcustomer'] = &$this->idcustomer;
+        $this->submitted_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->submitted_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->submitted_by->Param, "CustomMsg");
+        $this->Fields['submitted_by'] = &$this->submitted_by;
 
-        // idbrand
-        $this->idbrand = new DbField('ijinhaki', 'ijinhaki', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
-        $this->idbrand->Nullable = false; // NOT NULL field
-        $this->idbrand->Sortable = true; // Allow sort
-        $this->idbrand->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        // checked1_by
+        $this->checked1_by = new DbField('ijinhaki', 'ijinhaki', 'x_checked1_by', 'checked1_by', '`checked1_by`', '`checked1_by`', 3, 11, -1, false, '`checked1_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->checked1_by->Sortable = true; // Allow sort
+        $this->checked1_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->checked1_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], [], [], [], [], [], '', '');
+                $this->checked1_by->Lookup = new Lookup('checked1_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], [], [], [], [], [], '', '');
+                $this->checked1_by->Lookup = new Lookup('checked1_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
                 break;
         }
-        $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
-        $this->Fields['idbrand'] = &$this->idbrand;
+        $this->checked1_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked1_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked1_by->Param, "CustomMsg");
+        $this->Fields['checked1_by'] = &$this->checked1_by;
 
-        // aktaperusahaan
-        $this->aktaperusahaan = new DbField('ijinhaki', 'ijinhaki', 'x_aktaperusahaan', 'aktaperusahaan', '`aktaperusahaan`', '`aktaperusahaan`', 200, 255, -1, true, '`aktaperusahaan`', false, false, false, 'FORMATTED TEXT', 'FILE');
-        $this->aktaperusahaan->Sortable = true; // Allow sort
-        $this->aktaperusahaan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktaperusahaan->Param, "CustomMsg");
-        $this->Fields['aktaperusahaan'] = &$this->aktaperusahaan;
+        // checked2_by
+        $this->checked2_by = new DbField('ijinhaki', 'ijinhaki', 'x_checked2_by', 'checked2_by', '`checked2_by`', '`checked2_by`', 3, 11, -1, false, '`checked2_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->checked2_by->Sortable = true; // Allow sort
+        $this->checked2_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->checked2_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->checked2_by->Lookup = new Lookup('checked2_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->checked2_by->Lookup = new Lookup('checked2_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->checked2_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->checked2_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->checked2_by->Param, "CustomMsg");
+        $this->Fields['checked2_by'] = &$this->checked2_by;
+
+        // approved_by
+        $this->approved_by = new DbField('ijinhaki', 'ijinhaki', 'x_approved_by', 'approved_by', '`approved_by`', '`approved_by`', 3, 11, -1, false, '`approved_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->approved_by->Sortable = true; // Allow sort
+        $this->approved_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->approved_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->approved_by->Lookup = new Lookup('approved_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->approved_by->Lookup = new Lookup('approved_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->approved_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->approved_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->approved_by->Param, "CustomMsg");
+        $this->Fields['approved_by'] = &$this->approved_by;
 
         // status
         $this->status = new DbField('ijinhaki', 'ijinhaki', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'SELECT');
@@ -188,13 +303,6 @@ class Ijinhaki extends DbTable
         $this->created_at->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
         $this->created_at->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_at->Param, "CustomMsg");
         $this->Fields['created_at'] = &$this->created_at;
-
-        // created_by
-        $this->created_by = new DbField('ijinhaki', 'ijinhaki', 'x_created_by', 'created_by', '`created_by`', '`created_by`', 3, 11, -1, false, '`created_by`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->created_by->Sortable = true; // Allow sort
-        $this->created_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->created_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->created_by->Param, "CustomMsg");
-        $this->Fields['created_by'] = &$this->created_by;
 
         // readonly
         $this->readonly = new DbField('ijinhaki', 'ijinhaki', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
@@ -375,11 +483,6 @@ class Ijinhaki extends DbTable
     // Apply User ID filters
     public function applyUserIDFilters($filter)
     {
-        global $Security;
-        // Add User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $filter = $this->addUserIDFilter($filter);
-        }
         return $filter;
     }
 
@@ -709,14 +812,26 @@ class Ijinhaki extends DbTable
             return;
         }
         $this->id->DbValue = $row['id'];
-        $this->idpegawai->DbValue = $row['idpegawai'];
-        $this->idcustomer->DbValue = $row['idcustomer'];
-        $this->idbrand->DbValue = $row['idbrand'];
-        $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
+        $this->idnpd->DbValue = $row['idnpd'];
+        $this->tglterima->DbValue = $row['tglterima'];
+        $this->tglsubmit->DbValue = $row['tglsubmit'];
+        $this->ktp->DbValue = $row['ktp'];
+        $this->npwp->DbValue = $row['npwp'];
+        $this->nib->DbValue = $row['nib'];
+        $this->akta_pendirian->Upload->DbValue = $row['akta_pendirian'];
+        $this->sk_umk->DbValue = $row['sk_umk'];
+        $this->ttd_pemohon->Upload->DbValue = $row['ttd_pemohon'];
+        $this->nama_brand->DbValue = $row['nama_brand'];
+        $this->label_brand->Upload->DbValue = $row['label_brand'];
+        $this->deskripsi_brand->DbValue = $row['deskripsi_brand'];
+        $this->unsur_brand->DbValue = $row['unsur_brand'];
+        $this->submitted_by->DbValue = $row['submitted_by'];
+        $this->checked1_by->DbValue = $row['checked1_by'];
+        $this->checked2_by->DbValue = $row['checked2_by'];
+        $this->approved_by->DbValue = $row['approved_by'];
         $this->status->DbValue = $row['status'];
         $this->selesai->DbValue = $row['selesai'];
         $this->created_at->DbValue = $row['created_at'];
-        $this->created_by->DbValue = $row['created_by'];
         $this->readonly->DbValue = $row['readonly'];
     }
 
@@ -724,10 +839,22 @@ class Ijinhaki extends DbTable
     public function deleteUploadedFiles($row)
     {
         $this->loadDbValues($row);
-        $oldFiles = EmptyValue($row['aktaperusahaan']) ? [] : [$row['aktaperusahaan']];
+        $oldFiles = EmptyValue($row['akta_pendirian']) ? [] : [$row['akta_pendirian']];
         foreach ($oldFiles as $oldFile) {
-            if (file_exists($this->aktaperusahaan->oldPhysicalUploadPath() . $oldFile)) {
-                @unlink($this->aktaperusahaan->oldPhysicalUploadPath() . $oldFile);
+            if (file_exists($this->akta_pendirian->oldPhysicalUploadPath() . $oldFile)) {
+                @unlink($this->akta_pendirian->oldPhysicalUploadPath() . $oldFile);
+            }
+        }
+        $oldFiles = EmptyValue($row['ttd_pemohon']) ? [] : [$row['ttd_pemohon']];
+        foreach ($oldFiles as $oldFile) {
+            if (file_exists($this->ttd_pemohon->oldPhysicalUploadPath() . $oldFile)) {
+                @unlink($this->ttd_pemohon->oldPhysicalUploadPath() . $oldFile);
+            }
+        }
+        $oldFiles = EmptyValue($row['label_brand']) ? [] : [$row['label_brand']];
+        foreach ($oldFiles as $oldFile) {
+            if (file_exists($this->label_brand->oldPhysicalUploadPath() . $oldFile)) {
+                @unlink($this->label_brand->oldPhysicalUploadPath() . $oldFile);
             }
         }
     }
@@ -1053,15 +1180,29 @@ SORTHTML;
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->idbrand->setDbValue($row['idbrand']);
-        $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
-        $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
+        $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
+        $this->ktp->setDbValue($row['ktp']);
+        $this->npwp->setDbValue($row['npwp']);
+        $this->nib->setDbValue($row['nib']);
+        $this->akta_pendirian->Upload->DbValue = $row['akta_pendirian'];
+        $this->akta_pendirian->setDbValue($this->akta_pendirian->Upload->DbValue);
+        $this->sk_umk->setDbValue($row['sk_umk']);
+        $this->ttd_pemohon->Upload->DbValue = $row['ttd_pemohon'];
+        $this->ttd_pemohon->setDbValue($this->ttd_pemohon->Upload->DbValue);
+        $this->nama_brand->setDbValue($row['nama_brand']);
+        $this->label_brand->Upload->DbValue = $row['label_brand'];
+        $this->label_brand->setDbValue($this->label_brand->Upload->DbValue);
+        $this->deskripsi_brand->setDbValue($row['deskripsi_brand']);
+        $this->unsur_brand->setDbValue($row['unsur_brand']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
         $this->status->setDbValue($row['status']);
         $this->selesai->setDbValue($row['selesai']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -1077,21 +1218,45 @@ SORTHTML;
 
         // id
 
-        // idpegawai
+        // idnpd
 
-        // idcustomer
+        // tglterima
 
-        // idbrand
+        // tglsubmit
 
-        // aktaperusahaan
+        // ktp
+
+        // npwp
+
+        // nib
+
+        // akta_pendirian
+
+        // sk_umk
+
+        // ttd_pemohon
+
+        // nama_brand
+
+        // label_brand
+
+        // deskripsi_brand
+
+        // unsur_brand
+
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
+
+        // approved_by
 
         // status
 
         // selesai
 
         // created_at
-
-        // created_by
 
         // readonly
 
@@ -1100,80 +1265,172 @@ SORTHTML;
         $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
-        // idpegawai
-        $curVal = trim(strval($this->idpegawai->CurrentValue));
+        // idnpd
+        $curVal = trim(strval($this->idnpd->CurrentValue));
         if ($curVal != "") {
-            $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-            if ($this->idpegawai->ViewValue === null) { // Lookup from database
+            $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
+            if ($this->idnpd->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                    $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
+                    $arwrk = $this->idnpd->Lookup->renderViewRow($rswrk[0]);
+                    $this->idnpd->ViewValue = $this->idnpd->displayValue($arwrk);
                 } else {
-                    $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+                    $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
                 }
             }
         } else {
-            $this->idpegawai->ViewValue = null;
+            $this->idnpd->ViewValue = null;
         }
-        $this->idpegawai->ViewCustomAttributes = "";
+        $this->idnpd->ViewCustomAttributes = "";
 
-        // idcustomer
-        $curVal = trim(strval($this->idcustomer->CurrentValue));
+        // tglterima
+        $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+        $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+        $this->tglterima->ViewCustomAttributes = "";
+
+        // tglsubmit
+        $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+        $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+        $this->tglsubmit->ViewCustomAttributes = "";
+
+        // ktp
+        $this->ktp->ViewValue = $this->ktp->CurrentValue;
+        $this->ktp->ViewCustomAttributes = "";
+
+        // npwp
+        $this->npwp->ViewValue = $this->npwp->CurrentValue;
+        $this->npwp->ViewCustomAttributes = "";
+
+        // nib
+        $this->nib->ViewValue = $this->nib->CurrentValue;
+        $this->nib->ViewCustomAttributes = "";
+
+        // akta_pendirian
+        if (!EmptyValue($this->akta_pendirian->Upload->DbValue)) {
+            $this->akta_pendirian->ViewValue = $this->akta_pendirian->Upload->DbValue;
+        } else {
+            $this->akta_pendirian->ViewValue = "";
+        }
+        $this->akta_pendirian->ViewCustomAttributes = "";
+
+        // sk_umk
+        $this->sk_umk->ViewValue = $this->sk_umk->CurrentValue;
+        $this->sk_umk->ViewCustomAttributes = "";
+
+        // ttd_pemohon
+        if (!EmptyValue($this->ttd_pemohon->Upload->DbValue)) {
+            $this->ttd_pemohon->ViewValue = $this->ttd_pemohon->Upload->DbValue;
+        } else {
+            $this->ttd_pemohon->ViewValue = "";
+        }
+        $this->ttd_pemohon->ViewCustomAttributes = "";
+
+        // nama_brand
+        $this->nama_brand->ViewValue = $this->nama_brand->CurrentValue;
+        $this->nama_brand->ViewCustomAttributes = "";
+
+        // label_brand
+        if (!EmptyValue($this->label_brand->Upload->DbValue)) {
+            $this->label_brand->ViewValue = $this->label_brand->Upload->DbValue;
+        } else {
+            $this->label_brand->ViewValue = "";
+        }
+        $this->label_brand->ViewCustomAttributes = "";
+
+        // deskripsi_brand
+        $this->deskripsi_brand->ViewValue = $this->deskripsi_brand->CurrentValue;
+        $this->deskripsi_brand->ViewCustomAttributes = "";
+
+        // unsur_brand
+        $this->unsur_brand->ViewValue = $this->unsur_brand->CurrentValue;
+        $this->unsur_brand->ViewCustomAttributes = "";
+
+        // submitted_by
+        $curVal = trim(strval($this->submitted_by->CurrentValue));
         if ($curVal != "") {
-            $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-            if ($this->idcustomer->ViewValue === null) { // Lookup from database
+            $this->submitted_by->ViewValue = $this->submitted_by->lookupCacheOption($curVal);
+            if ($this->submitted_by->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $sqlWrk = $this->submitted_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                    $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                    $arwrk = $this->submitted_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->submitted_by->ViewValue = $this->submitted_by->displayValue($arwrk);
                 } else {
-                    $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                    $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
                 }
             }
         } else {
-            $this->idcustomer->ViewValue = null;
+            $this->submitted_by->ViewValue = null;
         }
-        $this->idcustomer->ViewCustomAttributes = "";
+        $this->submitted_by->ViewCustomAttributes = "";
 
-        // idbrand
-        $curVal = trim(strval($this->idbrand->CurrentValue));
+        // checked1_by
+        $curVal = trim(strval($this->checked1_by->CurrentValue));
         if ($curVal != "") {
-            $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-            if ($this->idbrand->ViewValue === null) { // Lookup from database
+            $this->checked1_by->ViewValue = $this->checked1_by->lookupCacheOption($curVal);
+            if ($this->checked1_by->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "`ijinhaki` = 0" : "";
-                };
-                $lookupFilter = $lookupFilter->bindTo($this);
-                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                $sqlWrk = $this->checked1_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
-                    $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                    $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    $arwrk = $this->checked1_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->checked1_by->ViewValue = $this->checked1_by->displayValue($arwrk);
                 } else {
-                    $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
                 }
             }
         } else {
-            $this->idbrand->ViewValue = null;
+            $this->checked1_by->ViewValue = null;
         }
-        $this->idbrand->ViewCustomAttributes = "";
+        $this->checked1_by->ViewCustomAttributes = "";
 
-        // aktaperusahaan
-        if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
-            $this->aktaperusahaan->ViewValue = $this->aktaperusahaan->Upload->DbValue;
+        // checked2_by
+        $curVal = trim(strval($this->checked2_by->CurrentValue));
+        if ($curVal != "") {
+            $this->checked2_by->ViewValue = $this->checked2_by->lookupCacheOption($curVal);
+            if ($this->checked2_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->checked2_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->checked2_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->checked2_by->ViewValue = $this->checked2_by->displayValue($arwrk);
+                } else {
+                    $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+                }
+            }
         } else {
-            $this->aktaperusahaan->ViewValue = "";
+            $this->checked2_by->ViewValue = null;
         }
-        $this->aktaperusahaan->ViewCustomAttributes = "";
+        $this->checked2_by->ViewCustomAttributes = "";
+
+        // approved_by
+        $curVal = trim(strval($this->approved_by->CurrentValue));
+        if ($curVal != "") {
+            $this->approved_by->ViewValue = $this->approved_by->lookupCacheOption($curVal);
+            if ($this->approved_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->approved_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->approved_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->approved_by->ViewValue = $this->approved_by->displayValue($arwrk);
+                } else {
+                    $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->approved_by->ViewValue = null;
+        }
+        $this->approved_by->ViewCustomAttributes = "";
 
         // status
         if (strval($this->status->CurrentValue) != "") {
@@ -1196,11 +1453,6 @@ SORTHTML;
         $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
         $this->created_at->ViewCustomAttributes = "";
 
-        // created_by
-        $this->created_by->ViewValue = $this->created_by->CurrentValue;
-        $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-        $this->created_by->ViewCustomAttributes = "";
-
         // readonly
         if (ConvertToBool($this->readonly->CurrentValue)) {
             $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -1214,26 +1466,93 @@ SORTHTML;
         $this->id->HrefValue = "";
         $this->id->TooltipValue = "";
 
-        // idpegawai
-        $this->idpegawai->LinkCustomAttributes = "";
-        $this->idpegawai->HrefValue = "";
-        $this->idpegawai->TooltipValue = "";
+        // idnpd
+        $this->idnpd->LinkCustomAttributes = "";
+        $this->idnpd->HrefValue = "";
+        $this->idnpd->TooltipValue = "";
 
-        // idcustomer
-        $this->idcustomer->LinkCustomAttributes = "";
-        $this->idcustomer->HrefValue = "";
-        $this->idcustomer->TooltipValue = "";
+        // tglterima
+        $this->tglterima->LinkCustomAttributes = "";
+        $this->tglterima->HrefValue = "";
+        $this->tglterima->TooltipValue = "";
 
-        // idbrand
-        $this->idbrand->LinkCustomAttributes = "";
-        $this->idbrand->HrefValue = "";
-        $this->idbrand->TooltipValue = "";
+        // tglsubmit
+        $this->tglsubmit->LinkCustomAttributes = "";
+        $this->tglsubmit->HrefValue = "";
+        $this->tglsubmit->TooltipValue = "";
 
-        // aktaperusahaan
-        $this->aktaperusahaan->LinkCustomAttributes = "";
-        $this->aktaperusahaan->HrefValue = "";
-        $this->aktaperusahaan->ExportHrefValue = $this->aktaperusahaan->UploadPath . $this->aktaperusahaan->Upload->DbValue;
-        $this->aktaperusahaan->TooltipValue = "";
+        // ktp
+        $this->ktp->LinkCustomAttributes = "";
+        $this->ktp->HrefValue = "";
+        $this->ktp->TooltipValue = "";
+
+        // npwp
+        $this->npwp->LinkCustomAttributes = "";
+        $this->npwp->HrefValue = "";
+        $this->npwp->TooltipValue = "";
+
+        // nib
+        $this->nib->LinkCustomAttributes = "";
+        $this->nib->HrefValue = "";
+        $this->nib->TooltipValue = "";
+
+        // akta_pendirian
+        $this->akta_pendirian->LinkCustomAttributes = "";
+        $this->akta_pendirian->HrefValue = "";
+        $this->akta_pendirian->ExportHrefValue = $this->akta_pendirian->UploadPath . $this->akta_pendirian->Upload->DbValue;
+        $this->akta_pendirian->TooltipValue = "";
+
+        // sk_umk
+        $this->sk_umk->LinkCustomAttributes = "";
+        $this->sk_umk->HrefValue = "";
+        $this->sk_umk->TooltipValue = "";
+
+        // ttd_pemohon
+        $this->ttd_pemohon->LinkCustomAttributes = "";
+        $this->ttd_pemohon->HrefValue = "";
+        $this->ttd_pemohon->ExportHrefValue = $this->ttd_pemohon->UploadPath . $this->ttd_pemohon->Upload->DbValue;
+        $this->ttd_pemohon->TooltipValue = "";
+
+        // nama_brand
+        $this->nama_brand->LinkCustomAttributes = "";
+        $this->nama_brand->HrefValue = "";
+        $this->nama_brand->TooltipValue = "";
+
+        // label_brand
+        $this->label_brand->LinkCustomAttributes = "";
+        $this->label_brand->HrefValue = "";
+        $this->label_brand->ExportHrefValue = $this->label_brand->UploadPath . $this->label_brand->Upload->DbValue;
+        $this->label_brand->TooltipValue = "";
+
+        // deskripsi_brand
+        $this->deskripsi_brand->LinkCustomAttributes = "";
+        $this->deskripsi_brand->HrefValue = "";
+        $this->deskripsi_brand->TooltipValue = "";
+
+        // unsur_brand
+        $this->unsur_brand->LinkCustomAttributes = "";
+        $this->unsur_brand->HrefValue = "";
+        $this->unsur_brand->TooltipValue = "";
+
+        // submitted_by
+        $this->submitted_by->LinkCustomAttributes = "";
+        $this->submitted_by->HrefValue = "";
+        $this->submitted_by->TooltipValue = "";
+
+        // checked1_by
+        $this->checked1_by->LinkCustomAttributes = "";
+        $this->checked1_by->HrefValue = "";
+        $this->checked1_by->TooltipValue = "";
+
+        // checked2_by
+        $this->checked2_by->LinkCustomAttributes = "";
+        $this->checked2_by->HrefValue = "";
+        $this->checked2_by->TooltipValue = "";
+
+        // approved_by
+        $this->approved_by->LinkCustomAttributes = "";
+        $this->approved_by->HrefValue = "";
+        $this->approved_by->TooltipValue = "";
 
         // status
         $this->status->LinkCustomAttributes = "";
@@ -1249,11 +1568,6 @@ SORTHTML;
         $this->created_at->LinkCustomAttributes = "";
         $this->created_at->HrefValue = "";
         $this->created_at->TooltipValue = "";
-
-        // created_by
-        $this->created_by->LinkCustomAttributes = "";
-        $this->created_by->HrefValue = "";
-        $this->created_by->TooltipValue = "";
 
         // readonly
         $this->readonly->LinkCustomAttributes = "";
@@ -1282,32 +1596,138 @@ SORTHTML;
         $this->id->EditValue = FormatNumber($this->id->EditValue, 0, -2, -2, -2);
         $this->id->ViewCustomAttributes = "";
 
-        // idpegawai
-        $this->idpegawai->EditAttrs["class"] = "form-control";
-        $this->idpegawai->EditCustomAttributes = "";
-        $this->idpegawai->PlaceHolder = RemoveHtml($this->idpegawai->caption());
+        // idnpd
+        $this->idnpd->EditAttrs["class"] = "form-control";
+        $this->idnpd->EditCustomAttributes = "";
+        $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
 
-        // idcustomer
-        $this->idcustomer->EditAttrs["class"] = "form-control";
-        $this->idcustomer->EditCustomAttributes = "";
-        $this->idcustomer->PlaceHolder = RemoveHtml($this->idcustomer->caption());
+        // tglterima
+        $this->tglterima->EditAttrs["class"] = "form-control";
+        $this->tglterima->EditCustomAttributes = "";
+        $this->tglterima->EditValue = FormatDateTime($this->tglterima->CurrentValue, 8);
+        $this->tglterima->PlaceHolder = RemoveHtml($this->tglterima->caption());
 
-        // idbrand
-        $this->idbrand->EditAttrs["class"] = "form-control";
-        $this->idbrand->EditCustomAttributes = "";
-        $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
+        // tglsubmit
+        $this->tglsubmit->EditAttrs["class"] = "form-control";
+        $this->tglsubmit->EditCustomAttributes = "";
+        $this->tglsubmit->EditValue = FormatDateTime($this->tglsubmit->CurrentValue, 8);
+        $this->tglsubmit->PlaceHolder = RemoveHtml($this->tglsubmit->caption());
 
-        // aktaperusahaan
-        $this->aktaperusahaan->EditAttrs["class"] = "form-control";
-        $this->aktaperusahaan->EditCustomAttributes = "";
-        if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
-            $this->aktaperusahaan->EditValue = $this->aktaperusahaan->Upload->DbValue;
+        // ktp
+        $this->ktp->EditAttrs["class"] = "form-control";
+        $this->ktp->EditCustomAttributes = "";
+        if (!$this->ktp->Raw) {
+            $this->ktp->CurrentValue = HtmlDecode($this->ktp->CurrentValue);
+        }
+        $this->ktp->EditValue = $this->ktp->CurrentValue;
+        $this->ktp->PlaceHolder = RemoveHtml($this->ktp->caption());
+
+        // npwp
+        $this->npwp->EditAttrs["class"] = "form-control";
+        $this->npwp->EditCustomAttributes = "";
+        if (!$this->npwp->Raw) {
+            $this->npwp->CurrentValue = HtmlDecode($this->npwp->CurrentValue);
+        }
+        $this->npwp->EditValue = $this->npwp->CurrentValue;
+        $this->npwp->PlaceHolder = RemoveHtml($this->npwp->caption());
+
+        // nib
+        $this->nib->EditAttrs["class"] = "form-control";
+        $this->nib->EditCustomAttributes = "";
+        if (!$this->nib->Raw) {
+            $this->nib->CurrentValue = HtmlDecode($this->nib->CurrentValue);
+        }
+        $this->nib->EditValue = $this->nib->CurrentValue;
+        $this->nib->PlaceHolder = RemoveHtml($this->nib->caption());
+
+        // akta_pendirian
+        $this->akta_pendirian->EditAttrs["class"] = "form-control";
+        $this->akta_pendirian->EditCustomAttributes = "";
+        if (!EmptyValue($this->akta_pendirian->Upload->DbValue)) {
+            $this->akta_pendirian->EditValue = $this->akta_pendirian->Upload->DbValue;
         } else {
-            $this->aktaperusahaan->EditValue = "";
+            $this->akta_pendirian->EditValue = "";
         }
-        if (!EmptyValue($this->aktaperusahaan->CurrentValue)) {
-            $this->aktaperusahaan->Upload->FileName = $this->aktaperusahaan->CurrentValue;
+        if (!EmptyValue($this->akta_pendirian->CurrentValue)) {
+            $this->akta_pendirian->Upload->FileName = $this->akta_pendirian->CurrentValue;
         }
+
+        // sk_umk
+        $this->sk_umk->EditAttrs["class"] = "form-control";
+        $this->sk_umk->EditCustomAttributes = "";
+        if (!$this->sk_umk->Raw) {
+            $this->sk_umk->CurrentValue = HtmlDecode($this->sk_umk->CurrentValue);
+        }
+        $this->sk_umk->EditValue = $this->sk_umk->CurrentValue;
+        $this->sk_umk->PlaceHolder = RemoveHtml($this->sk_umk->caption());
+
+        // ttd_pemohon
+        $this->ttd_pemohon->EditAttrs["class"] = "form-control";
+        $this->ttd_pemohon->EditCustomAttributes = "";
+        if (!EmptyValue($this->ttd_pemohon->Upload->DbValue)) {
+            $this->ttd_pemohon->EditValue = $this->ttd_pemohon->Upload->DbValue;
+        } else {
+            $this->ttd_pemohon->EditValue = "";
+        }
+        if (!EmptyValue($this->ttd_pemohon->CurrentValue)) {
+            $this->ttd_pemohon->Upload->FileName = $this->ttd_pemohon->CurrentValue;
+        }
+
+        // nama_brand
+        $this->nama_brand->EditAttrs["class"] = "form-control";
+        $this->nama_brand->EditCustomAttributes = "";
+        if (!$this->nama_brand->Raw) {
+            $this->nama_brand->CurrentValue = HtmlDecode($this->nama_brand->CurrentValue);
+        }
+        $this->nama_brand->EditValue = $this->nama_brand->CurrentValue;
+        $this->nama_brand->PlaceHolder = RemoveHtml($this->nama_brand->caption());
+
+        // label_brand
+        $this->label_brand->EditAttrs["class"] = "form-control";
+        $this->label_brand->EditCustomAttributes = "";
+        if (!EmptyValue($this->label_brand->Upload->DbValue)) {
+            $this->label_brand->EditValue = $this->label_brand->Upload->DbValue;
+        } else {
+            $this->label_brand->EditValue = "";
+        }
+        if (!EmptyValue($this->label_brand->CurrentValue)) {
+            $this->label_brand->Upload->FileName = $this->label_brand->CurrentValue;
+        }
+
+        // deskripsi_brand
+        $this->deskripsi_brand->EditAttrs["class"] = "form-control";
+        $this->deskripsi_brand->EditCustomAttributes = "";
+        $this->deskripsi_brand->EditValue = $this->deskripsi_brand->CurrentValue;
+        $this->deskripsi_brand->PlaceHolder = RemoveHtml($this->deskripsi_brand->caption());
+
+        // unsur_brand
+        $this->unsur_brand->EditAttrs["class"] = "form-control";
+        $this->unsur_brand->EditCustomAttributes = "";
+        if (!$this->unsur_brand->Raw) {
+            $this->unsur_brand->CurrentValue = HtmlDecode($this->unsur_brand->CurrentValue);
+        }
+        $this->unsur_brand->EditValue = $this->unsur_brand->CurrentValue;
+        $this->unsur_brand->PlaceHolder = RemoveHtml($this->unsur_brand->caption());
+
+        // submitted_by
+        $this->submitted_by->EditAttrs["class"] = "form-control";
+        $this->submitted_by->EditCustomAttributes = "";
+        $this->submitted_by->PlaceHolder = RemoveHtml($this->submitted_by->caption());
+
+        // checked1_by
+        $this->checked1_by->EditAttrs["class"] = "form-control";
+        $this->checked1_by->EditCustomAttributes = "";
+        $this->checked1_by->PlaceHolder = RemoveHtml($this->checked1_by->caption());
+
+        // checked2_by
+        $this->checked2_by->EditAttrs["class"] = "form-control";
+        $this->checked2_by->EditCustomAttributes = "";
+        $this->checked2_by->PlaceHolder = RemoveHtml($this->checked2_by->caption());
+
+        // approved_by
+        $this->approved_by->EditAttrs["class"] = "form-control";
+        $this->approved_by->EditCustomAttributes = "";
+        $this->approved_by->PlaceHolder = RemoveHtml($this->approved_by->caption());
 
         // status
         $this->status->EditAttrs["class"] = "form-control";
@@ -1325,10 +1745,6 @@ SORTHTML;
         $this->created_at->EditCustomAttributes = "";
         $this->created_at->EditValue = FormatDateTime($this->created_at->CurrentValue, 8);
         $this->created_at->PlaceHolder = RemoveHtml($this->created_at->caption());
-
-        // created_by
-        $this->created_by->EditAttrs["class"] = "form-control";
-        $this->created_by->EditCustomAttributes = "";
 
         // readonly
         $this->readonly->EditCustomAttributes = "";
@@ -1363,22 +1779,45 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->idbrand);
-                    $doc->exportCaption($this->aktaperusahaan);
+                    $doc->exportCaption($this->idnpd);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
+                    $doc->exportCaption($this->ktp);
+                    $doc->exportCaption($this->npwp);
+                    $doc->exportCaption($this->nib);
+                    $doc->exportCaption($this->akta_pendirian);
+                    $doc->exportCaption($this->sk_umk);
+                    $doc->exportCaption($this->ttd_pemohon);
+                    $doc->exportCaption($this->nama_brand);
+                    $doc->exportCaption($this->label_brand);
+                    $doc->exportCaption($this->deskripsi_brand);
+                    $doc->exportCaption($this->unsur_brand);
+                    $doc->exportCaption($this->submitted_by);
+                    $doc->exportCaption($this->checked1_by);
+                    $doc->exportCaption($this->checked2_by);
+                    $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->selesai);
                 } else {
                     $doc->exportCaption($this->id);
-                    $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->idcustomer);
-                    $doc->exportCaption($this->idbrand);
-                    $doc->exportCaption($this->aktaperusahaan);
+                    $doc->exportCaption($this->idnpd);
+                    $doc->exportCaption($this->tglterima);
+                    $doc->exportCaption($this->tglsubmit);
+                    $doc->exportCaption($this->ktp);
+                    $doc->exportCaption($this->npwp);
+                    $doc->exportCaption($this->nib);
+                    $doc->exportCaption($this->akta_pendirian);
+                    $doc->exportCaption($this->sk_umk);
+                    $doc->exportCaption($this->ttd_pemohon);
+                    $doc->exportCaption($this->nama_brand);
+                    $doc->exportCaption($this->unsur_brand);
+                    $doc->exportCaption($this->submitted_by);
+                    $doc->exportCaption($this->checked1_by);
+                    $doc->exportCaption($this->checked2_by);
+                    $doc->exportCaption($this->approved_by);
                     $doc->exportCaption($this->status);
                     $doc->exportCaption($this->selesai);
                     $doc->exportCaption($this->created_at);
-                    $doc->exportCaption($this->created_by);
                     $doc->exportCaption($this->readonly);
                 }
                 $doc->endExportRow();
@@ -1409,22 +1848,45 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->idbrand);
-                        $doc->exportField($this->aktaperusahaan);
+                        $doc->exportField($this->idnpd);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
+                        $doc->exportField($this->ktp);
+                        $doc->exportField($this->npwp);
+                        $doc->exportField($this->nib);
+                        $doc->exportField($this->akta_pendirian);
+                        $doc->exportField($this->sk_umk);
+                        $doc->exportField($this->ttd_pemohon);
+                        $doc->exportField($this->nama_brand);
+                        $doc->exportField($this->label_brand);
+                        $doc->exportField($this->deskripsi_brand);
+                        $doc->exportField($this->unsur_brand);
+                        $doc->exportField($this->submitted_by);
+                        $doc->exportField($this->checked1_by);
+                        $doc->exportField($this->checked2_by);
+                        $doc->exportField($this->approved_by);
                         $doc->exportField($this->status);
                         $doc->exportField($this->selesai);
                     } else {
                         $doc->exportField($this->id);
-                        $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->idcustomer);
-                        $doc->exportField($this->idbrand);
-                        $doc->exportField($this->aktaperusahaan);
+                        $doc->exportField($this->idnpd);
+                        $doc->exportField($this->tglterima);
+                        $doc->exportField($this->tglsubmit);
+                        $doc->exportField($this->ktp);
+                        $doc->exportField($this->npwp);
+                        $doc->exportField($this->nib);
+                        $doc->exportField($this->akta_pendirian);
+                        $doc->exportField($this->sk_umk);
+                        $doc->exportField($this->ttd_pemohon);
+                        $doc->exportField($this->nama_brand);
+                        $doc->exportField($this->unsur_brand);
+                        $doc->exportField($this->submitted_by);
+                        $doc->exportField($this->checked1_by);
+                        $doc->exportField($this->checked2_by);
+                        $doc->exportField($this->approved_by);
                         $doc->exportField($this->status);
                         $doc->exportField($this->selesai);
                         $doc->exportField($this->created_at);
-                        $doc->exportField($this->created_by);
                         $doc->exportField($this->readonly);
                     }
                     $doc->endExportRow($rowCnt);
@@ -1442,53 +1904,6 @@ SORTHTML;
         }
     }
 
-    // Add User ID filter
-    public function addUserIDFilter($filter = "")
-    {
-        global $Security;
-        $filterWrk = "";
-        $id = (CurrentPageID() == "list") ? $this->CurrentAction : CurrentPageID();
-        if (!$this->userIDAllow($id) && !$Security->isAdmin()) {
-            $filterWrk = $Security->userIdList();
-            if ($filterWrk != "") {
-                $filterWrk = '`created_by` IN (' . $filterWrk . ')';
-            }
-        }
-
-        // Call User ID Filtering event
-        $this->userIdFiltering($filterWrk);
-        AddFilter($filter, $filterWrk);
-        return $filter;
-    }
-
-    // User ID subquery
-    public function getUserIDSubquery(&$fld, &$masterfld)
-    {
-        global $UserTable;
-        $wrk = "";
-        $sql = "SELECT " . $masterfld->Expression . " FROM `ijinhaki`";
-        $filter = $this->addUserIDFilter("");
-        if ($filter != "") {
-            $sql .= " WHERE " . $filter;
-        }
-
-        // List all values
-        if ($rs = Conn($UserTable->Dbid)->executeQuery($sql)->fetchAll(\PDO::FETCH_NUM)) {
-            foreach ($rs as $row) {
-                if ($wrk != "") {
-                    $wrk .= ",";
-                }
-                $wrk .= QuotedValue($row[0], $masterfld->DataType, Config("USER_TABLE_DBID"));
-            }
-        }
-        if ($wrk != "") {
-            $wrk = $fld->Expression . " IN (" . $wrk . ")";
-        } else { // No User ID value found
-            $wrk = "0=1";
-        }
-        return $wrk;
-    }
-
     // Get file data
     public function getFileData($fldparm, $key, $resize, $width = 0, $height = 0, $plugins = [])
     {
@@ -1499,9 +1914,15 @@ SORTHTML;
         $fldName = "";
         $fileNameFld = "";
         $fileTypeFld = "";
-        if ($fldparm == 'aktaperusahaan') {
-            $fldName = "aktaperusahaan";
-            $fileNameFld = "aktaperusahaan";
+        if ($fldparm == 'akta_pendirian') {
+            $fldName = "akta_pendirian";
+            $fileNameFld = "akta_pendirian";
+        } elseif ($fldparm == 'ttd_pemohon') {
+            $fldName = "ttd_pemohon";
+            $fileNameFld = "ttd_pemohon";
+        } elseif ($fldparm == 'label_brand') {
+            $fldName = "label_brand";
+            $fileNameFld = "label_brand";
         } else {
             return false; // Incorrect field
         }
@@ -1654,6 +2075,7 @@ SORTHTML;
         // Enter your code here
         // To cancel, set return value to false
         $myResult = ExecuteUpdate("UPDATE brand SET ijinhaki=-1 WHERE id=".$rsnew['idbrand']);
+        $rsnew['created_at'] = date('Y-m-d H:i:s');
         return true;
     }
 

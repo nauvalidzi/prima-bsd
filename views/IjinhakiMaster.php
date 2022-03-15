@@ -9,35 +9,69 @@ $ijinhaki = Container("ijinhaki");
 <div class="ew-master-div">
 <table id="tbl_ijinhakimaster" class="table ew-view-table ew-master-table ew-vertical">
     <tbody>
-<?php if ($ijinhaki->idpegawai->Visible) { // idpegawai ?>
-        <tr id="r_idpegawai">
-            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->idpegawai->caption() ?></td>
-            <td <?= $ijinhaki->idpegawai->cellAttributes() ?>>
-<span id="el_ijinhaki_idpegawai">
-<span<?= $ijinhaki->idpegawai->viewAttributes() ?>>
-<?= $ijinhaki->idpegawai->getViewValue() ?></span>
+<?php if ($ijinhaki->idnpd->Visible) { // idnpd ?>
+        <tr id="r_idnpd">
+            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->idnpd->caption() ?></td>
+            <td <?= $ijinhaki->idnpd->cellAttributes() ?>>
+<span id="el_ijinhaki_idnpd">
+<span<?= $ijinhaki->idnpd->viewAttributes() ?>>
+<?= $ijinhaki->idnpd->getViewValue() ?></span>
 </span>
 </td>
         </tr>
 <?php } ?>
-<?php if ($ijinhaki->idcustomer->Visible) { // idcustomer ?>
-        <tr id="r_idcustomer">
-            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->idcustomer->caption() ?></td>
-            <td <?= $ijinhaki->idcustomer->cellAttributes() ?>>
-<span id="el_ijinhaki_idcustomer">
-<span<?= $ijinhaki->idcustomer->viewAttributes() ?>>
-<?= $ijinhaki->idcustomer->getViewValue() ?></span>
+<?php if ($ijinhaki->tglterima->Visible) { // tglterima ?>
+        <tr id="r_tglterima">
+            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->tglterima->caption() ?></td>
+            <td <?= $ijinhaki->tglterima->cellAttributes() ?>>
+<span id="el_ijinhaki_tglterima">
+<span<?= $ijinhaki->tglterima->viewAttributes() ?>>
+<?= $ijinhaki->tglterima->getViewValue() ?></span>
 </span>
 </td>
         </tr>
 <?php } ?>
-<?php if ($ijinhaki->idbrand->Visible) { // idbrand ?>
-        <tr id="r_idbrand">
-            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->idbrand->caption() ?></td>
-            <td <?= $ijinhaki->idbrand->cellAttributes() ?>>
-<span id="el_ijinhaki_idbrand">
-<span<?= $ijinhaki->idbrand->viewAttributes() ?>>
-<?= $ijinhaki->idbrand->getViewValue() ?></span>
+<?php if ($ijinhaki->tglsubmit->Visible) { // tglsubmit ?>
+        <tr id="r_tglsubmit">
+            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->tglsubmit->caption() ?></td>
+            <td <?= $ijinhaki->tglsubmit->cellAttributes() ?>>
+<span id="el_ijinhaki_tglsubmit">
+<span<?= $ijinhaki->tglsubmit->viewAttributes() ?>>
+<?= $ijinhaki->tglsubmit->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($ijinhaki->nama_brand->Visible) { // nama_brand ?>
+        <tr id="r_nama_brand">
+            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->nama_brand->caption() ?></td>
+            <td <?= $ijinhaki->nama_brand->cellAttributes() ?>>
+<span id="el_ijinhaki_nama_brand">
+<span<?= $ijinhaki->nama_brand->viewAttributes() ?>>
+<?= $ijinhaki->nama_brand->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($ijinhaki->label_brand->Visible) { // label_brand ?>
+        <tr id="r_label_brand">
+            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->label_brand->caption() ?></td>
+            <td <?= $ijinhaki->label_brand->cellAttributes() ?>>
+<span id="el_ijinhaki_label_brand">
+<span<?= $ijinhaki->label_brand->viewAttributes() ?>>
+<?= GetFileViewTag($ijinhaki->label_brand, $ijinhaki->label_brand->getViewValue(), false) ?>
+</span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($ijinhaki->submitted_by->Visible) { // submitted_by ?>
+        <tr id="r_submitted_by">
+            <td class="<?= $ijinhaki->TableLeftColumnClass ?>"><?= $ijinhaki->submitted_by->caption() ?></td>
+            <td <?= $ijinhaki->submitted_by->cellAttributes() ?>>
+<span id="el_ijinhaki_submitted_by">
+<span<?= $ijinhaki->submitted_by->viewAttributes() ?>>
+<?= $ijinhaki->submitted_by->getViewValue() ?></span>
 </span>
 </td>
         </tr>

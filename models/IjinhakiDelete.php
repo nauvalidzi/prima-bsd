@@ -375,14 +375,26 @@ class IjinhakiDelete extends Ijinhaki
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
         $this->id->Visible = false;
-        $this->idpegawai->setVisibility();
-        $this->idcustomer->setVisibility();
-        $this->idbrand->setVisibility();
-        $this->aktaperusahaan->Visible = false;
+        $this->idnpd->setVisibility();
+        $this->tglterima->setVisibility();
+        $this->tglsubmit->setVisibility();
+        $this->ktp->Visible = false;
+        $this->npwp->Visible = false;
+        $this->nib->Visible = false;
+        $this->akta_pendirian->Visible = false;
+        $this->sk_umk->Visible = false;
+        $this->ttd_pemohon->Visible = false;
+        $this->nama_brand->setVisibility();
+        $this->label_brand->setVisibility();
+        $this->deskripsi_brand->Visible = false;
+        $this->unsur_brand->Visible = false;
+        $this->submitted_by->setVisibility();
+        $this->checked1_by->Visible = false;
+        $this->checked2_by->Visible = false;
+        $this->approved_by->Visible = false;
         $this->status->setVisibility();
         $this->selesai->Visible = false;
         $this->created_at->Visible = false;
-        $this->created_by->Visible = false;
         $this->readonly->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -398,9 +410,11 @@ class IjinhakiDelete extends Ijinhaki
         }
 
         // Set up lookup cache
-        $this->setupLookupOptions($this->idpegawai);
-        $this->setupLookupOptions($this->idcustomer);
-        $this->setupLookupOptions($this->idbrand);
+        $this->setupLookupOptions($this->idnpd);
+        $this->setupLookupOptions($this->submitted_by);
+        $this->setupLookupOptions($this->checked1_by);
+        $this->setupLookupOptions($this->checked2_by);
+        $this->setupLookupOptions($this->approved_by);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -415,25 +429,6 @@ class IjinhakiDelete extends Ijinhaki
 
         // Set up filter (WHERE Clause)
         $this->CurrentFilter = $filter;
-
-        // Check if valid User ID
-        $conn = $this->getConnection();
-        $sql = $this->getSql($this->CurrentFilter);
-        $rows = $conn->fetchAll($sql);
-        $res = true;
-        foreach ($rows as $row) {
-            $this->loadRowValues($row);
-            if (!$this->showOptionLink("delete")) {
-                $userIdMsg = $Language->phrase("NoDeletePermission");
-                $this->setFailureMessage($userIdMsg);
-                $res = false;
-                break;
-            }
-        }
-        if (!$res) {
-            $this->terminate("IjinhakiList"); // Return to list
-            return;
-        }
 
         // Get action
         if (IsApi()) {
@@ -569,15 +564,29 @@ class IjinhakiDelete extends Ijinhaki
             return;
         }
         $this->id->setDbValue($row['id']);
-        $this->idpegawai->setDbValue($row['idpegawai']);
-        $this->idcustomer->setDbValue($row['idcustomer']);
-        $this->idbrand->setDbValue($row['idbrand']);
-        $this->aktaperusahaan->Upload->DbValue = $row['aktaperusahaan'];
-        $this->aktaperusahaan->setDbValue($this->aktaperusahaan->Upload->DbValue);
+        $this->idnpd->setDbValue($row['idnpd']);
+        $this->tglterima->setDbValue($row['tglterima']);
+        $this->tglsubmit->setDbValue($row['tglsubmit']);
+        $this->ktp->setDbValue($row['ktp']);
+        $this->npwp->setDbValue($row['npwp']);
+        $this->nib->setDbValue($row['nib']);
+        $this->akta_pendirian->Upload->DbValue = $row['akta_pendirian'];
+        $this->akta_pendirian->setDbValue($this->akta_pendirian->Upload->DbValue);
+        $this->sk_umk->setDbValue($row['sk_umk']);
+        $this->ttd_pemohon->Upload->DbValue = $row['ttd_pemohon'];
+        $this->ttd_pemohon->setDbValue($this->ttd_pemohon->Upload->DbValue);
+        $this->nama_brand->setDbValue($row['nama_brand']);
+        $this->label_brand->Upload->DbValue = $row['label_brand'];
+        $this->label_brand->setDbValue($this->label_brand->Upload->DbValue);
+        $this->deskripsi_brand->setDbValue($row['deskripsi_brand']);
+        $this->unsur_brand->setDbValue($row['unsur_brand']);
+        $this->submitted_by->setDbValue($row['submitted_by']);
+        $this->checked1_by->setDbValue($row['checked1_by']);
+        $this->checked2_by->setDbValue($row['checked2_by']);
+        $this->approved_by->setDbValue($row['approved_by']);
         $this->status->setDbValue($row['status']);
         $this->selesai->setDbValue($row['selesai']);
         $this->created_at->setDbValue($row['created_at']);
-        $this->created_by->setDbValue($row['created_by']);
         $this->readonly->setDbValue($row['readonly']);
     }
 
@@ -586,14 +595,26 @@ class IjinhakiDelete extends Ijinhaki
     {
         $row = [];
         $row['id'] = null;
-        $row['idpegawai'] = null;
-        $row['idcustomer'] = null;
-        $row['idbrand'] = null;
-        $row['aktaperusahaan'] = null;
+        $row['idnpd'] = null;
+        $row['tglterima'] = null;
+        $row['tglsubmit'] = null;
+        $row['ktp'] = null;
+        $row['npwp'] = null;
+        $row['nib'] = null;
+        $row['akta_pendirian'] = null;
+        $row['sk_umk'] = null;
+        $row['ttd_pemohon'] = null;
+        $row['nama_brand'] = null;
+        $row['label_brand'] = null;
+        $row['deskripsi_brand'] = null;
+        $row['unsur_brand'] = null;
+        $row['submitted_by'] = null;
+        $row['checked1_by'] = null;
+        $row['checked2_by'] = null;
+        $row['approved_by'] = null;
         $row['status'] = null;
         $row['selesai'] = null;
         $row['created_at'] = null;
-        $row['created_by'] = null;
         $row['readonly'] = null;
         return $row;
     }
@@ -612,21 +633,45 @@ class IjinhakiDelete extends Ijinhaki
 
         // id
 
-        // idpegawai
+        // idnpd
 
-        // idcustomer
+        // tglterima
 
-        // idbrand
+        // tglsubmit
 
-        // aktaperusahaan
+        // ktp
+
+        // npwp
+
+        // nib
+
+        // akta_pendirian
+
+        // sk_umk
+
+        // ttd_pemohon
+
+        // nama_brand
+
+        // label_brand
+
+        // deskripsi_brand
+
+        // unsur_brand
+
+        // submitted_by
+
+        // checked1_by
+
+        // checked2_by
+
+        // approved_by
 
         // status
 
         // selesai
 
         // created_at
-
-        // created_by
 
         // readonly
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -635,80 +680,168 @@ class IjinhakiDelete extends Ijinhaki
             $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
             $this->id->ViewCustomAttributes = "";
 
-            // idpegawai
-            $curVal = trim(strval($this->idpegawai->CurrentValue));
+            // idnpd
+            $curVal = trim(strval($this->idnpd->CurrentValue));
             if ($curVal != "") {
-                $this->idpegawai->ViewValue = $this->idpegawai->lookupCacheOption($curVal);
-                if ($this->idpegawai->ViewValue === null) { // Lookup from database
+                $this->idnpd->ViewValue = $this->idnpd->lookupCacheOption($curVal);
+                if ($this->idnpd->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idpegawai->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->idnpd->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idpegawai->Lookup->renderViewRow($rswrk[0]);
-                        $this->idpegawai->ViewValue = $this->idpegawai->displayValue($arwrk);
+                        $arwrk = $this->idnpd->Lookup->renderViewRow($rswrk[0]);
+                        $this->idnpd->ViewValue = $this->idnpd->displayValue($arwrk);
                     } else {
-                        $this->idpegawai->ViewValue = $this->idpegawai->CurrentValue;
+                        $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
                     }
                 }
             } else {
-                $this->idpegawai->ViewValue = null;
+                $this->idnpd->ViewValue = null;
             }
-            $this->idpegawai->ViewCustomAttributes = "";
+            $this->idnpd->ViewCustomAttributes = "";
 
-            // idcustomer
-            $curVal = trim(strval($this->idcustomer->CurrentValue));
+            // tglterima
+            $this->tglterima->ViewValue = $this->tglterima->CurrentValue;
+            $this->tglterima->ViewValue = FormatDateTime($this->tglterima->ViewValue, 0);
+            $this->tglterima->ViewCustomAttributes = "";
+
+            // tglsubmit
+            $this->tglsubmit->ViewValue = $this->tglsubmit->CurrentValue;
+            $this->tglsubmit->ViewValue = FormatDateTime($this->tglsubmit->ViewValue, 0);
+            $this->tglsubmit->ViewCustomAttributes = "";
+
+            // ktp
+            $this->ktp->ViewValue = $this->ktp->CurrentValue;
+            $this->ktp->ViewCustomAttributes = "";
+
+            // npwp
+            $this->npwp->ViewValue = $this->npwp->CurrentValue;
+            $this->npwp->ViewCustomAttributes = "";
+
+            // nib
+            $this->nib->ViewValue = $this->nib->CurrentValue;
+            $this->nib->ViewCustomAttributes = "";
+
+            // akta_pendirian
+            if (!EmptyValue($this->akta_pendirian->Upload->DbValue)) {
+                $this->akta_pendirian->ViewValue = $this->akta_pendirian->Upload->DbValue;
+            } else {
+                $this->akta_pendirian->ViewValue = "";
+            }
+            $this->akta_pendirian->ViewCustomAttributes = "";
+
+            // sk_umk
+            $this->sk_umk->ViewValue = $this->sk_umk->CurrentValue;
+            $this->sk_umk->ViewCustomAttributes = "";
+
+            // ttd_pemohon
+            if (!EmptyValue($this->ttd_pemohon->Upload->DbValue)) {
+                $this->ttd_pemohon->ViewValue = $this->ttd_pemohon->Upload->DbValue;
+            } else {
+                $this->ttd_pemohon->ViewValue = "";
+            }
+            $this->ttd_pemohon->ViewCustomAttributes = "";
+
+            // nama_brand
+            $this->nama_brand->ViewValue = $this->nama_brand->CurrentValue;
+            $this->nama_brand->ViewCustomAttributes = "";
+
+            // label_brand
+            if (!EmptyValue($this->label_brand->Upload->DbValue)) {
+                $this->label_brand->ViewValue = $this->label_brand->Upload->DbValue;
+            } else {
+                $this->label_brand->ViewValue = "";
+            }
+            $this->label_brand->ViewCustomAttributes = "";
+
+            // unsur_brand
+            $this->unsur_brand->ViewValue = $this->unsur_brand->CurrentValue;
+            $this->unsur_brand->ViewCustomAttributes = "";
+
+            // submitted_by
+            $curVal = trim(strval($this->submitted_by->CurrentValue));
             if ($curVal != "") {
-                $this->idcustomer->ViewValue = $this->idcustomer->lookupCacheOption($curVal);
-                if ($this->idcustomer->ViewValue === null) { // Lookup from database
+                $this->submitted_by->ViewValue = $this->submitted_by->lookupCacheOption($curVal);
+                if ($this->submitted_by->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idcustomer->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $sqlWrk = $this->submitted_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idcustomer->Lookup->renderViewRow($rswrk[0]);
-                        $this->idcustomer->ViewValue = $this->idcustomer->displayValue($arwrk);
+                        $arwrk = $this->submitted_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->submitted_by->ViewValue = $this->submitted_by->displayValue($arwrk);
                     } else {
-                        $this->idcustomer->ViewValue = $this->idcustomer->CurrentValue;
+                        $this->submitted_by->ViewValue = $this->submitted_by->CurrentValue;
                     }
                 }
             } else {
-                $this->idcustomer->ViewValue = null;
+                $this->submitted_by->ViewValue = null;
             }
-            $this->idcustomer->ViewCustomAttributes = "";
+            $this->submitted_by->ViewCustomAttributes = "";
 
-            // idbrand
-            $curVal = trim(strval($this->idbrand->CurrentValue));
+            // checked1_by
+            $curVal = trim(strval($this->checked1_by->CurrentValue));
             if ($curVal != "") {
-                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
-                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                $this->checked1_by->ViewValue = $this->checked1_by->lookupCacheOption($curVal);
+                if ($this->checked1_by->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "`ijinhaki` = 0" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
+                    $sqlWrk = $this->checked1_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
-                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                        $arwrk = $this->checked1_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked1_by->ViewValue = $this->checked1_by->displayValue($arwrk);
                     } else {
-                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                        $this->checked1_by->ViewValue = $this->checked1_by->CurrentValue;
                     }
                 }
             } else {
-                $this->idbrand->ViewValue = null;
+                $this->checked1_by->ViewValue = null;
             }
-            $this->idbrand->ViewCustomAttributes = "";
+            $this->checked1_by->ViewCustomAttributes = "";
 
-            // aktaperusahaan
-            if (!EmptyValue($this->aktaperusahaan->Upload->DbValue)) {
-                $this->aktaperusahaan->ViewValue = $this->aktaperusahaan->Upload->DbValue;
+            // checked2_by
+            $curVal = trim(strval($this->checked2_by->CurrentValue));
+            if ($curVal != "") {
+                $this->checked2_by->ViewValue = $this->checked2_by->lookupCacheOption($curVal);
+                if ($this->checked2_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->checked2_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->checked2_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->checked2_by->ViewValue = $this->checked2_by->displayValue($arwrk);
+                    } else {
+                        $this->checked2_by->ViewValue = $this->checked2_by->CurrentValue;
+                    }
+                }
             } else {
-                $this->aktaperusahaan->ViewValue = "";
+                $this->checked2_by->ViewValue = null;
             }
-            $this->aktaperusahaan->ViewCustomAttributes = "";
+            $this->checked2_by->ViewCustomAttributes = "";
+
+            // approved_by
+            $curVal = trim(strval($this->approved_by->CurrentValue));
+            if ($curVal != "") {
+                $this->approved_by->ViewValue = $this->approved_by->lookupCacheOption($curVal);
+                if ($this->approved_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->approved_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->approved_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->approved_by->ViewValue = $this->approved_by->displayValue($arwrk);
+                    } else {
+                        $this->approved_by->ViewValue = $this->approved_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->approved_by->ViewValue = null;
+            }
+            $this->approved_by->ViewCustomAttributes = "";
 
             // status
             if (strval($this->status->CurrentValue) != "") {
@@ -731,11 +864,6 @@ class IjinhakiDelete extends Ijinhaki
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 0);
             $this->created_at->ViewCustomAttributes = "";
 
-            // created_by
-            $this->created_by->ViewValue = $this->created_by->CurrentValue;
-            $this->created_by->ViewValue = FormatNumber($this->created_by->ViewValue, 0, -2, -2, -2);
-            $this->created_by->ViewCustomAttributes = "";
-
             // readonly
             if (ConvertToBool($this->readonly->CurrentValue)) {
                 $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
@@ -744,20 +872,36 @@ class IjinhakiDelete extends Ijinhaki
             }
             $this->readonly->ViewCustomAttributes = "";
 
-            // idpegawai
-            $this->idpegawai->LinkCustomAttributes = "";
-            $this->idpegawai->HrefValue = "";
-            $this->idpegawai->TooltipValue = "";
+            // idnpd
+            $this->idnpd->LinkCustomAttributes = "";
+            $this->idnpd->HrefValue = "";
+            $this->idnpd->TooltipValue = "";
 
-            // idcustomer
-            $this->idcustomer->LinkCustomAttributes = "";
-            $this->idcustomer->HrefValue = "";
-            $this->idcustomer->TooltipValue = "";
+            // tglterima
+            $this->tglterima->LinkCustomAttributes = "";
+            $this->tglterima->HrefValue = "";
+            $this->tglterima->TooltipValue = "";
 
-            // idbrand
-            $this->idbrand->LinkCustomAttributes = "";
-            $this->idbrand->HrefValue = "";
-            $this->idbrand->TooltipValue = "";
+            // tglsubmit
+            $this->tglsubmit->LinkCustomAttributes = "";
+            $this->tglsubmit->HrefValue = "";
+            $this->tglsubmit->TooltipValue = "";
+
+            // nama_brand
+            $this->nama_brand->LinkCustomAttributes = "";
+            $this->nama_brand->HrefValue = "";
+            $this->nama_brand->TooltipValue = "";
+
+            // label_brand
+            $this->label_brand->LinkCustomAttributes = "";
+            $this->label_brand->HrefValue = "";
+            $this->label_brand->ExportHrefValue = $this->label_brand->UploadPath . $this->label_brand->Upload->DbValue;
+            $this->label_brand->TooltipValue = "";
+
+            // submitted_by
+            $this->submitted_by->LinkCustomAttributes = "";
+            $this->submitted_by->HrefValue = "";
+            $this->submitted_by->TooltipValue = "";
 
             // status
             $this->status->LinkCustomAttributes = "";
@@ -854,16 +998,6 @@ class IjinhakiDelete extends Ijinhaki
         return $deleteRows;
     }
 
-    // Show link optionally based on User ID
-    protected function showOptionLink($id = "")
-    {
-        global $Security;
-        if ($Security->isLoggedIn() && !$Security->isAdmin() && !$this->userIDAllow($id)) {
-            return $Security->isValidUserID($this->created_by->CurrentValue);
-        }
-        return true;
-    }
-
     // Set up Breadcrumb
     protected function setupBreadcrumb()
     {
@@ -888,15 +1022,15 @@ class IjinhakiDelete extends Ijinhaki
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_idpegawai":
+                case "x_idnpd":
                     break;
-                case "x_idcustomer":
+                case "x_submitted_by":
                     break;
-                case "x_idbrand":
-                    $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "`ijinhaki` = 0" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
+                case "x_checked1_by":
+                    break;
+                case "x_checked2_by":
+                    break;
+                case "x_approved_by":
                     break;
                 case "x_status":
                     break;

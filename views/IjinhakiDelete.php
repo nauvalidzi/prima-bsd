@@ -44,14 +44,23 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <th class="<?= $Page->idpegawai->headerCellClass() ?>"><span id="elh_ijinhaki_idpegawai" class="ijinhaki_idpegawai"><?= $Page->idpegawai->caption() ?></span></th>
+<?php if ($Page->idnpd->Visible) { // idnpd ?>
+        <th class="<?= $Page->idnpd->headerCellClass() ?>"><span id="elh_ijinhaki_idnpd" class="ijinhaki_idnpd"><?= $Page->idnpd->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <th class="<?= $Page->idcustomer->headerCellClass() ?>"><span id="elh_ijinhaki_idcustomer" class="ijinhaki_idcustomer"><?= $Page->idcustomer->caption() ?></span></th>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <th class="<?= $Page->tglterima->headerCellClass() ?>"><span id="elh_ijinhaki_tglterima" class="ijinhaki_tglterima"><?= $Page->tglterima->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <th class="<?= $Page->idbrand->headerCellClass() ?>"><span id="elh_ijinhaki_idbrand" class="ijinhaki_idbrand"><?= $Page->idbrand->caption() ?></span></th>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <th class="<?= $Page->tglsubmit->headerCellClass() ?>"><span id="elh_ijinhaki_tglsubmit" class="ijinhaki_tglsubmit"><?= $Page->tglsubmit->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->nama_brand->Visible) { // nama_brand ?>
+        <th class="<?= $Page->nama_brand->headerCellClass() ?>"><span id="elh_ijinhaki_nama_brand" class="ijinhaki_nama_brand"><?= $Page->nama_brand->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->label_brand->Visible) { // label_brand ?>
+        <th class="<?= $Page->label_brand->headerCellClass() ?>"><span id="elh_ijinhaki_label_brand" class="ijinhaki_label_brand"><?= $Page->label_brand->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <th class="<?= $Page->submitted_by->headerCellClass() ?>"><span id="elh_ijinhaki_submitted_by" class="ijinhaki_submitted_by"><?= $Page->submitted_by->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
         <th class="<?= $Page->status->headerCellClass() ?>"><span id="elh_ijinhaki_status" class="ijinhaki_status"><?= $Page->status->caption() ?></span></th>
@@ -77,27 +86,52 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->idpegawai->Visible) { // idpegawai ?>
-        <td <?= $Page->idpegawai->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinhaki_idpegawai" class="ijinhaki_idpegawai">
-<span<?= $Page->idpegawai->viewAttributes() ?>>
-<?= $Page->idpegawai->getViewValue() ?></span>
+<?php if ($Page->idnpd->Visible) { // idnpd ?>
+        <td <?= $Page->idnpd->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_idnpd" class="ijinhaki_idnpd">
+<span<?= $Page->idnpd->viewAttributes() ?>>
+<?= $Page->idnpd->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->idcustomer->Visible) { // idcustomer ?>
-        <td <?= $Page->idcustomer->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinhaki_idcustomer" class="ijinhaki_idcustomer">
-<span<?= $Page->idcustomer->viewAttributes() ?>>
-<?= $Page->idcustomer->getViewValue() ?></span>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+        <td <?= $Page->tglterima->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_tglterima" class="ijinhaki_tglterima">
+<span<?= $Page->tglterima->viewAttributes() ?>>
+<?= $Page->tglterima->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->idbrand->Visible) { // idbrand ?>
-        <td <?= $Page->idbrand->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_ijinhaki_idbrand" class="ijinhaki_idbrand">
-<span<?= $Page->idbrand->viewAttributes() ?>>
-<?= $Page->idbrand->getViewValue() ?></span>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+        <td <?= $Page->tglsubmit->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_tglsubmit" class="ijinhaki_tglsubmit">
+<span<?= $Page->tglsubmit->viewAttributes() ?>>
+<?= $Page->tglsubmit->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->nama_brand->Visible) { // nama_brand ?>
+        <td <?= $Page->nama_brand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_nama_brand" class="ijinhaki_nama_brand">
+<span<?= $Page->nama_brand->viewAttributes() ?>>
+<?= $Page->nama_brand->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->label_brand->Visible) { // label_brand ?>
+        <td <?= $Page->label_brand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_label_brand" class="ijinhaki_label_brand">
+<span<?= $Page->label_brand->viewAttributes() ?>>
+<?= GetFileViewTag($Page->label_brand, $Page->label_brand->getViewValue(), false) ?>
+</span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+        <td <?= $Page->submitted_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_ijinhaki_submitted_by" class="ijinhaki_submitted_by">
+<span<?= $Page->submitted_by->viewAttributes() ?>>
+<?= $Page->submitted_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
