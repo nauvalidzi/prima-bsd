@@ -1080,48 +1080,48 @@ return function (App $app) {
         }
     );
 
-    // npd_label_bahan
-    $app->any('/NpdLabelBahanList[/{id}]', NpdLabelBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelBahanList-npd_label_bahan-list'); // list
-    $app->any('/NpdLabelBahanAdd[/{id}]', NpdLabelBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelBahanAdd-npd_label_bahan-add'); // add
-    $app->any('/NpdLabelBahanEdit[/{id}]', NpdLabelBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelBahanEdit-npd_label_bahan-edit'); // edit
-    $app->any('/NpdLabelBahanDelete[/{id}]', NpdLabelBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelBahanDelete-npd_label_bahan-delete'); // delete
+    // npd_labelsticker_bahan
+    $app->any('/NpdLabelstickerBahanList[/{id}]', NpdLabelstickerBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelstickerBahanList-npd_labelsticker_bahan-list'); // list
+    $app->any('/NpdLabelstickerBahanAdd[/{id}]', NpdLabelstickerBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelstickerBahanAdd-npd_labelsticker_bahan-add'); // add
+    $app->any('/NpdLabelstickerBahanEdit[/{id}]', NpdLabelstickerBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelstickerBahanEdit-npd_labelsticker_bahan-edit'); // edit
+    $app->any('/NpdLabelstickerBahanDelete[/{id}]', NpdLabelstickerBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelstickerBahanDelete-npd_labelsticker_bahan-delete'); // delete
     $app->group(
-        '/npd_label_bahan',
+        '/npd_labelsticker_bahan',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_bahan/list-npd_label_bahan-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_bahan/add-npd_label_bahan-add-2'); // add
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_bahan/edit-npd_label_bahan-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_bahan/delete-npd_label_bahan-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelstickerBahanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_labelsticker_bahan/list-npd_labelsticker_bahan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelstickerBahanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_labelsticker_bahan/add-npd_labelsticker_bahan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelstickerBahanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_labelsticker_bahan/edit-npd_labelsticker_bahan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelstickerBahanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_labelsticker_bahan/delete-npd_labelsticker_bahan-delete-2'); // delete
         }
     );
 
-    // npd_label_posisi
-    $app->any('/NpdLabelPosisiList[/{id}]', NpdLabelPosisiController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiList-npd_label_posisi-list'); // list
-    $app->any('/NpdLabelPosisiAdd[/{id}]', NpdLabelPosisiController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiAdd-npd_label_posisi-add'); // add
-    $app->any('/NpdLabelPosisiEdit[/{id}]', NpdLabelPosisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiEdit-npd_label_posisi-edit'); // edit
-    $app->any('/NpdLabelPosisiDelete[/{id}]', NpdLabelPosisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelPosisiDelete-npd_label_posisi-delete'); // delete
+    // npd_labelsticker_posisi
+    $app->any('/NpdLabelstickerPosisiList[/{id}]', NpdLabelstickerPosisiController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelstickerPosisiList-npd_labelsticker_posisi-list'); // list
+    $app->any('/NpdLabelstickerPosisiAdd[/{id}]', NpdLabelstickerPosisiController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelstickerPosisiAdd-npd_labelsticker_posisi-add'); // add
+    $app->any('/NpdLabelstickerPosisiEdit[/{id}]', NpdLabelstickerPosisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelstickerPosisiEdit-npd_labelsticker_posisi-edit'); // edit
+    $app->any('/NpdLabelstickerPosisiDelete[/{id}]', NpdLabelstickerPosisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelstickerPosisiDelete-npd_labelsticker_posisi-delete'); // delete
     $app->group(
-        '/npd_label_posisi',
+        '/npd_labelsticker_posisi',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_posisi/list-npd_label_posisi-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_posisi/add-npd_label_posisi-add-2'); // add
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_posisi/edit-npd_label_posisi-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelPosisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_posisi/delete-npd_label_posisi-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelstickerPosisiController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_labelsticker_posisi/list-npd_labelsticker_posisi-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelstickerPosisiController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_labelsticker_posisi/add-npd_labelsticker_posisi-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelstickerPosisiController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_labelsticker_posisi/edit-npd_labelsticker_posisi-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelstickerPosisiController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_labelsticker_posisi/delete-npd_labelsticker_posisi-delete-2'); // delete
         }
     );
 
-    // npd_parfum_sediaan
-    $app->any('/NpdParfumSediaanList[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanList-npd_parfum_sediaan-list'); // list
-    $app->any('/NpdParfumSediaanAdd[/{id}]', NpdParfumSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanAdd-npd_parfum_sediaan-add'); // add
-    $app->any('/NpdParfumSediaanEdit[/{id}]', NpdParfumSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanEdit-npd_parfum_sediaan-edit'); // edit
-    $app->any('/NpdParfumSediaanDelete[/{id}]', NpdParfumSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanDelete-npd_parfum_sediaan-delete'); // delete
+    // npd_labelsticker_kualitas
+    $app->any('/NpdLabelstickerKualitasList[/{id}]', NpdLabelstickerKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelstickerKualitasList-npd_labelsticker_kualitas-list'); // list
+    $app->any('/NpdLabelstickerKualitasAdd[/{id}]', NpdLabelstickerKualitasController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelstickerKualitasAdd-npd_labelsticker_kualitas-add'); // add
+    $app->any('/NpdLabelstickerKualitasEdit[/{id}]', NpdLabelstickerKualitasController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelstickerKualitasEdit-npd_labelsticker_kualitas-edit'); // edit
+    $app->any('/NpdLabelstickerKualitasDelete[/{id}]', NpdLabelstickerKualitasController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelstickerKualitasDelete-npd_labelsticker_kualitas-delete'); // delete
     $app->group(
-        '/npd_parfum_sediaan',
+        '/npd_labelsticker_kualitas',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/list-npd_parfum_sediaan-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/add-npd_parfum_sediaan-add-2'); // add
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/edit-npd_parfum_sediaan-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/delete-npd_parfum_sediaan-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelstickerKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_labelsticker_kualitas/list-npd_labelsticker_kualitas-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelstickerKualitasController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_labelsticker_kualitas/add-npd_labelsticker_kualitas-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelstickerKualitasController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_labelsticker_kualitas/edit-npd_labelsticker_kualitas-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelstickerKualitasController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_labelsticker_kualitas/delete-npd_labelsticker_kualitas-delete-2'); // delete
         }
     );
 
@@ -1168,18 +1168,18 @@ return function (App $app) {
         }
     );
 
-    // npd_label_kualitas
-    $app->any('/NpdLabelKualitasList[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasList-npd_label_kualitas-list'); // list
-    $app->any('/NpdLabelKualitasAdd[/{id}]', NpdLabelKualitasController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasAdd-npd_label_kualitas-add'); // add
-    $app->any('/NpdLabelKualitasEdit[/{id}]', NpdLabelKualitasController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasEdit-npd_label_kualitas-edit'); // edit
-    $app->any('/NpdLabelKualitasDelete[/{id}]', NpdLabelKualitasController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasDelete-npd_label_kualitas-delete'); // delete
+    // npd_parfum_sediaan
+    $app->any('/NpdParfumSediaanList[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanList-npd_parfum_sediaan-list'); // list
+    $app->any('/NpdParfumSediaanAdd[/{id}]', NpdParfumSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanAdd-npd_parfum_sediaan-add'); // add
+    $app->any('/NpdParfumSediaanEdit[/{id}]', NpdParfumSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanEdit-npd_parfum_sediaan-edit'); // edit
+    $app->any('/NpdParfumSediaanDelete[/{id}]', NpdParfumSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdParfumSediaanDelete-npd_parfum_sediaan-delete'); // delete
     $app->group(
-        '/npd_label_kualitas',
+        '/npd_parfum_sediaan',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/list-npd_label_kualitas-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/add-npd_label_kualitas-add-2'); // add
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/edit-npd_label_kualitas-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/delete-npd_label_kualitas-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/list-npd_parfum_sediaan-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/add-npd_parfum_sediaan-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/edit-npd_parfum_sediaan-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdParfumSediaanController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_parfum_sediaan/delete-npd_parfum_sediaan-delete-2'); // delete
         }
     );
 
@@ -1362,42 +1362,42 @@ return function (App $app) {
         }
     );
 
-    // npd_label_print
-    $app->any('/NpdLabelPrintList[/{id}]', NpdLabelPrintController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelPrintList-npd_label_print-list'); // list
-    $app->any('/NpdLabelPrintAdd[/{id}]', NpdLabelPrintController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelPrintAdd-npd_label_print-add'); // add
-    $app->any('/NpdLabelPrintEdit[/{id}]', NpdLabelPrintController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelPrintEdit-npd_label_print-edit'); // edit
-    $app->any('/NpdLabelPrintDelete[/{id}]', NpdLabelPrintController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelPrintDelete-npd_label_print-delete'); // delete
+    // npd_labelhot_sisiprint
+    $app->any('/NpdLabelhotSisiprintList[/{id}]', NpdLabelhotSisiprintController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelhotSisiprintList-npd_labelhot_sisiprint-list'); // list
+    $app->any('/NpdLabelhotSisiprintAdd[/{id}]', NpdLabelhotSisiprintController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelhotSisiprintAdd-npd_labelhot_sisiprint-add'); // add
+    $app->any('/NpdLabelhotSisiprintEdit[/{id}]', NpdLabelhotSisiprintController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelhotSisiprintEdit-npd_labelhot_sisiprint-edit'); // edit
+    $app->any('/NpdLabelhotSisiprintDelete[/{id}]', NpdLabelhotSisiprintController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelhotSisiprintDelete-npd_labelhot_sisiprint-delete'); // delete
     $app->group(
-        '/npd_label_print',
+        '/npd_labelhot_sisiprint',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_print/list-npd_label_print-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_print/add-npd_label_print-add-2'); // add
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_print/edit-npd_label_print-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelPrintController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_print/delete-npd_label_print-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelhotSisiprintController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_labelhot_sisiprint/list-npd_labelhot_sisiprint-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelhotSisiprintController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_labelhot_sisiprint/add-npd_labelhot_sisiprint-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelhotSisiprintController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_labelhot_sisiprint/edit-npd_labelhot_sisiprint-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelhotSisiprintController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_labelhot_sisiprint/delete-npd_labelhot_sisiprint-delete-2'); // delete
         }
     );
 
-    // npd_label_tekstur
-    $app->any('/NpdLabelTeksturList[/{id}]', NpdLabelTeksturController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturList-npd_label_tekstur-list'); // list
-    $app->any('/NpdLabelTeksturAdd[/{id}]', NpdLabelTeksturController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturAdd-npd_label_tekstur-add'); // add
-    $app->any('/NpdLabelTeksturEdit[/{id}]', NpdLabelTeksturController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturEdit-npd_label_tekstur-edit'); // edit
-    $app->any('/NpdLabelTeksturDelete[/{id}]', NpdLabelTeksturController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelTeksturDelete-npd_label_tekstur-delete'); // delete
+    // npd_labelhot_tekstur
+    $app->any('/NpdLabelhotTeksturList[/{id}]', NpdLabelhotTeksturController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelhotTeksturList-npd_labelhot_tekstur-list'); // list
+    $app->any('/NpdLabelhotTeksturAdd[/{id}]', NpdLabelhotTeksturController::class . ':add')->add(PermissionMiddleware::class)->setName('NpdLabelhotTeksturAdd-npd_labelhot_tekstur-add'); // add
+    $app->any('/NpdLabelhotTeksturEdit[/{id}]', NpdLabelhotTeksturController::class . ':edit')->add(PermissionMiddleware::class)->setName('NpdLabelhotTeksturEdit-npd_labelhot_tekstur-edit'); // edit
+    $app->any('/NpdLabelhotTeksturDelete[/{id}]', NpdLabelhotTeksturController::class . ':delete')->add(PermissionMiddleware::class)->setName('NpdLabelhotTeksturDelete-npd_labelhot_tekstur-delete'); // delete
     $app->group(
-        '/npd_label_tekstur',
+        '/npd_labelhot_tekstur',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/list-npd_label_tekstur-list-2'); // list
-            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/add-npd_label_tekstur-add-2'); // add
-            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/edit-npd_label_tekstur-edit-2'); // edit
-            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelTeksturController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_label_tekstur/delete-npd_label_tekstur-delete-2'); // delete
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelhotTeksturController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_labelhot_tekstur/list-npd_labelhot_tekstur-list-2'); // list
+            $group->any('/' . Config("ADD_ACTION") . '[/{id}]', NpdLabelhotTeksturController::class . ':add')->add(PermissionMiddleware::class)->setName('npd_labelhot_tekstur/add-npd_labelhot_tekstur-add-2'); // add
+            $group->any('/' . Config("EDIT_ACTION") . '[/{id}]', NpdLabelhotTeksturController::class . ':edit')->add(PermissionMiddleware::class)->setName('npd_labelhot_tekstur/edit-npd_labelhot_tekstur-edit-2'); // edit
+            $group->any('/' . Config("DELETE_ACTION") . '[/{id}]', NpdLabelhotTeksturController::class . ':delete')->add(PermissionMiddleware::class)->setName('npd_labelhot_tekstur/delete-npd_labelhot_tekstur-delete-2'); // delete
         }
     );
 
-    // v_kartu_stok
-    $app->any('/VKartuStokList[/{idproduct}]', VKartuStokController::class . ':list')->add(PermissionMiddleware::class)->setName('VKartuStokList-v_kartu_stok-list'); // list
+    // npd_label_jenis
+    $app->any('/NpdLabelJenisList[/{id}]', NpdLabelJenisController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelJenisList-npd_label_jenis-list'); // list
     $app->group(
-        '/v_kartu_stok',
+        '/npd_label_jenis',
         function (RouteCollectorProxy $group) {
-            $group->any('/' . Config("LIST_ACTION") . '[/{idproduct}]', VKartuStokController::class . ':list')->add(PermissionMiddleware::class)->setName('v_kartu_stok/list-v_kartu_stok-list-2'); // list
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelJenisController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_jenis/list-npd_label_jenis-list-2'); // list
         }
     );
 
@@ -1455,6 +1455,24 @@ return function (App $app) {
 
     // npd_resume
     $app->any('/NpdResume[/{params:.*}]', NpdResumeController::class)->add(PermissionMiddleware::class)->setName('NpdResume-npd_resume-custom'); // custom
+
+    // npd_label_kualitas
+    $app->any('/NpdLabelKualitasList[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('NpdLabelKualitasList-npd_label_kualitas-list'); // list
+    $app->group(
+        '/npd_label_kualitas',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{id}]', NpdLabelKualitasController::class . ':list')->add(PermissionMiddleware::class)->setName('npd_label_kualitas/list-npd_label_kualitas-list-2'); // list
+        }
+    );
+
+    // v_kartu_stok
+    $app->any('/VKartuStokList[/{idproduct}]', VKartuStokController::class . ':list')->add(PermissionMiddleware::class)->setName('VKartuStokList-v_kartu_stok-list'); // list
+    $app->group(
+        '/v_kartu_stok',
+        function (RouteCollectorProxy $group) {
+            $group->any('/' . Config("LIST_ACTION") . '[/{idproduct}]', VKartuStokController::class . ':list')->add(PermissionMiddleware::class)->setName('v_kartu_stok/list-v_kartu_stok-list-2'); // list
+        }
+    );
 
     // error
     $app->any('/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');

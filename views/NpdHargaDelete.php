@@ -56,6 +56,12 @@ $Page->showMessage();
 <?php if ($Page->nama->Visible) { // nama ?>
         <th class="<?= $Page->nama->headerCellClass() ?>"><span id="elh_npd_harga_nama" class="npd_harga_nama"><?= $Page->nama->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->warna->Visible) { // warna ?>
+        <th class="<?= $Page->warna->headerCellClass() ?>"><span id="elh_npd_harga_warna" class="npd_harga_warna"><?= $Page->warna->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->bauparfum->Visible) { // bauparfum ?>
+        <th class="<?= $Page->bauparfum->headerCellClass() ?>"><span id="elh_npd_harga_bauparfum" class="npd_harga_bauparfum"><?= $Page->bauparfum->caption() ?></span></th>
+<?php } ?>
     </tr>
     </thead>
     <tbody>
@@ -106,6 +112,22 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_npd_harga_nama" class="npd_harga_nama">
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->warna->Visible) { // warna ?>
+        <td <?= $Page->warna->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_harga_warna" class="npd_harga_warna">
+<span<?= $Page->warna->viewAttributes() ?>>
+<?= $Page->warna->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->bauparfum->Visible) { // bauparfum ?>
+        <td <?= $Page->bauparfum->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_harga_bauparfum" class="npd_harga_bauparfum">
+<span<?= $Page->bauparfum->viewAttributes() ?>>
+<?= $Page->bauparfum->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

@@ -397,6 +397,8 @@ class NpdHargaPreview extends NpdHarga
         $this->nama->setVisibility();
         $this->bentuk->Visible = false;
         $this->viskositas->Visible = false;
+        $this->warna->setVisibility();
+        $this->bauparfum->setVisibility();
         $this->aplikasisediaan->Visible = false;
         $this->volume->Visible = false;
         $this->bahanaktif->Visible = false;
@@ -460,6 +462,12 @@ class NpdHargaPreview extends NpdHarga
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
+        $this->setupLookupOptions($this->viskositas);
+        $this->setupLookupOptions($this->warna);
+        $this->setupLookupOptions($this->aplikasisediaan);
+        $this->setupLookupOptions($this->jenislabel);
+        $this->setupLookupOptions($this->kualitaslabel);
+        $this->setupLookupOptions($this->kategoridelivery);
 
         // Load filter
         $filter = Get("f", "");
@@ -535,6 +543,8 @@ class NpdHargaPreview extends NpdHarga
             $this->nama->setSort("");
             $this->bentuk->setSort("");
             $this->viskositas->setSort("");
+            $this->warna->setSort("");
+            $this->bauparfum->setSort("");
             $this->aplikasisediaan->setSort("");
             $this->volume->setSort("");
             $this->bahanaktif->setSort("");
@@ -594,6 +604,8 @@ class NpdHargaPreview extends NpdHarga
             $this->updateSort($this->tglpengajuan); // tglpengajuan
             $this->updateSort($this->idnpd_sample); // idnpd_sample
             $this->updateSort($this->nama); // nama
+            $this->updateSort($this->warna); // warna
+            $this->updateSort($this->bauparfum); // bauparfum
         }
     }
 
@@ -836,11 +848,23 @@ class NpdHargaPreview extends NpdHarga
                     break;
                 case "x_idnpd_sample":
                     $lookupFilter = function () {
-                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirmsample WHERE readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
+                case "x_viskositas":
+                    break;
+                case "x_warna":
+                    break;
+                case "x_aplikasisediaan":
+                    break;
                 case "x_segel":
+                    break;
+                case "x_jenislabel":
+                    break;
+                case "x_kualitaslabel":
+                    break;
+                case "x_kategoridelivery":
                     break;
                 case "x_disetujui":
                     break;

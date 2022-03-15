@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/3/14" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/3/15" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1250,19 +1250,25 @@
       <phrase id="menutext" value="Kemasan Komposisi" />
     </menu>
     <menu id="706">
-      <phrase id="menutext" value="Label Bahan" />
+      <phrase id="menutext" value="Label Sticker, Bahan" />
     </menu>
     <menu id="711">
-      <phrase id="menutext" value="Label Kualitas" />
+      <phrase id="menutext" value="Label Sticker, Kualitas" />
     </menu>
     <menu id="710">
-      <phrase id="menutext" value="Label Posisi" />
+      <phrase id="menutext" value="Label Sticker, Posisi" />
     </menu>
     <menu id="1060">
-      <phrase id="menutext" value="Label Tekstur" />
+      <phrase id="menutext" value="Label Hot Print, Tekstur" />
     </menu>
     <menu id="1061">
-      <phrase id="menutext" value="Label Print" />
+      <phrase id="menutext" value="Label Hot Print, Sisi Print" />
+    </menu>
+    <menu id="1072">
+      <phrase id="menutext" value="Label Kualitas" />
+    </menu>
+    <menu id="1071">
+      <phrase id="menutext" value="Label Jenis" />
     </menu>
     <menu id="40">
       <phrase id="menutext" value="Data Indonesia" />
@@ -2366,6 +2372,12 @@
       </field>
       <field id="viskositas">
         <phrase id="fldcaption" value="Viskositas" />
+      </field>
+      <field id="warna">
+        <phrase id="fldcaption" value="Warna" />
+      </field>
+      <field id="bauparfum">
+        <phrase id="fldcaption" value="Bau/Parfum" />
       </field>
       <field id="aplikasisediaan">
         <phrase id="fldcaption" value="Aplikasi Sediaan" />
@@ -4058,7 +4070,7 @@
         <phrase id="fldcaption" value="Value" />
       </field>
     </table>
-    <table id="npd_label_bahan">
+    <table id="npd_labelsticker_bahan">
       <phrase id="tblcaption" value="Label Bahan" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
@@ -4070,7 +4082,7 @@
         <phrase id="fldcaption" value="Value" />
       </field>
     </table>
-    <table id="npd_label_posisi">
+    <table id="npd_labelsticker_posisi">
       <phrase id="tblcaption" value="Label Posisi" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
@@ -4082,8 +4094,8 @@
         <phrase id="fldcaption" value="Value" />
       </field>
     </table>
-    <table id="npd_parfum_sediaan">
-      <phrase id="tblcaption" value="Parfum Sediaan" />
+    <table id="npd_labelsticker_kualitas">
+      <phrase id="tblcaption" value="Label Kualitas" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -4160,8 +4172,8 @@
         <phrase id="fldcaption" value="Value" />
       </field>
     </table>
-    <table id="npd_label_kualitas">
-      <phrase id="tblcaption" value="Label Kualitas" />
+    <table id="npd_parfum_sediaan">
+      <phrase id="tblcaption" value="Parfum Sediaan" />
       <field id="id">
         <phrase id="fldcaption" value="ID" />
       </field>
@@ -4460,8 +4472,8 @@
         <phrase id="fldcaption" value="value" />
       </field>
     </table>
-    <table id="npd_label_print">
-      <phrase id="tblcaption" value="Label Print" />
+    <table id="npd_labelhot_sisiprint">
+      <phrase id="tblcaption" value="Label Hot Print, Sisi Print" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -4472,8 +4484,8 @@
         <phrase id="fldcaption" value="value" />
       </field>
     </table>
-    <table id="npd_label_tekstur">
-      <phrase id="tblcaption" value="Label Tekstur" />
+    <table id="npd_labelhot_tekstur">
+      <phrase id="tblcaption" value="Label Hot Print, Tekstur" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -4484,19 +4496,16 @@
         <phrase id="fldcaption" value="value" />
       </field>
     </table>
-    <table id="v_kartu_stok">
-      <phrase id="tblcaption" value="Kartu Stok" />
-      <field id="idproduct">
-        <phrase id="fldcaption" value="idproduct" />
+    <table id="npd_label_jenis">
+      <phrase id="tblcaption" value="Label Jenis" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
       </field>
-      <field id="kodeproduct">
-        <phrase id="fldcaption" value="Kode Produk" />
+      <field id="parent">
+        <phrase id="fldcaption" value="parent" />
       </field>
-      <field id="namaproduct">
-        <phrase id="fldcaption" value="Nama Produk" />
-      </field>
-      <field id="stok">
-        <phrase id="fldcaption" value="Stok" />
+      <field id="value">
+        <phrase id="fldcaption" value="value" />
       </field>
     </table>
     <table id="product_history">
@@ -4543,6 +4552,33 @@
     </table>
     <table id="npd_resume">
       <phrase id="tblcaption" value="NPD Resume" />
+    </table>
+    <table id="npd_label_kualitas">
+      <phrase id="tblcaption" value="Label Kualitas" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="parent">
+        <phrase id="fldcaption" value="parent" />
+      </field>
+      <field id="value">
+        <phrase id="fldcaption" value="value" />
+      </field>
+    </table>
+    <table id="v_kartu_stok">
+      <phrase id="tblcaption" value="Kartu Stok" />
+      <field id="idproduct">
+        <phrase id="fldcaption" value="idproduct" />
+      </field>
+      <field id="kodeproduct">
+        <phrase id="fldcaption" value="Kode Produk" />
+      </field>
+      <field id="namaproduct">
+        <phrase id="fldcaption" value="Nama Produk" />
+      </field>
+      <field id="stok">
+        <phrase id="fldcaption" value="Stok" />
+      </field>
     </table>
   </project>
 </ew-language>

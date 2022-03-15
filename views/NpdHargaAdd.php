@@ -26,6 +26,8 @@ loadjs.ready("head", function () {
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["bentuk", [fields.bentuk.visible && fields.bentuk.required ? ew.Validators.required(fields.bentuk.caption) : null], fields.bentuk.isInvalid],
         ["viskositas", [fields.viskositas.visible && fields.viskositas.required ? ew.Validators.required(fields.viskositas.caption) : null], fields.viskositas.isInvalid],
+        ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
+        ["bauparfum", [fields.bauparfum.visible && fields.bauparfum.required ? ew.Validators.required(fields.bauparfum.caption) : null], fields.bauparfum.isInvalid],
         ["aplikasisediaan", [fields.aplikasisediaan.visible && fields.aplikasisediaan.required ? ew.Validators.required(fields.aplikasisediaan.caption) : null], fields.aplikasisediaan.isInvalid],
         ["volume", [fields.volume.visible && fields.volume.required ? ew.Validators.required(fields.volume.caption) : null], fields.volume.isInvalid],
         ["bahanaktif", [fields.bahanaktif.visible && fields.bahanaktif.required ? ew.Validators.required(fields.bahanaktif.caption) : null], fields.bahanaktif.isInvalid],
@@ -135,7 +137,13 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     fnpd_hargaadd.lists.idnpd = <?= $Page->idnpd->toClientList($Page) ?>;
     fnpd_hargaadd.lists.idnpd_sample = <?= $Page->idnpd_sample->toClientList($Page) ?>;
+    fnpd_hargaadd.lists.viskositas = <?= $Page->viskositas->toClientList($Page) ?>;
+    fnpd_hargaadd.lists.warna = <?= $Page->warna->toClientList($Page) ?>;
+    fnpd_hargaadd.lists.aplikasisediaan = <?= $Page->aplikasisediaan->toClientList($Page) ?>;
     fnpd_hargaadd.lists.segel = <?= $Page->segel->toClientList($Page) ?>;
+    fnpd_hargaadd.lists.jenislabel = <?= $Page->jenislabel->toClientList($Page) ?>;
+    fnpd_hargaadd.lists.kualitaslabel = <?= $Page->kualitaslabel->toClientList($Page) ?>;
+    fnpd_hargaadd.lists.kategoridelivery = <?= $Page->kategoridelivery->toClientList($Page) ?>;
     fnpd_hargaadd.lists.disetujui = <?= $Page->disetujui->toClientList($Page) ?>;
     loadjs.done("fnpd_hargaadd");
 });
@@ -284,24 +292,111 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->viskositas->Visible) { // viskositas ?>
     <div id="r_viskositas" class="form-group row">
-        <label id="elh_npd_harga_viskositas" for="x_viskositas" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_viskositas"><?= $Page->viskositas->caption() ?><?= $Page->viskositas->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_harga_viskositas" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_viskositas"><?= $Page->viskositas->caption() ?><?= $Page->viskositas->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->viskositas->cellAttributes() ?>>
 <template id="tpx_npd_harga_viskositas"><span id="el_npd_harga_viskositas">
-<input type="<?= $Page->viskositas->getInputTextType() ?>" data-table="npd_harga" data-field="x_viskositas" name="x_viskositas" id="x_viskositas" size="30" maxlength="100" placeholder="<?= HtmlEncode($Page->viskositas->getPlaceHolder()) ?>" value="<?= $Page->viskositas->EditValue ?>"<?= $Page->viskositas->editAttributes() ?> aria-describedby="x_viskositas_help">
+<template id="tp_x_viskositas">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_viskositas" name="x_viskositas" id="x_viskositas"<?= $Page->viskositas->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_viskositas" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_viskositas"
+    name="x_viskositas"
+    value="<?= HtmlEncode($Page->viskositas->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_viskositas"
+    data-target="dsl_x_viskositas"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->viskositas->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_viskositas"
+    data-value-separator="<?= $Page->viskositas->displayValueSeparatorAttribute() ?>"
+    <?= $Page->viskositas->editAttributes() ?>>
 <?= $Page->viskositas->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->viskositas->getErrorMessage() ?></div>
+<?= $Page->viskositas->Lookup->getParamTag($Page, "p_x_viskositas") ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->warna->Visible) { // warna ?>
+    <div id="r_warna" class="form-group row">
+        <label id="elh_npd_harga_warna" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_warna"><?= $Page->warna->caption() ?><?= $Page->warna->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->warna->cellAttributes() ?>>
+<template id="tpx_npd_harga_warna"><span id="el_npd_harga_warna">
+<template id="tp_x_warna">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_warna" name="x_warna" id="x_warna"<?= $Page->warna->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_warna" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_warna"
+    name="x_warna"
+    value="<?= HtmlEncode($Page->warna->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_warna"
+    data-target="dsl_x_warna"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->warna->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_warna"
+    data-value-separator="<?= $Page->warna->displayValueSeparatorAttribute() ?>"
+    <?= $Page->warna->editAttributes() ?>>
+<?= $Page->warna->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->warna->getErrorMessage() ?></div>
+<?= $Page->warna->Lookup->getParamTag($Page, "p_x_warna") ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->bauparfum->Visible) { // bauparfum ?>
+    <div id="r_bauparfum" class="form-group row">
+        <label id="elh_npd_harga_bauparfum" for="x_bauparfum" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_bauparfum"><?= $Page->bauparfum->caption() ?><?= $Page->bauparfum->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->bauparfum->cellAttributes() ?>>
+<template id="tpx_npd_harga_bauparfum"><span id="el_npd_harga_bauparfum">
+<input type="<?= $Page->bauparfum->getInputTextType() ?>" data-table="npd_harga" data-field="x_bauparfum" name="x_bauparfum" id="x_bauparfum" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->bauparfum->getPlaceHolder()) ?>" value="<?= $Page->bauparfum->EditValue ?>"<?= $Page->bauparfum->editAttributes() ?> aria-describedby="x_bauparfum_help">
+<?= $Page->bauparfum->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->bauparfum->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
 <?php } ?>
 <?php if ($Page->aplikasisediaan->Visible) { // aplikasisediaan ?>
     <div id="r_aplikasisediaan" class="form-group row">
-        <label id="elh_npd_harga_aplikasisediaan" for="x_aplikasisediaan" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_aplikasisediaan"><?= $Page->aplikasisediaan->caption() ?><?= $Page->aplikasisediaan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_harga_aplikasisediaan" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_aplikasisediaan"><?= $Page->aplikasisediaan->caption() ?><?= $Page->aplikasisediaan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasisediaan->cellAttributes() ?>>
 <template id="tpx_npd_harga_aplikasisediaan"><span id="el_npd_harga_aplikasisediaan">
-<input type="<?= $Page->aplikasisediaan->getInputTextType() ?>" data-table="npd_harga" data-field="x_aplikasisediaan" name="x_aplikasisediaan" id="x_aplikasisediaan" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->aplikasisediaan->getPlaceHolder()) ?>" value="<?= $Page->aplikasisediaan->EditValue ?>"<?= $Page->aplikasisediaan->editAttributes() ?> aria-describedby="x_aplikasisediaan_help">
+<template id="tp_x_aplikasisediaan">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_aplikasisediaan" name="x_aplikasisediaan" id="x_aplikasisediaan"<?= $Page->aplikasisediaan->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_aplikasisediaan" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_aplikasisediaan"
+    name="x_aplikasisediaan"
+    value="<?= HtmlEncode($Page->aplikasisediaan->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_aplikasisediaan"
+    data-target="dsl_x_aplikasisediaan"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->aplikasisediaan->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_aplikasisediaan"
+    data-value-separator="<?= $Page->aplikasisediaan->displayValueSeparatorAttribute() ?>"
+    <?= $Page->aplikasisediaan->editAttributes() ?>>
 <?= $Page->aplikasisediaan->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->aplikasisediaan->getErrorMessage() ?></div>
+<?= $Page->aplikasisediaan->Lookup->getParamTag($Page, "p_x_aplikasisediaan") ?>
 </span></template>
 </div></div>
     </div>
@@ -446,7 +541,7 @@ loadjs.ready("head", function() {
     data-type="select-one"
     data-template="tp_x_segel"
     data-target="dsl_x_segel"
-    data-repeatcolumn="5"
+    data-repeatcolumn="2"
     class="form-control<?= $Page->segel->isInvalidClass() ?>"
     data-table="npd_harga"
     data-field="x_segel"
@@ -580,12 +675,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->jenislabel->Visible) { // jenislabel ?>
     <div id="r_jenislabel" class="form-group row">
-        <label id="elh_npd_harga_jenislabel" for="x_jenislabel" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_jenislabel"><?= $Page->jenislabel->caption() ?><?= $Page->jenislabel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_harga_jenislabel" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_jenislabel"><?= $Page->jenislabel->caption() ?><?= $Page->jenislabel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jenislabel->cellAttributes() ?>>
 <template id="tpx_npd_harga_jenislabel"><span id="el_npd_harga_jenislabel">
-<input type="<?= $Page->jenislabel->getInputTextType() ?>" data-table="npd_harga" data-field="x_jenislabel" name="x_jenislabel" id="x_jenislabel" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->jenislabel->getPlaceHolder()) ?>" value="<?= $Page->jenislabel->EditValue ?>"<?= $Page->jenislabel->editAttributes() ?> aria-describedby="x_jenislabel_help">
+<template id="tp_x_jenislabel">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_jenislabel" name="x_jenislabel" id="x_jenislabel"<?= $Page->jenislabel->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_jenislabel" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_jenislabel"
+    name="x_jenislabel"
+    value="<?= HtmlEncode($Page->jenislabel->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_jenislabel"
+    data-target="dsl_x_jenislabel"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->jenislabel->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_jenislabel"
+    data-value-separator="<?= $Page->jenislabel->displayValueSeparatorAttribute() ?>"
+    <?= $Page->jenislabel->editAttributes() ?>>
 <?= $Page->jenislabel->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->jenislabel->getErrorMessage() ?></div>
+<?= $Page->jenislabel->Lookup->getParamTag($Page, "p_x_jenislabel") ?>
 </span></template>
 </div></div>
     </div>
@@ -604,12 +720,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->kualitaslabel->Visible) { // kualitaslabel ?>
     <div id="r_kualitaslabel" class="form-group row">
-        <label id="elh_npd_harga_kualitaslabel" for="x_kualitaslabel" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_kualitaslabel"><?= $Page->kualitaslabel->caption() ?><?= $Page->kualitaslabel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_harga_kualitaslabel" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_kualitaslabel"><?= $Page->kualitaslabel->caption() ?><?= $Page->kualitaslabel->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kualitaslabel->cellAttributes() ?>>
 <template id="tpx_npd_harga_kualitaslabel"><span id="el_npd_harga_kualitaslabel">
-<input type="<?= $Page->kualitaslabel->getInputTextType() ?>" data-table="npd_harga" data-field="x_kualitaslabel" name="x_kualitaslabel" id="x_kualitaslabel" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kualitaslabel->getPlaceHolder()) ?>" value="<?= $Page->kualitaslabel->EditValue ?>"<?= $Page->kualitaslabel->editAttributes() ?> aria-describedby="x_kualitaslabel_help">
+<template id="tp_x_kualitaslabel">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_kualitaslabel" name="x_kualitaslabel" id="x_kualitaslabel"<?= $Page->kualitaslabel->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_kualitaslabel" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_kualitaslabel"
+    name="x_kualitaslabel"
+    value="<?= HtmlEncode($Page->kualitaslabel->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_kualitaslabel"
+    data-target="dsl_x_kualitaslabel"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->kualitaslabel->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_kualitaslabel"
+    data-value-separator="<?= $Page->kualitaslabel->displayValueSeparatorAttribute() ?>"
+    <?= $Page->kualitaslabel->editAttributes() ?>>
 <?= $Page->kualitaslabel->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->kualitaslabel->getErrorMessage() ?></div>
+<?= $Page->kualitaslabel->Lookup->getParamTag($Page, "p_x_kualitaslabel") ?>
 </span></template>
 </div></div>
     </div>
@@ -664,12 +801,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->kategoridelivery->Visible) { // kategoridelivery ?>
     <div id="r_kategoridelivery" class="form-group row">
-        <label id="elh_npd_harga_kategoridelivery" for="x_kategoridelivery" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_kategoridelivery"><?= $Page->kategoridelivery->caption() ?><?= $Page->kategoridelivery->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_harga_kategoridelivery" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_harga_kategoridelivery"><?= $Page->kategoridelivery->caption() ?><?= $Page->kategoridelivery->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->kategoridelivery->cellAttributes() ?>>
 <template id="tpx_npd_harga_kategoridelivery"><span id="el_npd_harga_kategoridelivery">
-<input type="<?= $Page->kategoridelivery->getInputTextType() ?>" data-table="npd_harga" data-field="x_kategoridelivery" name="x_kategoridelivery" id="x_kategoridelivery" size="30" maxlength="50" placeholder="<?= HtmlEncode($Page->kategoridelivery->getPlaceHolder()) ?>" value="<?= $Page->kategoridelivery->EditValue ?>"<?= $Page->kategoridelivery->editAttributes() ?> aria-describedby="x_kategoridelivery_help">
+<template id="tp_x_kategoridelivery">
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" data-table="npd_harga" data-field="x_kategoridelivery" name="x_kategoridelivery" id="x_kategoridelivery"<?= $Page->kategoridelivery->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x_kategoridelivery" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_kategoridelivery[]"
+    name="x_kategoridelivery[]"
+    value="<?= HtmlEncode($Page->kategoridelivery->CurrentValue) ?>"
+    data-type="select-multiple"
+    data-template="tp_x_kategoridelivery"
+    data-target="dsl_x_kategoridelivery"
+    data-repeatcolumn="3"
+    class="form-control<?= $Page->kategoridelivery->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_kategoridelivery"
+    data-value-separator="<?= $Page->kategoridelivery->displayValueSeparatorAttribute() ?>"
+    <?= $Page->kategoridelivery->editAttributes() ?>>
 <?= $Page->kategoridelivery->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->kategoridelivery->getErrorMessage() ?></div>
+<?= $Page->kategoridelivery->Lookup->getParamTag($Page, "p_x_kategoridelivery") ?>
 </span></template>
 </div></div>
     </div>
@@ -880,7 +1038,7 @@ loadjs.ready(["fnpd_hargaadd", "datetimepicker"], function() {
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right">Alamat</label>
                 <div class="col-8">
-                    <input type="text" class="form-control" id="c_alamat" placeholder="Alamat" disabled>
+                    <textarea class="form-control" id="c_alamat" placeholder="Alamat" disabled></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -929,12 +1087,12 @@ loadjs.ready(["fnpd_hargaadd", "datetimepicker"], function() {
                 <div class="col-8"><slot class="ew-slot" name="tpx_npd_harga_viskositas"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><slot class="ew-slot" name="tpcaption_warna"></slot></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_warna"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->warna->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_harga_warna"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><slot class="ew-slot" name="tpcaption_bauparfum"></slot></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_bauparfum"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->bauparfum->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_harga_bauparfum"></slot></div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->aplikasisediaan->caption() ?></label>
@@ -956,6 +1114,7 @@ loadjs.ready(["fnpd_hargaadd", "datetimepicker"], function() {
         </div>
         <div class="card-body row">
             <div class="col-6">
+            	<h5 class="text-bold" style="margin-left: 7em;">Wadah</h5>
                 <div class="form-group row">
                     <label class="col-4 col-form-label text-right"><?= $Page->volumewadah->caption() ?></label>
                     <div class="col-8"><slot class="ew-slot" name="tpx_npd_harga_volumewadah"></slot></div>
@@ -974,6 +1133,7 @@ loadjs.ready(["fnpd_hargaadd", "datetimepicker"], function() {
                 </div>
             </div>
             <div class="col-6">
+                <h5 class="text-bold" style="margin-left: 7em;">Tutup</h5>
                 <div class="form-group row">
                     <label class="col-4 col-form-label text-right"><?= $Page->jenistutup->caption() ?></label>
                     <div class="col-8"><slot class="ew-slot" name="tpx_npd_harga_jenistutup"></slot></div>
@@ -992,6 +1152,7 @@ loadjs.ready(["fnpd_hargaadd", "datetimepicker"], function() {
                 </div>
             </div>
             <div class="col-12">
+                <h5 class="text-bold mt-2" style="margin-left: 7em;">Segel</h5>
                 <div class="form-group row">
                     <label class="col-2 col-form-label text-right"><?= $Page->segel->caption() ?></label>
                     <div class="col-8"><slot class="ew-slot" name="tpx_npd_harga_segel"></slot></div>
@@ -1052,7 +1213,7 @@ loadjs.ready(["fnpd_hargaadd", "datetimepicker"], function() {
     </div>
     <div class="card">
         <div class="card-header">
-            <div class="card-title">KONTEN (ISI SEDIAAN)</div>
+            <div class="card-title">LABEL</div>
         </div>
         <div class="card-body">
             <div class="form-group row">

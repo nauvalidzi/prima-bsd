@@ -58,6 +58,24 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
+<?php if ($Page->warna->Visible) { // warna ?>
+    <?php if ($Page->SortUrl($Page->warna) == "") { ?>
+        <th class="<?= $Page->warna->headerCellClass() ?>"><?= $Page->warna->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->warna->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->warna->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->warna->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->warna->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->warna->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->warna->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->bauparfum->Visible) { // bauparfum ?>
+    <?php if ($Page->SortUrl($Page->bauparfum) == "") { ?>
+        <th class="<?= $Page->bauparfum->headerCellClass() ?>"><?= $Page->bauparfum->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->bauparfum->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->bauparfum->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->bauparfum->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->bauparfum->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->bauparfum->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->bauparfum->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -114,6 +132,20 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td<?= $Page->nama->cellAttributes() ?>>
 <span<?= $Page->nama->viewAttributes() ?>>
 <?= $Page->nama->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->warna->Visible) { // warna ?>
+        <!-- warna -->
+        <td<?= $Page->warna->cellAttributes() ?>>
+<span<?= $Page->warna->viewAttributes() ?>>
+<?= $Page->warna->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->bauparfum->Visible) { // bauparfum ?>
+        <!-- bauparfum -->
+        <td<?= $Page->bauparfum->cellAttributes() ?>>
+<span<?= $Page->bauparfum->viewAttributes() ?>>
+<?= $Page->bauparfum->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

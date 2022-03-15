@@ -396,8 +396,7 @@ echo GetDebugMessage();
 <?php if (!$Page->isExport()) { ?>
 <script>
 loadjs.ready("load", function () {
-    // Startup script
-    loadjs.ready("jquery",(function(){$("#r_namapemesan").before('<h5 class="form-group">Data Pemesan</h5>')}));
+    // Write your table-specific startup script here, no need to add script tags.
 });
 </script>
 <?php } ?>

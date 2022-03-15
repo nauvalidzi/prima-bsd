@@ -7,7 +7,7 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Page class
  */
-class NpdLabelKualitasList extends NpdLabelKualitas
+class NpdLabelJenisList extends NpdLabelJenis
 {
     use MessagesTrait;
 
@@ -18,16 +18,16 @@ class NpdLabelKualitasList extends NpdLabelKualitas
     public $ProjectID = PROJECT_ID;
 
     // Table name
-    public $TableName = 'npd_label_kualitas';
+    public $TableName = 'npd_label_jenis';
 
     // Page object name
-    public $PageObjName = "NpdLabelKualitasList";
+    public $PageObjName = "NpdLabelJenisList";
 
     // Rendering View
     public $RenderingView = false;
 
     // Grid form hidden field names
-    public $FormName = "fnpd_label_kualitaslist";
+    public $FormName = "fnpd_label_jenislist";
     public $FormActionName = "k_action";
     public $FormBlankRowName = "k_blankrow";
     public $FormKeyCountName = "key_count";
@@ -165,9 +165,9 @@ class NpdLabelKualitasList extends NpdLabelKualitas
         // Parent constuctor
         parent::__construct();
 
-        // Table object (npd_label_kualitas)
-        if (!isset($GLOBALS["npd_label_kualitas"]) || get_class($GLOBALS["npd_label_kualitas"]) == PROJECT_NAMESPACE . "npd_label_kualitas") {
-            $GLOBALS["npd_label_kualitas"] = &$this;
+        // Table object (npd_label_jenis)
+        if (!isset($GLOBALS["npd_label_jenis"]) || get_class($GLOBALS["npd_label_jenis"]) == PROJECT_NAMESPACE . "npd_label_jenis") {
+            $GLOBALS["npd_label_jenis"] = &$this;
         }
 
         // Page URL
@@ -181,16 +181,16 @@ class NpdLabelKualitasList extends NpdLabelKualitas
         $this->ExportHtmlUrl = $pageUrl . "export=html";
         $this->ExportXmlUrl = $pageUrl . "export=xml";
         $this->ExportCsvUrl = $pageUrl . "export=csv";
-        $this->AddUrl = "NpdLabelKualitasAdd";
+        $this->AddUrl = "NpdLabelJenisAdd";
         $this->InlineAddUrl = $pageUrl . "action=add";
         $this->GridAddUrl = $pageUrl . "action=gridadd";
         $this->GridEditUrl = $pageUrl . "action=gridedit";
-        $this->MultiDeleteUrl = "NpdLabelKualitasDelete";
-        $this->MultiUpdateUrl = "NpdLabelKualitasUpdate";
+        $this->MultiDeleteUrl = "NpdLabelJenisDelete";
+        $this->MultiUpdateUrl = "NpdLabelJenisUpdate";
 
         // Table name (for backward compatibility only)
         if (!defined(PROJECT_NAMESPACE . "TABLE_NAME")) {
-            define(PROJECT_NAMESPACE . "TABLE_NAME", 'npd_label_kualitas');
+            define(PROJECT_NAMESPACE . "TABLE_NAME", 'npd_label_jenis');
         }
 
         // Start timer
@@ -230,7 +230,7 @@ class NpdLabelKualitasList extends NpdLabelKualitas
 
         // Filter options
         $this->FilterOptions = new ListOptions("div");
-        $this->FilterOptions->TagClassName = "ew-filter-option fnpd_label_kualitaslistsrch";
+        $this->FilterOptions->TagClassName = "ew-filter-option fnpd_label_jenislistsrch";
 
         // List actions
         $this->ListActions = new ListActions();
@@ -305,7 +305,7 @@ class NpdLabelKualitasList extends NpdLabelKualitas
             }
             $class = PROJECT_NAMESPACE . Config("EXPORT_CLASSES." . $this->CustomExport);
             if (class_exists($class)) {
-                $doc = new $class(Container("npd_label_kualitas"));
+                $doc = new $class(Container("npd_label_jenis"));
                 $doc->Text = @$content;
                 if ($this->isExport("email")) {
                     echo $this->exportEmail($doc->Text);
@@ -885,7 +885,7 @@ class NpdLabelKualitasList extends NpdLabelKualitas
         global $UserProfile;
         if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
             $filters = Post("filters");
-            $UserProfile->setSearchFilters(CurrentUserName(), "fnpd_label_kualitaslistsrch", $filters);
+            $UserProfile->setSearchFilters(CurrentUserName(), "fnpd_label_jenislistsrch", $filters);
             WriteJson([["success" => true]]); // Success
             return true;
         } elseif (Post("cmd") == "resetfilter") {
@@ -1270,10 +1270,10 @@ class NpdLabelKualitasList extends NpdLabelKualitas
 
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
-        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fnpd_label_kualitaslistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
+        $item->Body = "<a class=\"ew-save-filter\" data-form=\"fnpd_label_jenislistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
         $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
-        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fnpd_label_kualitaslistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
+        $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fnpd_label_jenislistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
         $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1297,7 +1297,7 @@ class NpdLabelKualitasList extends NpdLabelKualitas
                 $item = &$option->add("custom_" . $listaction->Action);
                 $caption = $listaction->Caption;
                 $icon = ($listaction->Icon != "") ? '<i class="' . HtmlEncode($listaction->Icon) . '" data-caption="' . HtmlEncode($caption) . '"></i>' . $caption : $caption;
-                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fnpd_label_kualitaslist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
+                $item->Body = '<a class="ew-action ew-list-action" title="' . HtmlEncode($caption) . '" data-caption="' . HtmlEncode($caption) . '" href="#" onclick="return ew.submitAction(event,jQuery.extend({f:document.fnpd_label_jenislist},' . $listaction->toJson(true) . '));">' . $icon . '</a>';
                 $item->Visible = $listaction->Allow;
             }
         }
@@ -1587,7 +1587,7 @@ class NpdLabelKualitasList extends NpdLabelKualitas
         // Search button
         $item = &$this->SearchOptions->add("searchtoggle");
         $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fnpd_label_kualitaslistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fnpd_label_jenislistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
         $item->Visible = true;
 
         // Show all button

@@ -25,7 +25,9 @@ loadjs.ready("head", function () {
         ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null], fields.idnpd.isInvalid],
         ["tglpengajuan", [fields.tglpengajuan.visible && fields.tglpengajuan.required ? ew.Validators.required(fields.tglpengajuan.caption) : null, ew.Validators.datetime(0)], fields.tglpengajuan.isInvalid],
         ["idnpd_sample", [fields.idnpd_sample.visible && fields.idnpd_sample.required ? ew.Validators.required(fields.idnpd_sample.caption) : null], fields.idnpd_sample.isInvalid],
-        ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid]
+        ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
+        ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
+        ["bauparfum", [fields.bauparfum.visible && fields.bauparfum.required ? ew.Validators.required(fields.bauparfum.caption) : null], fields.bauparfum.isInvalid]
     ]);
 
     // Set invalid fields
@@ -87,6 +89,10 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "nama", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "warna", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "bauparfum", false))
+            return false;
         return true;
     }
 
@@ -102,6 +108,7 @@ loadjs.ready("head", function () {
     // Dynamic selection lists
     fnpd_hargagrid.lists.idnpd = <?= $Grid->idnpd->toClientList($Grid) ?>;
     fnpd_hargagrid.lists.idnpd_sample = <?= $Grid->idnpd_sample->toClientList($Grid) ?>;
+    fnpd_hargagrid.lists.warna = <?= $Grid->warna->toClientList($Grid) ?>;
     loadjs.done("fnpd_hargagrid");
 });
 </script>
@@ -137,6 +144,12 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->nama->Visible) { // nama ?>
         <th data-name="nama" class="<?= $Grid->nama->headerCellClass() ?>"><div id="elh_npd_harga_nama" class="npd_harga_nama"><?= $Grid->renderSort($Grid->nama) ?></div></th>
+<?php } ?>
+<?php if ($Grid->warna->Visible) { // warna ?>
+        <th data-name="warna" class="<?= $Grid->warna->headerCellClass() ?>"><div id="elh_npd_harga_warna" class="npd_harga_warna"><?= $Grid->renderSort($Grid->warna) ?></div></th>
+<?php } ?>
+<?php if ($Grid->bauparfum->Visible) { // bauparfum ?>
+        <th data-name="bauparfum" class="<?= $Grid->bauparfum->headerCellClass() ?>"><div id="elh_npd_harga_bauparfum" class="npd_harga_bauparfum"><?= $Grid->renderSort($Grid->bauparfum) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -475,6 +488,102 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->warna->Visible) { // warna ?>
+        <td data-name="warna" <?= $Grid->warna->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_harga_warna" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_warna">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_warna" name="x<?= $Grid->RowIndex ?>_warna" id="x<?= $Grid->RowIndex ?>_warna"<?= $Grid->warna->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_warna" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_warna"
+    name="x<?= $Grid->RowIndex ?>_warna"
+    value="<?= HtmlEncode($Grid->warna->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_warna"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_warna"
+    data-repeatcolumn="4"
+    class="form-control<?= $Grid->warna->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_warna"
+    data-value-separator="<?= $Grid->warna->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->warna->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->warna->getErrorMessage() ?></div>
+<?= $Grid->warna->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_warna") ?>
+</span>
+<input type="hidden" data-table="npd_harga" data-field="x_warna" data-hidden="1" name="o<?= $Grid->RowIndex ?>_warna" id="o<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_harga_warna" class="form-group">
+<template id="tp_x<?= $Grid->RowIndex ?>_warna">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_warna" name="x<?= $Grid->RowIndex ?>_warna" id="x<?= $Grid->RowIndex ?>_warna"<?= $Grid->warna->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_warna" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_warna"
+    name="x<?= $Grid->RowIndex ?>_warna"
+    value="<?= HtmlEncode($Grid->warna->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_warna"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_warna"
+    data-repeatcolumn="4"
+    class="form-control<?= $Grid->warna->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_warna"
+    data-value-separator="<?= $Grid->warna->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->warna->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->warna->getErrorMessage() ?></div>
+<?= $Grid->warna->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_warna") ?>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_harga_warna">
+<span<?= $Grid->warna->viewAttributes() ?>>
+<?= $Grid->warna->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_harga" data-field="x_warna" data-hidden="1" name="fnpd_hargagrid$x<?= $Grid->RowIndex ?>_warna" id="fnpd_hargagrid$x<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->FormValue) ?>">
+<input type="hidden" data-table="npd_harga" data-field="x_warna" data-hidden="1" name="fnpd_hargagrid$o<?= $Grid->RowIndex ?>_warna" id="fnpd_hargagrid$o<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->bauparfum->Visible) { // bauparfum ?>
+        <td data-name="bauparfum" <?= $Grid->bauparfum->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_harga_bauparfum" class="form-group">
+<input type="<?= $Grid->bauparfum->getInputTextType() ?>" data-table="npd_harga" data-field="x_bauparfum" name="x<?= $Grid->RowIndex ?>_bauparfum" id="x<?= $Grid->RowIndex ?>_bauparfum" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->bauparfum->getPlaceHolder()) ?>" value="<?= $Grid->bauparfum->EditValue ?>"<?= $Grid->bauparfum->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->bauparfum->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="npd_harga" data-field="x_bauparfum" data-hidden="1" name="o<?= $Grid->RowIndex ?>_bauparfum" id="o<?= $Grid->RowIndex ?>_bauparfum" value="<?= HtmlEncode($Grid->bauparfum->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_harga_bauparfum" class="form-group">
+<input type="<?= $Grid->bauparfum->getInputTextType() ?>" data-table="npd_harga" data-field="x_bauparfum" name="x<?= $Grid->RowIndex ?>_bauparfum" id="x<?= $Grid->RowIndex ?>_bauparfum" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->bauparfum->getPlaceHolder()) ?>" value="<?= $Grid->bauparfum->EditValue ?>"<?= $Grid->bauparfum->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->bauparfum->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_npd_harga_bauparfum">
+<span<?= $Grid->bauparfum->viewAttributes() ?>>
+<?= $Grid->bauparfum->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="npd_harga" data-field="x_bauparfum" data-hidden="1" name="fnpd_hargagrid$x<?= $Grid->RowIndex ?>_bauparfum" id="fnpd_hargagrid$x<?= $Grid->RowIndex ?>_bauparfum" value="<?= HtmlEncode($Grid->bauparfum->FormValue) ?>">
+<input type="hidden" data-table="npd_harga" data-field="x_bauparfum" data-hidden="1" name="fnpd_hargagrid$o<?= $Grid->RowIndex ?>_bauparfum" id="fnpd_hargagrid$o<?= $Grid->RowIndex ?>_bauparfum" value="<?= HtmlEncode($Grid->bauparfum->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -643,6 +752,61 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="npd_harga" data-field="x_nama" data-hidden="1" name="x<?= $Grid->RowIndex ?>_nama" id="x<?= $Grid->RowIndex ?>_nama" value="<?= HtmlEncode($Grid->nama->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="npd_harga" data-field="x_nama" data-hidden="1" name="o<?= $Grid->RowIndex ?>_nama" id="o<?= $Grid->RowIndex ?>_nama" value="<?= HtmlEncode($Grid->nama->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->warna->Visible) { // warna ?>
+        <td data-name="warna">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_harga_warna" class="form-group npd_harga_warna">
+<template id="tp_x<?= $Grid->RowIndex ?>_warna">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd_harga" data-field="x_warna" name="x<?= $Grid->RowIndex ?>_warna" id="x<?= $Grid->RowIndex ?>_warna"<?= $Grid->warna->editAttributes() ?>>
+        <label class="custom-control-label"></label>
+    </div>
+</template>
+<div id="dsl_x<?= $Grid->RowIndex ?>_warna" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x<?= $Grid->RowIndex ?>_warna"
+    name="x<?= $Grid->RowIndex ?>_warna"
+    value="<?= HtmlEncode($Grid->warna->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x<?= $Grid->RowIndex ?>_warna"
+    data-target="dsl_x<?= $Grid->RowIndex ?>_warna"
+    data-repeatcolumn="4"
+    class="form-control<?= $Grid->warna->isInvalidClass() ?>"
+    data-table="npd_harga"
+    data-field="x_warna"
+    data-value-separator="<?= $Grid->warna->displayValueSeparatorAttribute() ?>"
+    <?= $Grid->warna->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->warna->getErrorMessage() ?></div>
+<?= $Grid->warna->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_warna") ?>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_harga_warna" class="form-group npd_harga_warna">
+<span<?= $Grid->warna->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->warna->getDisplayValue($Grid->warna->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_harga" data-field="x_warna" data-hidden="1" name="x<?= $Grid->RowIndex ?>_warna" id="x<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_harga" data-field="x_warna" data-hidden="1" name="o<?= $Grid->RowIndex ?>_warna" id="o<?= $Grid->RowIndex ?>_warna" value="<?= HtmlEncode($Grid->warna->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->bauparfum->Visible) { // bauparfum ?>
+        <td data-name="bauparfum">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_npd_harga_bauparfum" class="form-group npd_harga_bauparfum">
+<input type="<?= $Grid->bauparfum->getInputTextType() ?>" data-table="npd_harga" data-field="x_bauparfum" name="x<?= $Grid->RowIndex ?>_bauparfum" id="x<?= $Grid->RowIndex ?>_bauparfum" size="30" maxlength="50" placeholder="<?= HtmlEncode($Grid->bauparfum->getPlaceHolder()) ?>" value="<?= $Grid->bauparfum->EditValue ?>"<?= $Grid->bauparfum->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->bauparfum->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_npd_harga_bauparfum" class="form-group npd_harga_bauparfum">
+<span<?= $Grid->bauparfum->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->bauparfum->getDisplayValue($Grid->bauparfum->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="npd_harga" data-field="x_bauparfum" data-hidden="1" name="x<?= $Grid->RowIndex ?>_bauparfum" id="x<?= $Grid->RowIndex ?>_bauparfum" value="<?= HtmlEncode($Grid->bauparfum->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="npd_harga" data-field="x_bauparfum" data-hidden="1" name="o<?= $Grid->RowIndex ?>_bauparfum" id="o<?= $Grid->RowIndex ?>_bauparfum" value="<?= HtmlEncode($Grid->bauparfum->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

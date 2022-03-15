@@ -5,9 +5,9 @@ namespace PHPMaker2021\production2;
 use Doctrine\DBAL\ParameterType;
 
 /**
- * Table class for npd_label_kualitas
+ * Table class for npd_label_jenis
  */
-class NpdLabelKualitas extends DbTable
+class NpdLabelJenis extends DbTable
 {
     protected $SqlFrom = "";
     protected $SqlSelect = null;
@@ -43,12 +43,12 @@ class NpdLabelKualitas extends DbTable
 
         // Language object
         $Language = Container("language");
-        $this->TableVar = 'npd_label_kualitas';
-        $this->TableName = 'npd_label_kualitas';
+        $this->TableVar = 'npd_label_jenis';
+        $this->TableName = 'npd_label_jenis';
         $this->TableType = 'VIEW';
 
         // Update Table
-        $this->UpdateTable = "`npd_label_kualitas`";
+        $this->UpdateTable = "`npd_label_jenis`";
         $this->Dbid = 'DB';
         $this->ExportAll = true;
         $this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -68,7 +68,7 @@ class NpdLabelKualitas extends DbTable
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
         // id
-        $this->id = new DbField('npd_label_kualitas', 'npd_label_kualitas', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
+        $this->id = new DbField('npd_label_jenis', 'npd_label_jenis', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'NO');
         $this->id->IsAutoIncrement = true; // Autoincrement field
         $this->id->IsPrimaryKey = true; // Primary key field
         $this->id->Sortable = true; // Allow sort
@@ -77,7 +77,7 @@ class NpdLabelKualitas extends DbTable
         $this->Fields['id'] = &$this->id;
 
         // parent
-        $this->parent = new DbField('npd_label_kualitas', 'npd_label_kualitas', 'x_parent', 'parent', '`parent`', '`parent`', 200, 50, -1, false, '`parent`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->parent = new DbField('npd_label_jenis', 'npd_label_jenis', 'x_parent', 'parent', '`parent`', '`parent`', 200, 50, -1, false, '`parent`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->parent->Nullable = false; // NOT NULL field
         $this->parent->Required = true; // Required field
         $this->parent->Sortable = true; // Allow sort
@@ -85,7 +85,7 @@ class NpdLabelKualitas extends DbTable
         $this->Fields['parent'] = &$this->parent;
 
         // value
-        $this->value = new DbField('npd_label_kualitas', 'npd_label_kualitas', 'x_value', 'value', '`value`', '`value`', 200, 255, -1, false, '`value`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->value = new DbField('npd_label_jenis', 'npd_label_jenis', 'x_value', 'value', '`value`', '`value`', 200, 255, -1, false, '`value`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->value->Nullable = false; // NOT NULL field
         $this->value->Required = true; // Required field
         $this->value->Sortable = true; // Allow sort
@@ -133,7 +133,7 @@ class NpdLabelKualitas extends DbTable
     // Table level SQL
     public function getSqlFrom() // From
     {
-        return ($this->SqlFrom != "") ? $this->SqlFrom : "`npd_label_kualitas`";
+        return ($this->SqlFrom != "") ? $this->SqlFrom : "`npd_label_jenis`";
     }
 
     public function sqlFrom() // For backward compatibility
@@ -578,7 +578,7 @@ class NpdLabelKualitas extends DbTable
         if ($referUrl != "" && $referPageName != CurrentPageName() && $referPageName != "login") { // Referer not same page or login page
             $_SESSION[$name] = $referUrl; // Save to Session
         }
-        return $_SESSION[$name] ?? GetUrl("NpdLabelKualitasList");
+        return $_SESSION[$name] ?? GetUrl("NpdLabelJenisList");
     }
 
     // Set return page URL
@@ -591,11 +591,11 @@ class NpdLabelKualitas extends DbTable
     public function getModalCaption($pageName)
     {
         global $Language;
-        if ($pageName == "NpdLabelKualitasView") {
+        if ($pageName == "NpdLabelJenisView") {
             return $Language->phrase("View");
-        } elseif ($pageName == "NpdLabelKualitasEdit") {
+        } elseif ($pageName == "NpdLabelJenisEdit") {
             return $Language->phrase("Edit");
-        } elseif ($pageName == "NpdLabelKualitasAdd") {
+        } elseif ($pageName == "NpdLabelJenisAdd") {
             return $Language->phrase("Add");
         } else {
             return "";
@@ -607,15 +607,15 @@ class NpdLabelKualitas extends DbTable
     {
         switch (strtolower($action)) {
             case Config("API_VIEW_ACTION"):
-                return "NpdLabelKualitasView";
+                return "NpdLabelJenisView";
             case Config("API_ADD_ACTION"):
-                return "NpdLabelKualitasAdd";
+                return "NpdLabelJenisAdd";
             case Config("API_EDIT_ACTION"):
-                return "NpdLabelKualitasEdit";
+                return "NpdLabelJenisEdit";
             case Config("API_DELETE_ACTION"):
-                return "NpdLabelKualitasDelete";
+                return "NpdLabelJenisDelete";
             case Config("API_LIST_ACTION"):
-                return "NpdLabelKualitasList";
+                return "NpdLabelJenisList";
             default:
                 return "";
         }
@@ -624,16 +624,16 @@ class NpdLabelKualitas extends DbTable
     // List URL
     public function getListUrl()
     {
-        return "NpdLabelKualitasList";
+        return "NpdLabelJenisList";
     }
 
     // View URL
     public function getViewUrl($parm = "")
     {
         if ($parm != "") {
-            $url = $this->keyUrl("NpdLabelKualitasView", $this->getUrlParm($parm));
+            $url = $this->keyUrl("NpdLabelJenisView", $this->getUrlParm($parm));
         } else {
-            $url = $this->keyUrl("NpdLabelKualitasView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+            $url = $this->keyUrl("NpdLabelJenisView", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
         }
         return $this->addMasterUrl($url);
     }
@@ -642,9 +642,9 @@ class NpdLabelKualitas extends DbTable
     public function getAddUrl($parm = "")
     {
         if ($parm != "") {
-            $url = "NpdLabelKualitasAdd?" . $this->getUrlParm($parm);
+            $url = "NpdLabelJenisAdd?" . $this->getUrlParm($parm);
         } else {
-            $url = "NpdLabelKualitasAdd";
+            $url = "NpdLabelJenisAdd";
         }
         return $this->addMasterUrl($url);
     }
@@ -652,7 +652,7 @@ class NpdLabelKualitas extends DbTable
     // Edit URL
     public function getEditUrl($parm = "")
     {
-        $url = $this->keyUrl("NpdLabelKualitasEdit", $this->getUrlParm($parm));
+        $url = $this->keyUrl("NpdLabelJenisEdit", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -666,7 +666,7 @@ class NpdLabelKualitas extends DbTable
     // Copy URL
     public function getCopyUrl($parm = "")
     {
-        $url = $this->keyUrl("NpdLabelKualitasAdd", $this->getUrlParm($parm));
+        $url = $this->keyUrl("NpdLabelJenisAdd", $this->getUrlParm($parm));
         return $this->addMasterUrl($url);
     }
 
@@ -680,7 +680,7 @@ class NpdLabelKualitas extends DbTable
     // Delete URL
     public function getDeleteUrl()
     {
-        return $this->keyUrl("NpdLabelKualitasDelete", $this->getUrlParm());
+        return $this->keyUrl("NpdLabelJenisDelete", $this->getUrlParm());
     }
 
     // Add master url

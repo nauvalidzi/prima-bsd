@@ -111,6 +111,28 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->warna->Visible) { // warna ?>
+    <tr id="r_warna">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_harga_warna"><template id="tpc_npd_harga_warna"><?= $Page->warna->caption() ?></template></span></td>
+        <td data-name="warna" <?= $Page->warna->cellAttributes() ?>>
+<template id="tpx_npd_harga_warna"><span id="el_npd_harga_warna">
+<span<?= $Page->warna->viewAttributes() ?>>
+<?= $Page->warna->getViewValue() ?></span>
+</span></template>
+</td>
+    </tr>
+<?php } ?>
+<?php if ($Page->bauparfum->Visible) { // bauparfum ?>
+    <tr id="r_bauparfum">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_harga_bauparfum"><template id="tpc_npd_harga_bauparfum"><?= $Page->bauparfum->caption() ?></template></span></td>
+        <td data-name="bauparfum" <?= $Page->bauparfum->cellAttributes() ?>>
+<template id="tpx_npd_harga_bauparfum"><span id="el_npd_harga_bauparfum">
+<span<?= $Page->bauparfum->viewAttributes() ?>>
+<?= $Page->bauparfum->getViewValue() ?></span>
+</span></template>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->aplikasisediaan->Visible) { // aplikasisediaan ?>
     <tr id="r_aplikasisediaan">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_harga_aplikasisediaan"><template id="tpc_npd_harga_aplikasisediaan"><?= $Page->aplikasisediaan->caption() ?></template></span></td>
@@ -670,12 +692,12 @@ $Page->showMessage();
                 <td><slot class="ew-slot" name="tpx_npd_harga_viskositas"></slot></td>
             </tr>
             <tr>
-                <th class="text-right w-col-3"><slot class="ew-slot" name="tpcaption_warna"></slot></th>
-                <td><slot class="ew-slot" name="tpx_warna"></slot></td>
+                <th class="text-right w-col-3"><?= $Page->warna->caption() ?></th>
+                <td><slot class="ew-slot" name="tpx_npd_harga_warna"></slot></td>
             </tr>
             <tr>
-                <th class="text-right w-col-3"><slot class="ew-slot" name="tpcaption_bauparfum"></slot></th>
-                <td><slot class="ew-slot" name="tpx_bauparfum"></slot></td>
+                <th class="text-right w-col-3"><?= $Page->bauparfum->caption() ?></th>
+                <td><slot class="ew-slot" name="tpx_npd_harga_bauparfum"></slot></td>
             </tr>
             <tr>
                 <th class="text-right w-col-3"><?= $Page->aplikasisediaan->caption() ?></th>

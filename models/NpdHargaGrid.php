@@ -512,6 +512,8 @@ class NpdHargaGrid extends NpdHarga
         $this->nama->setVisibility();
         $this->bentuk->Visible = false;
         $this->viskositas->Visible = false;
+        $this->warna->setVisibility();
+        $this->bauparfum->setVisibility();
         $this->aplikasisediaan->Visible = false;
         $this->volume->Visible = false;
         $this->bahanaktif->Visible = false;
@@ -575,6 +577,12 @@ class NpdHargaGrid extends NpdHarga
         // Set up lookup cache
         $this->setupLookupOptions($this->idnpd);
         $this->setupLookupOptions($this->idnpd_sample);
+        $this->setupLookupOptions($this->viskositas);
+        $this->setupLookupOptions($this->warna);
+        $this->setupLookupOptions($this->aplikasisediaan);
+        $this->setupLookupOptions($this->jenislabel);
+        $this->setupLookupOptions($this->kualitaslabel);
+        $this->setupLookupOptions($this->kategoridelivery);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -992,6 +1000,12 @@ class NpdHargaGrid extends NpdHarga
         if ($CurrentForm->hasValue("x_nama") && $CurrentForm->hasValue("o_nama") && $this->nama->CurrentValue != $this->nama->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_warna") && $CurrentForm->hasValue("o_warna") && $this->warna->CurrentValue != $this->warna->OldValue) {
+            return false;
+        }
+        if ($CurrentForm->hasValue("x_bauparfum") && $CurrentForm->hasValue("o_bauparfum") && $this->bauparfum->CurrentValue != $this->bauparfum->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1077,6 +1091,8 @@ class NpdHargaGrid extends NpdHarga
         $this->tglpengajuan->clearErrorMessage();
         $this->idnpd_sample->clearErrorMessage();
         $this->nama->clearErrorMessage();
+        $this->warna->clearErrorMessage();
+        $this->bauparfum->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1343,6 +1359,10 @@ class NpdHargaGrid extends NpdHarga
         $this->bentuk->OldValue = $this->bentuk->CurrentValue;
         $this->viskositas->CurrentValue = null;
         $this->viskositas->OldValue = $this->viskositas->CurrentValue;
+        $this->warna->CurrentValue = null;
+        $this->warna->OldValue = $this->warna->CurrentValue;
+        $this->bauparfum->CurrentValue = null;
+        $this->bauparfum->OldValue = $this->bauparfum->CurrentValue;
         $this->aplikasisediaan->CurrentValue = null;
         $this->aplikasisediaan->OldValue = $this->aplikasisediaan->CurrentValue;
         $this->volume->CurrentValue = null;
@@ -1494,6 +1514,32 @@ class NpdHargaGrid extends NpdHarga
             $this->nama->setOldValue($CurrentForm->getValue("o_nama"));
         }
 
+        // Check field name 'warna' first before field var 'x_warna'
+        $val = $CurrentForm->hasValue("warna") ? $CurrentForm->getValue("warna") : $CurrentForm->getValue("x_warna");
+        if (!$this->warna->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->warna->Visible = false; // Disable update for API request
+            } else {
+                $this->warna->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_warna")) {
+            $this->warna->setOldValue($CurrentForm->getValue("o_warna"));
+        }
+
+        // Check field name 'bauparfum' first before field var 'x_bauparfum'
+        $val = $CurrentForm->hasValue("bauparfum") ? $CurrentForm->getValue("bauparfum") : $CurrentForm->getValue("x_bauparfum");
+        if (!$this->bauparfum->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->bauparfum->Visible = false; // Disable update for API request
+            } else {
+                $this->bauparfum->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_bauparfum")) {
+            $this->bauparfum->setOldValue($CurrentForm->getValue("o_bauparfum"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1513,6 +1559,8 @@ class NpdHargaGrid extends NpdHarga
         $this->tglpengajuan->CurrentValue = UnFormatDateTime($this->tglpengajuan->CurrentValue, 0);
         $this->idnpd_sample->CurrentValue = $this->idnpd_sample->FormValue;
         $this->nama->CurrentValue = $this->nama->FormValue;
+        $this->warna->CurrentValue = $this->warna->FormValue;
+        $this->bauparfum->CurrentValue = $this->bauparfum->FormValue;
     }
 
     // Load recordset
@@ -1590,6 +1638,8 @@ class NpdHargaGrid extends NpdHarga
         $this->nama->setDbValue($row['nama']);
         $this->bentuk->setDbValue($row['bentuk']);
         $this->viskositas->setDbValue($row['viskositas']);
+        $this->warna->setDbValue($row['warna']);
+        $this->bauparfum->setDbValue($row['bauparfum']);
         $this->aplikasisediaan->setDbValue($row['aplikasisediaan']);
         $this->volume->setDbValue($row['volume']);
         $this->bahanaktif->setDbValue($row['bahanaktif']);
@@ -1650,6 +1700,8 @@ class NpdHargaGrid extends NpdHarga
         $row['nama'] = $this->nama->CurrentValue;
         $row['bentuk'] = $this->bentuk->CurrentValue;
         $row['viskositas'] = $this->viskositas->CurrentValue;
+        $row['warna'] = $this->warna->CurrentValue;
+        $row['bauparfum'] = $this->bauparfum->CurrentValue;
         $row['aplikasisediaan'] = $this->aplikasisediaan->CurrentValue;
         $row['volume'] = $this->volume->CurrentValue;
         $row['bahanaktif'] = $this->bahanaktif->CurrentValue;
@@ -1742,6 +1794,10 @@ class NpdHargaGrid extends NpdHarga
         // bentuk
 
         // viskositas
+
+        // warna
+
+        // bauparfum
 
         // aplikasisediaan
 
@@ -1872,7 +1928,7 @@ class NpdHargaGrid extends NpdHarga
                 if ($this->idnpd_sample->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirmsample WHERE readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idnpd_sample->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1899,11 +1955,70 @@ class NpdHargaGrid extends NpdHarga
             $this->bentuk->ViewCustomAttributes = "";
 
             // viskositas
-            $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
+            $curVal = trim(strval($this->viskositas->CurrentValue));
+            if ($curVal != "") {
+                $this->viskositas->ViewValue = $this->viskositas->lookupCacheOption($curVal);
+                if ($this->viskositas->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->viskositas->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->viskositas->Lookup->renderViewRow($rswrk[0]);
+                        $this->viskositas->ViewValue = $this->viskositas->displayValue($arwrk);
+                    } else {
+                        $this->viskositas->ViewValue = $this->viskositas->CurrentValue;
+                    }
+                }
+            } else {
+                $this->viskositas->ViewValue = null;
+            }
             $this->viskositas->ViewCustomAttributes = "";
 
+            // warna
+            $curVal = trim(strval($this->warna->CurrentValue));
+            if ($curVal != "") {
+                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
+                if ($this->warna->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->warna->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->warna->Lookup->renderViewRow($rswrk[0]);
+                        $this->warna->ViewValue = $this->warna->displayValue($arwrk);
+                    } else {
+                        $this->warna->ViewValue = $this->warna->CurrentValue;
+                    }
+                }
+            } else {
+                $this->warna->ViewValue = null;
+            }
+            $this->warna->ViewCustomAttributes = "";
+
+            // bauparfum
+            $this->bauparfum->ViewValue = $this->bauparfum->CurrentValue;
+            $this->bauparfum->ViewCustomAttributes = "";
+
             // aplikasisediaan
-            $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
+            $curVal = trim(strval($this->aplikasisediaan->CurrentValue));
+            if ($curVal != "") {
+                $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->lookupCacheOption($curVal);
+                if ($this->aplikasisediaan->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->aplikasisediaan->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->aplikasisediaan->Lookup->renderViewRow($rswrk[0]);
+                        $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->displayValue($arwrk);
+                    } else {
+                        $this->aplikasisediaan->ViewValue = $this->aplikasisediaan->CurrentValue;
+                    }
+                }
+            } else {
+                $this->aplikasisediaan->ViewValue = null;
+            }
             $this->aplikasisediaan->ViewCustomAttributes = "";
 
             // volume
@@ -1991,7 +2106,24 @@ class NpdHargaGrid extends NpdHarga
             $this->isikarton->ViewCustomAttributes = "";
 
             // jenislabel
-            $this->jenislabel->ViewValue = $this->jenislabel->CurrentValue;
+            $curVal = trim(strval($this->jenislabel->CurrentValue));
+            if ($curVal != "") {
+                $this->jenislabel->ViewValue = $this->jenislabel->lookupCacheOption($curVal);
+                if ($this->jenislabel->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->jenislabel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->jenislabel->Lookup->renderViewRow($rswrk[0]);
+                        $this->jenislabel->ViewValue = $this->jenislabel->displayValue($arwrk);
+                    } else {
+                        $this->jenislabel->ViewValue = $this->jenislabel->CurrentValue;
+                    }
+                }
+            } else {
+                $this->jenislabel->ViewValue = null;
+            }
             $this->jenislabel->ViewCustomAttributes = "";
 
             // keteranganjenislabel
@@ -1999,7 +2131,24 @@ class NpdHargaGrid extends NpdHarga
             $this->keteranganjenislabel->ViewCustomAttributes = "";
 
             // kualitaslabel
-            $this->kualitaslabel->ViewValue = $this->kualitaslabel->CurrentValue;
+            $curVal = trim(strval($this->kualitaslabel->CurrentValue));
+            if ($curVal != "") {
+                $this->kualitaslabel->ViewValue = $this->kualitaslabel->lookupCacheOption($curVal);
+                if ($this->kualitaslabel->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`value`" . SearchString("=", $curVal, DATATYPE_STRING, "");
+                    $sqlWrk = $this->kualitaslabel->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->kualitaslabel->Lookup->renderViewRow($rswrk[0]);
+                        $this->kualitaslabel->ViewValue = $this->kualitaslabel->displayValue($arwrk);
+                    } else {
+                        $this->kualitaslabel->ViewValue = $this->kualitaslabel->CurrentValue;
+                    }
+                }
+            } else {
+                $this->kualitaslabel->ViewValue = null;
+            }
             $this->kualitaslabel->ViewCustomAttributes = "";
 
             // jumlahwarnalabel
@@ -2019,7 +2168,34 @@ class NpdHargaGrid extends NpdHarga
             $this->keteranganlabel->ViewCustomAttributes = "";
 
             // kategoridelivery
-            $this->kategoridelivery->ViewValue = $this->kategoridelivery->CurrentValue;
+            $curVal = trim(strval($this->kategoridelivery->CurrentValue));
+            if ($curVal != "") {
+                $this->kategoridelivery->ViewValue = $this->kategoridelivery->lookupCacheOption($curVal);
+                if ($this->kategoridelivery->ViewValue === null) { // Lookup from database
+                    $arwrk = explode(",", $curVal);
+                    $filterWrk = "";
+                    foreach ($arwrk as $wrk) {
+                        if ($filterWrk != "") {
+                            $filterWrk .= " OR ";
+                        }
+                        $filterWrk .= "`nama`" . SearchString("=", trim($wrk), DATATYPE_STRING, "");
+                    }
+                    $sqlWrk = $this->kategoridelivery->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $this->kategoridelivery->ViewValue = new OptionValues();
+                        foreach ($rswrk as $row) {
+                            $arwrk = $this->kategoridelivery->Lookup->renderViewRow($row);
+                            $this->kategoridelivery->ViewValue->add($this->kategoridelivery->displayValue($arwrk));
+                        }
+                    } else {
+                        $this->kategoridelivery->ViewValue = $this->kategoridelivery->CurrentValue;
+                    }
+                }
+            } else {
+                $this->kategoridelivery->ViewValue = null;
+            }
             $this->kategoridelivery->ViewCustomAttributes = "";
 
             // alamatpengiriman
@@ -2119,6 +2295,16 @@ class NpdHargaGrid extends NpdHarga
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
             $this->nama->TooltipValue = "";
+
+            // warna
+            $this->warna->LinkCustomAttributes = "";
+            $this->warna->HrefValue = "";
+            $this->warna->TooltipValue = "";
+
+            // bauparfum
+            $this->bauparfum->LinkCustomAttributes = "";
+            $this->bauparfum->HrefValue = "";
+            $this->bauparfum->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -2201,7 +2387,7 @@ class NpdHargaGrid extends NpdHarga
                     $filterWrk = "`id`" . SearchString("=", $this->idnpd_sample->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $lookupFilter = function() {
-                    return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                    return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirmsample WHERE readonly=0)" : "";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idnpd_sample->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -2221,6 +2407,39 @@ class NpdHargaGrid extends NpdHarga
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
+            // warna
+            $this->warna->EditCustomAttributes = "";
+            $curVal = trim(strval($this->warna->CurrentValue));
+            if ($curVal != "") {
+                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
+            } else {
+                $this->warna->ViewValue = $this->warna->Lookup !== null && is_array($this->warna->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->warna->ViewValue !== null) { // Load from cache
+                $this->warna->EditValue = array_values($this->warna->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`value`" . SearchString("=", $this->warna->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->warna->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->warna->EditValue = $arwrk;
+            }
+            $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
+
+            // bauparfum
+            $this->bauparfum->EditAttrs["class"] = "form-control";
+            $this->bauparfum->EditCustomAttributes = "";
+            if (!$this->bauparfum->Raw) {
+                $this->bauparfum->CurrentValue = HtmlDecode($this->bauparfum->CurrentValue);
+            }
+            $this->bauparfum->EditValue = HtmlEncode($this->bauparfum->CurrentValue);
+            $this->bauparfum->PlaceHolder = RemoveHtml($this->bauparfum->caption());
+
             // Add refer script
 
             // idnpd
@@ -2238,6 +2457,14 @@ class NpdHargaGrid extends NpdHarga
             // nama
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
+
+            // warna
+            $this->warna->LinkCustomAttributes = "";
+            $this->warna->HrefValue = "";
+
+            // bauparfum
+            $this->bauparfum->LinkCustomAttributes = "";
+            $this->bauparfum->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idnpd
             $this->idnpd->EditAttrs["class"] = "form-control";
@@ -2320,7 +2547,7 @@ class NpdHargaGrid extends NpdHarga
                     $filterWrk = "`id`" . SearchString("=", $this->idnpd_sample->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $lookupFilter = function() {
-                    return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                    return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirmsample WHERE readonly=0)" : "";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idnpd_sample->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -2340,6 +2567,39 @@ class NpdHargaGrid extends NpdHarga
             $this->nama->EditValue = HtmlEncode($this->nama->CurrentValue);
             $this->nama->PlaceHolder = RemoveHtml($this->nama->caption());
 
+            // warna
+            $this->warna->EditCustomAttributes = "";
+            $curVal = trim(strval($this->warna->CurrentValue));
+            if ($curVal != "") {
+                $this->warna->ViewValue = $this->warna->lookupCacheOption($curVal);
+            } else {
+                $this->warna->ViewValue = $this->warna->Lookup !== null && is_array($this->warna->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->warna->ViewValue !== null) { // Load from cache
+                $this->warna->EditValue = array_values($this->warna->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`value`" . SearchString("=", $this->warna->CurrentValue, DATATYPE_STRING, "");
+                }
+                $sqlWrk = $this->warna->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->warna->EditValue = $arwrk;
+            }
+            $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
+
+            // bauparfum
+            $this->bauparfum->EditAttrs["class"] = "form-control";
+            $this->bauparfum->EditCustomAttributes = "";
+            if (!$this->bauparfum->Raw) {
+                $this->bauparfum->CurrentValue = HtmlDecode($this->bauparfum->CurrentValue);
+            }
+            $this->bauparfum->EditValue = HtmlEncode($this->bauparfum->CurrentValue);
+            $this->bauparfum->PlaceHolder = RemoveHtml($this->bauparfum->caption());
+
             // Edit refer script
 
             // idnpd
@@ -2357,6 +2617,14 @@ class NpdHargaGrid extends NpdHarga
             // nama
             $this->nama->LinkCustomAttributes = "";
             $this->nama->HrefValue = "";
+
+            // warna
+            $this->warna->LinkCustomAttributes = "";
+            $this->warna->HrefValue = "";
+
+            // bauparfum
+            $this->bauparfum->LinkCustomAttributes = "";
+            $this->bauparfum->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -2398,6 +2666,16 @@ class NpdHargaGrid extends NpdHarga
         if ($this->nama->Required) {
             if (!$this->nama->IsDetailKey && EmptyValue($this->nama->FormValue)) {
                 $this->nama->addErrorMessage(str_replace("%s", $this->nama->caption(), $this->nama->RequiredErrorMessage));
+            }
+        }
+        if ($this->warna->Required) {
+            if ($this->warna->FormValue == "") {
+                $this->warna->addErrorMessage(str_replace("%s", $this->warna->caption(), $this->warna->RequiredErrorMessage));
+            }
+        }
+        if ($this->bauparfum->Required) {
+            if (!$this->bauparfum->IsDetailKey && EmptyValue($this->bauparfum->FormValue)) {
+                $this->bauparfum->addErrorMessage(str_replace("%s", $this->bauparfum->caption(), $this->bauparfum->RequiredErrorMessage));
             }
         }
 
@@ -2524,6 +2802,12 @@ class NpdHargaGrid extends NpdHarga
             // nama
             $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, null, $this->nama->ReadOnly);
 
+            // warna
+            $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, null, $this->warna->ReadOnly);
+
+            // bauparfum
+            $this->bauparfum->setDbValueDef($rsnew, $this->bauparfum->CurrentValue, null, $this->bauparfum->ReadOnly);
+
             // Check referential integrity for master table 'npd'
             $validMasterRecord = true;
             $masterFilter = $this->sqlMasterFilter_npd();
@@ -2634,6 +2918,12 @@ class NpdHargaGrid extends NpdHarga
         // nama
         $this->nama->setDbValueDef($rsnew, $this->nama->CurrentValue, null, false);
 
+        // warna
+        $this->warna->setDbValueDef($rsnew, $this->warna->CurrentValue, null, false);
+
+        // bauparfum
+        $this->bauparfum->setDbValueDef($rsnew, $this->bauparfum->CurrentValue, null, false);
+
         // Call Row Inserting event
         $insertRow = $this->rowInserting($rsold, $rsnew);
         $addRow = false;
@@ -2709,11 +2999,23 @@ class NpdHargaGrid extends NpdHarga
                     break;
                 case "x_idnpd_sample":
                     $lookupFilter = function () {
-                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirm WHERE readonly=0)" : "";
+                        return CurrentPageID() == "add" ? "id IN (SELECT idnpd_sample FROM npd_confirmsample WHERE readonly=0)" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
+                case "x_viskositas":
+                    break;
+                case "x_warna":
+                    break;
+                case "x_aplikasisediaan":
+                    break;
                 case "x_segel":
+                    break;
+                case "x_jenislabel":
+                    break;
+                case "x_kualitaslabel":
+                    break;
+                case "x_kategoridelivery":
                     break;
                 case "x_disetujui":
                     break;

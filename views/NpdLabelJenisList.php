@@ -3,31 +3,31 @@
 namespace PHPMaker2021\production2;
 
 // Page object
-$NpdHargaList = &$Page;
+$NpdLabelJenisList = &$Page;
 ?>
 <?php if (!$Page->isExport()) { ?>
 <script>
 var currentForm, currentPageID;
-var fnpd_hargalist;
+var fnpd_label_jenislist;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object
     currentPageID = ew.PAGE_ID = "list";
-    fnpd_hargalist = currentForm = new ew.Form("fnpd_hargalist", "list");
-    fnpd_hargalist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
-    loadjs.done("fnpd_hargalist");
+    fnpd_label_jenislist = currentForm = new ew.Form("fnpd_label_jenislist", "list");
+    fnpd_label_jenislist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
+    loadjs.done("fnpd_label_jenislist");
 });
-var fnpd_hargalistsrch, currentSearchForm, currentAdvancedSearchForm;
+var fnpd_label_jenislistsrch, currentSearchForm, currentAdvancedSearchForm;
 loadjs.ready("head", function () {
     var $ = jQuery;
     // Form object for search
-    fnpd_hargalistsrch = currentSearchForm = new ew.Form("fnpd_hargalistsrch");
+    fnpd_label_jenislistsrch = currentSearchForm = new ew.Form("fnpd_label_jenislistsrch");
 
     // Dynamic selection lists
 
     // Filters
-    fnpd_hargalistsrch.filterList = <?= $Page->getFilterList() ?>;
-    loadjs.done("fnpd_hargalistsrch");
+    fnpd_label_jenislistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fnpd_label_jenislistsrch");
 });
 </script>
 <style>
@@ -77,24 +77,15 @@ loadjs.ready("head", function () {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php if (!$Page->isExport() || Config("EXPORT_MASTER_RECORD") && $Page->isExport("print")) { ?>
-<?php
-if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "npd") {
-    if ($Page->MasterRecordExists) {
-        include_once "views/NpdMaster.php";
-    }
-}
-?>
-<?php } ?>
 <?php
 $Page->renderOtherOptions();
 ?>
 <?php if ($Security->canSearch()) { ?>
 <?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
-<form name="fnpd_hargalistsrch" id="fnpd_hargalistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
-<div id="fnpd_hargalistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<form name="fnpd_label_jenislistsrch" id="fnpd_label_jenislistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fnpd_label_jenislistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="npd_harga">
+<input type="hidden" name="t" value="npd_label_jenis">
     <div class="ew-extended-search">
 <div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
     <div class="ew-quick-search input-group">
@@ -122,20 +113,16 @@ $Page->renderOtherOptions();
 $Page->showMessage();
 ?>
 <?php if ($Page->TotalRecords > 0 || $Page->CurrentAction) { ?>
-<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> npd_harga">
-<form name="fnpd_hargalist" id="fnpd_hargalist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
+<div class="card ew-card ew-grid<?php if ($Page->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> npd_label_jenis">
+<form name="fnpd_label_jenislist" id="fnpd_label_jenislist" class="form-inline ew-form ew-list-form" action="<?= CurrentPageUrl(false) ?>" method="post">
 <?php if (Config("CHECK_TOKEN")) { ?>
 <input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
 <input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
 <?php } ?>
-<input type="hidden" name="t" value="npd_harga">
-<?php if ($Page->getCurrentMasterTable() == "npd" && $Page->CurrentAction) { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="npd">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idnpd->getSessionValue()) ?>">
-<?php } ?>
-<div id="gmp_npd_harga" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<input type="hidden" name="t" value="npd_label_jenis">
+<div id="gmp_npd_label_jenis" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($Page->TotalRecords > 0 || $Page->isGridEdit()) { ?>
-<table id="tbl_npd_hargalist" class="table ew-table"><!-- .ew-table -->
+<table id="tbl_npd_label_jenislist" class="table ew-table"><!-- .ew-table -->
 <thead>
     <tr class="ew-table-header">
 <?php
@@ -148,23 +135,14 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <th data-name="idnpd" class="<?= $Page->idnpd->headerCellClass() ?>"><div id="elh_npd_harga_idnpd" class="npd_harga_idnpd"><?= $Page->renderSort($Page->idnpd) ?></div></th>
+<?php if ($Page->id->Visible) { // id ?>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_npd_label_jenis_id" class="npd_label_jenis_id"><?= $Page->renderSort($Page->id) ?></div></th>
 <?php } ?>
-<?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <th data-name="tglpengajuan" class="<?= $Page->tglpengajuan->headerCellClass() ?>"><div id="elh_npd_harga_tglpengajuan" class="npd_harga_tglpengajuan"><?= $Page->renderSort($Page->tglpengajuan) ?></div></th>
+<?php if ($Page->parent->Visible) { // parent ?>
+        <th data-name="parent" class="<?= $Page->parent->headerCellClass() ?>"><div id="elh_npd_label_jenis_parent" class="npd_label_jenis_parent"><?= $Page->renderSort($Page->parent) ?></div></th>
 <?php } ?>
-<?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
-        <th data-name="idnpd_sample" class="<?= $Page->idnpd_sample->headerCellClass() ?>"><div id="elh_npd_harga_idnpd_sample" class="npd_harga_idnpd_sample"><?= $Page->renderSort($Page->idnpd_sample) ?></div></th>
-<?php } ?>
-<?php if ($Page->nama->Visible) { // nama ?>
-        <th data-name="nama" class="<?= $Page->nama->headerCellClass() ?>"><div id="elh_npd_harga_nama" class="npd_harga_nama"><?= $Page->renderSort($Page->nama) ?></div></th>
-<?php } ?>
-<?php if ($Page->warna->Visible) { // warna ?>
-        <th data-name="warna" class="<?= $Page->warna->headerCellClass() ?>"><div id="elh_npd_harga_warna" class="npd_harga_warna"><?= $Page->renderSort($Page->warna) ?></div></th>
-<?php } ?>
-<?php if ($Page->bauparfum->Visible) { // bauparfum ?>
-        <th data-name="bauparfum" class="<?= $Page->bauparfum->headerCellClass() ?>"><div id="elh_npd_harga_bauparfum" class="npd_harga_bauparfum"><?= $Page->renderSort($Page->bauparfum) ?></div></th>
+<?php if ($Page->value->Visible) { // value ?>
+        <th data-name="value" class="<?= $Page->value->headerCellClass() ?>"><div id="elh_npd_label_jenis_value" class="npd_label_jenis_value"><?= $Page->renderSort($Page->value) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -220,7 +198,7 @@ while ($Page->RecordCount < $Page->StopRecord) {
         $Page->RowType = ROWTYPE_VIEW; // Render view
 
         // Set up row id / data-rowindex
-        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_npd_harga", "data-rowtype" => $Page->RowType]);
+        $Page->RowAttrs->merge(["data-rowindex" => $Page->RowCount, "id" => "r" . $Page->RowCount . "_npd_label_jenis", "data-rowtype" => $Page->RowType]);
 
         // Render row
         $Page->renderRow();
@@ -233,51 +211,27 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idnpd->Visible) { // idnpd ?>
-        <td data-name="idnpd" <?= $Page->idnpd->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd">
-<span<?= $Page->idnpd->viewAttributes() ?>>
-<?= $Page->idnpd->getViewValue() ?></span>
+    <?php if ($Page->id->Visible) { // id ?>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_label_jenis_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tglpengajuan->Visible) { // tglpengajuan ?>
-        <td data-name="tglpengajuan" <?= $Page->tglpengajuan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_tglpengajuan">
-<span<?= $Page->tglpengajuan->viewAttributes() ?>>
-<?= $Page->tglpengajuan->getViewValue() ?></span>
+    <?php if ($Page->parent->Visible) { // parent ?>
+        <td data-name="parent" <?= $Page->parent->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_label_jenis_parent">
+<span<?= $Page->parent->viewAttributes() ?>>
+<?= $Page->parent->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idnpd_sample->Visible) { // idnpd_sample ?>
-        <td data-name="idnpd_sample" <?= $Page->idnpd_sample->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_idnpd_sample">
-<span<?= $Page->idnpd_sample->viewAttributes() ?>>
-<?= $Page->idnpd_sample->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->nama->Visible) { // nama ?>
-        <td data-name="nama" <?= $Page->nama->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_nama">
-<span<?= $Page->nama->viewAttributes() ?>>
-<?= $Page->nama->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->warna->Visible) { // warna ?>
-        <td data-name="warna" <?= $Page->warna->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_warna">
-<span<?= $Page->warna->viewAttributes() ?>>
-<?= $Page->warna->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->bauparfum->Visible) { // bauparfum ?>
-        <td data-name="bauparfum" <?= $Page->bauparfum->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_harga_bauparfum">
-<span<?= $Page->bauparfum->viewAttributes() ?>>
-<?= $Page->bauparfum->getViewValue() ?></span>
+    <?php if ($Page->value->Visible) { // value ?>
+        <td data-name="value" <?= $Page->value->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_label_jenis_value">
+<span<?= $Page->value->viewAttributes() ?>>
+<?= $Page->value->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -336,7 +290,7 @@ echo GetDebugMessage();
 <script>
 // Field event handlers
 loadjs.ready("head", function() {
-    ew.addEventHandlers("npd_harga");
+    ew.addEventHandlers("npd_label_jenis");
 });
 </script>
 <script>
