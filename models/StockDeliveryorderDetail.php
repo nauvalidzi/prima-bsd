@@ -34,7 +34,7 @@ class StockDeliveryorderDetail extends DbTable
     public $idstockorder_detail;
     public $totalorder;
     public $sisa;
-    public $jumlah_kirim;
+    public $jumlahkirim;
     public $keterangan;
 
     // Page ID
@@ -100,10 +100,10 @@ class StockDeliveryorderDetail extends DbTable
         $this->idstockorder->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idstockorder->Lookup = new Lookup('idstockorder', 'v_stockorder', false, 'idstockorder', ["kode_stockorder","tanggal_stockorder","",""], [], ["x_idstockorder_detail"], [], [], [], [], '', '');
+                $this->idstockorder->Lookup = new Lookup('idstockorder', 'v_stockorder', false, 'id', ["kode","tanggal","",""], [], ["x_idstockorder_detail"], [], [], [], [], '', '');
                 break;
             default:
-                $this->idstockorder->Lookup = new Lookup('idstockorder', 'v_stockorder', false, 'idstockorder', ["kode_stockorder","tanggal_stockorder","",""], [], ["x_idstockorder_detail"], [], [], [], [], '', '');
+                $this->idstockorder->Lookup = new Lookup('idstockorder', 'v_stockorder', false, 'id', ["kode","tanggal","",""], [], ["x_idstockorder_detail"], [], [], [], [], '', '');
                 break;
         }
         $this->idstockorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -147,18 +147,17 @@ class StockDeliveryorderDetail extends DbTable
         $this->sisa->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisa->Param, "CustomMsg");
         $this->Fields['sisa'] = &$this->sisa;
 
-        // jumlah_kirim
-        $this->jumlah_kirim = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_jumlah_kirim', 'jumlah_kirim', '`jumlah_kirim`', '`jumlah_kirim`', 3, 11, -1, false, '`jumlah_kirim`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jumlah_kirim->Nullable = false; // NOT NULL field
-        $this->jumlah_kirim->Required = true; // Required field
-        $this->jumlah_kirim->Sortable = true; // Allow sort
-        $this->jumlah_kirim->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->jumlah_kirim->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah_kirim->Param, "CustomMsg");
-        $this->Fields['jumlah_kirim'] = &$this->jumlah_kirim;
+        // jumlahkirim
+        $this->jumlahkirim = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_jumlahkirim', 'jumlahkirim', '`jumlahkirim`', '`jumlahkirim`', 3, 11, -1, false, '`jumlahkirim`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->jumlahkirim->Nullable = false; // NOT NULL field
+        $this->jumlahkirim->Required = true; // Required field
+        $this->jumlahkirim->Sortable = true; // Allow sort
+        $this->jumlahkirim->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->jumlahkirim->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlahkirim->Param, "CustomMsg");
+        $this->Fields['jumlahkirim'] = &$this->jumlahkirim;
 
         // keterangan
         $this->keterangan = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keterangan->Nullable = false; // NOT NULL field
         $this->keterangan->Required = true; // Required field
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
@@ -634,7 +633,7 @@ class StockDeliveryorderDetail extends DbTable
         $this->idstockorder_detail->DbValue = $row['idstockorder_detail'];
         $this->totalorder->DbValue = $row['totalorder'];
         $this->sisa->DbValue = $row['sisa'];
-        $this->jumlah_kirim->DbValue = $row['jumlah_kirim'];
+        $this->jumlahkirim->DbValue = $row['jumlahkirim'];
         $this->keterangan->DbValue = $row['keterangan'];
     }
 
@@ -966,7 +965,7 @@ SORTHTML;
         $this->idstockorder_detail->setDbValue($row['idstockorder_detail']);
         $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
-        $this->jumlah_kirim->setDbValue($row['jumlah_kirim']);
+        $this->jumlahkirim->setDbValue($row['jumlahkirim']);
         $this->keterangan->setDbValue($row['keterangan']);
     }
 
@@ -992,7 +991,7 @@ SORTHTML;
 
         // sisa
 
-        // jumlah_kirim
+        // jumlahkirim
 
         // keterangan
 
@@ -1010,9 +1009,9 @@ SORTHTML;
         if ($curVal != "") {
             $this->idstockorder->ViewValue = $this->idstockorder->lookupCacheOption($curVal);
             if ($this->idstockorder->ViewValue === null) { // Lookup from database
-                $filterWrk = "`idstockorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                    return (CurrentPageID() == "add" ) ? "totalsisa > 0" : "";;
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idstockorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1036,7 +1035,11 @@ SORTHTML;
             $this->idstockorder_detail->ViewValue = $this->idstockorder_detail->lookupCacheOption($curVal);
             if ($this->idstockorder_detail->ViewValue === null) { // Lookup from database
                 $filterWrk = "`idstockorder_detail`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 if ($ari > 0) { // Lookup values found
@@ -1061,10 +1064,10 @@ SORTHTML;
         $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
         $this->sisa->ViewCustomAttributes = "";
 
-        // jumlah_kirim
-        $this->jumlah_kirim->ViewValue = $this->jumlah_kirim->CurrentValue;
-        $this->jumlah_kirim->ViewValue = FormatNumber($this->jumlah_kirim->ViewValue, 0, -2, -2, -2);
-        $this->jumlah_kirim->ViewCustomAttributes = "";
+        // jumlahkirim
+        $this->jumlahkirim->ViewValue = $this->jumlahkirim->CurrentValue;
+        $this->jumlahkirim->ViewValue = FormatNumber($this->jumlahkirim->ViewValue, 0, -2, -2, -2);
+        $this->jumlahkirim->ViewCustomAttributes = "";
 
         // keterangan
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -1100,10 +1103,10 @@ SORTHTML;
         $this->sisa->HrefValue = "";
         $this->sisa->TooltipValue = "";
 
-        // jumlah_kirim
-        $this->jumlah_kirim->LinkCustomAttributes = "";
-        $this->jumlah_kirim->HrefValue = "";
-        $this->jumlah_kirim->TooltipValue = "";
+        // jumlahkirim
+        $this->jumlahkirim->LinkCustomAttributes = "";
+        $this->jumlahkirim->HrefValue = "";
+        $this->jumlahkirim->TooltipValue = "";
 
         // keterangan
         $this->keterangan->LinkCustomAttributes = "";
@@ -1167,11 +1170,11 @@ SORTHTML;
         $this->sisa->EditValue = $this->sisa->CurrentValue;
         $this->sisa->PlaceHolder = RemoveHtml($this->sisa->caption());
 
-        // jumlah_kirim
-        $this->jumlah_kirim->EditAttrs["class"] = "form-control";
-        $this->jumlah_kirim->EditCustomAttributes = "";
-        $this->jumlah_kirim->EditValue = $this->jumlah_kirim->CurrentValue;
-        $this->jumlah_kirim->PlaceHolder = RemoveHtml($this->jumlah_kirim->caption());
+        // jumlahkirim
+        $this->jumlahkirim->EditAttrs["class"] = "form-control";
+        $this->jumlahkirim->EditCustomAttributes = "";
+        $this->jumlahkirim->EditValue = $this->jumlahkirim->CurrentValue;
+        $this->jumlahkirim->PlaceHolder = RemoveHtml($this->jumlahkirim->caption());
 
         // keterangan
         $this->keterangan->EditAttrs["class"] = "form-control";
@@ -1211,14 +1214,14 @@ SORTHTML;
                     $doc->exportCaption($this->idstockorder_detail);
                     $doc->exportCaption($this->totalorder);
                     $doc->exportCaption($this->sisa);
-                    $doc->exportCaption($this->jumlah_kirim);
+                    $doc->exportCaption($this->jumlahkirim);
                     $doc->exportCaption($this->keterangan);
                 } else {
                     $doc->exportCaption($this->idstockorder);
                     $doc->exportCaption($this->idstockorder_detail);
                     $doc->exportCaption($this->totalorder);
                     $doc->exportCaption($this->sisa);
-                    $doc->exportCaption($this->jumlah_kirim);
+                    $doc->exportCaption($this->jumlahkirim);
                 }
                 $doc->endExportRow();
             }
@@ -1252,14 +1255,14 @@ SORTHTML;
                         $doc->exportField($this->idstockorder_detail);
                         $doc->exportField($this->totalorder);
                         $doc->exportField($this->sisa);
-                        $doc->exportField($this->jumlah_kirim);
+                        $doc->exportField($this->jumlahkirim);
                         $doc->exportField($this->keterangan);
                     } else {
                         $doc->exportField($this->idstockorder);
                         $doc->exportField($this->idstockorder_detail);
                         $doc->exportField($this->totalorder);
                         $doc->exportField($this->sisa);
-                        $doc->exportField($this->jumlah_kirim);
+                        $doc->exportField($this->jumlahkirim);
                     }
                     $doc->endExportRow($rowCnt);
                 }
@@ -1334,6 +1337,15 @@ SORTHTML;
     public function rowInserted($rsold, &$rsnew)
     {
         //Log("Row Inserted");
+        // update sisa stock_order_detail
+        ExecuteUpdate("UPDATE stock_order_detail SET sisa = sisa - {$rsnew['jumlahkirim']} WHERE id = {$rsnew['idstockorder_detail']}");
+
+        // set stock_order processed
+        ExecuteUpdate("UPDATE stock_order SET readonly = 1 WHERE id = {$rsnew['idstockorder']}");
+
+        // insert to stok
+        $idproduct = ExecuteScalar("SELECT idproduct FROM stock_order_detail WHERE id = {$rsnew['idstockorder_detail']}");
+        stok_trx($rsnew['id'], 'stockdelivery-in', $idproduct, $rsnew['jumlahkirim'], 'masuk');
     }
 
     // Row Updating event
@@ -1348,8 +1360,8 @@ SORTHTML;
     public function rowUpdated($rsold, &$rsnew)
     {
         //Log("Row Updated");
-        //$idproduct = ExecuteRow("SELECT idproduct FROM stock_order_detail WHERE id = {$rsnew['idstockorder_detail']}")['idproduct'];
-        //stok_trx($rsnew['id'], 'stockdelivery-in', $idproduct, $rsnew['jumlah_kirim'], 'masuk');
+        //$idproduct = ExecuteScalar("SELECT idproduct FROM stock_order_detail WHERE id = {$rsnew['idstockorder_detail']}");
+        //stok_trx($rsnew['id'], 'stockdelivery-in', $idproduct, $rsnew['jumlahkirim'], 'masuk');
     }
 
     // Row Update Conflict event

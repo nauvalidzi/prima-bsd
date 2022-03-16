@@ -22,6 +22,7 @@ loadjs.ready("head", function () {
     fstock_deliveryorderadd.addFields([
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null, ew.Validators.datetime(7)], fields.tanggal.isInvalid],
+        ["receipt_by", [fields.receipt_by.visible && fields.receipt_by.required ? ew.Validators.required(fields.receipt_by.caption) : null], fields.receipt_by.isInvalid],
         ["lampiran", [fields.lampiran.visible && fields.lampiran.required ? ew.Validators.fileRequired(fields.lampiran.caption) : null], fields.lampiran.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
@@ -90,6 +91,7 @@ loadjs.ready("head", function () {
     fstock_deliveryorderadd.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
+    fstock_deliveryorderadd.lists.receipt_by = <?= $Page->receipt_by->toClientList($Page) ?>;
     loadjs.done("fstock_deliveryorderadd");
 });
 </script>
@@ -139,6 +141,39 @@ loadjs.ready(["fstock_deliveryorderadd", "datetimepicker"], function() {
 });
 </script>
 <?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+    <div id="r_receipt_by" class="form-group row">
+        <label id="elh_stock_deliveryorder_receipt_by" for="x_receipt_by" class="<?= $Page->LeftColumnClass ?>"><?= $Page->receipt_by->caption() ?><?= $Page->receipt_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el_stock_deliveryorder_receipt_by">
+    <select
+        id="x_receipt_by"
+        name="x_receipt_by"
+        class="form-control ew-select<?= $Page->receipt_by->isInvalidClass() ?>"
+        data-select2-id="stock_deliveryorder_x_receipt_by"
+        data-table="stock_deliveryorder"
+        data-field="x_receipt_by"
+        data-value-separator="<?= $Page->receipt_by->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->receipt_by->getPlaceHolder()) ?>"
+        <?= $Page->receipt_by->editAttributes() ?>>
+        <?= $Page->receipt_by->selectOptionListHtml("x_receipt_by") ?>
+    </select>
+    <?= $Page->receipt_by->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->receipt_by->getErrorMessage() ?></div>
+<?= $Page->receipt_by->Lookup->getParamTag($Page, "p_x_receipt_by") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='stock_deliveryorder_x_receipt_by']"),
+        options = { name: "x_receipt_by", selectId: "stock_deliveryorder_x_receipt_by", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.stock_deliveryorder.fields.receipt_by.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -210,6 +245,7 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    $.get("api/nextKode/stock_deliveryorder/0",(function(e){$("#x_kode").val(e)}));
 });
 </script>

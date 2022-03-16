@@ -426,7 +426,6 @@ class VStockorderList extends VStockorder
     {
         $key = "";
         if (is_array($ar)) {
-            $key .= @$ar['idstockorder'];
         }
         return $key;
     }
@@ -438,9 +437,6 @@ class VStockorderList extends VStockorder
      */
     protected function hideFieldsForAddEdit()
     {
-        if ($this->isAdd() || $this->isCopy() || $this->isGridAdd()) {
-            $this->idstockorder->Visible = false;
-        }
     }
 
     // Lookup data
@@ -568,12 +564,11 @@ class VStockorderList extends VStockorder
 
         // Set up list options
         $this->setupListOptions();
-        $this->idstockorder->setVisibility();
-        $this->kode_stockorder->setVisibility();
-        $this->tanggal_stockorder->setVisibility();
-        $this->jumlah_order->setVisibility();
-        $this->sisa_order->setVisibility();
-        $this->aktif->setVisibility();
+        $this->id->setVisibility();
+        $this->kode->setVisibility();
+        $this->tanggal->setVisibility();
+        $this->readonly->setVisibility();
+        $this->totalsisa->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -864,12 +859,11 @@ class VStockorderList extends VStockorder
         // Initialize
         $filterList = "";
         $savedFilterList = "";
-        $filterList = Concat($filterList, $this->idstockorder->AdvancedSearch->toJson(), ","); // Field idstockorder
-        $filterList = Concat($filterList, $this->kode_stockorder->AdvancedSearch->toJson(), ","); // Field kode_stockorder
-        $filterList = Concat($filterList, $this->tanggal_stockorder->AdvancedSearch->toJson(), ","); // Field tanggal_stockorder
-        $filterList = Concat($filterList, $this->jumlah_order->AdvancedSearch->toJson(), ","); // Field jumlah_order
-        $filterList = Concat($filterList, $this->sisa_order->AdvancedSearch->toJson(), ","); // Field sisa_order
-        $filterList = Concat($filterList, $this->aktif->AdvancedSearch->toJson(), ","); // Field aktif
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
+        $filterList = Concat($filterList, $this->tanggal->AdvancedSearch->toJson(), ","); // Field tanggal
+        $filterList = Concat($filterList, $this->readonly->AdvancedSearch->toJson(), ","); // Field readonly
+        $filterList = Concat($filterList, $this->totalsisa->AdvancedSearch->toJson(), ","); // Field totalsisa
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -910,53 +904,45 @@ class VStockorderList extends VStockorder
         $filter = json_decode(Post("filter"), true);
         $this->Command = "search";
 
-        // Field idstockorder
-        $this->idstockorder->AdvancedSearch->SearchValue = @$filter["x_idstockorder"];
-        $this->idstockorder->AdvancedSearch->SearchOperator = @$filter["z_idstockorder"];
-        $this->idstockorder->AdvancedSearch->SearchCondition = @$filter["v_idstockorder"];
-        $this->idstockorder->AdvancedSearch->SearchValue2 = @$filter["y_idstockorder"];
-        $this->idstockorder->AdvancedSearch->SearchOperator2 = @$filter["w_idstockorder"];
-        $this->idstockorder->AdvancedSearch->save();
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
 
-        // Field kode_stockorder
-        $this->kode_stockorder->AdvancedSearch->SearchValue = @$filter["x_kode_stockorder"];
-        $this->kode_stockorder->AdvancedSearch->SearchOperator = @$filter["z_kode_stockorder"];
-        $this->kode_stockorder->AdvancedSearch->SearchCondition = @$filter["v_kode_stockorder"];
-        $this->kode_stockorder->AdvancedSearch->SearchValue2 = @$filter["y_kode_stockorder"];
-        $this->kode_stockorder->AdvancedSearch->SearchOperator2 = @$filter["w_kode_stockorder"];
-        $this->kode_stockorder->AdvancedSearch->save();
+        // Field kode
+        $this->kode->AdvancedSearch->SearchValue = @$filter["x_kode"];
+        $this->kode->AdvancedSearch->SearchOperator = @$filter["z_kode"];
+        $this->kode->AdvancedSearch->SearchCondition = @$filter["v_kode"];
+        $this->kode->AdvancedSearch->SearchValue2 = @$filter["y_kode"];
+        $this->kode->AdvancedSearch->SearchOperator2 = @$filter["w_kode"];
+        $this->kode->AdvancedSearch->save();
 
-        // Field tanggal_stockorder
-        $this->tanggal_stockorder->AdvancedSearch->SearchValue = @$filter["x_tanggal_stockorder"];
-        $this->tanggal_stockorder->AdvancedSearch->SearchOperator = @$filter["z_tanggal_stockorder"];
-        $this->tanggal_stockorder->AdvancedSearch->SearchCondition = @$filter["v_tanggal_stockorder"];
-        $this->tanggal_stockorder->AdvancedSearch->SearchValue2 = @$filter["y_tanggal_stockorder"];
-        $this->tanggal_stockorder->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal_stockorder"];
-        $this->tanggal_stockorder->AdvancedSearch->save();
+        // Field tanggal
+        $this->tanggal->AdvancedSearch->SearchValue = @$filter["x_tanggal"];
+        $this->tanggal->AdvancedSearch->SearchOperator = @$filter["z_tanggal"];
+        $this->tanggal->AdvancedSearch->SearchCondition = @$filter["v_tanggal"];
+        $this->tanggal->AdvancedSearch->SearchValue2 = @$filter["y_tanggal"];
+        $this->tanggal->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal"];
+        $this->tanggal->AdvancedSearch->save();
 
-        // Field jumlah_order
-        $this->jumlah_order->AdvancedSearch->SearchValue = @$filter["x_jumlah_order"];
-        $this->jumlah_order->AdvancedSearch->SearchOperator = @$filter["z_jumlah_order"];
-        $this->jumlah_order->AdvancedSearch->SearchCondition = @$filter["v_jumlah_order"];
-        $this->jumlah_order->AdvancedSearch->SearchValue2 = @$filter["y_jumlah_order"];
-        $this->jumlah_order->AdvancedSearch->SearchOperator2 = @$filter["w_jumlah_order"];
-        $this->jumlah_order->AdvancedSearch->save();
+        // Field readonly
+        $this->readonly->AdvancedSearch->SearchValue = @$filter["x_readonly"];
+        $this->readonly->AdvancedSearch->SearchOperator = @$filter["z_readonly"];
+        $this->readonly->AdvancedSearch->SearchCondition = @$filter["v_readonly"];
+        $this->readonly->AdvancedSearch->SearchValue2 = @$filter["y_readonly"];
+        $this->readonly->AdvancedSearch->SearchOperator2 = @$filter["w_readonly"];
+        $this->readonly->AdvancedSearch->save();
 
-        // Field sisa_order
-        $this->sisa_order->AdvancedSearch->SearchValue = @$filter["x_sisa_order"];
-        $this->sisa_order->AdvancedSearch->SearchOperator = @$filter["z_sisa_order"];
-        $this->sisa_order->AdvancedSearch->SearchCondition = @$filter["v_sisa_order"];
-        $this->sisa_order->AdvancedSearch->SearchValue2 = @$filter["y_sisa_order"];
-        $this->sisa_order->AdvancedSearch->SearchOperator2 = @$filter["w_sisa_order"];
-        $this->sisa_order->AdvancedSearch->save();
-
-        // Field aktif
-        $this->aktif->AdvancedSearch->SearchValue = @$filter["x_aktif"];
-        $this->aktif->AdvancedSearch->SearchOperator = @$filter["z_aktif"];
-        $this->aktif->AdvancedSearch->SearchCondition = @$filter["v_aktif"];
-        $this->aktif->AdvancedSearch->SearchValue2 = @$filter["y_aktif"];
-        $this->aktif->AdvancedSearch->SearchOperator2 = @$filter["w_aktif"];
-        $this->aktif->AdvancedSearch->save();
+        // Field totalsisa
+        $this->totalsisa->AdvancedSearch->SearchValue = @$filter["x_totalsisa"];
+        $this->totalsisa->AdvancedSearch->SearchOperator = @$filter["z_totalsisa"];
+        $this->totalsisa->AdvancedSearch->SearchCondition = @$filter["v_totalsisa"];
+        $this->totalsisa->AdvancedSearch->SearchValue2 = @$filter["y_totalsisa"];
+        $this->totalsisa->AdvancedSearch->SearchOperator2 = @$filter["w_totalsisa"];
+        $this->totalsisa->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -965,7 +951,7 @@ class VStockorderList extends VStockorder
     protected function basicSearchSql($arKeywords, $type)
     {
         $where = "";
-        $this->buildBasicSearchSql($where, $this->kode_stockorder, $arKeywords, $type);
+        $this->buildBasicSearchSql($where, $this->kode, $arKeywords, $type);
         return $where;
     }
 
@@ -1128,12 +1114,11 @@ class VStockorderList extends VStockorder
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->idstockorder); // idstockorder
-            $this->updateSort($this->kode_stockorder); // kode_stockorder
-            $this->updateSort($this->tanggal_stockorder); // tanggal_stockorder
-            $this->updateSort($this->jumlah_order); // jumlah_order
-            $this->updateSort($this->sisa_order); // sisa_order
-            $this->updateSort($this->aktif); // aktif
+            $this->updateSort($this->id); // id
+            $this->updateSort($this->kode); // kode
+            $this->updateSort($this->tanggal); // tanggal
+            $this->updateSort($this->readonly); // readonly
+            $this->updateSort($this->totalsisa); // totalsisa
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1173,12 +1158,11 @@ class VStockorderList extends VStockorder
             if ($this->Command == "resetsort") {
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
-                $this->idstockorder->setSort("");
-                $this->kode_stockorder->setSort("");
-                $this->tanggal_stockorder->setSort("");
-                $this->jumlah_order->setSort("");
-                $this->sisa_order->setSort("");
-                $this->aktif->setSort("");
+                $this->id->setSort("");
+                $this->kode->setSort("");
+                $this->tanggal->setSort("");
+                $this->readonly->setSort("");
+                $this->totalsisa->setSort("");
             }
 
             // Reset start position
@@ -1276,7 +1260,6 @@ class VStockorderList extends VStockorder
 
         // "checkbox"
         $opt = $this->ListOptions["checkbox"];
-        $opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->idstockorder->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
         $this->renderListOptionsExt();
 
         // Call ListOptions_Rendered event
@@ -1522,41 +1505,29 @@ class VStockorderList extends VStockorder
         if (!$rs) {
             return;
         }
-        $this->idstockorder->setDbValue($row['idstockorder']);
-        $this->kode_stockorder->setDbValue($row['kode_stockorder']);
-        $this->tanggal_stockorder->setDbValue($row['tanggal_stockorder']);
-        $this->jumlah_order->setDbValue($row['jumlah_order']);
-        $this->sisa_order->setDbValue($row['sisa_order']);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->id->setDbValue($row['id']);
+        $this->kode->setDbValue($row['kode']);
+        $this->tanggal->setDbValue($row['tanggal']);
+        $this->readonly->setDbValue($row['readonly']);
+        $this->totalsisa->setDbValue($row['totalsisa']);
     }
 
     // Return a row with default values
     protected function newRow()
     {
         $row = [];
-        $row['idstockorder'] = null;
-        $row['kode_stockorder'] = null;
-        $row['tanggal_stockorder'] = null;
-        $row['jumlah_order'] = null;
-        $row['sisa_order'] = null;
-        $row['aktif'] = null;
+        $row['id'] = null;
+        $row['kode'] = null;
+        $row['tanggal'] = null;
+        $row['readonly'] = null;
+        $row['totalsisa'] = null;
         return $row;
     }
 
     // Load old record
     protected function loadOldRecord()
     {
-        // Load old record
-        $this->OldRecordset = null;
-        $validKey = $this->OldKey != "";
-        if ($validKey) {
-            $this->CurrentFilter = $this->getRecordFilter();
-            $sql = $this->getCurrentSql();
-            $conn = $this->getConnection();
-            $this->OldRecordset = LoadRecordset($sql, $conn);
-        }
-        $this->loadRowValues($this->OldRecordset); // Load row values
-        return $validKey;
+        return false;
     }
 
     // Render row values based on field settings
@@ -1572,83 +1543,77 @@ class VStockorderList extends VStockorder
         $this->InlineCopyUrl = $this->getInlineCopyUrl();
         $this->DeleteUrl = $this->getDeleteUrl();
 
+        // Convert decimal values if posted back
+        if ($this->totalsisa->FormValue == $this->totalsisa->CurrentValue && is_numeric(ConvertToFloatString($this->totalsisa->CurrentValue))) {
+            $this->totalsisa->CurrentValue = ConvertToFloatString($this->totalsisa->CurrentValue);
+        }
+
         // Call Row_Rendering event
         $this->rowRendering();
 
         // Common render codes for all row types
 
-        // idstockorder
+        // id
 
-        // kode_stockorder
+        // kode
 
-        // tanggal_stockorder
+        // tanggal
 
-        // jumlah_order
+        // readonly
 
-        // sisa_order
-
-        // aktif
+        // totalsisa
         if ($this->RowType == ROWTYPE_VIEW) {
-            // idstockorder
-            $this->idstockorder->ViewValue = $this->idstockorder->CurrentValue;
-            $this->idstockorder->ViewCustomAttributes = "";
+            // id
+            $this->id->ViewValue = $this->id->CurrentValue;
+            $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
+            $this->id->ViewCustomAttributes = "";
 
-            // kode_stockorder
-            $this->kode_stockorder->ViewValue = $this->kode_stockorder->CurrentValue;
-            $this->kode_stockorder->ViewCustomAttributes = "";
+            // kode
+            $this->kode->ViewValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
-            // tanggal_stockorder
-            $this->tanggal_stockorder->ViewValue = $this->tanggal_stockorder->CurrentValue;
-            $this->tanggal_stockorder->ViewValue = FormatDateTime($this->tanggal_stockorder->ViewValue, 0);
-            $this->tanggal_stockorder->ViewCustomAttributes = "";
+            // tanggal
+            $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
+            $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+            $this->tanggal->ViewCustomAttributes = "";
 
-            // jumlah_order
-            $this->jumlah_order->ViewValue = $this->jumlah_order->CurrentValue;
-            $this->jumlah_order->ViewValue = FormatNumber($this->jumlah_order->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_order->ViewCustomAttributes = "";
-
-            // sisa_order
-            $this->sisa_order->ViewValue = $this->sisa_order->CurrentValue;
-            $this->sisa_order->ViewValue = FormatNumber($this->sisa_order->ViewValue, 0, -2, -2, -2);
-            $this->sisa_order->ViewCustomAttributes = "";
-
-            // aktif
-            if (ConvertToBool($this->aktif->CurrentValue)) {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
+            // readonly
+            if (ConvertToBool($this->readonly->CurrentValue)) {
+                $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
             } else {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
+                $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
-            // idstockorder
-            $this->idstockorder->LinkCustomAttributes = "";
-            $this->idstockorder->HrefValue = "";
-            $this->idstockorder->TooltipValue = "";
+            // totalsisa
+            $this->totalsisa->ViewValue = $this->totalsisa->CurrentValue;
+            $this->totalsisa->ViewValue = FormatNumber($this->totalsisa->ViewValue, 2, -2, -2, -2);
+            $this->totalsisa->ViewCustomAttributes = "";
 
-            // kode_stockorder
-            $this->kode_stockorder->LinkCustomAttributes = "";
-            $this->kode_stockorder->HrefValue = "";
-            $this->kode_stockorder->TooltipValue = "";
+            // id
+            $this->id->LinkCustomAttributes = "";
+            $this->id->HrefValue = "";
+            $this->id->TooltipValue = "";
 
-            // tanggal_stockorder
-            $this->tanggal_stockorder->LinkCustomAttributes = "";
-            $this->tanggal_stockorder->HrefValue = "";
-            $this->tanggal_stockorder->TooltipValue = "";
+            // kode
+            $this->kode->LinkCustomAttributes = "";
+            $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
-            // jumlah_order
-            $this->jumlah_order->LinkCustomAttributes = "";
-            $this->jumlah_order->HrefValue = "";
-            $this->jumlah_order->TooltipValue = "";
+            // tanggal
+            $this->tanggal->LinkCustomAttributes = "";
+            $this->tanggal->HrefValue = "";
+            $this->tanggal->TooltipValue = "";
 
-            // sisa_order
-            $this->sisa_order->LinkCustomAttributes = "";
-            $this->sisa_order->HrefValue = "";
-            $this->sisa_order->TooltipValue = "";
+            // readonly
+            $this->readonly->LinkCustomAttributes = "";
+            $this->readonly->HrefValue = "";
+            $this->readonly->TooltipValue = "";
 
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
+            // totalsisa
+            $this->totalsisa->LinkCustomAttributes = "";
+            $this->totalsisa->HrefValue = "";
+            $this->totalsisa->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1719,7 +1684,7 @@ class VStockorderList extends VStockorder
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_aktif":
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";

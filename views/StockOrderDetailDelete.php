@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $StockOrderDetailDelete = &$Page;
@@ -44,12 +44,6 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_stock_order_detail_id" class="stock_order_detail_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
-<?php if ($Page->pid->Visible) { // pid ?>
-        <th class="<?= $Page->pid->headerCellClass() ?>"><span id="elh_stock_order_detail_pid" class="stock_order_detail_pid"><?= $Page->pid->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
         <th class="<?= $Page->idbrand->headerCellClass() ?>"><span id="elh_stock_order_detail_idbrand" class="stock_order_detail_idbrand"><?= $Page->idbrand->caption() ?></span></th>
 <?php } ?>
@@ -59,14 +53,14 @@ $Page->showMessage();
 <?php if ($Page->stok_akhir->Visible) { // stok_akhir ?>
         <th class="<?= $Page->stok_akhir->headerCellClass() ?>"><span id="elh_stock_order_detail_stok_akhir" class="stock_order_detail_stok_akhir"><?= $Page->stok_akhir->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->jumlah->Visible) { // jumlah ?>
-        <th class="<?= $Page->jumlah->headerCellClass() ?>"><span id="elh_stock_order_detail_jumlah" class="stock_order_detail_jumlah"><?= $Page->jumlah->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
         <th class="<?= $Page->sisa->headerCellClass() ?>"><span id="elh_stock_order_detail_sisa" class="stock_order_detail_sisa"><?= $Page->sisa->caption() ?></span></th>
 <?php } ?>
-<?php if ($Page->aktif->Visible) { // aktif ?>
-        <th class="<?= $Page->aktif->headerCellClass() ?>"><span id="elh_stock_order_detail_aktif" class="stock_order_detail_aktif"><?= $Page->aktif->caption() ?></span></th>
+<?php if ($Page->jumlah->Visible) { // jumlah ?>
+        <th class="<?= $Page->jumlah->headerCellClass() ?>"><span id="elh_stock_order_detail_jumlah" class="stock_order_detail_jumlah"><?= $Page->jumlah->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><span id="elh_stock_order_detail_keterangan" class="stock_order_detail_keterangan"><?= $Page->keterangan->caption() ?></span></th>
 <?php } ?>
     </tr>
     </thead>
@@ -89,22 +83,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_order_detail_id" class="stock_order_detail_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($Page->pid->Visible) { // pid ?>
-        <td <?= $Page->pid->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_order_detail_pid" class="stock_order_detail_pid">
-<span<?= $Page->pid->viewAttributes() ?>>
-<?= $Page->pid->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
         <td <?= $Page->idbrand->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_stock_order_detail_idbrand" class="stock_order_detail_idbrand">
@@ -129,14 +107,6 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->jumlah->Visible) { // jumlah ?>
-        <td <?= $Page->jumlah->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_order_detail_jumlah" class="stock_order_detail_jumlah">
-<span<?= $Page->jumlah->viewAttributes() ?>>
-<?= $Page->jumlah->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
         <td <?= $Page->sisa->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_stock_order_detail_sisa" class="stock_order_detail_sisa">
@@ -145,14 +115,19 @@ while (!$Page->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
-<?php if ($Page->aktif->Visible) { // aktif ?>
-        <td <?= $Page->aktif->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_order_detail_aktif" class="stock_order_detail_aktif">
-<span<?= $Page->aktif->viewAttributes() ?>>
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" id="x_aktif_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->aktif->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->aktif->CurrentValue)) { ?> checked<?php } ?>>
-    <label class="custom-control-label" for="x_aktif_<?= $Page->RowCount ?>"></label>
-</div></span>
+<?php if ($Page->jumlah->Visible) { // jumlah ?>
+        <td <?= $Page->jumlah->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_order_detail_jumlah" class="stock_order_detail_jumlah">
+<span<?= $Page->jumlah->viewAttributes() ?>>
+<?= $Page->jumlah->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_order_detail_keterangan" class="stock_order_detail_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

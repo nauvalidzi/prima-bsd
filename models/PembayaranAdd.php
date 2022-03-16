@@ -650,7 +650,7 @@ class PembayaranAdd extends Pembayaran
         $this->bukti->CurrentValue = null; // Clear file related field
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
-        $this->created_by->CurrentValue = CurrentUserID();
+        $this->created_by->CurrentValue = CurrentDate();
     }
 
     // Load form values

@@ -17,6 +17,18 @@ loadjs.ready("head", function () {
     fstock_order_detaillist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
     loadjs.done("fstock_order_detaillist");
 });
+var fstock_order_detaillistsrch, currentSearchForm, currentAdvancedSearchForm;
+loadjs.ready("head", function () {
+    var $ = jQuery;
+    // Form object for search
+    fstock_order_detaillistsrch = currentSearchForm = new ew.Form("fstock_order_detaillistsrch");
+
+    // Dynamic selection lists
+
+    // Filters
+    fstock_order_detaillistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fstock_order_detaillistsrch");
+});
 </script>
 <style>
 .ew-table-preview-row { /* main table preview row color */
@@ -56,6 +68,12 @@ loadjs.ready("head", function () {
 <?php if ($Page->ImportOptions->visible()) { ?>
 <?php $Page->ImportOptions->render("body") ?>
 <?php } ?>
+<?php if ($Page->SearchOptions->visible()) { ?>
+<?php $Page->SearchOptions->render("body") ?>
+<?php } ?>
+<?php if ($Page->FilterOptions->visible()) { ?>
+<?php $Page->FilterOptions->render("body") ?>
+<?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -71,6 +89,34 @@ if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "stock_orde
 <?php
 $Page->renderOtherOptions();
 ?>
+<?php if ($Security->canSearch()) { ?>
+<?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
+<form name="fstock_order_detaillistsrch" id="fstock_order_detaillistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fstock_order_detaillistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<input type="hidden" name="cmd" value="search">
+<input type="hidden" name="t" value="stock_order_detail">
+    <div class="ew-extended-search">
+<div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
+    <div class="ew-quick-search input-group">
+        <input type="text" name="<?= Config("TABLE_BASIC_SEARCH") ?>" id="<?= Config("TABLE_BASIC_SEARCH") ?>" class="form-control" value="<?= HtmlEncode($Page->BasicSearch->getKeyword()) ?>" placeholder="<?= HtmlEncode($Language->phrase("Search")) ?>">
+        <input type="hidden" name="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" value="<?= HtmlEncode($Page->BasicSearch->getType()) ?>">
+        <div class="input-group-append">
+            <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span></button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this);"><?= $Language->phrase("QuickSearchAuto") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "=") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, '=');"><?= $Language->phrase("QuickSearchExact") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "AND") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'AND');"><?= $Language->phrase("QuickSearchAll") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "OR") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'OR');"><?= $Language->phrase("QuickSearchAny") ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+    </div><!-- /.ew-extended-search -->
+</div><!-- /.ew-search-panel -->
+</form>
+<?php } ?>
+<?php } ?>
 <?php $Page->showPageHeader(); ?>
 <?php
 $Page->showMessage();
@@ -116,6 +162,9 @@ $Page->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Page->jumlah->Visible) { // jumlah ?>
         <th data-name="jumlah" class="<?= $Page->jumlah->headerCellClass() ?>"><div id="elh_stock_order_detail_jumlah" class="stock_order_detail_jumlah"><?= $Page->renderSort($Page->jumlah) ?></div></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_stock_order_detail_keterangan" class="stock_order_detail_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -221,6 +270,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_stock_order_detail_jumlah">
 <span<?= $Page->jumlah->viewAttributes() ?>>
 <?= $Page->jumlah->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_order_detail_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

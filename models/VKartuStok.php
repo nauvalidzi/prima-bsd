@@ -29,6 +29,7 @@ class VKartuStok extends DbTable
 
     // Fields
     public $idproduct;
+    public $idbrand;
     public $kodeproduct;
     public $namaproduct;
     public $stok;
@@ -76,6 +77,25 @@ class VKartuStok extends DbTable
         $this->idproduct->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idproduct->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idproduct->Param, "CustomMsg");
         $this->Fields['idproduct'] = &$this->idproduct;
+
+        // idbrand
+        $this->idbrand = new DbField('v_kartu_stok', 'v_kartu_stok', 'x_idbrand', 'idbrand', '`idbrand`', '`idbrand`', 20, 20, -1, false, '`idbrand`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->idbrand->Nullable = false; // NOT NULL field
+        $this->idbrand->Required = true; // Required field
+        $this->idbrand->Sortable = true; // Allow sort
+        $this->idbrand->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idbrand->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idbrand->Lookup = new Lookup('idbrand', 'brand', false, 'id', ["kode","title","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->idbrand->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->idbrand->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idbrand->Param, "CustomMsg");
+        $this->Fields['idbrand'] = &$this->idbrand;
 
         // kodeproduct
         $this->kodeproduct = new DbField('v_kartu_stok', 'v_kartu_stok', 'x_kodeproduct', 'kodeproduct', '`kodeproduct`', '`kodeproduct`', 200, 50, -1, false, '`kodeproduct`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -515,6 +535,7 @@ class VKartuStok extends DbTable
             return;
         }
         $this->idproduct->DbValue = $row['idproduct'];
+        $this->idbrand->DbValue = $row['idbrand'];
         $this->kodeproduct->DbValue = $row['kodeproduct'];
         $this->namaproduct->DbValue = $row['namaproduct'];
         $this->stok->DbValue = $row['stok'];
@@ -839,6 +860,7 @@ SORTHTML;
             return;
         }
         $this->idproduct->setDbValue($row['idproduct']);
+        $this->idbrand->setDbValue($row['idbrand']);
         $this->kodeproduct->setDbValue($row['kodeproduct']);
         $this->namaproduct->setDbValue($row['namaproduct']);
         $this->stok->setDbValue($row['stok']);
@@ -856,6 +878,8 @@ SORTHTML;
 
         // idproduct
 
+        // idbrand
+
         // kodeproduct
 
         // namaproduct
@@ -865,6 +889,27 @@ SORTHTML;
         // idproduct
         $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
         $this->idproduct->ViewCustomAttributes = "";
+
+        // idbrand
+        $curVal = trim(strval($this->idbrand->CurrentValue));
+        if ($curVal != "") {
+            $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+            if ($this->idbrand->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                    $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                } else {
+                    $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                }
+            }
+        } else {
+            $this->idbrand->ViewValue = null;
+        }
+        $this->idbrand->ViewCustomAttributes = "";
 
         // kodeproduct
         $this->kodeproduct->ViewValue = $this->kodeproduct->CurrentValue;
@@ -883,6 +928,11 @@ SORTHTML;
         $this->idproduct->LinkCustomAttributes = "";
         $this->idproduct->HrefValue = "";
         $this->idproduct->TooltipValue = "";
+
+        // idbrand
+        $this->idbrand->LinkCustomAttributes = "";
+        $this->idbrand->HrefValue = "";
+        $this->idbrand->TooltipValue = "";
 
         // kodeproduct
         $this->kodeproduct->LinkCustomAttributes = "";
@@ -919,6 +969,11 @@ SORTHTML;
         $this->idproduct->EditCustomAttributes = "";
         $this->idproduct->EditValue = $this->idproduct->CurrentValue;
         $this->idproduct->ViewCustomAttributes = "";
+
+        // idbrand
+        $this->idbrand->EditAttrs["class"] = "form-control";
+        $this->idbrand->EditCustomAttributes = "";
+        $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
         // kodeproduct
         $this->kodeproduct->EditAttrs["class"] = "form-control";
@@ -972,11 +1027,13 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
+                    $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->kodeproduct);
                     $doc->exportCaption($this->namaproduct);
                     $doc->exportCaption($this->stok);
                 } else {
                     $doc->exportCaption($this->idproduct);
+                    $doc->exportCaption($this->idbrand);
                     $doc->exportCaption($this->kodeproduct);
                     $doc->exportCaption($this->namaproduct);
                     $doc->exportCaption($this->stok);
@@ -1009,11 +1066,13 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
+                        $doc->exportField($this->idbrand);
                         $doc->exportField($this->kodeproduct);
                         $doc->exportField($this->namaproduct);
                         $doc->exportField($this->stok);
                     } else {
                         $doc->exportField($this->idproduct);
+                        $doc->exportField($this->idbrand);
                         $doc->exportField($this->kodeproduct);
                         $doc->exportField($this->namaproduct);
                         $doc->exportField($this->stok);

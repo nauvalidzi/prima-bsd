@@ -26,7 +26,8 @@ loadjs.ready("head", function () {
         ["idstockorder_detail", [fields.idstockorder_detail.visible && fields.idstockorder_detail.required ? ew.Validators.required(fields.idstockorder_detail.caption) : null], fields.idstockorder_detail.isInvalid],
         ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null], fields.totalorder.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
-        ["jumlah_kirim", [fields.jumlah_kirim.visible && fields.jumlah_kirim.required ? ew.Validators.required(fields.jumlah_kirim.caption) : null, ew.Validators.integer], fields.jumlah_kirim.isInvalid]
+        ["jumlahkirim", [fields.jumlahkirim.visible && fields.jumlahkirim.required ? ew.Validators.required(fields.jumlahkirim.caption) : null, ew.Validators.integer], fields.jumlahkirim.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -88,7 +89,9 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "sisa", false))
             return false;
-        if (ew.valueChanged(fobj, rowIndex, "jumlah_kirim", false))
+        if (ew.valueChanged(fobj, rowIndex, "jumlahkirim", false))
+            return false;
+        if (ew.valueChanged(fobj, rowIndex, "keterangan", false))
             return false;
         return true;
     }
@@ -141,8 +144,11 @@ $Grid->ListOptions->render("header", "left");
 <?php if ($Grid->sisa->Visible) { // sisa ?>
         <th data-name="sisa" class="<?= $Grid->sisa->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_sisa" class="stock_deliveryorder_detail_sisa"><?= $Grid->renderSort($Grid->sisa) ?></div></th>
 <?php } ?>
-<?php if ($Grid->jumlah_kirim->Visible) { // jumlah_kirim ?>
-        <th data-name="jumlah_kirim" class="<?= $Grid->jumlah_kirim->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_jumlah_kirim" class="stock_deliveryorder_detail_jumlah_kirim"><?= $Grid->renderSort($Grid->jumlah_kirim) ?></div></th>
+<?php if ($Grid->jumlahkirim->Visible) { // jumlahkirim ?>
+        <th data-name="jumlahkirim" class="<?= $Grid->jumlahkirim->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_jumlahkirim" class="stock_deliveryorder_detail_jumlahkirim"><?= $Grid->renderSort($Grid->jumlahkirim) ?></div></th>
+<?php } ?>
+<?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Grid->keterangan->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_keterangan" class="stock_deliveryorder_detail_keterangan"><?= $Grid->renderSort($Grid->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -454,29 +460,56 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
-    <?php if ($Grid->jumlah_kirim->Visible) { // jumlah_kirim ?>
-        <td data-name="jumlah_kirim" <?= $Grid->jumlah_kirim->cellAttributes() ?>>
+    <?php if ($Grid->jumlahkirim->Visible) { // jumlahkirim ?>
+        <td data-name="jumlahkirim" <?= $Grid->jumlahkirim->cellAttributes() ?>>
 <?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_jumlah_kirim" class="form-group">
-<input type="<?= $Grid->jumlah_kirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" name="x<?= $Grid->RowIndex ?>_jumlah_kirim" id="x<?= $Grid->RowIndex ?>_jumlah_kirim" size="30" placeholder="<?= HtmlEncode($Grid->jumlah_kirim->getPlaceHolder()) ?>" value="<?= $Grid->jumlah_kirim->EditValue ?>"<?= $Grid->jumlah_kirim->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->jumlah_kirim->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_jumlahkirim" class="form-group">
+<input type="<?= $Grid->jumlahkirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" name="x<?= $Grid->RowIndex ?>_jumlahkirim" id="x<?= $Grid->RowIndex ?>_jumlahkirim" size="30" placeholder="<?= HtmlEncode($Grid->jumlahkirim->getPlaceHolder()) ?>" value="<?= $Grid->jumlahkirim->EditValue ?>"<?= $Grid->jumlahkirim->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->jumlahkirim->getErrorMessage() ?></div>
 </span>
-<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlah_kirim" id="o<?= $Grid->RowIndex ?>_jumlah_kirim" value="<?= HtmlEncode($Grid->jumlah_kirim->OldValue) ?>">
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlahkirim" id="o<?= $Grid->RowIndex ?>_jumlahkirim" value="<?= HtmlEncode($Grid->jumlahkirim->OldValue) ?>">
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_jumlah_kirim" class="form-group">
-<input type="<?= $Grid->jumlah_kirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" name="x<?= $Grid->RowIndex ?>_jumlah_kirim" id="x<?= $Grid->RowIndex ?>_jumlah_kirim" size="30" placeholder="<?= HtmlEncode($Grid->jumlah_kirim->getPlaceHolder()) ?>" value="<?= $Grid->jumlah_kirim->EditValue ?>"<?= $Grid->jumlah_kirim->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->jumlah_kirim->getErrorMessage() ?></div>
+<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_jumlahkirim" class="form-group">
+<input type="<?= $Grid->jumlahkirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" name="x<?= $Grid->RowIndex ?>_jumlahkirim" id="x<?= $Grid->RowIndex ?>_jumlahkirim" size="30" placeholder="<?= HtmlEncode($Grid->jumlahkirim->getPlaceHolder()) ?>" value="<?= $Grid->jumlahkirim->EditValue ?>"<?= $Grid->jumlahkirim->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->jumlahkirim->getErrorMessage() ?></div>
 </span>
 <?php } ?>
 <?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_jumlah_kirim">
-<span<?= $Grid->jumlah_kirim->viewAttributes() ?>>
-<?= $Grid->jumlah_kirim->getViewValue() ?></span>
+<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_jumlahkirim">
+<span<?= $Grid->jumlahkirim->viewAttributes() ?>>
+<?= $Grid->jumlahkirim->getViewValue() ?></span>
 </span>
 <?php if ($Grid->isConfirm()) { ?>
-<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" data-hidden="1" name="fstock_deliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_jumlah_kirim" id="fstock_deliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_jumlah_kirim" value="<?= HtmlEncode($Grid->jumlah_kirim->FormValue) ?>">
-<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" data-hidden="1" name="fstock_deliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_jumlah_kirim" id="fstock_deliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_jumlah_kirim" value="<?= HtmlEncode($Grid->jumlah_kirim->OldValue) ?>">
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" data-hidden="1" name="fstock_deliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_jumlahkirim" id="fstock_deliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_jumlahkirim" value="<?= HtmlEncode($Grid->jumlahkirim->FormValue) ?>">
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" data-hidden="1" name="fstock_deliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_jumlahkirim" id="fstock_deliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_jumlahkirim" value="<?= HtmlEncode($Grid->jumlahkirim->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Grid->keterangan->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_keterangan" class="form-group">
+<textarea data-table="stock_deliveryorder_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_keterangan" class="form-group">
+<textarea data-table="stock_deliveryorder_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_stock_deliveryorder_detail_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_keterangan" data-hidden="1" name="fstock_deliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_keterangan" id="fstock_deliveryorder_detailgrid$x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_keterangan" data-hidden="1" name="fstock_deliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_keterangan" id="fstock_deliveryorder_detailgrid$o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -637,21 +670,38 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_sisa" data-hidden="1" name="o<?= $Grid->RowIndex ?>_sisa" id="o<?= $Grid->RowIndex ?>_sisa" value="<?= HtmlEncode($Grid->sisa->OldValue) ?>">
 </td>
     <?php } ?>
-    <?php if ($Grid->jumlah_kirim->Visible) { // jumlah_kirim ?>
-        <td data-name="jumlah_kirim">
+    <?php if ($Grid->jumlahkirim->Visible) { // jumlahkirim ?>
+        <td data-name="jumlahkirim">
 <?php if (!$Grid->isConfirm()) { ?>
-<span id="el$rowindex$_stock_deliveryorder_detail_jumlah_kirim" class="form-group stock_deliveryorder_detail_jumlah_kirim">
-<input type="<?= $Grid->jumlah_kirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" name="x<?= $Grid->RowIndex ?>_jumlah_kirim" id="x<?= $Grid->RowIndex ?>_jumlah_kirim" size="30" placeholder="<?= HtmlEncode($Grid->jumlah_kirim->getPlaceHolder()) ?>" value="<?= $Grid->jumlah_kirim->EditValue ?>"<?= $Grid->jumlah_kirim->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Grid->jumlah_kirim->getErrorMessage() ?></div>
+<span id="el$rowindex$_stock_deliveryorder_detail_jumlahkirim" class="form-group stock_deliveryorder_detail_jumlahkirim">
+<input type="<?= $Grid->jumlahkirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" name="x<?= $Grid->RowIndex ?>_jumlahkirim" id="x<?= $Grid->RowIndex ?>_jumlahkirim" size="30" placeholder="<?= HtmlEncode($Grid->jumlahkirim->getPlaceHolder()) ?>" value="<?= $Grid->jumlahkirim->EditValue ?>"<?= $Grid->jumlahkirim->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->jumlahkirim->getErrorMessage() ?></div>
 </span>
 <?php } else { ?>
-<span id="el$rowindex$_stock_deliveryorder_detail_jumlah_kirim" class="form-group stock_deliveryorder_detail_jumlah_kirim">
-<span<?= $Grid->jumlah_kirim->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->jumlah_kirim->getDisplayValue($Grid->jumlah_kirim->ViewValue))) ?>"></span>
+<span id="el$rowindex$_stock_deliveryorder_detail_jumlahkirim" class="form-group stock_deliveryorder_detail_jumlahkirim">
+<span<?= $Grid->jumlahkirim->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->jumlahkirim->getDisplayValue($Grid->jumlahkirim->ViewValue))) ?>"></span>
 </span>
-<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlah_kirim" id="x<?= $Grid->RowIndex ?>_jumlah_kirim" value="<?= HtmlEncode($Grid->jumlah_kirim->FormValue) ?>">
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlahkirim" id="x<?= $Grid->RowIndex ?>_jumlahkirim" value="<?= HtmlEncode($Grid->jumlahkirim->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlah_kirim" id="o<?= $Grid->RowIndex ?>_jumlah_kirim" value="<?= HtmlEncode($Grid->jumlah_kirim->OldValue) ?>">
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlahkirim" id="o<?= $Grid->RowIndex ?>_jumlahkirim" value="<?= HtmlEncode($Grid->jumlahkirim->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_stock_deliveryorder_detail_keterangan" class="form-group stock_deliveryorder_detail_keterangan">
+<textarea data-table="stock_deliveryorder_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_stock_deliveryorder_detail_keterangan" class="form-group stock_deliveryorder_detail_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_keterangan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="stock_deliveryorder_detail" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

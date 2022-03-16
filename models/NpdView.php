@@ -552,7 +552,6 @@ class NpdView extends Npd
         $this->viskositas->setVisibility();
         $this->warna->setVisibility();
         $this->parfum->setVisibility();
-        $this->aroma->setVisibility();
         $this->aplikasi->setVisibility();
         $this->estetika->setVisibility();
         $this->tambahan->setVisibility();
@@ -896,37 +895,6 @@ class NpdView extends Npd
             $item->Visible = false;
         }
 
-        // "detail_npd_desain"
-        $item = &$option->add("detail_npd_desain");
-        $body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("npd_desain", "TblCaption");
-        $body .= "&nbsp;" . str_replace("%c", Container("npd_desain")->Count, $Language->phrase("DetailCount"));
-        $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode(GetUrl("NpdDesainList?" . Config("TABLE_SHOW_MASTER") . "=npd&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue) . "")) . "\">" . $body . "</a>";
-        $links = "";
-        $detailPageObj = Container("NpdDesainGrid");
-        if ($detailPageObj->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'npd')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=npd_desain"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
-            if ($detailViewTblVar != "") {
-                $detailViewTblVar .= ",";
-            }
-            $detailViewTblVar .= "npd_desain";
-        }
-        if ($links != "") {
-            $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
-            $body .= "<ul class=\"dropdown-menu\">" . $links . "</ul>";
-        }
-        $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
-        $item->Body = $body;
-        $item->Visible = $Security->allowList(CurrentProjectID() . 'npd_desain');
-        if ($item->Visible) {
-            if ($detailTableLink != "") {
-                $detailTableLink .= ",";
-            }
-            $detailTableLink .= "npd_desain";
-        }
-        if ($this->ShowMultipleDetails) {
-            $item->Visible = false;
-        }
-
         // Multiple details
         if ($this->ShowMultipleDetails) {
             $body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
@@ -1039,7 +1007,6 @@ class NpdView extends Npd
         $this->viskositas->setDbValue($row['viskositas']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
-        $this->aroma->setDbValue($row['aroma']);
         $this->aplikasi->setDbValue($row['aplikasi']);
         $this->estetika->setDbValue($row['estetika']);
         $this->tambahan->setDbValue($row['tambahan']);
@@ -1119,12 +1086,6 @@ class NpdView extends Npd
         $detailTbl->setCurrentMasterTable("npd");
         $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
         $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
-        $detailTbl = Container("npd_desain");
-        $detailFilter = $detailTbl->sqlDetailFilter_npd();
-        $detailFilter = str_replace("@idnpd@", AdjustSql($this->id->DbValue, "DB"), $detailFilter);
-        $detailTbl->setCurrentMasterTable("npd");
-        $detailFilter = $detailTbl->applyUserIDFilters($detailFilter);
-        $detailTbl->Count = $detailTbl->loadRecordCount($detailFilter);
     }
 
     // Return a row with default values
@@ -1152,7 +1113,6 @@ class NpdView extends Npd
         $row['viskositas'] = null;
         $row['warna'] = null;
         $row['parfum'] = null;
-        $row['aroma'] = null;
         $row['aplikasi'] = null;
         $row['estetika'] = null;
         $row['tambahan'] = null;
@@ -1270,8 +1230,6 @@ class NpdView extends Npd
         // warna
 
         // parfum
-
-        // aroma
 
         // aplikasi
 
@@ -1667,10 +1625,6 @@ class NpdView extends Npd
                 $this->parfum->ViewValue = null;
             }
             $this->parfum->ViewCustomAttributes = "";
-
-            // aroma
-            $this->aroma->ViewValue = $this->aroma->CurrentValue;
-            $this->aroma->ViewCustomAttributes = "";
 
             // aplikasi
             $curVal = trim(strval($this->aplikasi->CurrentValue));
@@ -2282,11 +2236,6 @@ class NpdView extends Npd
             $this->parfum->HrefValue = "";
             $this->parfum->TooltipValue = "";
 
-            // aroma
-            $this->aroma->LinkCustomAttributes = "";
-            $this->aroma->HrefValue = "";
-            $this->aroma->TooltipValue = "";
-
             // aplikasi
             $this->aplikasi->LinkCustomAttributes = "";
             $this->aplikasi->HrefValue = "";
@@ -2634,19 +2583,6 @@ class NpdView extends Npd
                     $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
                 }
             }
-            if (in_array("npd_desain", $detailTblVar)) {
-                $detailPageObj = Container("NpdDesainGrid");
-                if ($detailPageObj->DetailView) {
-                    $detailPageObj->CurrentMode = "view";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idnpd->IsDetailKey = true;
-                    $detailPageObj->idnpd->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
-                }
-            }
         }
     }
 
@@ -2670,7 +2606,6 @@ class NpdView extends Npd
         $pages->add('npd_review');
         $pages->add('npd_confirmsample');
         $pages->add('npd_harga');
-        $pages->add('npd_desain');
         $this->DetailPages = $pages;
     }
 

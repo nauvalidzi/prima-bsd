@@ -19,4 +19,10 @@ class NpdConfirmprintController extends ControllerBase
     {
         return $this->runPage($request, $response, $args, "NpdConfirmprintAdd");
     }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdConfirmprintEdit");
+    }
 }

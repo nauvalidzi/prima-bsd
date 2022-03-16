@@ -472,7 +472,7 @@ class StockOrderEdit extends StockOrder
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->keterangan->setVisibility();
-        $this->aktif->setVisibility();
+        $this->readonly->setVisibility();
         $this->created_at->Visible = false;
         $this->hideFieldsForAddEdit();
         $this->kode->Required = false;
@@ -712,13 +712,13 @@ class StockOrderEdit extends StockOrder
             }
         }
 
-        // Check field name 'aktif' first before field var 'x_aktif'
-        $val = $CurrentForm->hasValue("aktif") ? $CurrentForm->getValue("aktif") : $CurrentForm->getValue("x_aktif");
-        if (!$this->aktif->IsDetailKey) {
+        // Check field name 'readonly' first before field var 'x_readonly'
+        $val = $CurrentForm->hasValue("readonly") ? $CurrentForm->getValue("readonly") : $CurrentForm->getValue("x_readonly");
+        if (!$this->readonly->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->aktif->Visible = false; // Disable update for API request
+                $this->readonly->Visible = false; // Disable update for API request
             } else {
-                $this->aktif->setFormValue($val);
+                $this->readonly->setFormValue($val);
             }
         }
 
@@ -739,7 +739,7 @@ class StockOrderEdit extends StockOrder
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 7);
         $this->idpegawai->CurrentValue = $this->idpegawai->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
-        $this->aktif->CurrentValue = $this->aktif->FormValue;
+        $this->readonly->CurrentValue = $this->readonly->FormValue;
     }
 
     /**
@@ -794,7 +794,7 @@ class StockOrderEdit extends StockOrder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
     }
 
@@ -807,7 +807,7 @@ class StockOrderEdit extends StockOrder
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['keterangan'] = null;
-        $row['aktif'] = null;
+        $row['readonly'] = null;
         $row['created_at'] = null;
         return $row;
     }
@@ -850,7 +850,7 @@ class StockOrderEdit extends StockOrder
 
         // keterangan
 
-        // aktif
+        // readonly
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -892,13 +892,13 @@ class StockOrderEdit extends StockOrder
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -925,10 +925,10 @@ class StockOrderEdit extends StockOrder
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
 
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
+            // readonly
+            $this->readonly->LinkCustomAttributes = "";
+            $this->readonly->HrefValue = "";
+            $this->readonly->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
@@ -972,15 +972,15 @@ class StockOrderEdit extends StockOrder
             $this->keterangan->EditValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
-            // aktif
-            $this->aktif->EditAttrs["class"] = "form-control";
-            $this->aktif->EditCustomAttributes = "";
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->EditValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            $this->readonly->EditAttrs["class"] = "form-control";
+            $this->readonly->EditCustomAttributes = "";
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->EditValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->EditValue = null;
+                $this->readonly->EditValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // Edit refer script
 
@@ -1004,10 +1004,10 @@ class StockOrderEdit extends StockOrder
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
 
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
+            // readonly
+            $this->readonly->LinkCustomAttributes = "";
+            $this->readonly->HrefValue = "";
+            $this->readonly->TooltipValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1048,9 +1048,9 @@ class StockOrderEdit extends StockOrder
                 $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
             }
         }
-        if ($this->aktif->Required) {
-            if ($this->aktif->FormValue == "") {
-                $this->aktif->addErrorMessage(str_replace("%s", $this->aktif->caption(), $this->aktif->RequiredErrorMessage));
+        if ($this->readonly->Required) {
+            if ($this->readonly->FormValue == "") {
+                $this->readonly->addErrorMessage(str_replace("%s", $this->readonly->caption(), $this->readonly->RequiredErrorMessage));
             }
         }
 
@@ -1216,7 +1216,7 @@ class StockOrderEdit extends StockOrder
             switch ($fld->FieldVar) {
                 case "x_idpegawai":
                     break;
-                case "x_aktif":
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1340,6 +1340,9 @@ class StockOrderEdit extends StockOrder
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
+        if ($this->readonly->FormValue > 0) {
+        	$customError = "Data tidak dapat diubah karena telah diproses.";
+        }
         return true;
     }
 }

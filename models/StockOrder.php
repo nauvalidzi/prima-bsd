@@ -33,7 +33,7 @@ class StockOrder extends DbTable
     public $tanggal;
     public $idpegawai;
     public $keterangan;
-    public $aktif;
+    public $readonly;
     public $created_at;
 
     // Page ID
@@ -122,22 +122,21 @@ class StockOrder extends DbTable
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;
 
-        // aktif
-        $this->aktif = new DbField('stock_order', 'stock_order', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'RADIO');
-        $this->aktif->Nullable = false; // NOT NULL field
-        $this->aktif->Sortable = true; // Allow sort
+        // readonly
+        $this->readonly = new DbField('stock_order', 'stock_order', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'RADIO');
+        $this->readonly->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
-                $this->aktif->Lookup = new Lookup('aktif', 'stock_order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                $this->readonly->Lookup = new Lookup('readonly', 'stock_order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->aktif->Lookup = new Lookup('aktif', 'stock_order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                $this->readonly->Lookup = new Lookup('readonly', 'stock_order', false, '', ["","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
-        $this->aktif->OptionCount = 2;
-        $this->aktif->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->aktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktif->Param, "CustomMsg");
-        $this->Fields['aktif'] = &$this->aktif;
+        $this->readonly->OptionCount = 2;
+        $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
+        $this->Fields['readonly'] = &$this->readonly;
 
         // created_at
         $this->created_at = new DbField('stock_order', 'stock_order', 'x_created_at', 'created_at', '`created_at`', CastDateFieldForLike("`created_at`", 11, "DB"), 135, 19, 11, false, '`created_at`', false, false, false, 'FORMATTED TEXT', 'TEXT');
@@ -642,7 +641,7 @@ class StockOrder extends DbTable
         $this->tanggal->DbValue = $row['tanggal'];
         $this->idpegawai->DbValue = $row['idpegawai'];
         $this->keterangan->DbValue = $row['keterangan'];
-        $this->aktif->DbValue = $row['aktif'];
+        $this->readonly->DbValue = $row['readonly'];
         $this->created_at->DbValue = $row['created_at'];
     }
 
@@ -977,7 +976,7 @@ SORTHTML;
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
     }
 
@@ -1002,7 +1001,7 @@ SORTHTML;
 
         // keterangan
 
-        // aktif
+        // readonly
 
         // created_at
 
@@ -1044,13 +1043,13 @@ SORTHTML;
         $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
         $this->keterangan->ViewCustomAttributes = "";
 
-        // aktif
-        if (strval($this->aktif->CurrentValue) != "") {
-            $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+        // readonly
+        if (strval($this->readonly->CurrentValue) != "") {
+            $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
         } else {
-            $this->aktif->ViewValue = null;
+            $this->readonly->ViewValue = null;
         }
-        $this->aktif->ViewCustomAttributes = "";
+        $this->readonly->ViewCustomAttributes = "";
 
         // created_at
         $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -1082,10 +1081,10 @@ SORTHTML;
         $this->keterangan->HrefValue = "";
         $this->keterangan->TooltipValue = "";
 
-        // aktif
-        $this->aktif->LinkCustomAttributes = "";
-        $this->aktif->HrefValue = "";
-        $this->aktif->TooltipValue = "";
+        // readonly
+        $this->readonly->LinkCustomAttributes = "";
+        $this->readonly->HrefValue = "";
+        $this->readonly->TooltipValue = "";
 
         // created_at
         $this->created_at->LinkCustomAttributes = "";
@@ -1155,15 +1154,15 @@ SORTHTML;
         $this->keterangan->EditValue = $this->keterangan->CurrentValue;
         $this->keterangan->ViewCustomAttributes = "";
 
-        // aktif
-        $this->aktif->EditAttrs["class"] = "form-control";
-        $this->aktif->EditCustomAttributes = "";
-        if (strval($this->aktif->CurrentValue) != "") {
-            $this->aktif->EditValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+        // readonly
+        $this->readonly->EditAttrs["class"] = "form-control";
+        $this->readonly->EditCustomAttributes = "";
+        if (strval($this->readonly->CurrentValue) != "") {
+            $this->readonly->EditValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
         } else {
-            $this->aktif->EditValue = null;
+            $this->readonly->EditValue = null;
         }
-        $this->aktif->ViewCustomAttributes = "";
+        $this->readonly->ViewCustomAttributes = "";
 
         // created_at
         $this->created_at->EditAttrs["class"] = "form-control";
@@ -1203,14 +1202,14 @@ SORTHTML;
                     $doc->exportCaption($this->tanggal);
                     $doc->exportCaption($this->idpegawai);
                     $doc->exportCaption($this->keterangan);
-                    $doc->exportCaption($this->aktif);
+                    $doc->exportCaption($this->readonly);
                     $doc->exportCaption($this->created_at);
                 } else {
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->tanggal);
                     $doc->exportCaption($this->idpegawai);
-                    $doc->exportCaption($this->aktif);
+                    $doc->exportCaption($this->readonly);
                     $doc->exportCaption($this->created_at);
                 }
                 $doc->endExportRow();
@@ -1245,14 +1244,14 @@ SORTHTML;
                         $doc->exportField($this->tanggal);
                         $doc->exportField($this->idpegawai);
                         $doc->exportField($this->keterangan);
-                        $doc->exportField($this->aktif);
+                        $doc->exportField($this->readonly);
                         $doc->exportField($this->created_at);
                     } else {
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->tanggal);
                         $doc->exportField($this->idpegawai);
-                        $doc->exportField($this->aktif);
+                        $doc->exportField($this->readonly);
                         $doc->exportField($this->created_at);
                     }
                     $doc->endExportRow($rowCnt);
@@ -1322,8 +1321,7 @@ SORTHTML;
         // Enter your code here
         // To cancel, set return value to false
         $rsnew['kode'] = getNextKode('stock_order', 0);
-        $rsnew['kode'] = getNextKode('suratjalan', 0);
-        $rsnew['aktif'] = 1;
+        $rsnew['readonly'] = 0;
         $rsnew['created_at'] = date('Y-m-d H:i:s');
         return true;
     }
@@ -1339,6 +1337,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['kode'] = $rsold['kode'];
         return true;
     }
 
@@ -1389,6 +1388,9 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
+        if ($rs['readonly'] > 0) {
+            $this->setFailureMessage("Data tidak dapat dihapus karena telah diproses.");
+        }
         return true;
     }
 

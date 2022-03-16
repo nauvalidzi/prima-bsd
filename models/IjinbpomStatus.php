@@ -86,7 +86,6 @@ class IjinbpomStatus extends DbTable
 
         // idijinbpom
         $this->idijinbpom = new DbField('ijinbpom_status', 'ijinbpom_status', 'x_idijinbpom', 'idijinbpom', '`idijinbpom`', '`idijinbpom`', 20, 20, -1, false, '`idijinbpom`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idijinbpom->IsForeignKey = true; // Foreign key field
         $this->idijinbpom->Nullable = false; // NOT NULL field
         $this->idijinbpom->Sortable = true; // Allow sort
         $this->idijinbpom->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -218,58 +217,6 @@ class IjinbpomStatus extends DbTable
         } else {
             $fld->setSort("");
         }
-    }
-
-    // Current master table name
-    public function getCurrentMasterTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
-    }
-
-    public function setCurrentMasterTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
-    }
-
-    // Session master WHERE clause
-    public function getMasterFilter()
-    {
-        // Master filter
-        $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "ijinbpom") {
-            if ($this->idijinbpom->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idijinbpom->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $masterFilter;
-    }
-
-    // Session detail WHERE clause
-    public function getDetailFilter()
-    {
-        // Detail filter
-        $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "ijinbpom") {
-            if ($this->idijinbpom->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idijinbpom`", $this->idijinbpom->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_ijinbpom()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_ijinbpom()
-    {
-        return "`idijinbpom`=@idijinbpom@";
     }
 
     // Table level SQL
@@ -848,10 +795,6 @@ class IjinbpomStatus extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "ijinbpom" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idijinbpom->CurrentValue ?? $this->idijinbpom->getSessionValue());
-        }
         return $url;
     }
 
@@ -1203,15 +1146,8 @@ SORTHTML;
         // idijinbpom
         $this->idijinbpom->EditAttrs["class"] = "form-control";
         $this->idijinbpom->EditCustomAttributes = "";
-        if ($this->idijinbpom->getSessionValue() != "") {
-            $this->idijinbpom->CurrentValue = GetForeignKeyValue($this->idijinbpom->getSessionValue());
-            $this->idijinbpom->ViewValue = $this->idijinbpom->CurrentValue;
-            $this->idijinbpom->ViewValue = FormatNumber($this->idijinbpom->ViewValue, 0, -2, -2, -2);
-            $this->idijinbpom->ViewCustomAttributes = "";
-        } else {
-            $this->idijinbpom->EditValue = $this->idijinbpom->CurrentValue;
-            $this->idijinbpom->PlaceHolder = RemoveHtml($this->idijinbpom->caption());
-        }
+        $this->idijinbpom->EditValue = $this->idijinbpom->CurrentValue;
+        $this->idijinbpom->PlaceHolder = RemoveHtml($this->idijinbpom->caption());
 
         // idpegawai
         $this->idpegawai->EditAttrs["class"] = "form-control";
@@ -1442,30 +1378,6 @@ SORTHTML;
             $wrk = "0=1";
         }
         return $wrk;
-    }
-
-    // Add master User ID filter
-    public function addMasterUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "ijinbpom") {
-            $filterWrk = Container("ijinbpom")->addUserIDFilter($filterWrk);
-        }
-        return $filterWrk;
-    }
-
-    // Add detail User ID filter
-    public function addDetailUserIDFilter($filter, $currentMasterTable)
-    {
-        $filterWrk = $filter;
-        if ($currentMasterTable == "ijinbpom") {
-            $mastertable = Container("ijinbpom");
-            if (!$mastertable->userIdAllow()) {
-                $subqueryWrk = $mastertable->getUserIDSubquery($this->idijinbpom, $mastertable->id);
-                AddFilter($filterWrk, $subqueryWrk);
-            }
-        }
-        return $filterWrk;
     }
 
     // Get file data

@@ -31,6 +31,7 @@ class StockDeliveryorder extends DbTable
     public $id;
     public $kode;
     public $tanggal;
+    public $receipt_by;
     public $lampiran;
     public $keterangan;
     public $created_at;
@@ -95,6 +96,25 @@ class StockDeliveryorder extends DbTable
         $this->tanggal->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_SEPARATOR"], $Language->phrase("IncorrectDateDMY"));
         $this->tanggal->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal->Param, "CustomMsg");
         $this->Fields['tanggal'] = &$this->tanggal;
+
+        // receipt_by
+        $this->receipt_by = new DbField('stock_deliveryorder', 'stock_deliveryorder', 'x_receipt_by', 'receipt_by', '`receipt_by`', '`receipt_by`', 3, 11, -1, false, '`receipt_by`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->receipt_by->Nullable = false; // NOT NULL field
+        $this->receipt_by->Required = true; // Required field
+        $this->receipt_by->Sortable = true; // Allow sort
+        $this->receipt_by->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->receipt_by->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+            default:
+                $this->receipt_by->Lookup = new Lookup('receipt_by', 'pegawai', false, 'id', ["kode","nama","",""], [], [], [], [], [], [], '', '');
+                break;
+        }
+        $this->receipt_by->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->receipt_by->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->receipt_by->Param, "CustomMsg");
+        $this->Fields['receipt_by'] = &$this->receipt_by;
 
         // lampiran
         $this->lampiran = new DbField('stock_deliveryorder', 'stock_deliveryorder', 'x_lampiran', 'lampiran', '`lampiran`', '`lampiran`', 200, 255, -1, true, '`lampiran`', false, false, false, 'FORMATTED TEXT', 'FILE');
@@ -609,6 +629,7 @@ class StockDeliveryorder extends DbTable
         $this->id->DbValue = $row['id'];
         $this->kode->DbValue = $row['kode'];
         $this->tanggal->DbValue = $row['tanggal'];
+        $this->receipt_by->DbValue = $row['receipt_by'];
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->keterangan->DbValue = $row['keterangan'];
         $this->created_at->DbValue = $row['created_at'];
@@ -949,6 +970,7 @@ SORTHTML;
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
         $this->tanggal->setDbValue($row['tanggal']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
@@ -971,6 +993,8 @@ SORTHTML;
 
         // tanggal
 
+        // receipt_by
+
         // lampiran
 
         // keterangan
@@ -989,6 +1013,27 @@ SORTHTML;
         $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
         $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 7);
         $this->tanggal->ViewCustomAttributes = "";
+
+        // receipt_by
+        $curVal = trim(strval($this->receipt_by->CurrentValue));
+        if ($curVal != "") {
+            $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+            if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                    $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                } else {
+                    $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                }
+            }
+        } else {
+            $this->receipt_by->ViewValue = null;
+        }
+        $this->receipt_by->ViewCustomAttributes = "";
 
         // lampiran
         if (!EmptyValue($this->lampiran->Upload->DbValue)) {
@@ -1021,6 +1066,11 @@ SORTHTML;
         $this->tanggal->LinkCustomAttributes = "";
         $this->tanggal->HrefValue = "";
         $this->tanggal->TooltipValue = "";
+
+        // receipt_by
+        $this->receipt_by->LinkCustomAttributes = "";
+        $this->receipt_by->HrefValue = "";
+        $this->receipt_by->TooltipValue = "";
 
         // lampiran
         $this->lampiran->LinkCustomAttributes = "";
@@ -1061,18 +1111,21 @@ SORTHTML;
 
         // kode
         $this->kode->EditAttrs["class"] = "form-control";
-        $this->kode->EditCustomAttributes = "";
-        if (!$this->kode->Raw) {
-            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-        }
+        $this->kode->EditCustomAttributes = "readonly";
         $this->kode->EditValue = $this->kode->CurrentValue;
-        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+        $this->kode->ViewCustomAttributes = "";
 
         // tanggal
         $this->tanggal->EditAttrs["class"] = "form-control";
         $this->tanggal->EditCustomAttributes = "";
-        $this->tanggal->EditValue = FormatDateTime($this->tanggal->CurrentValue, 7);
-        $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
+        $this->tanggal->EditValue = $this->tanggal->CurrentValue;
+        $this->tanggal->EditValue = FormatDateTime($this->tanggal->EditValue, 7);
+        $this->tanggal->ViewCustomAttributes = "";
+
+        // receipt_by
+        $this->receipt_by->EditAttrs["class"] = "form-control";
+        $this->receipt_by->EditCustomAttributes = "";
+        $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
 
         // lampiran
         $this->lampiran->EditAttrs["class"] = "form-control";
@@ -1128,6 +1181,7 @@ SORTHTML;
                 if ($exportPageType == "view") {
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->tanggal);
+                    $doc->exportCaption($this->receipt_by);
                     $doc->exportCaption($this->lampiran);
                     $doc->exportCaption($this->keterangan);
                     $doc->exportCaption($this->created_at);
@@ -1135,6 +1189,7 @@ SORTHTML;
                     $doc->exportCaption($this->id);
                     $doc->exportCaption($this->kode);
                     $doc->exportCaption($this->tanggal);
+                    $doc->exportCaption($this->receipt_by);
                     $doc->exportCaption($this->lampiran);
                     $doc->exportCaption($this->created_at);
                 }
@@ -1168,6 +1223,7 @@ SORTHTML;
                     if ($exportPageType == "view") {
                         $doc->exportField($this->kode);
                         $doc->exportField($this->tanggal);
+                        $doc->exportField($this->receipt_by);
                         $doc->exportField($this->lampiran);
                         $doc->exportField($this->keterangan);
                         $doc->exportField($this->created_at);
@@ -1175,6 +1231,7 @@ SORTHTML;
                         $doc->exportField($this->id);
                         $doc->exportField($this->kode);
                         $doc->exportField($this->tanggal);
+                        $doc->exportField($this->receipt_by);
                         $doc->exportField($this->lampiran);
                         $doc->exportField($this->created_at);
                     }
@@ -1357,6 +1414,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['kode'] = getNextKode('stock_deliveryorder', 0);
         $rsnew['created_at'] = date('Y-m-d H:i:s');
         return true;
     }

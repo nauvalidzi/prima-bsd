@@ -127,7 +127,6 @@ class Deliveryorder extends DbTable
 
         // readonly
         $this->readonly = new DbField('deliveryorder', 'deliveryorder', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'HIDDEN');
-        $this->readonly->Nullable = false; // NOT NULL field
         $this->readonly->Sortable = false; // Allow sort
         $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");

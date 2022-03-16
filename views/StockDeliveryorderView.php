@@ -67,6 +67,17 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+    <tr id="r_receipt_by">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_deliveryorder_receipt_by"><?= $Page->receipt_by->caption() ?></span></td>
+        <td data-name="receipt_by" <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el_stock_deliveryorder_receipt_by">
+<span<?= $Page->receipt_by->viewAttributes() ?>>
+<?= $Page->receipt_by->getViewValue() ?></span>
+</span>
+</td>
+    </tr>
+<?php } ?>
 <?php if ($Page->lampiran->Visible) { // lampiran ?>
     <tr id="r_lampiran">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_deliveryorder_lampiran"><?= $Page->lampiran->caption() ?></span></td>

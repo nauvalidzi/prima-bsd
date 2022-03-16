@@ -574,8 +574,8 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         $this->idstockorder_detail->setVisibility();
         $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
-        $this->jumlah_kirim->setVisibility();
-        $this->keterangan->Visible = false;
+        $this->jumlahkirim->setVisibility();
+        $this->keterangan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -657,8 +657,33 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
                 $this->OtherOptions->hideAllOptions();
             }
 
+            // Get default search criteria
+            AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(true));
+
+            // Get basic search values
+            $this->loadBasicSearchValues();
+
+            // Process filter list
+            if ($this->processFilterList()) {
+                $this->terminate();
+                return;
+            }
+
+            // Restore search parms from Session if not searching / reset / export
+            if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms()) {
+                $this->restoreSearchParms();
+            }
+
+            // Call Recordset SearchValidated event
+            $this->recordsetSearchValidated();
+
             // Set up sorting order
             $this->setupSortOrder();
+
+            // Get basic search criteria
+            if (!$this->hasInvalidFields()) {
+                $srchBasic = $this->basicSearchWhere();
+            }
         }
 
         // Restore display records
@@ -672,6 +697,31 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         // Load Sorting Order
         if ($this->Command != "json") {
             $this->loadSortOrder();
+        }
+
+        // Load search default if no existing search criteria
+        if (!$this->checkSearchParms()) {
+            // Load basic search from default
+            $this->BasicSearch->loadDefault();
+            if ($this->BasicSearch->Keyword != "") {
+                $srchBasic = $this->basicSearchWhere();
+            }
+        }
+
+        // Build search criteria
+        AddFilter($this->SearchWhere, $srchAdvanced);
+        AddFilter($this->SearchWhere, $srchBasic);
+
+        // Call Recordset_Searching event
+        $this->recordsetSearching($this->SearchWhere);
+
+        // Save search criteria
+        if ($this->Command == "search" && !$this->RestoreSearch) {
+            $this->setSearchWhere($this->SearchWhere); // Save to Session
+            $this->StartRecord = 1; // Reset start record counter
+            $this->setStartRecordNumber($this->StartRecord);
+        } elseif ($this->Command != "json") {
+            $this->SearchWhere = $this->getSearchWhere();
         }
 
         // Build filter
@@ -833,6 +883,289 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         return $wrkFilter;
     }
 
+    // Get list of filters
+    public function getFilterList()
+    {
+        global $UserProfile;
+
+        // Initialize
+        $filterList = "";
+        $savedFilterList = "";
+        $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
+        $filterList = Concat($filterList, $this->pid->AdvancedSearch->toJson(), ","); // Field pid
+        $filterList = Concat($filterList, $this->idstockorder->AdvancedSearch->toJson(), ","); // Field idstockorder
+        $filterList = Concat($filterList, $this->idstockorder_detail->AdvancedSearch->toJson(), ","); // Field idstockorder_detail
+        $filterList = Concat($filterList, $this->totalorder->AdvancedSearch->toJson(), ","); // Field totalorder
+        $filterList = Concat($filterList, $this->sisa->AdvancedSearch->toJson(), ","); // Field sisa
+        $filterList = Concat($filterList, $this->jumlahkirim->AdvancedSearch->toJson(), ","); // Field jumlahkirim
+        $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
+        if ($this->BasicSearch->Keyword != "") {
+            $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+            $filterList = Concat($filterList, $wrk, ",");
+        }
+
+        // Return filter list in JSON
+        if ($filterList != "") {
+            $filterList = "\"data\":{" . $filterList . "}";
+        }
+        if ($savedFilterList != "") {
+            $filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
+        }
+        return ($filterList != "") ? "{" . $filterList . "}" : "null";
+    }
+
+    // Process filter list
+    protected function processFilterList()
+    {
+        global $UserProfile;
+        if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
+            $filters = Post("filters");
+            $UserProfile->setSearchFilters(CurrentUserName(), "fstock_deliveryorder_detaillistsrch", $filters);
+            WriteJson([["success" => true]]); // Success
+            return true;
+        } elseif (Post("cmd") == "resetfilter") {
+            $this->restoreFilterList();
+        }
+        return false;
+    }
+
+    // Restore list of filters
+    protected function restoreFilterList()
+    {
+        // Return if not reset filter
+        if (Post("cmd") !== "resetfilter") {
+            return false;
+        }
+        $filter = json_decode(Post("filter"), true);
+        $this->Command = "search";
+
+        // Field id
+        $this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
+        $this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
+        $this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
+        $this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
+        $this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
+        $this->id->AdvancedSearch->save();
+
+        // Field pid
+        $this->pid->AdvancedSearch->SearchValue = @$filter["x_pid"];
+        $this->pid->AdvancedSearch->SearchOperator = @$filter["z_pid"];
+        $this->pid->AdvancedSearch->SearchCondition = @$filter["v_pid"];
+        $this->pid->AdvancedSearch->SearchValue2 = @$filter["y_pid"];
+        $this->pid->AdvancedSearch->SearchOperator2 = @$filter["w_pid"];
+        $this->pid->AdvancedSearch->save();
+
+        // Field idstockorder
+        $this->idstockorder->AdvancedSearch->SearchValue = @$filter["x_idstockorder"];
+        $this->idstockorder->AdvancedSearch->SearchOperator = @$filter["z_idstockorder"];
+        $this->idstockorder->AdvancedSearch->SearchCondition = @$filter["v_idstockorder"];
+        $this->idstockorder->AdvancedSearch->SearchValue2 = @$filter["y_idstockorder"];
+        $this->idstockorder->AdvancedSearch->SearchOperator2 = @$filter["w_idstockorder"];
+        $this->idstockorder->AdvancedSearch->save();
+
+        // Field idstockorder_detail
+        $this->idstockorder_detail->AdvancedSearch->SearchValue = @$filter["x_idstockorder_detail"];
+        $this->idstockorder_detail->AdvancedSearch->SearchOperator = @$filter["z_idstockorder_detail"];
+        $this->idstockorder_detail->AdvancedSearch->SearchCondition = @$filter["v_idstockorder_detail"];
+        $this->idstockorder_detail->AdvancedSearch->SearchValue2 = @$filter["y_idstockorder_detail"];
+        $this->idstockorder_detail->AdvancedSearch->SearchOperator2 = @$filter["w_idstockorder_detail"];
+        $this->idstockorder_detail->AdvancedSearch->save();
+
+        // Field totalorder
+        $this->totalorder->AdvancedSearch->SearchValue = @$filter["x_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchOperator = @$filter["z_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchCondition = @$filter["v_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchValue2 = @$filter["y_totalorder"];
+        $this->totalorder->AdvancedSearch->SearchOperator2 = @$filter["w_totalorder"];
+        $this->totalorder->AdvancedSearch->save();
+
+        // Field sisa
+        $this->sisa->AdvancedSearch->SearchValue = @$filter["x_sisa"];
+        $this->sisa->AdvancedSearch->SearchOperator = @$filter["z_sisa"];
+        $this->sisa->AdvancedSearch->SearchCondition = @$filter["v_sisa"];
+        $this->sisa->AdvancedSearch->SearchValue2 = @$filter["y_sisa"];
+        $this->sisa->AdvancedSearch->SearchOperator2 = @$filter["w_sisa"];
+        $this->sisa->AdvancedSearch->save();
+
+        // Field jumlahkirim
+        $this->jumlahkirim->AdvancedSearch->SearchValue = @$filter["x_jumlahkirim"];
+        $this->jumlahkirim->AdvancedSearch->SearchOperator = @$filter["z_jumlahkirim"];
+        $this->jumlahkirim->AdvancedSearch->SearchCondition = @$filter["v_jumlahkirim"];
+        $this->jumlahkirim->AdvancedSearch->SearchValue2 = @$filter["y_jumlahkirim"];
+        $this->jumlahkirim->AdvancedSearch->SearchOperator2 = @$filter["w_jumlahkirim"];
+        $this->jumlahkirim->AdvancedSearch->save();
+
+        // Field keterangan
+        $this->keterangan->AdvancedSearch->SearchValue = @$filter["x_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator = @$filter["z_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchCondition = @$filter["v_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchValue2 = @$filter["y_keterangan"];
+        $this->keterangan->AdvancedSearch->SearchOperator2 = @$filter["w_keterangan"];
+        $this->keterangan->AdvancedSearch->save();
+        $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+        $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
+    }
+
+    // Return basic search SQL
+    protected function basicSearchSql($arKeywords, $type)
+    {
+        $where = "";
+        $this->buildBasicSearchSql($where, $this->keterangan, $arKeywords, $type);
+        return $where;
+    }
+
+    // Build basic search SQL
+    protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
+    {
+        $defCond = ($type == "OR") ? "OR" : "AND";
+        $arSql = []; // Array for SQL parts
+        $arCond = []; // Array for search conditions
+        $cnt = count($arKeywords);
+        $j = 0; // Number of SQL parts
+        for ($i = 0; $i < $cnt; $i++) {
+            $keyword = $arKeywords[$i];
+            $keyword = trim($keyword);
+            if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
+                $keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
+                $ar = explode("\\", $keyword);
+            } else {
+                $ar = [$keyword];
+            }
+            foreach ($ar as $keyword) {
+                if ($keyword != "") {
+                    $wrk = "";
+                    if ($keyword == "OR" && $type == "") {
+                        if ($j > 0) {
+                            $arCond[$j - 1] = "OR";
+                        }
+                    } elseif ($keyword == Config("NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NULL";
+                    } elseif ($keyword == Config("NOT_NULL_VALUE")) {
+                        $wrk = $fld->Expression . " IS NOT NULL";
+                    } elseif ($fld->IsVirtual && $fld->Visible) {
+                        $wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    } elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
+                        $wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+                    }
+                    if ($wrk != "") {
+                        $arSql[$j] = $wrk;
+                        $arCond[$j] = $defCond;
+                        $j += 1;
+                    }
+                }
+            }
+        }
+        $cnt = count($arSql);
+        $quoted = false;
+        $sql = "";
+        if ($cnt > 0) {
+            for ($i = 0; $i < $cnt - 1; $i++) {
+                if ($arCond[$i] == "OR") {
+                    if (!$quoted) {
+                        $sql .= "(";
+                    }
+                    $quoted = true;
+                }
+                $sql .= $arSql[$i];
+                if ($quoted && $arCond[$i] != "OR") {
+                    $sql .= ")";
+                    $quoted = false;
+                }
+                $sql .= " " . $arCond[$i] . " ";
+            }
+            $sql .= $arSql[$cnt - 1];
+            if ($quoted) {
+                $sql .= ")";
+            }
+        }
+        if ($sql != "") {
+            if ($where != "") {
+                $where .= " OR ";
+            }
+            $where .= "(" . $sql . ")";
+        }
+    }
+
+    // Return basic search WHERE clause based on search keyword and type
+    protected function basicSearchWhere($default = false)
+    {
+        global $Security;
+        $searchStr = "";
+        if (!$Security->canSearch()) {
+            return "";
+        }
+        $searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+        $searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+        // Get search SQL
+        if ($searchKeyword != "") {
+            $ar = $this->BasicSearch->keywordList($default);
+            // Search keyword in any fields
+            if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
+                foreach ($ar as $keyword) {
+                    if ($keyword != "") {
+                        if ($searchStr != "") {
+                            $searchStr .= " " . $searchType . " ";
+                        }
+                        $searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
+                    }
+                }
+            } else {
+                $searchStr = $this->basicSearchSql($ar, $searchType);
+            }
+            if (!$default && in_array($this->Command, ["", "reset", "resetall"])) {
+                $this->Command = "search";
+            }
+        }
+        if (!$default && $this->Command == "search") {
+            $this->BasicSearch->setKeyword($searchKeyword);
+            $this->BasicSearch->setType($searchType);
+        }
+        return $searchStr;
+    }
+
+    // Check if search parm exists
+    protected function checkSearchParms()
+    {
+        // Check basic search
+        if ($this->BasicSearch->issetSession()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Clear all search parameters
+    protected function resetSearchParms()
+    {
+        // Clear search WHERE clause
+        $this->SearchWhere = "";
+        $this->setSearchWhere($this->SearchWhere);
+
+        // Clear basic search parameters
+        $this->resetBasicSearchParms();
+    }
+
+    // Load advanced search default values
+    protected function loadAdvancedSearchDefault()
+    {
+        return false;
+    }
+
+    // Clear all basic search parameters
+    protected function resetBasicSearchParms()
+    {
+        $this->BasicSearch->unsetSession();
+    }
+
+    // Restore all search parameters
+    protected function restoreSearchParms()
+    {
+        $this->RestoreSearch = true;
+
+        // Restore basic search values
+        $this->BasicSearch->load();
+    }
+
     // Set up sort parameters
     protected function setupSortOrder()
     {
@@ -844,7 +1177,8 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
             $this->updateSort($this->idstockorder_detail); // idstockorder_detail
             $this->updateSort($this->totalorder); // totalorder
             $this->updateSort($this->sisa); // sisa
-            $this->updateSort($this->jumlah_kirim); // jumlah_kirim
+            $this->updateSort($this->jumlahkirim); // jumlahkirim
+            $this->updateSort($this->keterangan); // keterangan
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -875,6 +1209,11 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
     {
         // Check if reset command
         if (StartsString("reset", $this->Command)) {
+            // Reset search criteria
+            if ($this->Command == "reset" || $this->Command == "resetall") {
+                $this->resetSearchParms();
+            }
+
             // Reset master/detail keys
             if ($this->Command == "resetall") {
                 $this->setCurrentMasterTable(""); // Clear master table
@@ -893,7 +1232,7 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
                 $this->idstockorder_detail->setSort("");
                 $this->totalorder->setSort("");
                 $this->sisa->setSort("");
-                $this->jumlah_kirim->setSort("");
+                $this->jumlahkirim->setSort("");
                 $this->keterangan->setSort("");
             }
 
@@ -913,12 +1252,6 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         $item->Body = "";
         $item->OnLeft = false;
         $item->Visible = false;
-
-        // "view"
-        $item = &$this->ListOptions->add("view");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canView();
-        $item->OnLeft = false;
 
         // List actions
         $item = &$this->ListOptions->add("listactions");
@@ -962,15 +1295,7 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $pageUrl = $this->pageUrl();
-        if ($this->CurrentMode == "view") {
-            // "view"
-            $opt = $this->ListOptions["view"];
-            $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
-            if ($Security->canView()) {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
+        if ($this->CurrentMode == "view") { // View mode
         } // End View mode
 
         // Set up list action buttons
@@ -1043,10 +1368,10 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         // Filter button
         $item = &$this->FilterOptions->add("savecurrentfilter");
         $item->Body = "<a class=\"ew-save-filter\" data-form=\"fstock_deliveryorder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $item = &$this->FilterOptions->add("deletefilter");
         $item->Body = "<a class=\"ew-delete-filter\" data-form=\"fstock_deliveryorder_detaillistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-        $item->Visible = false;
+        $item->Visible = true;
         $this->FilterOptions->UseDropDownButton = true;
         $this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
         $this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
@@ -1181,6 +1506,16 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         global $Security, $Language;
     }
 
+    // Load basic search values
+    protected function loadBasicSearchValues()
+    {
+        $this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), false);
+        if ($this->BasicSearch->Keyword != "" && $this->Command == "") {
+            $this->Command = "search";
+        }
+        $this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), false);
+    }
+
     // Load recordset
     public function loadRecordset($offset = -1, $rowcnt = -1)
     {
@@ -1255,7 +1590,7 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         $this->idstockorder_detail->setDbValue($row['idstockorder_detail']);
         $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
-        $this->jumlah_kirim->setDbValue($row['jumlah_kirim']);
+        $this->jumlahkirim->setDbValue($row['jumlahkirim']);
         $this->keterangan->setDbValue($row['keterangan']);
     }
 
@@ -1269,7 +1604,7 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         $row['idstockorder_detail'] = null;
         $row['totalorder'] = null;
         $row['sisa'] = null;
-        $row['jumlah_kirim'] = null;
+        $row['jumlahkirim'] = null;
         $row['keterangan'] = null;
         return $row;
     }
@@ -1320,7 +1655,7 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
 
         // sisa
 
-        // jumlah_kirim
+        // jumlahkirim
 
         // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -1329,9 +1664,9 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
             if ($curVal != "") {
                 $this->idstockorder->ViewValue = $this->idstockorder->lookupCacheOption($curVal);
                 if ($this->idstockorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idstockorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                        return (CurrentPageID() == "add" ) ? "totalsisa > 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idstockorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1355,7 +1690,11 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
                 $this->idstockorder_detail->ViewValue = $this->idstockorder_detail->lookupCacheOption($curVal);
                 if ($this->idstockorder_detail->ViewValue === null) { // Lookup from database
                     $filterWrk = "`idstockorder_detail`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -1380,10 +1719,14 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
             $this->sisa->ViewCustomAttributes = "";
 
-            // jumlah_kirim
-            $this->jumlah_kirim->ViewValue = $this->jumlah_kirim->CurrentValue;
-            $this->jumlah_kirim->ViewValue = FormatNumber($this->jumlah_kirim->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_kirim->ViewCustomAttributes = "";
+            // jumlahkirim
+            $this->jumlahkirim->ViewValue = $this->jumlahkirim->CurrentValue;
+            $this->jumlahkirim->ViewValue = FormatNumber($this->jumlahkirim->ViewValue, 0, -2, -2, -2);
+            $this->jumlahkirim->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
 
             // idstockorder
             $this->idstockorder->LinkCustomAttributes = "";
@@ -1405,10 +1748,15 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
             $this->sisa->HrefValue = "";
             $this->sisa->TooltipValue = "";
 
-            // jumlah_kirim
-            $this->jumlah_kirim->LinkCustomAttributes = "";
-            $this->jumlah_kirim->HrefValue = "";
-            $this->jumlah_kirim->TooltipValue = "";
+            // jumlahkirim
+            $this->jumlahkirim->LinkCustomAttributes = "";
+            $this->jumlahkirim->HrefValue = "";
+            $this->jumlahkirim->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -1424,6 +1772,17 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
         $pageUrl = $this->pageUrl();
         $this->SearchOptions = new ListOptions("div");
         $this->SearchOptions->TagClassName = "ew-search-option";
+
+        // Search button
+        $item = &$this->SearchOptions->add("searchtoggle");
+        $searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
+        $item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fstock_deliveryorder_detaillistsrch\" aria-pressed=\"" . ($searchToggleClass == " active" ? "true" : "false") . "\">" . $Language->phrase("SearchLink") . "</a>";
+        $item->Visible = true;
+
+        // Show all button
+        $item = &$this->SearchOptions->add("showall");
+        $item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ShowAll") . "\" data-caption=\"" . $Language->phrase("ShowAll") . "\" href=\"" . $pageUrl . "cmd=reset\">" . $Language->phrase("ShowAllBtn") . "</a>";
+        $item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
 
         // Button group for search
         $this->SearchOptions->UseDropDownButton = false;
@@ -1545,11 +1904,15 @@ class StockDeliveryorderDetailList extends StockDeliveryorderDetail
             switch ($fld->FieldVar) {
                 case "x_idstockorder":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                        return (CurrentPageID() == "add" ) ? "totalsisa > 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idstockorder_detail":
+                    $lookupFilter = function () {
+                        return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

@@ -49,7 +49,6 @@ class Npd extends DbTable
     public $viskositas;
     public $warna;
     public $parfum;
-    public $aroma;
     public $aplikasi;
     public $estetika;
     public $tambahan;
@@ -391,10 +390,8 @@ class Npd extends DbTable
         $this->Fields['warna'] = &$this->warna;
 
         // parfum
-        $this->parfum = new DbField('npd', 'npd', 'x_parfum', 'parfum', '`parfum`', '`parfum`', 200, 50, -1, false, '`parfum`', false, false, false, 'FORMATTED TEXT', 'SELECT');
+        $this->parfum = new DbField('npd', 'npd', 'x_parfum', 'parfum', '`parfum`', '`parfum`', 200, 50, -1, false, '`parfum`', false, false, false, 'FORMATTED TEXT', 'RADIO');
         $this->parfum->Sortable = true; // Allow sort
-        $this->parfum->UsePleaseSelect = true; // Use PleaseSelect by default
-        $this->parfum->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->parfum->Lookup = new Lookup('parfum', 'npd_parfum_sediaan', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
@@ -405,12 +402,6 @@ class Npd extends DbTable
         }
         $this->parfum->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->parfum->Param, "CustomMsg");
         $this->Fields['parfum'] = &$this->parfum;
-
-        // aroma
-        $this->aroma = new DbField('npd', 'npd', 'x_aroma', 'aroma', '`aroma`', '`aroma`', 200, 50, -1, false, '`aroma`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->aroma->Sortable = true; // Allow sort
-        $this->aroma->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aroma->Param, "CustomMsg");
-        $this->Fields['aroma'] = &$this->aroma;
 
         // aplikasi
         $this->aplikasi = new DbField('npd', 'npd', 'x_aplikasi', 'aplikasi', '`aplikasi`', '`aplikasi`', 200, 50, -1, false, '`aplikasi`', false, false, false, 'FORMATTED TEXT', 'RADIO');
@@ -577,10 +568,10 @@ class Npd extends DbTable
         $this->labelbahan->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
-                $this->labelbahan->Lookup = new Lookup('labelbahan', 'npd_label_bahan', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelbahan->Lookup = new Lookup('labelbahan', 'npd_labelsticker_bahan', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->labelbahan->Lookup = new Lookup('labelbahan', 'npd_label_bahan', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelbahan->Lookup = new Lookup('labelbahan', 'npd_labelsticker_bahan', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->labelbahan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->labelbahan->Param, "CustomMsg");
@@ -591,10 +582,10 @@ class Npd extends DbTable
         $this->labelkualitas->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
-                $this->labelkualitas->Lookup = new Lookup('labelkualitas', 'npd_label_kualitas', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelkualitas->Lookup = new Lookup('labelkualitas', 'npd_labelsticker_kualitas', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->labelkualitas->Lookup = new Lookup('labelkualitas', 'npd_label_kualitas', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelkualitas->Lookup = new Lookup('labelkualitas', 'npd_labelsticker_kualitas', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->labelkualitas->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->labelkualitas->Param, "CustomMsg");
@@ -605,10 +596,10 @@ class Npd extends DbTable
         $this->labelposisi->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
-                $this->labelposisi->Lookup = new Lookup('labelposisi', 'npd_label_posisi', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelposisi->Lookup = new Lookup('labelposisi', 'npd_labelsticker_posisi', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->labelposisi->Lookup = new Lookup('labelposisi', 'npd_label_posisi', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelposisi->Lookup = new Lookup('labelposisi', 'npd_labelsticker_posisi', true, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->labelposisi->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->labelposisi->Param, "CustomMsg");
@@ -625,10 +616,10 @@ class Npd extends DbTable
         $this->labeltekstur->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
-                $this->labeltekstur->Lookup = new Lookup('labeltekstur', 'npd_label_tekstur', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labeltekstur->Lookup = new Lookup('labeltekstur', 'npd_labelhot_tekstur', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->labeltekstur->Lookup = new Lookup('labeltekstur', 'npd_label_tekstur', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labeltekstur->Lookup = new Lookup('labeltekstur', 'npd_labelhot_tekstur', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->labeltekstur->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->labeltekstur->Param, "CustomMsg");
@@ -639,10 +630,10 @@ class Npd extends DbTable
         $this->labelprint->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
-                $this->labelprint->Lookup = new Lookup('labelprint', 'npd_label_print', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelprint->Lookup = new Lookup('labelprint', 'npd_labelhot_sisiprint', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->labelprint->Lookup = new Lookup('labelprint', 'npd_label_print', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
+                $this->labelprint->Lookup = new Lookup('labelprint', 'npd_labelhot_sisiprint', false, 'value', ["value","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
         $this->labelprint->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->labelprint->Param, "CustomMsg");
@@ -997,10 +988,6 @@ class Npd extends DbTable
         }
         if ($this->getCurrentDetailTable() == "npd_harga") {
             $detailUrl = Container("npd_harga")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
-            $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
-        }
-        if ($this->getCurrentDetailTable() == "npd_desain") {
-            $detailUrl = Container("npd_desain")->getListUrl() . "?" . Config("TABLE_SHOW_MASTER") . "=" . $this->TableVar;
             $detailUrl .= "&" . GetForeignKeyUrl("fk_id", $this->id->CurrentValue);
         }
         if ($detailUrl == "") {
@@ -1444,33 +1431,6 @@ class Npd extends DbTable
             }
         }
 
-        // Cascade Update detail table 'npd_desain'
-        $cascadeUpdate = false;
-        $rscascade = [];
-        if ($rsold && (isset($rs['id']) && $rsold['id'] != $rs['id'])) { // Update detail field 'idnpd'
-            $cascadeUpdate = true;
-            $rscascade['idnpd'] = $rs['id'];
-        }
-        if ($cascadeUpdate) {
-            $rswrk = Container("npd_desain")->loadRs("`idnpd` = " . QuotedValue($rsold['id'], DATATYPE_NUMBER, 'DB'))->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($rswrk as $rsdtlold) {
-                $rskey = [];
-                $fldname = 'id';
-                $rskey[$fldname] = $rsdtlold[$fldname];
-                $rsdtlnew = array_merge($rsdtlold, $rscascade);
-                // Call Row_Updating event
-                $success = Container("npd_desain")->rowUpdating($rsdtlold, $rsdtlnew);
-                if ($success) {
-                    $success = Container("npd_desain")->update($rscascade, $rskey, $rsdtlold);
-                }
-                if (!$success) {
-                    return false;
-                }
-                // Call Row_Updated event
-                Container("npd_desain")->rowUpdated($rsdtlold, $rsdtlnew);
-            }
-        }
-
         // If no field is updated, execute may return 0. Treat as success
         $success = $this->updateSql($rs, $where, $curfilter)->execute();
         $success = ($success > 0) ? $success : true;
@@ -1602,30 +1562,6 @@ class Npd extends DbTable
                 Container("npd_harga")->rowDeleted($dtlrow);
             }
         }
-
-        // Cascade delete detail table 'npd_desain'
-        $dtlrows = Container("npd_desain")->loadRs("`idnpd` = " . QuotedValue($rs['id'], DATATYPE_NUMBER, "DB"))->fetchAll(\PDO::FETCH_ASSOC);
-        // Call Row Deleting event
-        foreach ($dtlrows as $dtlrow) {
-            $success = Container("npd_desain")->rowDeleting($dtlrow);
-            if (!$success) {
-                break;
-            }
-        }
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                $success = Container("npd_desain")->delete($dtlrow); // Delete
-                if (!$success) {
-                    break;
-                }
-            }
-        }
-        // Call Row Deleted event
-        if ($success) {
-            foreach ($dtlrows as $dtlrow) {
-                Container("npd_desain")->rowDeleted($dtlrow);
-            }
-        }
         if ($success) {
             $success = $this->deleteSql($rs, $where, $curfilter)->execute();
         }
@@ -1659,7 +1595,6 @@ class Npd extends DbTable
         $this->viskositas->DbValue = $row['viskositas'];
         $this->warna->DbValue = $row['warna'];
         $this->parfum->DbValue = $row['parfum'];
-        $this->aroma->DbValue = $row['aroma'];
         $this->aplikasi->DbValue = $row['aplikasi'];
         $this->estetika->DbValue = $row['estetika'];
         $this->tambahan->DbValue = $row['tambahan'];
@@ -2064,7 +1999,6 @@ SORTHTML;
         $this->viskositas->setDbValue($row['viskositas']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
-        $this->aroma->setDbValue($row['aroma']);
         $this->aplikasi->setDbValue($row['aplikasi']);
         $this->estetika->setDbValue($row['estetika']);
         $this->tambahan->setDbValue($row['tambahan']);
@@ -2174,8 +2108,6 @@ SORTHTML;
         // warna
 
         // parfum
-
-        // aroma
 
         // aplikasi
 
@@ -2571,10 +2503,6 @@ SORTHTML;
             $this->parfum->ViewValue = null;
         }
         $this->parfum->ViewCustomAttributes = "";
-
-        // aroma
-        $this->aroma->ViewValue = $this->aroma->CurrentValue;
-        $this->aroma->ViewCustomAttributes = "";
 
         // aplikasi
         $curVal = trim(strval($this->aplikasi->CurrentValue));
@@ -3191,11 +3119,6 @@ SORTHTML;
         $this->parfum->HrefValue = "";
         $this->parfum->TooltipValue = "";
 
-        // aroma
-        $this->aroma->LinkCustomAttributes = "";
-        $this->aroma->HrefValue = "";
-        $this->aroma->TooltipValue = "";
-
         // aplikasi
         $this->aplikasi->LinkCustomAttributes = "";
         $this->aplikasi->HrefValue = "";
@@ -3637,18 +3560,8 @@ SORTHTML;
         $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
 
         // parfum
-        $this->parfum->EditAttrs["class"] = "form-control";
         $this->parfum->EditCustomAttributes = "";
         $this->parfum->PlaceHolder = RemoveHtml($this->parfum->caption());
-
-        // aroma
-        $this->aroma->EditAttrs["class"] = "form-control";
-        $this->aroma->EditCustomAttributes = "";
-        if (!$this->aroma->Raw) {
-            $this->aroma->CurrentValue = HtmlDecode($this->aroma->CurrentValue);
-        }
-        $this->aroma->EditValue = $this->aroma->CurrentValue;
-        $this->aroma->PlaceHolder = RemoveHtml($this->aroma->caption());
 
         // aplikasi
         $this->aplikasi->EditCustomAttributes = "";
@@ -4022,7 +3935,6 @@ SORTHTML;
                     $doc->exportCaption($this->viskositas);
                     $doc->exportCaption($this->warna);
                     $doc->exportCaption($this->parfum);
-                    $doc->exportCaption($this->aroma);
                     $doc->exportCaption($this->aplikasi);
                     $doc->exportCaption($this->estetika);
                     $doc->exportCaption($this->tambahan);
@@ -4098,7 +4010,6 @@ SORTHTML;
                     $doc->exportCaption($this->viskositas);
                     $doc->exportCaption($this->warna);
                     $doc->exportCaption($this->parfum);
-                    $doc->exportCaption($this->aroma);
                     $doc->exportCaption($this->aplikasi);
                     $doc->exportCaption($this->estetika);
                     $doc->exportCaption($this->tambahan);
@@ -4199,7 +4110,6 @@ SORTHTML;
                         $doc->exportField($this->viskositas);
                         $doc->exportField($this->warna);
                         $doc->exportField($this->parfum);
-                        $doc->exportField($this->aroma);
                         $doc->exportField($this->aplikasi);
                         $doc->exportField($this->estetika);
                         $doc->exportField($this->tambahan);
@@ -4275,7 +4185,6 @@ SORTHTML;
                         $doc->exportField($this->viskositas);
                         $doc->exportField($this->warna);
                         $doc->exportField($this->parfum);
-                        $doc->exportField($this->aroma);
                         $doc->exportField($this->aplikasi);
                         $doc->exportField($this->estetika);
                         $doc->exportField($this->tambahan);

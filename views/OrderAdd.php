@@ -316,6 +316,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("api/nextKodeOrder/0",(function(e){$("#x_kode").val(e)})),$("select[name=x_idbrand]").change((function(){const e=$(this).val()<1?1:$(this).val();$.get("api/nextKodeOrder/"+e,(function(e){$("#x_kode").val(e)}))}))}));
+    $.get("api/nextKodeOrder/0",(function(e){$("#x_kode").val(e)})),$("select[name=x_idbrand]").change((function(){const e=$(this).val()<1?1:$(this).val();$.get("api/nextKodeOrder/"+e,(function(e){$("#x_kode").val(e)}))}));
 });
 </script>

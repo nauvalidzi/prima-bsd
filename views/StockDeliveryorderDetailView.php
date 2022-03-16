@@ -89,13 +89,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->jumlah_kirim->Visible) { // jumlah_kirim ?>
-    <tr id="r_jumlah_kirim">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_deliveryorder_detail_jumlah_kirim"><?= $Page->jumlah_kirim->caption() ?></span></td>
-        <td data-name="jumlah_kirim" <?= $Page->jumlah_kirim->cellAttributes() ?>>
-<span id="el_stock_deliveryorder_detail_jumlah_kirim">
-<span<?= $Page->jumlah_kirim->viewAttributes() ?>>
-<?= $Page->jumlah_kirim->getViewValue() ?></span>
+<?php if ($Page->jumlahkirim->Visible) { // jumlahkirim ?>
+    <tr id="r_jumlahkirim">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_deliveryorder_detail_jumlahkirim"><?= $Page->jumlahkirim->caption() ?></span></td>
+        <td data-name="jumlahkirim" <?= $Page->jumlahkirim->cellAttributes() ?>>
+<span id="el_stock_deliveryorder_detail_jumlahkirim">
+<span<?= $Page->jumlahkirim->viewAttributes() ?>>
+<?= $Page->jumlahkirim->getViewValue() ?></span>
 </span>
 </td>
     </tr>

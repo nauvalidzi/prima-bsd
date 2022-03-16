@@ -44,14 +44,14 @@ $Page->showMessage();
 <table class="table ew-table">
     <thead>
     <tr class="ew-table-header">
-<?php if ($Page->id->Visible) { // id ?>
-        <th class="<?= $Page->id->headerCellClass() ?>"><span id="elh_stock_deliveryorder_id" class="stock_deliveryorder_id"><?= $Page->id->caption() ?></span></th>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th class="<?= $Page->kode->headerCellClass() ?>"><span id="elh_stock_deliveryorder_kode" class="stock_deliveryorder_kode"><?= $Page->kode->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->tanggal->Visible) { // tanggal ?>
         <th class="<?= $Page->tanggal->headerCellClass() ?>"><span id="elh_stock_deliveryorder_tanggal" class="stock_deliveryorder_tanggal"><?= $Page->tanggal->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <th class="<?= $Page->receipt_by->headerCellClass() ?>"><span id="elh_stock_deliveryorder_receipt_by" class="stock_deliveryorder_receipt_by"><?= $Page->receipt_by->caption() ?></span></th>
 <?php } ?>
 <?php if ($Page->lampiran->Visible) { // lampiran ?>
         <th class="<?= $Page->lampiran->headerCellClass() ?>"><span id="elh_stock_deliveryorder_lampiran" class="stock_deliveryorder_lampiran"><?= $Page->lampiran->caption() ?></span></th>
@@ -80,14 +80,6 @@ while (!$Page->Recordset->EOF) {
     $Page->renderRow();
 ?>
     <tr <?= $Page->rowAttributes() ?>>
-<?php if ($Page->id->Visible) { // id ?>
-        <td <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_deliveryorder_id" class="stock_deliveryorder_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <td <?= $Page->kode->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_stock_deliveryorder_kode" class="stock_deliveryorder_kode">
@@ -101,6 +93,14 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_stock_deliveryorder_tanggal" class="stock_deliveryorder_tanggal">
 <span<?= $Page->tanggal->viewAttributes() ?>>
 <?= $Page->tanggal->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <td <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_deliveryorder_receipt_by" class="stock_deliveryorder_receipt_by">
+<span<?= $Page->receipt_by->viewAttributes() ?>>
+<?= $Page->receipt_by->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

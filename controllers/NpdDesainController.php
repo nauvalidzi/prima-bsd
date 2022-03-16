@@ -14,9 +14,15 @@ class NpdDesainController extends ControllerBase
         return $this->runPage($request, $response, $args, "NpdDesainList");
     }
 
-    // preview
-    public function preview(Request $request, Response $response, array $args): Response
+    // add
+    public function add(Request $request, Response $response, array $args): Response
     {
-        return $this->runPage($request, $response, $args, "NpdDesainPreview", false);
+        return $this->runPage($request, $response, $args, "NpdDesainAdd");
+    }
+
+    // edit
+    public function edit(Request $request, Response $response, array $args): Response
+    {
+        return $this->runPage($request, $response, $args, "NpdDesainEdit");
     }
 }

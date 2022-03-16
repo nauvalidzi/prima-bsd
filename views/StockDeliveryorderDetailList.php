@@ -17,6 +17,18 @@ loadjs.ready("head", function () {
     fstock_deliveryorder_detaillist.formKeyCountName = '<?= $Page->FormKeyCountName ?>';
     loadjs.done("fstock_deliveryorder_detaillist");
 });
+var fstock_deliveryorder_detaillistsrch, currentSearchForm, currentAdvancedSearchForm;
+loadjs.ready("head", function () {
+    var $ = jQuery;
+    // Form object for search
+    fstock_deliveryorder_detaillistsrch = currentSearchForm = new ew.Form("fstock_deliveryorder_detaillistsrch");
+
+    // Dynamic selection lists
+
+    // Filters
+    fstock_deliveryorder_detaillistsrch.filterList = <?= $Page->getFilterList() ?>;
+    loadjs.done("fstock_deliveryorder_detaillistsrch");
+});
 </script>
 <style>
 .ew-table-preview-row { /* main table preview row color */
@@ -56,6 +68,12 @@ loadjs.ready("head", function () {
 <?php if ($Page->ImportOptions->visible()) { ?>
 <?php $Page->ImportOptions->render("body") ?>
 <?php } ?>
+<?php if ($Page->SearchOptions->visible()) { ?>
+<?php $Page->SearchOptions->render("body") ?>
+<?php } ?>
+<?php if ($Page->FilterOptions->visible()) { ?>
+<?php $Page->FilterOptions->render("body") ?>
+<?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
@@ -71,6 +89,34 @@ if ($Page->DbMasterFilter != "" && $Page->getCurrentMasterTable() == "stock_deli
 <?php
 $Page->renderOtherOptions();
 ?>
+<?php if ($Security->canSearch()) { ?>
+<?php if (!$Page->isExport() && !$Page->CurrentAction) { ?>
+<form name="fstock_deliveryorder_detaillistsrch" id="fstock_deliveryorder_detaillistsrch" class="form-inline ew-form ew-ext-search-form" action="<?= CurrentPageUrl(false) ?>">
+<div id="fstock_deliveryorder_detaillistsrch-search-panel" class="<?= $Page->SearchPanelClass ?>">
+<input type="hidden" name="cmd" value="search">
+<input type="hidden" name="t" value="stock_deliveryorder_detail">
+    <div class="ew-extended-search">
+<div id="xsr_<?= $Page->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
+    <div class="ew-quick-search input-group">
+        <input type="text" name="<?= Config("TABLE_BASIC_SEARCH") ?>" id="<?= Config("TABLE_BASIC_SEARCH") ?>" class="form-control" value="<?= HtmlEncode($Page->BasicSearch->getKeyword()) ?>" placeholder="<?= HtmlEncode($Language->phrase("Search")) ?>">
+        <input type="hidden" name="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?= Config("TABLE_BASIC_SEARCH_TYPE") ?>" value="<?= HtmlEncode($Page->BasicSearch->getType()) ?>">
+        <div class="input-group-append">
+            <button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?= $Language->phrase("SearchBtn") ?></button>
+            <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?= $Page->BasicSearch->getTypeNameShort() ?></span></button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this);"><?= $Language->phrase("QuickSearchAuto") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "=") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, '=');"><?= $Language->phrase("QuickSearchExact") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "AND") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'AND');"><?= $Language->phrase("QuickSearchAll") ?></a>
+                <a class="dropdown-item<?php if ($Page->BasicSearch->getType() == "OR") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'OR');"><?= $Language->phrase("QuickSearchAny") ?></a>
+            </div>
+        </div>
+    </div>
+</div>
+    </div><!-- /.ew-extended-search -->
+</div><!-- /.ew-search-panel -->
+</form>
+<?php } ?>
+<?php } ?>
 <?php $Page->showPageHeader(); ?>
 <?php
 $Page->showMessage();
@@ -114,8 +160,11 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->sisa->Visible) { // sisa ?>
         <th data-name="sisa" class="<?= $Page->sisa->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_sisa" class="stock_deliveryorder_detail_sisa"><?= $Page->renderSort($Page->sisa) ?></div></th>
 <?php } ?>
-<?php if ($Page->jumlah_kirim->Visible) { // jumlah_kirim ?>
-        <th data-name="jumlah_kirim" class="<?= $Page->jumlah_kirim->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_jumlah_kirim" class="stock_deliveryorder_detail_jumlah_kirim"><?= $Page->renderSort($Page->jumlah_kirim) ?></div></th>
+<?php if ($Page->jumlahkirim->Visible) { // jumlahkirim ?>
+        <th data-name="jumlahkirim" class="<?= $Page->jumlahkirim->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_jumlahkirim" class="stock_deliveryorder_detail_jumlahkirim"><?= $Page->renderSort($Page->jumlahkirim) ?></div></th>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_stock_deliveryorder_detail_keterangan" class="stock_deliveryorder_detail_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -216,11 +265,19 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->jumlah_kirim->Visible) { // jumlah_kirim ?>
-        <td data-name="jumlah_kirim" <?= $Page->jumlah_kirim->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_deliveryorder_detail_jumlah_kirim">
-<span<?= $Page->jumlah_kirim->viewAttributes() ?>>
-<?= $Page->jumlah_kirim->getViewValue() ?></span>
+    <?php if ($Page->jumlahkirim->Visible) { // jumlahkirim ?>
+        <td data-name="jumlahkirim" <?= $Page->jumlahkirim->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_deliveryorder_detail_jumlahkirim">
+<span<?= $Page->jumlahkirim->viewAttributes() ?>>
+<?= $Page->jumlahkirim->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_deliveryorder_detail_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

@@ -119,10 +119,10 @@ class StockOrderDetail extends DbTable
         $this->idproduct->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
-                $this->idproduct->Lookup = new Lookup('idproduct', 'v_stock_produk', false, 'idproduk', ["kode_produk","nama_produk","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["stok_akhir"], ["x_stok_akhir"], '', '');
+                $this->idproduct->Lookup = new Lookup('idproduct', 'v_kartu_stok', false, 'idproduct', ["kodeproduct","namaproduct","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["stok"], ["x_stok_akhir"], '', '');
                 break;
             default:
-                $this->idproduct->Lookup = new Lookup('idproduct', 'v_stock_produk', false, 'idproduk', ["kode_produk","nama_produk","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["stok_akhir"], ["x_stok_akhir"], '', '');
+                $this->idproduct->Lookup = new Lookup('idproduct', 'v_kartu_stok', false, 'idproduct', ["kodeproduct","namaproduct","",""], ["x_idbrand"], [], ["idbrand"], ["x_idbrand"], ["stok"], ["x_stok_akhir"], '', '');
                 break;
         }
         $this->idproduct->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
@@ -158,8 +158,6 @@ class StockOrderDetail extends DbTable
 
         // keterangan
         $this->keterangan = new DbField('stock_order_detail', 'stock_order_detail', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keterangan->Nullable = false; // NOT NULL field
-        $this->keterangan->Required = true; // Required field
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;
@@ -1032,7 +1030,7 @@ SORTHTML;
         if ($curVal != "") {
             $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
             if ($this->idproduct->ViewValue === null) { // Lookup from database
-                $filterWrk = "`idproduk`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $filterWrk = "`idproduct`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
@@ -1060,7 +1058,7 @@ SORTHTML;
 
         // jumlah
         $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-        $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
+        $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -1, -2, -2);
         $this->jumlah->ViewCustomAttributes = "";
 
         // keterangan
@@ -1325,6 +1323,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
+        $rsnew['sisa'] = $rsnew['jumlah'];
         return true;
     }
 
@@ -1389,6 +1388,10 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
+        $readonly = ExecuteScalar("SELECT readonly FROM stock_order WHERE id = {$rs['pid']}");
+        if ($readonly > 0) {
+            $this->setFailureMessage("Data tidak dapat dihapus karena telah diproses.");
+        }
         return true;
     }
 

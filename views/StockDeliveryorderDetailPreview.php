@@ -58,12 +58,21 @@ $Page->ListOptions->render("header", "left");
         </div></div></th>
     <?php } ?>
 <?php } ?>
-<?php if ($Page->jumlah_kirim->Visible) { // jumlah_kirim ?>
-    <?php if ($Page->SortUrl($Page->jumlah_kirim) == "") { ?>
-        <th class="<?= $Page->jumlah_kirim->headerCellClass() ?>"><?= $Page->jumlah_kirim->caption() ?></th>
+<?php if ($Page->jumlahkirim->Visible) { // jumlahkirim ?>
+    <?php if ($Page->SortUrl($Page->jumlahkirim) == "") { ?>
+        <th class="<?= $Page->jumlahkirim->headerCellClass() ?>"><?= $Page->jumlahkirim->caption() ?></th>
     <?php } else { ?>
-        <th class="<?= $Page->jumlah_kirim->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->jumlah_kirim->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->jumlah_kirim->getNextSort() ?>">
-            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->jumlah_kirim->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->jumlah_kirim->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->jumlah_kirim->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        <th class="<?= $Page->jumlahkirim->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->jumlahkirim->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->jumlahkirim->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->jumlahkirim->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->jumlahkirim->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->jumlahkirim->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
+        </div></div></th>
+    <?php } ?>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+    <?php if ($Page->SortUrl($Page->keterangan) == "") { ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><?= $Page->keterangan->caption() ?></th>
+    <?php } else { ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><div class="ew-pointer" data-sort="<?= HtmlEncode($Page->keterangan->Name) ?>" data-sort-type="1" data-sort-order="<?= $Page->keterangan->getNextSort() ?>">
+            <div class="ew-table-header-btn"><span class="ew-table-header-caption"><?= $Page->keterangan->caption() ?></span><span class="ew-table-header-sort"><?php if ($Page->keterangan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($Page->keterangan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span>
         </div></div></th>
     <?php } ?>
 <?php } ?>
@@ -125,11 +134,18 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <?= $Page->sisa->getViewValue() ?></span>
 </td>
 <?php } ?>
-<?php if ($Page->jumlah_kirim->Visible) { // jumlah_kirim ?>
-        <!-- jumlah_kirim -->
-        <td<?= $Page->jumlah_kirim->cellAttributes() ?>>
-<span<?= $Page->jumlah_kirim->viewAttributes() ?>>
-<?= $Page->jumlah_kirim->getViewValue() ?></span>
+<?php if ($Page->jumlahkirim->Visible) { // jumlahkirim ?>
+        <!-- jumlahkirim -->
+        <td<?= $Page->jumlahkirim->cellAttributes() ?>>
+<span<?= $Page->jumlahkirim->viewAttributes() ?>>
+<?= $Page->jumlahkirim->getViewValue() ?></span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <!-- keterangan -->
+        <td<?= $Page->keterangan->cellAttributes() ?>>
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
 </td>
 <?php } ?>
 <?php

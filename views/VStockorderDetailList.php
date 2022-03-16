@@ -153,9 +153,6 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->sisa_order->Visible) { // sisa_order ?>
         <th data-name="sisa_order" class="<?= $Page->sisa_order->headerCellClass() ?>"><div id="elh_v_stockorder_detail_sisa_order" class="v_stockorder_detail_sisa_order"><?= $Page->renderSort($Page->sisa_order) ?></div></th>
 <?php } ?>
-<?php if ($Page->stok_akhir->Visible) { // stok_akhir ?>
-        <th data-name="stok_akhir" class="<?= $Page->stok_akhir->headerCellClass() ?>"><div id="elh_v_stockorder_detail_stok_akhir" class="v_stockorder_detail_stok_akhir"><?= $Page->renderSort($Page->stok_akhir) ?></div></th>
-<?php } ?>
 <?php
 // Render list options (header, right)
 $Page->ListOptions->render("header", "right");
@@ -268,14 +265,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_v_stockorder_detail_sisa_order">
 <span<?= $Page->sisa_order->viewAttributes() ?>>
 <?= $Page->sisa_order->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->stok_akhir->Visible) { // stok_akhir ?>
-        <td data-name="stok_akhir" <?= $Page->stok_akhir->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stockorder_detail_stok_akhir">
-<span<?= $Page->stok_akhir->viewAttributes() ?>>
-<?= $Page->stok_akhir->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

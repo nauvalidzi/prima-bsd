@@ -203,10 +203,8 @@ loadjs.ready("head", function() {
 loadjs.ready("load", function () {
     // Startup script
     // Write your table-specific startup script here, no need to add script tags.
-    //loadjs.ready('jquery', function() {
-    //	$.get('api/nextKode/deliveryorder/0').then(function(data){
-    //    	$("#x_kode").val(data)
-    //    })
+    //$.get('api/nextKode/deliveryorder/0').then(function(data){
+    //	$("#x_kode").val(data)
     //});
 });
 </script>

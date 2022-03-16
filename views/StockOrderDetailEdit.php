@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 // Page object
 $StockOrderDetailEdit = &$Page;
@@ -20,15 +20,12 @@ loadjs.ready("head", function () {
     if (!ew.vars.tables.stock_order_detail)
         ew.vars.tables.stock_order_detail = currentTable;
     fstock_order_detailedit.addFields([
-        ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
-        ["pid", [fields.pid.visible && fields.pid.required ? ew.Validators.required(fields.pid.caption) : null, ew.Validators.integer], fields.pid.isInvalid],
-        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null, ew.Validators.integer], fields.idbrand.isInvalid],
-        ["idproduct", [fields.idproduct.visible && fields.idproduct.required ? ew.Validators.required(fields.idproduct.caption) : null, ew.Validators.integer], fields.idproduct.isInvalid],
+        ["idbrand", [fields.idbrand.visible && fields.idbrand.required ? ew.Validators.required(fields.idbrand.caption) : null], fields.idbrand.isInvalid],
+        ["idproduct", [fields.idproduct.visible && fields.idproduct.required ? ew.Validators.required(fields.idproduct.caption) : null], fields.idproduct.isInvalid],
         ["stok_akhir", [fields.stok_akhir.visible && fields.stok_akhir.required ? ew.Validators.required(fields.stok_akhir.caption) : null, ew.Validators.integer], fields.stok_akhir.isInvalid],
-        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
-        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
-        ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
+        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -95,7 +92,8 @@ loadjs.ready("head", function () {
     fstock_order_detailedit.validateRequired = <?= Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
     // Dynamic selection lists
-    fstock_order_detailedit.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
+    fstock_order_detailedit.lists.idbrand = <?= $Page->idbrand->toClientList($Page) ?>;
+    fstock_order_detailedit.lists.idproduct = <?= $Page->idproduct->toClientList($Page) ?>;
     loadjs.done("fstock_order_detailedit");
 });
 </script>
@@ -122,46 +120,36 @@ $Page->showMessage();
 <input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->pid->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-edit-div"><!-- page* -->
-<?php if ($Page->id->Visible) { // id ?>
-    <div id="r_id" class="form-group row">
-        <label id="elh_stock_order_detail_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->id->caption() ?><?= $Page->id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->id->cellAttributes() ?>>
-<span id="el_stock_order_detail_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->id->getDisplayValue($Page->id->EditValue))) ?>"></span>
-</span>
-<input type="hidden" data-table="stock_order_detail" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->pid->Visible) { // pid ?>
-    <div id="r_pid" class="form-group row">
-        <label id="elh_stock_order_detail_pid" for="x_pid" class="<?= $Page->LeftColumnClass ?>"><?= $Page->pid->caption() ?><?= $Page->pid->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->pid->cellAttributes() ?>>
-<?php if ($Page->pid->getSessionValue() != "") { ?>
-<span id="el_stock_order_detail_pid">
-<span<?= $Page->pid->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->pid->getDisplayValue($Page->pid->ViewValue))) ?>"></span>
-</span>
-<input type="hidden" id="x_pid" name="x_pid" value="<?= HtmlEncode($Page->pid->CurrentValue) ?>" data-hidden="1">
-<?php } else { ?>
-<span id="el_stock_order_detail_pid">
-<input type="<?= $Page->pid->getInputTextType() ?>" data-table="stock_order_detail" data-field="x_pid" name="x_pid" id="x_pid" size="30" placeholder="<?= HtmlEncode($Page->pid->getPlaceHolder()) ?>" value="<?= $Page->pid->EditValue ?>"<?= $Page->pid->editAttributes() ?> aria-describedby="x_pid_help">
-<?= $Page->pid->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->pid->getErrorMessage() ?></div>
-</span>
-<?php } ?>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->idbrand->Visible) { // idbrand ?>
     <div id="r_idbrand" class="form-group row">
         <label id="elh_stock_order_detail_idbrand" for="x_idbrand" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idbrand->caption() ?><?= $Page->idbrand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idbrand->cellAttributes() ?>>
 <span id="el_stock_order_detail_idbrand">
-<input type="<?= $Page->idbrand->getInputTextType() ?>" data-table="stock_order_detail" data-field="x_idbrand" name="x_idbrand" id="x_idbrand" size="30" placeholder="<?= HtmlEncode($Page->idbrand->getPlaceHolder()) ?>" value="<?= $Page->idbrand->EditValue ?>"<?= $Page->idbrand->editAttributes() ?> aria-describedby="x_idbrand_help">
-<?= $Page->idbrand->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idbrand->getErrorMessage() ?></div>
+<?php $Page->idbrand->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
+    <select
+        id="x_idbrand"
+        name="x_idbrand"
+        class="form-control ew-select<?= $Page->idbrand->isInvalidClass() ?>"
+        data-select2-id="stock_order_detail_x_idbrand"
+        data-table="stock_order_detail"
+        data-field="x_idbrand"
+        data-value-separator="<?= $Page->idbrand->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idbrand->getPlaceHolder()) ?>"
+        <?= $Page->idbrand->editAttributes() ?>>
+        <?= $Page->idbrand->selectOptionListHtml("x_idbrand") ?>
+    </select>
+    <?= $Page->idbrand->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idbrand->getErrorMessage() ?></div>
+<?= $Page->idbrand->Lookup->getParamTag($Page, "p_x_idbrand") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='stock_order_detail_x_idbrand']"),
+        options = { name: "x_idbrand", selectId: "stock_order_detail_x_idbrand", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.stock_order_detail.fields.idbrand.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -171,9 +159,31 @@ $Page->showMessage();
         <label id="elh_stock_order_detail_idproduct" for="x_idproduct" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idproduct->caption() ?><?= $Page->idproduct->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idproduct->cellAttributes() ?>>
 <span id="el_stock_order_detail_idproduct">
-<input type="<?= $Page->idproduct->getInputTextType() ?>" data-table="stock_order_detail" data-field="x_idproduct" name="x_idproduct" id="x_idproduct" size="30" placeholder="<?= HtmlEncode($Page->idproduct->getPlaceHolder()) ?>" value="<?= $Page->idproduct->EditValue ?>"<?= $Page->idproduct->editAttributes() ?> aria-describedby="x_idproduct_help">
-<?= $Page->idproduct->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idproduct->getErrorMessage() ?></div>
+<?php $Page->idproduct->EditAttrs->prepend("onchange", "ew.autoFill(this);"); ?>
+    <select
+        id="x_idproduct"
+        name="x_idproduct"
+        class="form-control ew-select<?= $Page->idproduct->isInvalidClass() ?>"
+        data-select2-id="stock_order_detail_x_idproduct"
+        data-table="stock_order_detail"
+        data-field="x_idproduct"
+        data-value-separator="<?= $Page->idproduct->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idproduct->getPlaceHolder()) ?>"
+        <?= $Page->idproduct->editAttributes() ?>>
+        <?= $Page->idproduct->selectOptionListHtml("x_idproduct") ?>
+    </select>
+    <?= $Page->idproduct->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idproduct->getErrorMessage() ?></div>
+<?= $Page->idproduct->Lookup->getParamTag($Page, "p_x_idproduct") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='stock_order_detail_x_idproduct']"),
+        options = { name: "x_idproduct", selectId: "stock_order_detail_x_idproduct", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.stock_order_detail.fields.idproduct.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>
@@ -190,18 +200,6 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->jumlah->Visible) { // jumlah ?>
-    <div id="r_jumlah" class="form-group row">
-        <label id="elh_stock_order_detail_jumlah" for="x_jumlah" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jumlah->caption() ?><?= $Page->jumlah->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jumlah->cellAttributes() ?>>
-<span id="el_stock_order_detail_jumlah">
-<input type="<?= $Page->jumlah->getInputTextType() ?>" data-table="stock_order_detail" data-field="x_jumlah" name="x_jumlah" id="x_jumlah" size="30" placeholder="<?= HtmlEncode($Page->jumlah->getPlaceHolder()) ?>" value="<?= $Page->jumlah->EditValue ?>"<?= $Page->jumlah->editAttributes() ?> aria-describedby="x_jumlah_help">
-<?= $Page->jumlah->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jumlah->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 <?php if ($Page->sisa->Visible) { // sisa ?>
     <div id="r_sisa" class="form-group row">
         <label id="elh_stock_order_detail_sisa" for="x_sisa" class="<?= $Page->LeftColumnClass ?>"><?= $Page->sisa->caption() ?><?= $Page->sisa->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -210,6 +208,18 @@ $Page->showMessage();
 <input type="<?= $Page->sisa->getInputTextType() ?>" data-table="stock_order_detail" data-field="x_sisa" name="x_sisa" id="x_sisa" size="30" placeholder="<?= HtmlEncode($Page->sisa->getPlaceHolder()) ?>" value="<?= $Page->sisa->EditValue ?>"<?= $Page->sisa->editAttributes() ?> aria-describedby="x_sisa_help">
 <?= $Page->sisa->getCustomMessage() ?>
 <div class="invalid-feedback"><?= $Page->sisa->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->jumlah->Visible) { // jumlah ?>
+    <div id="r_jumlah" class="form-group row">
+        <label id="elh_stock_order_detail_jumlah" for="x_jumlah" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jumlah->caption() ?><?= $Page->jumlah->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jumlah->cellAttributes() ?>>
+<span id="el_stock_order_detail_jumlah">
+<input type="<?= $Page->jumlah->getInputTextType() ?>" data-table="stock_order_detail" data-field="x_jumlah" name="x_jumlah" id="x_jumlah" size="30" placeholder="<?= HtmlEncode($Page->jumlah->getPlaceHolder()) ?>" value="<?= $Page->jumlah->EditValue ?>"<?= $Page->jumlah->editAttributes() ?> aria-describedby="x_jumlah_help">
+<?= $Page->jumlah->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->jumlah->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>
@@ -226,22 +236,8 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aktif->Visible) { // aktif ?>
-    <div id="r_aktif" class="form-group row">
-        <label id="elh_stock_order_detail_aktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aktif->caption() ?><?= $Page->aktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aktif->cellAttributes() ?>>
-<span id="el_stock_order_detail_aktif">
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" class="custom-control-input<?= $Page->aktif->isInvalidClass() ?>" data-table="stock_order_detail" data-field="x_aktif" name="x_aktif[]" id="x_aktif_706182" value="1"<?= ConvertToBool($Page->aktif->CurrentValue) ? " checked" : "" ?><?= $Page->aktif->editAttributes() ?> aria-describedby="x_aktif_help">
-    <label class="custom-control-label" for="x_aktif_706182"></label>
-</div>
-<?= $Page->aktif->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aktif->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
 </div><!-- /page* -->
+    <input type="hidden" data-table="stock_order_detail" data-field="x_id" data-hidden="1" name="x_id" id="x_id" value="<?= HtmlEncode($Page->id->CurrentValue) ?>">
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

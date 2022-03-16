@@ -1365,7 +1365,7 @@ class OrderGrid extends Order
         $this->id->OldValue = $this->id->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
-        $this->tanggal->CurrentValue = null;
+        $this->tanggal->CurrentValue = CurrentDate();
         $this->tanggal->OldValue = $this->tanggal->CurrentValue;
         $this->idpegawai->CurrentValue = CurrentUserID();
         $this->idpegawai->OldValue = $this->idpegawai->CurrentValue;
@@ -1386,7 +1386,7 @@ class OrderGrid extends Order
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->created_by->CurrentValue = CurrentUserID();
         $this->created_by->OldValue = $this->created_by->CurrentValue;
-        $this->readonly->CurrentValue = 0;
+        $this->readonly->CurrentValue = CurrentDate();
         $this->readonly->OldValue = $this->readonly->CurrentValue;
     }
 

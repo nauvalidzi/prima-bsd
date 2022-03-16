@@ -53,6 +53,12 @@ $Page->showMessage();
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
         <th class="<?= $Page->idpegawai->headerCellClass() ?>"><span id="elh_stock_order_idpegawai" class="stock_order_idpegawai"><?= $Page->idpegawai->caption() ?></span></th>
 <?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th class="<?= $Page->keterangan->headerCellClass() ?>"><span id="elh_stock_order_keterangan" class="stock_order_keterangan"><?= $Page->keterangan->caption() ?></span></th>
+<?php } ?>
+<?php if ($Page->readonly->Visible) { // readonly ?>
+        <th class="<?= $Page->readonly->headerCellClass() ?>"><span id="elh_stock_order_readonly" class="stock_order_readonly"><?= $Page->readonly->caption() ?></span></th>
+<?php } ?>
 <?php if ($Page->created_at->Visible) { // created_at ?>
         <th class="<?= $Page->created_at->headerCellClass() ?>"><span id="elh_stock_order_created_at" class="stock_order_created_at"><?= $Page->created_at->caption() ?></span></th>
 <?php } ?>
@@ -98,6 +104,22 @@ while (!$Page->Recordset->EOF) {
 <span id="el<?= $Page->RowCount ?>_stock_order_idpegawai" class="stock_order_idpegawai">
 <span<?= $Page->idpegawai->viewAttributes() ?>>
 <?= $Page->idpegawai->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_order_keterangan" class="stock_order_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($Page->readonly->Visible) { // readonly ?>
+        <td <?= $Page->readonly->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_order_readonly" class="stock_order_readonly">
+<span<?= $Page->readonly->viewAttributes() ?>>
+<?= $Page->readonly->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

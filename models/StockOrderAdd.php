@@ -469,7 +469,7 @@ class StockOrderAdd extends StockOrder
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->keterangan->setVisibility();
-        $this->aktif->Visible = false;
+        $this->readonly->Visible = false;
         $this->created_at->Visible = false;
         $this->hideFieldsForAddEdit();
 
@@ -635,14 +635,13 @@ class StockOrderAdd extends StockOrder
         $this->id->OldValue = $this->id->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
-        $this->tanggal->CurrentValue = null;
-        $this->tanggal->OldValue = $this->tanggal->CurrentValue;
+        $this->tanggal->CurrentValue = CurrentDate();
         $this->idpegawai->CurrentValue = null;
         $this->idpegawai->OldValue = $this->idpegawai->CurrentValue;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
-        $this->aktif->CurrentValue = null;
-        $this->aktif->OldValue = $this->aktif->CurrentValue;
+        $this->readonly->CurrentValue = null;
+        $this->readonly->OldValue = $this->readonly->CurrentValue;
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
     }
@@ -761,7 +760,7 @@ class StockOrderAdd extends StockOrder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
     }
 
@@ -775,7 +774,7 @@ class StockOrderAdd extends StockOrder
         $row['tanggal'] = $this->tanggal->CurrentValue;
         $row['idpegawai'] = $this->idpegawai->CurrentValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
-        $row['aktif'] = $this->aktif->CurrentValue;
+        $row['readonly'] = $this->readonly->CurrentValue;
         $row['created_at'] = $this->created_at->CurrentValue;
         return $row;
     }
@@ -818,7 +817,7 @@ class StockOrderAdd extends StockOrder
 
         // keterangan
 
-        // aktif
+        // readonly
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -860,13 +859,13 @@ class StockOrderAdd extends StockOrder
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -1170,7 +1169,7 @@ class StockOrderAdd extends StockOrder
             switch ($fld->FieldVar) {
                 case "x_idpegawai":
                     break;
-                case "x_aktif":
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";

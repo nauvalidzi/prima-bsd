@@ -2323,7 +2323,7 @@ class ProductGrid extends Product
             $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, null, $this->kemasanbarang->ReadOnly);
 
             // harga
-            $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, $this->harga->ReadOnly);
+            $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, null, $this->harga->ReadOnly);
 
             // updated_at
             $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 11), CurrentDate(), $this->updated_at->ReadOnly);
@@ -2442,7 +2442,7 @@ class ProductGrid extends Product
         $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, null, false);
 
         // harga
-        $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, false);
+        $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, null, strval($this->harga->CurrentValue) == "");
 
         // updated_at
         $this->updated_at->setDbValueDef($rsnew, UnFormatDateTime($this->updated_at->CurrentValue, 11), CurrentDate(), false);

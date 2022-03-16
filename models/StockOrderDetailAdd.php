@@ -871,7 +871,7 @@ class StockOrderDetailAdd extends StockOrderDetail
             if ($curVal != "") {
                 $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
                 if ($this->idproduct->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idproduk`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idproduct`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -899,7 +899,7 @@ class StockOrderDetailAdd extends StockOrderDetail
 
             // jumlah
             $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
+            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -1, -2, -2);
             $this->jumlah->ViewCustomAttributes = "";
 
             // keterangan
@@ -976,7 +976,7 @@ class StockOrderDetailAdd extends StockOrderDetail
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`idproduk`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idproduct`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $sqlWrk = $this->idproduct->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1153,7 +1153,7 @@ class StockOrderDetailAdd extends StockOrderDetail
         $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, false);
 
         // keterangan
-        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", false);
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // pid
         if ($this->pid->getSessionValue() != "") {

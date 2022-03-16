@@ -1746,7 +1746,7 @@ class ProductEdit extends Product
             $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, null, $this->kemasanbarang->ReadOnly);
 
             // harga
-            $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, $this->harga->ReadOnly);
+            $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, null, $this->harga->ReadOnly);
 
             // bahan
             $this->bahan->setDbValueDef($rsnew, $this->bahan->CurrentValue, null, $this->bahan->ReadOnly);
@@ -1774,10 +1774,10 @@ class ProductEdit extends Product
             $this->tambahan->setDbValueDef($rsnew, $this->tambahan->CurrentValue, null, $this->tambahan->ReadOnly);
 
             // ijinbpom
-            $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, 0, $this->ijinbpom->ReadOnly);
+            $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, null, $this->ijinbpom->ReadOnly);
 
             // aktif
-            $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, 0, $this->aktif->ReadOnly);
+            $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, null, $this->aktif->ReadOnly);
 
             // Check referential integrity for master table 'brand'
             $validMasterRecord = true;

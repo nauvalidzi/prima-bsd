@@ -555,9 +555,6 @@ class IjinbpomStatusView extends IjinbpomStatus
         $loadCurrentRecord = false;
         $returnUrl = "";
         $matchRecord = false;
-
-        // Set up master/detail parameters
-        $this->setupMasterParms();
         if ($this->isPageRequest()) { // Validate request
             if (($keyValue = Get("id") ?? Route("id")) !== null) {
                 $this->id->setQueryStringValue($keyValue);
@@ -945,76 +942,6 @@ class IjinbpomStatusView extends IjinbpomStatus
             return $Security->isValidUserID($this->created_by->CurrentValue);
         }
         return true;
-    }
-
-    // Set up master/detail based on QueryString
-    protected function setupMasterParms()
-    {
-        $validMaster = false;
-        // Get the keys for master table
-        if (($master = Get(Config("TABLE_SHOW_MASTER"), Get(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                $validMaster = true;
-                $this->DbMasterFilter = "";
-                $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "ijinbpom") {
-                $validMaster = true;
-                $masterTbl = Container("ijinbpom");
-                if (($parm = Get("fk_id", Get("idijinbpom"))) !== null) {
-                    $masterTbl->id->setQueryStringValue($parm);
-                    $this->idijinbpom->setQueryStringValue($masterTbl->id->QueryStringValue);
-                    $this->idijinbpom->setSessionValue($this->idijinbpom->QueryStringValue);
-                    if (!is_numeric($masterTbl->id->QueryStringValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        } elseif (($master = Post(Config("TABLE_SHOW_MASTER"), Post(Config("TABLE_MASTER")))) !== null) {
-            $masterTblVar = $master;
-            if ($masterTblVar == "") {
-                    $validMaster = true;
-                    $this->DbMasterFilter = "";
-                    $this->DbDetailFilter = "";
-            }
-            if ($masterTblVar == "ijinbpom") {
-                $validMaster = true;
-                $masterTbl = Container("ijinbpom");
-                if (($parm = Post("fk_id", Post("idijinbpom"))) !== null) {
-                    $masterTbl->id->setFormValue($parm);
-                    $this->idijinbpom->setFormValue($masterTbl->id->FormValue);
-                    $this->idijinbpom->setSessionValue($this->idijinbpom->FormValue);
-                    if (!is_numeric($masterTbl->id->FormValue)) {
-                        $validMaster = false;
-                    }
-                } else {
-                    $validMaster = false;
-                }
-            }
-        }
-        if ($validMaster) {
-            // Save current master table
-            $this->setCurrentMasterTable($masterTblVar);
-            $this->setSessionWhere($this->getDetailFilter());
-
-            // Reset start record counter (new master key)
-            if (!$this->isAddOrEdit()) {
-                $this->StartRecord = 1;
-                $this->setStartRecordNumber($this->StartRecord);
-            }
-
-            // Clear previous master key from Session
-            if ($masterTblVar != "ijinbpom") {
-                if ($this->idijinbpom->CurrentValue == "") {
-                    $this->idijinbpom->setSessionValue("");
-                }
-            }
-        }
-        $this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
-        $this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
     }
 
     // Set up Breadcrumb

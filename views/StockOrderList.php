@@ -144,6 +144,12 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
         <th data-name="idpegawai" class="<?= $Page->idpegawai->headerCellClass() ?>"><div id="elh_stock_order_idpegawai" class="stock_order_idpegawai"><?= $Page->renderSort($Page->idpegawai) ?></div></th>
 <?php } ?>
+<?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Page->keterangan->headerCellClass() ?>"><div id="elh_stock_order_keterangan" class="stock_order_keterangan"><?= $Page->renderSort($Page->keterangan) ?></div></th>
+<?php } ?>
+<?php if ($Page->readonly->Visible) { // readonly ?>
+        <th data-name="readonly" class="<?= $Page->readonly->headerCellClass() ?>"><div id="elh_stock_order_readonly" class="stock_order_readonly"><?= $Page->renderSort($Page->readonly) ?></div></th>
+<?php } ?>
 <?php if ($Page->created_at->Visible) { // created_at ?>
         <th data-name="created_at" class="<?= $Page->created_at->headerCellClass() ?>"><div id="elh_stock_order_created_at" class="stock_order_created_at"><?= $Page->renderSort($Page->created_at) ?></div></th>
 <?php } ?>
@@ -235,6 +241,22 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_stock_order_idpegawai">
 <span<?= $Page->idpegawai->viewAttributes() ?>>
 <?= $Page->idpegawai->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Page->keterangan->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_order_keterangan">
+<span<?= $Page->keterangan->viewAttributes() ?>>
+<?= $Page->keterangan->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->readonly->Visible) { // readonly ?>
+        <td data-name="readonly" <?= $Page->readonly->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_order_readonly">
+<span<?= $Page->readonly->viewAttributes() ?>>
+<?= $Page->readonly->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

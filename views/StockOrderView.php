@@ -89,13 +89,13 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->aktif->Visible) { // aktif ?>
-    <tr id="r_aktif">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_order_aktif"><?= $Page->aktif->caption() ?></span></td>
-        <td data-name="aktif" <?= $Page->aktif->cellAttributes() ?>>
-<span id="el_stock_order_aktif">
-<span<?= $Page->aktif->viewAttributes() ?>>
-<?= $Page->aktif->getViewValue() ?></span>
+<?php if ($Page->readonly->Visible) { // readonly ?>
+    <tr id="r_readonly">
+        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_stock_order_readonly"><?= $Page->readonly->caption() ?></span></td>
+        <td data-name="readonly" <?= $Page->readonly->cellAttributes() ?>>
+<span id="el_stock_order_readonly">
+<span<?= $Page->readonly->viewAttributes() ?>>
+<?= $Page->readonly->getViewValue() ?></span>
 </span>
 </td>
     </tr>

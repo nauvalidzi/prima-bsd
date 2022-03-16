@@ -378,8 +378,8 @@ class StockOrderDelete extends StockOrder
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
-        $this->keterangan->Visible = false;
-        $this->aktif->Visible = false;
+        $this->keterangan->setVisibility();
+        $this->readonly->setVisibility();
         $this->created_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -549,7 +549,7 @@ class StockOrderDelete extends StockOrder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
     }
 
@@ -562,7 +562,7 @@ class StockOrderDelete extends StockOrder
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['keterangan'] = null;
-        $row['aktif'] = null;
+        $row['readonly'] = null;
         $row['created_at'] = null;
         return $row;
     }
@@ -590,7 +590,7 @@ class StockOrderDelete extends StockOrder
 
         // keterangan
 
-        // aktif
+        // readonly
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -628,13 +628,17 @@ class StockOrderDelete extends StockOrder
             }
             $this->idpegawai->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
+
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -655,6 +659,16 @@ class StockOrderDelete extends StockOrder
             $this->idpegawai->LinkCustomAttributes = "";
             $this->idpegawai->HrefValue = "";
             $this->idpegawai->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
+
+            // readonly
+            $this->readonly->LinkCustomAttributes = "";
+            $this->readonly->HrefValue = "";
+            $this->readonly->TooltipValue = "";
 
             // created_at
             $this->created_at->LinkCustomAttributes = "";
@@ -777,7 +791,7 @@ class StockOrderDelete extends StockOrder
             switch ($fld->FieldVar) {
                 case "x_idpegawai":
                     break;
-                case "x_aktif":
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";

@@ -42,6 +42,28 @@ $stock_order = Container("stock_order");
 </td>
         </tr>
 <?php } ?>
+<?php if ($stock_order->keterangan->Visible) { // keterangan ?>
+        <tr id="r_keterangan">
+            <td class="<?= $stock_order->TableLeftColumnClass ?>"><?= $stock_order->keterangan->caption() ?></td>
+            <td <?= $stock_order->keterangan->cellAttributes() ?>>
+<span id="el_stock_order_keterangan">
+<span<?= $stock_order->keterangan->viewAttributes() ?>>
+<?= $stock_order->keterangan->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($stock_order->readonly->Visible) { // readonly ?>
+        <tr id="r_readonly">
+            <td class="<?= $stock_order->TableLeftColumnClass ?>"><?= $stock_order->readonly->caption() ?></td>
+            <td <?= $stock_order->readonly->cellAttributes() ?>>
+<span id="el_stock_order_readonly">
+<span<?= $stock_order->readonly->viewAttributes() ?>>
+<?= $stock_order->readonly->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
 <?php if ($stock_order->created_at->Visible) { // created_at ?>
         <tr id="r_created_at">
             <td class="<?= $stock_order->TableLeftColumnClass ?>"><?= $stock_order->created_at->caption() ?></td>

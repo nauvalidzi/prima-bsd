@@ -117,10 +117,6 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="insert">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<?php if ($Page->getCurrentMasterTable() == "ijinbpom") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="ijinbpom">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idijinbpom->getSessionValue()) ?>">
-<?php } ?>
 <div class="ew-add-div"><!-- page* -->
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
     <div id="r_idpegawai" class="form-group row">
@@ -284,9 +280,6 @@ loadjs.ready(["fijinbpom_statusadd", "datetimepicker"], function() {
     <input type="hidden" data-table="ijinbpom_status" data-field="x_created_by" data-hidden="1" name="x_created_by" id="x_created_by" value="<?= HtmlEncode($Page->created_by->CurrentValue) ?>">
     </span>
 </div><!-- /page* -->
-    <?php if (strval($Page->idijinbpom->getSessionValue()) != "") { ?>
-    <input type="hidden" name="x_idijinbpom" id="x_idijinbpom" value="<?= HtmlEncode(strval($Page->idijinbpom->getSessionValue())) ?>">
-    <?php } ?>
 <?php if (!$Page->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
     <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->

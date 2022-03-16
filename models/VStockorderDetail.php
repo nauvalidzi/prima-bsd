@@ -34,7 +34,6 @@ class VStockorderDetail extends DbTable
     public $nama_produk;
     public $jumlah_order;
     public $sisa_order;
-    public $stok_akhir;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -122,14 +121,6 @@ class VStockorderDetail extends DbTable
         $this->sisa_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->sisa_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisa_order->Param, "CustomMsg");
         $this->Fields['sisa_order'] = &$this->sisa_order;
-
-        // stok_akhir
-        $this->stok_akhir = new DbField('v_stockorder_detail', 'v_stockorder_detail', 'x_stok_akhir', 'stok_akhir', '`stok_akhir`', '`stok_akhir`', 20, 20, -1, false, '`stok_akhir`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->stok_akhir->Nullable = false; // NOT NULL field
-        $this->stok_akhir->Sortable = true; // Allow sort
-        $this->stok_akhir->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->stok_akhir->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->stok_akhir->Param, "CustomMsg");
-        $this->Fields['stok_akhir'] = &$this->stok_akhir;
     }
 
     // Field Visibility
@@ -549,7 +540,6 @@ class VStockorderDetail extends DbTable
         $this->nama_produk->DbValue = $row['nama_produk'];
         $this->jumlah_order->DbValue = $row['jumlah_order'];
         $this->sisa_order->DbValue = $row['sisa_order'];
-        $this->stok_akhir->DbValue = $row['stok_akhir'];
     }
 
     // Delete uploaded files
@@ -876,7 +866,6 @@ SORTHTML;
         $this->nama_produk->setDbValue($row['nama_produk']);
         $this->jumlah_order->setDbValue($row['jumlah_order']);
         $this->sisa_order->setDbValue($row['sisa_order']);
-        $this->stok_akhir->setDbValue($row['stok_akhir']);
     }
 
     // Render list row values
@@ -900,8 +889,6 @@ SORTHTML;
         // jumlah_order
 
         // sisa_order
-
-        // stok_akhir
 
         // idstockorder
         $this->idstockorder->ViewValue = $this->idstockorder->CurrentValue;
@@ -929,11 +916,6 @@ SORTHTML;
         $this->sisa_order->ViewValue = $this->sisa_order->CurrentValue;
         $this->sisa_order->ViewValue = FormatNumber($this->sisa_order->ViewValue, 0, -2, -2, -2);
         $this->sisa_order->ViewCustomAttributes = "";
-
-        // stok_akhir
-        $this->stok_akhir->ViewValue = $this->stok_akhir->CurrentValue;
-        $this->stok_akhir->ViewValue = FormatNumber($this->stok_akhir->ViewValue, 0, -2, -2, -2);
-        $this->stok_akhir->ViewCustomAttributes = "";
 
         // idstockorder
         $this->idstockorder->LinkCustomAttributes = "";
@@ -964,11 +946,6 @@ SORTHTML;
         $this->sisa_order->LinkCustomAttributes = "";
         $this->sisa_order->HrefValue = "";
         $this->sisa_order->TooltipValue = "";
-
-        // stok_akhir
-        $this->stok_akhir->LinkCustomAttributes = "";
-        $this->stok_akhir->HrefValue = "";
-        $this->stok_akhir->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1027,12 +1004,6 @@ SORTHTML;
         $this->sisa_order->EditValue = $this->sisa_order->CurrentValue;
         $this->sisa_order->PlaceHolder = RemoveHtml($this->sisa_order->caption());
 
-        // stok_akhir
-        $this->stok_akhir->EditAttrs["class"] = "form-control";
-        $this->stok_akhir->EditCustomAttributes = "";
-        $this->stok_akhir->EditValue = $this->stok_akhir->CurrentValue;
-        $this->stok_akhir->PlaceHolder = RemoveHtml($this->stok_akhir->caption());
-
         // Call Row Rendered event
         $this->rowRendered();
     }
@@ -1067,7 +1038,6 @@ SORTHTML;
                     $doc->exportCaption($this->nama_produk);
                     $doc->exportCaption($this->jumlah_order);
                     $doc->exportCaption($this->sisa_order);
-                    $doc->exportCaption($this->stok_akhir);
                 } else {
                     $doc->exportCaption($this->idstockorder);
                     $doc->exportCaption($this->idstockorder_detail);
@@ -1075,7 +1045,6 @@ SORTHTML;
                     $doc->exportCaption($this->nama_produk);
                     $doc->exportCaption($this->jumlah_order);
                     $doc->exportCaption($this->sisa_order);
-                    $doc->exportCaption($this->stok_akhir);
                 }
                 $doc->endExportRow();
             }
@@ -1111,7 +1080,6 @@ SORTHTML;
                         $doc->exportField($this->nama_produk);
                         $doc->exportField($this->jumlah_order);
                         $doc->exportField($this->sisa_order);
-                        $doc->exportField($this->stok_akhir);
                     } else {
                         $doc->exportField($this->idstockorder);
                         $doc->exportField($this->idstockorder_detail);
@@ -1119,7 +1087,6 @@ SORTHTML;
                         $doc->exportField($this->nama_produk);
                         $doc->exportField($this->jumlah_order);
                         $doc->exportField($this->sisa_order);
-                        $doc->exportField($this->stok_akhir);
                     }
                     $doc->endExportRow($rowCnt);
                 }

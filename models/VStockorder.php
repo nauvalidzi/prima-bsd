@@ -28,12 +28,11 @@ class VStockorder extends DbTable
     public $ExportDoc;
 
     // Fields
-    public $idstockorder;
-    public $kode_stockorder;
-    public $tanggal_stockorder;
-    public $jumlah_order;
-    public $sisa_order;
-    public $aktif;
+    public $id;
+    public $kode;
+    public $tanggal;
+    public $readonly;
+    public $totalsisa;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -70,65 +69,54 @@ class VStockorder extends DbTable
         $this->UserIDAllowSecurity = Config("DEFAULT_USER_ID_ALLOW_SECURITY"); // Default User ID allowed permissions
         $this->BasicSearch = new BasicSearch($this->TableVar);
 
-        // idstockorder
-        $this->idstockorder = new DbField('v_stockorder', 'v_stockorder', 'x_idstockorder', 'idstockorder', '`idstockorder`', '`idstockorder`', 20, 20, -1, false, '`idstockorder`', false, false, false, 'FORMATTED TEXT', 'NO');
-        $this->idstockorder->IsAutoIncrement = true; // Autoincrement field
-        $this->idstockorder->IsPrimaryKey = true; // Primary key field
-        $this->idstockorder->Sortable = true; // Allow sort
-        $this->idstockorder->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->idstockorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idstockorder->Param, "CustomMsg");
-        $this->Fields['idstockorder'] = &$this->idstockorder;
+        // id
+        $this->id = new DbField('v_stockorder', 'v_stockorder', 'x_id', 'id', '`id`', '`id`', 20, 20, -1, false, '`id`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->id->Nullable = false; // NOT NULL field
+        $this->id->Required = true; // Required field
+        $this->id->Sortable = true; // Allow sort
+        $this->id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->id->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->id->Param, "CustomMsg");
+        $this->Fields['id'] = &$this->id;
 
-        // kode_stockorder
-        $this->kode_stockorder = new DbField('v_stockorder', 'v_stockorder', 'x_kode_stockorder', 'kode_stockorder', '`kode_stockorder`', '`kode_stockorder`', 200, 50, -1, false, '`kode_stockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->kode_stockorder->Sortable = true; // Allow sort
-        $this->kode_stockorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode_stockorder->Param, "CustomMsg");
-        $this->Fields['kode_stockorder'] = &$this->kode_stockorder;
+        // kode
+        $this->kode = new DbField('v_stockorder', 'v_stockorder', 'x_kode', 'kode', '`kode`', '`kode`', 200, 50, -1, false, '`kode`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->kode->Sortable = true; // Allow sort
+        $this->kode->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->kode->Param, "CustomMsg");
+        $this->Fields['kode'] = &$this->kode;
 
-        // tanggal_stockorder
-        $this->tanggal_stockorder = new DbField('v_stockorder', 'v_stockorder', 'x_tanggal_stockorder', 'tanggal_stockorder', '`tanggal_stockorder`', CastDateFieldForLike("`tanggal_stockorder`", 0, "DB"), 133, 10, 0, false, '`tanggal_stockorder`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->tanggal_stockorder->Nullable = false; // NOT NULL field
-        $this->tanggal_stockorder->Required = true; // Required field
-        $this->tanggal_stockorder->Sortable = true; // Allow sort
-        $this->tanggal_stockorder->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
-        $this->tanggal_stockorder->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal_stockorder->Param, "CustomMsg");
-        $this->Fields['tanggal_stockorder'] = &$this->tanggal_stockorder;
+        // tanggal
+        $this->tanggal = new DbField('v_stockorder', 'v_stockorder', 'x_tanggal', 'tanggal', '`tanggal`', CastDateFieldForLike("`tanggal`", 0, "DB"), 133, 10, 0, false, '`tanggal`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->tanggal->Nullable = false; // NOT NULL field
+        $this->tanggal->Required = true; // Required field
+        $this->tanggal->Sortable = true; // Allow sort
+        $this->tanggal->DefaultErrorMessage = str_replace("%s", $GLOBALS["DATE_FORMAT"], $Language->phrase("IncorrectDate"));
+        $this->tanggal->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->tanggal->Param, "CustomMsg");
+        $this->Fields['tanggal'] = &$this->tanggal;
 
-        // jumlah_order
-        $this->jumlah_order = new DbField('v_stockorder', 'v_stockorder', 'x_jumlah_order', 'jumlah_order', '`jumlah_order`', '`jumlah_order`', 3, 11, -1, false, '`jumlah_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->jumlah_order->Nullable = false; // NOT NULL field
-        $this->jumlah_order->Required = true; // Required field
-        $this->jumlah_order->Sortable = true; // Allow sort
-        $this->jumlah_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->jumlah_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->jumlah_order->Param, "CustomMsg");
-        $this->Fields['jumlah_order'] = &$this->jumlah_order;
-
-        // sisa_order
-        $this->sisa_order = new DbField('v_stockorder', 'v_stockorder', 'x_sisa_order', 'sisa_order', '`sisa_order`', '`sisa_order`', 3, 11, -1, false, '`sisa_order`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->sisa_order->Nullable = false; // NOT NULL field
-        $this->sisa_order->Required = true; // Required field
-        $this->sisa_order->Sortable = true; // Allow sort
-        $this->sisa_order->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-        $this->sisa_order->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->sisa_order->Param, "CustomMsg");
-        $this->Fields['sisa_order'] = &$this->sisa_order;
-
-        // aktif
-        $this->aktif = new DbField('v_stockorder', 'v_stockorder', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
-        $this->aktif->Nullable = false; // NOT NULL field
-        $this->aktif->Sortable = true; // Allow sort
-        $this->aktif->DataType = DATATYPE_BOOLEAN;
+        // readonly
+        $this->readonly = new DbField('v_stockorder', 'v_stockorder', 'x_readonly', 'readonly', '`readonly`', '`readonly`', 16, 1, -1, false, '`readonly`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
+        $this->readonly->Sortable = true; // Allow sort
+        $this->readonly->DataType = DATATYPE_BOOLEAN;
         switch ($CurrentLanguage) {
             case "en":
-                $this->aktif->Lookup = new Lookup('aktif', 'v_stockorder', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                $this->readonly->Lookup = new Lookup('readonly', 'v_stockorder', false, '', ["","","",""], [], [], [], [], [], [], '', '');
                 break;
             default:
-                $this->aktif->Lookup = new Lookup('aktif', 'v_stockorder', false, '', ["","","",""], [], [], [], [], [], [], '', '');
+                $this->readonly->Lookup = new Lookup('readonly', 'v_stockorder', false, '', ["","","",""], [], [], [], [], [], [], '', '');
                 break;
         }
-        $this->aktif->OptionCount = 2;
-        $this->aktif->DefaultErrorMessage = $Language->phrase("IncorrectField");
-        $this->aktif->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->aktif->Param, "CustomMsg");
-        $this->Fields['aktif'] = &$this->aktif;
+        $this->readonly->OptionCount = 2;
+        $this->readonly->DefaultErrorMessage = $Language->phrase("IncorrectField");
+        $this->readonly->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->readonly->Param, "CustomMsg");
+        $this->Fields['readonly'] = &$this->readonly;
+
+        // totalsisa
+        $this->totalsisa = new DbField('v_stockorder', 'v_stockorder', 'x_totalsisa', 'totalsisa', '`totalsisa`', '`totalsisa`', 131, 32, -1, false, '`totalsisa`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->totalsisa->Sortable = true; // Allow sort
+        $this->totalsisa->DefaultDecimalPrecision = 2; // Default decimal precision
+        $this->totalsisa->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
+        $this->totalsisa->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->totalsisa->Param, "CustomMsg");
+        $this->Fields['totalsisa'] = &$this->totalsisa;
     }
 
     // Field Visibility
@@ -455,9 +443,6 @@ class VStockorder extends DbTable
         $conn = $this->getConnection();
         $success = $this->insertSql($rs)->execute();
         if ($success) {
-            // Get insert id if necessary
-            $this->idstockorder->setDbValue($conn->lastInsertId());
-            $rs['idstockorder'] = $this->idstockorder->DbValue;
         }
         return $success;
     }
@@ -517,9 +502,6 @@ class VStockorder extends DbTable
             $where = $this->arrayToFilter($where);
         }
         if ($rs) {
-            if (array_key_exists('idstockorder', $rs)) {
-                AddFilter($where, QuotedName('idstockorder', $this->Dbid) . '=' . QuotedValue($rs['idstockorder'], $this->idstockorder->DataType, $this->Dbid));
-            }
         }
         $filter = ($curfilter) ? $this->CurrentFilter : "";
         AddFilter($filter, $where);
@@ -542,12 +524,11 @@ class VStockorder extends DbTable
         if (!is_array($row)) {
             return;
         }
-        $this->idstockorder->DbValue = $row['idstockorder'];
-        $this->kode_stockorder->DbValue = $row['kode_stockorder'];
-        $this->tanggal_stockorder->DbValue = $row['tanggal_stockorder'];
-        $this->jumlah_order->DbValue = $row['jumlah_order'];
-        $this->sisa_order->DbValue = $row['sisa_order'];
-        $this->aktif->DbValue = $row['aktif'];
+        $this->id->DbValue = $row['id'];
+        $this->kode->DbValue = $row['kode'];
+        $this->tanggal->DbValue = $row['tanggal'];
+        $this->readonly->DbValue = $row['readonly'];
+        $this->totalsisa->DbValue = $row['totalsisa'];
     }
 
     // Delete uploaded files
@@ -559,19 +540,13 @@ class VStockorder extends DbTable
     // Record filter WHERE clause
     protected function sqlKeyFilter()
     {
-        return "`idstockorder` = @idstockorder@";
+        return "";
     }
 
     // Get Key
     public function getKey($current = false)
     {
         $keys = [];
-        $val = $current ? $this->idstockorder->CurrentValue : $this->idstockorder->OldValue;
-        if (EmptyValue($val)) {
-            return "";
-        } else {
-            $keys[] = $val;
-        }
         return implode(Config("COMPOSITE_KEY_SEPARATOR"), $keys);
     }
 
@@ -580,12 +555,7 @@ class VStockorder extends DbTable
     {
         $this->OldKey = strval($key);
         $keys = explode(Config("COMPOSITE_KEY_SEPARATOR"), $this->OldKey);
-        if (count($keys) == 1) {
-            if ($current) {
-                $this->idstockorder->CurrentValue = $keys[0];
-            } else {
-                $this->idstockorder->OldValue = $keys[0];
-            }
+        if (count($keys) == 0) {
         }
     }
 
@@ -593,19 +563,6 @@ class VStockorder extends DbTable
     public function getRecordFilter($row = null)
     {
         $keyFilter = $this->sqlKeyFilter();
-        if (is_array($row)) {
-            $val = array_key_exists('idstockorder', $row) ? $row['idstockorder'] : null;
-        } else {
-            $val = $this->idstockorder->OldValue !== null ? $this->idstockorder->OldValue : $this->idstockorder->CurrentValue;
-        }
-        if (!is_numeric($val)) {
-            return "0=1"; // Invalid key
-        }
-        if ($val === null) {
-            return "0=1"; // Invalid key
-        } else {
-            $keyFilter = str_replace("@idstockorder@", AdjustSql($val, $this->Dbid), $keyFilter); // Replace key value
-        }
         return $keyFilter;
     }
 
@@ -733,7 +690,6 @@ class VStockorder extends DbTable
     public function keyToJson($htmlEncode = false)
     {
         $json = "";
-        $json .= "idstockorder:" . JsonEncode($this->idstockorder->CurrentValue, "number");
         $json = "{" . $json . "}";
         if ($htmlEncode) {
             $json = HtmlEncode($json);
@@ -744,11 +700,6 @@ class VStockorder extends DbTable
     // Add key value to URL
     public function keyUrl($url, $parm = "")
     {
-        if ($this->idstockorder->CurrentValue !== null) {
-            $url .= "/" . rawurlencode($this->idstockorder->CurrentValue);
-        } else {
-            return "javascript:ew.alert(ew.language.phrase('InvalidRecord'));";
-        }
         if ($parm != "") {
             $url .= "?" . $parm;
         }
@@ -807,23 +758,12 @@ SORTHTML;
             $arKeys = Param("key_m");
             $cnt = count($arKeys);
         } else {
-            if (($keyValue = Param("idstockorder") ?? Route("idstockorder")) !== null) {
-                $arKeys[] = $keyValue;
-            } elseif (IsApi() && (($keyValue = Key(0) ?? Route(2)) !== null)) {
-                $arKeys[] = $keyValue;
-            } else {
-                $arKeys = null; // Do not setup
-            }
-
             //return $arKeys; // Do not return yet, so the values will also be checked by the following code
         }
         // Check keys
         $ar = [];
         if (is_array($arKeys)) {
             foreach ($arKeys as $key) {
-                if (!is_numeric($key)) {
-                    continue;
-                }
                 $ar[] = $key;
             }
         }
@@ -838,11 +778,6 @@ SORTHTML;
         foreach ($arKeys as $key) {
             if ($keyFilter != "") {
                 $keyFilter .= " OR ";
-            }
-            if ($setCurrent) {
-                $this->idstockorder->CurrentValue = $key;
-            } else {
-                $this->idstockorder->OldValue = $key;
             }
             $keyFilter .= "(" . $this->getRecordFilter() . ")";
         }
@@ -868,12 +803,11 @@ SORTHTML;
         } else {
             return;
         }
-        $this->idstockorder->setDbValue($row['idstockorder']);
-        $this->kode_stockorder->setDbValue($row['kode_stockorder']);
-        $this->tanggal_stockorder->setDbValue($row['tanggal_stockorder']);
-        $this->jumlah_order->setDbValue($row['jumlah_order']);
-        $this->sisa_order->setDbValue($row['sisa_order']);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->id->setDbValue($row['id']);
+        $this->kode->setDbValue($row['kode']);
+        $this->tanggal->setDbValue($row['tanggal']);
+        $this->readonly->setDbValue($row['readonly']);
+        $this->totalsisa->setDbValue($row['totalsisa']);
     }
 
     // Render list row values
@@ -886,78 +820,67 @@ SORTHTML;
 
         // Common render codes
 
-        // idstockorder
+        // id
 
-        // kode_stockorder
+        // kode
 
-        // tanggal_stockorder
+        // tanggal
 
-        // jumlah_order
+        // readonly
 
-        // sisa_order
+        // totalsisa
 
-        // aktif
+        // id
+        $this->id->ViewValue = $this->id->CurrentValue;
+        $this->id->ViewValue = FormatNumber($this->id->ViewValue, 0, -2, -2, -2);
+        $this->id->ViewCustomAttributes = "";
 
-        // idstockorder
-        $this->idstockorder->ViewValue = $this->idstockorder->CurrentValue;
-        $this->idstockorder->ViewCustomAttributes = "";
+        // kode
+        $this->kode->ViewValue = $this->kode->CurrentValue;
+        $this->kode->ViewCustomAttributes = "";
 
-        // kode_stockorder
-        $this->kode_stockorder->ViewValue = $this->kode_stockorder->CurrentValue;
-        $this->kode_stockorder->ViewCustomAttributes = "";
+        // tanggal
+        $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
+        $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 0);
+        $this->tanggal->ViewCustomAttributes = "";
 
-        // tanggal_stockorder
-        $this->tanggal_stockorder->ViewValue = $this->tanggal_stockorder->CurrentValue;
-        $this->tanggal_stockorder->ViewValue = FormatDateTime($this->tanggal_stockorder->ViewValue, 0);
-        $this->tanggal_stockorder->ViewCustomAttributes = "";
-
-        // jumlah_order
-        $this->jumlah_order->ViewValue = $this->jumlah_order->CurrentValue;
-        $this->jumlah_order->ViewValue = FormatNumber($this->jumlah_order->ViewValue, 0, -2, -2, -2);
-        $this->jumlah_order->ViewCustomAttributes = "";
-
-        // sisa_order
-        $this->sisa_order->ViewValue = $this->sisa_order->CurrentValue;
-        $this->sisa_order->ViewValue = FormatNumber($this->sisa_order->ViewValue, 0, -2, -2, -2);
-        $this->sisa_order->ViewCustomAttributes = "";
-
-        // aktif
-        if (ConvertToBool($this->aktif->CurrentValue)) {
-            $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
+        // readonly
+        if (ConvertToBool($this->readonly->CurrentValue)) {
+            $this->readonly->ViewValue = $this->readonly->tagCaption(1) != "" ? $this->readonly->tagCaption(1) : "Yes";
         } else {
-            $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
+            $this->readonly->ViewValue = $this->readonly->tagCaption(2) != "" ? $this->readonly->tagCaption(2) : "No";
         }
-        $this->aktif->ViewCustomAttributes = "";
+        $this->readonly->ViewCustomAttributes = "";
 
-        // idstockorder
-        $this->idstockorder->LinkCustomAttributes = "";
-        $this->idstockorder->HrefValue = "";
-        $this->idstockorder->TooltipValue = "";
+        // totalsisa
+        $this->totalsisa->ViewValue = $this->totalsisa->CurrentValue;
+        $this->totalsisa->ViewValue = FormatNumber($this->totalsisa->ViewValue, 2, -2, -2, -2);
+        $this->totalsisa->ViewCustomAttributes = "";
 
-        // kode_stockorder
-        $this->kode_stockorder->LinkCustomAttributes = "";
-        $this->kode_stockorder->HrefValue = "";
-        $this->kode_stockorder->TooltipValue = "";
+        // id
+        $this->id->LinkCustomAttributes = "";
+        $this->id->HrefValue = "";
+        $this->id->TooltipValue = "";
 
-        // tanggal_stockorder
-        $this->tanggal_stockorder->LinkCustomAttributes = "";
-        $this->tanggal_stockorder->HrefValue = "";
-        $this->tanggal_stockorder->TooltipValue = "";
+        // kode
+        $this->kode->LinkCustomAttributes = "";
+        $this->kode->HrefValue = "";
+        $this->kode->TooltipValue = "";
 
-        // jumlah_order
-        $this->jumlah_order->LinkCustomAttributes = "";
-        $this->jumlah_order->HrefValue = "";
-        $this->jumlah_order->TooltipValue = "";
+        // tanggal
+        $this->tanggal->LinkCustomAttributes = "";
+        $this->tanggal->HrefValue = "";
+        $this->tanggal->TooltipValue = "";
 
-        // sisa_order
-        $this->sisa_order->LinkCustomAttributes = "";
-        $this->sisa_order->HrefValue = "";
-        $this->sisa_order->TooltipValue = "";
+        // readonly
+        $this->readonly->LinkCustomAttributes = "";
+        $this->readonly->HrefValue = "";
+        $this->readonly->TooltipValue = "";
 
-        // aktif
-        $this->aktif->LinkCustomAttributes = "";
-        $this->aktif->HrefValue = "";
-        $this->aktif->TooltipValue = "";
+        // totalsisa
+        $this->totalsisa->LinkCustomAttributes = "";
+        $this->totalsisa->HrefValue = "";
+        $this->totalsisa->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -974,43 +897,40 @@ SORTHTML;
         // Call Row Rendering event
         $this->rowRendering();
 
-        // idstockorder
-        $this->idstockorder->EditAttrs["class"] = "form-control";
-        $this->idstockorder->EditCustomAttributes = "";
-        $this->idstockorder->EditValue = $this->idstockorder->CurrentValue;
-        $this->idstockorder->ViewCustomAttributes = "";
+        // id
+        $this->id->EditAttrs["class"] = "form-control";
+        $this->id->EditCustomAttributes = "";
+        $this->id->EditValue = $this->id->CurrentValue;
+        $this->id->PlaceHolder = RemoveHtml($this->id->caption());
 
-        // kode_stockorder
-        $this->kode_stockorder->EditAttrs["class"] = "form-control";
-        $this->kode_stockorder->EditCustomAttributes = "";
-        if (!$this->kode_stockorder->Raw) {
-            $this->kode_stockorder->CurrentValue = HtmlDecode($this->kode_stockorder->CurrentValue);
+        // kode
+        $this->kode->EditAttrs["class"] = "form-control";
+        $this->kode->EditCustomAttributes = "";
+        if (!$this->kode->Raw) {
+            $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
         }
-        $this->kode_stockorder->EditValue = $this->kode_stockorder->CurrentValue;
-        $this->kode_stockorder->PlaceHolder = RemoveHtml($this->kode_stockorder->caption());
+        $this->kode->EditValue = $this->kode->CurrentValue;
+        $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
 
-        // tanggal_stockorder
-        $this->tanggal_stockorder->EditAttrs["class"] = "form-control";
-        $this->tanggal_stockorder->EditCustomAttributes = "";
-        $this->tanggal_stockorder->EditValue = FormatDateTime($this->tanggal_stockorder->CurrentValue, 8);
-        $this->tanggal_stockorder->PlaceHolder = RemoveHtml($this->tanggal_stockorder->caption());
+        // tanggal
+        $this->tanggal->EditAttrs["class"] = "form-control";
+        $this->tanggal->EditCustomAttributes = "";
+        $this->tanggal->EditValue = FormatDateTime($this->tanggal->CurrentValue, 8);
+        $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
 
-        // jumlah_order
-        $this->jumlah_order->EditAttrs["class"] = "form-control";
-        $this->jumlah_order->EditCustomAttributes = "";
-        $this->jumlah_order->EditValue = $this->jumlah_order->CurrentValue;
-        $this->jumlah_order->PlaceHolder = RemoveHtml($this->jumlah_order->caption());
+        // readonly
+        $this->readonly->EditCustomAttributes = "";
+        $this->readonly->EditValue = $this->readonly->options(false);
+        $this->readonly->PlaceHolder = RemoveHtml($this->readonly->caption());
 
-        // sisa_order
-        $this->sisa_order->EditAttrs["class"] = "form-control";
-        $this->sisa_order->EditCustomAttributes = "";
-        $this->sisa_order->EditValue = $this->sisa_order->CurrentValue;
-        $this->sisa_order->PlaceHolder = RemoveHtml($this->sisa_order->caption());
-
-        // aktif
-        $this->aktif->EditCustomAttributes = "";
-        $this->aktif->EditValue = $this->aktif->options(false);
-        $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
+        // totalsisa
+        $this->totalsisa->EditAttrs["class"] = "form-control";
+        $this->totalsisa->EditCustomAttributes = "";
+        $this->totalsisa->EditValue = $this->totalsisa->CurrentValue;
+        $this->totalsisa->PlaceHolder = RemoveHtml($this->totalsisa->caption());
+        if (strval($this->totalsisa->EditValue) != "" && is_numeric($this->totalsisa->EditValue)) {
+            $this->totalsisa->EditValue = FormatNumber($this->totalsisa->EditValue, -2, -2, -2, -2);
+        }
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -1040,19 +960,17 @@ SORTHTML;
             if ($doc->Horizontal) { // Horizontal format, write header
                 $doc->beginExportRow();
                 if ($exportPageType == "view") {
-                    $doc->exportCaption($this->idstockorder);
-                    $doc->exportCaption($this->kode_stockorder);
-                    $doc->exportCaption($this->tanggal_stockorder);
-                    $doc->exportCaption($this->jumlah_order);
-                    $doc->exportCaption($this->sisa_order);
-                    $doc->exportCaption($this->aktif);
+                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->kode);
+                    $doc->exportCaption($this->tanggal);
+                    $doc->exportCaption($this->readonly);
+                    $doc->exportCaption($this->totalsisa);
                 } else {
-                    $doc->exportCaption($this->idstockorder);
-                    $doc->exportCaption($this->kode_stockorder);
-                    $doc->exportCaption($this->tanggal_stockorder);
-                    $doc->exportCaption($this->jumlah_order);
-                    $doc->exportCaption($this->sisa_order);
-                    $doc->exportCaption($this->aktif);
+                    $doc->exportCaption($this->id);
+                    $doc->exportCaption($this->kode);
+                    $doc->exportCaption($this->tanggal);
+                    $doc->exportCaption($this->readonly);
+                    $doc->exportCaption($this->totalsisa);
                 }
                 $doc->endExportRow();
             }
@@ -1082,19 +1000,17 @@ SORTHTML;
                 if (!$doc->ExportCustom) {
                     $doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
                     if ($exportPageType == "view") {
-                        $doc->exportField($this->idstockorder);
-                        $doc->exportField($this->kode_stockorder);
-                        $doc->exportField($this->tanggal_stockorder);
-                        $doc->exportField($this->jumlah_order);
-                        $doc->exportField($this->sisa_order);
-                        $doc->exportField($this->aktif);
+                        $doc->exportField($this->id);
+                        $doc->exportField($this->kode);
+                        $doc->exportField($this->tanggal);
+                        $doc->exportField($this->readonly);
+                        $doc->exportField($this->totalsisa);
                     } else {
-                        $doc->exportField($this->idstockorder);
-                        $doc->exportField($this->kode_stockorder);
-                        $doc->exportField($this->tanggal_stockorder);
-                        $doc->exportField($this->jumlah_order);
-                        $doc->exportField($this->sisa_order);
-                        $doc->exportField($this->aktif);
+                        $doc->exportField($this->id);
+                        $doc->exportField($this->kode);
+                        $doc->exportField($this->tanggal);
+                        $doc->exportField($this->readonly);
+                        $doc->exportField($this->totalsisa);
                     }
                     $doc->endExportRow($rowCnt);
                 }

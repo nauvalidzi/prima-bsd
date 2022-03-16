@@ -40,7 +40,6 @@ loadjs.ready("head", function () {
         ["viskositas", [fields.viskositas.visible && fields.viskositas.required ? ew.Validators.required(fields.viskositas.caption) : null], fields.viskositas.isInvalid],
         ["warna", [fields.warna.visible && fields.warna.required ? ew.Validators.required(fields.warna.caption) : null], fields.warna.isInvalid],
         ["parfum", [fields.parfum.visible && fields.parfum.required ? ew.Validators.required(fields.parfum.caption) : null], fields.parfum.isInvalid],
-        ["aroma", [fields.aroma.visible && fields.aroma.required ? ew.Validators.required(fields.aroma.caption) : null], fields.aroma.isInvalid],
         ["aplikasi", [fields.aplikasi.visible && fields.aplikasi.required ? ew.Validators.required(fields.aplikasi.caption) : null], fields.aplikasi.isInvalid],
         ["estetika", [fields.estetika.visible && fields.estetika.required ? ew.Validators.required(fields.estetika.caption) : null], fields.estetika.isInvalid],
         ["tambahan", [fields.tambahan.visible && fields.tambahan.required ? ew.Validators.required(fields.tambahan.caption) : null], fields.tambahan.isInvalid],
@@ -718,46 +717,34 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->parfum->Visible) { // parfum ?>
     <div id="r_parfum" class="form-group row">
-        <label id="elh_npd_parfum" for="x_parfum" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_parfum"><?= $Page->parfum->caption() ?><?= $Page->parfum->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_parfum" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_parfum"><?= $Page->parfum->caption() ?><?= $Page->parfum->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->parfum->cellAttributes() ?>>
 <template id="tpx_npd_parfum"><span id="el_npd_parfum">
-    <select
-        id="x_parfum"
-        name="x_parfum"
-        class="form-control ew-select<?= $Page->parfum->isInvalidClass() ?>"
-        data-select2-id="npd_x_parfum"
-        data-table="npd"
-        data-field="x_parfum"
-        data-page="1"
-        data-value-separator="<?= $Page->parfum->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->parfum->getPlaceHolder()) ?>"
-        <?= $Page->parfum->editAttributes() ?>>
-        <?= $Page->parfum->selectOptionListHtml("x_parfum") ?>
-    </select>
-    <?= $Page->parfum->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->parfum->getErrorMessage() ?></div>
-<?= $Page->parfum->Lookup->getParamTag($Page, "p_x_parfum") ?>
-<script>
-loadjs.ready("head", function() {
-    var el = document.querySelector("select[data-select2-id='npd_x_parfum']"),
-        options = { name: "x_parfum", selectId: "npd_x_parfum", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
-    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
-    Object.assign(options, ew.vars.tables.npd.fields.parfum.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span></template>
-</div></div>
+<template id="tp_x_parfum">
+    <div class="custom-control custom-radio">
+        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_parfum" name="x_parfum" id="x_parfum"<?= $Page->parfum->editAttributes() ?>>
+        <label class="custom-control-label"></label>
     </div>
-<?php } ?>
-<?php if ($Page->aroma->Visible) { // aroma ?>
-    <div id="r_aroma" class="form-group row">
-        <label id="elh_npd_aroma" for="x_aroma" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_aroma"><?= $Page->aroma->caption() ?><?= $Page->aroma->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aroma->cellAttributes() ?>>
-<template id="tpx_npd_aroma"><span id="el_npd_aroma">
-<input type="<?= $Page->aroma->getInputTextType() ?>" data-table="npd" data-field="x_aroma" data-page="1" name="x_aroma" id="x_aroma" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aroma->getPlaceHolder()) ?>" value="<?= $Page->aroma->EditValue ?>"<?= $Page->aroma->editAttributes() ?> aria-describedby="x_aroma_help">
-<?= $Page->aroma->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aroma->getErrorMessage() ?></div>
+</template>
+<div id="dsl_x_parfum" class="ew-item-list"></div>
+<input type="hidden"
+    is="selection-list"
+    id="x_parfum"
+    name="x_parfum"
+    value="<?= HtmlEncode($Page->parfum->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_parfum"
+    data-target="dsl_x_parfum"
+    data-repeatcolumn="4"
+    class="form-control<?= $Page->parfum->isInvalidClass() ?>"
+    data-table="npd"
+    data-field="x_parfum"
+    data-page="1"
+    data-value-separator="<?= $Page->parfum->displayValueSeparatorAttribute() ?>"
+    <?= $Page->parfum->editAttributes() ?>>
+<?= $Page->parfum->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->parfum->getErrorMessage() ?></div>
+<?= $Page->parfum->Lookup->getParamTag($Page, "p_x_parfum") ?>
 </span></template>
 </div></div>
     </div>
@@ -2107,16 +2094,6 @@ loadjs.ready("head", function() {
 <?php
     }
 ?>
-<?php
-    if (in_array("npd_desain", explode(",", $Page->getCurrentDetailTable())) && $npd_desain->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_desain") {
-            $firstActiveDetailTable = "npd_desain";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("npd_desain") ?>" href="#tab_npd_desain" data-toggle="tab"><?= $Language->tablePhrase("npd_desain", "TblCaption") ?></a></li>
-<?php
-    }
-?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
 <?php
@@ -2157,16 +2134,6 @@ loadjs.ready("head", function() {
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_harga") ?>" id="tab_npd_harga"><!-- page* -->
 <?php include_once "NpdHargaGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
-<?php
-    if (in_array("npd_desain", explode(",", $Page->getCurrentDetailTable())) && $npd_desain->DetailAdd) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_desain") {
-            $firstActiveDetailTable = "npd_desain";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_desain") ?>" id="tab_npd_desain"><!-- page* -->
-<?php include_once "NpdDesainGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

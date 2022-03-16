@@ -116,10 +116,6 @@ $Page->showMessage();
 <input type="hidden" name="action" id="action" value="update">
 <input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
 <input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
-<?php if ($Page->getCurrentMasterTable() == "ijinbpom") { ?>
-<input type="hidden" name="<?= Config("TABLE_SHOW_MASTER") ?>" value="ijinbpom">
-<input type="hidden" name="fk_id" value="<?= HtmlEncode($Page->idijinbpom->getSessionValue()) ?>">
-<?php } ?>
 <div class="ew-edit-div"><!-- page* -->
 <?php if ($Page->idpegawai->Visible) { // idpegawai ?>
     <div id="r_idpegawai" class="form-group row">

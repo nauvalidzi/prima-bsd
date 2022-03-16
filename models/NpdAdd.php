@@ -498,7 +498,6 @@ class NpdAdd extends Npd
         $this->viskositas->setVisibility();
         $this->warna->setVisibility();
         $this->parfum->setVisibility();
-        $this->aroma->setVisibility();
         $this->aplikasi->setVisibility();
         $this->estetika->setVisibility();
         $this->tambahan->setVisibility();
@@ -781,8 +780,6 @@ class NpdAdd extends Npd
         $this->warna->OldValue = $this->warna->CurrentValue;
         $this->parfum->CurrentValue = null;
         $this->parfum->OldValue = $this->parfum->CurrentValue;
-        $this->aroma->CurrentValue = null;
-        $this->aroma->OldValue = $this->aroma->CurrentValue;
         $this->aplikasi->CurrentValue = null;
         $this->aplikasi->OldValue = $this->aplikasi->CurrentValue;
         $this->estetika->CurrentValue = null;
@@ -1096,16 +1093,6 @@ class NpdAdd extends Npd
                 $this->parfum->Visible = false; // Disable update for API request
             } else {
                 $this->parfum->setFormValue($val);
-            }
-        }
-
-        // Check field name 'aroma' first before field var 'x_aroma'
-        $val = $CurrentForm->hasValue("aroma") ? $CurrentForm->getValue("aroma") : $CurrentForm->getValue("x_aroma");
-        if (!$this->aroma->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->aroma->Visible = false; // Disable update for API request
-            } else {
-                $this->aroma->setFormValue($val);
             }
         }
 
@@ -1649,7 +1636,6 @@ class NpdAdd extends Npd
         $this->viskositas->CurrentValue = $this->viskositas->FormValue;
         $this->warna->CurrentValue = $this->warna->FormValue;
         $this->parfum->CurrentValue = $this->parfum->FormValue;
-        $this->aroma->CurrentValue = $this->aroma->FormValue;
         $this->aplikasi->CurrentValue = $this->aplikasi->FormValue;
         $this->estetika->CurrentValue = $this->estetika->FormValue;
         $this->tambahan->CurrentValue = $this->tambahan->FormValue;
@@ -1771,7 +1757,6 @@ class NpdAdd extends Npd
         $this->viskositas->setDbValue($row['viskositas']);
         $this->warna->setDbValue($row['warna']);
         $this->parfum->setDbValue($row['parfum']);
-        $this->aroma->setDbValue($row['aroma']);
         $this->aplikasi->setDbValue($row['aplikasi']);
         $this->estetika->setDbValue($row['estetika']);
         $this->tambahan->setDbValue($row['tambahan']);
@@ -1855,7 +1840,6 @@ class NpdAdd extends Npd
         $row['viskositas'] = $this->viskositas->CurrentValue;
         $row['warna'] = $this->warna->CurrentValue;
         $row['parfum'] = $this->parfum->CurrentValue;
-        $row['aroma'] = $this->aroma->CurrentValue;
         $row['aplikasi'] = $this->aplikasi->CurrentValue;
         $row['estetika'] = $this->estetika->CurrentValue;
         $row['tambahan'] = $this->tambahan->CurrentValue;
@@ -1983,8 +1967,6 @@ class NpdAdd extends Npd
         // warna
 
         // parfum
-
-        // aroma
 
         // aplikasi
 
@@ -2380,10 +2362,6 @@ class NpdAdd extends Npd
                 $this->parfum->ViewValue = null;
             }
             $this->parfum->ViewCustomAttributes = "";
-
-            // aroma
-            $this->aroma->ViewValue = $this->aroma->CurrentValue;
-            $this->aroma->ViewCustomAttributes = "";
 
             // aplikasi
             $curVal = trim(strval($this->aplikasi->CurrentValue));
@@ -2995,11 +2973,6 @@ class NpdAdd extends Npd
             $this->parfum->HrefValue = "";
             $this->parfum->TooltipValue = "";
 
-            // aroma
-            $this->aroma->LinkCustomAttributes = "";
-            $this->aroma->HrefValue = "";
-            $this->aroma->TooltipValue = "";
-
             // aplikasi
             $this->aplikasi->LinkCustomAttributes = "";
             $this->aplikasi->HrefValue = "";
@@ -3571,7 +3544,6 @@ class NpdAdd extends Npd
             $this->warna->PlaceHolder = RemoveHtml($this->warna->caption());
 
             // parfum
-            $this->parfum->EditAttrs["class"] = "form-control";
             $this->parfum->EditCustomAttributes = "";
             $curVal = trim(strval($this->parfum->CurrentValue));
             if ($curVal != "") {
@@ -3594,15 +3566,6 @@ class NpdAdd extends Npd
                 $this->parfum->EditValue = $arwrk;
             }
             $this->parfum->PlaceHolder = RemoveHtml($this->parfum->caption());
-
-            // aroma
-            $this->aroma->EditAttrs["class"] = "form-control";
-            $this->aroma->EditCustomAttributes = "";
-            if (!$this->aroma->Raw) {
-                $this->aroma->CurrentValue = HtmlDecode($this->aroma->CurrentValue);
-            }
-            $this->aroma->EditValue = HtmlEncode($this->aroma->CurrentValue);
-            $this->aroma->PlaceHolder = RemoveHtml($this->aroma->caption());
 
             // aplikasi
             $this->aplikasi->EditCustomAttributes = "";
@@ -4288,10 +4251,6 @@ class NpdAdd extends Npd
             $this->parfum->LinkCustomAttributes = "";
             $this->parfum->HrefValue = "";
 
-            // aroma
-            $this->aroma->LinkCustomAttributes = "";
-            $this->aroma->HrefValue = "";
-
             // aplikasi
             $this->aplikasi->LinkCustomAttributes = "";
             $this->aplikasi->HrefValue = "";
@@ -4622,13 +4581,8 @@ class NpdAdd extends Npd
             }
         }
         if ($this->parfum->Required) {
-            if (!$this->parfum->IsDetailKey && EmptyValue($this->parfum->FormValue)) {
+            if ($this->parfum->FormValue == "") {
                 $this->parfum->addErrorMessage(str_replace("%s", $this->parfum->caption(), $this->parfum->RequiredErrorMessage));
-            }
-        }
-        if ($this->aroma->Required) {
-            if (!$this->aroma->IsDetailKey && EmptyValue($this->aroma->FormValue)) {
-                $this->aroma->addErrorMessage(str_replace("%s", $this->aroma->caption(), $this->aroma->RequiredErrorMessage));
             }
         }
         if ($this->aplikasi->Required) {
@@ -4971,10 +4925,6 @@ class NpdAdd extends Npd
         if (in_array("npd_harga", $detailTblVar) && $detailPage->DetailAdd) {
             $detailPage->validateGridForm();
         }
-        $detailPage = Container("NpdDesainGrid");
-        if (in_array("npd_desain", $detailTblVar) && $detailPage->DetailAdd) {
-            $detailPage->validateGridForm();
-        }
 
         // Return validate result
         $validateForm = !$this->hasInvalidFields();
@@ -5074,9 +5024,6 @@ class NpdAdd extends Npd
 
         // parfum
         $this->parfum->setDbValueDef($rsnew, $this->parfum->CurrentValue, null, false);
-
-        // aroma
-        $this->aroma->setDbValueDef($rsnew, $this->aroma->CurrentValue, null, false);
 
         // aplikasi
         $this->aplikasi->setDbValueDef($rsnew, $this->aplikasi->CurrentValue, null, false);
@@ -5297,16 +5244,6 @@ class NpdAdd extends Npd
                 $detailPage->idnpd->setSessionValue(""); // Clear master key if insert failed
                 }
             }
-            $detailPage = Container("NpdDesainGrid");
-            if (in_array("npd_desain", $detailTblVar) && $detailPage->DetailAdd) {
-                $detailPage->idnpd->setSessionValue($this->id->CurrentValue); // Set master key
-                $Security->loadCurrentUserLevel($this->ProjectID . "npd_desain"); // Load user level of detail table
-                $addRow = $detailPage->gridInsert();
-                $Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-                if (!$addRow) {
-                $detailPage->idnpd->setSessionValue(""); // Clear master key if insert failed
-                }
-            }
         }
 
         // Commit/Rollback transaction
@@ -5419,24 +5356,6 @@ class NpdAdd extends Npd
                     $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
                 }
             }
-            if (in_array("npd_desain", $detailTblVar)) {
-                $detailPageObj = Container("NpdDesainGrid");
-                if ($detailPageObj->DetailAdd) {
-                    if ($this->CopyRecord) {
-                        $detailPageObj->CurrentMode = "copy";
-                    } else {
-                        $detailPageObj->CurrentMode = "add";
-                    }
-                    $detailPageObj->CurrentAction = "gridadd";
-
-                    // Save current master table to detail table
-                    $detailPageObj->setCurrentMasterTable($this->TableVar);
-                    $detailPageObj->setStartRecordNumber(1);
-                    $detailPageObj->idnpd->IsDetailKey = true;
-                    $detailPageObj->idnpd->CurrentValue = $this->id->CurrentValue;
-                    $detailPageObj->idnpd->setSessionValue($detailPageObj->idnpd->CurrentValue);
-                }
-            }
         }
     }
 
@@ -5460,7 +5379,6 @@ class NpdAdd extends Npd
         $pages->add('npd_review');
         $pages->add('npd_confirmsample');
         $pages->add('npd_harga');
-        $pages->add('npd_desain');
         $this->DetailPages = $pages;
     }
 

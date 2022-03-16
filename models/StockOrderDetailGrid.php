@@ -512,7 +512,7 @@ class StockOrderDetailGrid extends StockOrderDetail
         $this->stok_akhir->setVisibility();
         $this->sisa->setVisibility();
         $this->jumlah->setVisibility();
-        $this->keterangan->Visible = false;
+        $this->keterangan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -952,6 +952,9 @@ class StockOrderDetailGrid extends StockOrderDetail
         if ($CurrentForm->hasValue("x_jumlah") && $CurrentForm->hasValue("o_jumlah") && $this->jumlah->CurrentValue != $this->jumlah->OldValue) {
             return false;
         }
+        if ($CurrentForm->hasValue("x_keterangan") && $CurrentForm->hasValue("o_keterangan") && $this->keterangan->CurrentValue != $this->keterangan->OldValue) {
+            return false;
+        }
         return true;
     }
 
@@ -1038,6 +1041,7 @@ class StockOrderDetailGrid extends StockOrderDetail
         $this->stok_akhir->clearErrorMessage();
         $this->sisa->clearErrorMessage();
         $this->jumlah->clearErrorMessage();
+        $this->keterangan->clearErrorMessage();
     }
 
     // Set up sort parameters
@@ -1122,6 +1126,18 @@ class StockOrderDetailGrid extends StockOrderDetail
         $item->Visible = $Security->canView();
         $item->OnLeft = false;
 
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "delete"
+        $item = &$this->ListOptions->add("delete");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canDelete();
+        $item->OnLeft = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1171,7 +1187,7 @@ class StockOrderDetailGrid extends StockOrderDetail
                 $options = &$this->ListOptions;
                 $options->UseButtonGroup = true; // Use button group for grid delete button
                 $opt = $options["griddelete"];
-                if (is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
+                if (!$Security->canDelete() && is_numeric($this->RowIndex) && ($this->RowAction == "" || $this->RowAction == "edit")) { // Do not allow delete existing record
                     $opt->Body = "&nbsp;";
                 } else {
                     $opt->Body = "<a class=\"ew-grid-link ew-grid-delete\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" onclick=\"return ew.deleteGridRow(this, " . $this->RowIndex . ");\">" . $Language->phrase("DeleteLink") . "</a>";
@@ -1184,6 +1200,23 @@ class StockOrderDetailGrid extends StockOrderDetail
             $viewcaption = HtmlTitle($Language->phrase("ViewLink"));
             if ($Security->canView()) {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . HtmlEncode(GetUrl($this->ViewUrl)) . "\">" . $Language->phrase("ViewLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "edit"
+            $opt = $this->ListOptions["edit"];
+            $editcaption = HtmlTitle($Language->phrase("EditLink"));
+            if ($Security->canEdit()) {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
+            } else {
+                $opt->Body = "";
+            }
+
+            // "delete"
+            $opt = $this->ListOptions["delete"];
+            if ($Security->canDelete()) {
+            $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
@@ -1351,6 +1384,19 @@ class StockOrderDetailGrid extends StockOrderDetail
             $this->jumlah->setOldValue($CurrentForm->getValue("o_jumlah"));
         }
 
+        // Check field name 'keterangan' first before field var 'x_keterangan'
+        $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
+        if (!$this->keterangan->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->keterangan->Visible = false; // Disable update for API request
+            } else {
+                $this->keterangan->setFormValue($val);
+            }
+        }
+        if ($CurrentForm->hasValue("o_keterangan")) {
+            $this->keterangan->setOldValue($CurrentForm->getValue("o_keterangan"));
+        }
+
         // Check field name 'id' first before field var 'x_id'
         $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
         if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd()) {
@@ -1370,6 +1416,7 @@ class StockOrderDetailGrid extends StockOrderDetail
         $this->stok_akhir->CurrentValue = $this->stok_akhir->FormValue;
         $this->sisa->CurrentValue = $this->sisa->FormValue;
         $this->jumlah->CurrentValue = $this->jumlah->FormValue;
+        $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
 
     // Load recordset
@@ -1545,7 +1592,7 @@ class StockOrderDetailGrid extends StockOrderDetail
             if ($curVal != "") {
                 $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
                 if ($this->idproduct->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idproduk`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idproduct`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, '', $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
@@ -1573,8 +1620,12 @@ class StockOrderDetailGrid extends StockOrderDetail
 
             // jumlah
             $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
+            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -1, -2, -2);
             $this->jumlah->ViewCustomAttributes = "";
+
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -1600,6 +1651,11 @@ class StockOrderDetailGrid extends StockOrderDetail
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
             $this->jumlah->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_ADD) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -1641,7 +1697,7 @@ class StockOrderDetailGrid extends StockOrderDetail
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`idproduk`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idproduct`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $sqlWrk = $this->idproduct->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1669,6 +1725,12 @@ class StockOrderDetailGrid extends StockOrderDetail
             $this->jumlah->EditValue = HtmlEncode($this->jumlah->CurrentValue);
             $this->jumlah->PlaceHolder = RemoveHtml($this->jumlah->caption());
 
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
+
             // Add refer script
 
             // idbrand
@@ -1690,6 +1752,10 @@ class StockOrderDetailGrid extends StockOrderDetail
             // jumlah
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
@@ -1731,7 +1797,7 @@ class StockOrderDetailGrid extends StockOrderDetail
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`idproduk`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`idproduct`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $sqlWrk = $this->idproduct->Lookup->getSql(true, $filterWrk, '', $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
@@ -1759,6 +1825,12 @@ class StockOrderDetailGrid extends StockOrderDetail
             $this->jumlah->EditValue = HtmlEncode($this->jumlah->CurrentValue);
             $this->jumlah->PlaceHolder = RemoveHtml($this->jumlah->caption());
 
+            // keterangan
+            $this->keterangan->EditAttrs["class"] = "form-control";
+            $this->keterangan->EditCustomAttributes = "";
+            $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
+            $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
+
             // Edit refer script
 
             // idbrand
@@ -1780,6 +1852,10 @@ class StockOrderDetailGrid extends StockOrderDetail
             // jumlah
             $this->jumlah->LinkCustomAttributes = "";
             $this->jumlah->HrefValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1833,6 +1909,11 @@ class StockOrderDetailGrid extends StockOrderDetail
         }
         if (!CheckInteger($this->jumlah->FormValue)) {
             $this->jumlah->addErrorMessage($this->jumlah->getErrorMessage(false));
+        }
+        if ($this->keterangan->Required) {
+            if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
+                $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
+            }
         }
 
         // Return validate result
@@ -1958,6 +2039,9 @@ class StockOrderDetailGrid extends StockOrderDetail
             // jumlah
             $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, $this->jumlah->ReadOnly);
 
+            // keterangan
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
+
             // Check referential integrity for master table 'stock_order'
             $validMasterRecord = true;
             $masterFilter = $this->sqlMasterFilter_stock_order();
@@ -2070,6 +2154,9 @@ class StockOrderDetailGrid extends StockOrderDetail
 
         // jumlah
         $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, false);
+
+        // keterangan
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // pid
         if ($this->pid->getSessionValue() != "") {

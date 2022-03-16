@@ -470,7 +470,7 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
         $this->idstockorder_detail->setVisibility();
         $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
-        $this->jumlah_kirim->setVisibility();
+        $this->jumlahkirim->setVisibility();
         $this->keterangan->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -636,8 +636,8 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
         $this->totalorder->OldValue = $this->totalorder->CurrentValue;
         $this->sisa->CurrentValue = null;
         $this->sisa->OldValue = $this->sisa->CurrentValue;
-        $this->jumlah_kirim->CurrentValue = null;
-        $this->jumlah_kirim->OldValue = $this->jumlah_kirim->CurrentValue;
+        $this->jumlahkirim->CurrentValue = null;
+        $this->jumlahkirim->OldValue = $this->jumlahkirim->CurrentValue;
         $this->keterangan->CurrentValue = null;
         $this->keterangan->OldValue = $this->keterangan->CurrentValue;
     }
@@ -688,13 +688,13 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
             }
         }
 
-        // Check field name 'jumlah_kirim' first before field var 'x_jumlah_kirim'
-        $val = $CurrentForm->hasValue("jumlah_kirim") ? $CurrentForm->getValue("jumlah_kirim") : $CurrentForm->getValue("x_jumlah_kirim");
-        if (!$this->jumlah_kirim->IsDetailKey) {
+        // Check field name 'jumlahkirim' first before field var 'x_jumlahkirim'
+        $val = $CurrentForm->hasValue("jumlahkirim") ? $CurrentForm->getValue("jumlahkirim") : $CurrentForm->getValue("x_jumlahkirim");
+        if (!$this->jumlahkirim->IsDetailKey) {
             if (IsApi() && $val === null) {
-                $this->jumlah_kirim->Visible = false; // Disable update for API request
+                $this->jumlahkirim->Visible = false; // Disable update for API request
             } else {
-                $this->jumlah_kirim->setFormValue($val);
+                $this->jumlahkirim->setFormValue($val);
             }
         }
 
@@ -720,7 +720,7 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
         $this->idstockorder_detail->CurrentValue = $this->idstockorder_detail->FormValue;
         $this->totalorder->CurrentValue = $this->totalorder->FormValue;
         $this->sisa->CurrentValue = $this->sisa->FormValue;
-        $this->jumlah_kirim->CurrentValue = $this->jumlah_kirim->FormValue;
+        $this->jumlahkirim->CurrentValue = $this->jumlahkirim->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
 
@@ -777,7 +777,7 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
         $this->idstockorder_detail->setDbValue($row['idstockorder_detail']);
         $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
-        $this->jumlah_kirim->setDbValue($row['jumlah_kirim']);
+        $this->jumlahkirim->setDbValue($row['jumlahkirim']);
         $this->keterangan->setDbValue($row['keterangan']);
     }
 
@@ -792,7 +792,7 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
         $row['idstockorder_detail'] = $this->idstockorder_detail->CurrentValue;
         $row['totalorder'] = $this->totalorder->CurrentValue;
         $row['sisa'] = $this->sisa->CurrentValue;
-        $row['jumlah_kirim'] = $this->jumlah_kirim->CurrentValue;
+        $row['jumlahkirim'] = $this->jumlahkirim->CurrentValue;
         $row['keterangan'] = $this->keterangan->CurrentValue;
         return $row;
     }
@@ -837,7 +837,7 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
 
         // sisa
 
-        // jumlah_kirim
+        // jumlahkirim
 
         // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -846,9 +846,9 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
             if ($curVal != "") {
                 $this->idstockorder->ViewValue = $this->idstockorder->lookupCacheOption($curVal);
                 if ($this->idstockorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idstockorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                        return (CurrentPageID() == "add" ) ? "totalsisa > 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idstockorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -872,7 +872,11 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
                 $this->idstockorder_detail->ViewValue = $this->idstockorder_detail->lookupCacheOption($curVal);
                 if ($this->idstockorder_detail->ViewValue === null) { // Lookup from database
                     $filterWrk = "`idstockorder_detail`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -897,10 +901,10 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
             $this->sisa->ViewCustomAttributes = "";
 
-            // jumlah_kirim
-            $this->jumlah_kirim->ViewValue = $this->jumlah_kirim->CurrentValue;
-            $this->jumlah_kirim->ViewValue = FormatNumber($this->jumlah_kirim->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_kirim->ViewCustomAttributes = "";
+            // jumlahkirim
+            $this->jumlahkirim->ViewValue = $this->jumlahkirim->CurrentValue;
+            $this->jumlahkirim->ViewValue = FormatNumber($this->jumlahkirim->ViewValue, 0, -2, -2, -2);
+            $this->jumlahkirim->ViewCustomAttributes = "";
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -926,10 +930,10 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
             $this->sisa->HrefValue = "";
             $this->sisa->TooltipValue = "";
 
-            // jumlah_kirim
-            $this->jumlah_kirim->LinkCustomAttributes = "";
-            $this->jumlah_kirim->HrefValue = "";
-            $this->jumlah_kirim->TooltipValue = "";
+            // jumlahkirim
+            $this->jumlahkirim->LinkCustomAttributes = "";
+            $this->jumlahkirim->HrefValue = "";
+            $this->jumlahkirim->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -951,10 +955,10 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
                 if ($curVal == "") {
                     $filterWrk = "0=1";
                 } else {
-                    $filterWrk = "`idstockorder`" . SearchString("=", $this->idstockorder->CurrentValue, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $this->idstockorder->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                    return (CurrentPageID() == "add" ) ? "totalsisa > 0" : "";;
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idstockorder->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -984,7 +988,11 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
                 } else {
                     $filterWrk = "`idstockorder_detail`" . SearchString("=", $this->idstockorder_detail->CurrentValue, DATATYPE_NUMBER, "");
                 }
-                $sqlWrk = $this->idstockorder_detail->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $lookupFilter = function() {
+                    return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                };
+                $lookupFilter = $lookupFilter->bindTo($this);
+                $sqlWrk = $this->idstockorder_detail->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
                 $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                 $ari = count($rswrk);
                 $arwrk = $rswrk;
@@ -1004,11 +1012,11 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
             $this->sisa->EditValue = HtmlEncode($this->sisa->CurrentValue);
             $this->sisa->PlaceHolder = RemoveHtml($this->sisa->caption());
 
-            // jumlah_kirim
-            $this->jumlah_kirim->EditAttrs["class"] = "form-control";
-            $this->jumlah_kirim->EditCustomAttributes = "";
-            $this->jumlah_kirim->EditValue = HtmlEncode($this->jumlah_kirim->CurrentValue);
-            $this->jumlah_kirim->PlaceHolder = RemoveHtml($this->jumlah_kirim->caption());
+            // jumlahkirim
+            $this->jumlahkirim->EditAttrs["class"] = "form-control";
+            $this->jumlahkirim->EditCustomAttributes = "";
+            $this->jumlahkirim->EditValue = HtmlEncode($this->jumlahkirim->CurrentValue);
+            $this->jumlahkirim->PlaceHolder = RemoveHtml($this->jumlahkirim->caption());
 
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
@@ -1034,9 +1042,9 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
             $this->sisa->LinkCustomAttributes = "";
             $this->sisa->HrefValue = "";
 
-            // jumlah_kirim
-            $this->jumlah_kirim->LinkCustomAttributes = "";
-            $this->jumlah_kirim->HrefValue = "";
+            // jumlahkirim
+            $this->jumlahkirim->LinkCustomAttributes = "";
+            $this->jumlahkirim->HrefValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -1087,13 +1095,13 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
         if (!CheckInteger($this->sisa->FormValue)) {
             $this->sisa->addErrorMessage($this->sisa->getErrorMessage(false));
         }
-        if ($this->jumlah_kirim->Required) {
-            if (!$this->jumlah_kirim->IsDetailKey && EmptyValue($this->jumlah_kirim->FormValue)) {
-                $this->jumlah_kirim->addErrorMessage(str_replace("%s", $this->jumlah_kirim->caption(), $this->jumlah_kirim->RequiredErrorMessage));
+        if ($this->jumlahkirim->Required) {
+            if (!$this->jumlahkirim->IsDetailKey && EmptyValue($this->jumlahkirim->FormValue)) {
+                $this->jumlahkirim->addErrorMessage(str_replace("%s", $this->jumlahkirim->caption(), $this->jumlahkirim->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->jumlah_kirim->FormValue)) {
-            $this->jumlah_kirim->addErrorMessage($this->jumlah_kirim->getErrorMessage(false));
+        if (!CheckInteger($this->jumlahkirim->FormValue)) {
+            $this->jumlahkirim->addErrorMessage($this->jumlahkirim->getErrorMessage(false));
         }
         if ($this->keterangan->Required) {
             if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
@@ -1155,11 +1163,11 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
         // sisa
         $this->sisa->setDbValueDef($rsnew, $this->sisa->CurrentValue, 0, false);
 
-        // jumlah_kirim
-        $this->jumlah_kirim->setDbValueDef($rsnew, $this->jumlah_kirim->CurrentValue, 0, false);
+        // jumlahkirim
+        $this->jumlahkirim->setDbValueDef($rsnew, $this->jumlahkirim->CurrentValue, 0, false);
 
         // keterangan
-        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", false);
+        $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, false);
 
         // pid
         if ($this->pid->getSessionValue() != "") {
@@ -1300,11 +1308,15 @@ class StockDeliveryorderDetailAdd extends StockDeliveryorderDetail
             switch ($fld->FieldVar) {
                 case "x_idstockorder":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                        return (CurrentPageID() == "add" ) ? "totalsisa > 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idstockorder_detail":
+                    $lookupFilter = function () {
+                        return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

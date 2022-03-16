@@ -95,7 +95,6 @@ class NpdDesain extends DbTable
 
         // idnpd
         $this->idnpd = new DbField('npd_desain', 'npd_desain', 'x_idnpd', 'idnpd', '`idnpd`', '`idnpd`', 20, 20, -1, false, '`idnpd`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->idnpd->IsForeignKey = true; // Foreign key field
         $this->idnpd->Sortable = true; // Allow sort
         $this->idnpd->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idnpd->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idnpd->Param, "CustomMsg");
@@ -257,58 +256,6 @@ class NpdDesain extends DbTable
         } else {
             $fld->setSort("");
         }
-    }
-
-    // Current master table name
-    public function getCurrentMasterTable()
-    {
-        return Session(PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE"));
-    }
-
-    public function setCurrentMasterTable($v)
-    {
-        $_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
-    }
-
-    // Session master WHERE clause
-    public function getMasterFilter()
-    {
-        // Master filter
-        $masterFilter = "";
-        if ($this->getCurrentMasterTable() == "npd") {
-            if ($this->idnpd->getSessionValue() != "") {
-                $masterFilter .= "" . GetForeignKeySql("`id`", $this->idnpd->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $masterFilter;
-    }
-
-    // Session detail WHERE clause
-    public function getDetailFilter()
-    {
-        // Detail filter
-        $detailFilter = "";
-        if ($this->getCurrentMasterTable() == "npd") {
-            if ($this->idnpd->getSessionValue() != "") {
-                $detailFilter .= "" . GetForeignKeySql("`idnpd`", $this->idnpd->getSessionValue(), DATATYPE_NUMBER, "DB");
-            } else {
-                return "";
-            }
-        }
-        return $detailFilter;
-    }
-
-    // Master filter
-    public function sqlMasterFilter_npd()
-    {
-        return "`id`=@id@";
-    }
-    // Detail filter
-    public function sqlDetailFilter_npd()
-    {
-        return "`idnpd`=@idnpd@";
     }
 
     // Table level SQL
@@ -884,10 +831,6 @@ class NpdDesain extends DbTable
     // Add master url
     public function addMasterUrl($url)
     {
-        if ($this->getCurrentMasterTable() == "npd" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
-            $url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
-            $url .= "&" . GetForeignKeyUrl("fk_id", $this->idnpd->CurrentValue ?? $this->idnpd->getSessionValue());
-        }
         return $url;
     }
 
@@ -1316,15 +1259,8 @@ SORTHTML;
         // idnpd
         $this->idnpd->EditAttrs["class"] = "form-control";
         $this->idnpd->EditCustomAttributes = "";
-        if ($this->idnpd->getSessionValue() != "") {
-            $this->idnpd->CurrentValue = GetForeignKeyValue($this->idnpd->getSessionValue());
-            $this->idnpd->ViewValue = $this->idnpd->CurrentValue;
-            $this->idnpd->ViewValue = FormatNumber($this->idnpd->ViewValue, 0, -2, -2, -2);
-            $this->idnpd->ViewCustomAttributes = "";
-        } else {
-            $this->idnpd->EditValue = $this->idnpd->CurrentValue;
-            $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
-        }
+        $this->idnpd->EditValue = $this->idnpd->CurrentValue;
+        $this->idnpd->PlaceHolder = RemoveHtml($this->idnpd->caption());
 
         // tglterima
         $this->tglterima->EditAttrs["class"] = "form-control";

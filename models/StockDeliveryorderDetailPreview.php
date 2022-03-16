@@ -396,8 +396,8 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
         $this->idstockorder_detail->setVisibility();
         $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
-        $this->jumlah_kirim->setVisibility();
-        $this->keterangan->Visible = false;
+        $this->jumlahkirim->setVisibility();
+        $this->keterangan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -491,7 +491,7 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
             $this->idstockorder_detail->setSort("");
             $this->totalorder->setSort("");
             $this->sisa->setSort("");
-            $this->jumlah_kirim->setSort("");
+            $this->jumlahkirim->setSort("");
             $this->keterangan->setSort("");
 
             // Save sort to session
@@ -508,7 +508,8 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
             $this->updateSort($this->idstockorder_detail); // idstockorder_detail
             $this->updateSort($this->totalorder); // totalorder
             $this->updateSort($this->sisa); // sisa
-            $this->updateSort($this->jumlah_kirim); // jumlah_kirim
+            $this->updateSort($this->jumlahkirim); // jumlahkirim
+            $this->updateSort($this->keterangan); // keterangan
         }
     }
 
@@ -547,12 +548,6 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
         $item->OnLeft = false;
         $item->Visible = false;
 
-        // "view"
-        $item = &$this->ListOptions->add("view");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -574,21 +569,6 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
         $masterKeyUrl = $this->masterKeyUrl();
-
-        // "view"
-        $opt = $this->ListOptions["view"];
-        if ($Security->canView()) {
-            $viewCaption = $Language->phrase("ViewLink");
-            $viewTitle = HtmlTitle($viewCaption);
-            $viewUrl = $this->getViewUrl($masterKeyUrl);
-            if ($this->UseModalLinks && !IsMobile()) {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($viewUrl) . "',btn:null});\">" . $viewCaption . "</a>";
-            } else {
-                $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"" . HtmlEncode($viewUrl) . "\">" . $viewCaption . "</a>";
-            }
-        } else {
-            $opt->Body = "";
-        }
 
         // Call ListOptions_Rendered event
         $this->listOptionsRendered();
@@ -702,11 +682,15 @@ class StockDeliveryorderDetailPreview extends StockDeliveryorderDetail
             switch ($fld->FieldVar) {
                 case "x_idstockorder":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                        return (CurrentPageID() == "add" ) ? "totalsisa > 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idstockorder_detail":
+                    $lookupFilter = function () {
+                        return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

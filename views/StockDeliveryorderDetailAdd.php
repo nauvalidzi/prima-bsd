@@ -24,7 +24,7 @@ loadjs.ready("head", function () {
         ["idstockorder_detail", [fields.idstockorder_detail.visible && fields.idstockorder_detail.required ? ew.Validators.required(fields.idstockorder_detail.caption) : null], fields.idstockorder_detail.isInvalid],
         ["totalorder", [fields.totalorder.visible && fields.totalorder.required ? ew.Validators.required(fields.totalorder.caption) : null, ew.Validators.integer], fields.totalorder.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
-        ["jumlah_kirim", [fields.jumlah_kirim.visible && fields.jumlah_kirim.required ? ew.Validators.required(fields.jumlah_kirim.caption) : null, ew.Validators.integer], fields.jumlah_kirim.isInvalid],
+        ["jumlahkirim", [fields.jumlahkirim.visible && fields.jumlahkirim.required ? ew.Validators.required(fields.jumlahkirim.caption) : null, ew.Validators.integer], fields.jumlahkirim.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
@@ -212,14 +212,14 @@ loadjs.ready("head", function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->jumlah_kirim->Visible) { // jumlah_kirim ?>
-    <div id="r_jumlah_kirim" class="form-group row">
-        <label id="elh_stock_deliveryorder_detail_jumlah_kirim" for="x_jumlah_kirim" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jumlah_kirim->caption() ?><?= $Page->jumlah_kirim->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jumlah_kirim->cellAttributes() ?>>
-<span id="el_stock_deliveryorder_detail_jumlah_kirim">
-<input type="<?= $Page->jumlah_kirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlah_kirim" name="x_jumlah_kirim" id="x_jumlah_kirim" size="30" placeholder="<?= HtmlEncode($Page->jumlah_kirim->getPlaceHolder()) ?>" value="<?= $Page->jumlah_kirim->EditValue ?>"<?= $Page->jumlah_kirim->editAttributes() ?> aria-describedby="x_jumlah_kirim_help">
-<?= $Page->jumlah_kirim->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jumlah_kirim->getErrorMessage() ?></div>
+<?php if ($Page->jumlahkirim->Visible) { // jumlahkirim ?>
+    <div id="r_jumlahkirim" class="form-group row">
+        <label id="elh_stock_deliveryorder_detail_jumlahkirim" for="x_jumlahkirim" class="<?= $Page->LeftColumnClass ?>"><?= $Page->jumlahkirim->caption() ?><?= $Page->jumlahkirim->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jumlahkirim->cellAttributes() ?>>
+<span id="el_stock_deliveryorder_detail_jumlahkirim">
+<input type="<?= $Page->jumlahkirim->getInputTextType() ?>" data-table="stock_deliveryorder_detail" data-field="x_jumlahkirim" name="x_jumlahkirim" id="x_jumlahkirim" size="30" placeholder="<?= HtmlEncode($Page->jumlahkirim->getPlaceHolder()) ?>" value="<?= $Page->jumlahkirim->EditValue ?>"<?= $Page->jumlahkirim->editAttributes() ?> aria-describedby="x_jumlahkirim_help">
+<?= $Page->jumlahkirim->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->jumlahkirim->getErrorMessage() ?></div>
 </span>
 </div></div>
     </div>

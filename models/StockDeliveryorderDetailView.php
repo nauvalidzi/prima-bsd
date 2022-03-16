@@ -524,7 +524,7 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
         $this->idstockorder_detail->setVisibility();
         $this->totalorder->setVisibility();
         $this->sisa->setVisibility();
-        $this->jumlah_kirim->setVisibility();
+        $this->jumlahkirim->setVisibility();
         $this->keterangan->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -721,7 +721,7 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
         $this->idstockorder_detail->setDbValue($row['idstockorder_detail']);
         $this->totalorder->setDbValue($row['totalorder']);
         $this->sisa->setDbValue($row['sisa']);
-        $this->jumlah_kirim->setDbValue($row['jumlah_kirim']);
+        $this->jumlahkirim->setDbValue($row['jumlahkirim']);
         $this->keterangan->setDbValue($row['keterangan']);
     }
 
@@ -735,7 +735,7 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
         $row['idstockorder_detail'] = null;
         $row['totalorder'] = null;
         $row['sisa'] = null;
-        $row['jumlah_kirim'] = null;
+        $row['jumlahkirim'] = null;
         $row['keterangan'] = null;
         return $row;
     }
@@ -770,7 +770,7 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
 
         // sisa
 
-        // jumlah_kirim
+        // jumlahkirim
 
         // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -779,9 +779,9 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
             if ($curVal != "") {
                 $this->idstockorder->ViewValue = $this->idstockorder->lookupCacheOption($curVal);
                 if ($this->idstockorder->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`idstockorder`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                        return (CurrentPageID() == "add" ) ? "readonly = 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idstockorder->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -805,7 +805,11 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
                 $this->idstockorder_detail->ViewValue = $this->idstockorder_detail->lookupCacheOption($curVal);
                 if ($this->idstockorder_detail->ViewValue === null) { // Lookup from database
                     $filterWrk = "`idstockorder_detail`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $lookupFilter = function() {
+                        return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
+                    $sqlWrk = $this->idstockorder_detail->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
                     $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
                     $ari = count($rswrk);
                     if ($ari > 0) { // Lookup values found
@@ -830,10 +834,10 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
             $this->sisa->ViewCustomAttributes = "";
 
-            // jumlah_kirim
-            $this->jumlah_kirim->ViewValue = $this->jumlah_kirim->CurrentValue;
-            $this->jumlah_kirim->ViewValue = FormatNumber($this->jumlah_kirim->ViewValue, 0, -2, -2, -2);
-            $this->jumlah_kirim->ViewCustomAttributes = "";
+            // jumlahkirim
+            $this->jumlahkirim->ViewValue = $this->jumlahkirim->CurrentValue;
+            $this->jumlahkirim->ViewValue = FormatNumber($this->jumlahkirim->ViewValue, 0, -2, -2, -2);
+            $this->jumlahkirim->ViewCustomAttributes = "";
 
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
@@ -859,10 +863,10 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
             $this->sisa->HrefValue = "";
             $this->sisa->TooltipValue = "";
 
-            // jumlah_kirim
-            $this->jumlah_kirim->LinkCustomAttributes = "";
-            $this->jumlah_kirim->HrefValue = "";
-            $this->jumlah_kirim->TooltipValue = "";
+            // jumlahkirim
+            $this->jumlahkirim->LinkCustomAttributes = "";
+            $this->jumlahkirim->HrefValue = "";
+            $this->jumlahkirim->TooltipValue = "";
 
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
@@ -972,11 +976,15 @@ class StockDeliveryorderDetailView extends StockDeliveryorderDetail
             switch ($fld->FieldVar) {
                 case "x_idstockorder":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add" ) ? "aktif = 1" : "";;
+                        return (CurrentPageID() == "add" ) ? "readonly = 0" : "";;
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 case "x_idstockorder_detail":
+                    $lookupFilter = function () {
+                        return (CurrentPageID() == "add" ) ? "sisa_order > 0" : "";;
+                    };
+                    $lookupFilter = $lookupFilter->bindTo($this);
                     break;
                 default:
                     $lookupFilter = "";

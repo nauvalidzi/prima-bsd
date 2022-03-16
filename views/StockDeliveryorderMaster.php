@@ -9,17 +9,6 @@ $stock_deliveryorder = Container("stock_deliveryorder");
 <div class="ew-master-div">
 <table id="tbl_stock_deliveryordermaster" class="table ew-view-table ew-master-table ew-vertical">
     <tbody>
-<?php if ($stock_deliveryorder->id->Visible) { // id ?>
-        <tr id="r_id">
-            <td class="<?= $stock_deliveryorder->TableLeftColumnClass ?>"><?= $stock_deliveryorder->id->caption() ?></td>
-            <td <?= $stock_deliveryorder->id->cellAttributes() ?>>
-<span id="el_stock_deliveryorder_id">
-<span<?= $stock_deliveryorder->id->viewAttributes() ?>>
-<?= $stock_deliveryorder->id->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
 <?php if ($stock_deliveryorder->kode->Visible) { // kode ?>
         <tr id="r_kode">
             <td class="<?= $stock_deliveryorder->TableLeftColumnClass ?>"><?= $stock_deliveryorder->kode->caption() ?></td>
@@ -38,6 +27,17 @@ $stock_deliveryorder = Container("stock_deliveryorder");
 <span id="el_stock_deliveryorder_tanggal">
 <span<?= $stock_deliveryorder->tanggal->viewAttributes() ?>>
 <?= $stock_deliveryorder->tanggal->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($stock_deliveryorder->receipt_by->Visible) { // receipt_by ?>
+        <tr id="r_receipt_by">
+            <td class="<?= $stock_deliveryorder->TableLeftColumnClass ?>"><?= $stock_deliveryorder->receipt_by->caption() ?></td>
+            <td <?= $stock_deliveryorder->receipt_by->cellAttributes() ?>>
+<span id="el_stock_deliveryorder_receipt_by">
+<span<?= $stock_deliveryorder->receipt_by->viewAttributes() ?>>
+<?= $stock_deliveryorder->receipt_by->getViewValue() ?></span>
 </span>
 </td>
         </tr>

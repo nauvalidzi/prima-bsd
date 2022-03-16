@@ -26,7 +26,8 @@ loadjs.ready("head", function () {
         ["idproduct", [fields.idproduct.visible && fields.idproduct.required ? ew.Validators.required(fields.idproduct.caption) : null], fields.idproduct.isInvalid],
         ["stok_akhir", [fields.stok_akhir.visible && fields.stok_akhir.required ? ew.Validators.required(fields.stok_akhir.caption) : null, ew.Validators.integer], fields.stok_akhir.isInvalid],
         ["sisa", [fields.sisa.visible && fields.sisa.required ? ew.Validators.required(fields.sisa.caption) : null, ew.Validators.integer], fields.sisa.isInvalid],
-        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid]
+        ["jumlah", [fields.jumlah.visible && fields.jumlah.required ? ew.Validators.required(fields.jumlah.caption) : null, ew.Validators.integer], fields.jumlah.isInvalid],
+        ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid]
     ]);
 
     // Set invalid fields
@@ -90,6 +91,8 @@ loadjs.ready("head", function () {
             return false;
         if (ew.valueChanged(fobj, rowIndex, "jumlah", false))
             return false;
+        if (ew.valueChanged(fobj, rowIndex, "keterangan", false))
+            return false;
         return true;
     }
 
@@ -143,6 +146,9 @@ $Grid->ListOptions->render("header", "left");
 <?php } ?>
 <?php if ($Grid->jumlah->Visible) { // jumlah ?>
         <th data-name="jumlah" class="<?= $Grid->jumlah->headerCellClass() ?>"><div id="elh_stock_order_detail_jumlah" class="stock_order_detail_jumlah"><?= $Grid->renderSort($Grid->jumlah) ?></div></th>
+<?php } ?>
+<?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <th data-name="keterangan" class="<?= $Grid->keterangan->headerCellClass() ?>"><div id="elh_stock_order_detail_keterangan" class="stock_order_detail_keterangan"><?= $Grid->renderSort($Grid->keterangan) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -480,6 +486,33 @@ loadjs.ready("head", function() {
 <?php } ?>
 </td>
     <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan" <?= $Grid->keterangan->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_stock_order_detail_keterangan" class="form-group">
+<textarea data-table="stock_order_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="stock_order_detail" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_stock_order_detail_keterangan" class="form-group">
+<textarea data-table="stock_order_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_stock_order_detail_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="stock_order_detail" data-field="x_keterangan" data-hidden="1" name="fstock_order_detailgrid$x<?= $Grid->RowIndex ?>_keterangan" id="fstock_order_detailgrid$x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<input type="hidden" data-table="stock_order_detail" data-field="x_keterangan" data-hidden="1" name="fstock_order_detailgrid$o<?= $Grid->RowIndex ?>_keterangan" id="fstock_order_detailgrid$o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
 <?php
 // Render list options (body, right)
 $Grid->ListOptions->render("body", "right", $Grid->RowCount);
@@ -651,6 +684,23 @@ loadjs.ready("head", function() {
 <input type="hidden" data-table="stock_order_detail" data-field="x_jumlah" data-hidden="1" name="x<?= $Grid->RowIndex ?>_jumlah" id="x<?= $Grid->RowIndex ?>_jumlah" value="<?= HtmlEncode($Grid->jumlah->FormValue) ?>">
 <?php } ?>
 <input type="hidden" data-table="stock_order_detail" data-field="x_jumlah" data-hidden="1" name="o<?= $Grid->RowIndex ?>_jumlah" id="o<?= $Grid->RowIndex ?>_jumlah" value="<?= HtmlEncode($Grid->jumlah->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->keterangan->Visible) { // keterangan ?>
+        <td data-name="keterangan">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_stock_order_detail_keterangan" class="form-group stock_order_detail_keterangan">
+<textarea data-table="stock_order_detail" data-field="x_keterangan" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" cols="35" rows="4" placeholder="<?= HtmlEncode($Grid->keterangan->getPlaceHolder()) ?>"<?= $Grid->keterangan->editAttributes() ?>><?= $Grid->keterangan->EditValue ?></textarea>
+<div class="invalid-feedback"><?= $Grid->keterangan->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_stock_order_detail_keterangan" class="form-group stock_order_detail_keterangan">
+<span<?= $Grid->keterangan->viewAttributes() ?>>
+<?= $Grid->keterangan->ViewValue ?></span>
+</span>
+<input type="hidden" data-table="stock_order_detail" data-field="x_keterangan" data-hidden="1" name="x<?= $Grid->RowIndex ?>_keterangan" id="x<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="stock_order_detail" data-field="x_keterangan" data-hidden="1" name="o<?= $Grid->RowIndex ?>_keterangan" id="o<?= $Grid->RowIndex ?>_keterangan" value="<?= HtmlEncode($Grid->keterangan->OldValue) ?>">
 </td>
     <?php } ?>
 <?php

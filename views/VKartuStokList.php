@@ -135,6 +135,9 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
+<?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <th data-name="idbrand" class="<?= $Page->idbrand->headerCellClass() ?>"><div id="elh_v_kartu_stok_idbrand" class="v_kartu_stok_idbrand"><?= $Page->renderSort($Page->idbrand) ?></div></th>
+<?php } ?>
 <?php if ($Page->kodeproduct->Visible) { // kodeproduct ?>
         <th data-name="kodeproduct" class="<?= $Page->kodeproduct->headerCellClass() ?>"><div id="elh_v_kartu_stok_kodeproduct" class="v_kartu_stok_kodeproduct"><?= $Page->renderSort($Page->kodeproduct) ?></div></th>
 <?php } ?>
@@ -211,6 +214,14 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
+    <?php if ($Page->idbrand->Visible) { // idbrand ?>
+        <td data-name="idbrand" <?= $Page->idbrand->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_kartu_stok_idbrand">
+<span<?= $Page->idbrand->viewAttributes() ?>>
+<?= $Page->idbrand->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
     <?php if ($Page->kodeproduct->Visible) { // kodeproduct ?>
         <td data-name="kodeproduct" <?= $Page->kodeproduct->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_v_kartu_stok_kodeproduct">

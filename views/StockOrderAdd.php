@@ -220,6 +220,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$.get("api/nextKode/stock_order/0",(function(e){$("#x_kode").val(e)}))}));
+    $.get("api/nextKode/stock_order/0",(function(a){$("#x_kode").val(a)})),$("th[data-name=sisa], td[data-name=sisa]").remove();
 });
 </script>

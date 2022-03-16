@@ -374,9 +374,10 @@ class StockDeliveryorderDelete extends StockDeliveryorder
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
+        $this->receipt_by->setVisibility();
         $this->lampiran->setVisibility();
         $this->keterangan->Visible = false;
         $this->created_at->setVisibility();
@@ -394,6 +395,7 @@ class StockDeliveryorderDelete extends StockDeliveryorder
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->receipt_by);
 
         // Set up Breadcrumb
         $this->setupBreadcrumb();
@@ -545,6 +547,7 @@ class StockDeliveryorderDelete extends StockDeliveryorder
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
         $this->tanggal->setDbValue($row['tanggal']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
@@ -558,6 +561,7 @@ class StockDeliveryorderDelete extends StockDeliveryorder
         $row['id'] = null;
         $row['kode'] = null;
         $row['tanggal'] = null;
+        $row['receipt_by'] = null;
         $row['lampiran'] = null;
         $row['keterangan'] = null;
         $row['created_at'] = null;
@@ -582,6 +586,8 @@ class StockDeliveryorderDelete extends StockDeliveryorder
 
         // tanggal
 
+        // receipt_by
+
         // lampiran
 
         // keterangan
@@ -601,6 +607,27 @@ class StockDeliveryorderDelete extends StockDeliveryorder
             $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 7);
             $this->tanggal->ViewCustomAttributes = "";
 
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
+
             // lampiran
             if (!EmptyValue($this->lampiran->Upload->DbValue)) {
                 $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
@@ -614,11 +641,6 @@ class StockDeliveryorderDelete extends StockDeliveryorder
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
             $this->created_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -628,6 +650,11 @@ class StockDeliveryorderDelete extends StockDeliveryorder
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
             $this->tanggal->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
@@ -754,6 +781,8 @@ class StockDeliveryorderDelete extends StockDeliveryorder
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_receipt_by":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

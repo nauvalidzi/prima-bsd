@@ -397,7 +397,7 @@ class StockOrderDetailPreview extends StockOrderDetail
         $this->stok_akhir->setVisibility();
         $this->sisa->setVisibility();
         $this->jumlah->setVisibility();
-        $this->keterangan->Visible = false;
+        $this->keterangan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -509,6 +509,7 @@ class StockOrderDetailPreview extends StockOrderDetail
             $this->updateSort($this->stok_akhir); // stok_akhir
             $this->updateSort($this->sisa); // sisa
             $this->updateSort($this->jumlah); // jumlah
+            $this->updateSort($this->keterangan); // keterangan
         }
     }
 
@@ -553,6 +554,18 @@ class StockOrderDetailPreview extends StockOrderDetail
         $item->Visible = $Security->canView();
         $item->OnLeft = false;
 
+        // "edit"
+        $item = &$this->ListOptions->add("edit");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canEdit();
+        $item->OnLeft = false;
+
+        // "delete"
+        $item = &$this->ListOptions->add("delete");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = $Security->canDelete();
+        $item->OnLeft = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -585,6 +598,37 @@ class StockOrderDetailPreview extends StockOrderDetail
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,url:'" . HtmlEncode($viewUrl) . "',btn:null});\">" . $viewCaption . "</a>";
             } else {
                 $opt->Body = "<a class=\"ew-row-link ew-view\" title=\"" . $viewTitle . "\" data-caption=\"" . $viewTitle . "\" href=\"" . HtmlEncode($viewUrl) . "\">" . $viewCaption . "</a>";
+            }
+        } else {
+            $opt->Body = "";
+        }
+
+        // "edit"
+        $opt = $this->ListOptions["edit"];
+        if ($Security->canEdit()) {
+            $editCaption = $Language->phrase("EditLink");
+            $editTitle = HtmlTitle($editCaption);
+            $editUrl = $this->getEditUrl($masterKeyUrl);
+            if ($this->UseModalLinks && !IsMobile()) {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,btn:'SaveBtn',url:'" . HtmlEncode($editUrl) . "'});\">" . $editCaption . "</a>";
+            } else {
+                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" href=\"" . HtmlEncode($editUrl) . "\">" . $editCaption . "</a>";
+            }
+        } else {
+            $opt->Body = "";
+        }
+
+        // "delete"
+        $opt = $this->ListOptions["delete"];
+        if ($Security->canDelete()) {
+            $deleteCaption = $Language->phrase("DeleteLink");
+            $deleteTitle = HtmlTitle($deleteCaption);
+            $deleteUrl = $this->getDeleteUrl();
+            if ($this->UseModalLinks && !IsMobile()) {
+                $deleteUrl .= (ContainsString($deleteUrl, "?") ? "&" : "?") . "action=1";
+                $opt->Body = "<a class=\"ew-row-link ew-delete\" onclick=\"return ew.confirmDelete(this);\" title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
+            } else {
+                $opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
             }
         } else {
             $opt->Body = "";
@@ -806,5 +850,10 @@ class StockOrderDetailPreview extends StockOrderDetail
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
+        $readonly = ExecuteScalar("SELECT readonly FROM stock_order WHERE id = {$this->pid->CurrentValue}");
+        if ($readonly > 0) {
+            $this->ListOptions->Items["edit"]->Body = false;
+        	$this->ListOptions->Items["delete"]->Body = false;
+        }
     }
 }

@@ -569,6 +569,7 @@ class VKartuStokList extends VKartuStok
         // Set up list options
         $this->setupListOptions();
         $this->idproduct->Visible = false;
+        $this->idbrand->setVisibility();
         $this->kodeproduct->setVisibility();
         $this->namaproduct->setVisibility();
         $this->stok->setVisibility();
@@ -599,6 +600,7 @@ class VKartuStokList extends VKartuStok
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idbrand);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -863,6 +865,7 @@ class VKartuStokList extends VKartuStok
         $filterList = "";
         $savedFilterList = "";
         $filterList = Concat($filterList, $this->idproduct->AdvancedSearch->toJson(), ","); // Field idproduct
+        $filterList = Concat($filterList, $this->idbrand->AdvancedSearch->toJson(), ","); // Field idbrand
         $filterList = Concat($filterList, $this->kodeproduct->AdvancedSearch->toJson(), ","); // Field kodeproduct
         $filterList = Concat($filterList, $this->namaproduct->AdvancedSearch->toJson(), ","); // Field namaproduct
         $filterList = Concat($filterList, $this->stok->AdvancedSearch->toJson(), ","); // Field stok
@@ -913,6 +916,14 @@ class VKartuStokList extends VKartuStok
         $this->idproduct->AdvancedSearch->SearchValue2 = @$filter["y_idproduct"];
         $this->idproduct->AdvancedSearch->SearchOperator2 = @$filter["w_idproduct"];
         $this->idproduct->AdvancedSearch->save();
+
+        // Field idbrand
+        $this->idbrand->AdvancedSearch->SearchValue = @$filter["x_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchOperator = @$filter["z_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchCondition = @$filter["v_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchValue2 = @$filter["y_idbrand"];
+        $this->idbrand->AdvancedSearch->SearchOperator2 = @$filter["w_idbrand"];
+        $this->idbrand->AdvancedSearch->save();
 
         // Field kodeproduct
         $this->kodeproduct->AdvancedSearch->SearchValue = @$filter["x_kodeproduct"];
@@ -1109,6 +1120,7 @@ class VKartuStokList extends VKartuStok
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
+            $this->updateSort($this->idbrand); // idbrand
             $this->updateSort($this->kodeproduct); // kodeproduct
             $this->updateSort($this->namaproduct); // namaproduct
             $this->updateSort($this->stok); // stok
@@ -1152,6 +1164,7 @@ class VKartuStokList extends VKartuStok
                 $orderBy = "";
                 $this->setSessionOrderBy($orderBy);
                 $this->idproduct->setSort("");
+                $this->idbrand->setSort("");
                 $this->kodeproduct->setSort("");
                 $this->namaproduct->setSort("");
                 $this->stok->setSort("");
@@ -1190,6 +1203,14 @@ class VKartuStokList extends VKartuStok
         $item->ShowInDropDown = false;
         $item->ShowInButtonGroup = false;
 
+        // "sequence"
+        $item = &$this->ListOptions->add("sequence");
+        $item->CssClass = "text-nowrap";
+        $item->Visible = true;
+        $item->OnLeft = true; // Always on left
+        $item->ShowInDropDown = false;
+        $item->ShowInButtonGroup = false;
+
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -1215,6 +1236,10 @@ class VKartuStokList extends VKartuStok
 
         // Call ListOptions_Rendering event
         $this->listOptionsRendering();
+
+        // "sequence"
+        $opt = $this->ListOptions["sequence"];
+        $opt->Body = FormatSequenceNumber($this->RecordCount);
         $pageUrl = $this->pageUrl();
         if ($this->CurrentMode == "view") { // View mode
         } // End View mode
@@ -1499,6 +1524,7 @@ class VKartuStokList extends VKartuStok
             return;
         }
         $this->idproduct->setDbValue($row['idproduct']);
+        $this->idbrand->setDbValue($row['idbrand']);
         $this->kodeproduct->setDbValue($row['kodeproduct']);
         $this->namaproduct->setDbValue($row['namaproduct']);
         $this->stok->setDbValue($row['stok']);
@@ -1509,6 +1535,7 @@ class VKartuStokList extends VKartuStok
     {
         $row = [];
         $row['idproduct'] = null;
+        $row['idbrand'] = null;
         $row['kodeproduct'] = null;
         $row['namaproduct'] = null;
         $row['stok'] = null;
@@ -1551,6 +1578,8 @@ class VKartuStokList extends VKartuStok
 
         // idproduct
 
+        // idbrand
+
         // kodeproduct
 
         // namaproduct
@@ -1560,6 +1589,27 @@ class VKartuStokList extends VKartuStok
             // idproduct
             $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
             $this->idproduct->ViewCustomAttributes = "";
+
+            // idbrand
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->ViewValue = null;
+            }
+            $this->idbrand->ViewCustomAttributes = "";
 
             // kodeproduct
             $this->kodeproduct->ViewValue = $this->kodeproduct->CurrentValue;
@@ -1573,6 +1623,11 @@ class VKartuStokList extends VKartuStok
             $this->stok->ViewValue = $this->stok->CurrentValue;
             $this->stok->ViewValue = FormatNumber($this->stok->ViewValue, 0, -2, -2, -2);
             $this->stok->ViewCustomAttributes = "";
+
+            // idbrand
+            $this->idbrand->LinkCustomAttributes = "";
+            $this->idbrand->HrefValue = "";
+            $this->idbrand->TooltipValue = "";
 
             // kodeproduct
             $this->kodeproduct->LinkCustomAttributes = "";
@@ -1658,6 +1713,8 @@ class VKartuStokList extends VKartuStok
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_idbrand":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

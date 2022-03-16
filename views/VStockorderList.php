@@ -135,23 +135,20 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->idstockorder->Visible) { // idstockorder ?>
-        <th data-name="idstockorder" class="<?= $Page->idstockorder->headerCellClass() ?>"><div id="elh_v_stockorder_idstockorder" class="v_stockorder_idstockorder"><?= $Page->renderSort($Page->idstockorder) ?></div></th>
+<?php if ($Page->id->Visible) { // id ?>
+        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_v_stockorder_id" class="v_stockorder_id"><?= $Page->renderSort($Page->id) ?></div></th>
 <?php } ?>
-<?php if ($Page->kode_stockorder->Visible) { // kode_stockorder ?>
-        <th data-name="kode_stockorder" class="<?= $Page->kode_stockorder->headerCellClass() ?>"><div id="elh_v_stockorder_kode_stockorder" class="v_stockorder_kode_stockorder"><?= $Page->renderSort($Page->kode_stockorder) ?></div></th>
+<?php if ($Page->kode->Visible) { // kode ?>
+        <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_v_stockorder_kode" class="v_stockorder_kode"><?= $Page->renderSort($Page->kode) ?></div></th>
 <?php } ?>
-<?php if ($Page->tanggal_stockorder->Visible) { // tanggal_stockorder ?>
-        <th data-name="tanggal_stockorder" class="<?= $Page->tanggal_stockorder->headerCellClass() ?>"><div id="elh_v_stockorder_tanggal_stockorder" class="v_stockorder_tanggal_stockorder"><?= $Page->renderSort($Page->tanggal_stockorder) ?></div></th>
+<?php if ($Page->tanggal->Visible) { // tanggal ?>
+        <th data-name="tanggal" class="<?= $Page->tanggal->headerCellClass() ?>"><div id="elh_v_stockorder_tanggal" class="v_stockorder_tanggal"><?= $Page->renderSort($Page->tanggal) ?></div></th>
 <?php } ?>
-<?php if ($Page->jumlah_order->Visible) { // jumlah_order ?>
-        <th data-name="jumlah_order" class="<?= $Page->jumlah_order->headerCellClass() ?>"><div id="elh_v_stockorder_jumlah_order" class="v_stockorder_jumlah_order"><?= $Page->renderSort($Page->jumlah_order) ?></div></th>
+<?php if ($Page->readonly->Visible) { // readonly ?>
+        <th data-name="readonly" class="<?= $Page->readonly->headerCellClass() ?>"><div id="elh_v_stockorder_readonly" class="v_stockorder_readonly"><?= $Page->renderSort($Page->readonly) ?></div></th>
 <?php } ?>
-<?php if ($Page->sisa_order->Visible) { // sisa_order ?>
-        <th data-name="sisa_order" class="<?= $Page->sisa_order->headerCellClass() ?>"><div id="elh_v_stockorder_sisa_order" class="v_stockorder_sisa_order"><?= $Page->renderSort($Page->sisa_order) ?></div></th>
-<?php } ?>
-<?php if ($Page->aktif->Visible) { // aktif ?>
-        <th data-name="aktif" class="<?= $Page->aktif->headerCellClass() ?>"><div id="elh_v_stockorder_aktif" class="v_stockorder_aktif"><?= $Page->renderSort($Page->aktif) ?></div></th>
+<?php if ($Page->totalsisa->Visible) { // totalsisa ?>
+        <th data-name="totalsisa" class="<?= $Page->totalsisa->headerCellClass() ?>"><div id="elh_v_stockorder_totalsisa" class="v_stockorder_totalsisa"><?= $Page->renderSort($Page->totalsisa) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -220,54 +217,46 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->idstockorder->Visible) { // idstockorder ?>
-        <td data-name="idstockorder" <?= $Page->idstockorder->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stockorder_idstockorder">
-<span<?= $Page->idstockorder->viewAttributes() ?>>
-<?= $Page->idstockorder->getViewValue() ?></span>
+    <?php if ($Page->id->Visible) { // id ?>
+        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_stockorder_id">
+<span<?= $Page->id->viewAttributes() ?>>
+<?= $Page->id->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->kode_stockorder->Visible) { // kode_stockorder ?>
-        <td data-name="kode_stockorder" <?= $Page->kode_stockorder->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stockorder_kode_stockorder">
-<span<?= $Page->kode_stockorder->viewAttributes() ?>>
-<?= $Page->kode_stockorder->getViewValue() ?></span>
+    <?php if ($Page->kode->Visible) { // kode ?>
+        <td data-name="kode" <?= $Page->kode->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_stockorder_kode">
+<span<?= $Page->kode->viewAttributes() ?>>
+<?= $Page->kode->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->tanggal_stockorder->Visible) { // tanggal_stockorder ?>
-        <td data-name="tanggal_stockorder" <?= $Page->tanggal_stockorder->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stockorder_tanggal_stockorder">
-<span<?= $Page->tanggal_stockorder->viewAttributes() ?>>
-<?= $Page->tanggal_stockorder->getViewValue() ?></span>
+    <?php if ($Page->tanggal->Visible) { // tanggal ?>
+        <td data-name="tanggal" <?= $Page->tanggal->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_stockorder_tanggal">
+<span<?= $Page->tanggal->viewAttributes() ?>>
+<?= $Page->tanggal->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->jumlah_order->Visible) { // jumlah_order ?>
-        <td data-name="jumlah_order" <?= $Page->jumlah_order->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stockorder_jumlah_order">
-<span<?= $Page->jumlah_order->viewAttributes() ?>>
-<?= $Page->jumlah_order->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->sisa_order->Visible) { // sisa_order ?>
-        <td data-name="sisa_order" <?= $Page->sisa_order->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stockorder_sisa_order">
-<span<?= $Page->sisa_order->viewAttributes() ?>>
-<?= $Page->sisa_order->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
-    <?php if ($Page->aktif->Visible) { // aktif ?>
-        <td data-name="aktif" <?= $Page->aktif->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_v_stockorder_aktif">
-<span<?= $Page->aktif->viewAttributes() ?>>
+    <?php if ($Page->readonly->Visible) { // readonly ?>
+        <td data-name="readonly" <?= $Page->readonly->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_stockorder_readonly">
+<span<?= $Page->readonly->viewAttributes() ?>>
 <div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" id="x_aktif_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->aktif->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->aktif->CurrentValue)) { ?> checked<?php } ?>>
-    <label class="custom-control-label" for="x_aktif_<?= $Page->RowCount ?>"></label>
+    <input type="checkbox" id="x_readonly_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->readonly->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->readonly->CurrentValue)) { ?> checked<?php } ?>>
+    <label class="custom-control-label" for="x_readonly_<?= $Page->RowCount ?>"></label>
 </div></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->totalsisa->Visible) { // totalsisa ?>
+        <td data-name="totalsisa" <?= $Page->totalsisa->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_v_stockorder_totalsisa">
+<span<?= $Page->totalsisa->viewAttributes() ?>>
+<?= $Page->totalsisa->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

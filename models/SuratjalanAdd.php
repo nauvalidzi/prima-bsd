@@ -638,8 +638,7 @@ class SuratjalanAdd extends Suratjalan
         $this->id->OldValue = $this->id->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
-        $this->tglsurat->CurrentValue = null;
-        $this->tglsurat->OldValue = $this->tglsurat->CurrentValue;
+        $this->tglsurat->CurrentValue = CurrentDate();
         $this->tglkirim->CurrentValue = null;
         $this->tglkirim->OldValue = $this->tglkirim->CurrentValue;
         $this->idcustomer->CurrentValue = null;
@@ -1077,7 +1076,7 @@ class SuratjalanAdd extends Suratjalan
             // created_by
             $this->created_by->EditAttrs["class"] = "form-control";
             $this->created_by->EditCustomAttributes = "";
-            $this->created_by->CurrentValue = CurrentUserID();
+            $this->created_by->CurrentValue = CurrentDate();
 
             // Add refer script
 

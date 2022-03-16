@@ -21,17 +21,23 @@ loadjs.ready("head", function () {
         ew.vars.tables.npd_confirmprint = currentTable;
     fnpd_confirmprintedit.addFields([
         ["id", [fields.id.visible && fields.id.required ? ew.Validators.required(fields.id.caption) : null], fields.id.isInvalid],
+        ["idnpd", [fields.idnpd.visible && fields.idnpd.required ? ew.Validators.required(fields.idnpd.caption) : null, ew.Validators.integer], fields.idnpd.isInvalid],
+        ["tglterima", [fields.tglterima.visible && fields.tglterima.required ? ew.Validators.required(fields.tglterima.caption) : null, ew.Validators.datetime(0)], fields.tglterima.isInvalid],
+        ["tglsubmit", [fields.tglsubmit.visible && fields.tglsubmit.required ? ew.Validators.required(fields.tglsubmit.caption) : null, ew.Validators.datetime(0)], fields.tglsubmit.isInvalid],
         ["brand", [fields.brand.visible && fields.brand.required ? ew.Validators.required(fields.brand.caption) : null], fields.brand.isInvalid],
-        ["tglkirim", [fields.tglkirim.visible && fields.tglkirim.required ? ew.Validators.required(fields.tglkirim.caption) : null, ew.Validators.datetime(0)], fields.tglkirim.isInvalid],
-        ["tgldisetujui", [fields.tgldisetujui.visible && fields.tgldisetujui.required ? ew.Validators.required(fields.tgldisetujui.caption) : null, ew.Validators.datetime(0)], fields.tgldisetujui.isInvalid],
+        ["tglkirimprimer", [fields.tglkirimprimer.visible && fields.tglkirimprimer.required ? ew.Validators.required(fields.tglkirimprimer.caption) : null, ew.Validators.datetime(0)], fields.tglkirimprimer.isInvalid],
+        ["tgldisetujuiprimer", [fields.tgldisetujuiprimer.visible && fields.tgldisetujuiprimer.required ? ew.Validators.required(fields.tgldisetujuiprimer.caption) : null, ew.Validators.datetime(0)], fields.tgldisetujuiprimer.isInvalid],
         ["desainprimer", [fields.desainprimer.visible && fields.desainprimer.required ? ew.Validators.required(fields.desainprimer.caption) : null], fields.desainprimer.isInvalid],
         ["materialprimer", [fields.materialprimer.visible && fields.materialprimer.required ? ew.Validators.required(fields.materialprimer.caption) : null], fields.materialprimer.isInvalid],
         ["aplikasiprimer", [fields.aplikasiprimer.visible && fields.aplikasiprimer.required ? ew.Validators.required(fields.aplikasiprimer.caption) : null], fields.aplikasiprimer.isInvalid],
         ["jumlahcetakprimer", [fields.jumlahcetakprimer.visible && fields.jumlahcetakprimer.required ? ew.Validators.required(fields.jumlahcetakprimer.caption) : null, ew.Validators.integer], fields.jumlahcetakprimer.isInvalid],
+        ["tglkirimsekunder", [fields.tglkirimsekunder.visible && fields.tglkirimsekunder.required ? ew.Validators.required(fields.tglkirimsekunder.caption) : null, ew.Validators.datetime(0)], fields.tglkirimsekunder.isInvalid],
+        ["tgldisetujuisekunder", [fields.tgldisetujuisekunder.visible && fields.tgldisetujuisekunder.required ? ew.Validators.required(fields.tgldisetujuisekunder.caption) : null, ew.Validators.datetime(0)], fields.tgldisetujuisekunder.isInvalid],
         ["desainsekunder", [fields.desainsekunder.visible && fields.desainsekunder.required ? ew.Validators.required(fields.desainsekunder.caption) : null], fields.desainsekunder.isInvalid],
-        ["materialinnerbox", [fields.materialinnerbox.visible && fields.materialinnerbox.required ? ew.Validators.required(fields.materialinnerbox.caption) : null], fields.materialinnerbox.isInvalid],
-        ["aplikasiinnerbox", [fields.aplikasiinnerbox.visible && fields.aplikasiinnerbox.required ? ew.Validators.required(fields.aplikasiinnerbox.caption) : null], fields.aplikasiinnerbox.isInvalid],
-        ["jumlahcetak", [fields.jumlahcetak.visible && fields.jumlahcetak.required ? ew.Validators.required(fields.jumlahcetak.caption) : null, ew.Validators.integer], fields.jumlahcetak.isInvalid],
+        ["materialsekunder", [fields.materialsekunder.visible && fields.materialsekunder.required ? ew.Validators.required(fields.materialsekunder.caption) : null], fields.materialsekunder.isInvalid],
+        ["aplikasisekunder", [fields.aplikasisekunder.visible && fields.aplikasisekunder.required ? ew.Validators.required(fields.aplikasisekunder.caption) : null], fields.aplikasisekunder.isInvalid],
+        ["jumlahcetaksekunder", [fields.jumlahcetaksekunder.visible && fields.jumlahcetaksekunder.required ? ew.Validators.required(fields.jumlahcetaksekunder.caption) : null, ew.Validators.integer], fields.jumlahcetaksekunder.isInvalid],
+        ["submitted_by", [fields.submitted_by.visible && fields.submitted_by.required ? ew.Validators.required(fields.submitted_by.caption) : null, ew.Validators.integer], fields.submitted_by.isInvalid],
         ["checked_by", [fields.checked_by.visible && fields.checked_by.required ? ew.Validators.required(fields.checked_by.caption) : null], fields.checked_by.isInvalid],
         ["approved_by", [fields.approved_by.visible && fields.approved_by.required ? ew.Validators.required(fields.approved_by.caption) : null], fields.approved_by.isInvalid],
         ["created_at", [fields.created_at.visible && fields.created_at.required ? ew.Validators.required(fields.created_at.caption) : null, ew.Validators.datetime(0)], fields.created_at.isInvalid],
@@ -138,6 +144,56 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->idnpd->Visible) { // idnpd ?>
+    <div id="r_idnpd" class="form-group row">
+        <label id="elh_npd_confirmprint_idnpd" for="x_idnpd" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_idnpd"><?= $Page->idnpd->caption() ?><?= $Page->idnpd->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idnpd->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_idnpd"><span id="el_npd_confirmprint_idnpd">
+<input type="<?= $Page->idnpd->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_idnpd" name="x_idnpd" id="x_idnpd" size="30" placeholder="<?= HtmlEncode($Page->idnpd->getPlaceHolder()) ?>" value="<?= $Page->idnpd->EditValue ?>"<?= $Page->idnpd->editAttributes() ?> aria-describedby="x_idnpd_help">
+<?= $Page->idnpd->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->idnpd->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->tglterima->Visible) { // tglterima ?>
+    <div id="r_tglterima" class="form-group row">
+        <label id="elh_npd_confirmprint_tglterima" for="x_tglterima" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tglterima"><?= $Page->tglterima->caption() ?><?= $Page->tglterima->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglterima->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_tglterima"><span id="el_npd_confirmprint_tglterima">
+<input type="<?= $Page->tglterima->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tglterima" name="x_tglterima" id="x_tglterima" placeholder="<?= HtmlEncode($Page->tglterima->getPlaceHolder()) ?>" value="<?= $Page->tglterima->EditValue ?>"<?= $Page->tglterima->editAttributes() ?> aria-describedby="x_tglterima_help">
+<?= $Page->tglterima->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tglterima->getErrorMessage() ?></div>
+<?php if (!$Page->tglterima->ReadOnly && !$Page->tglterima->Disabled && !isset($Page->tglterima->EditAttrs["readonly"]) && !isset($Page->tglterima->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
+    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tglterima", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->tglsubmit->Visible) { // tglsubmit ?>
+    <div id="r_tglsubmit" class="form-group row">
+        <label id="elh_npd_confirmprint_tglsubmit" for="x_tglsubmit" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tglsubmit"><?= $Page->tglsubmit->caption() ?><?= $Page->tglsubmit->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglsubmit->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_tglsubmit"><span id="el_npd_confirmprint_tglsubmit">
+<input type="<?= $Page->tglsubmit->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tglsubmit" name="x_tglsubmit" id="x_tglsubmit" placeholder="<?= HtmlEncode($Page->tglsubmit->getPlaceHolder()) ?>" value="<?= $Page->tglsubmit->EditValue ?>"<?= $Page->tglsubmit->editAttributes() ?> aria-describedby="x_tglsubmit_help">
+<?= $Page->tglsubmit->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tglsubmit->getErrorMessage() ?></div>
+<?php if (!$Page->tglsubmit->ReadOnly && !$Page->tglsubmit->Disabled && !isset($Page->tglsubmit->EditAttrs["readonly"]) && !isset($Page->tglsubmit->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
+    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tglsubmit", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->brand->Visible) { // brand ?>
     <div id="r_brand" class="form-group row">
         <label id="elh_npd_confirmprint_brand" for="x_brand" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_brand"><?= $Page->brand->caption() ?><?= $Page->brand->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
@@ -150,18 +206,18 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tglkirim->Visible) { // tglkirim ?>
-    <div id="r_tglkirim" class="form-group row">
-        <label id="elh_npd_confirmprint_tglkirim" for="x_tglkirim" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tglkirim"><?= $Page->tglkirim->caption() ?><?= $Page->tglkirim->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglkirim->cellAttributes() ?>>
-<template id="tpx_npd_confirmprint_tglkirim"><span id="el_npd_confirmprint_tglkirim">
-<input type="<?= $Page->tglkirim->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tglkirim" name="x_tglkirim" id="x_tglkirim" placeholder="<?= HtmlEncode($Page->tglkirim->getPlaceHolder()) ?>" value="<?= $Page->tglkirim->EditValue ?>"<?= $Page->tglkirim->editAttributes() ?> aria-describedby="x_tglkirim_help">
-<?= $Page->tglkirim->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tglkirim->getErrorMessage() ?></div>
-<?php if (!$Page->tglkirim->ReadOnly && !$Page->tglkirim->Disabled && !isset($Page->tglkirim->EditAttrs["readonly"]) && !isset($Page->tglkirim->EditAttrs["disabled"])) { ?>
+<?php if ($Page->tglkirimprimer->Visible) { // tglkirimprimer ?>
+    <div id="r_tglkirimprimer" class="form-group row">
+        <label id="elh_npd_confirmprint_tglkirimprimer" for="x_tglkirimprimer" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tglkirimprimer"><?= $Page->tglkirimprimer->caption() ?><?= $Page->tglkirimprimer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglkirimprimer->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_tglkirimprimer"><span id="el_npd_confirmprint_tglkirimprimer">
+<input type="<?= $Page->tglkirimprimer->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tglkirimprimer" name="x_tglkirimprimer" id="x_tglkirimprimer" placeholder="<?= HtmlEncode($Page->tglkirimprimer->getPlaceHolder()) ?>" value="<?= $Page->tglkirimprimer->EditValue ?>"<?= $Page->tglkirimprimer->editAttributes() ?> aria-describedby="x_tglkirimprimer_help">
+<?= $Page->tglkirimprimer->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tglkirimprimer->getErrorMessage() ?></div>
+<?php if (!$Page->tglkirimprimer->ReadOnly && !$Page->tglkirimprimer->Disabled && !isset($Page->tglkirimprimer->EditAttrs["readonly"]) && !isset($Page->tglkirimprimer->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tglkirim", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tglkirimprimer", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 });
 </script>
 <?php } ?>
@@ -169,18 +225,18 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->tgldisetujui->Visible) { // tgldisetujui ?>
-    <div id="r_tgldisetujui" class="form-group row">
-        <label id="elh_npd_confirmprint_tgldisetujui" for="x_tgldisetujui" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tgldisetujui"><?= $Page->tgldisetujui->caption() ?><?= $Page->tgldisetujui->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tgldisetujui->cellAttributes() ?>>
-<template id="tpx_npd_confirmprint_tgldisetujui"><span id="el_npd_confirmprint_tgldisetujui">
-<input type="<?= $Page->tgldisetujui->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tgldisetujui" name="x_tgldisetujui" id="x_tgldisetujui" placeholder="<?= HtmlEncode($Page->tgldisetujui->getPlaceHolder()) ?>" value="<?= $Page->tgldisetujui->EditValue ?>"<?= $Page->tgldisetujui->editAttributes() ?> aria-describedby="x_tgldisetujui_help">
-<?= $Page->tgldisetujui->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->tgldisetujui->getErrorMessage() ?></div>
-<?php if (!$Page->tgldisetujui->ReadOnly && !$Page->tgldisetujui->Disabled && !isset($Page->tgldisetujui->EditAttrs["readonly"]) && !isset($Page->tgldisetujui->EditAttrs["disabled"])) { ?>
+<?php if ($Page->tgldisetujuiprimer->Visible) { // tgldisetujuiprimer ?>
+    <div id="r_tgldisetujuiprimer" class="form-group row">
+        <label id="elh_npd_confirmprint_tgldisetujuiprimer" for="x_tgldisetujuiprimer" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tgldisetujuiprimer"><?= $Page->tgldisetujuiprimer->caption() ?><?= $Page->tgldisetujuiprimer->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tgldisetujuiprimer->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_tgldisetujuiprimer"><span id="el_npd_confirmprint_tgldisetujuiprimer">
+<input type="<?= $Page->tgldisetujuiprimer->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tgldisetujuiprimer" name="x_tgldisetujuiprimer" id="x_tgldisetujuiprimer" placeholder="<?= HtmlEncode($Page->tgldisetujuiprimer->getPlaceHolder()) ?>" value="<?= $Page->tgldisetujuiprimer->EditValue ?>"<?= $Page->tgldisetujuiprimer->editAttributes() ?> aria-describedby="x_tgldisetujuiprimer_help">
+<?= $Page->tgldisetujuiprimer->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tgldisetujuiprimer->getErrorMessage() ?></div>
+<?php if (!$Page->tgldisetujuiprimer->ReadOnly && !$Page->tgldisetujuiprimer->Disabled && !isset($Page->tgldisetujuiprimer->EditAttrs["readonly"]) && !isset($Page->tgldisetujuiprimer->EditAttrs["disabled"])) { ?>
 <script>
 loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
-    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tgldisetujui", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tgldisetujuiprimer", {"ignoreReadonly":true,"useCurrent":false,"format":0});
 });
 </script>
 <?php } ?>
@@ -236,6 +292,44 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->tglkirimsekunder->Visible) { // tglkirimsekunder ?>
+    <div id="r_tglkirimsekunder" class="form-group row">
+        <label id="elh_npd_confirmprint_tglkirimsekunder" for="x_tglkirimsekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tglkirimsekunder"><?= $Page->tglkirimsekunder->caption() ?><?= $Page->tglkirimsekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tglkirimsekunder->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_tglkirimsekunder"><span id="el_npd_confirmprint_tglkirimsekunder">
+<input type="<?= $Page->tglkirimsekunder->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tglkirimsekunder" name="x_tglkirimsekunder" id="x_tglkirimsekunder" placeholder="<?= HtmlEncode($Page->tglkirimsekunder->getPlaceHolder()) ?>" value="<?= $Page->tglkirimsekunder->EditValue ?>"<?= $Page->tglkirimsekunder->editAttributes() ?> aria-describedby="x_tglkirimsekunder_help">
+<?= $Page->tglkirimsekunder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tglkirimsekunder->getErrorMessage() ?></div>
+<?php if (!$Page->tglkirimsekunder->ReadOnly && !$Page->tglkirimsekunder->Disabled && !isset($Page->tglkirimsekunder->EditAttrs["readonly"]) && !isset($Page->tglkirimsekunder->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
+    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tglkirimsekunder", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->tgldisetujuisekunder->Visible) { // tgldisetujuisekunder ?>
+    <div id="r_tgldisetujuisekunder" class="form-group row">
+        <label id="elh_npd_confirmprint_tgldisetujuisekunder" for="x_tgldisetujuisekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_tgldisetujuisekunder"><?= $Page->tgldisetujuisekunder->caption() ?><?= $Page->tgldisetujuisekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->tgldisetujuisekunder->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_tgldisetujuisekunder"><span id="el_npd_confirmprint_tgldisetujuisekunder">
+<input type="<?= $Page->tgldisetujuisekunder->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_tgldisetujuisekunder" name="x_tgldisetujuisekunder" id="x_tgldisetujuisekunder" placeholder="<?= HtmlEncode($Page->tgldisetujuisekunder->getPlaceHolder()) ?>" value="<?= $Page->tgldisetujuisekunder->EditValue ?>"<?= $Page->tgldisetujuisekunder->editAttributes() ?> aria-describedby="x_tgldisetujuisekunder_help">
+<?= $Page->tgldisetujuisekunder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->tgldisetujuisekunder->getErrorMessage() ?></div>
+<?php if (!$Page->tgldisetujuisekunder->ReadOnly && !$Page->tgldisetujuisekunder->Disabled && !isset($Page->tgldisetujuisekunder->EditAttrs["readonly"]) && !isset($Page->tgldisetujuisekunder->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
+    ew.createDateTimePicker("fnpd_confirmprintedit", "x_tgldisetujuisekunder", {"ignoreReadonly":true,"useCurrent":false,"format":0});
+});
+</script>
+<?php } ?>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->desainsekunder->Visible) { // desainsekunder ?>
     <div id="r_desainsekunder" class="form-group row">
         <label id="elh_npd_confirmprint_desainsekunder" for="x_desainsekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_desainsekunder"><?= $Page->desainsekunder->caption() ?><?= $Page->desainsekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
@@ -248,38 +342,50 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->materialinnerbox->Visible) { // materialinnerbox ?>
-    <div id="r_materialinnerbox" class="form-group row">
-        <label id="elh_npd_confirmprint_materialinnerbox" for="x_materialinnerbox" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_materialinnerbox"><?= $Page->materialinnerbox->caption() ?><?= $Page->materialinnerbox->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->materialinnerbox->cellAttributes() ?>>
-<template id="tpx_npd_confirmprint_materialinnerbox"><span id="el_npd_confirmprint_materialinnerbox">
-<input type="<?= $Page->materialinnerbox->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_materialinnerbox" name="x_materialinnerbox" id="x_materialinnerbox" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->materialinnerbox->getPlaceHolder()) ?>" value="<?= $Page->materialinnerbox->EditValue ?>"<?= $Page->materialinnerbox->editAttributes() ?> aria-describedby="x_materialinnerbox_help">
-<?= $Page->materialinnerbox->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->materialinnerbox->getErrorMessage() ?></div>
+<?php if ($Page->materialsekunder->Visible) { // materialsekunder ?>
+    <div id="r_materialsekunder" class="form-group row">
+        <label id="elh_npd_confirmprint_materialsekunder" for="x_materialsekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_materialsekunder"><?= $Page->materialsekunder->caption() ?><?= $Page->materialsekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->materialsekunder->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_materialsekunder"><span id="el_npd_confirmprint_materialsekunder">
+<input type="<?= $Page->materialsekunder->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_materialsekunder" name="x_materialsekunder" id="x_materialsekunder" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->materialsekunder->getPlaceHolder()) ?>" value="<?= $Page->materialsekunder->EditValue ?>"<?= $Page->materialsekunder->editAttributes() ?> aria-describedby="x_materialsekunder_help">
+<?= $Page->materialsekunder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->materialsekunder->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aplikasiinnerbox->Visible) { // aplikasiinnerbox ?>
-    <div id="r_aplikasiinnerbox" class="form-group row">
-        <label id="elh_npd_confirmprint_aplikasiinnerbox" for="x_aplikasiinnerbox" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_aplikasiinnerbox"><?= $Page->aplikasiinnerbox->caption() ?><?= $Page->aplikasiinnerbox->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasiinnerbox->cellAttributes() ?>>
-<template id="tpx_npd_confirmprint_aplikasiinnerbox"><span id="el_npd_confirmprint_aplikasiinnerbox">
-<input type="<?= $Page->aplikasiinnerbox->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_aplikasiinnerbox" name="x_aplikasiinnerbox" id="x_aplikasiinnerbox" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aplikasiinnerbox->getPlaceHolder()) ?>" value="<?= $Page->aplikasiinnerbox->EditValue ?>"<?= $Page->aplikasiinnerbox->editAttributes() ?> aria-describedby="x_aplikasiinnerbox_help">
-<?= $Page->aplikasiinnerbox->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->aplikasiinnerbox->getErrorMessage() ?></div>
+<?php if ($Page->aplikasisekunder->Visible) { // aplikasisekunder ?>
+    <div id="r_aplikasisekunder" class="form-group row">
+        <label id="elh_npd_confirmprint_aplikasisekunder" for="x_aplikasisekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_aplikasisekunder"><?= $Page->aplikasisekunder->caption() ?><?= $Page->aplikasisekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aplikasisekunder->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_aplikasisekunder"><span id="el_npd_confirmprint_aplikasisekunder">
+<input type="<?= $Page->aplikasisekunder->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_aplikasisekunder" name="x_aplikasisekunder" id="x_aplikasisekunder" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->aplikasisekunder->getPlaceHolder()) ?>" value="<?= $Page->aplikasisekunder->EditValue ?>"<?= $Page->aplikasisekunder->editAttributes() ?> aria-describedby="x_aplikasisekunder_help">
+<?= $Page->aplikasisekunder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->aplikasisekunder->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->jumlahcetak->Visible) { // jumlahcetak ?>
-    <div id="r_jumlahcetak" class="form-group row">
-        <label id="elh_npd_confirmprint_jumlahcetak" for="x_jumlahcetak" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_jumlahcetak"><?= $Page->jumlahcetak->caption() ?><?= $Page->jumlahcetak->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jumlahcetak->cellAttributes() ?>>
-<template id="tpx_npd_confirmprint_jumlahcetak"><span id="el_npd_confirmprint_jumlahcetak">
-<input type="<?= $Page->jumlahcetak->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_jumlahcetak" name="x_jumlahcetak" id="x_jumlahcetak" size="30" placeholder="<?= HtmlEncode($Page->jumlahcetak->getPlaceHolder()) ?>" value="<?= $Page->jumlahcetak->EditValue ?>"<?= $Page->jumlahcetak->editAttributes() ?> aria-describedby="x_jumlahcetak_help">
-<?= $Page->jumlahcetak->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->jumlahcetak->getErrorMessage() ?></div>
+<?php if ($Page->jumlahcetaksekunder->Visible) { // jumlahcetaksekunder ?>
+    <div id="r_jumlahcetaksekunder" class="form-group row">
+        <label id="elh_npd_confirmprint_jumlahcetaksekunder" for="x_jumlahcetaksekunder" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_jumlahcetaksekunder"><?= $Page->jumlahcetaksekunder->caption() ?><?= $Page->jumlahcetaksekunder->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->jumlahcetaksekunder->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_jumlahcetaksekunder"><span id="el_npd_confirmprint_jumlahcetaksekunder">
+<input type="<?= $Page->jumlahcetaksekunder->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_jumlahcetaksekunder" name="x_jumlahcetaksekunder" id="x_jumlahcetaksekunder" size="30" placeholder="<?= HtmlEncode($Page->jumlahcetaksekunder->getPlaceHolder()) ?>" value="<?= $Page->jumlahcetaksekunder->EditValue ?>"<?= $Page->jumlahcetaksekunder->editAttributes() ?> aria-describedby="x_jumlahcetaksekunder_help">
+<?= $Page->jumlahcetaksekunder->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->jumlahcetaksekunder->getErrorMessage() ?></div>
+</span></template>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->submitted_by->Visible) { // submitted_by ?>
+    <div id="r_submitted_by" class="form-group row">
+        <label id="elh_npd_confirmprint_submitted_by" for="x_submitted_by" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_confirmprint_submitted_by"><?= $Page->submitted_by->caption() ?><?= $Page->submitted_by->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->submitted_by->cellAttributes() ?>>
+<template id="tpx_npd_confirmprint_submitted_by"><span id="el_npd_confirmprint_submitted_by">
+<input type="<?= $Page->submitted_by->getInputTextType() ?>" data-table="npd_confirmprint" data-field="x_submitted_by" name="x_submitted_by" id="x_submitted_by" size="30" placeholder="<?= HtmlEncode($Page->submitted_by->getPlaceHolder()) ?>" value="<?= $Page->submitted_by->EditValue ?>"<?= $Page->submitted_by->editAttributes() ?> aria-describedby="x_submitted_by_help">
+<?= $Page->submitted_by->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->submitted_by->getErrorMessage() ?></div>
 </span></template>
 </div></div>
     </div>
@@ -396,8 +502,8 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
         <div class="card-body row">
             <div class="col-6">
                 <div class="form-group row">
-                    <label class="col-4 col-form-label text-right"><slot class="ew-slot" name="tpcaption_idnpd"></slot></label>
-                    <div class="col-7"><slot class="ew-slot" name="tpx_idnpd"></slot></div>
+                    <label class="col-4 col-form-label text-right"><?= $Page->idnpd->caption() ?></label>
+                    <div class="col-7"><slot class="ew-slot" name="tpx_npd_confirmprint_idnpd"></slot></div>
                 </div>
                 <div class="form-group row">
                     <label class="col-4 col-form-label text-right">Kode Customer</label>
@@ -410,12 +516,12 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
             </div>
             <div class="col-6">
                 <div class="form-group row">
-                    <label class="col-4 col-form-label text-right"><slot class="ew-slot" name="tpcaption_tglterima"></slot></label>
-                    <div class="col-8"><slot class="ew-slot" name="tpx_tglterima"></slot></div>
+                    <label class="col-4 col-form-label text-right"><?= $Page->tglterima->caption() ?></label>
+                    <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tglterima"></slot></div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-4 col-form-label text-right"><slot class="ew-slot" name="tpcaption_tglsubmit"></slot></label>
-                    <div class="col-8"><slot class="ew-slot" name="tpx_tglsubmit"></slot></div>
+                    <label class="col-4 col-form-label text-right"><?= $Page->tglsubmit->caption() ?></label>
+                    <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tglsubmit"></slot></div>
                 </div>
             </div>
         </div>
@@ -437,12 +543,12 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->tglkirim->caption() ?></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tglkirim"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->tglkirimprimer->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tglkirimprimer"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->tgldisetujui->caption() ?></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tgldisetujui"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->tgldisetujuiprimer->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tgldisetujuiprimer"></slot></div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->desainprimer->caption() ?></label>
@@ -468,20 +574,28 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
         </div>
         <div class="card-body">
             <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->tglkirimsekunder->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tglkirimsekunder"></slot></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-2 col-form-label text-right"><?= $Page->tgldisetujuisekunder->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_tgldisetujuisekunder"></slot></div>
+            </div>
+            <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->desainsekunder->caption() ?></label>
                 <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_desainsekunder"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->materialinnerbox->caption() ?></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_materialinnerbox"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->materialsekunder->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_materialsekunder"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->aplikasiinnerbox->caption() ?></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_aplikasiinnerbox"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->aplikasisekunder->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_aplikasisekunder"></slot></div>
             </div>
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><?= $Page->jumlahcetak->caption() ?></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_jumlahcetak"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->jumlahcetaksekunder->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_jumlahcetaksekunder"></slot></div>
             </div>
         </div>
     </div>
@@ -491,8 +605,8 @@ loadjs.ready(["fnpd_confirmprintedit", "datetimepicker"], function() {
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-2 col-form-label text-right"><slot class="ew-slot" name="tpcaption_submitted_by"></slot></label>
-                <div class="col-8"><slot class="ew-slot" name="tpx_submitted_by"></slot></div>
+                <label class="col-2 col-form-label text-right"><?= $Page->submitted_by->caption() ?></label>
+                <div class="col-8"><slot class="ew-slot" name="tpx_npd_confirmprint_submitted_by"></slot></div>
             </div>
             <div class="form-group row">
                 <label class="col-2 col-form-label text-right"><?= $Page->checked_by->caption() ?></label>

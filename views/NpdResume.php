@@ -72,7 +72,7 @@ $NpdResume = &$Page;
 					<ul class="pagination float-left">
 					<?php 
 					$link = CurrentPage()->PageObjName ."?page=%d";
-					if ($totalPages > 0 ) {
+					if ($totalPages > 1) {
 						if ($page > 2 ) { 
 							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">First</a></li>", 1); 
 						}
@@ -81,7 +81,7 @@ $NpdResume = &$Page;
 							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">Previous</a></li>", $page - 1); 
 						}
 
-						for($x = 1; $x <= $totalPages; $x++) {
+						for ($x = 1; $x <= $totalPages; $x++) {
 							if ($page == $x) {
 								echo "<li class=\"page-item disabled\"><a href=\"#\" class=\"page-link\">{$x}</a></li>";
 							} else {

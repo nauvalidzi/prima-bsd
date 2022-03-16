@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -374,15 +374,14 @@ class StockOrderDetailDelete extends StockOrderDetail
     {
         global $ExportType, $CustomExportType, $ExportFileName, $UserProfile, $Language, $Security, $CurrentForm;
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
-        $this->pid->setVisibility();
+        $this->id->Visible = false;
+        $this->pid->Visible = false;
         $this->idbrand->setVisibility();
         $this->idproduct->setVisibility();
         $this->stok_akhir->setVisibility();
-        $this->jumlah->setVisibility();
         $this->sisa->setVisibility();
-        $this->keterangan->Visible = false;
-        $this->aktif->setVisibility();
+        $this->jumlah->setVisibility();
+        $this->keterangan->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -397,6 +396,8 @@ class StockOrderDetailDelete extends StockOrderDetail
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idbrand);
+        $this->setupLookupOptions($this->idproduct);
 
         // Set up master/detail parameters
         $this->setupMasterParms();
@@ -553,10 +554,9 @@ class StockOrderDetailDelete extends StockOrderDetail
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idproduct->setDbValue($row['idproduct']);
         $this->stok_akhir->setDbValue($row['stok_akhir']);
-        $this->jumlah->setDbValue($row['jumlah']);
         $this->sisa->setDbValue($row['sisa']);
+        $this->jumlah->setDbValue($row['jumlah']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->aktif->setDbValue($row['aktif']);
     }
 
     // Return a row with default values
@@ -568,10 +568,9 @@ class StockOrderDetailDelete extends StockOrderDetail
         $row['idbrand'] = null;
         $row['idproduct'] = null;
         $row['stok_akhir'] = null;
-        $row['jumlah'] = null;
         $row['sisa'] = null;
+        $row['jumlah'] = null;
         $row['keterangan'] = null;
-        $row['aktif'] = null;
         return $row;
     }
 
@@ -590,6 +589,7 @@ class StockOrderDetailDelete extends StockOrderDetail
         // id
 
         // pid
+        $this->pid->CellCssStyle = "white-space: nowrap;";
 
         // idbrand
 
@@ -597,31 +597,56 @@ class StockOrderDetailDelete extends StockOrderDetail
 
         // stok_akhir
 
-        // jumlah
-
         // sisa
 
-        // keterangan
+        // jumlah
 
-        // aktif
+        // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // pid
-            $this->pid->ViewValue = $this->pid->CurrentValue;
-            $this->pid->ViewValue = FormatNumber($this->pid->ViewValue, 0, -2, -2, -2);
-            $this->pid->ViewCustomAttributes = "";
-
             // idbrand
-            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-            $this->idbrand->ViewValue = FormatNumber($this->idbrand->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->ViewValue = null;
+            }
             $this->idbrand->ViewCustomAttributes = "";
 
             // idproduct
-            $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
-            $this->idproduct->ViewValue = FormatNumber($this->idproduct->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idproduct->CurrentValue));
+            if ($curVal != "") {
+                $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
+                if ($this->idproduct->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idproduct`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idproduct->Lookup->renderViewRow($rswrk[0]);
+                        $this->idproduct->ViewValue = $this->idproduct->displayValue($arwrk);
+                    } else {
+                        $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idproduct->ViewValue = null;
+            }
             $this->idproduct->ViewCustomAttributes = "";
 
             // stok_akhir
@@ -629,33 +654,19 @@ class StockOrderDetailDelete extends StockOrderDetail
             $this->stok_akhir->ViewValue = FormatNumber($this->stok_akhir->ViewValue, 0, -2, -2, -2);
             $this->stok_akhir->ViewCustomAttributes = "";
 
-            // jumlah
-            $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
-            $this->jumlah->ViewCustomAttributes = "";
-
             // sisa
             $this->sisa->ViewValue = $this->sisa->CurrentValue;
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
             $this->sisa->ViewCustomAttributes = "";
 
-            // aktif
-            if (ConvertToBool($this->aktif->CurrentValue)) {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
-            } else {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
-            }
-            $this->aktif->ViewCustomAttributes = "";
+            // jumlah
+            $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
+            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -1, -2, -2);
+            $this->jumlah->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
-            // pid
-            $this->pid->LinkCustomAttributes = "";
-            $this->pid->HrefValue = "";
-            $this->pid->TooltipValue = "";
+            // keterangan
+            $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
+            $this->keterangan->ViewCustomAttributes = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -672,20 +683,20 @@ class StockOrderDetailDelete extends StockOrderDetail
             $this->stok_akhir->HrefValue = "";
             $this->stok_akhir->TooltipValue = "";
 
-            // jumlah
-            $this->jumlah->LinkCustomAttributes = "";
-            $this->jumlah->HrefValue = "";
-            $this->jumlah->TooltipValue = "";
-
             // sisa
             $this->sisa->LinkCustomAttributes = "";
             $this->sisa->HrefValue = "";
             $this->sisa->TooltipValue = "";
 
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
+            // jumlah
+            $this->jumlah->LinkCustomAttributes = "";
+            $this->jumlah->HrefValue = "";
+            $this->jumlah->TooltipValue = "";
+
+            // keterangan
+            $this->keterangan->LinkCustomAttributes = "";
+            $this->keterangan->HrefValue = "";
+            $this->keterangan->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -870,7 +881,9 @@ class StockOrderDetailDelete extends StockOrderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_aktif":
+                case "x_idbrand":
+                    break;
+                case "x_idproduct":
                     break;
                 default:
                     $lookupFilter = "";

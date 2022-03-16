@@ -1473,6 +1473,9 @@ SORTHTML;
 
         // check untuk close order
         checkCloseOrder($rsnew['idorder_detail']);
+
+        // new stock
+        //stok_trx($rsnew['id'], 'detaildelivery-in', $idproduct, $rsnew['jumlahkirim'], 'masuk');
         return true;
     }
 

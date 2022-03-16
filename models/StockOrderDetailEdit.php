@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPMaker2021\distributor;
+namespace PHPMaker2021\production2;
 
 use Doctrine\DBAL\ParameterType;
 
@@ -467,15 +467,14 @@ class StockOrderDetailEdit extends StockOrderDetail
         // Create form object
         $CurrentForm = new HttpForm();
         $this->CurrentAction = Param("action"); // Set up current action
-        $this->id->setVisibility();
-        $this->pid->setVisibility();
+        $this->id->Visible = false;
+        $this->pid->Visible = false;
         $this->idbrand->setVisibility();
         $this->idproduct->setVisibility();
         $this->stok_akhir->setVisibility();
-        $this->jumlah->setVisibility();
         $this->sisa->setVisibility();
+        $this->jumlah->setVisibility();
         $this->keterangan->setVisibility();
-        $this->aktif->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Do not use lookup cache
@@ -490,6 +489,8 @@ class StockOrderDetailEdit extends StockOrderDetail
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->idbrand);
+        $this->setupLookupOptions($this->idproduct);
 
         // Check modal
         if ($this->IsModal) {
@@ -659,22 +660,6 @@ class StockOrderDetailEdit extends StockOrderDetail
         // Load from form
         global $CurrentForm;
 
-        // Check field name 'id' first before field var 'x_id'
-        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
-        if (!$this->id->IsDetailKey) {
-            $this->id->setFormValue($val);
-        }
-
-        // Check field name 'pid' first before field var 'x_pid'
-        $val = $CurrentForm->hasValue("pid") ? $CurrentForm->getValue("pid") : $CurrentForm->getValue("x_pid");
-        if (!$this->pid->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->pid->Visible = false; // Disable update for API request
-            } else {
-                $this->pid->setFormValue($val);
-            }
-        }
-
         // Check field name 'idbrand' first before field var 'x_idbrand'
         $val = $CurrentForm->hasValue("idbrand") ? $CurrentForm->getValue("idbrand") : $CurrentForm->getValue("x_idbrand");
         if (!$this->idbrand->IsDetailKey) {
@@ -705,16 +690,6 @@ class StockOrderDetailEdit extends StockOrderDetail
             }
         }
 
-        // Check field name 'jumlah' first before field var 'x_jumlah'
-        $val = $CurrentForm->hasValue("jumlah") ? $CurrentForm->getValue("jumlah") : $CurrentForm->getValue("x_jumlah");
-        if (!$this->jumlah->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->jumlah->Visible = false; // Disable update for API request
-            } else {
-                $this->jumlah->setFormValue($val);
-            }
-        }
-
         // Check field name 'sisa' first before field var 'x_sisa'
         $val = $CurrentForm->hasValue("sisa") ? $CurrentForm->getValue("sisa") : $CurrentForm->getValue("x_sisa");
         if (!$this->sisa->IsDetailKey) {
@@ -722,6 +697,16 @@ class StockOrderDetailEdit extends StockOrderDetail
                 $this->sisa->Visible = false; // Disable update for API request
             } else {
                 $this->sisa->setFormValue($val);
+            }
+        }
+
+        // Check field name 'jumlah' first before field var 'x_jumlah'
+        $val = $CurrentForm->hasValue("jumlah") ? $CurrentForm->getValue("jumlah") : $CurrentForm->getValue("x_jumlah");
+        if (!$this->jumlah->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->jumlah->Visible = false; // Disable update for API request
+            } else {
+                $this->jumlah->setFormValue($val);
             }
         }
 
@@ -735,14 +720,10 @@ class StockOrderDetailEdit extends StockOrderDetail
             }
         }
 
-        // Check field name 'aktif' first before field var 'x_aktif'
-        $val = $CurrentForm->hasValue("aktif") ? $CurrentForm->getValue("aktif") : $CurrentForm->getValue("x_aktif");
-        if (!$this->aktif->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->aktif->Visible = false; // Disable update for API request
-            } else {
-                $this->aktif->setFormValue($val);
-            }
+        // Check field name 'id' first before field var 'x_id'
+        $val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
+        if (!$this->id->IsDetailKey) {
+            $this->id->setFormValue($val);
         }
     }
 
@@ -751,14 +732,12 @@ class StockOrderDetailEdit extends StockOrderDetail
     {
         global $CurrentForm;
         $this->id->CurrentValue = $this->id->FormValue;
-        $this->pid->CurrentValue = $this->pid->FormValue;
         $this->idbrand->CurrentValue = $this->idbrand->FormValue;
         $this->idproduct->CurrentValue = $this->idproduct->FormValue;
         $this->stok_akhir->CurrentValue = $this->stok_akhir->FormValue;
-        $this->jumlah->CurrentValue = $this->jumlah->FormValue;
         $this->sisa->CurrentValue = $this->sisa->FormValue;
+        $this->jumlah->CurrentValue = $this->jumlah->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
-        $this->aktif->CurrentValue = $this->aktif->FormValue;
     }
 
     /**
@@ -813,10 +792,9 @@ class StockOrderDetailEdit extends StockOrderDetail
         $this->idbrand->setDbValue($row['idbrand']);
         $this->idproduct->setDbValue($row['idproduct']);
         $this->stok_akhir->setDbValue($row['stok_akhir']);
-        $this->jumlah->setDbValue($row['jumlah']);
         $this->sisa->setDbValue($row['sisa']);
+        $this->jumlah->setDbValue($row['jumlah']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->aktif->setDbValue($row['aktif']);
     }
 
     // Return a row with default values
@@ -828,10 +806,9 @@ class StockOrderDetailEdit extends StockOrderDetail
         $row['idbrand'] = null;
         $row['idproduct'] = null;
         $row['stok_akhir'] = null;
-        $row['jumlah'] = null;
         $row['sisa'] = null;
+        $row['jumlah'] = null;
         $row['keterangan'] = null;
-        $row['aktif'] = null;
         return $row;
     }
 
@@ -873,31 +850,56 @@ class StockOrderDetailEdit extends StockOrderDetail
 
         // stok_akhir
 
-        // jumlah
-
         // sisa
 
-        // keterangan
+        // jumlah
 
-        // aktif
+        // keterangan
         if ($this->RowType == ROWTYPE_VIEW) {
             // id
             $this->id->ViewValue = $this->id->CurrentValue;
             $this->id->ViewCustomAttributes = "";
 
-            // pid
-            $this->pid->ViewValue = $this->pid->CurrentValue;
-            $this->pid->ViewValue = FormatNumber($this->pid->ViewValue, 0, -2, -2, -2);
-            $this->pid->ViewCustomAttributes = "";
-
             // idbrand
-            $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
-            $this->idbrand->ViewValue = FormatNumber($this->idbrand->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+                if ($this->idbrand->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idbrand->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idbrand->Lookup->renderViewRow($rswrk[0]);
+                        $this->idbrand->ViewValue = $this->idbrand->displayValue($arwrk);
+                    } else {
+                        $this->idbrand->ViewValue = $this->idbrand->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idbrand->ViewValue = null;
+            }
             $this->idbrand->ViewCustomAttributes = "";
 
             // idproduct
-            $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
-            $this->idproduct->ViewValue = FormatNumber($this->idproduct->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idproduct->CurrentValue));
+            if ($curVal != "") {
+                $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
+                if ($this->idproduct->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`idproduct`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idproduct->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idproduct->Lookup->renderViewRow($rswrk[0]);
+                        $this->idproduct->ViewValue = $this->idproduct->displayValue($arwrk);
+                    } else {
+                        $this->idproduct->ViewValue = $this->idproduct->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idproduct->ViewValue = null;
+            }
             $this->idproduct->ViewCustomAttributes = "";
 
             // stok_akhir
@@ -905,37 +907,19 @@ class StockOrderDetailEdit extends StockOrderDetail
             $this->stok_akhir->ViewValue = FormatNumber($this->stok_akhir->ViewValue, 0, -2, -2, -2);
             $this->stok_akhir->ViewCustomAttributes = "";
 
-            // jumlah
-            $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
-            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -2, -2, -2);
-            $this->jumlah->ViewCustomAttributes = "";
-
             // sisa
             $this->sisa->ViewValue = $this->sisa->CurrentValue;
             $this->sisa->ViewValue = FormatNumber($this->sisa->ViewValue, 0, -2, -2, -2);
             $this->sisa->ViewCustomAttributes = "";
 
+            // jumlah
+            $this->jumlah->ViewValue = $this->jumlah->CurrentValue;
+            $this->jumlah->ViewValue = FormatNumber($this->jumlah->ViewValue, 0, -1, -2, -2);
+            $this->jumlah->ViewCustomAttributes = "";
+
             // keterangan
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
-
-            // aktif
-            if (ConvertToBool($this->aktif->CurrentValue)) {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(1) != "" ? $this->aktif->tagCaption(1) : "Yes";
-            } else {
-                $this->aktif->ViewValue = $this->aktif->tagCaption(2) != "" ? $this->aktif->tagCaption(2) : "No";
-            }
-            $this->aktif->ViewCustomAttributes = "";
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
-            // pid
-            $this->pid->LinkCustomAttributes = "";
-            $this->pid->HrefValue = "";
-            $this->pid->TooltipValue = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -952,62 +936,82 @@ class StockOrderDetailEdit extends StockOrderDetail
             $this->stok_akhir->HrefValue = "";
             $this->stok_akhir->TooltipValue = "";
 
-            // jumlah
-            $this->jumlah->LinkCustomAttributes = "";
-            $this->jumlah->HrefValue = "";
-            $this->jumlah->TooltipValue = "";
-
             // sisa
             $this->sisa->LinkCustomAttributes = "";
             $this->sisa->HrefValue = "";
             $this->sisa->TooltipValue = "";
 
+            // jumlah
+            $this->jumlah->LinkCustomAttributes = "";
+            $this->jumlah->HrefValue = "";
+            $this->jumlah->TooltipValue = "";
+
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
-
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
         } elseif ($this->RowType == ROWTYPE_EDIT) {
-            // id
-            $this->id->EditAttrs["class"] = "form-control";
-            $this->id->EditCustomAttributes = "";
-            $this->id->EditValue = $this->id->CurrentValue;
-            $this->id->ViewCustomAttributes = "";
-
-            // pid
-            $this->pid->EditAttrs["class"] = "form-control";
-            $this->pid->EditCustomAttributes = "";
-            if ($this->pid->getSessionValue() != "") {
-                $this->pid->CurrentValue = GetForeignKeyValue($this->pid->getSessionValue());
-                $this->pid->ViewValue = $this->pid->CurrentValue;
-                $this->pid->ViewValue = FormatNumber($this->pid->ViewValue, 0, -2, -2, -2);
-                $this->pid->ViewCustomAttributes = "";
-            } else {
-                $this->pid->EditValue = HtmlEncode($this->pid->CurrentValue);
-                $this->pid->PlaceHolder = RemoveHtml($this->pid->caption());
-            }
-
             // idbrand
             $this->idbrand->EditAttrs["class"] = "form-control";
             $this->idbrand->EditCustomAttributes = "";
-            $this->idbrand->EditValue = HtmlEncode($this->idbrand->CurrentValue);
+            $curVal = trim(strval($this->idbrand->CurrentValue));
+            if ($curVal != "") {
+                $this->idbrand->ViewValue = $this->idbrand->lookupCacheOption($curVal);
+            } else {
+                $this->idbrand->ViewValue = $this->idbrand->Lookup !== null && is_array($this->idbrand->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idbrand->ViewValue !== null) { // Load from cache
+                $this->idbrand->EditValue = array_values($this->idbrand->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idbrand->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idbrand->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idbrand->EditValue = $arwrk;
+            }
             $this->idbrand->PlaceHolder = RemoveHtml($this->idbrand->caption());
 
             // idproduct
             $this->idproduct->EditAttrs["class"] = "form-control";
             $this->idproduct->EditCustomAttributes = "";
-            $this->idproduct->EditValue = HtmlEncode($this->idproduct->CurrentValue);
+            $curVal = trim(strval($this->idproduct->CurrentValue));
+            if ($curVal != "") {
+                $this->idproduct->ViewValue = $this->idproduct->lookupCacheOption($curVal);
+            } else {
+                $this->idproduct->ViewValue = $this->idproduct->Lookup !== null && is_array($this->idproduct->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idproduct->ViewValue !== null) { // Load from cache
+                $this->idproduct->EditValue = array_values($this->idproduct->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`idproduct`" . SearchString("=", $this->idproduct->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idproduct->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idproduct->EditValue = $arwrk;
+            }
             $this->idproduct->PlaceHolder = RemoveHtml($this->idproduct->caption());
 
             // stok_akhir
             $this->stok_akhir->EditAttrs["class"] = "form-control";
-            $this->stok_akhir->EditCustomAttributes = "";
+            $this->stok_akhir->EditCustomAttributes = "readonly";
             $this->stok_akhir->EditValue = HtmlEncode($this->stok_akhir->CurrentValue);
             $this->stok_akhir->PlaceHolder = RemoveHtml($this->stok_akhir->caption());
+
+            // sisa
+            $this->sisa->EditAttrs["class"] = "form-control";
+            $this->sisa->EditCustomAttributes = "readonly";
+            $this->sisa->EditValue = HtmlEncode($this->sisa->CurrentValue);
+            $this->sisa->PlaceHolder = RemoveHtml($this->sisa->caption());
 
             // jumlah
             $this->jumlah->EditAttrs["class"] = "form-control";
@@ -1015,32 +1019,13 @@ class StockOrderDetailEdit extends StockOrderDetail
             $this->jumlah->EditValue = HtmlEncode($this->jumlah->CurrentValue);
             $this->jumlah->PlaceHolder = RemoveHtml($this->jumlah->caption());
 
-            // sisa
-            $this->sisa->EditAttrs["class"] = "form-control";
-            $this->sisa->EditCustomAttributes = "";
-            $this->sisa->EditValue = HtmlEncode($this->sisa->CurrentValue);
-            $this->sisa->PlaceHolder = RemoveHtml($this->sisa->caption());
-
             // keterangan
             $this->keterangan->EditAttrs["class"] = "form-control";
             $this->keterangan->EditCustomAttributes = "";
             $this->keterangan->EditValue = HtmlEncode($this->keterangan->CurrentValue);
             $this->keterangan->PlaceHolder = RemoveHtml($this->keterangan->caption());
 
-            // aktif
-            $this->aktif->EditCustomAttributes = "";
-            $this->aktif->EditValue = $this->aktif->options(false);
-            $this->aktif->PlaceHolder = RemoveHtml($this->aktif->caption());
-
             // Edit refer script
-
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-
-            // pid
-            $this->pid->LinkCustomAttributes = "";
-            $this->pid->HrefValue = "";
 
             // idbrand
             $this->idbrand->LinkCustomAttributes = "";
@@ -1054,21 +1039,17 @@ class StockOrderDetailEdit extends StockOrderDetail
             $this->stok_akhir->LinkCustomAttributes = "";
             $this->stok_akhir->HrefValue = "";
 
-            // jumlah
-            $this->jumlah->LinkCustomAttributes = "";
-            $this->jumlah->HrefValue = "";
-
             // sisa
             $this->sisa->LinkCustomAttributes = "";
             $this->sisa->HrefValue = "";
 
+            // jumlah
+            $this->jumlah->LinkCustomAttributes = "";
+            $this->jumlah->HrefValue = "";
+
             // keterangan
             $this->keterangan->LinkCustomAttributes = "";
             $this->keterangan->HrefValue = "";
-
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
         }
         if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) { // Add/Edit/Search row
             $this->setupFieldTitles();
@@ -1089,34 +1070,15 @@ class StockOrderDetailEdit extends StockOrderDetail
         if (!Config("SERVER_VALIDATE")) {
             return true;
         }
-        if ($this->id->Required) {
-            if (!$this->id->IsDetailKey && EmptyValue($this->id->FormValue)) {
-                $this->id->addErrorMessage(str_replace("%s", $this->id->caption(), $this->id->RequiredErrorMessage));
-            }
-        }
-        if ($this->pid->Required) {
-            if (!$this->pid->IsDetailKey && EmptyValue($this->pid->FormValue)) {
-                $this->pid->addErrorMessage(str_replace("%s", $this->pid->caption(), $this->pid->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->pid->FormValue)) {
-            $this->pid->addErrorMessage($this->pid->getErrorMessage(false));
-        }
         if ($this->idbrand->Required) {
             if (!$this->idbrand->IsDetailKey && EmptyValue($this->idbrand->FormValue)) {
                 $this->idbrand->addErrorMessage(str_replace("%s", $this->idbrand->caption(), $this->idbrand->RequiredErrorMessage));
             }
         }
-        if (!CheckInteger($this->idbrand->FormValue)) {
-            $this->idbrand->addErrorMessage($this->idbrand->getErrorMessage(false));
-        }
         if ($this->idproduct->Required) {
             if (!$this->idproduct->IsDetailKey && EmptyValue($this->idproduct->FormValue)) {
                 $this->idproduct->addErrorMessage(str_replace("%s", $this->idproduct->caption(), $this->idproduct->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->idproduct->FormValue)) {
-            $this->idproduct->addErrorMessage($this->idproduct->getErrorMessage(false));
         }
         if ($this->stok_akhir->Required) {
             if (!$this->stok_akhir->IsDetailKey && EmptyValue($this->stok_akhir->FormValue)) {
@@ -1126,14 +1088,6 @@ class StockOrderDetailEdit extends StockOrderDetail
         if (!CheckInteger($this->stok_akhir->FormValue)) {
             $this->stok_akhir->addErrorMessage($this->stok_akhir->getErrorMessage(false));
         }
-        if ($this->jumlah->Required) {
-            if (!$this->jumlah->IsDetailKey && EmptyValue($this->jumlah->FormValue)) {
-                $this->jumlah->addErrorMessage(str_replace("%s", $this->jumlah->caption(), $this->jumlah->RequiredErrorMessage));
-            }
-        }
-        if (!CheckInteger($this->jumlah->FormValue)) {
-            $this->jumlah->addErrorMessage($this->jumlah->getErrorMessage(false));
-        }
         if ($this->sisa->Required) {
             if (!$this->sisa->IsDetailKey && EmptyValue($this->sisa->FormValue)) {
                 $this->sisa->addErrorMessage(str_replace("%s", $this->sisa->caption(), $this->sisa->RequiredErrorMessage));
@@ -1142,14 +1096,17 @@ class StockOrderDetailEdit extends StockOrderDetail
         if (!CheckInteger($this->sisa->FormValue)) {
             $this->sisa->addErrorMessage($this->sisa->getErrorMessage(false));
         }
+        if ($this->jumlah->Required) {
+            if (!$this->jumlah->IsDetailKey && EmptyValue($this->jumlah->FormValue)) {
+                $this->jumlah->addErrorMessage(str_replace("%s", $this->jumlah->caption(), $this->jumlah->RequiredErrorMessage));
+            }
+        }
+        if (!CheckInteger($this->jumlah->FormValue)) {
+            $this->jumlah->addErrorMessage($this->jumlah->getErrorMessage(false));
+        }
         if ($this->keterangan->Required) {
             if (!$this->keterangan->IsDetailKey && EmptyValue($this->keterangan->FormValue)) {
                 $this->keterangan->addErrorMessage(str_replace("%s", $this->keterangan->caption(), $this->keterangan->RequiredErrorMessage));
-            }
-        }
-        if ($this->aktif->Required) {
-            if ($this->aktif->FormValue == "") {
-                $this->aktif->addErrorMessage(str_replace("%s", $this->aktif->caption(), $this->aktif->RequiredErrorMessage));
             }
         }
 
@@ -1184,12 +1141,6 @@ class StockOrderDetailEdit extends StockOrderDetail
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // pid
-            if ($this->pid->getSessionValue() != "") {
-                $this->pid->ReadOnly = true;
-            }
-            $this->pid->setDbValueDef($rsnew, $this->pid->CurrentValue, 0, $this->pid->ReadOnly);
-
             // idbrand
             $this->idbrand->setDbValueDef($rsnew, $this->idbrand->CurrentValue, 0, $this->idbrand->ReadOnly);
 
@@ -1199,21 +1150,14 @@ class StockOrderDetailEdit extends StockOrderDetail
             // stok_akhir
             $this->stok_akhir->setDbValueDef($rsnew, $this->stok_akhir->CurrentValue, 0, $this->stok_akhir->ReadOnly);
 
-            // jumlah
-            $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, $this->jumlah->ReadOnly);
-
             // sisa
             $this->sisa->setDbValueDef($rsnew, $this->sisa->CurrentValue, 0, $this->sisa->ReadOnly);
 
-            // keterangan
-            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, "", $this->keterangan->ReadOnly);
+            // jumlah
+            $this->jumlah->setDbValueDef($rsnew, $this->jumlah->CurrentValue, 0, $this->jumlah->ReadOnly);
 
-            // aktif
-            $tmpBool = $this->aktif->CurrentValue;
-            if ($tmpBool != "1" && $tmpBool != "0") {
-                $tmpBool = !empty($tmpBool) ? "1" : "0";
-            }
-            $this->aktif->setDbValueDef($rsnew, $tmpBool, 0, $this->aktif->ReadOnly);
+            // keterangan
+            $this->keterangan->setDbValueDef($rsnew, $this->keterangan->CurrentValue, null, $this->keterangan->ReadOnly);
 
             // Check referential integrity for master table 'stock_order'
             $validMasterRecord = true;
@@ -1372,7 +1316,9 @@ class StockOrderDetailEdit extends StockOrderDetail
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_aktif":
+                case "x_idbrand":
+                    break;
+                case "x_idproduct":
                     break;
                 default:
                     $lookupFilter = "";
@@ -1496,6 +1442,10 @@ class StockOrderDetailEdit extends StockOrderDetail
     public function formCustomValidate(&$customError)
     {
         // Return error message in CustomError
+        $readonly = ExecuteScalar("SELECT readonly FROM stock_order WHERE id = {$this->pid->FormValue}");
+        if ($readonly > 0) {
+        	$customError = "Data tidak dapat diubah karena telah diproses.";
+        }
         return true;
     }
 }

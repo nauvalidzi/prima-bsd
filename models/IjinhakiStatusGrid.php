@@ -597,13 +597,6 @@ class IjinhakiStatusGrid extends IjinhakiStatus
         // Restore master/detail filter
         $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
         $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "ijinhaki") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "ijinhaki"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
 
@@ -2206,32 +2199,6 @@ class IjinhakiStatusGrid extends IjinhakiStatus
                 $userIdMsg = str_replace("%u", $this->created_by->CurrentValue, $userIdMsg);
                 $this->setFailureMessage($userIdMsg);
                 return false;
-            }
-        }
-
-        // Check if valid key values for master user
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-            $masterFilter = $this->sqlMasterFilter_ijinhaki();
-            if (strval($this->idijinhaki->CurrentValue) != "") {
-                $masterFilter = str_replace("@id@", AdjustSql($this->idijinhaki->CurrentValue, "DB"), $masterFilter);
-            } else {
-                $masterFilter = "";
-            }
-            if ($masterFilter != "") {
-                $rsmaster = Container("ijinhaki")->loadRs($masterFilter)->fetch(\PDO::FETCH_ASSOC);
-                $masterRecordExists = $rsmaster !== false;
-                $validMasterKey = true;
-                if ($masterRecordExists) {
-                    $validMasterKey = $Security->isValidUserID($rsmaster['created_by']);
-                } elseif ($this->getCurrentMasterTable() == "ijinhaki") {
-                    $validMasterKey = false;
-                }
-                if (!$validMasterKey) {
-                    $masterUserIdMsg = str_replace("%c", CurrentUserID(), $Language->phrase("UnAuthorizedMasterUserID"));
-                    $masterUserIdMsg = str_replace("%f", $masterFilter, $masterUserIdMsg);
-                    $this->setFailureMessage($masterUserIdMsg);
-                    return false;
-                }
             }
         }
 

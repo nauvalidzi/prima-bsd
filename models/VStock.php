@@ -94,8 +94,6 @@ class VStock extends DbTable
 
         // harga
         $this->harga = new DbField('v_stock', 'v_stock', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->harga->Nullable = false; // NOT NULL field
-        $this->harga->Required = true; // Required field
         $this->harga->Sortable = true; // Allow sort
         $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");

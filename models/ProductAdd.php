@@ -1767,7 +1767,7 @@ class ProductAdd extends Product
         $this->kemasanbarang->setDbValueDef($rsnew, $this->kemasanbarang->CurrentValue, null, false);
 
         // harga
-        $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, 0, false);
+        $this->harga->setDbValueDef($rsnew, $this->harga->CurrentValue, null, strval($this->harga->CurrentValue) == "");
 
         // bahan
         $this->bahan->setDbValueDef($rsnew, $this->bahan->CurrentValue, null, false);
@@ -1795,10 +1795,10 @@ class ProductAdd extends Product
         $this->tambahan->setDbValueDef($rsnew, $this->tambahan->CurrentValue, null, false);
 
         // ijinbpom
-        $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, 0, strval($this->ijinbpom->CurrentValue) == "");
+        $this->ijinbpom->setDbValueDef($rsnew, $this->ijinbpom->CurrentValue, null, strval($this->ijinbpom->CurrentValue) == "");
 
         // aktif
-        $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, 0, strval($this->aktif->CurrentValue) == "");
+        $this->aktif->setDbValueDef($rsnew, $this->aktif->CurrentValue, null, strval($this->aktif->CurrentValue) == "");
         if ($this->foto->Visible && !$this->foto->Upload->KeepFile) {
             $oldFiles = EmptyValue($this->foto->Upload->DbValue) ? [] : [$this->foto->htmlDecode($this->foto->Upload->DbValue)];
             if (!EmptyValue($this->foto->Upload->FileName)) {

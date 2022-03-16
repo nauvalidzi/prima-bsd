@@ -13,7 +13,7 @@ $ProductHistory = &$Page;
 	$laststok = ExecuteRow("SELECT stok_akhir FROM stocks WHERE idproduct = {$idproduct} AND id IN (SELECT MAX(id) FROM stocks GROUP BY idproduct)")['stok_akhir'];
 
 	// PAGINATION
-	$batas = 2;
+	$batas = 10;
 	$halaman = isset($_GET['halaman']) ? (int)$_GET['halaman'] : 1;
 	$halaman_awal = ($halaman>1) ? ($halaman * $batas) - $batas : 0;
 
@@ -75,7 +75,7 @@ $ProductHistory = &$Page;
 		</table>
 		<ul class="pagination justify-content-center">
 			<?php 
-				if ($total_halaman > 0 ) {
+				if ($total_halaman > 1) {
 					if ($halaman > 2) {
 						echo "<li class=\"page-item\"><a class=\"page-link\" href=\"?product={$idproduct}&halaman=1\">First</a></li>";
 					}

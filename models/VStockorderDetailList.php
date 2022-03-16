@@ -574,7 +574,6 @@ class VStockorderDetailList extends VStockorderDetail
         $this->nama_produk->setVisibility();
         $this->jumlah_order->setVisibility();
         $this->sisa_order->setVisibility();
-        $this->stok_akhir->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Global Page Loading event (in userfn*.php)
@@ -871,7 +870,6 @@ class VStockorderDetailList extends VStockorderDetail
         $filterList = Concat($filterList, $this->nama_produk->AdvancedSearch->toJson(), ","); // Field nama_produk
         $filterList = Concat($filterList, $this->jumlah_order->AdvancedSearch->toJson(), ","); // Field jumlah_order
         $filterList = Concat($filterList, $this->sisa_order->AdvancedSearch->toJson(), ","); // Field sisa_order
-        $filterList = Concat($filterList, $this->stok_akhir->AdvancedSearch->toJson(), ","); // Field stok_akhir
         if ($this->BasicSearch->Keyword != "") {
             $wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
             $filterList = Concat($filterList, $wrk, ",");
@@ -959,14 +957,6 @@ class VStockorderDetailList extends VStockorderDetail
         $this->sisa_order->AdvancedSearch->SearchValue2 = @$filter["y_sisa_order"];
         $this->sisa_order->AdvancedSearch->SearchOperator2 = @$filter["w_sisa_order"];
         $this->sisa_order->AdvancedSearch->save();
-
-        // Field stok_akhir
-        $this->stok_akhir->AdvancedSearch->SearchValue = @$filter["x_stok_akhir"];
-        $this->stok_akhir->AdvancedSearch->SearchOperator = @$filter["z_stok_akhir"];
-        $this->stok_akhir->AdvancedSearch->SearchCondition = @$filter["v_stok_akhir"];
-        $this->stok_akhir->AdvancedSearch->SearchValue2 = @$filter["y_stok_akhir"];
-        $this->stok_akhir->AdvancedSearch->SearchOperator2 = @$filter["w_stok_akhir"];
-        $this->stok_akhir->AdvancedSearch->save();
         $this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
         $this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
     }
@@ -1145,7 +1135,6 @@ class VStockorderDetailList extends VStockorderDetail
             $this->updateSort($this->nama_produk); // nama_produk
             $this->updateSort($this->jumlah_order); // jumlah_order
             $this->updateSort($this->sisa_order); // sisa_order
-            $this->updateSort($this->stok_akhir); // stok_akhir
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -1191,7 +1180,6 @@ class VStockorderDetailList extends VStockorderDetail
                 $this->nama_produk->setSort("");
                 $this->jumlah_order->setSort("");
                 $this->sisa_order->setSort("");
-                $this->stok_akhir->setSort("");
             }
 
             // Reset start position
@@ -1541,7 +1529,6 @@ class VStockorderDetailList extends VStockorderDetail
         $this->nama_produk->setDbValue($row['nama_produk']);
         $this->jumlah_order->setDbValue($row['jumlah_order']);
         $this->sisa_order->setDbValue($row['sisa_order']);
-        $this->stok_akhir->setDbValue($row['stok_akhir']);
     }
 
     // Return a row with default values
@@ -1554,7 +1541,6 @@ class VStockorderDetailList extends VStockorderDetail
         $row['nama_produk'] = null;
         $row['jumlah_order'] = null;
         $row['sisa_order'] = null;
-        $row['stok_akhir'] = null;
         return $row;
     }
 
@@ -1603,8 +1589,6 @@ class VStockorderDetailList extends VStockorderDetail
         // jumlah_order
 
         // sisa_order
-
-        // stok_akhir
         if ($this->RowType == ROWTYPE_VIEW) {
             // idstockorder
             $this->idstockorder->ViewValue = $this->idstockorder->CurrentValue;
@@ -1632,11 +1616,6 @@ class VStockorderDetailList extends VStockorderDetail
             $this->sisa_order->ViewValue = $this->sisa_order->CurrentValue;
             $this->sisa_order->ViewValue = FormatNumber($this->sisa_order->ViewValue, 0, -2, -2, -2);
             $this->sisa_order->ViewCustomAttributes = "";
-
-            // stok_akhir
-            $this->stok_akhir->ViewValue = $this->stok_akhir->CurrentValue;
-            $this->stok_akhir->ViewValue = FormatNumber($this->stok_akhir->ViewValue, 0, -2, -2, -2);
-            $this->stok_akhir->ViewCustomAttributes = "";
 
             // idstockorder
             $this->idstockorder->LinkCustomAttributes = "";
@@ -1667,11 +1646,6 @@ class VStockorderDetailList extends VStockorderDetail
             $this->sisa_order->LinkCustomAttributes = "";
             $this->sisa_order->HrefValue = "";
             $this->sisa_order->TooltipValue = "";
-
-            // stok_akhir
-            $this->stok_akhir->LinkCustomAttributes = "";
-            $this->stok_akhir->HrefValue = "";
-            $this->stok_akhir->TooltipValue = "";
         }
 
         // Call Row Rendered event

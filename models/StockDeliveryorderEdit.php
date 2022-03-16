@@ -470,10 +470,13 @@ class StockDeliveryorderEdit extends StockDeliveryorder
         $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
+        $this->receipt_by->setVisibility();
         $this->lampiran->setVisibility();
         $this->keterangan->setVisibility();
         $this->created_at->Visible = false;
         $this->hideFieldsForAddEdit();
+        $this->kode->Required = false;
+        $this->tanggal->Required = false;
 
         // Do not use lookup cache
         $this->setUseLookupCache(false);
@@ -487,6 +490,7 @@ class StockDeliveryorderEdit extends StockDeliveryorder
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->receipt_by);
 
         // Check modal
         if ($this->IsModal) {
@@ -690,6 +694,16 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 7);
         }
 
+        // Check field name 'receipt_by' first before field var 'x_receipt_by'
+        $val = $CurrentForm->hasValue("receipt_by") ? $CurrentForm->getValue("receipt_by") : $CurrentForm->getValue("x_receipt_by");
+        if (!$this->receipt_by->IsDetailKey) {
+            if (IsApi() && $val === null) {
+                $this->receipt_by->Visible = false; // Disable update for API request
+            } else {
+                $this->receipt_by->setFormValue($val);
+            }
+        }
+
         // Check field name 'keterangan' first before field var 'x_keterangan'
         $val = $CurrentForm->hasValue("keterangan") ? $CurrentForm->getValue("keterangan") : $CurrentForm->getValue("x_keterangan");
         if (!$this->keterangan->IsDetailKey) {
@@ -716,6 +730,7 @@ class StockDeliveryorderEdit extends StockDeliveryorder
         $this->kode->CurrentValue = $this->kode->FormValue;
         $this->tanggal->CurrentValue = $this->tanggal->FormValue;
         $this->tanggal->CurrentValue = UnFormatDateTime($this->tanggal->CurrentValue, 7);
+        $this->receipt_by->CurrentValue = $this->receipt_by->FormValue;
         $this->keterangan->CurrentValue = $this->keterangan->FormValue;
     }
 
@@ -769,6 +784,7 @@ class StockDeliveryorderEdit extends StockDeliveryorder
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
         $this->tanggal->setDbValue($row['tanggal']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
@@ -782,6 +798,7 @@ class StockDeliveryorderEdit extends StockDeliveryorder
         $row['id'] = null;
         $row['kode'] = null;
         $row['tanggal'] = null;
+        $row['receipt_by'] = null;
         $row['lampiran'] = null;
         $row['keterangan'] = null;
         $row['created_at'] = null;
@@ -822,6 +839,8 @@ class StockDeliveryorderEdit extends StockDeliveryorder
 
         // tanggal
 
+        // receipt_by
+
         // lampiran
 
         // keterangan
@@ -840,6 +859,27 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             $this->tanggal->ViewValue = $this->tanggal->CurrentValue;
             $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 7);
             $this->tanggal->ViewCustomAttributes = "";
+
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
 
             // lampiran
             if (!EmptyValue($this->lampiran->Upload->DbValue)) {
@@ -868,6 +908,11 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             $this->tanggal->HrefValue = "";
             $this->tanggal->TooltipValue = "";
 
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
+
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
             $this->lampiran->HrefValue = "";
@@ -882,17 +927,40 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             // kode
             $this->kode->EditAttrs["class"] = "form-control";
             $this->kode->EditCustomAttributes = "";
-            if (!$this->kode->Raw) {
-                $this->kode->CurrentValue = HtmlDecode($this->kode->CurrentValue);
-            }
-            $this->kode->EditValue = HtmlEncode($this->kode->CurrentValue);
-            $this->kode->PlaceHolder = RemoveHtml($this->kode->caption());
+            $this->kode->EditValue = $this->kode->CurrentValue;
+            $this->kode->ViewCustomAttributes = "";
 
             // tanggal
             $this->tanggal->EditAttrs["class"] = "form-control";
             $this->tanggal->EditCustomAttributes = "";
-            $this->tanggal->EditValue = HtmlEncode(FormatDateTime($this->tanggal->CurrentValue, 7));
-            $this->tanggal->PlaceHolder = RemoveHtml($this->tanggal->caption());
+            $this->tanggal->EditValue = $this->tanggal->CurrentValue;
+            $this->tanggal->EditValue = FormatDateTime($this->tanggal->EditValue, 7);
+            $this->tanggal->ViewCustomAttributes = "";
+
+            // receipt_by
+            $this->receipt_by->EditAttrs["class"] = "form-control";
+            $this->receipt_by->EditCustomAttributes = "";
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+            } else {
+                $this->receipt_by->ViewValue = $this->receipt_by->Lookup !== null && is_array($this->receipt_by->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->receipt_by->ViewValue !== null) { // Load from cache
+                $this->receipt_by->EditValue = array_values($this->receipt_by->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->receipt_by->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->receipt_by->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->receipt_by->EditValue = $arwrk;
+            }
+            $this->receipt_by->PlaceHolder = RemoveHtml($this->receipt_by->caption());
 
             // lampiran
             $this->lampiran->EditAttrs["class"] = "form-control";
@@ -920,10 +988,16 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
+            $this->kode->TooltipValue = "";
 
             // tanggal
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
+            $this->tanggal->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
@@ -963,8 +1037,10 @@ class StockDeliveryorderEdit extends StockDeliveryorder
                 $this->tanggal->addErrorMessage(str_replace("%s", $this->tanggal->caption(), $this->tanggal->RequiredErrorMessage));
             }
         }
-        if (!CheckEuroDate($this->tanggal->FormValue)) {
-            $this->tanggal->addErrorMessage($this->tanggal->getErrorMessage(false));
+        if ($this->receipt_by->Required) {
+            if (!$this->receipt_by->IsDetailKey && EmptyValue($this->receipt_by->FormValue)) {
+                $this->receipt_by->addErrorMessage(str_replace("%s", $this->receipt_by->caption(), $this->receipt_by->RequiredErrorMessage));
+            }
         }
         if ($this->lampiran->Required) {
             if ($this->lampiran->Upload->FileName == "" && !$this->lampiran->Upload->KeepFile) {
@@ -1020,11 +1096,8 @@ class StockDeliveryorderEdit extends StockDeliveryorder
             $this->loadDbValues($rsold);
             $rsnew = [];
 
-            // kode
-            $this->kode->setDbValueDef($rsnew, $this->kode->CurrentValue, null, $this->kode->ReadOnly);
-
-            // tanggal
-            $this->tanggal->setDbValueDef($rsnew, UnFormatDateTime($this->tanggal->CurrentValue, 7), CurrentDate(), $this->tanggal->ReadOnly);
+            // receipt_by
+            $this->receipt_by->setDbValueDef($rsnew, $this->receipt_by->CurrentValue, 0, $this->receipt_by->ReadOnly);
 
             // lampiran
             if ($this->lampiran->Visible && !$this->lampiran->ReadOnly && !$this->lampiran->Upload->KeepFile) {
@@ -1230,6 +1303,8 @@ class StockDeliveryorderEdit extends StockDeliveryorder
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_receipt_by":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;

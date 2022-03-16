@@ -523,7 +523,7 @@ class StockOrderView extends StockOrder
         $this->tanggal->setVisibility();
         $this->idpegawai->setVisibility();
         $this->keterangan->setVisibility();
-        $this->aktif->setVisibility();
+        $this->readonly->setVisibility();
         $this->created_at->setVisibility();
         $this->hideFieldsForAddEdit();
 
@@ -666,16 +666,6 @@ class StockOrderView extends StockOrder
         }
         $item->Visible = ($this->EditUrl != "" && $Security->canEdit());
 
-        // Copy
-        $item = &$option->add("copy");
-        $copycaption = HtmlTitle($Language->phrase("ViewPageCopyLink"));
-        if ($this->IsModal) {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,btn:'AddBtn',url:'" . HtmlEncode(GetUrl($this->CopyUrl)) . "'});\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-        } else {
-            $item->Body = "<a class=\"ew-action ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("ViewPageCopyLink") . "</a>";
-        }
-        $item->Visible = ($this->CopyUrl != "" && $Security->canAdd());
-
         // Delete
         $item = &$option->add("delete");
         if ($this->IsModal) { // Handle as inline delete
@@ -709,13 +699,6 @@ class StockOrderView extends StockOrder
                 $detailEditTblVar .= ",";
             }
             $detailEditTblVar .= "stock_order_detail";
-        }
-        if ($detailPageObj->DetailAdd && $Security->canAdd() && $Security->allowAdd(CurrentProjectID() . 'stock_order')) {
-            $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=stock_order_detail"))) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
-            if ($detailCopyTblVar != "") {
-                $detailCopyTblVar .= ",";
-            }
-            $detailCopyTblVar .= "stock_order_detail";
         }
         if ($links != "") {
             $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -830,7 +813,7 @@ class StockOrderView extends StockOrder
         $this->tanggal->setDbValue($row['tanggal']);
         $this->idpegawai->setDbValue($row['idpegawai']);
         $this->keterangan->setDbValue($row['keterangan']);
-        $this->aktif->setDbValue($row['aktif']);
+        $this->readonly->setDbValue($row['readonly']);
         $this->created_at->setDbValue($row['created_at']);
     }
 
@@ -843,7 +826,7 @@ class StockOrderView extends StockOrder
         $row['tanggal'] = null;
         $row['idpegawai'] = null;
         $row['keterangan'] = null;
-        $row['aktif'] = null;
+        $row['readonly'] = null;
         $row['created_at'] = null;
         return $row;
     }
@@ -876,7 +859,7 @@ class StockOrderView extends StockOrder
 
         // keterangan
 
-        // aktif
+        // readonly
 
         // created_at
         if ($this->RowType == ROWTYPE_VIEW) {
@@ -918,13 +901,13 @@ class StockOrderView extends StockOrder
             $this->keterangan->ViewValue = $this->keterangan->CurrentValue;
             $this->keterangan->ViewCustomAttributes = "";
 
-            // aktif
-            if (strval($this->aktif->CurrentValue) != "") {
-                $this->aktif->ViewValue = $this->aktif->optionCaption($this->aktif->CurrentValue);
+            // readonly
+            if (strval($this->readonly->CurrentValue) != "") {
+                $this->readonly->ViewValue = $this->readonly->optionCaption($this->readonly->CurrentValue);
             } else {
-                $this->aktif->ViewValue = null;
+                $this->readonly->ViewValue = null;
             }
-            $this->aktif->ViewCustomAttributes = "";
+            $this->readonly->ViewCustomAttributes = "";
 
             // created_at
             $this->created_at->ViewValue = $this->created_at->CurrentValue;
@@ -951,10 +934,10 @@ class StockOrderView extends StockOrder
             $this->keterangan->HrefValue = "";
             $this->keterangan->TooltipValue = "";
 
-            // aktif
-            $this->aktif->LinkCustomAttributes = "";
-            $this->aktif->HrefValue = "";
-            $this->aktif->TooltipValue = "";
+            // readonly
+            $this->readonly->LinkCustomAttributes = "";
+            $this->readonly->HrefValue = "";
+            $this->readonly->TooltipValue = "";
 
             // created_at
             $this->created_at->LinkCustomAttributes = "";
@@ -1022,7 +1005,7 @@ class StockOrderView extends StockOrder
             switch ($fld->FieldVar) {
                 case "x_idpegawai":
                     break;
-                case "x_aktif":
+                case "x_readonly":
                     break;
                 default:
                     $lookupFilter = "";

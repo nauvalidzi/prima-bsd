@@ -265,17 +265,6 @@ $Page->showMessage();
 </td>
     </tr>
 <?php } ?>
-<?php if ($Page->aroma->Visible) { // aroma ?>
-    <tr id="r_aroma">
-        <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_aroma"><template id="tpc_npd_aroma"><?= $Page->aroma->caption() ?></template></span></td>
-        <td data-name="aroma" <?= $Page->aroma->cellAttributes() ?>>
-<template id="tpx_npd_aroma"><span id="el_npd_aroma">
-<span<?= $Page->aroma->viewAttributes() ?>>
-<?= $Page->aroma->getViewValue() ?></span>
-</span></template>
-</td>
-    </tr>
-<?php } ?>
 <?php if ($Page->aplikasi->Visible) { // aplikasi ?>
     <tr id="r_aplikasi">
         <td class="<?= $Page->TableLeftColumnClass ?>"><span id="elh_npd_aplikasi"><template id="tpc_npd_aplikasi"><?= $Page->aplikasi->caption() ?></template></span></td>
@@ -1265,16 +1254,6 @@ $Page->showMessage();
 <?php
     }
 ?>
-<?php
-    if (in_array("npd_desain", explode(",", $Page->getCurrentDetailTable())) && $npd_desain->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_desain") {
-            $firstActiveDetailTable = "npd_desain";
-        }
-?>
-        <li class="nav-item"><a class="nav-link <?= $Page->DetailPages->pageStyle("npd_desain") ?>" href="#tab_npd_desain" data-toggle="tab"><?= $Language->tablePhrase("npd_desain", "TblCaption") ?>&nbsp;<?= str_replace("%c", Container("npd_desain")->Count, $Language->phrase("DetailCount")) ?></a></li>
-<?php
-    }
-?>
     </ul><!-- /.nav -->
     <div class="tab-content"><!-- .tab-content -->
 <?php
@@ -1315,16 +1294,6 @@ $Page->showMessage();
 ?>
         <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_harga") ?>" id="tab_npd_harga"><!-- page* -->
 <?php include_once "NpdHargaGrid.php" ?>
-        </div><!-- /page* -->
-<?php } ?>
-<?php
-    if (in_array("npd_desain", explode(",", $Page->getCurrentDetailTable())) && $npd_desain->DetailView) {
-        if ($firstActiveDetailTable == "" || $firstActiveDetailTable == "npd_desain") {
-            $firstActiveDetailTable = "npd_desain";
-        }
-?>
-        <div class="tab-pane <?= $Page->DetailPages->pageStyle("npd_desain") ?>" id="tab_npd_desain"><!-- page* -->
-<?php include_once "NpdDesainGrid.php" ?>
         </div><!-- /page* -->
 <?php } ?>
     </div><!-- /.tab-content -->

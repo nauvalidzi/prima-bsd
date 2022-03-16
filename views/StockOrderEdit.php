@@ -24,7 +24,7 @@ loadjs.ready("head", function () {
         ["tanggal", [fields.tanggal.visible && fields.tanggal.required ? ew.Validators.required(fields.tanggal.caption) : null], fields.tanggal.isInvalid],
         ["idpegawai", [fields.idpegawai.visible && fields.idpegawai.required ? ew.Validators.required(fields.idpegawai.caption) : null], fields.idpegawai.isInvalid],
         ["keterangan", [fields.keterangan.visible && fields.keterangan.required ? ew.Validators.required(fields.keterangan.caption) : null], fields.keterangan.isInvalid],
-        ["aktif", [fields.aktif.visible && fields.aktif.required ? ew.Validators.required(fields.aktif.caption) : null], fields.aktif.isInvalid]
+        ["readonly", [fields.readonly.visible && fields.readonly.required ? ew.Validators.required(fields.readonly.caption) : null], fields.readonly.isInvalid]
     ]);
 
     // Set invalid fields
@@ -161,15 +161,15 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->aktif->Visible) { // aktif ?>
-    <div id="r_aktif" class="form-group row">
-        <label id="elh_stock_order_aktif" class="<?= $Page->LeftColumnClass ?>"><?= $Page->aktif->caption() ?><?= $Page->aktif->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->aktif->cellAttributes() ?>>
-<span id="el_stock_order_aktif">
-<span<?= $Page->aktif->viewAttributes() ?>>
-<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->aktif->getDisplayValue($Page->aktif->EditValue))) ?>"></span>
+<?php if ($Page->readonly->Visible) { // readonly ?>
+    <div id="r_readonly" class="form-group row">
+        <label id="elh_stock_order_readonly" class="<?= $Page->LeftColumnClass ?>"><?= $Page->readonly->caption() ?><?= $Page->readonly->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->readonly->cellAttributes() ?>>
+<span id="el_stock_order_readonly">
+<span<?= $Page->readonly->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Page->readonly->getDisplayValue($Page->readonly->EditValue))) ?>"></span>
 </span>
-<input type="hidden" data-table="stock_order" data-field="x_aktif" data-hidden="1" name="x_aktif" id="x_aktif" value="<?= HtmlEncode($Page->aktif->CurrentValue) ?>">
+<input type="hidden" data-table="stock_order" data-field="x_readonly" data-hidden="1" name="x_readonly" id="x_readonly" value="<?= HtmlEncode($Page->readonly->CurrentValue) ?>">
 </div></div>
     </div>
 <?php } ?>

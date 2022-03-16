@@ -650,8 +650,7 @@ class OrderAdd extends Order
         $this->id->OldValue = $this->id->CurrentValue;
         $this->kode->CurrentValue = null;
         $this->kode->OldValue = $this->kode->CurrentValue;
-        $this->tanggal->CurrentValue = null;
-        $this->tanggal->OldValue = $this->tanggal->CurrentValue;
+        $this->tanggal->CurrentValue = CurrentDate();
         $this->idpegawai->CurrentValue = CurrentUserID();
         $this->idcustomer->CurrentValue = null;
         $this->idcustomer->OldValue = $this->idcustomer->CurrentValue;
@@ -668,7 +667,7 @@ class OrderAdd extends Order
         $this->created_at->CurrentValue = null;
         $this->created_at->OldValue = $this->created_at->CurrentValue;
         $this->created_by->CurrentValue = CurrentUserID();
-        $this->readonly->CurrentValue = 0;
+        $this->readonly->CurrentValue = CurrentDate();
     }
 
     // Load form values

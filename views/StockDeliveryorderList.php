@@ -135,14 +135,14 @@ $Page->renderListOptions();
 // Render list options (header, left)
 $Page->ListOptions->render("header", "left");
 ?>
-<?php if ($Page->id->Visible) { // id ?>
-        <th data-name="id" class="<?= $Page->id->headerCellClass() ?>"><div id="elh_stock_deliveryorder_id" class="stock_deliveryorder_id"><?= $Page->renderSort($Page->id) ?></div></th>
-<?php } ?>
 <?php if ($Page->kode->Visible) { // kode ?>
         <th data-name="kode" class="<?= $Page->kode->headerCellClass() ?>"><div id="elh_stock_deliveryorder_kode" class="stock_deliveryorder_kode"><?= $Page->renderSort($Page->kode) ?></div></th>
 <?php } ?>
 <?php if ($Page->tanggal->Visible) { // tanggal ?>
         <th data-name="tanggal" class="<?= $Page->tanggal->headerCellClass() ?>"><div id="elh_stock_deliveryorder_tanggal" class="stock_deliveryorder_tanggal"><?= $Page->renderSort($Page->tanggal) ?></div></th>
+<?php } ?>
+<?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <th data-name="receipt_by" class="<?= $Page->receipt_by->headerCellClass() ?>"><div id="elh_stock_deliveryorder_receipt_by" class="stock_deliveryorder_receipt_by"><?= $Page->renderSort($Page->receipt_by) ?></div></th>
 <?php } ?>
 <?php if ($Page->lampiran->Visible) { // lampiran ?>
         <th data-name="lampiran" class="<?= $Page->lampiran->headerCellClass() ?>"><div id="elh_stock_deliveryorder_lampiran" class="stock_deliveryorder_lampiran"><?= $Page->renderSort($Page->lampiran) ?></div></th>
@@ -217,14 +217,6 @@ while ($Page->RecordCount < $Page->StopRecord) {
 // Render list options (body, left)
 $Page->ListOptions->render("body", "left", $Page->RowCount);
 ?>
-    <?php if ($Page->id->Visible) { // id ?>
-        <td data-name="id" <?= $Page->id->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_stock_deliveryorder_id">
-<span<?= $Page->id->viewAttributes() ?>>
-<?= $Page->id->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->kode->Visible) { // kode ?>
         <td data-name="kode" <?= $Page->kode->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_stock_deliveryorder_kode">
@@ -238,6 +230,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_stock_deliveryorder_tanggal">
 <span<?= $Page->tanggal->viewAttributes() ?>>
 <?= $Page->tanggal->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->receipt_by->Visible) { // receipt_by ?>
+        <td data-name="receipt_by" <?= $Page->receipt_by->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_stock_deliveryorder_receipt_by">
+<span<?= $Page->receipt_by->viewAttributes() ?>>
+<?= $Page->receipt_by->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>

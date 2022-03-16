@@ -198,8 +198,6 @@ class Product extends DbTable
 
         // harga
         $this->harga = new DbField('product', 'product', 'x_harga', 'harga', '`harga`', '`harga`', 20, 20, -1, false, '`harga`', false, false, false, 'FORMATTED TEXT', 'TEXT');
-        $this->harga->Nullable = false; // NOT NULL field
-        $this->harga->Required = true; // Required field
         $this->harga->Sortable = true; // Allow sort
         $this->harga->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->harga->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->harga->Param, "CustomMsg");
@@ -243,7 +241,6 @@ class Product extends DbTable
 
         // ijinbpom
         $this->ijinbpom = new DbField('product', 'product', 'x_ijinbpom', 'ijinbpom', '`ijinbpom`', '`ijinbpom`', 16, 1, -1, false, '`ijinbpom`', false, false, false, 'FORMATTED TEXT', 'RADIO');
-        $this->ijinbpom->Nullable = false; // NOT NULL field
         $this->ijinbpom->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":
@@ -260,7 +257,6 @@ class Product extends DbTable
 
         // aktif
         $this->aktif = new DbField('product', 'product', 'x_aktif', 'aktif', '`aktif`', '`aktif`', 16, 1, -1, false, '`aktif`', false, false, false, 'FORMATTED TEXT', 'RADIO');
-        $this->aktif->Nullable = false; // NOT NULL field
         $this->aktif->Sortable = true; // Allow sort
         switch ($CurrentLanguage) {
             case "en":

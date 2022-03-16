@@ -231,16 +231,14 @@ function Api_Action($app)
     });
     $app->get('/dashboard-order', function ($request, $response, $args) {
         $query = "SELECT o.kode AS kode_order, 
-                        DATE_FORMAT(o.tanggal, '%d-%m-%Y') AS tgl_order, 
+                        DATE_FORMAT(o.tanggal, '%d/%m/%Y') AS tgl_order, 
                         p.kode AS kode_marketing, 
                         p.nama AS nama_marketing, 
                         c.kode AS kode_customer, 
-                        c.nama AS nama_customer,
-                        b.title AS brand
+                        c.nama AS nama_customer
                     FROM `order` o  
                     JOIN pegawai p ON p.id = o.idpegawai
                     JOIN customer c ON c.id = o.idcustomer
-                    JOIN brand b ON b.id = o.idbrand
                     JOIN order_detail od ON o.id = od.idorder
                     WHERE od.sisa > 0
                     GROUP BY o.id";
@@ -249,22 +247,20 @@ function Api_Action($app)
         $html .= "<table class=\"table table-bordered\">";
         $html .= "<tr>
                     <th width=\"5%\">No.</th>
-                    <th>Kode Order</th>
                     <th>Tanggal Order</th>
-                    <th>Marketing</th>
+                    <th>Kode Order</th>
                     <th>Customer</th>
-                    <th>Brand</th>
+                    <th>Marketing</th>
                 </tr>";
         if (count($result) > 0) {
             $no=1;
             foreach ($result as $row) {
                 $html .= "<tr>
                         <td>{$no}</td>
-                        <td>{$row['kode_order']}</td>
                         <td>{$row['tgl_order']}</td>
-                        <td>{$row['kode_marketing']}, {$row['nama_marketing']}</td>
+                        <td>{$row['kode_order']}</td>
                         <td>{$row['kode_customer']}, {$row['nama_customer']}</td>
-                        <td>{$row['brand']}</td>
+                        <td>{$row['kode_marketing']}, {$row['nama_marketing']}</td>
                     </tr>";
                 $no++;
             }
@@ -277,7 +273,7 @@ function Api_Action($app)
     });
     $app->get('/dashboard-delivery', function ($request, $response, $args) {
         $query = "SELECT d.kode as kode_delivery, 
-                        DATE_FORMAT(d.tanggal, '%d-%m-%Y') AS tgl_delivery, 
+                        DATE_FORMAT(d.tanggal, '%d/%m/%Y') AS tgl_delivery, 
                         COUNT(dd.idorder) AS jumlah_order
                     FROM deliveryorder d
                     JOIN deliveryorder_detail dd ON dd.iddeliveryorder = d.id
@@ -313,9 +309,9 @@ function Api_Action($app)
     });
     $app->get('/dashboard-invoice-unpaid', function ($request, $response, $args) {
         $query = "SELECT i.kode AS kode_invoice,
-                    DATE_FORMAT(i.tglinvoice, '%d-%m-%Y') AS tgl_invoice, 
+                    DATE_FORMAT(i.tglinvoice, '%d/%m/%Y') AS tgl_invoice, 
                     o.kode AS kode_order,
-                    DATE_FORMAT(o.tanggal, '%d-%m-%Y') AS tgl_order, 
+                    DATE_FORMAT(o.tanggal, '%d/%m/%Y') AS tgl_order, 
                     c.kode AS kode_customer,
                     c.nama AS nama_customer,
                     i.totaltagihan,
@@ -357,9 +353,9 @@ function Api_Action($app)
     });
     $app->get('/dashboard-invoice-unsent', function ($request, $response, $args) {
         $query = "SELECT i.kode AS kode_invoice,
-                    DATE_FORMAT(i.tglinvoice, '%d-%m-%Y') AS tgl_invoice, 
+                    DATE_FORMAT(i.tglinvoice, '%d/%m/%Y') AS tgl_invoice, 
                     o.kode AS kode_order,
-                    DATE_FORMAT(o.tanggal, '%d-%m-%Y') AS tgl_order, 
+                    DATE_FORMAT(o.tanggal, '%d/%m/%Y') AS tgl_order, 
                     c.kode AS kode_customer,
                     c.nama AS nama_customer,
                     i.totaltagihan,
@@ -438,6 +434,49 @@ function Api_Action($app)
             $message = 'Error editing data into database!';
         }
         return $response->withJson(['success' => $status, 'message' => $message, 'redirect' => urlencode($redirect . "?param=update")]);
+    });
+
+    // [TEMP] modal pop-up stock product history
+    $app->get('/product-history/{id}', function ($request, $response, $args) {
+        $idproduct = $args['id'];
+        $product = ExecuteRow("SELECT CONCAT(p.kode,', ', p.nama) AS productname FROM product p WHERE id = {$idproduct}");
+        $result = ExecuteQuery("SELECT prop_id, prop_code, stok_masuk, stok_keluar, stok_akhir FROM stocks WHERE aktif = 1 AND idproduct = {$idproduct} ORDER BY id ASC")->fetchAll();
+        $stokakhir = ExecuteRow("SELECT stok_akhir FROM stocks WHERE idproduct = {$idproduct} AND id IN (SELECT MAX(id) FROM stocks GROUP BY idproduct)")['stok_akhir'];
+        $html = "<div class=\"table-responsive\">";
+        $html .= "<table class=\"table table-bordered\">";
+        $html .= "<tr>
+                    <th class=\"text-center\">No.</th>
+                    <th class=\"text-center\">Jenis</th>
+                    <th class=\"text-center\">Stok Masuk</th>
+                    <th class=\"text-center\">Stok Keluar</th>
+                    <th class=\"text-center\">Stok Akhir</th>
+                    <th>Keterangan</th>
+                </tr>";
+        if (count($result) > 0) {
+            $no=1;
+            foreach ($result as $row) {
+                $jenis = $row['stok_masuk'] > 0 ? 'Debet' : 'Kredit';
+                $html .= "<tr>
+                        <td>{$no}</td>
+                        <td>{$jenis}</td>
+                        <td>{$row['stok_masuk']}</td>
+                        <td>{$row['stok_keluar']}</td>
+                        <td>{$row['stok_akhir']}</td>
+                        <td>{$row['prop_code']}</td>
+                    </tr>";
+                $no++;
+            }
+            $html .= "<tr>
+                    <th class=\"text-right\" colspan=\"4\">Stok Akhir :</th>
+                    <th class=\"text-center\">{$stokakhir}</th>
+                    <th></th>
+                </tr>";
+        } else {
+            $html .= "<tr><td class=\"text-center\" colspan=\"10\">Tidak ada data.</td></tr>";
+        }
+        $html .= "</table>";
+        $html .= "</div>";
+        return $response->withJson(['product' => $product['productname'], 'data' => $html]);
     });
 }
 
@@ -585,7 +624,7 @@ function stok_trx($prop_id, $prop_code, $idproduct, $jumlah, $jenis) {
     }
 
     // Stok transaction
-    $execute = Execute("INSERT INTO `stocks` (prop_id, prop_code, idproduct, stok_masuk, stok_keluar, stok_akhir, aktif, keterangan, created_at) VALUES ({$prop_id}, '{$prop_code}', {$idproduct}, {$stok_masuk}, {$stok_keluar}, {$stok_akhir}, 1, NULL, ".date('Y-m-d H:i:s').")");
+    $execute = Execute("INSERT INTO `stocks` (prop_id, prop_code, idproduct, stok_masuk, stok_keluar, stok_akhir, aktif, keterangan, created_at) VALUES ({$prop_id}, '{$prop_code}', {$idproduct}, {$stok_masuk}, {$stok_keluar}, {$stok_akhir}, 1, NULL, '".date('Y-m-d H:i:s')."')");
     if (!$execute) {
         return false;
     }
@@ -855,7 +894,10 @@ function getNextKode($tipe, $id) {
    	} elseif ($tipe == "stock_order") {
    		$table = "stock_order";
    		$format = "ST/ORD/%YY%MM-%URUTAN";
-   	}
+   	} elseif ($tipe == "stock_deliveryorder") {
+        $table = "stock_deliveryorder";
+        $format = "ST/DO/%YY%MM-%URUTAN";
+    }
     if (strpos($format, "%MM") !== false || strpos($format, "%YY") !== false) {
         $maxKode = ExecuteRow("SELECT kode, created_at AS last_post FROM `{$table}` WHERE created_at = (SELECT MAX(created_at) FROM `{$table}`)");
     } else {

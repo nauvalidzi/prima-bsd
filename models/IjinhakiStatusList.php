@@ -736,13 +736,6 @@ class IjinhakiStatusList extends IjinhakiStatus
         // Restore master/detail filter
         $this->DbMasterFilter = $this->getMasterFilter(); // Restore master filter
         $this->DbDetailFilter = $this->getDetailFilter(); // Restore detail filter
-
-        // Add master User ID filter
-        if ($Security->currentUserID() != "" && !$Security->isAdmin()) { // Non system admin
-                if ($this->getCurrentMasterTable() == "ijinhaki") {
-                    $this->DbMasterFilter = $this->addMasterUserIDFilter($this->DbMasterFilter, "ijinhaki"); // Add master User ID filter
-                }
-        }
         AddFilter($filter, $this->DbDetailFilter);
         AddFilter($filter, $this->SearchWhere);
 

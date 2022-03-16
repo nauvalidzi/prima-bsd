@@ -568,9 +568,10 @@ class StockDeliveryorderList extends StockDeliveryorder
 
         // Set up list options
         $this->setupListOptions();
-        $this->id->setVisibility();
+        $this->id->Visible = false;
         $this->kode->setVisibility();
         $this->tanggal->setVisibility();
+        $this->receipt_by->setVisibility();
         $this->lampiran->setVisibility();
         $this->keterangan->Visible = false;
         $this->created_at->setVisibility();
@@ -601,6 +602,7 @@ class StockDeliveryorderList extends StockDeliveryorder
         }
 
         // Set up lookup cache
+        $this->setupLookupOptions($this->receipt_by);
 
         // Search filters
         $srchAdvanced = ""; // Advanced search filter
@@ -867,6 +869,7 @@ class StockDeliveryorderList extends StockDeliveryorder
         $filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
         $filterList = Concat($filterList, $this->kode->AdvancedSearch->toJson(), ","); // Field kode
         $filterList = Concat($filterList, $this->tanggal->AdvancedSearch->toJson(), ","); // Field tanggal
+        $filterList = Concat($filterList, $this->receipt_by->AdvancedSearch->toJson(), ","); // Field receipt_by
         $filterList = Concat($filterList, $this->lampiran->AdvancedSearch->toJson(), ","); // Field lampiran
         $filterList = Concat($filterList, $this->keterangan->AdvancedSearch->toJson(), ","); // Field keterangan
         $filterList = Concat($filterList, $this->created_at->AdvancedSearch->toJson(), ","); // Field created_at
@@ -933,6 +936,14 @@ class StockDeliveryorderList extends StockDeliveryorder
         $this->tanggal->AdvancedSearch->SearchValue2 = @$filter["y_tanggal"];
         $this->tanggal->AdvancedSearch->SearchOperator2 = @$filter["w_tanggal"];
         $this->tanggal->AdvancedSearch->save();
+
+        // Field receipt_by
+        $this->receipt_by->AdvancedSearch->SearchValue = @$filter["x_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchOperator = @$filter["z_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchCondition = @$filter["v_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchValue2 = @$filter["y_receipt_by"];
+        $this->receipt_by->AdvancedSearch->SearchOperator2 = @$filter["w_receipt_by"];
+        $this->receipt_by->AdvancedSearch->save();
 
         // Field lampiran
         $this->lampiran->AdvancedSearch->SearchValue = @$filter["x_lampiran"];
@@ -1130,9 +1141,9 @@ class StockDeliveryorderList extends StockDeliveryorder
         if (Get("order") !== null) {
             $this->CurrentOrder = Get("order");
             $this->CurrentOrderType = Get("ordertype", "");
-            $this->updateSort($this->id); // id
             $this->updateSort($this->kode); // kode
             $this->updateSort($this->tanggal); // tanggal
+            $this->updateSort($this->receipt_by); // receipt_by
             $this->updateSort($this->lampiran); // lampiran
             $this->updateSort($this->created_at); // created_at
             $this->setStartRecordNumber(1); // Reset start position
@@ -1177,6 +1188,7 @@ class StockDeliveryorderList extends StockDeliveryorder
                 $this->id->setSort("");
                 $this->kode->setSort("");
                 $this->tanggal->setSort("");
+                $this->receipt_by->setSort("");
                 $this->lampiran->setSort("");
                 $this->keterangan->setSort("");
                 $this->created_at->setSort("");
@@ -1203,18 +1215,6 @@ class StockDeliveryorderList extends StockDeliveryorder
         $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canView();
-        $item->OnLeft = false;
-
-        // "edit"
-        $item = &$this->ListOptions->add("edit");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
-
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canAdd();
         $item->OnLeft = false;
 
         // "delete"
@@ -1308,24 +1308,6 @@ class StockDeliveryorderList extends StockDeliveryorder
                 $opt->Body = "";
             }
 
-            // "edit"
-            $opt = $this->ListOptions["edit"];
-            $editcaption = HtmlTitle($Language->phrase("EditLink"));
-            if ($Security->canEdit()) {
-                $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "copy"
-            $opt = $this->ListOptions["copy"];
-            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
-            if ($Security->canAdd()) {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
             // "delete"
             $opt = $this->ListOptions["delete"];
             if ($Security->canDelete()) {
@@ -1384,24 +1366,6 @@ class StockDeliveryorderList extends StockDeliveryorder
                     $detailViewTblVar .= ",";
                 }
                 $detailViewTblVar .= "stock_deliveryorder_detail";
-            }
-            if ($detailPage->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'stock_deliveryorder')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=stock_deliveryorder_detail");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
-                if ($detailEditTblVar != "") {
-                    $detailEditTblVar .= ",";
-                }
-                $detailEditTblVar .= "stock_deliveryorder_detail";
-            }
-            if ($detailPage->DetailAdd && $Security->canAdd() && $Security->allowAdd(CurrentProjectID() . 'stock_deliveryorder')) {
-                $caption = $Language->phrase("MasterDetailCopyLink");
-                $url = $this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=stock_deliveryorder_detail");
-                $links .= "<li><a class=\"dropdown-item ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"" . HtmlEncode($url) . "\">" . HtmlImageAndText($caption) . "</a></li>";
-                if ($detailCopyTblVar != "") {
-                    $detailCopyTblVar .= ",";
-                }
-                $detailCopyTblVar .= "stock_deliveryorder_detail";
             }
             if ($links != "") {
                 $body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
@@ -1664,11 +1628,6 @@ class StockDeliveryorderList extends StockDeliveryorder
                 $url = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=stock_deliveryorder_detail");
                 $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
             }
-            if ($detailPageObj->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 'stock_deliveryorder')) {
-                $caption = $Language->phrase("MasterDetailEditLink");
-                $url = $this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=stock_deliveryorder_detail");
-                $btngrp .= "<a href=\"#\" class=\"mr-2\" title=\"" . HtmlTitle($caption) . "\" onclick=\"window.location='" . HtmlEncode($url) . "';return false;\">" . $caption . "</a>";
-            }
             $btngrp .= "</div>";
             if ($link != "") {
                 $btngrps .= $btngrp;
@@ -1792,6 +1751,7 @@ class StockDeliveryorderList extends StockDeliveryorder
         $this->id->setDbValue($row['id']);
         $this->kode->setDbValue($row['kode']);
         $this->tanggal->setDbValue($row['tanggal']);
+        $this->receipt_by->setDbValue($row['receipt_by']);
         $this->lampiran->Upload->DbValue = $row['lampiran'];
         $this->lampiran->setDbValue($this->lampiran->Upload->DbValue);
         $this->keterangan->setDbValue($row['keterangan']);
@@ -1805,6 +1765,7 @@ class StockDeliveryorderList extends StockDeliveryorder
         $row['id'] = null;
         $row['kode'] = null;
         $row['tanggal'] = null;
+        $row['receipt_by'] = null;
         $row['lampiran'] = null;
         $row['keterangan'] = null;
         $row['created_at'] = null;
@@ -1851,6 +1812,8 @@ class StockDeliveryorderList extends StockDeliveryorder
 
         // tanggal
 
+        // receipt_by
+
         // lampiran
 
         // keterangan
@@ -1870,6 +1833,27 @@ class StockDeliveryorderList extends StockDeliveryorder
             $this->tanggal->ViewValue = FormatDateTime($this->tanggal->ViewValue, 7);
             $this->tanggal->ViewCustomAttributes = "";
 
+            // receipt_by
+            $curVal = trim(strval($this->receipt_by->CurrentValue));
+            if ($curVal != "") {
+                $this->receipt_by->ViewValue = $this->receipt_by->lookupCacheOption($curVal);
+                if ($this->receipt_by->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->receipt_by->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->receipt_by->Lookup->renderViewRow($rswrk[0]);
+                        $this->receipt_by->ViewValue = $this->receipt_by->displayValue($arwrk);
+                    } else {
+                        $this->receipt_by->ViewValue = $this->receipt_by->CurrentValue;
+                    }
+                }
+            } else {
+                $this->receipt_by->ViewValue = null;
+            }
+            $this->receipt_by->ViewCustomAttributes = "";
+
             // lampiran
             if (!EmptyValue($this->lampiran->Upload->DbValue)) {
                 $this->lampiran->ViewValue = $this->lampiran->Upload->DbValue;
@@ -1883,11 +1867,6 @@ class StockDeliveryorderList extends StockDeliveryorder
             $this->created_at->ViewValue = FormatDateTime($this->created_at->ViewValue, 11);
             $this->created_at->ViewCustomAttributes = "";
 
-            // id
-            $this->id->LinkCustomAttributes = "";
-            $this->id->HrefValue = "";
-            $this->id->TooltipValue = "";
-
             // kode
             $this->kode->LinkCustomAttributes = "";
             $this->kode->HrefValue = "";
@@ -1897,6 +1876,11 @@ class StockDeliveryorderList extends StockDeliveryorder
             $this->tanggal->LinkCustomAttributes = "";
             $this->tanggal->HrefValue = "";
             $this->tanggal->TooltipValue = "";
+
+            // receipt_by
+            $this->receipt_by->LinkCustomAttributes = "";
+            $this->receipt_by->HrefValue = "";
+            $this->receipt_by->TooltipValue = "";
 
             // lampiran
             $this->lampiran->LinkCustomAttributes = "";
@@ -1978,6 +1962,8 @@ class StockDeliveryorderList extends StockDeliveryorder
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
+                case "x_receipt_by":
+                    break;
                 default:
                     $lookupFilter = "";
                     break;
@@ -2133,6 +2119,7 @@ class StockDeliveryorderList extends StockDeliveryorder
     {
         // Example:
         //$this->ListOptions["new"]->Body = "xxx";
+        $this->lampiran->Visible = false;
     }
 
     // Row Custom Action event
