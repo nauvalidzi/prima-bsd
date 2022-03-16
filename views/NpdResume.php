@@ -73,30 +73,28 @@ $NpdResume = &$Page;
 					<?php 
 					$link = CurrentPage()->PageObjName ."?page=%d";
 					if ($totalPages > 0 ) {
-						if ($page > 1 ) { 
-							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">First</a></li>", 1 ); 
+						if ($page > 2 ) { 
+							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">First</a></li>", 1); 
 						}
 
 						if ($page > 1 ) { 
-							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">Previous</a></li>", $page - 1 ); 
+							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">Previous</a></li>", $page - 1); 
 						}
 
 						for($x = 1; $x <= $totalPages; $x++) {
 							if ($page == $x) {
-								echo "<li class=\"page-item disabled\"><a href=\"#\" class=\"page-link\">{$x}</span></li>";
+								echo "<li class=\"page-item disabled\"><a href=\"#\" class=\"page-link\">{$x}</a></li>";
 							} else {
 								echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">{$x}</a></li>", $x) ;
 							}
 						}
 
-						if ($page != $totalPages ) { 
-							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">Next</a></li>", $page + 1 ); 
+						if ($page < $totalPages) { 
+							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">Next</a></li>", $page + 1); 
 						}
 
-						if ($page != $totalPages ) { 
-							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">Last</a></li>", $totalPages );
-						} else {
-							echo "<li class=\"page-item disabled\"><a href=\"#\" class=\"page-link\">Last</a></li>";
+						if (($totalPages - $page) > 1) { 
+							echo sprintf("<li class=\"page-item\"><a href=\"{$link}\" class=\"page-link\">Last</a></li>", $totalPages);
 						}
 					}                   
 					?>

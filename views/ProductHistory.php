@@ -10,9 +10,23 @@ $ProductHistory = &$Page;
 
 	$product = ExecuteRow("SELECT p.kode, p.nama FROM product p WHERE id = {$idproduct}");
 
-	$history = ExecuteQuery("SELECT prop_id, prop_code, stok_masuk, stok_keluar, stok_akhir FROM stocks WHERE aktif = 1 AND idproduct = {$idproduct} ORDER BY id ASC")->fetchAll();
-
 	$laststok = ExecuteRow("SELECT stok_akhir FROM stocks WHERE idproduct = {$idproduct} AND id IN (SELECT MAX(id) FROM stocks GROUP BY idproduct)")['stok_akhir'];
+
+	// PAGINATION
+	$batas = 2;
+	$halaman = isset($_GET['halaman']) ? (int)$_GET['halaman'] : 1;
+	$halaman_awal = ($halaman>1) ? ($halaman * $batas) - $batas : 0;
+
+	$previous = $halaman - 1;
+	$next = $halaman + 1;
+
+	// count data
+	$result = ExecuteQuery("SELECT * FROM stocks WHERE aktif = 1 AND idproduct = {$idproduct}")->fetchAll();
+    $jumlah_data = count($result);
+    $total_halaman = ceil($jumlah_data/$batas);
+
+	$history = ExecuteQuery("SELECT * FROM stocks WHERE aktif = 1 AND idproduct = {$idproduct} ORDER BY id ASC LIMIT {$halaman_awal}, {$batas}")->fetchAll();
+	$nomor = $halaman_awal+1;
 ?>
 
 <div class="row">
@@ -59,6 +73,35 @@ $ProductHistory = &$Page;
 			</tfoot>
 			<?php endif; ?>
 		</table>
+		<ul class="pagination justify-content-center">
+			<?php 
+				if ($total_halaman > 0 ) {
+					if ($halaman > 2) {
+						echo "<li class=\"page-item\"><a class=\"page-link\" href=\"?product={$idproduct}&halaman=1\">First</a></li>";
+					}
+
+					if ($halaman > 1) {
+						echo "<li class=\"page-item\"><a class=\"page-link\" href=\"?product={$idproduct}&halaman={$previous}\">Previous</a></li>";
+					}
+
+					for ($x=1; $x<=$total_halaman; $x++) {
+						if ($halaman == $x) {
+							echo "<li class=\"page-item disabled\"><a href=\"#\" class=\"page-link\">{$x}</a></li>";
+						} else {
+							echo "<li class=\"page-item\"><a href=\"?product={$idproduct}&halaman={$x}\" class=\"page-link\">{$x}</a></li>";
+						}
+					}
+
+					if ($halaman < $total_halaman) {
+						echo "<li class=\"page-item\"><a class=\"page-link\" href=\"?product={$idproduct}&halaman={$next}\">Next</a></li>";
+					}
+
+					if (($total_halaman - $halaman) > 1) { 
+						echo "<li class=\"page-item\"><a href=\"?product={$idproduct}&halaman={$total_halaman}\" class=\"page-link\">Last</a></li>";
+					}
+				}
+			 ?>
+		</ul>
 	</div>
 </div>
 
