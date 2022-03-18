@@ -165,20 +165,10 @@ class VNpdCustomer extends DbTable
         $this->Fields['tambahan'] = &$this->tambahan;
 
         // status
-        $this->status = new DbField('v_npd_customer', 'v_npd_customer', 'x_status', 'status', '`status`', '`status`', 16, 1, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'CHECKBOX');
+        $this->status = new DbField('v_npd_customer', 'v_npd_customer', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'TEXT');
         $this->status->Nullable = false; // NOT NULL field
+        $this->status->Required = true; // Required field
         $this->status->Sortable = true; // Allow sort
-        $this->status->DataType = DATATYPE_BOOLEAN;
-        switch ($CurrentLanguage) {
-            case "en":
-                $this->status->Lookup = new Lookup('status', 'v_npd_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-            default:
-                $this->status->Lookup = new Lookup('status', 'v_npd_customer', false, '', ["","","",""], [], [], [], [], [], [], '', '');
-                break;
-        }
-        $this->status->OptionCount = 2;
-        $this->status->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
 
@@ -1137,11 +1127,7 @@ SORTHTML;
         $this->tambahan->ViewCustomAttributes = "";
 
         // status
-        if (ConvertToBool($this->status->CurrentValue)) {
-            $this->status->ViewValue = $this->status->tagCaption(1) != "" ? $this->status->tagCaption(1) : "Yes";
-        } else {
-            $this->status->ViewValue = $this->status->tagCaption(2) != "" ? $this->status->tagCaption(2) : "No";
-        }
+        $this->status->ViewValue = $this->status->CurrentValue;
         $this->status->ViewCustomAttributes = "";
 
         // created_at
@@ -1401,8 +1387,12 @@ SORTHTML;
         $this->tambahan->PlaceHolder = RemoveHtml($this->tambahan->caption());
 
         // status
+        $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
-        $this->status->EditValue = $this->status->options(false);
+        if (!$this->status->Raw) {
+            $this->status->CurrentValue = HtmlDecode($this->status->CurrentValue);
+        }
+        $this->status->EditValue = $this->status->CurrentValue;
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // created_at

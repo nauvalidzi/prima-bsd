@@ -137,13 +137,31 @@ class Product extends DbTable
         $this->idkategoribarang->Sortable = true; // Allow sort
         $this->idkategoribarang->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->idkategoribarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoriproduk', false, 'id', ["nama","","",""], [], ["x_idjenisbarang"], [], [], [], [], '', '');
+                break;
+            default:
+                $this->idkategoribarang->Lookup = new Lookup('idkategoribarang', 'kategoriproduk', false, 'id', ["nama","","",""], [], ["x_idjenisbarang"], [], [], [], [], '', '');
+                break;
+        }
         $this->idkategoribarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idkategoribarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idkategoribarang->Param, "CustomMsg");
         $this->Fields['idkategoribarang'] = &$this->idkategoribarang;
 
         // idjenisbarang
-        $this->idjenisbarang = new DbField('product', 'product', 'x_idjenisbarang', 'idjenisbarang', '`idjenisbarang`', '`idjenisbarang`', 3, 11, -1, false, '`idjenisbarang`', false, false, false, 'FORMATTED TEXT', 'TEXT');
+        $this->idjenisbarang = new DbField('product', 'product', 'x_idjenisbarang', 'idjenisbarang', '`idjenisbarang`', '`idjenisbarang`', 3, 11, -1, false, '`idjenisbarang`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->idjenisbarang->Sortable = true; // Allow sort
+        $this->idjenisbarang->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->idjenisbarang->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
+        switch ($CurrentLanguage) {
+            case "en":
+                $this->idjenisbarang->Lookup = new Lookup('idjenisbarang', 'jenisproduk', false, 'id', ["nama","","",""], ["x_idkategoribarang"], [], ["idkategoribarang"], ["x_idkategoribarang"], [], [], '', '');
+                break;
+            default:
+                $this->idjenisbarang->Lookup = new Lookup('idjenisbarang', 'jenisproduk', false, 'id', ["nama","","",""], ["x_idkategoribarang"], [], ["idkategoribarang"], ["x_idkategoribarang"], [], [], '', '');
+                break;
+        }
         $this->idjenisbarang->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->idjenisbarang->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->idjenisbarang->Param, "CustomMsg");
         $this->Fields['idjenisbarang'] = &$this->idjenisbarang;
@@ -1224,12 +1242,45 @@ SORTHTML;
         $this->nama->ViewCustomAttributes = "";
 
         // idkategoribarang
-        $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+        if ($curVal != "") {
+            $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
+            if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
+                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
+                } else {
+                    $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+                }
+            }
+        } else {
+            $this->idkategoribarang->ViewValue = null;
+        }
         $this->idkategoribarang->ViewCustomAttributes = "";
 
         // idjenisbarang
-        $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
-        $this->idjenisbarang->ViewValue = FormatNumber($this->idjenisbarang->ViewValue, 0, -2, -2, -2);
+        $curVal = trim(strval($this->idjenisbarang->CurrentValue));
+        if ($curVal != "") {
+            $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
+            if ($this->idjenisbarang->ViewValue === null) { // Lookup from database
+                $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                $sqlWrk = $this->idjenisbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                if ($ari > 0) { // Lookup values found
+                    $arwrk = $this->idjenisbarang->Lookup->renderViewRow($rswrk[0]);
+                    $this->idjenisbarang->ViewValue = $this->idjenisbarang->displayValue($arwrk);
+                } else {
+                    $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
+                }
+            }
+        } else {
+            $this->idjenisbarang->ViewValue = null;
+        }
         $this->idjenisbarang->ViewCustomAttributes = "";
 
         // idkualitasbarang
@@ -1244,7 +1295,7 @@ SORTHTML;
             if ($this->idproduct_acuan->ViewValue === null) { // Lookup from database
                 $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idbrand = 1" : "";
+                    return (CurrentPageID() == "add") ? "idbrand > 1" : "";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idproduct_acuan->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1528,7 +1579,6 @@ SORTHTML;
         // idjenisbarang
         $this->idjenisbarang->EditAttrs["class"] = "form-control";
         $this->idjenisbarang->EditCustomAttributes = "";
-        $this->idjenisbarang->EditValue = $this->idjenisbarang->CurrentValue;
         $this->idjenisbarang->PlaceHolder = RemoveHtml($this->idjenisbarang->caption());
 
         // idkualitasbarang

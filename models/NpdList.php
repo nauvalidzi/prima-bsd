@@ -577,7 +577,7 @@ class NpdList extends Npd
         $this->sifatorder->setVisibility();
         $this->kodeorder->setVisibility();
         $this->nomororder->Visible = false;
-        $this->idproduct_acuan->setVisibility();
+        $this->idproduct_acuan->Visible = false;
         $this->kategoriproduk->setVisibility();
         $this->jenisproduk->setVisibility();
         $this->fungsiproduk->Visible = false;
@@ -637,7 +637,7 @@ class NpdList extends Npd
         $this->delivery_singlepoint->Visible = false;
         $this->delivery_multipoint->Visible = false;
         $this->delivery_termlain->Visible = false;
-        $this->status->Visible = false;
+        $this->status->setVisibility();
         $this->readonly->Visible = false;
         $this->receipt_by->Visible = false;
         $this->approve_by->Visible = false;
@@ -1887,9 +1887,9 @@ class NpdList extends Npd
             $this->updateSort($this->tanggal_order); // tanggal_order
             $this->updateSort($this->sifatorder); // sifatorder
             $this->updateSort($this->kodeorder); // kodeorder
-            $this->updateSort($this->idproduct_acuan); // idproduct_acuan
             $this->updateSort($this->kategoriproduk); // kategoriproduk
             $this->updateSort($this->jenisproduk); // jenisproduk
+            $this->updateSort($this->status); // status
             $this->setStartRecordNumber(1); // Reset start position
         }
     }
@@ -3246,31 +3246,6 @@ class NpdList extends Npd
             $this->nomororder->ViewValue = $this->nomororder->CurrentValue;
             $this->nomororder->ViewCustomAttributes = "";
 
-            // idproduct_acuan
-            $curVal = trim(strval($this->idproduct_acuan->CurrentValue));
-            if ($curVal != "") {
-                $this->idproduct_acuan->ViewValue = $this->idproduct_acuan->lookupCacheOption($curVal);
-                if ($this->idproduct_acuan->ViewValue === null) { // Lookup from database
-                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
-                    $lookupFilter = function() {
-                        return (CurrentPageID() == "add" || CurrentPageID() == "edit") ? "idbrand = 1" : "";
-                    };
-                    $lookupFilter = $lookupFilter->bindTo($this);
-                    $sqlWrk = $this->idproduct_acuan->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
-                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
-                    $ari = count($rswrk);
-                    if ($ari > 0) { // Lookup values found
-                        $arwrk = $this->idproduct_acuan->Lookup->renderViewRow($rswrk[0]);
-                        $this->idproduct_acuan->ViewValue = $this->idproduct_acuan->displayValue($arwrk);
-                    } else {
-                        $this->idproduct_acuan->ViewValue = $this->idproduct_acuan->CurrentValue;
-                    }
-                }
-            } else {
-                $this->idproduct_acuan->ViewValue = null;
-            }
-            $this->idproduct_acuan->ViewCustomAttributes = "";
-
             // kategoriproduk
             $curVal = trim(strval($this->kategoriproduk->CurrentValue));
             if ($curVal != "") {
@@ -3952,11 +3927,6 @@ class NpdList extends Npd
             $this->kodeorder->HrefValue = "";
             $this->kodeorder->TooltipValue = "";
 
-            // idproduct_acuan
-            $this->idproduct_acuan->LinkCustomAttributes = "";
-            $this->idproduct_acuan->HrefValue = "";
-            $this->idproduct_acuan->TooltipValue = "";
-
             // kategoriproduk
             $this->kategoriproduk->LinkCustomAttributes = "";
             $this->kategoriproduk->HrefValue = "";
@@ -3966,6 +3936,11 @@ class NpdList extends Npd
             $this->jenisproduk->LinkCustomAttributes = "";
             $this->jenisproduk->HrefValue = "";
             $this->jenisproduk->TooltipValue = "";
+
+            // status
+            $this->status->LinkCustomAttributes = "";
+            $this->status->HrefValue = "";
+            $this->status->TooltipValue = "";
         }
 
         // Call Row Rendered event
@@ -4225,30 +4200,6 @@ class NpdList extends Npd
     {
         // Example:
         //$footer = "your footer";
-        echo "
-        <script>
-
-        function selesai(id) {
-    		$.get('api/npd/selesai/'+id, function(data) {
-    			if (data == 1) {
-    				location.reload();
-    			} else {
-    				alert('Gagal menandai selesai : '+data);
-    			}
-    		});
-    	}
-
-        function belumselesai(id) {
-    		$.get('api/npd/belumselesai/'+id, function(data) {
-    			if (data == 1) {
-    				location.reload();
-    			} else {
-    				alert('Gagal menandai belum selesai : '+data);
-    			}
-    		});
-    	}
-        </script>
-        ";
     }
 
     // Form Custom Validate event
@@ -4266,7 +4217,7 @@ class NpdList extends Npd
         //$opt->Header = "xxx";
         //$opt->OnLeft = true; // Link on left
         //$opt->MoveTo(0); // Move to first column
-        //$this->ListOptions->Items["details"]->Visible = false;
+        $this->ListOptions->Items["details"]->Visible = false;
 
         //$item = &$this->ListOptions->add("aksi");
         //$item->Header = "Action";

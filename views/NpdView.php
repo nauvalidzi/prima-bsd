@@ -1012,7 +1012,7 @@ $Page->showMessage();
                 <th class="text-right w-col-3"><?= $Page->kemasancatatan->caption() ?></th>
                 <td><slot class="ew-slot" name="tpx_npd_kemasancatatan"></slot></td>
             </tr>
-        </div>
+        </table>
     </div>
 </div>
 <div class="card">

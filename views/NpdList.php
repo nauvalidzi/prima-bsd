@@ -147,14 +147,14 @@ $Page->ListOptions->render("header", "left");
 <?php if ($Page->kodeorder->Visible) { // kodeorder ?>
         <th data-name="kodeorder" class="<?= $Page->kodeorder->headerCellClass() ?>"><div id="elh_npd_kodeorder" class="npd_kodeorder"><?= $Page->renderSort($Page->kodeorder) ?></div></th>
 <?php } ?>
-<?php if ($Page->idproduct_acuan->Visible) { // idproduct_acuan ?>
-        <th data-name="idproduct_acuan" class="<?= $Page->idproduct_acuan->headerCellClass() ?>" style="white-space: nowrap;"><div id="elh_npd_idproduct_acuan" class="npd_idproduct_acuan"><?= $Page->renderSort($Page->idproduct_acuan) ?></div></th>
-<?php } ?>
 <?php if ($Page->kategoriproduk->Visible) { // kategoriproduk ?>
         <th data-name="kategoriproduk" class="<?= $Page->kategoriproduk->headerCellClass() ?>"><div id="elh_npd_kategoriproduk" class="npd_kategoriproduk"><?= $Page->renderSort($Page->kategoriproduk) ?></div></th>
 <?php } ?>
 <?php if ($Page->jenisproduk->Visible) { // jenisproduk ?>
         <th data-name="jenisproduk" class="<?= $Page->jenisproduk->headerCellClass() ?>"><div id="elh_npd_jenisproduk" class="npd_jenisproduk"><?= $Page->renderSort($Page->jenisproduk) ?></div></th>
+<?php } ?>
+<?php if ($Page->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Page->status->headerCellClass() ?>"><div id="elh_npd_status" class="npd_status"><?= $Page->renderSort($Page->status) ?></div></th>
 <?php } ?>
 <?php
 // Render list options (header, right)
@@ -255,14 +255,6 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 </span>
 </td>
     <?php } ?>
-    <?php if ($Page->idproduct_acuan->Visible) { // idproduct_acuan ?>
-        <td data-name="idproduct_acuan" <?= $Page->idproduct_acuan->cellAttributes() ?>>
-<span id="el<?= $Page->RowCount ?>_npd_idproduct_acuan">
-<span<?= $Page->idproduct_acuan->viewAttributes() ?>>
-<?= $Page->idproduct_acuan->getViewValue() ?></span>
-</span>
-</td>
-    <?php } ?>
     <?php if ($Page->kategoriproduk->Visible) { // kategoriproduk ?>
         <td data-name="kategoriproduk" <?= $Page->kategoriproduk->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_npd_kategoriproduk">
@@ -276,6 +268,14 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
 <span id="el<?= $Page->RowCount ?>_npd_jenisproduk">
 <span<?= $Page->jenisproduk->viewAttributes() ?>>
 <?= $Page->jenisproduk->getViewValue() ?></span>
+</span>
+</td>
+    <?php } ?>
+    <?php if ($Page->status->Visible) { // status ?>
+        <td data-name="status" <?= $Page->status->cellAttributes() ?>>
+<span id="el<?= $Page->RowCount ?>_npd_status">
+<span<?= $Page->status->viewAttributes() ?>>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
@@ -339,7 +339,8 @@ loadjs.ready("head", function() {
 </script>
 <script>
 loadjs.ready("load", function () {
-    // Write your table-specific startup script here, no need to add script tags.
+    // Startup script
+    function selesai(e){$.get("api/npd/selesai/"+e,(function(e){1==e?location.reload():alert("Gagal menandai selesai : "+e)}))}function belumselesai(e){$.get("api/npd/belumselesai/"+e,(function(e){1==e?location.reload():alert("Gagal menandai belum selesai : "+e)}))}
 });
 </script>
 <?php } ?>

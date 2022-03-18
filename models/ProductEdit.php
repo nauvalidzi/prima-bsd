@@ -505,6 +505,8 @@ class ProductEdit extends Product
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idbrand);
+        $this->setupLookupOptions($this->idkategoribarang);
+        $this->setupLookupOptions($this->idjenisbarang);
         $this->setupLookupOptions($this->idproduct_acuan);
 
         // Check modal
@@ -1091,12 +1093,45 @@ class ProductEdit extends Product
             $this->nama->ViewCustomAttributes = "";
 
             // idkategoribarang
-            $this->idkategoribarang->ViewValue = FormatNumber($this->idkategoribarang->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+            if ($curVal != "") {
+                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
+                if ($this->idkategoribarang->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idkategoribarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idkategoribarang->Lookup->renderViewRow($rswrk[0]);
+                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->displayValue($arwrk);
+                    } else {
+                        $this->idkategoribarang->ViewValue = $this->idkategoribarang->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idkategoribarang->ViewValue = null;
+            }
             $this->idkategoribarang->ViewCustomAttributes = "";
 
             // idjenisbarang
-            $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
-            $this->idjenisbarang->ViewValue = FormatNumber($this->idjenisbarang->ViewValue, 0, -2, -2, -2);
+            $curVal = trim(strval($this->idjenisbarang->CurrentValue));
+            if ($curVal != "") {
+                $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
+                if ($this->idjenisbarang->ViewValue === null) { // Lookup from database
+                    $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+                    $sqlWrk = $this->idjenisbarang->Lookup->getSql(false, $filterWrk, '', $this, true, true);
+                    $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                    $ari = count($rswrk);
+                    if ($ari > 0) { // Lookup values found
+                        $arwrk = $this->idjenisbarang->Lookup->renderViewRow($rswrk[0]);
+                        $this->idjenisbarang->ViewValue = $this->idjenisbarang->displayValue($arwrk);
+                    } else {
+                        $this->idjenisbarang->ViewValue = $this->idjenisbarang->CurrentValue;
+                    }
+                }
+            } else {
+                $this->idjenisbarang->ViewValue = null;
+            }
             $this->idjenisbarang->ViewCustomAttributes = "";
 
             // idkualitasbarang
@@ -1111,7 +1146,7 @@ class ProductEdit extends Product
                 if ($this->idproduct_acuan->ViewValue === null) { // Lookup from database
                     $filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
                     $lookupFilter = function() {
-                        return (CurrentPageID() == "add") ? "idbrand = 1" : "";
+                        return (CurrentPageID() == "add") ? "idbrand > 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     $sqlWrk = $this->idproduct_acuan->Lookup->getSql(false, $filterWrk, $lookupFilter, $this, true, true);
@@ -1356,12 +1391,51 @@ class ProductEdit extends Product
             // idkategoribarang
             $this->idkategoribarang->EditAttrs["class"] = "form-control";
             $this->idkategoribarang->EditCustomAttributes = "";
+            $curVal = trim(strval($this->idkategoribarang->CurrentValue));
+            if ($curVal != "") {
+                $this->idkategoribarang->ViewValue = $this->idkategoribarang->lookupCacheOption($curVal);
+            } else {
+                $this->idkategoribarang->ViewValue = $this->idkategoribarang->Lookup !== null && is_array($this->idkategoribarang->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idkategoribarang->ViewValue !== null) { // Load from cache
+                $this->idkategoribarang->EditValue = array_values($this->idkategoribarang->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idkategoribarang->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idkategoribarang->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idkategoribarang->EditValue = $arwrk;
+            }
             $this->idkategoribarang->PlaceHolder = RemoveHtml($this->idkategoribarang->caption());
 
             // idjenisbarang
             $this->idjenisbarang->EditAttrs["class"] = "form-control";
             $this->idjenisbarang->EditCustomAttributes = "";
-            $this->idjenisbarang->EditValue = HtmlEncode($this->idjenisbarang->CurrentValue);
+            $curVal = trim(strval($this->idjenisbarang->CurrentValue));
+            if ($curVal != "") {
+                $this->idjenisbarang->ViewValue = $this->idjenisbarang->lookupCacheOption($curVal);
+            } else {
+                $this->idjenisbarang->ViewValue = $this->idjenisbarang->Lookup !== null && is_array($this->idjenisbarang->Lookup->Options) ? $curVal : null;
+            }
+            if ($this->idjenisbarang->ViewValue !== null) { // Load from cache
+                $this->idjenisbarang->EditValue = array_values($this->idjenisbarang->Lookup->Options);
+            } else { // Lookup from database
+                if ($curVal == "") {
+                    $filterWrk = "0=1";
+                } else {
+                    $filterWrk = "`id`" . SearchString("=", $this->idjenisbarang->CurrentValue, DATATYPE_NUMBER, "");
+                }
+                $sqlWrk = $this->idjenisbarang->Lookup->getSql(true, $filterWrk, '', $this, false, true);
+                $rswrk = Conn()->executeQuery($sqlWrk)->fetchAll(\PDO::FETCH_BOTH);
+                $ari = count($rswrk);
+                $arwrk = $rswrk;
+                $this->idjenisbarang->EditValue = $arwrk;
+            }
             $this->idjenisbarang->PlaceHolder = RemoveHtml($this->idjenisbarang->caption());
 
             // idkualitasbarang
@@ -1388,7 +1462,7 @@ class ProductEdit extends Product
                     $filterWrk = "`id`" . SearchString("=", $this->idproduct_acuan->CurrentValue, DATATYPE_NUMBER, "");
                 }
                 $lookupFilter = function() {
-                    return (CurrentPageID() == "add") ? "idbrand = 1" : "";
+                    return (CurrentPageID() == "add") ? "idbrand > 1" : "";
                 };
                 $lookupFilter = $lookupFilter->bindTo($this);
                 $sqlWrk = $this->idproduct_acuan->Lookup->getSql(true, $filterWrk, $lookupFilter, $this, false, true);
@@ -1608,9 +1682,6 @@ class ProductEdit extends Product
             if (!$this->idjenisbarang->IsDetailKey && EmptyValue($this->idjenisbarang->FormValue)) {
                 $this->idjenisbarang->addErrorMessage(str_replace("%s", $this->idjenisbarang->caption(), $this->idjenisbarang->RequiredErrorMessage));
             }
-        }
-        if (!CheckInteger($this->idjenisbarang->FormValue)) {
-            $this->idjenisbarang->addErrorMessage($this->idjenisbarang->getErrorMessage(false));
         }
         if ($this->idkualitasbarang->Required) {
             if (!$this->idkualitasbarang->IsDetailKey && EmptyValue($this->idkualitasbarang->FormValue)) {
@@ -2012,9 +2083,13 @@ class ProductEdit extends Product
             switch ($fld->FieldVar) {
                 case "x_idbrand":
                     break;
+                case "x_idkategoribarang":
+                    break;
+                case "x_idjenisbarang":
+                    break;
                 case "x_idproduct_acuan":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idbrand = 1" : "";
+                        return (CurrentPageID() == "add") ? "idbrand > 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;

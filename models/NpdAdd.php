@@ -3322,7 +3322,7 @@ class NpdAdd extends Npd
 
             // kodeorder
             $this->kodeorder->EditAttrs["class"] = "form-control";
-            $this->kodeorder->EditCustomAttributes = "";
+            $this->kodeorder->EditCustomAttributes = "readonly";
             if (!$this->kodeorder->Raw) {
                 $this->kodeorder->CurrentValue = HtmlDecode($this->kodeorder->CurrentValue);
             }
@@ -4134,8 +4134,9 @@ class NpdAdd extends Npd
             $this->delivery_termlain->PlaceHolder = RemoveHtml($this->delivery_termlain->caption());
 
             // status
+            $this->status->EditAttrs["class"] = "form-control";
             $this->status->EditCustomAttributes = "";
-            $this->status->EditValue = $this->status->options(false);
+            $this->status->EditValue = $this->status->options(true);
             $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
             // receipt_by
@@ -4889,7 +4890,7 @@ class NpdAdd extends Npd
             }
         }
         if ($this->status->Required) {
-            if ($this->status->FormValue == "") {
+            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
                 $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
@@ -5170,7 +5171,7 @@ class NpdAdd extends Npd
         $this->delivery_termlain->setDbValueDef($rsnew, $this->delivery_termlain->CurrentValue, null, false);
 
         // status
-        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, 0, strval($this->status->CurrentValue) == "");
+        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, "", false);
 
         // receipt_by
         $this->receipt_by->setDbValueDef($rsnew, $this->receipt_by->CurrentValue, null, false);

@@ -431,6 +431,8 @@ class ProductPreview extends Product
 
         // Set up lookup cache
         $this->setupLookupOptions($this->idbrand);
+        $this->setupLookupOptions($this->idkategoribarang);
+        $this->setupLookupOptions($this->idjenisbarang);
         $this->setupLookupOptions($this->idproduct_acuan);
 
         // Load filter
@@ -777,9 +779,13 @@ class ProductPreview extends Product
             switch ($fld->FieldVar) {
                 case "x_idbrand":
                     break;
+                case "x_idkategoribarang":
+                    break;
+                case "x_idjenisbarang":
+                    break;
                 case "x_idproduct_acuan":
                     $lookupFilter = function () {
-                        return (CurrentPageID() == "add") ? "idbrand = 1" : "";
+                        return (CurrentPageID() == "add") ? "idbrand > 1" : "";
                     };
                     $lookupFilter = $lookupFilter->bindTo($this);
                     break;

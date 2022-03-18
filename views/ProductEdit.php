@@ -24,7 +24,7 @@ loadjs.ready("head", function () {
         ["kode", [fields.kode.visible && fields.kode.required ? ew.Validators.required(fields.kode.caption) : null], fields.kode.isInvalid],
         ["nama", [fields.nama.visible && fields.nama.required ? ew.Validators.required(fields.nama.caption) : null], fields.nama.isInvalid],
         ["idkategoribarang", [fields.idkategoribarang.visible && fields.idkategoribarang.required ? ew.Validators.required(fields.idkategoribarang.caption) : null], fields.idkategoribarang.isInvalid],
-        ["idjenisbarang", [fields.idjenisbarang.visible && fields.idjenisbarang.required ? ew.Validators.required(fields.idjenisbarang.caption) : null, ew.Validators.integer], fields.idjenisbarang.isInvalid],
+        ["idjenisbarang", [fields.idjenisbarang.visible && fields.idjenisbarang.required ? ew.Validators.required(fields.idjenisbarang.caption) : null], fields.idjenisbarang.isInvalid],
         ["idkualitasbarang", [fields.idkualitasbarang.visible && fields.idkualitasbarang.required ? ew.Validators.required(fields.idkualitasbarang.caption) : null, ew.Validators.integer], fields.idkualitasbarang.isInvalid],
         ["idproduct_acuan", [fields.idproduct_acuan.visible && fields.idproduct_acuan.required ? ew.Validators.required(fields.idproduct_acuan.caption) : null], fields.idproduct_acuan.isInvalid],
         ["ukuran", [fields.ukuran.visible && fields.ukuran.required ? ew.Validators.required(fields.ukuran.caption) : null], fields.ukuran.isInvalid],
@@ -105,6 +105,8 @@ loadjs.ready("head", function () {
 
     // Dynamic selection lists
     fproductedit.lists.idbrand = <?= $Page->idbrand->toClientList($Page) ?>;
+    fproductedit.lists.idkategoribarang = <?= $Page->idkategoribarang->toClientList($Page) ?>;
+    fproductedit.lists.idjenisbarang = <?= $Page->idjenisbarang->toClientList($Page) ?>;
     fproductedit.lists.idproduct_acuan = <?= $Page->idproduct_acuan->toClientList($Page) ?>;
     fproductedit.lists.ijinbpom = <?= $Page->ijinbpom->toClientList($Page) ?>;
     fproductedit.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
@@ -204,6 +206,7 @@ loadjs.ready("head", function() {
         <label id="elh_product_idkategoribarang" for="x_idkategoribarang" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idkategoribarang->caption() ?><?= $Page->idkategoribarang->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkategoribarang->cellAttributes() ?>>
 <span id="el_product_idkategoribarang">
+<?php $Page->idkategoribarang->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x_idkategoribarang"
         name="x_idkategoribarang"
@@ -218,6 +221,7 @@ loadjs.ready("head", function() {
     </select>
     <?= $Page->idkategoribarang->getCustomMessage() ?>
     <div class="invalid-feedback"><?= $Page->idkategoribarang->getErrorMessage() ?></div>
+<?= $Page->idkategoribarang->Lookup->getParamTag($Page, "p_x_idkategoribarang") ?>
 <script>
 loadjs.ready("head", function() {
     var el = document.querySelector("select[data-select2-id='product_x_idkategoribarang']"),
@@ -236,9 +240,30 @@ loadjs.ready("head", function() {
         <label id="elh_product_idjenisbarang" for="x_idjenisbarang" class="<?= $Page->LeftColumnClass ?>"><?= $Page->idjenisbarang->caption() ?><?= $Page->idjenisbarang->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idjenisbarang->cellAttributes() ?>>
 <span id="el_product_idjenisbarang">
-<input type="<?= $Page->idjenisbarang->getInputTextType() ?>" data-table="product" data-field="x_idjenisbarang" name="x_idjenisbarang" id="x_idjenisbarang" size="30" placeholder="<?= HtmlEncode($Page->idjenisbarang->getPlaceHolder()) ?>" value="<?= $Page->idjenisbarang->EditValue ?>"<?= $Page->idjenisbarang->editAttributes() ?> aria-describedby="x_idjenisbarang_help">
-<?= $Page->idjenisbarang->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->idjenisbarang->getErrorMessage() ?></div>
+    <select
+        id="x_idjenisbarang"
+        name="x_idjenisbarang"
+        class="form-control ew-select<?= $Page->idjenisbarang->isInvalidClass() ?>"
+        data-select2-id="product_x_idjenisbarang"
+        data-table="product"
+        data-field="x_idjenisbarang"
+        data-value-separator="<?= $Page->idjenisbarang->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idjenisbarang->getPlaceHolder()) ?>"
+        <?= $Page->idjenisbarang->editAttributes() ?>>
+        <?= $Page->idjenisbarang->selectOptionListHtml("x_idjenisbarang") ?>
+    </select>
+    <?= $Page->idjenisbarang->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->idjenisbarang->getErrorMessage() ?></div>
+<?= $Page->idjenisbarang->Lookup->getParamTag($Page, "p_x_idjenisbarang") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='product_x_idjenisbarang']"),
+        options = { name: "x_idjenisbarang", selectId: "product_x_idjenisbarang", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.product.fields.idjenisbarang.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
 </div></div>
     </div>

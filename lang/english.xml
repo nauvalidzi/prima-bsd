@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2022/3/16" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
+<ew-language date="2022/3/18" version="17.0.5" id="en" name="English" desc="English" author="e.World Technology Limited">
   <!--
     *** Important Notes:
     1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -1993,10 +1993,10 @@
       </field>
       <field id="status">
         <phrase id="fldcaption" value="Status" />
-        <phrase id="fldtagvalue1" value="1" />
-        <phrase id="fldtagcaption1" value="Yes" />
-        <phrase id="fldtagvalue2" value="0" />
-        <phrase id="fldtagcaption2" value="No" />
+        <phrase id="fldtagvalue1" value="Draft" />
+        <phrase id="fldtagcaption1" value="Draft" />
+        <phrase id="fldtagvalue2" value="Ready" />
+        <phrase id="fldtagcaption2" value="Diajukan" />
       </field>
       <field id="readonly">
         <phrase id="fldcaption" value="Lock NPD" />
@@ -3979,7 +3979,7 @@
         <phrase id="fldcaption" value="idproduct" />
       </field>
       <field id="idbrand">
-        <phrase id="fldcaption" value="idbrand" />
+        <phrase id="fldcaption" value="Brand" />
       </field>
       <field id="kodeproduct">
         <phrase id="fldcaption" value="Kode Produk" />

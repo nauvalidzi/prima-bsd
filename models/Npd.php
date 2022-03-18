@@ -829,9 +829,12 @@ class Npd extends DbTable
         $this->Fields['delivery_termlain'] = &$this->delivery_termlain;
 
         // status
-        $this->status = new DbField('npd', 'npd', 'x_status', 'status', '`status`', '`status`', 16, 1, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'RADIO');
+        $this->status = new DbField('npd', 'npd', 'x_status', 'status', '`status`', '`status`', 200, 50, -1, false, '`status`', false, false, false, 'FORMATTED TEXT', 'SELECT');
         $this->status->Nullable = false; // NOT NULL field
+        $this->status->Required = true; // Required field
         $this->status->Sortable = true; // Allow sort
+        $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
+        $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         switch ($CurrentLanguage) {
             case "en":
                 $this->status->Lookup = new Lookup('status', 'npd', false, '', ["","","",""], [], [], [], [], [], [], '', '');
@@ -841,7 +844,6 @@ class Npd extends DbTable
                 break;
         }
         $this->status->OptionCount = 2;
-        $this->status->DefaultErrorMessage = $Language->phrase("IncorrectField");
         $this->status->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->status->Param, "CustomMsg");
         $this->Fields['status'] = &$this->status;
 
@@ -3485,7 +3487,7 @@ SORTHTML;
 
         // kodeorder
         $this->kodeorder->EditAttrs["class"] = "form-control";
-        $this->kodeorder->EditCustomAttributes = "";
+        $this->kodeorder->EditCustomAttributes = "readonly";
         $this->kodeorder->EditValue = $this->kodeorder->CurrentValue;
         $this->kodeorder->ViewCustomAttributes = "";
 
@@ -3850,8 +3852,9 @@ SORTHTML;
         $this->delivery_termlain->PlaceHolder = RemoveHtml($this->delivery_termlain->caption());
 
         // status
+        $this->status->EditAttrs["class"] = "form-control";
         $this->status->EditCustomAttributes = "";
-        $this->status->EditValue = $this->status->options(false);
+        $this->status->EditValue = $this->status->options(true);
         $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
         // readonly
@@ -4303,7 +4306,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to false
-        //$rsnew['kodeorder'] = getNextKodeNpd($rsnew['idcustomer']);
+        $rsnew['kodeorder'] = getNextKodeNpd($rsnew['idcustomer']);
         $rsnew['created_at'] = date('Y-m-d H:i:s');
         $rsnew['updated_at'] = date('Y-m-d H:i:s');
         return true;

@@ -53,17 +53,6 @@ $npd = Container("npd");
 </td>
         </tr>
 <?php } ?>
-<?php if ($npd->idproduct_acuan->Visible) { // idproduct_acuan ?>
-        <tr id="r_idproduct_acuan">
-            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->idproduct_acuan->caption() ?></td>
-            <td <?= $npd->idproduct_acuan->cellAttributes() ?>>
-<span id="el_npd_idproduct_acuan">
-<span<?= $npd->idproduct_acuan->viewAttributes() ?>>
-<?= $npd->idproduct_acuan->getViewValue() ?></span>
-</span>
-</td>
-        </tr>
-<?php } ?>
 <?php if ($npd->kategoriproduk->Visible) { // kategoriproduk ?>
         <tr id="r_kategoriproduk">
             <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->kategoriproduk->caption() ?></td>
@@ -82,6 +71,17 @@ $npd = Container("npd");
 <span id="el_npd_jenisproduk">
 <span<?= $npd->jenisproduk->viewAttributes() ?>>
 <?= $npd->jenisproduk->getViewValue() ?></span>
+</span>
+</td>
+        </tr>
+<?php } ?>
+<?php if ($npd->status->Visible) { // status ?>
+        <tr id="r_status">
+            <td class="<?= $npd->TableLeftColumnClass ?>"><?= $npd->status->caption() ?></td>
+            <td <?= $npd->status->cellAttributes() ?>>
+<span id="el_npd_status">
+<span<?= $npd->status->viewAttributes() ?>>
+<?= $npd->status->getViewValue() ?></span>
 </span>
 </td>
         </tr>

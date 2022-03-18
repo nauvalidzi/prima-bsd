@@ -158,7 +158,6 @@ class StockDeliveryorderDetail extends DbTable
 
         // keterangan
         $this->keterangan = new DbField('stock_deliveryorder_detail', 'stock_deliveryorder_detail', 'x_keterangan', 'keterangan', '`keterangan`', '`keterangan`', 201, 65535, -1, false, '`keterangan`', false, false, false, 'FORMATTED TEXT', 'TEXTAREA');
-        $this->keterangan->Required = true; // Required field
         $this->keterangan->Sortable = true; // Allow sort
         $this->keterangan->CustomMsg = $Language->FieldPhrase($this->TableVar, $this->keterangan->Param, "CustomMsg");
         $this->Fields['keterangan'] = &$this->keterangan;
@@ -1405,6 +1404,7 @@ SORTHTML;
     {
         // Enter your code here
         // To cancel, set return value to False
+        ExecuteUpdate("UPDATE stocks SET aktif = 0 WHERE prop_id = {$rs['id']} AND prop_code like '%stockdelivery-in%'");
         return true;
     }
 

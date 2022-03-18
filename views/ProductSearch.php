@@ -27,7 +27,7 @@ loadjs.ready("head", function () {
         ["kode", [], fields.kode.isInvalid],
         ["nama", [], fields.nama.isInvalid],
         ["idkategoribarang", [], fields.idkategoribarang.isInvalid],
-        ["idjenisbarang", [ew.Validators.integer], fields.idjenisbarang.isInvalid],
+        ["idjenisbarang", [], fields.idjenisbarang.isInvalid],
         ["idkualitasbarang", [ew.Validators.integer], fields.idkualitasbarang.isInvalid],
         ["idproduct_acuan", [], fields.idproduct_acuan.isInvalid],
         ["ukuran", [], fields.ukuran.isInvalid],
@@ -84,6 +84,8 @@ loadjs.ready("head", function () {
 
     // Dynamic selection lists
     fproductsearch.lists.idbrand = <?= $Page->idbrand->toClientList($Page) ?>;
+    fproductsearch.lists.idkategoribarang = <?= $Page->idkategoribarang->toClientList($Page) ?>;
+    fproductsearch.lists.idjenisbarang = <?= $Page->idjenisbarang->toClientList($Page) ?>;
     fproductsearch.lists.idproduct_acuan = <?= $Page->idproduct_acuan->toClientList($Page) ?>;
     fproductsearch.lists.ijinbpom = <?= $Page->ijinbpom->toClientList($Page) ?>;
     fproductsearch.lists.aktif = <?= $Page->aktif->toClientList($Page) ?>;
@@ -203,6 +205,7 @@ loadjs.ready("head", function() {
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idkategoribarang->cellAttributes() ?>>
             <span id="el_product_idkategoribarang" class="ew-search-field ew-search-field-single">
+<?php $Page->idkategoribarang->EditAttrs->prepend("onchange", "ew.updateOptions.call(this);"); ?>
     <select
         id="x_idkategoribarang"
         name="x_idkategoribarang"
@@ -216,6 +219,7 @@ loadjs.ready("head", function() {
         <?= $Page->idkategoribarang->selectOptionListHtml("x_idkategoribarang") ?>
     </select>
     <div class="invalid-feedback"><?= $Page->idkategoribarang->getErrorMessage(false) ?></div>
+<?= $Page->idkategoribarang->Lookup->getParamTag($Page, "p_x_idkategoribarang") ?>
 <script>
 loadjs.ready("head", function() {
     var el = document.querySelector("select[data-select2-id='product_x_idkategoribarang']"),
@@ -239,8 +243,29 @@ loadjs.ready("head", function() {
         </label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->idjenisbarang->cellAttributes() ?>>
             <span id="el_product_idjenisbarang" class="ew-search-field ew-search-field-single">
-<input type="<?= $Page->idjenisbarang->getInputTextType() ?>" data-table="product" data-field="x_idjenisbarang" name="x_idjenisbarang" id="x_idjenisbarang" size="30" placeholder="<?= HtmlEncode($Page->idjenisbarang->getPlaceHolder()) ?>" value="<?= $Page->idjenisbarang->EditValue ?>"<?= $Page->idjenisbarang->editAttributes() ?>>
-<div class="invalid-feedback"><?= $Page->idjenisbarang->getErrorMessage(false) ?></div>
+    <select
+        id="x_idjenisbarang"
+        name="x_idjenisbarang"
+        class="form-control ew-select<?= $Page->idjenisbarang->isInvalidClass() ?>"
+        data-select2-id="product_x_idjenisbarang"
+        data-table="product"
+        data-field="x_idjenisbarang"
+        data-value-separator="<?= $Page->idjenisbarang->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->idjenisbarang->getPlaceHolder()) ?>"
+        <?= $Page->idjenisbarang->editAttributes() ?>>
+        <?= $Page->idjenisbarang->selectOptionListHtml("x_idjenisbarang") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Page->idjenisbarang->getErrorMessage(false) ?></div>
+<?= $Page->idjenisbarang->Lookup->getParamTag($Page, "p_x_idjenisbarang") ?>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='product_x_idjenisbarang']"),
+        options = { name: "x_idjenisbarang", selectId: "product_x_idjenisbarang", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.product.fields.idjenisbarang.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span>
         </div></div>
     </div>

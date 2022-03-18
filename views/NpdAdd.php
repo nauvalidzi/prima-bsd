@@ -1635,33 +1635,34 @@ loadjs.ready("head", function() {
 <?php } ?>
 <?php if ($Page->status->Visible) { // status ?>
     <div id="r_status" class="form-group row">
-        <label id="elh_npd_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
+        <label id="elh_npd_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><template id="tpc_npd_status"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></template></label>
         <div class="<?= $Page->RightColumnClass ?>"><div <?= $Page->status->cellAttributes() ?>>
 <template id="tpx_npd_status"><span id="el_npd_status">
-<template id="tp_x_status">
-    <div class="custom-control custom-radio">
-        <input type="radio" class="custom-control-input" data-table="npd" data-field="x_status" name="x_status" id="x_status"<?= $Page->status->editAttributes() ?>>
-        <label class="custom-control-label"></label>
-    </div>
-</template>
-<div id="dsl_x_status" class="ew-item-list"></div>
-<input type="hidden"
-    is="selection-list"
-    id="x_status"
-    name="x_status"
-    value="<?= HtmlEncode($Page->status->CurrentValue) ?>"
-    data-type="select-one"
-    data-template="tp_x_status"
-    data-target="dsl_x_status"
-    data-repeatcolumn="5"
-    class="form-control<?= $Page->status->isInvalidClass() ?>"
-    data-table="npd"
-    data-field="x_status"
-    data-page="1"
-    data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
-    <?= $Page->status->editAttributes() ?>>
-<?= $Page->status->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+    <select
+        id="x_status"
+        name="x_status"
+        class="form-control ew-select<?= $Page->status->isInvalidClass() ?>"
+        data-select2-id="npd_x_status"
+        data-table="npd"
+        data-field="x_status"
+        data-page="1"
+        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
+        <?= $Page->status->editAttributes() ?>>
+        <?= $Page->status->selectOptionListHtml("x_status") ?>
+    </select>
+    <?= $Page->status->getCustomMessage() ?>
+    <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("head", function() {
+    var el = document.querySelector("select[data-select2-id='npd_x_status']"),
+        options = { name: "x_status", selectId: "npd_x_status", language: ew.LANGUAGE_ID, dir: ew.IS_RTL ? "rtl" : "ltr" };
+    options.data = ew.vars.tables.npd.fields.status.lookupOptions;
+    options.dropdownParent = $(el).closest("#ew-modal-dialog, #ew-add-opt-dialog")[0];
+    Object.assign(options, ew.vars.tables.npd.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
 </span></template>
 </div></div>
     </div>
@@ -2169,6 +2170,6 @@ loadjs.ready("head", function() {
 <script>
 loadjs.ready("load", function () {
     // Startup script
-    loadjs.ready("jquery",(function(){$("#x_idcustomer").change((function(){$.get("api/nextKodeNpd/"+$(this).val(),(function(a){$("#x_kodeorder").val(a)}))}))})),$("input[name=x_kodeorder], input[name=x_nomororder]").css({"min-width":"",width:"100%"}),$("#x_tanggal_order, #x_target_selesai").css({"min-width":"100px",width:"70%"}),$("#x_utama_harga_isi, #x_utama_harga_isi_proyeksi, #x_utama_harga_primer, #x_utama_harga_primer_proyeksi, #x_utama_harga_sekunder, #x_utama_harga_sekunder_proyeksi, #x_utama_harga_label, #x_utama_harga_label_proyeksi, #x_utama_harga_total, #x_utama_harga_total_proyeksi").css({"min-width":"100px",width:"100%"}),$("#x_utama_harga_isi, #x_utama_harga_isi_proyeksi, #x_utama_harga_primer, #x_utama_harga_primer_proyeksi, #x_utama_harga_sekunder, #x_utama_harga_sekunder_proyeksi, #x_utama_harga_label, #x_utama_harga_label_proyeksi, #x_utama_harga_total, #x_utama_harga_total_proyeksi").attr("placeholder",""),$("#x_lain_harga_isi, #x_lain_harga_isi_proyeksi, #x_lain_harga_primer, #x_lain_harga_primer_proyeksi, #x_lain_harga_sekunder, #x_lain_harga_sekunder_proyeksi, #x_lain_harga_label, #x_lain_harga_label_proyeksi, #x_lain_harga_total, #x_lain_harga_total_proyeksi").css({"min-width":"100px",width:"100%"}),$("#x_lain_harga_isi, #x_lain_harga_isi_proyeksi, #x_lain_harga_primer, #x_lain_harga_primer_proyeksi, #x_lain_harga_sekunder, #x_lain_harga_sekunder_proyeksi, #x_lain_harga_label, #x_lain_harga_label_proyeksi, #x_lain_harga_total, #x_lain_harga_total_proyeksi").attr("placeholder","");
+    $("#x_idcustomer").change((function(){$.get("api/nextKodeNpd/"+$(this).val(),(function(a){$("#x_kodeorder").val(a)}))})),$("input[name=x_kodeorder], input[name=x_nomororder]").css({"min-width":"",width:"100%"}),$("#x_tanggal_order, #x_target_selesai").css({"min-width":"100px",width:"70%"}),$("#x_utama_harga_isi, #x_utama_harga_isi_proyeksi, #x_utama_harga_primer, #x_utama_harga_primer_proyeksi, #x_utama_harga_sekunder, #x_utama_harga_sekunder_proyeksi, #x_utama_harga_label, #x_utama_harga_label_proyeksi, #x_utama_harga_total, #x_utama_harga_total_proyeksi").css({"min-width":"100px",width:"100%"}),$("#x_utama_harga_isi, #x_utama_harga_isi_proyeksi, #x_utama_harga_primer, #x_utama_harga_primer_proyeksi, #x_utama_harga_sekunder, #x_utama_harga_sekunder_proyeksi, #x_utama_harga_label, #x_utama_harga_label_proyeksi, #x_utama_harga_total, #x_utama_harga_total_proyeksi").attr("placeholder",""),$("#x_lain_harga_isi, #x_lain_harga_isi_proyeksi, #x_lain_harga_primer, #x_lain_harga_primer_proyeksi, #x_lain_harga_sekunder, #x_lain_harga_sekunder_proyeksi, #x_lain_harga_label, #x_lain_harga_label_proyeksi, #x_lain_harga_total, #x_lain_harga_total_proyeksi").css({"min-width":"100px",width:"100%"}),$("#x_lain_harga_isi, #x_lain_harga_isi_proyeksi, #x_lain_harga_primer, #x_lain_harga_primer_proyeksi, #x_lain_harga_sekunder, #x_lain_harga_sekunder_proyeksi, #x_lain_harga_label, #x_lain_harga_label_proyeksi, #x_lain_harga_total, #x_lain_harga_total_proyeksi").attr("placeholder",""),$("#x_ukuransediaan, #x_ukurankemasan, #x_ukurankemasansekunder").css("width","250px");
 });
 </script>

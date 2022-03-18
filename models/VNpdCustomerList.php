@@ -1901,11 +1901,7 @@ class VNpdCustomerList extends VNpdCustomer
             $this->parfum->ViewCustomAttributes = "";
 
             // status
-            if (ConvertToBool($this->status->CurrentValue)) {
-                $this->status->ViewValue = $this->status->tagCaption(1) != "" ? $this->status->tagCaption(1) : "Yes";
-            } else {
-                $this->status->ViewValue = $this->status->tagCaption(2) != "" ? $this->status->tagCaption(2) : "No";
-            }
+            $this->status->ViewValue = $this->status->CurrentValue;
             $this->status->ViewCustomAttributes = "";
 
             // created_at
@@ -2109,8 +2105,6 @@ class VNpdCustomerList extends VNpdCustomer
 
             // Set up lookup SQL and connection
             switch ($fld->FieldVar) {
-                case "x_status":
-                    break;
                 case "x_readonly":
                     break;
                 default:

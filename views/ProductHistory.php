@@ -10,7 +10,7 @@ $ProductHistory = &$Page;
 
 	$product = ExecuteRow("SELECT p.kode, p.nama FROM product p WHERE id = {$idproduct}");
 
-	$laststok = ExecuteRow("SELECT stok_akhir FROM stocks WHERE idproduct = {$idproduct} AND id IN (SELECT MAX(id) FROM stocks GROUP BY idproduct)")['stok_akhir'];
+	$laststok = ExecuteRow("SELECT stok_akhir FROM stocks WHERE aktif = 1 AND idproduct = {$idproduct} AND id IN (SELECT MAX(id) FROM stocks WHERE aktif = 1 GROUP BY idproduct)")['stok_akhir'];
 
 	// PAGINATION
 	$batas = 10;
@@ -21,11 +21,11 @@ $ProductHistory = &$Page;
 	$next = $halaman + 1;
 
 	// count data
-	$result = ExecuteQuery("SELECT * FROM stocks WHERE aktif = 1 AND idproduct = {$idproduct}")->fetchAll();
+	$result = ExecuteQuery("SELECT * FROM stocks WHERE idproduct = {$idproduct}")->fetchAll();
     $jumlah_data = count($result);
     $total_halaman = ceil($jumlah_data/$batas);
 
-	$history = ExecuteQuery("SELECT * FROM stocks WHERE aktif = 1 AND idproduct = {$idproduct} ORDER BY id ASC LIMIT {$halaman_awal}, {$batas}")->fetchAll();
+	$history = ExecuteQuery("SELECT * FROM stocks WHERE idproduct = {$idproduct} ORDER BY id ASC LIMIT {$halaman_awal}, {$batas}")->fetchAll();
 	$nomor = $halaman_awal+1;
 ?>
 
@@ -48,13 +48,13 @@ $ProductHistory = &$Page;
 			<tbody>
 				<?php if (count($history) > 0) : ?>
 					<?php $no=0; foreach ($history as $row) : ?>
-					<tr>
+					<tr <?php if ($row['aktif'] < 1) echo "class=\"bg-danger\" style=\"text-decoration: line-through\""; ?>>
 						<td class="text-center"><?php echo $no+1; ?></td>
 						<td class="text-center"><?php echo $row['stok_masuk'] > 0 ? 'Debet' : 'Kredit'; ?></td>
 						<td class="text-center"><?php echo $row['stok_masuk'] ?></td>
 						<td class="text-center"><?php echo $row['stok_keluar'] ?></td>
 						<td class="text-center"><?php echo $row['stok_akhir'] ?></td>
-						<td><?php echo ucwords(str_replace('-', ' ', $row['prop_code'])) ?></td>
+						<td><?php echo ucwords(str_replace('-', ' ', $row['prop_code'])) ?><?php if ($row['aktif'] < 1) echo " (Deleted data)"; ?></td>
 					</tr>
 					<?php $no++; endforeach ?>
 				<?php else: ?>

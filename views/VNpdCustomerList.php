@@ -343,10 +343,7 @@ $Page->ListOptions->render("body", "left", $Page->RowCount);
         <td data-name="status" <?= $Page->status->cellAttributes() ?>>
 <span id="el<?= $Page->RowCount ?>_v_npd_customer_status">
 <span<?= $Page->status->viewAttributes() ?>>
-<div class="custom-control custom-checkbox d-inline-block">
-    <input type="checkbox" id="x_status_<?= $Page->RowCount ?>" class="custom-control-input" value="<?= $Page->status->getViewValue() ?>" disabled<?php if (ConvertToBool($Page->status->CurrentValue)) { ?> checked<?php } ?>>
-    <label class="custom-control-label" for="x_status_<?= $Page->RowCount ?>"></label>
-</div></span>
+<?= $Page->status->getViewValue() ?></span>
 </span>
 </td>
     <?php } ?>
