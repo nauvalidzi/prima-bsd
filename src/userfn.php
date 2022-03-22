@@ -537,6 +537,12 @@ $API_ACTIONS["getTagihan"] = function(Request $request, Response &$response) {
     }
 };
 
+function base_url() {
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https://" : "http://";
+    $script = str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+    return $protocol . $_SERVER['HTTP_HOST'] . $script;
+}
+
 function get_approval($cust_id) {
 	return ExecuteRow("SELECT * FROM po_limit_approval WHERE aktif = 1 AND idcustomer = {$cust_id} ORDER BY id DESC");
 }
@@ -573,18 +579,16 @@ function status_pembayaran($idinvoice) {
 }
 
 function get_kodeorder($idorder) {
-    return ExecuteRow("SELECT kode FROM `order` WHERE id = '{$idorder}'")['kode'];
+    return ExecuteScalar("SELECT kode FROM `order` WHERE id = '{$idorder}'");
 }
 
 function getCustomer($id, $table="order") {
-    $row = [];
-    if ($table == 'order') {
-        $row = ExecuteRow("SELECT idcustomer FROM `order` WHERE id = {$id}");
+	// table order / table invoice
+    $data = ExecuteScalar("SELECT idcustomer FROM `{$table}` WHERE id = {$id}");
+    if (empty($data)) {
+    	return 0;
     }
-    if ($table == 'invoice') {
-        $row = ExecuteRow("SELECT idcustomer FROM `invoice` WHERE id = {$id}");
-    }
-	return $row['idcustomer'];
+	return $data;
 }
 
 function update_status_order($idinvoice, $attr="") {
@@ -631,6 +635,24 @@ function stok_trx($prop_id, $prop_code, $idproduct, $jumlah, $jenis) {
     return true;
 }
 
+// FUNGSI PEMISAH RIBUAN RUPIAH
+function rupiah($number, $decimal='with-decimal') {
+    if (!is_numeric($number)) {
+        return "Bad Format!";
+    }
+    if ($number < 1000) {
+        return $number;
+    }
+    switch ($decimal) {
+        case 'without-decimal':
+            return number_format($number, 0, ",", ".");
+            break;
+        default:
+            return number_format($number, 2, ",", ".");
+            break;
+    }
+}
+
 //-- FUNGSI TERBILANG --//
 function penyebut($nilai) {
 	$nilai = abs($nilai);
@@ -656,17 +678,15 @@ function penyebut($nilai) {
 		$temp = penyebut($nilai/1000000000) . " milyar" . penyebut(fmod($nilai,1000000000));
 	} else if ($nilai < 1000000000000000) {
 		$temp = penyebut($nilai/1000000000000) . " trilyun" . penyebut(fmod($nilai,1000000000000));
-	}     
+	}
 	return $temp;
 }
 
 function terbilang($nilai) {
-	if($nilai<0) {
-		$hasil = "minus ". trim(penyebut($nilai));
-	} else {
-		$hasil = trim(penyebut($nilai));
-	}     		
-	return $hasil;
+	if($nilai < 0) {
+		return "minus ". trim(penyebut($nilai));
+	}
+	return trim(penyebut($nilai));
 }
 //!-- FUNGSI TERBILANG --//
 
@@ -683,12 +703,15 @@ function addStock($idorderdetail, $jumlah) {
 
 // dipanggil di deliveryorder_detail
 function checkCloseOrder($idOrderDetail) {
-	$data = ExecuteRow("SELECT idorder, sisa FROM order_detail WHERE id=".$idOrderDetail);
-	$update = ExecuteUpdate("UPDATE order_detail SET aktif=".($data['sisa'] > 0 ? 1 : 0)." WHERE id=".$idOrderDetail);
-
-	//$orderAktif = ExecuteScalar("SELECT COUNT(id) FROM order_detail WHERE aktif=1 and idorder=".$data['idorder']);
-
-	//$update = ExecuteUpdate("UPDATE `order` SET aktif=".($orderAktif > 0 ? 1 : 0)." WHERE id=".$data['idorder']);
+	$data = ExecuteRow("SELECT idorder, sisa FROM order_detail WHERE id = {$idOrderDetail}");
+    if ($data['sisa'] > 0) {
+        ExecuteUpdate("UPDATE `order_detail` SET aktif = 1 WHERE id= {$idOrderDetail}");
+        ExecuteUpdate("UPDATE `order` SET aktif = 1 WHERE id = {$data['idorder']}");
+    } else {
+        ExecuteUpdate("UPDATE `order_detail` SET aktif = 0 WHERE id= {$idOrderDetail}");
+        ExecuteUpdate("UPDATE `order` SET aktif = 0 WHERE id = {$data['idorder']}");        
+    }
+    return true;
 }
 
 // dipanggil di invoice_detail, redeem_bonus
@@ -698,12 +721,13 @@ function addBlackBonus($idCustomer, $jumlah) {
 
 // dipanggil di pembayaran
 function checkCloseInvoice($idinvoice) {
-	$sisaBayar = ExecuteScalar("SELECT sisabayar FROM invoice WHERE id=".$idinvoice);
+	$sisaBayar = ExecuteScalar("SELECT sisabayar FROM invoice WHERE id = {$idinvoice}");
 	if ($sisaBayar <= 0) {
-		$update = ExecuteUpdate("UPDATE invoice SET aktif=0 WHERE id=".$idinvoice);
+		ExecuteUpdate("UPDATE invoice SET aktif=0 WHERE id = {$idinvoice} ");
 	} else {
-		$update = ExecuteUpdate("UPDATE invoice SET aktif=1 WHERE id=".$idinvoice);
+		ExecuteUpdate("UPDATE invoice SET aktif=1 WHERE id = {$idinvoice}");
 	}
+	return true;
 }
 
 // dipanggil di invoice_detail
@@ -786,7 +810,7 @@ function addNpdToProduct2($idNpd, $nama) {
 }
 
 function removeNpdFromProduct($idNpd) {
-	$update = ExecuteUpdate("UPDATE product SET aktif=0, ijinbpom=0 WHERE id=(SELECT idproduct FROM npd WHERE id=".$idNpd.")");
+	ExecuteUpdate("UPDATE product SET aktif=0, ijinbpom=0 WHERE id=(SELECT idproduct FROM npd WHERE id=".$idNpd.")");
 }
 
 // UNTUK API
@@ -933,60 +957,6 @@ function penomoran_date_replace($format) {
     return $format;
 }
 
-// function getNextKode($tipe, $id) {
-//     $kode = $column = $table = "";
-//     if ($tipe == "pegawai") {
-//         $table = "pegawai";
-//         $column = "kode";
-//         $kode = "PEG-";
-//     } elseif ($tipe == "customer") {
-//         $table = "customer";
-//         $column = "kode";
-//         $kode = "LD. ";
-//     } elseif ($tipe == "order") {
-//         $table = "`order`";
-//         $column = "kode";
-//         $kode = "SP-";
-//     } elseif ($tipe == "deliveryorder") {
-//         $table = "deliveryorder";
-//         $column = "kode";
-//         $kode = "FD-";
-//     } elseif ($tipe == "invoice") {
-//         $table = "invoice";
-//         $column = "kode";
-//         $kode = "BSD-";
-//     } elseif ($tipe == "suratjalan") {
-//         $table = "suratjalan";
-//         $column = "kode";
-//         $kode = "SJ-";
-//     } elseif ($tipe == "pembayaran") {
-//         $table = "pembayaran";
-//         $column = "kode";
-//         $kode = "PB-";
-//     }
-
-//     $maxKode = ExecuteScalar("SELECT MAX(".$column.") FROM ".$table);
-//     if ($maxKode == null) {
-//         $kode = $kode."0001";
-//     } else {
-//         $pecah = explode("-", $maxKode);
-//         if ($tipe == "customer") {
-//             $pecah = explode(" ", $maxKode);
-//         }
-//         $nominal = intval(end($pecah))+1;
-//         if($nominal <= 9) {
-//             $kode = $kode."000".$nominal;
-//         } else if ($nominal > 9 && $nominal <= 99) {
-//             $kode = $kode."00".$nominal;
-//         } else if ($nominal > 99 && $nominal <= 999) {
-//             $kode = $kode."0".$nominal;
-//         } else {
-//             $kode = $kode.$nominal;
-//         }
-//     }
-
-//     return $kode;
-// }
 function tgl_indo($tanggal, $format='date'){
 	$bulan = array (
 		1 => 'Januari',
@@ -1017,7 +987,7 @@ function tgl_indo($tanggal, $format='date'){
 }
 
 function cek_po_aktif($idcustomer) {
-    return ExecuteRow("SELECT COUNT(*) AS jumlah
+    return ExecuteScalar("SELECT COUNT(*) AS jumlah
                     FROM (
                     SELECT idorder AS idorder, idcustomer
                     FROM invoice
@@ -1030,11 +1000,11 @@ function cek_po_aktif($idcustomer) {
                     GROUP BY `order`.id
                     ) po_aktif
                     WHERE idcustomer = {$idcustomer}
-                ")['jumlah'];    
+                ");    
 }
 
 function cek_totaltagihan_po_aktif($idcustomer) {
-    return ExecuteRow("SELECT tagihan AS totaltagihan
+    return ExecuteScalar("SELECT tagihan AS totaltagihan
                     FROM (
                     SELECT idorder, idcustomer, sisabayar AS tagihan
                     FROM invoice
@@ -1047,7 +1017,7 @@ function cek_totaltagihan_po_aktif($idcustomer) {
                     LEFT JOIN stock ON stock.idorder_detail = order_detail.id
                     GROUP BY `order`.id
                     ) po_aktif WHERE idcustomer = {$idcustomer}
-                ")['totaltagihan'];
+                ");
 }
 
 /*
@@ -1060,29 +1030,6 @@ order masuk surat jalan => invoice.sent = 1
 order masuk bayar sebagian => invoice.aktif = 1 & invoice.readonly = 1 invoice.sent = 0
 order masuk bayar lunas => invoice.aktif = 0
 */
-function rupiah($number, $decimal='with-decimal') {
-    if (!is_numeric($number)) {
-        return "Bad Format!";
-    }
-    if ($number < 1000) {
-        return $number;
-    }
-    switch ($decimal) {
-        case 'without-decimal':
-            return number_format($number, 0, ",", ".");
-            break;
-        default:
-            return number_format($number, 2, ",", ".");
-            break;
-    }
-}
-
-function base_url() {
-    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https://" : "http://";
-    $script = str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
-    return $protocol . $_SERVER['HTTP_HOST'] . $script;
-}
-
 function check_kpi_existing($idpegawai, $bulan) {
 	$check = ExecuteRow("SELECT COUNT(*) as jumlah FROM kpi_marketing WHERE idpegawai = {$idpegawai} AND bulan = '".date('Y-m-01', strtotime($bulan))."'");
     if ($check['jumlah'] > 0) {
@@ -1283,7 +1230,7 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
             // IF NOT EXIST CREATE DELIVERY ORDER
             if (!$delivery && $db_orders) {
                 $do = Execute("INSERT INTO deliveryorder (kode, tanggal, created_at, readonly) VALUES ('{$row['no_suratjalan']}', '{$row['tgl_kirim']}', '".date('Y-m-d H:i:s')."', 1)");
-                $delivery = ExecuteRow("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'")['id'];
+                $delivery = ExecuteScalar("SELECT id FROM deliveryorder WHERE kode = '{$row['no_suratjalan']}' AND tanggal = '{$row['tgl_kirim']}'");
             }
 
             // CEK EXISTING DATA DELIVERY & DATA ORDER
@@ -1305,18 +1252,22 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
                                             AND ded.tanggal = '{$row['tgl_kirim']}' 
                                             AND p.kode = '{$val['kode_barang']}' 
                                             AND o.kode = '{$ord['no_penjualan']}'";
-                    $existing = ExecuteRow($deliverydetil_exist)['jumlah'];
+                    $existing = ExecuteScalar($deliverydetil_exist);
 
                     // CEK EXISTING DATA deliveryorder_detail
                     if (!$existing) {
                         // INSERT TO DB deliveryorder_detail
                         $do_detail = Execute("INSERT INTO deliveryorder_detail (iddeliveryorder, idorder, idorder_detail, totalorder, jumlahkirim, sisa) VALUES ({$delivery}, {$detail['idorder']}, {$detail['idorderdetail']}, {$detail['totalorder']}, {$val['jumlah_kirim']}, {$sisa})");
 
+                        // GET ID DELIVERYORDER_DETAIL UNTUK HISTORY STOK
+                        $do_detail_id = ExecuteScalar("SELECT id FROM deliveryorder_detail WHERE iddeliveryorder = {$delivery} AND idorder = {$detail['idorder']} AND idorderdetail = {$detail['idorderdetail']} AND totalorder = {$detail['totalorder']} AND jumlahkirim = {$val['jumlah_kirim']}");
+
                         // UPDATE SISA ORDER DETAIL
                         ExecuteUpdate("UPDATE order_detail SET sisa = sisa-({$val['jumlah_kirim']}) WHERE id = {$detail['idorderdetail']}");
 
                         // ADD JUMLAH KIRIM TO STOCK
                         addStock($detail['idorderdetail'], $val['jumlah_kirim']);
+                        stok_trx($do_detail_id, 'deliveryorder-in', $idproduct, $val['jumlah_kirim'], 'masuk');
 
                         // CEK CLOSE ORDER
                         checkCloseOrder($detail['idorderdetail']);
@@ -1349,7 +1300,7 @@ $API_ACTIONS['sync-do-sip'] = function(Request $request, Response &$response) {
                                                 AND ded.tanggal = '{$row['tgl_kirim']}' 
                                                 AND od.id = {$dbo['idorderdetail']}
                                                 AND o.kode = '{$ord['no_penjualan']}'";
-                        $existing = ExecuteRow($deliverydetil_exist)['jumlah'];
+                        $existing = ExecuteScalar($deliverydetil_exist);
 
                         // JIKA DATA SUDAH ADA DI ARRAY MAKA TIDAK PERLU DI INSERT
                         if (!in_array($dbo['idorderdetail'], $datas) && !$existing) {
@@ -1419,7 +1370,7 @@ $API_ACTIONS['brandcustomer-edit'] = function(Request $request, Response &$respo
     $old_customer = Param("old_customer", Route(4));
     $status = true;
     $message = 'Updated successfully';
-    $check = ExecuteRow("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$brand} AND idcustomer = {$customer}")['exist'];
+    $check = ExecuteScalar("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$brand} AND idcustomer = {$customer}");
     if ($check > 0) {
         return WriteJson(['status' => false, 'message' => 'Duplicate data, please select another Brand/Customer.']);
     }
@@ -1436,7 +1387,7 @@ $API_ACTIONS['brandcustomer-delete'] = function(Request $request, Response &$res
     $redirect = 'BrandList';//Param("landing", Route(3));
     $status = true;
     $message = 'Deleted successfully';
-    $check = ExecuteRow("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$brand} AND idcustomer = {$customer}")['exist'];
+    $check = ExecuteScalar("SELECT COUNT(*) as exist FROM brand_customer WHERE idbrand = {$brand} AND idcustomer = {$customer}");
     if ($check < 1) {
         return WriteJson(['success' => false, 'message' => 'Data not found']);
     }

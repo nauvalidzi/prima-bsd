@@ -14,27 +14,9 @@ class PenagihanController extends ControllerBase
         return $this->runPage($request, $response, $args, "PenagihanList");
     }
 
-    // add
-    public function add(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "PenagihanAdd");
-    }
-
     // view
     public function view(Request $request, Response $response, array $args): Response
     {
         return $this->runPage($request, $response, $args, "PenagihanView");
-    }
-
-    // edit
-    public function edit(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "PenagihanEdit");
-    }
-
-    // delete
-    public function delete(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "PenagihanDelete");
     }
 }

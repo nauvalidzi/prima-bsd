@@ -26,12 +26,6 @@ class DeliveryorderDetailController extends ControllerBase
         return $this->runPage($request, $response, $args, "DeliveryorderDetailView");
     }
 
-    // edit
-    public function edit(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "DeliveryorderDetailEdit");
-    }
-
     // delete
     public function delete(Request $request, Response $response, array $args): Response
     {

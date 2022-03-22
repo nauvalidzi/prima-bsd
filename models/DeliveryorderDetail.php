@@ -1494,7 +1494,7 @@ SORTHTML;
         // To cancel, set return value to false
 
         // update sisa order detail
-        $myResult = ExecuteUpdate("UPDATE order_detail SET sisa=sisa+(".($rsold['jumlahkirim']-$rsnew['jumlahkirim']).") WHERE id=".$rsold['idorder_detail']);
+        ExecuteUpdate("UPDATE order_detail SET sisa=sisa+(".($rsold['jumlahkirim']-$rsnew['jumlahkirim']).") WHERE id=".$rsold['idorder_detail']);
 
         // update stock
         addStock($rsold['idorder_detail'], ($rsnew['jumlahkirim']-$rsold['jumlahkirim']));
